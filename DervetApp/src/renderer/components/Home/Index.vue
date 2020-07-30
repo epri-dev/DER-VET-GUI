@@ -1,39 +1,41 @@
 <template>
-  <div id="wrapper">
+  <body>
+    <div id="wrapper" class="container body-content">
 
-    <div class="jumbotron">
-      <h1>DER-VET Alpha Test</h1>
-    </div>
+      <div class="jumbotron">
+        <h1>DER-VET Alpha Test</h1>
+      </div>
 
-    <div class="row buffer-bottom">
-      <div class="col-md-6 text-center">
-        <button class="btn btn-lg btn-warning">Start a New Analysis</button>
+      <div class="row buffer-bottom">
+        <div class="col-md-6 text-center">
+          <a class="btn btn-lg btn-warning">Start a New Analysis</a>
+        </div>
+        <div class="col-md-6 text-center">
+          <a class="btn btn-lg btn-info">Import Existing Project</a>
+        </div>
       </div>
-      <div class="col-md-6 text-center">
-        <button class="btn btn-lg btn-info">Import Existing Project</button>
-      </div>
-    </div>
 
-    <div class="row">
-      <div class="col-md-6">
-        <h2>Getting started</h2>
-        <p>
-            To start an analysis, click the <b>Start a New Analysis</b> button above. You will
-            then be prompted to specify the type of analysis to run and to enter all relevant input data.
-            Once you've entered all the needed data, the DER-VET analysis will begin. This can take several
-            minutes to complete.
-        </p>
-      </div>
-      <div class="col-md-6">
-        <h2>Import an existing project</h2>
-        <p>
-            You can load a previously exported project by clicking the <b>Import Existing Project</b> button above.
-            You will then be prompted to select the ZIP file that contains the project data and accompanying time series
-            data.
-        </p>
+      <div class="row">
+        <div class="col-md-6">
+          <h2>Getting started</h2>
+          <p>
+              To start an analysis, click the <b>Start a New Analysis</b> button above. You will
+              then be prompted to specify the type of analysis to run and to enter all relevant input data.
+              Once you've entered all the needed data, the DER-VET analysis will begin. This can take several
+              minutes to complete.
+          </p>
+        </div>
+        <div class="col-md-6">
+          <h2>Import an existing project</h2>
+          <p>
+              You can load a previously exported project by clicking the <b>Import Existing Project</b> button above.
+              You will then be prompted to select the ZIP file that contains the project data and accompanying time series
+              data.
+          </p>
+        </div>
       </div>
     </div>
-  </div>
+  </body>
 </template>
 
 <script>
@@ -41,7 +43,3 @@
     name: 'index',
   };
 </script>
-
-<style>
-  @import url('https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css');
-</style>
