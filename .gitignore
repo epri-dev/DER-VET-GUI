@@ -20,9 +20,6 @@ npm-debug.log.*
 thumbs.db
 !.gitkeep
 
-## ignore entire DervetBackEnd
-DervetBackEnd/
-
 # Byte-compiled / optimized / DLL files
 **/*.py[cod]
 
