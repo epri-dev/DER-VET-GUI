@@ -61,6 +61,7 @@
   "dependencies": {
     "axios": "^0.18.1",
     "bootstrap": "^4.5.0",
+    "bootstrap-vue": "^2.16.0",
     "font-awesome": "^4.7.0",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",

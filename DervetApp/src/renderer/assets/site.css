@@ -14,6 +14,14 @@ body {
     padding-right: 15px;
 }
 
+.dervet-title {
+    text-align: center;
+}
+
+.text-white {
+    color: white;
+}
+
 
 .form-horizontal .control-label {
     text-align: left;
