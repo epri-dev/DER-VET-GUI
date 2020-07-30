@@ -1,9 +1,12 @@
 # NOTE: this .gitignore file operates on files NOT under revision.
 #       files already under revision cannot be ignored here.
 
-# GUI data, database
-DerivetUI.Web/App_Data/
-DervetExec.Web/App_Data/
+# Python/Flask build and dist files
+DervetApp/dervetpy/.python-version
+DervetApp/dervetpy/__pycache__/*
+DervetApp/dervetpy/build/*
+DervetApp/dervetpy/dist/*
+DervetApp/extraResources/*
 
 # Electron build and dist files
 .DS_Store
