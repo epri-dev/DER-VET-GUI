@@ -1,6 +1,10 @@
 import Vue from 'vue';
 import axios from 'axios';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'font-awesome/css/font-awesome.min.css';
+import './assets/site.css';
+
 import App from './App';
 import router from './router';
 import store from './store';
