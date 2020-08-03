@@ -7,10 +7,11 @@
 
     <div class="row buffer-bottom">
       <div class="col-md-6 text-center">
-        <router-link to="/landing" class="btn btn-lg btn-warning text-white">Start a New Analysis</router-link>
+        <!-- Temporarily routing to the Wizard, to be replaced by CreateProject component -->
+        <router-link to="/wizard" class="btn btn-lg btn-warning text-white">Start a New Analysis</router-link>
       </div>
       <div class="col-md-6 text-center">
-        <router-link to="/landing" class="btn btn-lg btn-info">Import Existing Project</router-link>
+        <router-link to="/" class="btn btn-lg btn-info">Import Existing Project</router-link>
       </div>
     </div>
 

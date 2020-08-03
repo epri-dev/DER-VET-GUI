@@ -7,13 +7,21 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'index',
       component: require('@/components/Home/Index').default,
     },
     {
-      path: '/landing',
-      name: 'landingPage',
-      component: require('@/components/LandingPage').default,
+      path: '/wizard',
+      component: require('@/components/Wizard/Layout').default,
+      children: [
+        {
+          path: '',
+          component: require('@/components/Wizard/StartProject').default,
+        },
+        {
+          path: 'start-project',
+          component: require('@/components/Wizard/StartProject').default,
+        },
+      ],
     },
     {
       path: '*',
