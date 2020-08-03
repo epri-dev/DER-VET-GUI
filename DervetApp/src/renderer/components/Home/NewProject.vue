@@ -8,9 +8,9 @@
             </div>
         } -->
         <div class="form-group">
-            <div class="col-md-5">
-                <p class="tool-tip">Name of the project.</p>
-            </div>
+            <label for="project">Name of the project:</label>
+            <input type="text" class="form-control" id="project">
+
         </div>
         <div class="form-group">
 

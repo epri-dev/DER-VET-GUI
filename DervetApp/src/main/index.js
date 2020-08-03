@@ -1,5 +1,6 @@
+/* eslint-disable */
+
 const childProcess = require('child_process');
-const fs = require('fs');
 const path = require('path');
 
 import { app, BrowserWindow } from 'electron' // eslint-disable-line
@@ -40,54 +41,25 @@ function createWindow() {
 
 let pythonProcess = null;
 
-const getPythonExe = () => path.join(process.resourcesPath, 'extraResources/api');
-
-const pythonExeExists = exePath => fs.existsSync(exePath);
-
-const getDevPythonDirectory = () => path.resolve(__dirname, '../..', 'dervetpy');
-
-// TODO pass path to python runtime via environment variable
-const getDevPythonRuntime = pythonDirectory => path.join(pythonDirectory, 'venv/bin/python3');
-
-const getDevPythonScript = pythonDirectory => path.join(pythonDirectory, 'api.py');
-
-const spawnPackagedPythonProcess = pythonExe => childProcess.execFile(pythonExe);
-
-const spawnDevPythonProcess = () => {
-  const pythonDirectory = getDevPythonDirectory();
-  const pythonPath = getDevPythonRuntime(pythonDirectory);
-  const pythonScript = getDevPythonScript(pythonDirectory);
-  return childProcess.spawn(pythonPath, [pythonScript]);
-};
-
-const listenToPythonProcessLogs = (pythonProcess) => {
-  pythonProcess.stdout.on('data', (data) => {
-    console.log(`python stdout: ${data}`); // eslint-disable-line
-  });
-  pythonProcess.stderr.on('data', (data) => {
-    console.error(`python stderr: ${data}`); // eslint-disable-line
-  });
-};
-
 const createPythonProcess = () => {
-  const pythonExe = getPythonExe();
+  const pythonDirectory = path.resolve(__dirname, '../..', 'dervetpy')
+  const pythonPath = path.join(pythonDirectory, 'venv/Scripts/python')
+  const pythonScript = path.join(pythonDirectory, 'api.py')
 
-  // getPythonExe is used to determine whether this code is running within the
-  // packaged application: if the packaged python api executable does not exist
-  // in the expected directory, we assume we are running in the development
-  // environment and the raw python code is called.
-  if (pythonExeExists(pythonExe)) {
-    pythonProcess = spawnPackagedPythonProcess(pythonExe);
-  } else {
-    pythonProcess = spawnDevPythonProcess();
-  } // TODO handle case where neither executable nor source exists
+  pythonProcess = childProcess.spawn(pythonPath, [pythonScript]);
 
   if (pythonProcess != null) {
-    listenToPythonProcessLogs(pythonProcess);
+    pythonProcess.stdout.on('data', (data) => {
+      console.log(`python stdout: ${data}`);
+    });
+    pythonProcess.stderr.on('data', (data) => {
+      console.error(`python stderr: ${data}`);
+    });
   }
 };
 
 const exitPythonProcess = () => {
+  // TODO also kill when webpack dev server restarts
   pythonProcess.kill();
   pythonProcess = null;
 };
@@ -105,6 +77,7 @@ app.on('activate', () => {
   }
 });
 
+
 app.on('will-quit', exitPythonProcess);
 
 app.on('window-all-closed', () => {
@@ -112,3 +85,22 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
+
+/**
+ * Auto Updater
+ *
+ * Uncomment the following code below and install `electron-updater` to
+ * support auto updating. Code Signing with a valid certificate is required.
+ * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-electron-builder.html#auto-updating
+ */
+
+/*
+import { autoUpdater } from 'electron-updater'
+autoUpdater.on('update-downloaded', () => {
+  autoUpdater.quitAndInstall()
+})
+app.on('ready', () => {
+  if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
+})
+ */
