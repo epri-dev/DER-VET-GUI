@@ -44,7 +44,7 @@
   };
 </script>
 
-<style scoped>
+<!-- <style scoped>
   @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
   
   .form-horizontal .control-label {
@@ -53,4 +53,4 @@
     padding-right: 0;
 }
 </style>
-
+ -->

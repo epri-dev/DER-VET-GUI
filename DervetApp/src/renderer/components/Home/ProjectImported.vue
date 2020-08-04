@@ -1,13 +1,15 @@
-﻿@model DerivetUI.Web.Models.Home.HomeProjectImportedViewModel
+﻿<template>
+    <div class="container body-content">
+        <h2>Project Imported!</h2>
+        <hr />
+        <div class="form-horizontal form-buffer">
+            
+        </div>
+    </div>
+</template>
 
-@{
-    ViewBag.Title = "DER-VET: Project Imported!";
-}
 
-<h2>Project Imported!</h2>
-<hr />
-
-<p>
+<!-- <p>
     The project <b>@Model.Project.ProjectName</b> has been successfully imported.
     
     @if (Model.ResultData != null)
@@ -30,3 +32,4 @@
         @Html.ActionLink("View Project Results", "Results", "Wizard", new { id = Model.Project.ProjectID, rid = Model.ResultData.ResultID }, new { @class = "btn btn-info buffer-left" })
     }
 </p>
+ -->
