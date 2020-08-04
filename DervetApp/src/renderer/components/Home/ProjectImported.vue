@@ -8,6 +8,12 @@
     </div>
 </template>
 
+<script>
+  export default {
+    name: 'newProject',
+  };
+</script>
+
 
 <!-- <p>
     The project <b>@Model.Project.ProjectName</b> has been successfully imported.

@@ -15,14 +15,20 @@
                 </div>
             </div>
             <div class="form-group">
-                <!-- <div class="col-md-3 text-right">
+                <div class="col-md-3 text-right">
                     <label class="control-label" for="ProjectType">Project Type</label>
-                </div> -->
+                </div>
                 <div class="col-md-4">
-                    <b-dropdown id="ProjectType" text="Project Type">
+                    <select>
+                      <option disabled value="Project Type">Please select one</option>
+                      <option>Expert</option>
+                      <option>Wizard</option>
+                    </select>
+
+                    <!-- <b-dropdown id="ProjectType" text="Project Type">
                         <b-dropdown-item>Exert</b-dropdown-item>
                         <b-dropdown-item>Wizard</b-dropdown-item>
-                    </b-dropdown>
+                    </b-dropdown> -->
                 </div>
                 <div class="col-md-5">
                     <p class="tool-tip">Wizard projects guide you through constructing an analysis by asking a series of questions. Expert Mode projects allow you to directly edit the project configuration data used by DER-VET. Please note that this decision is final &mdash; once you select a Project Type you cannot change it.</p>

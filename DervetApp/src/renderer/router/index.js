@@ -5,10 +5,15 @@ Vue.use(Router);
 
 export default new Router({
   routes: [
+    // {
+    //   path: '/',
+    //   name: 'newProject',
+    //   component: require('@/components/Home/NewProject').default,
+    // },
     {
       path: '/',
-      name: 'newProject',
-      component: require('@/components/Home/NewProject').default,
+      name: 'StartProject',
+      component: require('@/components/Wizard/StartProject').default,
     },
     {
       path: '/landing',
