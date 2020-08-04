@@ -10,6 +10,10 @@ export default new Router({
       component: require('@/components/Home/Index').default,
     },
     {
+      path: '/new-project',
+      component: require('@/components/Home/PlaceholderNewProject').default,
+    },
+    {
       path: '/wizard',
       component: require('@/components/Wizard/Layout').default,
       children: [
