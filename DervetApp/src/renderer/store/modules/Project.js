@@ -1,6 +1,7 @@
 const getDefaultState = () => ({
   id: null,
   name: null,
+  startYear: 2020,
 });
 
 const state = getDefaultState();
@@ -15,6 +16,9 @@ const mutations = {
   RESET_PROJECT_TO_DEFAULT(state) {
     Object.assign(state, getDefaultState());
   },
+  SET_START_YEAR(state, newStartYear) {
+    state.startYear = newStartYear;
+  },
 };
 
 const actions = {
@@ -26,6 +30,9 @@ const actions = {
   },
   resetProjectToDefault({ commit }) {
     commit('RESET_PROJECT_TO_DEFAULT');
+  },
+  setStartYear({ commit }, newStartYear) {
+    commit('SET_START_YEAR', newStartYear);
   },
 };
 
