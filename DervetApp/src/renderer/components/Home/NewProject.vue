@@ -4,27 +4,27 @@
     <hr />
     <div class="form-horizontal form-buffer">
       <div class="form-group">
-        <div class="col-md-3 text-right">
+        <div class="col-md-12 text-right">
           <label class="control-label" for="ProjectName">Project Name</label>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-12">
           <input v-model="inputName" type="text" class="form-control" id="ProjectName">
         </div>
-        <div class="col-md-5">
+        <div class="col-md-12">
           <p type="tool-tip">Name of the project.</p>
         </div>
       </div>
       <div class="form-group">
-        <div class="col-md-3 text-right">
+        <div class="col-md-12 text-right">
           <label class="control-label" for="ProjectType">Project Type</label>
         </div>
-        <div class="col-md-4"> 
+        <div class="col-md-12"> 
           <select class="custom-select" @click="setProjectType(inputType)" v-model="inputType" id="ProjectType">
             <option value="Expert">Expert</option>
             <option value="Wizard">Wizard</option>
           </select>        
         </div>
-        <div class="col-md-5">
+        <div class="col-md-12">
           <p class="tool-tip">Wizard projects guide you through constructing an analysis by asking a series of questions. Expert Mode projects allow you to directly edit the project configuration data used by DER-VET. Please note that this decision is final &mdash; once you select a Project Type you cannot change it.</p>
         </div>
       </div>
