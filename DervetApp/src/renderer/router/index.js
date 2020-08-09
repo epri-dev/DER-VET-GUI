@@ -12,11 +12,11 @@ export default new Router({
     // },
     {
       path: '/',
-      component: require('@/components/Home/Index').default,
+      component: require('@/components/Home/ProjectImported').default,
     },
     {
       path: '/new-project',
-      component: require('@/components/Home/PlaceholderNewProject').default,
+      component: require('@/components/Home/NewProject').default,
     },
     {
       path: '/wizard',
