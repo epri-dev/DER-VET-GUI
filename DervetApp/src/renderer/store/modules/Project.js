@@ -4,10 +4,9 @@ const getDefaultState = () => ({
   startYear: 2020,
   analysisHorizon: null,
   analysisHorizonMode: null,
-  dataYear: null,
+  dataYear: 2020,
   gridLocation: null,
-  ownership: null
-
+  ownership: null,
 });
 
 const state = getDefaultState();
