@@ -1,33 +1,42 @@
 <template>
   <div class="left-sidebar">
     <b-nav vertical>
-        <router-link class="nav nav-sidebar" to="/wizard/start-project">
+        <router-link class="nav nav-sidebar sidebar-root-el" to="/wizard/start-project">
           Project Configuration
         </router-link>
-        <router-link class="nav nav-sidebar" to="/wizard/technology-specs">
+        <router-link class="nav nav-sidebar sidebar-root-el" to="/wizard/technology-specs">
           Technology Specifications
         </router-link>
-        <router-link class="nav nav-sidebar" to="/wizard/objectives">
+        <router-link class="nav nav-sidebar sidebar-indent" to="/wizard/technology-specs-solar-pv" v-if="true">
+          Solar PV
+        </router-link>
+        <router-link class="nav nav-sidebar sidebar-indent" to="/wizard/technology-specs-battery-storage" v-if="true">
+          Battery Storage
+        </router-link>
+        <router-link class="nav nav-sidebar sidebar-indent" to="/wizard/technology-specs-ice" v-if="true">
+          Internal Combustion Engine
+        </router-link>
+        <router-link class="nav nav-sidebar sidebar-root-el" to="/wizard/objectives">
           Services
         </router-link>
-        <router-link class="nav nav-sidebar indented" to="/wizard/objectives-parameters-site-information">
+        <router-link class="nav nav-sidebar sidebar-indent" to="/wizard/objectives-parameters-site-information">
           Site Information
         </router-link>
-        <router-link class="nav nav-sidebar" to="/wizard/financial-inputs">
+        <router-link class="nav nav-sidebar sidebar-root-el" to="/wizard/financial-inputs">
           Financial Inputs
         </router-link>
-        <router-link class="nav nav-sidebar indented" to="/wizard/financial-inputs-external-incentives">
+        <router-link class="nav nav-sidebar sidebar-indent" to="/wizard/financial-inputs-external-incentives">
           External Incentives
         </router-link>
-        <router-link class="nav nav-sidebar" to="/wizard/sensitivity-analysis">
+        <router-link class="nav nav-sidebar sidebar-root-el" to="/wizard/sensitivity-analysis">
           Scenario Analysis
         </router-link>
-        <li class="nav nav-sidebar">
+        <li class="nav nav-sidebar sidebar-root-el">
           <div class="menutext">Summary</div>
         </li>
-        <li class="nav nav-sidebar">
+        <li class="nav nav-sidebar sidebar-root-el">
           <div class="menutext">Results</div>
-        </li>  
+        </li>
     </b-nav>
     <div class="export-project">
       <router-link class="btn btn-md btn-primary" to="/">Export Project</router-link>

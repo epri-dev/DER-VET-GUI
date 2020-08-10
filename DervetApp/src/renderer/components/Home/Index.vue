@@ -12,7 +12,9 @@
         </router-link>
       </div>
       <div class="col-md-6 text-center">
-        <router-link to="/" class="btn btn-lg btn-info">Import Existing Project</router-link>
+        <router-link to="/import-project" class="btn btn-lg btn-info">
+          Import Existing Project
+        </router-link>
       </div>
     </div>
 
@@ -36,7 +38,7 @@
       </div>
     </div>
   </div>
-</div> 
+</div>
 
 </template>
 
