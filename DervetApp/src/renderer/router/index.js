@@ -5,13 +5,18 @@ Vue.use(Router);
 
 export default new Router({
   routes: [
+    // {
+    //   path: '/',
+    //   name: 'newProject',
+    //   component: require('@/components/Home/ProjectImported').default,
+    // },
     {
       path: '/',
       component: require('@/components/Home/Index').default,
     },
     {
       path: '/new-project',
-      component: require('@/components/Home/PlaceholderNewProject').default,
+      component: require('@/components/Home/NewProject').default,
     },
     {
       path: '/import-project',
