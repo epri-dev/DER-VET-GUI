@@ -2,6 +2,12 @@ const getDefaultState = () => ({
   id: null,
   name: null,
   startYear: 2020,
+  analysisHorizon: null,
+  analysisHorizonMode: null,
+  dataYear: null,
+  gridLocation: null,
+  ownership: null
+
 });
 
 const state = getDefaultState();
@@ -19,6 +25,21 @@ const mutations = {
   SET_START_YEAR(state, newStartYear) {
     state.startYear = newStartYear;
   },
+  SET_ANALYSIS_HORIZON_MODE(state, newAnalysisHorizonMode) {
+    state.analysisHorizonMode = newAnalysisHorizonMode;
+  },
+  SET_ANALYSIS_HORIZON(state, newAnalysisHorizon) {
+    state.analysisHorizon = newAnalysisHorizon;
+  },
+  SET_DATA_YEAR(state, newDataYear) {
+    state.dataYear = newDataYear;
+  },
+  SET_GRID_LOCATION(state, newGridLocation) {
+    state.gridLocation = newGridLocation;
+  },
+  SET_OWNERSHIP(state, newOwnership) {
+    state.ownership = newOwnership;
+  },
 };
 
 const actions = {
@@ -33,6 +54,21 @@ const actions = {
   },
   setStartYear({ commit }, newStartYear) {
     commit('SET_START_YEAR', newStartYear);
+  },
+  setAnalysisHorizonMode({ commit }, newAnalysisHorizonMode) {
+    commit('SET_ANALYSIS_HORIZON_MODE', newAnalysisHorizonMode);
+  },
+  setAnalysisHorizon({ commit }, newAnalysisHorizon) {
+    commit('SET_ANALYSIS_HORIZON', newAnalysisHorizon);
+  },
+  setDataYear({ commit }, newDataYear) {
+    commit('SET_DATA_YEAR', newDataYear);
+  },
+  setGridLocation({ commit }, newGridLocation) {
+    commit('SET_GRID_LOCATION', newGridLocation);
+  },
+  setOwnership({ commit }, newOwnership) {
+    commit('SET_OWNERSHIP', newOwnership);
   },
 };
 
