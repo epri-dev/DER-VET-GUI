@@ -14,6 +14,10 @@ export default new Router({
       component: require('@/components/Home/PlaceholderNewProject').default,
     },
     {
+      path: '/import-project',
+      component: require('@/components/Home/ImportProject').default,
+    },
+    {
       path: '/wizard',
       component: require('@/components/Wizard/Layout').default,
       children: [
