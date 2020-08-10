@@ -12,7 +12,7 @@
             </div>
             <div class="form-group">
               <div class="col-md-12">
-                <router-link to="/wizard/technology-specs-solar-pv" class="btn btn-primary btn-w250">
+                <router-link to="/wizard/technology-specs-solar-pv/null" class="btn btn-primary btn-w250">
                   Solar PV
                </router-link>
               </div>

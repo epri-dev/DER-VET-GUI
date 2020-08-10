@@ -39,8 +39,10 @@ export default new Router({
           component: require('@/components/Wizard/TechnologySpecs').default,
         },
         {
-          path: 'technology-specs-solar-pv',
+          path: 'technology-specs-solar-pv/:solarIndex',
+          name: 'technologySpecsSolarPV',
           component: require('@/components/Wizard/TechnologySpecsSolarPV').default,
+          props: true,
         },
         {
           path: 'technology-specs-battery-storage',
