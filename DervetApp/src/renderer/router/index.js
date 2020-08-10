@@ -12,7 +12,7 @@ export default new Router({
     // },
     {
       path: '/',
-      component: require('@/components/Home/ProjectImported').default,
+      component: require('@/components/Home/Index').default,
     },
     {
       path: '/new-project',
