@@ -8,7 +8,7 @@ export default new Router({
     // {
     //   path: '/',
     //   name: 'newProject',
-    //   component: require('@/components/Home/NewProject').default,
+    //   component: require('@/components/Home/ProjectImported').default,
     // },
     {
       path: '/',
