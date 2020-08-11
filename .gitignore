@@ -10,6 +10,7 @@ DervetApp/extraResources/*
 
 # Electron build and dist files
 .DS_Store
+DervetApp/.env
 DervetApp/dervetpy/.python-version
 DervetApp/dist/electron/*
 DervetApp/dist/web/*

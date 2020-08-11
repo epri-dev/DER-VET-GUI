@@ -1,6 +1,7 @@
 const childProcess = require('child_process');
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config();
 
 import { app, BrowserWindow } from 'electron' // eslint-disable-line
 
@@ -46,8 +47,7 @@ const pythonExeExists = exePath => fs.existsSync(exePath);
 
 const getDevPythonDirectory = () => path.resolve(__dirname, '../..', 'dervetpy');
 
-// TODO pass path to python runtime via environment variable
-const getDevPythonRuntime = pythonDirectory => path.join(pythonDirectory, 'venv/bin/python3');
+const getDevPythonRuntime = () => process.env.DERVET_PYTHON_PATH;
 
 const getDevPythonScript = pythonDirectory => path.join(pythonDirectory, 'api.py');
 
@@ -55,7 +55,7 @@ const spawnPackagedPythonProcess = pythonExe => childProcess.execFile(pythonExe)
 
 const spawnDevPythonProcess = () => {
   const pythonDirectory = getDevPythonDirectory();
-  const pythonPath = getDevPythonRuntime(pythonDirectory);
+  const pythonPath = getDevPythonRuntime();
   const pythonScript = getDevPythonScript(pythonDirectory);
   return childProcess.spawn(pythonPath, [pythonScript]);
 };
