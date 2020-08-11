@@ -216,7 +216,6 @@
         };
       },
       saveAndContinue() {
-        console.log(this.buildSolarPV()); // eslint-ignore-line
         if (this.solarIndex === 'null') {
           this.$store.dispatch('addTechnologySpecsSolarPV', this.buildSolarPV());
         } else {

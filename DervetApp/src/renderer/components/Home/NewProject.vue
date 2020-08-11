@@ -31,12 +31,11 @@
       <hr />
       <div class="form-group form-buffer">
         <div class="col-md-12">
-          <button @click="setProjectName(inputName)" type="submit" class="btn btn-primary pull-right">Save and Continue</button>
+          <router-link v-on:click.native="saveAndContinue()" to="/wizard/start-project" class="btn btn-primary pull-right">
+            Save and Continue
+          </router-link>
         </div>
       </div>
-      <!-- <div>{{ `Project ID: ${projectId}` }}</div>
-      <div>{{ `Project Name: ${projectName}` }}</div>
-      <div>{{ `Project type: ${projectType}` }}</div> -->
     </div>
   </div>
 </template>
@@ -45,35 +44,26 @@
   import { v4 as uuidv4 } from 'uuid';
 
   export default {
-    computed: {
-      projectId() {
-        return this.$store.state.Project.id;
-      },
-      projectName() {
-        return this.$store.state.Project.name;
-      },
-      projectType() {
-        return this.$store.state.Project.type;
-      },
-    },
-    data: {
-      inputName: '',
-      inputType: '',
-      projectType: '',
+    data() {
+      return {
+        inputName: '',
+        inputType: '',
+      };
     },
     methods: {
-      setProjectName(inputName) {
-        this.$store.dispatch('setName', inputName);
-        this.inputName = '';
-      },
       setRandomUuid() {
         this.$store.dispatch('setId', uuidv4());
       },
-      resetProjectToDefault() {
-        this.$store.dispatch('resetProjectToDefault');
+      setProjectName() {
+        this.$store.dispatch('setName', this.inputName);
       },
-      setProjectType(type) {
-        this.$store.dispatch('setType', type);
+      setProjectType() {
+        this.$store.dispatch('setType', this.inputType);
+      },
+      saveAndContinue() {
+        this.setRandomUuid();
+        this.setProjectName();
+        this.setProjectType();
       },
     },
   };
