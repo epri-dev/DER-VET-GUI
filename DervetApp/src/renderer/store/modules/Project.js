@@ -26,7 +26,8 @@ const mutations = {
   },
   REPLACE_TECHNOLOGY_SPECS_SOLAR_PV(state, payload) {
     const tmpSolarPVSpecs = cloneDeep(state.technologySpecsSolarPV);
-    tmpSolarPVSpecs[payload.solarIndex] = payload.newSolar;
+    const indexMatchingId = tmpSolarPVSpecs.findIndex(x => x.id === payload.solarId);
+    tmpSolarPVSpecs[indexMatchingId] = payload.newSolar;
     state.technologySpecsSolarPV = tmpSolarPVSpecs;
   },
   RESET_PROJECT_TO_DEFAULT(state) {

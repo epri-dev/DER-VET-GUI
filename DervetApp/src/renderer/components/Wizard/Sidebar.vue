@@ -10,9 +10,9 @@
         <!-- TODO add router link that appears when adding a new solar spec -->
         <router-link
           class="nav nav-sidebar sidebar-indent"
-          v-for="solar, index in solarPVItems"
-          :to="{ name: 'technologySpecsSolarPV', params: { solarIndex: index }}"
-          :key="index">
+          v-for="solar in solarPVItems"
+          :to="{ name: 'technologySpecsSolarPV', params: { solarId: solar.id }}"
+          :key="solar.id">
           Solar PV ({{ solar.name }})
         </router-link>
         <router-link class="nav nav-sidebar sidebar-indent" to="/wizard/technology-specs-battery-storage" v-if="true">
