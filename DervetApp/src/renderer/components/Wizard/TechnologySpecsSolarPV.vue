@@ -1,8 +1,244 @@
 <template>
-<h3>Technology Specs: Solar PV</h3>
+  <div>
+    <h3>Technology Specs: Solar PV</h3>
+    <form>
+      <div class="form-horizontal form-buffer container">
+
+        <div class="form-group row">
+          <div class="col-md-3">
+            <label class="control-label" for="name">Name</label>
+          </div>
+          <div class="col-md-9">
+            <input
+              class="form-control valid"
+              id="name"
+              type="text"
+              v-model="inputName">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-md-3">
+            <label class="control-label" for="cost">Cost per kW</label>
+          </div>
+          <div class="col-md-9">
+            <input
+              class="form-control numberbox valid"
+              id="cost"
+              type="text"
+              v-model.number="inputCost">
+              <span class="unit-label">$/kW</span>
+              <br/>
+              <p class="tool-tip tooltip-col">Capital cost per kW of rated power capacity (applied in year 0 of the analysis)</p>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-md-3">
+            <label class="control-label" for="size">Sizing</label>
+          </div>
+          <div class="col-md-9">
+            <input
+              id="size-yes"
+              name="size"
+              type="radio"
+              v-model="inputShouldSize"
+              v-bind:value="true">
+            <label for="size-yes" class="buffer-right">Have DER-VET size the Solar PV</label>
+            <input
+              id="size-no"
+              name="size"
+              type="radio"
+              v-model="inputShouldSize"
+              v-bind:value="false">
+            <label for="size-no">Known size</label>
+          </div>
+        </div>
+
+        <div v-if="!inputShouldSize" class="form-group row">
+          <div class="col-md-3">
+            <label class="control-label" for="rated-capacity">Rated Capacity</label>
+          </div>
+          <div class="col-md-3">
+            <input
+              class="form-control numberbox valid"
+              id="rated-capacity"
+              name="rated-capacity"
+              type="text"
+              v-model.number="inputRatedCapacity">
+            <span class="unit-label">kW</span>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-md-3">
+            <label class="control-label" for="loc">Coupled System Type</label>
+          </div>
+          <div class="col-md-9">
+            <select class="form-control valid"
+              id="loc"
+              name="loc"
+              v-model="inputLoc">
+              <option value="">-</option>
+              <option v-for="value in validation.loc.allowedValues" v-bind:value="value">
+                {{value}}
+              </option>
+            </select>
+            <p class="tool-tip tooltip-col">Solar plus storage AC or DC coupled system</p>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-md-3">
+            <label class="control-label" for="inverter-max">Solar (+storage) Inverter Rating (kVA)</label>
+          </div>
+          <div class="col-md-9">
+            <input
+              class="form-control numberbox-lg"
+              id="inverter-max"
+              name="inverter-max"
+              type="text"
+              v-model.number="inputInverterMax">
+            <span class="unit-label">kW</span>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-md-3">
+            <label class="control-label" for="construction-date">Construction Date</label>
+          </div>
+          <div class="col-md-9">
+            <input
+              type="date"
+              class="form-control valid"
+              id="construction-date"
+              name="construction-date"
+              v-model="inputConstructionDate">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-md-3">
+            <label class="control-label" for="operation-date">Operation Date</label>
+          </div>
+          <div class="col-md-9">
+            <input
+              type="date"
+              class="form-control valid"
+              id="operation-date"
+              name="operation-date"
+              v-model="inputOperationDate">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-md-3">
+            <label class="control-label" for="macrs-term">MACRS Term</label>
+          </div>
+          <div class="col-md-9">
+            <select
+            class="form-control numberbox"
+            id="macrs-term"
+            name="macrs-term"
+            v-model.number="inputMacrsTerm">
+              <option v-bind:value="undefined">-</option>
+              <option v-for="value in validation.macrsTerm.allowedValues" v-bind:value="value">
+                {{value}}
+              </option>
+            </select>
+            <span class="unit-label">years</span>
+            <br/>
+            <p class="tool-tip tooltip-col">Which MACRS GDS category does solar PV fall into?</p>
+          </div>
+        </div>
+
+        <div class="form-group form-buffer row">
+          <div class="col-md-3">
+            <router-link to="/wizard/technology-specs" class="btn btn-primary">
+              &lt;&lt; Back
+            </router-link>
+          </div>
+          <div class="col-md-9">
+            <router-link v-on:click.native="saveAndContinue()" to="/wizard/technology-specs" class="btn btn-primary pull-right">
+              Save and Continue
+            </router-link>
+          </div>
+        </div>
+
+      </div>
+    </form>
+
+  </div>
 </template>
 
 <script>
+  import NavButtons from './NavButtons';
+  import model from '../../models/TechnologySpecsSolarPV';
+
+  const { defaults, validation } = model;
+
   export default {
+    components: { NavButtons },
+    props: ['solarIndex'],
+    data() {
+      const data = { validation };
+      if (this.solarIndex === 'null') {
+        return { ...data, ...this.getDefaultData() };
+      }
+      return { ...data, ...this.getDataFromProject() };
+    },
+    methods: {
+      getDefaultData() {
+        return {
+          inputName: defaults.name,
+          inputCost: defaults.cost,
+          inputShouldSize: defaults.shouldSize,
+          inputRatedCapacity: defaults.ratedCapacity,
+          inputLoc: defaults.loc,
+          inputInverterMax: defaults.inverterMax,
+          inputConstructionDate: defaults.constructionDate,
+          inputOperationDate: defaults.operationDate,
+          inputMacrsTerm: defaults.macrsTerm,
+        };
+      },
+      getDataFromProject() {
+        const solarPVSpecs = this.$store.state.Project.technologySpecsSolarPV[this.solarIndex];
+        return {
+          inputName: solarPVSpecs.name,
+          inputCost: solarPVSpecs.cost,
+          inputShouldSize: solarPVSpecs.shouldSize,
+          inputRatedCapacity: solarPVSpecs.ratedCapacity,
+          inputLoc: solarPVSpecs.loc,
+          inputInverterMax: solarPVSpecs.inverterMax,
+          inputConstructionDate: solarPVSpecs.constructionDate,
+          inputOperationDate: solarPVSpecs.operationDate,
+          inputMacrsTerm: solarPVSpecs.macrsTerm,
+        };
+      },
+      saveAndContinue() {
+        if (this.solarIndex === 'null') {
+          this.$store.dispatch('addTechnologySpecsSolarPV', this.buildSolarPV());
+        } else {
+          const payload = {
+            newSolar: this.buildSolarPV(),
+            solarIndex: this.solarIndex,
+          };
+          this.$store.dispatch('replaceTechnologySpecsSolarPV', payload);
+        }
+      },
+      buildSolarPV() {
+        return {
+          name: this.inputName,
+          cost: this.inputCost,
+          shouldSize: this.inputShouldSize,
+          ratedCapacity: this.inputRatedCapacity,
+          loc: this.inputLoc,
+          inverterMax: this.inputInverterMax,
+          constructionDate: this.inputConstructionDate,
+          operationDate: this.inputOperationDate,
+          macrsTerm: this.inputMacrsTerm,
+        };
+      },
+    },
   };
 </script>

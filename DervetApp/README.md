@@ -34,7 +34,7 @@ https://nodejs.org/en/download/package-manager/#windows
 npm install -g @vue/cli
 npm install -g @vue/cli-init
 
-# install project's node dependencies (first time only)
+# install project's node dependencies (first time and whenever dependencies in package.json are updated)
 npm install
 
 # create a python3 virtualenv named venv in dervetpy and install dependencies
@@ -43,6 +43,9 @@ pip install virtualenv  # If not already installed
 virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
+
+# Add a .env file in the root of DervetApp with the following variable set to your python3 executable path
+DERVET_PYTHON_PATH="/path/to/venv/python3"
 ```
 
 #### Development Commands

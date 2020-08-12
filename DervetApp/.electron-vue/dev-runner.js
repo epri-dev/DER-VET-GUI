@@ -176,7 +176,6 @@ function greeting () {
 }
 
 function init () {
-  console.log('hello')
   greeting()
 
   Promise.all([startRenderer(), startMain()])
