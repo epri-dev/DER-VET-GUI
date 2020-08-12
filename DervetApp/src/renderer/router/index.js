@@ -5,11 +5,10 @@ Vue.use(Router);
 
 export default new Router({
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'newProject',
-    //   component: require('@/components/Home/ProjectImported').default,
-    // },
+    {
+      path: '/',
+      component: require('@/components/Wizard/StartProject').default,
+    },
     {
       path: '/',
       component: require('@/components/Home/Index').default,

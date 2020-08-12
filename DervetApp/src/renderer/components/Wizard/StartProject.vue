@@ -21,7 +21,7 @@
         <div class="col-md-9">
           <input v-model="inputStartYear" class="form-control numberbox" id="startYear" type="number" min="1980" step="1">
           <p class="help-block">Year the project starts.</p>
-          <!-- <p class="tool-tip">Currently: {{projStartYear}}</p> -->
+          <p class="tool-tip">Currently: {{projStartYear}}</p>
         </div>
       </div>
       <fieldset class="section-group">
@@ -40,7 +40,7 @@
           </div>
           <div class="col-md-5">
             <p class="tool-tip">Defines when/how to end CBA analysis</p>
-            <!-- <p class="tool-tip">Currently: {{projectAnalysisHorizon}}</p> -->
+            <p class="tool-tip">Currently: {{projAnalysisHorizonMode}}</p>
           </div>
         </div>
         <div class="row form-group" v-if="inputHorizonMode === '1'">
@@ -53,7 +53,7 @@
           </div>
           <div class="col-md-5">
             <p class="tool-tip">The number of years the analysis will go for. The analysis will not consider equipment lifetime or anything else when determining the number of years to run for.</p>
-            <!-- <p class="tool-tip">Currently: {{projectAnalysisHorizon}}</p> -->
+            <p class="tool-tip">Currently: {{projectAnalysisHorizon}}</p>
           </div>
         </div>
         <div class="row form-group">
@@ -65,7 +65,7 @@
           </div>
           <div class="col-md-5">
             <p class="tool-tip">DER-VET uses exactly one year of data. If the year this data comes from is different from the year the optimization is run against, it will be escalated from the data year to the optimization year.</p>
-            <!-- <p class="tool-tip">Currently: {{projDataYear}}</p> -->
+            <p class="tool-tip">Currently: {{projDataYear}}</p>
           </div>
         </div>
       </fieldset>
@@ -83,7 +83,7 @@
         </div>
         <div class="col-md-5">
           <p class="tool-tip">Which grid domain the project will be connected to. This limits which services are available.</p>
-          <!-- // <p class="tool-tip">Currently: {{projGridLocation}}</p> -->
+          <p class="tool-tip">Currently: {{projGridLocation}}</p>
         </div>
       </div>
       <div class="row form-group">
@@ -99,13 +99,13 @@
         </div>
         <div class="col-md-5">
           <p class="tool-tip">Who owns the assets.</p>
-          <!-- <p class="tool-tip">Currently: {{projOwnership}}</p> -->
+          <p class="tool-tip">Currently: {{projOwnership}}</p>
         </div>
       </div>
       <hr />
       <div class="form-group form-buffer">
         <div class="col-md-12">
-          <button @click="setStartYear(inputStartYear); setAnalysisHorizon(inputAnalysisHorizon); setDataYear(inputDataYear); setGridLocation(inputLocation); setOwnership(inputOwnership); setAnalysisHorizonMode(inputAnalysisHorizon)" type="submit" class="btn btn-primary pull-right">Save and Continue</button>
+          <button @click="saveInputs(inputStartYear, inputHorizonMode, inputAnalysisHorizon, inputDataYear, inputLocation, inputOwnership)" type="submit" class="btn btn-primary pull-right">Save and Continue</button>
         </div>
       </div>
     </div>
@@ -148,29 +148,13 @@
       };
     },
     methods: {
-      setStartYear(inputtedStarYear) {
-        this.$store.dispatch('setStartYear', inputtedStarYear);
-        this.inputStartYear = inputtedStarYear;
-      },
-      setAnalysisHorizonMode(inputtedAnalysisHorizonMode) {
-        this.$store.dispatch('setAnalysisHorizonMode', inputtedAnalysisHorizonMode);
-        this.inputHorizonMode = inputtedAnalysisHorizonMode;
-      },
-      setAnalysisHorizon(inputtedAnalysisHorizon) {
-        this.$store.dispatch('setAnalysisHorizon', inputtedAnalysisHorizon);
-        this.inputAnalysisHorizon = inputtedAnalysisHorizon;
-      },
-      setDataYear(inputtedDataYear) {
-        this.$store.dispatch('setDataYear', inputtedDataYear);
-        this.inputDataYear = inputtedDataYear;
-      },
-      setGridLocation(inputtedGridLocation) {
-        this.$store.dispatch('setGridLocation', inputtedGridLocation);
-        this.inputLocation = inputtedGridLocation;
-      },
-      setOwnership(inputtedOwnership) {
-        this.$store.dispatch('setOwnership', inputtedOwnership);
-        this.inputOwnership = inputtedOwnership;
+      saveInputs(startYear, analysisHorizonMode, analysisHorizon, dataYear, gridLocation, ownership) {
+        this.$store.dispatch('setStartYear', startYear);
+        this.$store.dispatch('setAnalysisHorizonMode', analysisHorizonMode);
+        this.$store.dispatch('setAnalysisHorizon', analysisHorizon);
+        this.$store.dispatch('setDataYear', dataYear);
+        this.$store.dispatch('setGridLocation', gridLocation);
+        this.$store.dispatch('setOwnership', ownership);
       },
     },
   };
