@@ -7,8 +7,13 @@
         <router-link class="nav nav-sidebar sidebar-root-el" to="/wizard/technology-specs">
           Technology Specifications
         </router-link>
-        <router-link class="nav nav-sidebar sidebar-indent" to="/wizard/technology-specs-solar-pv" v-if="true">
-          Solar PV
+        <!-- TODO add router link that appears when adding a new solar spec -->
+        <router-link
+          class="nav nav-sidebar sidebar-indent"
+          v-for="solar, index in solarPVItems"
+          :to="{ name: 'technologySpecsSolarPV', params: { solarIndex: index }}"
+          :key="index">
+          Solar PV ({{ solar.name }})
         </router-link>
         <router-link class="nav nav-sidebar sidebar-indent" to="/wizard/technology-specs-battery-storage" v-if="true">
           Battery Storage
@@ -46,5 +51,11 @@
 
 
 <script>
-  export default {};
+  export default {
+    computed: {
+      solarPVItems() {
+        return this.$store.state.Project.technologySpecsSolarPV;
+      },
+    },
+  };
 </script>

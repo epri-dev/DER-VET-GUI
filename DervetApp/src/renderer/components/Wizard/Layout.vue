@@ -3,7 +3,7 @@
     <div class="row">
       <sidebar></sidebar>
       <div class="col-md-12 main">
-        <router-view></router-view>
+        <router-view :key="$route.fullPath"></router-view>
       </div>
     </div>
   </div>

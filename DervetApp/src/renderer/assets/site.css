@@ -90,7 +90,7 @@ body {
 }
 
 .sidebar-root-el {
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
 .sidebar-indent {
@@ -729,14 +729,14 @@ textarea:focus ~ p.tool-tip {
 
 p.tool-tip {
     color: #a7a7a7;
-    font-size: 1.25rem;
+    font-size: 13px;
     line-height: 2.25rem;
     transition: all .3s ease-in;
 }
 
-    p.tool-tip:hover {
-        color: #000;
-    }
+p.tool-tip:hover {
+    color: #000;
+}
 
 p.selected-tool-tip {
     color: #000;
@@ -774,7 +774,7 @@ span.tooltip-space {
 }
 
 /* responsive tootip columns */
-@media (max-width: 991px) {
+@media (max-width: 1400px) {
     .col-md-3 {
         margin: 0 0 15px 0;
     }

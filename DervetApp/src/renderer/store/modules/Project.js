@@ -1,14 +1,18 @@
+import { cloneDeep } from 'lodash';
+
+
 const getDefaultState = () => ({
   id: null,
   name: null,
-  startYear: 2020,
+  startYear: null,
   analysisHorizon: null,
   analysisHorizonMode: null,
-  dataYear: 2020,
+  dataYear: null,
   gridLocation: null,
   ownership: null,
   type: null,
   resultsData: null,
+  technologySpecsSolarPV: [],
 });
 
 const state = getDefaultState();
@@ -22,6 +26,14 @@ const mutations = {
   },
   SET_TYPE(state, type) {
     state.type = type;
+  },
+  ADD_TECHNOLOGY_SPECS_SOLAR_PV(state, newSolar) {
+    state.technologySpecsSolarPV.push(newSolar);
+  },
+  REPLACE_TECHNOLOGY_SPECS_SOLAR_PV(state, payload) {
+    const tmpSolarPVSpecs = cloneDeep(state.technologySpecsSolarPV);
+    tmpSolarPVSpecs[payload.solarIndex] = payload.newSolar;
+    state.technologySpecsSolarPV = tmpSolarPVSpecs;
   },
   RESET_PROJECT_TO_DEFAULT(state) {
     Object.assign(state, getDefaultState());
@@ -60,6 +72,12 @@ const actions = {
     commit('SET_ID', newId);
     commit('SET_NAME', newName);
     commit('SET_TYPE', type);
+  },
+  addTechnologySpecsSolarPV({ commit }, newSolar) {
+    commit('ADD_TECHNOLOGY_SPECS_SOLAR_PV', newSolar);
+  },
+  replaceTechnologySpecsSolarPV({ commit }, payload) {
+    commit('REPLACE_TECHNOLOGY_SPECS_SOLAR_PV', payload);
   },
   resetProjectToDefault({ commit }) {
     commit('RESET_PROJECT_TO_DEFAULT');
