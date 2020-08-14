@@ -1,4 +1,3 @@
-<!-- This is a placeholder -->
 <template>
   <div class="container body-content">
     <h3>Project Configuration</h3>
@@ -19,7 +18,7 @@
           <b>Start year</b>
         </div>
         <div class="col-md-9">
-          <input v-model="inputStartYear" class="form-control numberbox" id="startYear" type="number" min="1980" step="1">
+          <input v-model.number="inputStartYear" class="form-control numberbox" id="startYear" type="number" min="1980" step="1">
           <p class="help-block">Year the project starts.</p>
           <p class="tool-tip">Currently: {{projStartYear}}</p>
         </div>
@@ -32,10 +31,9 @@
           </div>
           <div class="col-md-4 form-control-static">
             <b-form-radio-group id="analysisHorizonMode" v-model="inputHorizonMode" >
-              <b-form-radio value="1">User-defined analysis horizon</b-form-radio>
-              <b-form-radio value="2">Auto-calculate analysis horizon by shortest DER lifetime</b-form-radio>
-              <b-form-radio value="3">Auto-calculate analysis horizon by longest DER lifetime</b-form-radio>
-              <b-form-radio value="4">Use carrying cost</b-form-radio>
+              <b-form-radio v-for="value in validation.analysisHorizonMode.allowedValues" v-bind:value="value['value']">
+                {{value['description']}}
+              </b-form-radio>
             </b-form-radio-group>
           </div>
           <div class="col-md-5">
@@ -48,7 +46,7 @@
             <b>Analysis Horizon</b>
           </div>
           <div class="col-md-4">
-            <input v-model="inputAnalysisHorizon" class="form-control numberbox" id="AnalysisHorizon">
+            <input v-model.number="inputAnalysisHorizon" class="form-control numberbox" id="AnalysisHorizon">
             <span class="unit-label">years</span>
           </div>
           <div class="col-md-5">
@@ -61,7 +59,7 @@
             <b>Data Year</b>
           </div>
           <div class="col-md-4">
-            <input v-model="inputDataYear" class="form-control numberbox" id="dataYear" type="number" min="1980" step="1">
+            <input v-model.number="inputDataYear" class="form-control numberbox" id="dataYear" type="number" min="1980" step="1">
           </div>
           <div class="col-md-5">
             <p class="tool-tip">DER-VET uses exactly one year of data. If the year this data comes from is different from the year the optimization is run against, it will be escalated from the data year to the optimization year.</p>
@@ -75,10 +73,9 @@
         </div>
         <div class="col-md-4 form-control-static">
           <b-form-radio-group v-model="inputLocation">
-            <b-form-radio value="Customer">Customer</b-form-radio>
-            <b-form-radio value="Distribution">Distribution</b-form-radio>
-            <b-form-radio value="Transmission">Transmission</b-form-radio>
-            <b-form-radio value="Generation">Generation</b-form-radio>
+            <b-form-radio v-for="value in validation.gridLocation.allowedValues" v-bind:value="value">
+                {{value}}
+              </b-form-radio>
           </b-form-radio-group>
         </div>
         <div class="col-md-5">
@@ -92,9 +89,9 @@
         </div>
         <div class="col-md-4 form-control-static">
           <b-form-radio-group v-model="inputOwnership">
-            <b-form-radio value="Customer">Customer</b-form-radio>
-            <b-form-radio value="Utility">Utility</b-form-radio>
-            <b-form-radio value="3rd Party">3rd Party</b-form-radio>
+            <b-form-radio v-for="value in validation.ownership.allowedValues" v-bind:value="value">
+                {{value}}
+              </b-form-radio>
           </b-form-radio-group>
         </div>
         <div class="col-md-5">
@@ -105,7 +102,8 @@
       <hr />
       <div class="form-group form-buffer">
         <div class="col-md-12">
-          <button @click="saveInputs(inputStartYear, inputHorizonMode, inputAnalysisHorizon, inputDataYear, inputLocation, inputOwnership)" type="submit" class="btn btn-primary pull-right">Save and Continue</button>
+          <!-- <router-link @click="saveAndContinue()" to="/wizard/technology-specs" type="submit" class="btn btn-primary pull-right">Save and Continue</router-link> -->
+          <button @click="saveAndContinue()" type="submit" class="btn btn-primary pull-right">Save and Continue</button>
         </div>
       </div>
     </div>
@@ -113,6 +111,10 @@
 </template>
 
 <script>
+  import model from '../../models/StartProject';
+
+  const { validation } = model;
+
   export default {
     computed: {
       projectAnalysisHorizon() {
@@ -138,23 +140,28 @@
       },
     },
     data() {
-      return {
-        inputStartYear: 2020,
-        inputOwnership: 'Customer',
-        inputLocation: 'Customer',
-        inputHorizonMode: '1',
-        inputAnalysisHorizon: 1,
-        inputDataYear: 2020,
-      };
+      const data = { validation };
+      return { ...data, ...this.getDataFromProject() };
     },
     methods: {
-      saveInputs(startYear, analysisHorizonMode, analysisHorizon, dataYear, gridLocation, ownership) {
-        this.$store.dispatch('setStartYear', startYear);
-        this.$store.dispatch('setAnalysisHorizonMode', analysisHorizonMode);
-        this.$store.dispatch('setAnalysisHorizon', analysisHorizon);
-        this.$store.dispatch('setDataYear', dataYear);
-        this.$store.dispatch('setGridLocation', gridLocation);
-        this.$store.dispatch('setOwnership', ownership);
+      getDataFromProject() {
+        const projectSpecs = this.$store.state.Project;
+        return {
+          inputStartYear: projectSpecs.startYear,
+          inputOwnership: projectSpecs.ownership,
+          inputLocation: projectSpecs.gridLocation,
+          inputHorizonMode: projectSpecs.analysisHorizonMode,
+          inputAnalysisHorizon: projectSpecs.analysisHorizon,
+          inputDataYear: projectSpecs.dataYear,
+        };
+      },
+      saveAndContinue() {
+        this.$store.dispatch('setStartYear', this.inputStartYear);
+        this.$store.dispatch('setAnalysisHorizonMode', this.inputHorizonMode);
+        this.$store.dispatch('setAnalysisHorizon', this.inputAnalysisHorizon);
+        this.$store.dispatch('setDataYear', this.inputDataYear);
+        this.$store.dispatch('setGridLocation', this.inputLocation);
+        this.$store.dispatch('setOwnership', this.inputOwnership);
       },
     },
   };
