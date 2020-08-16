@@ -27,13 +27,17 @@
         <br>
         <div class="form-group row">
           <div class="col-md-5">
-            <label class="control-label" for="generationProfileFile">
+            <label class="control-label" for="generation-profile-timeseries">
               Generation Profile File for {{dataYear}}
               <span class="unit-label">(kW / rated kW)</span>
             </label>
           </div>
           <div class="col-md-7">
-            <input type="file" name="generationProfileFile" id="generationProfileFile" required="" class="form-control">
+            <input 
+              type="file"
+              id="generation-profile-timeseries"
+              class="form-control"
+              @change="onFileUpload">
           </div>
         </div>
         <div class="form-group row">
@@ -44,8 +48,7 @@
             <select
               class="form-control numberbox"
               id="timestep"
-              name="timestep"
-              v-model="inputGenerationProfileTimestep">
+              v-model="inputTimestep">
               <option
                 v-for="value in validation.generationProfileTimestep.allowedValues"
                 v-bind:value="value">
@@ -69,9 +72,12 @@
 </template>
 
 <script>
+  import { flatten } from 'lodash';
   import '../../assets/samples/SamplePVgen-8760.csv';
   import '../../assets/samples/SamplePVgen-8784.csv';
   import model from '../../models/TechnologySpecsSolarPV';
+  import PVGenerationTimeSeries from '../../models/PVGenerationTimeSeries';
+  import helpers from '../../util/helpers';
   import NavButtons from './NavButtons';
 
   const { defaults, validation } = model;
@@ -82,22 +88,30 @@
     data() {
       return {
         validation,
-        inputGenerationProfileTimestep: defaults.generationProfileTimestep,
-        inputGenerationProfile: 'x', // TODO Load generation profile from file
+        inputTimeseries: defaults.generationProfile,
+        inputTimestep: defaults.generationProfileTimestep,
         dataYear: 2020, // TODO replace with dataYear from project
       };
     },
     methods: {
       save() {
-        // TODO move solar tech lookup to a function in a common place (getter in store)
-        const techSpecsPV = this.$store.state.Project.technologySpecsSolarPV;
-        const solarPVSpecs = techSpecsPV.find(x => x.id === this.solarId);
-        solarPVSpecs.generationProfileTimestep = this.inputGenerationProfileTimestep;
-        const payload = {
-          newSolar: solarPVSpecs,
+        const payload = this.makeSavePayload();
+        this.$store.dispatch('addGenerationProfileToTechnologySpecsPV', payload);
+      },
+      makeSavePayload() {
+        const ts = new PVGenerationTimeSeries(this.inputTimestep, this.inputTimeseries);
+        return {
           solarId: this.solarId,
+          generationProfile: ts,
         };
-        this.$store.dispatch('replaceTechnologySpecsSolarPV', payload);
+      },
+      onFileUpload(e) {
+        const file = helpers.getFileFromEvent(e);
+        helpers.papaParsePromise(file)
+          .then((results) => {
+            this.inputTimeseries = flatten(results.data);
+          });
+        // TODO validation: file upload error handling and boolean for whether loaded
       },
     },
   };
