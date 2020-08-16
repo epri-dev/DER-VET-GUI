@@ -152,18 +152,11 @@
           </div>
         </div>
 
-        <div class="form-group form-buffer row">
-          <div class="col-md-3">
-            <router-link to="/wizard/technology-specs" class="btn btn-primary">
-              &lt;&lt; Back
-            </router-link>
-          </div>
-          <div class="col-md-9">
-            <router-link v-on:click.native="saveAndContinue()" to="/wizard/technology-specs" class="btn btn-primary pull-right">
-              Save and Continue
-            </router-link>
-          </div>
-        </div>
+        <nav-buttons
+          back-link="/wizard/technology-specs"
+          :continue-link="`/wizard/technology-specs-solar-pv-upload/${this.inputId}`"
+          :save="this.save"
+        />
 
       </div>
     </form>
@@ -172,6 +165,7 @@
 </template>
 
 <script>
+  import { v4 as uuidv4 } from 'uuid';
   import NavButtons from './NavButtons';
   import model from '../../models/TechnologySpecsSolarPV';
 
@@ -179,10 +173,10 @@
 
   export default {
     components: { NavButtons },
-    props: ['solarIndex'],
+    props: ['solarId'],
     data() {
       const data = { validation };
-      if (this.solarIndex === 'null') {
+      if (this.solarId === 'null') {
         return { ...data, ...this.getDefaultData() };
       }
       return { ...data, ...this.getDataFromProject() };
@@ -190,6 +184,7 @@
     methods: {
       getDefaultData() {
         return {
+          inputId: uuidv4(),
           inputName: defaults.name,
           inputCost: defaults.cost,
           inputShouldSize: defaults.shouldSize,
@@ -202,8 +197,11 @@
         };
       },
       getDataFromProject() {
-        const solarPVSpecs = this.$store.state.Project.technologySpecsSolarPV[this.solarIndex];
+        // TODO move solar tech lookup to a function in a common place (getter in store)
+        const techSpecsPV = this.$store.state.Project.technologySpecsSolarPV;
+        const solarPVSpecs = techSpecsPV.find(x => x.id === this.solarId);
         return {
+          inputId: solarPVSpecs.id,
           inputName: solarPVSpecs.name,
           inputCost: solarPVSpecs.cost,
           inputShouldSize: solarPVSpecs.shouldSize,
@@ -215,19 +213,20 @@
           inputMacrsTerm: solarPVSpecs.macrsTerm,
         };
       },
-      saveAndContinue() {
-        if (this.solarIndex === 'null') {
+      save() {
+        if (this.solarId === 'null') {
           this.$store.dispatch('addTechnologySpecsSolarPV', this.buildSolarPV());
         } else {
           const payload = {
             newSolar: this.buildSolarPV(),
-            solarIndex: this.solarIndex,
+            solarId: this.solarId,
           };
           this.$store.dispatch('replaceTechnologySpecsSolarPV', payload);
         }
       },
       buildSolarPV() {
         return {
+          id: this.inputId,
           name: this.inputName,
           cost: this.inputCost,
           shouldSize: this.inputShouldSize,
