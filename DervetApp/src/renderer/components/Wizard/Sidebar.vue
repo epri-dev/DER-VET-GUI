@@ -16,7 +16,8 @@
           class="nav nav-sidebar sidebar-indent"
           v-for="solar in solarPVItems"
           :to="{ name: 'technologySpecsSolarPV', params: { solarId: solar.id }}"
-          :key="solar.id">
+          :key="solar.id"
+          v-bind:class="{ current: techSpecsActiveSaved('solar-pv', solar.id) || techSpecsActiveSaved('solar-pv-upload', solar.id) }">
           Solar PV ({{ solar.name }})
         </router-link>
 
@@ -35,7 +36,7 @@
 
         <div
           class="nav nav-sidebar sidebar-indent current"
-          v-if="techSpecsActiveUnsaved('solarpv')">
+          v-if="techSpecsActiveUnsaved('solar-pv') || techSpecsActiveUnsaved('solar-pv-upload')">
           Solar PV
         </div>
         <div
