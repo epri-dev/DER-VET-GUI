@@ -26,7 +26,7 @@
             </div>
             <div class="form-group">
               <div class="col-md-12">
-                <router-link to="/wizard/technology-specs-ice" class="btn btn-primary btn-w250">
+                <router-link to="/wizard/technology-specs-ice/null" class="btn btn-primary btn-w250">
                   Internal Combustion Engine
                 </router-link>
               </div>
