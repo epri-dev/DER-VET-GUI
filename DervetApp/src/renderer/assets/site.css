@@ -158,8 +158,8 @@ body {
         border-radius: 50%;
     }
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
+/* Override the default bootstrap behavior where horizontal description lists
+   will truncate terms that are too long to fit in the left column
 */
 .dl-horizontal dt {
     white-space: normal;
@@ -730,7 +730,7 @@ textarea:focus ~ p.tool-tip {
 p.tool-tip {
     color: #a7a7a7;
     font-size: 13px;
-    line-height: 2.25rem;
+    line-height: 1.55rem;
     transition: all .3s ease-in;
 }
 
@@ -749,8 +749,8 @@ p.selected-tool-tip {
     min-height: 1px;
     padding-right: 15px;
     padding-left: 15px;
-    top: -50px;
-    margin-bottom: -40px;
+    top: -8px;
+    margin-bottom: 5px;
 }
 
 span.tooltip-space {

@@ -7,6 +7,7 @@ const getDefaultState = () => ({
   type: null,
   resultsData: null,
   technologySpecsSolarPV: [],
+  technologySpecsICE: [],
 });
 
 const state = getDefaultState();
@@ -24,11 +25,20 @@ const mutations = {
   ADD_TECHNOLOGY_SPECS_SOLAR_PV(state, newSolar) {
     state.technologySpecsSolarPV.push(newSolar);
   },
+  ADD_TECHNOLOGY_SPECS_ICE(state, newICE) {
+    state.technologySpecsICE.push(newICE);
+  },
   REPLACE_TECHNOLOGY_SPECS_SOLAR_PV(state, payload) {
     const tmpSolarPVSpecs = cloneDeep(state.technologySpecsSolarPV);
     const indexMatchingId = tmpSolarPVSpecs.findIndex(x => x.id === payload.solarId);
     tmpSolarPVSpecs[indexMatchingId] = payload.newSolar;
     state.technologySpecsSolarPV = tmpSolarPVSpecs;
+  },
+  REPLACE_TECHNOLOGY_SPECS_ICE(state, payload) {
+    const tmpICESpecs = cloneDeep(state.technologySpecsICE);
+    const indexMatchingId = tmpICESpecs.findIndex(x => x.id === payload.iceId);
+    tmpICESpecs[indexMatchingId] = payload.newICE;
+    state.technologySpecsICE = tmpICESpecs;
   },
   RESET_PROJECT_TO_DEFAULT(state) {
     Object.assign(state, getDefaultState());
@@ -53,8 +63,14 @@ const actions = {
   addTechnologySpecsSolarPV({ commit }, newSolar) {
     commit('ADD_TECHNOLOGY_SPECS_SOLAR_PV', newSolar);
   },
+  addTechnologySpecsICE({ commit }, newICE) {
+    commit('ADD_TECHNOLOGY_SPECS_ICE', newICE);
+  },
   replaceTechnologySpecsSolarPV({ commit }, payload) {
     commit('REPLACE_TECHNOLOGY_SPECS_SOLAR_PV', payload);
+  },
+  replaceTechnologySpecsICE({ commit }, payload) {
+    commit('REPLACE_TECHNOLOGY_SPECS_ICE', payload);
   },
   resetProjectToDefault({ commit }) {
     commit('RESET_PROJECT_TO_DEFAULT');
