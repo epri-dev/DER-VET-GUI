@@ -1,17 +1,20 @@
 <template>
   <div class="left-sidebar">
     <b-nav vertical>
-        <router-link class="nav nav-sidebar sidebar-root-el" to="/wizard/start-project">
-          Project Configuration
-        </router-link>
         <router-link
           class="nav nav-sidebar sidebar-root-el"
-          v-bind:class="{ current: techSpecsActive }"
-          to="/wizard/technology-specs">
+          v-bind:class="{ current: isActive(this.startProjectPath) }"
+          :to="this.startProjectPath">
+          Project Configuration
+        </router-link>
+
+        <router-link
+          class="nav nav-sidebar sidebar-root-el"
+          v-bind:class="{ current: isActive(this.techSpecsPath) }"
+          :to="this.techSpecsPath">
           Technology Specification
         </router-link>
 
-        <!-- TODO add router link that appears when adding a new solar spec -->
         <router-link
           class="nav nav-sidebar sidebar-indent"
           v-for="solar in solarPVItems"
@@ -49,19 +52,34 @@
           Internal Combustion Engine
         </div>
 
-        <router-link class="nav nav-sidebar sidebar-root-el" to="/wizard/objectives">
+        <router-link
+          class="nav nav-sidebar sidebar-root-el"
+          v-bind:class="{ current: isActive(this.objectivesPath) }"
+          :to="this.objectivesPath">
           Services
         </router-link>
-        <router-link class="nav nav-sidebar sidebar-indent" to="/wizard/objectives-parameters-site-information">
+        <router-link
+          class="nav nav-sidebar sidebar-indent"
+          v-bind:class="{ current: isActive(this.objectivesSiteInformationPath) }"
+          :to="this.objectivesSiteInformationPath">
           Site Information
         </router-link>
-        <router-link class="nav nav-sidebar sidebar-root-el" to="/wizard/financial-inputs">
+        <router-link
+          class="nav nav-sidebar sidebar-root-el"
+          v-bind:class="{ current: isActive(this.financialInputsPath) }"
+          :to="this.financialInputsPath">
           Financial Inputs
         </router-link>
-        <router-link class="nav nav-sidebar sidebar-indent" to="/wizard/financial-inputs-external-incentives">
+        <router-link
+          class="nav nav-sidebar sidebar-indent"
+          v-bind:class="{ current: isActive(this.financialInputsExternalIncentivesPath) }"
+          :to="this.financialInputsExternalIncentivesPath">
           External Incentives
         </router-link>
-        <router-link class="nav nav-sidebar sidebar-root-el" to="/wizard/sensitivity-analysis">
+        <router-link
+          class="nav nav-sidebar sidebar-root-el"
+          v-bind:class="{ current: isActive(this.sensitivityAnalysisPath) }"
+          :to="this.sensitivityAnalysisPath">
           Scenario Analysis
         </router-link>
         <li class="nav nav-sidebar sidebar-root-el">
@@ -79,20 +97,30 @@
 
 
 <script>
-  const techSpecsPath = '/wizard/technology-specs';
   export default {
+    data() {
+      return {
+        startProjectPath: '/wizard/start-project',
+        techSpecsPath: '/wizard/technology-specs',
+        objectivesPath: '/wizard/objectives',
+        objectivesSiteInformationPath: '/wizard/objectives-parameters-site-information',
+        financialInputsPath: '/wizard/financial-inputs',
+        financialInputsExternalIncentivesPath: '/wizard/financial-inputs-external-incentives',
+        sensitivityAnalysisPath: '/wizard/sensitivity-analysis',
+      };
+    },
     methods: {
       techSpecsActiveSaved(tech, id) {
-        return RegExp(`${techSpecsPath}-${tech}/${id}`).test(this.$route.path);
+        return RegExp(`${this.techSpecsPath}-${tech}/${id}`).test(this.$route.path);
       },
       techSpecsActiveUnsaved(tech) {
-        return RegExp(`${techSpecsPath}-${tech}/null`).test(this.$route.path);
+        return RegExp(`${this.techSpecsPath}-${tech}/null`).test(this.$route.path);
+      },
+      isActive(path) {
+        return RegExp(path).test(this.$route.path);
       },
     },
     computed: {
-      techSpecsActive() {
-        return RegExp(techSpecsPath).test(this.$route.path);
-      },
       solarPVItems() {
         return this.$store.state.Project.technologySpecsSolarPV;
       },
