@@ -60,6 +60,11 @@ export default new Router({
           name: 'financialInputs',
           component: require('@/components/Wizard/FinancialInputs').default,
         },
+        {
+          path: 'objectives-parameters-site-information',
+          name: 'objectivesParametersSiteInformation',
+          component: require('@/components/Wizard/ObjectivesParametersSiteInformation').default,
+        },
       ],
     },
     {

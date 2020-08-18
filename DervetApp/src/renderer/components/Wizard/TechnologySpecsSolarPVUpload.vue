@@ -50,13 +50,13 @@
               id="timestep"
               v-model="inputTimestep">
               <option
-                v-for="value in validation.generationProfileTimestep.allowedValues"
+                v-for="value in sharedValidation.generationProfileTimestep.allowedValues"
                 v-bind:value="value">
                 {{value}}
               </option>
-          </select>
-          <span class="unit-label">minutes</span>
-        </div>
+            </select>
+            <span class="unit-label">minutes</span>
+          </div>
         </div>
         <hr>
 
@@ -72,25 +72,23 @@
 </template>
 
 <script>
-  import { flatten } from 'lodash';
   import '../../assets/samples/SamplePVgen-8760.csv';
   import '../../assets/samples/SamplePVgen-8784.csv';
-  import model from '../../models/TechnologySpecsSolarPV';
+  import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
   import PVGenerationTimeSeries from '../../models/PVGenerationTimeSeries';
   import helpers from '../../util/helpers';
   import NavButtons from './NavButtons';
-
-  const { defaults, validation } = model;
 
   export default {
     components: { NavButtons },
     props: ['solarId'],
     data() {
+      const p = this.$store.state.Project;
       return {
-        validation,
-        inputTimeseries: defaults.generationProfile,
-        inputTimestep: defaults.generationProfileTimestep,
-        dataYear: 2020, // TODO replace with dataYear from project
+        sharedValidation,
+        inputTimeseries: null,
+        inputTimestep: sharedDefaults.generationProfileTimestep,
+        dataYear: p.dataYear,
       };
     },
     methods: {
@@ -106,12 +104,8 @@
         };
       },
       onFileUpload(e) {
-        const file = helpers.getFileFromEvent(e);
-        helpers.papaParsePromise(file)
-          .then((results) => {
-            this.inputTimeseries = flatten(results.data);
-          });
-        // TODO validation: file upload error handling and boolean for whether loaded
+        const onSuccess = (flatResults) => { this.inputTimeseries = flatResults; };
+        helpers.parseCsvFromFile(e, onSuccess);
       },
     },
   };

@@ -19,6 +19,9 @@ const getDefaultState = () => ({
   federalTaxRate: 0,
   stateTaxRate: 0,
   propertyTaxRate: 0,
+  noChargingFromGrid: false,
+  noDischargingToGrid: false,
+  siteLoad: null,
 });
 
 const state = getDefaultState();
@@ -59,6 +62,15 @@ const mutations = {
   },
   SET_PROPERTY_TAX_RATE(state, newPropertyTaxRate) {
     state.propertyTaxRate = newPropertyTaxRate;
+  },
+  SET_NO_CHARGING_FROM_GRID(state, newNoChargingFromGrid) {
+    state.noChargingFromGrid = newNoChargingFromGrid;
+  },
+  SET_NO_DISCHARGING_TO_GRID(state, newNoDischargingToGrid) {
+    state.noDischargingToGrid = newNoDischargingToGrid;
+  },
+  SET_SITE_LOAD(state, newSiteLoad) {
+    state.siteLoad = newSiteLoad;
   },
   ADD_TECHNOLOGY_SPECS_SOLAR_PV(state, newSolar) {
     state.technologySpecsSolarPV.push(newSolar);
@@ -131,6 +143,15 @@ const actions = {
   },
   setPropertyTaxRate({ commit }, newPropertyTaxRate) {
     commit('SET_PROPERTY_TAX_RATE', newPropertyTaxRate);
+  },
+  setNoChargingFromGrid({ commit }, newNoChargingFromGrid) {
+    commit('SET_NO_CHARGING_FROM_GRID', newNoChargingFromGrid);
+  },
+  setNoDischargingToGrid({ commit }, newNoDischargingToGrid) {
+    commit('SET_NO_DISCHARGING_TO_GRID', newNoDischargingToGrid);
+  },
+  setSiteLoad({ commit }, newSiteLoad) {
+    commit('SET_SITE_LOAD', newSiteLoad);
   },
   startNewProject({ commit }, newId, newName, type) {
     commit('SET_ID', newId);
