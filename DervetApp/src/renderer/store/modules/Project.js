@@ -8,6 +8,11 @@ const getDefaultState = () => ({
   resultsData: null,
   technologySpecsSolarPV: [],
   technologySpecsICE: [],
+  discountRate: 0,
+  inflationRate: 0,
+  federalTaxRate: 0,
+  stateTaxRate: 0,
+  propertyTaxRate: 0,
 });
 
 const state = getDefaultState();
@@ -21,6 +26,21 @@ const mutations = {
   },
   SET_TYPE(state, type) {
     state.type = type;
+  },
+  SET_DISCOUNT_RATE(state, newDiscountRate) {
+    state.discountRate = newDiscountRate;
+  },
+  SET_INFLATION_RATE(state, newInflationRate) {
+    state.inflationRate = newInflationRate;
+  },
+  SET_FEDERAL_TAX_RATE(state, newFederalTaxRate) {
+    state.federalTaxRate = newFederalTaxRate;
+  },
+  SET_STATE_TAX_RATE(state, newStateTaxRate) {
+    state.stateTaxRate = newStateTaxRate;
+  },
+  SET_PROPERTY_TAX_RATE(state, newPropertyTaxRate) {
+    state.propertyTaxRate = newPropertyTaxRate;
   },
   ADD_TECHNOLOGY_SPECS_SOLAR_PV(state, newSolar) {
     state.technologySpecsSolarPV.push(newSolar);
@@ -54,6 +74,21 @@ const actions = {
   },
   setType({ commit }, type) {
     commit('SET_TYPE', type);
+  },
+  setDiscountRate({ commit }, newDiscountRate) {
+    commit('SET_DISCOUNT_RATE', newDiscountRate);
+  },
+  setInflationRate({ commit }, newInflationRate) {
+    commit('SET_INFLATION_RATE', newInflationRate);
+  },
+  setFederalTaxRate({ commit }, newFederalTaxRate) {
+    commit('SET_FEDERAL_TAX_RATE', newFederalTaxRate);
+  },
+  setStateTaxRate({ commit }, newStateTaxRate) {
+    commit('SET_STATE_TAX_RATE', newStateTaxRate);
+  },
+  setPropertyTaxRate({ commit }, newPropertyTaxRate) {
+    commit('SET_PROPERTY_TAX_RATE', newPropertyTaxRate);
   },
   startNewProject({ commit }, newId, newName, type) {
     commit('SET_ID', newId);

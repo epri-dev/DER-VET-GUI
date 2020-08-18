@@ -5,11 +5,6 @@ Vue.use(Router);
 
 export default new Router({
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'newProject',
-    //   component: require('@/components/Home/ProjectImported').default,
-    // },
     {
       path: '/',
       component: require('@/components/Home/Index').default,
@@ -59,6 +54,11 @@ export default new Router({
           name: 'technologySpecsICE',
           component: require('@/components/Wizard/TechnologySpecsICE').default,
           props: true,
+        },
+        {
+          path: 'financial-inputs',
+          name: 'financialInputs',
+          component: require('@/components/Wizard/FinancialInputs').default,
         },
       ],
     },
