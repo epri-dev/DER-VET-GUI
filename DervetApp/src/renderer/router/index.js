@@ -5,10 +5,6 @@ Vue.use(Router);
 
 export default new Router({
   routes: [
-    // {
-    //   path: '/',
-    //   component: require('@/components/Wizard/StartProject').default,
-    // },
     {
       path: '/',
       component: require('@/components/Home/Index').default,
@@ -38,9 +34,15 @@ export default new Router({
           component: require('@/components/Wizard/TechnologySpecs').default,
         },
         {
-          path: 'technology-specs-solar-pv/:solarIndex',
+          path: 'technology-specs-solar-pv/:solarId',
           name: 'technologySpecsSolarPV',
           component: require('@/components/Wizard/TechnologySpecsSolarPV').default,
+          props: true,
+        },
+        {
+          path: 'technology-specs-solar-pv-upload/:solarId',
+          name: 'technologySpecsSolarPVUpload',
+          component: require('@/components/Wizard/TechnologySpecsSolarPVUpload').default,
           props: true,
         },
         {
@@ -48,8 +50,15 @@ export default new Router({
           component: require('@/components/Wizard/TechnologySpecsBatteryStorage').default,
         },
         {
-          path: 'technology-specs-ice',
+          path: 'technology-specs-ice/:iceId',
+          name: 'technologySpecsICE',
           component: require('@/components/Wizard/TechnologySpecsICE').default,
+          props: true,
+        },
+        {
+          path: 'financial-inputs',
+          name: 'financialInputs',
+          component: require('@/components/Wizard/FinancialInputs').default,
         },
       ],
     },

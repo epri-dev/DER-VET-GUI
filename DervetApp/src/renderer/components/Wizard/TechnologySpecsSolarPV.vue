@@ -40,14 +40,12 @@
           <div class="col-md-9">
             <input
               id="size-yes"
-              name="size"
               type="radio"
               v-model="inputShouldSize"
               v-bind:value="true">
             <label for="size-yes" class="buffer-right">Have DER-VET size the Solar PV</label>
             <input
               id="size-no"
-              name="size"
               type="radio"
               v-model="inputShouldSize"
               v-bind:value="false">
@@ -63,7 +61,6 @@
             <input
               class="form-control numberbox valid"
               id="rated-capacity"
-              name="rated-capacity"
               type="text"
               v-model.number="inputRatedCapacity">
             <span class="unit-label">kW</span>
@@ -77,7 +74,6 @@
           <div class="col-md-9">
             <select class="form-control valid"
               id="loc"
-              name="loc"
               v-model="inputLoc">
               <option value="">-</option>
               <option v-for="value in validation.loc.allowedValues" v-bind:value="value">
@@ -96,7 +92,6 @@
             <input
               class="form-control numberbox-lg"
               id="inverter-max"
-              name="inverter-max"
               type="text"
               v-model.number="inputInverterMax">
             <span class="unit-label">kW</span>
@@ -112,7 +107,6 @@
               type="date"
               class="form-control valid"
               id="construction-date"
-              name="construction-date"
               v-model="inputConstructionDate">
           </div>
         </div>
@@ -126,7 +120,6 @@
               type="date"
               class="form-control valid"
               id="operation-date"
-              name="operation-date"
               v-model="inputOperationDate">
           </div>
         </div>
@@ -139,7 +132,6 @@
             <select
             class="form-control numberbox"
             id="macrs-term"
-            name="macrs-term"
             v-model.number="inputMacrsTerm">
               <option v-bind:value="undefined">-</option>
               <option v-for="value in validation.macrsTerm.allowedValues" v-bind:value="value">
@@ -152,18 +144,11 @@
           </div>
         </div>
 
-        <div class="form-group form-buffer row">
-          <div class="col-md-3">
-            <router-link to="/wizard/technology-specs" class="btn btn-primary">
-              &lt;&lt; Back
-            </router-link>
-          </div>
-          <div class="col-md-9">
-            <router-link v-on:click.native="saveAndContinue()" to="/wizard/technology-specs" class="btn btn-primary pull-right">
-              Save and Continue
-            </router-link>
-          </div>
-        </div>
+        <nav-buttons
+          back-link="/wizard/technology-specs"
+          :continue-link="`/wizard/technology-specs-solar-pv-upload/${this.inputId}`"
+          :save="this.save"
+        />
 
       </div>
     </form>
@@ -172,6 +157,7 @@
 </template>
 
 <script>
+  import { v4 as uuidv4 } from 'uuid';
   import NavButtons from './NavButtons';
   import model from '../../models/TechnologySpecsSolarPV';
 
@@ -179,10 +165,10 @@
 
   export default {
     components: { NavButtons },
-    props: ['solarIndex'],
+    props: ['solarId'],
     data() {
       const data = { validation };
-      if (this.solarIndex === 'null') {
+      if (this.solarId === 'null') {
         return { ...data, ...this.getDefaultData() };
       }
       return { ...data, ...this.getDataFromProject() };
@@ -190,6 +176,7 @@
     methods: {
       getDefaultData() {
         return {
+          inputId: uuidv4(),
           inputName: defaults.name,
           inputCost: defaults.cost,
           inputShouldSize: defaults.shouldSize,
@@ -202,8 +189,9 @@
         };
       },
       getDataFromProject() {
-        const solarPVSpecs = this.$store.state.Project.technologySpecsSolarPV[this.solarIndex];
+        const solarPVSpecs = this.$store.getters.getSolarPVById(this.solarId);
         return {
+          inputId: solarPVSpecs.id,
           inputName: solarPVSpecs.name,
           inputCost: solarPVSpecs.cost,
           inputShouldSize: solarPVSpecs.shouldSize,
@@ -215,19 +203,20 @@
           inputMacrsTerm: solarPVSpecs.macrsTerm,
         };
       },
-      saveAndContinue() {
-        if (this.solarIndex === 'null') {
+      save() {
+        if (this.solarId === 'null') {
           this.$store.dispatch('addTechnologySpecsSolarPV', this.buildSolarPV());
         } else {
           const payload = {
             newSolar: this.buildSolarPV(),
-            solarIndex: this.solarIndex,
+            solarId: this.solarId,
           };
           this.$store.dispatch('replaceTechnologySpecsSolarPV', payload);
         }
       },
       buildSolarPV() {
         return {
+          id: this.inputId,
           name: this.inputName,
           cost: this.inputCost,
           shouldSize: this.inputShouldSize,

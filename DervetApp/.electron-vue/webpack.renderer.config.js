@@ -112,6 +112,14 @@ let rendererConfig = {
             name: 'fonts/[name]--[folder].[ext]'
           }
         }
+      },
+      {
+          test: /\.(csv)$/,
+          loader: 'file-loader',
+          options: {
+              name: `files/[name].[ext]`,
+              emitFile: true
+          }
       }
     ]
   },
