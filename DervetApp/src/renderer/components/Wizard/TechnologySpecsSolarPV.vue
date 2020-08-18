@@ -40,14 +40,12 @@
           <div class="col-md-9">
             <input
               id="size-yes"
-              name="size"
               type="radio"
               v-model="inputShouldSize"
               v-bind:value="true">
             <label for="size-yes" class="buffer-right">Have DER-VET size the Solar PV</label>
             <input
               id="size-no"
-              name="size"
               type="radio"
               v-model="inputShouldSize"
               v-bind:value="false">
@@ -63,7 +61,6 @@
             <input
               class="form-control numberbox valid"
               id="rated-capacity"
-              name="rated-capacity"
               type="text"
               v-model.number="inputRatedCapacity">
             <span class="unit-label">kW</span>
@@ -77,7 +74,6 @@
           <div class="col-md-9">
             <select class="form-control valid"
               id="loc"
-              name="loc"
               v-model="inputLoc">
               <option value="">-</option>
               <option v-for="value in validation.loc.allowedValues" v-bind:value="value">
@@ -96,7 +92,6 @@
             <input
               class="form-control numberbox-lg"
               id="inverter-max"
-              name="inverter-max"
               type="text"
               v-model.number="inputInverterMax">
             <span class="unit-label">kW</span>
@@ -112,7 +107,6 @@
               type="date"
               class="form-control valid"
               id="construction-date"
-              name="construction-date"
               v-model="inputConstructionDate">
           </div>
         </div>
@@ -126,7 +120,6 @@
               type="date"
               class="form-control valid"
               id="operation-date"
-              name="operation-date"
               v-model="inputOperationDate">
           </div>
         </div>
@@ -139,7 +132,6 @@
             <select
             class="form-control numberbox"
             id="macrs-term"
-            name="macrs-term"
             v-model.number="inputMacrsTerm">
               <option v-bind:value="undefined">-</option>
               <option v-for="value in validation.macrsTerm.allowedValues" v-bind:value="value">
@@ -197,9 +189,7 @@
         };
       },
       getDataFromProject() {
-        // TODO move solar tech lookup to a function in a common place (getter in store)
-        const techSpecsPV = this.$store.state.Project.technologySpecsSolarPV;
-        const solarPVSpecs = techSpecsPV.find(x => x.id === this.solarId);
+        const solarPVSpecs = this.$store.getters.getSolarPVById(this.solarId);
         return {
           inputId: solarPVSpecs.id,
           inputName: solarPVSpecs.name,

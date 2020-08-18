@@ -1,3 +1,5 @@
+import { sharedDefaults, sharedValidation } from './Shared.js';
+
 const defaults = {
   id: '',
   name: '',
@@ -8,9 +10,9 @@ const defaults = {
   inverterMax: 1000000000,
   constructionDate: '',
   operationDate: '',
-  macrsTerm: undefined,
-  generationProfile: undefined,
-  generationProfileTimestep: '60',
+  macrsTerm: sharedDefaults.macrsTerm,
+  generationProfile: sharedDefaults.generationProfile,
+  generationProfileTimestep: sharedDefaults.generationProfileTimestep,
 };
 
 const validation = {
@@ -18,16 +20,8 @@ const validation = {
     type: String,
     allowedValues: ['AC', 'DC'],
   },
-  // TODO move to shared file
-  macrsTerm: {
-    type: Number,
-    allowedValues: [3, 5, 7, 10, 15, 20, 25, 27.5, 39],
-  },
-  // TODO move to shared file
-  generationProfileTimestep: {
-    type: String,
-    allowedValues: ['1', '5', '15', '30', '60'],
-  },
+  macrsTerm: sharedValidation.macrsTerm,
+  generationProfileTimestep: sharedValidation.generationProfileTimestep,
 };
 
 export default {

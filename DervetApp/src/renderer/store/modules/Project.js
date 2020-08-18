@@ -17,6 +17,18 @@ const getDefaultState = () => ({
 
 const state = getDefaultState();
 
+const getters = {
+  getSolarPVById(state) {
+    return id => state.technologySpecsSolarPV.find(x => x.id === id);
+  },
+  getSolarPVSpecsClone(state) {
+    return () => cloneDeep(state.technologySpecsSolarPV);
+  },
+  getIndexOfSolarId(state) {
+    return id => state.technologySpecsSolarPV.findIndex(x => x.id === id);
+  },
+};
+
 const mutations = {
   SET_ID(state, newId) {
     state.id = newId;
@@ -49,8 +61,8 @@ const mutations = {
     state.technologySpecsICE.push(newICE);
   },
   REPLACE_TECHNOLOGY_SPECS_SOLAR_PV(state, payload) {
-    const tmpSolarPVSpecs = cloneDeep(state.technologySpecsSolarPV);
-    const indexMatchingId = tmpSolarPVSpecs.findIndex(x => x.id === payload.solarId);
+    const tmpSolarPVSpecs = getters.getSolarPVSpecsClone(state)();
+    const indexMatchingId = getters.getIndexOfSolarId(state)(payload.solarId);
     tmpSolarPVSpecs[indexMatchingId] = payload.newSolar;
     state.technologySpecsSolarPV = tmpSolarPVSpecs;
   },
@@ -59,6 +71,12 @@ const mutations = {
     const indexMatchingId = tmpICESpecs.findIndex(x => x.id === payload.iceId);
     tmpICESpecs[indexMatchingId] = payload.newICE;
     state.technologySpecsICE = tmpICESpecs;
+  },
+  ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV(state, payload) {
+    const tmpSolarPVSpecs = getters.getSolarPVSpecsClone(state)();
+    const indexMatchingId = getters.getIndexOfSolarId(state)(payload.solarId);
+    tmpSolarPVSpecs[indexMatchingId].generationProfile = payload.generationProfile;
+    state.technologySpecsSolarPV = tmpSolarPVSpecs;
   },
   RESET_PROJECT_TO_DEFAULT(state) {
     Object.assign(state, getDefaultState());
@@ -107,6 +125,9 @@ const actions = {
   replaceTechnologySpecsICE({ commit }, payload) {
     commit('REPLACE_TECHNOLOGY_SPECS_ICE', payload);
   },
+  addGenerationProfileToTechnologySpecsPV({ commit }, payload) {
+    commit('ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV', payload);
+  },
   resetProjectToDefault({ commit }) {
     commit('RESET_PROJECT_TO_DEFAULT');
   },
@@ -114,6 +135,7 @@ const actions = {
 
 export default {
   state,
+  getters,
   mutations,
   actions,
 };

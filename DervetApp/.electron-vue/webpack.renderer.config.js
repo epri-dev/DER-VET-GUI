@@ -114,7 +114,7 @@ let rendererConfig = {
         }
       },
       {
-          test: /\.(csv|xlsx|xls)$/,
+          test: /\.(csv)$/,
           loader: 'file-loader',
           options: {
               name: `files/[name].[ext]`,
