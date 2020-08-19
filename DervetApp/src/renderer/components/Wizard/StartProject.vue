@@ -31,7 +31,7 @@
           </div>
           <div class="col-md-4 form-control-static">
             <b-form-radio-group id="analysisHorizonMode" v-model="inputHorizonMode" >
-              <b-form-radio v-for="value in validation.analysisHorizonMode.allowedValues" v-bind:value="value['value']">
+              <b-form-radio v-for="value in validation.analysisHorizonMode.allowedValues" v-bind:value="value.value" v-bind:key="value.value">
                 {{value['description']}}
               </b-form-radio>
             </b-form-radio-group>
@@ -73,7 +73,7 @@
         </div>
         <div class="col-md-4 form-control-static">
           <b-form-radio-group v-model="inputLocation">
-            <b-form-radio v-for="value in validation.gridLocation.allowedValues" v-bind:value="value">
+            <b-form-radio v-for="value in validation.gridLocation.allowedValues" v-bind:value="value" v-bind:key="value">
                 {{value}}
               </b-form-radio>
           </b-form-radio-group>
@@ -89,7 +89,7 @@
         </div>
         <div class="col-md-4 form-control-static">
           <b-form-radio-group v-model="inputOwnership">
-            <b-form-radio v-for="value in validation.ownership.allowedValues" v-bind:value="value">
+            <b-form-radio v-for="value in validation.ownership.allowedValues" v-bind:value="value" v-bind:key="value">
                 {{value}}
               </b-form-radio>
           </b-form-radio-group>

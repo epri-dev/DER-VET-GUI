@@ -13,6 +13,15 @@ if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\') // eslint-disable-line
 }
 
+/**
+ * TODO: This line disables security warnings that show when using webpack dev server
+ * for development and don't represent an actual risk. However, we shouldn't suppress
+ * legitimate security warnings, so a better way to get rid of these warnings is to
+ * upgrade to a newer version of electron that includes this fix:
+ * https://github.com/electron/electron/pull/18814
+ */
+process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true;
+
 let mainWindow;
 const winURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080'

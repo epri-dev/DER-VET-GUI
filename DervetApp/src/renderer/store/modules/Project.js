@@ -22,6 +22,11 @@ const getDefaultState = () => ({
   noChargingFromGrid: false,
   noDischargingToGrid: false,
   siteLoad: null,
+  deferralPlannedLoadLimit: 0,
+  deferralReversePowerFlowLimit: 0,
+  deferralGrowth: 0,
+  deferralPrice: 0,
+  deferralLoad: null,
 });
 
 const state = getDefaultState();
@@ -71,6 +76,21 @@ const mutations = {
   },
   SET_SITE_LOAD(state, newSiteLoad) {
     state.siteLoad = newSiteLoad;
+  },
+  SET_DEFERRAL_PLANNED_LOAD_LIMIT(state, newDeferralPlannedLoadLimit) {
+    state.deferralPlannedLoadLimit = newDeferralPlannedLoadLimit;
+  },
+  SET_DEFERRAL_REVERSE_POWER_FLOW_LIMIT(state, newDeferralReversePowerFlowLimit) {
+    state.deferralReversePowerFlowLimit = newDeferralReversePowerFlowLimit;
+  },
+  SET_DEFERRAL_GROWTH(state, newDeferralGrowth) {
+    state.deferralGrowth = newDeferralGrowth;
+  },
+  SET_DEFERRAL_PRICE(state, newDeferralPrice) {
+    state.deferralPrice = newDeferralPrice;
+  },
+  SET_DEFERRAL_LOAD(state, newDeferralLoad) {
+    state.deferralLoad = newDeferralLoad;
   },
   ADD_TECHNOLOGY_SPECS_SOLAR_PV(state, newSolar) {
     state.technologySpecsSolarPV.push(newSolar);
@@ -153,10 +173,20 @@ const actions = {
   setSiteLoad({ commit }, newSiteLoad) {
     commit('SET_SITE_LOAD', newSiteLoad);
   },
-  startNewProject({ commit }, newId, newName, type) {
-    commit('SET_ID', newId);
-    commit('SET_NAME', newName);
-    commit('SET_TYPE', type);
+  setDeferralPlannedLoadLimit({ commit }, newDeferralPlannedLoadLimit) {
+    commit('SET_DEFERRAL_PLANNED_LOAD_LIMIT', newDeferralPlannedLoadLimit);
+  },
+  setDeferralReversePowerFlowLimit({ commit }, newDeferralReversePowerFlowLimit) {
+    commit('SET_DEFERRAL_REVERSE_POWER_FLOW_LIMIT', newDeferralReversePowerFlowLimit);
+  },
+  setDeferralGrowth({ commit }, newDeferralGrowth) {
+    commit('SET_DEFERRAL_GROWTH', newDeferralGrowth);
+  },
+  setDeferralPrice({ commit }, newDeferralPrice) {
+    commit('SET_DEFERRAL_PRICE', newDeferralPrice);
+  },
+  setDeferralLoad({ commit }, newDeferralLoad) {
+    commit('SET_DEFERRAL_LOAD', newDeferralLoad);
   },
   addTechnologySpecsSolarPV({ commit }, newSolar) {
     commit('ADD_TECHNOLOGY_SPECS_SOLAR_PV', newSolar);

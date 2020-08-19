@@ -76,17 +76,17 @@
   import '../../assets/samples/SamplePVgen-8784.csv';
   import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
   import PVGenerationTimeSeries from '../../models/PVGenerationTimeSeries';
-  import helpers from '../../util/helpers';
+  import csvUploadMixin from '../../mixins/csvUploadMixin';
   import NavButtons from './NavButtons';
 
   export default {
     components: { NavButtons },
+    mixins: [csvUploadMixin],
     props: ['solarId'],
     data() {
       const p = this.$store.state.Project;
       return {
         sharedValidation,
-        inputTimeseries: null,
         inputTimestep: sharedDefaults.generationProfileTimestep,
         dataYear: p.dataYear,
       };
@@ -102,10 +102,6 @@
           solarId: this.solarId,
           generationProfile: ts,
         };
-      },
-      onFileUpload(e) {
-        const onSuccess = (flatResults) => { this.inputTimeseries = flatResults; };
-        helpers.parseCsvFromFile(e, onSuccess);
       },
     },
   };

@@ -66,6 +66,13 @@
           Site Information
         </router-link>
         <router-link
+          class="nav nav-sidebar sidebar-indent"
+          v-bind:class="{ current: isActive(this.objectivesDeferralPath) }"
+          :to="this.objectivesDeferralPath">
+          Deferral
+        </router-link>
+
+        <router-link
           class="nav nav-sidebar sidebar-root-el"
           v-bind:class="{ current: isActive(this.financialInputsPath) }"
           :to="this.financialInputsPath">
@@ -105,6 +112,7 @@
         techSpecsPath: '/wizard/technology-specs',
         objectivesPath: '/wizard/objectives',
         objectivesSiteInformationPath: '/wizard/objectives-parameters-site-information',
+        objectivesDeferralPath: '/wizard/objectives-parameters-deferral',
         financialInputsPath: '/wizard/financial-inputs',
         financialInputsExternalIncentivesPath: '/wizard/financial-inputs-external-incentives',
         sensitivityAnalysisPath: '/wizard/sensitivity-analysis',
