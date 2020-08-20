@@ -49,6 +49,9 @@ const getDefaultState = () => ({
   objectivesLoadFollowing: false,
   objectivesUserDefined: false,
 
+  daGrowth: 0,
+  daPrice: null,
+
 });
 
 const state = getDefaultState();
@@ -131,6 +134,12 @@ const mutations = {
   },
   SET_DEFERRAL_LOAD(state, newDeferralLoad) {
     state.deferralLoad = newDeferralLoad;
+  },
+  SET_DA_GROWTH(state, newDAGrowth) {
+    state.daGrowth = newDAGrowth;
+  },
+  SET_DA_PRICE(state, newDAPrice) {
+    state.daPrice = newDAPrice;
   },
   ADD_TECHNOLOGY_SPECS_SOLAR_PV(state, newSolar) {
     state.technologySpecsSolarPV.push(newSolar);
@@ -270,6 +279,12 @@ const actions = {
   },
   setDeferralLoad({ commit }, newDeferralLoad) {
     commit('SET_DEFERRAL_LOAD', newDeferralLoad);
+  },
+  setDAGrowth({ commit }, newDAGrowth) {
+    commit('SET_DA_GROWTH', newDAGrowth);
+  },
+  setDAPrice({ commit }, newDAPrice) {
+    commit('SET_DA_PRICE', newDAPrice);
   },
   addTechnologySpecsSolarPV({ commit }, newSolar) {
     commit('ADD_TECHNOLOGY_SPECS_SOLAR_PV', newSolar);

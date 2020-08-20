@@ -76,6 +76,10 @@ export default new Router({
           path: 'objectives',
           component: require('@/components/Wizard/Objectives').default,
         },
+        {
+          path: 'objectives-parameters-da',
+          component: require('@/components/Wizard/ObjectivesParametersDA').default,
+        },
       ],
     },
     {

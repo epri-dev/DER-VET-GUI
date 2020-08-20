@@ -91,7 +91,7 @@
       <!-- TODO continue link should be dependent on selections in Services component -->
       <nav-buttons
         back-link="/wizard/objectives"
-        continue-link="/wizard/financial-inputs"
+        continue-link="/wizard/objectives-parameters-da"
         :save="this.save"
       />
 
