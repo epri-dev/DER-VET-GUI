@@ -20,14 +20,19 @@
           v-for="solar in solarPVItems"
           :to="{ name: 'technologySpecsSolarPV', params: { solarId: solar.id }}"
           :key="solar.id"
-          v-bind:class="{ current: techSpecsActiveSaved('solar-pv', solar.id) || techSpecsActiveSaved('solar-pv-upload', solar.id) }">
+          v-bind:class="{ current: techSpecsActiveSaved('solar-pv', solar.id) }">
           Solar PV ({{ solar.name }})
         </router-link>
 
-<!--        <router-link class="nav nav-sidebar sidebar-indent" to="/wizard/technology-specs-battery-storage" v-if=true>
-          Battery Storage
+        <router-link
+          class="nav nav-sidebar sidebar-indent"
+          v-for="battery in batteryItems"
+          :to="{ name: 'technologySpecsBattery', params: { batteryId: battery.id }}"
+          :key="battery.id"
+          v-bind:class="{ current: techSpecsActiveSaved('battery', battery.id) }">
+          Battery Storage ({{ battery.name }})
         </router-link>
--->
+
         <router-link
           class="nav nav-sidebar sidebar-indent"
           v-for="ice in iceItems"
@@ -39,12 +44,12 @@
 
         <div
           class="nav nav-sidebar sidebar-indent current"
-          v-if="techSpecsActiveUnsaved('solar-pv') || techSpecsActiveUnsaved('solar-pv-upload')">
+          v-if="techSpecsActiveUnsaved('solar-pv')">
           Solar PV
         </div>
         <div
           class="nav nav-sidebar sidebar-indent current"
-          v-if="techSpecsActiveUnsaved('battery-storage')">
+          v-if="techSpecsActiveUnsaved('battery')">
           Battery Storage
         </div>
         <div
@@ -120,7 +125,7 @@
     },
     methods: {
       techSpecsActiveSaved(tech, id) {
-        return RegExp(`${this.techSpecsPath}-${tech}/${id}`).test(this.$route.path);
+        return RegExp(`${this.techSpecsPath}-${tech}.*/${id}`).test(this.$route.path);
       },
       techSpecsActiveUnsaved(tech) {
         return RegExp(`${this.techSpecsPath}-${tech}/null`).test(this.$route.path);
@@ -135,6 +140,9 @@
       },
       iceItems() {
         return this.$store.state.Project.technologySpecsICE;
+      },
+      batteryItems() {
+        return this.$store.state.Project.technologySpecsBattery;
       },
     },
   };

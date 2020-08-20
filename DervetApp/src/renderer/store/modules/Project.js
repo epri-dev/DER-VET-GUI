@@ -14,6 +14,7 @@ const getDefaultState = () => ({
   resultsData: null,
   technologySpecsSolarPV: [],
   technologySpecsICE: [],
+  technologySpecsBattery: [],
   discountRate: 0,
   inflationRate: 0,
   federalTaxRate: 0,
@@ -40,6 +41,24 @@ const getters = {
   },
   getIndexOfSolarId(state) {
     return id => state.technologySpecsSolarPV.findIndex(x => x.id === id);
+  },
+  getICEById(state) {
+    return id => state.technologySpecsICE.find(x => x.id === id);
+  },
+  getICESpecsClone(state) {
+    return () => cloneDeep(state.technologySpecsICE);
+  },
+  getIndexOfICEId(state) {
+    return id => state.technologySpecsICE.findIndex(x => x.id === id);
+  },
+  getBatteryById(state) {
+    return id => state.technologySpecsBattery.find(x => x.id === id);
+  },
+  getBatterySpecsClone(state) {
+    return () => cloneDeep(state.technologySpecsBattery);
+  },
+  getIndexOfBatteryId(state) {
+    return id => state.technologySpecsBattery.findIndex(x => x.id === id);
   },
 };
 
@@ -98,6 +117,9 @@ const mutations = {
   ADD_TECHNOLOGY_SPECS_ICE(state, newICE) {
     state.technologySpecsICE.push(newICE);
   },
+  ADD_TECHNOLOGY_SPECS_BATTERY(state, newBattery) {
+    state.technologySpecsBattery.push(newBattery);
+  },
   REPLACE_TECHNOLOGY_SPECS_SOLAR_PV(state, payload) {
     const tmpSolarPVSpecs = getters.getSolarPVSpecsClone(state)();
     const indexMatchingId = getters.getIndexOfSolarId(state)(payload.solarId);
@@ -105,10 +127,16 @@ const mutations = {
     state.technologySpecsSolarPV = tmpSolarPVSpecs;
   },
   REPLACE_TECHNOLOGY_SPECS_ICE(state, payload) {
-    const tmpICESpecs = cloneDeep(state.technologySpecsICE);
-    const indexMatchingId = tmpICESpecs.findIndex(x => x.id === payload.iceId);
+    const tmpICESpecs = getters.getICESpecsClone(state)();
+    const indexMatchingId = getters.getIndexOfICEId(state)(payload.iceId);
     tmpICESpecs[indexMatchingId] = payload.newICE;
     state.technologySpecsICE = tmpICESpecs;
+  },
+  REPLACE_TECHNOLOGY_SPECS_BATTERY(state, payload) {
+    const tmpBatterySpecs = getters.getBatterySpecsClone(state)();
+    const indexMatchingId = getters.getIndexOfBatteryId(state)(payload.batteryId);
+    tmpBatterySpecs[indexMatchingId] = payload.newBattery;
+    state.technologySpecsBattery = tmpBatterySpecs;
   },
   ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV(state, payload) {
     const tmpSolarPVSpecs = getters.getSolarPVSpecsClone(state)();
@@ -194,11 +222,17 @@ const actions = {
   addTechnologySpecsICE({ commit }, newICE) {
     commit('ADD_TECHNOLOGY_SPECS_ICE', newICE);
   },
+  addTechnologySpecsBattery({ commit }, newBattery) {
+    commit('ADD_TECHNOLOGY_SPECS_BATTERY', newBattery);
+  },
   replaceTechnologySpecsSolarPV({ commit }, payload) {
     commit('REPLACE_TECHNOLOGY_SPECS_SOLAR_PV', payload);
   },
   replaceTechnologySpecsICE({ commit }, payload) {
     commit('REPLACE_TECHNOLOGY_SPECS_ICE', payload);
+  },
+  replaceTechnologySpecsBattery({ commit }, payload) {
+    commit('REPLACE_TECHNOLOGY_SPECS_BATTERY', payload);
   },
   addGenerationProfileToTechnologySpecsPV({ commit }, payload) {
     commit('ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV', payload);
