@@ -90,7 +90,7 @@
 
 <script>
   import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
-  // import PriceTimeSeries from '../../models/PriceTimeSeries';
+  import PriceTimeSeries from '../../models/PriceTimeSeries';
   import csvUploadMixin from '../../mixins/csvUploadMixin';
   import NavButtons from './NavButtons';
 
@@ -100,6 +100,7 @@
     data() {
       const p = this.$store.state.Project;
       return {
+        useExisting: true,
         sharedValidation,
         daGrowth: p.daGrowth,
         daPrice: p.daPrice,
@@ -113,10 +114,9 @@
     },
     methods: {
       save() {
-        // const price = new PriceTimeSeries(this.inputTimestep, this.inputTimeseries);
-        // this.$store.dispatch('setSiteLoad', siteLoad);
-        // this.$store.dispatch('setNoChargingFromGrid', this.inputNoChargingFromGrid);
-        // this.$store.dispatch('setNoDischargingToGrid', this.inputNoDischargingToGrid);
+        const price = new PriceTimeSeries(this.inputTimestep, 'DA', this.inputTimeseries);
+        this.$store.dispatch('setDeferralGrowth', this.daPrice);
+        this.$store.dispatch('setDeferralPrice', price);
       },
     },
   };
