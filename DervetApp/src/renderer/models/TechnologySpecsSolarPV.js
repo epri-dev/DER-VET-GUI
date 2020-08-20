@@ -11,8 +11,7 @@ const defaults = {
   constructionDate: '',
   operationDate: '',
   macrsTerm: sharedDefaults.macrsTerm,
-  generationProfile: sharedDefaults.generationProfile,
-  generationProfileTimestep: sharedDefaults.generationProfileTimestep,
+  generationProfile: null,
 };
 
 const validation = {
@@ -21,7 +20,6 @@ const validation = {
     allowedValues: ['AC', 'DC'],
   },
   macrsTerm: sharedValidation.macrsTerm,
-  generationProfileTimestep: sharedValidation.generationProfileTimestep,
 };
 
 export default {
