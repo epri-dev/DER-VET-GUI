@@ -5,13 +5,17 @@ const getDefaultState = () => ({
   id: null,
   name: null,
   type: null,
+  resultsData: null,
+
   startYear: (new Date()).getFullYear(),
   analysisHorizon: 0,
   analysisHorizonMode: '1',
   dataYear: (new Date()).getFullYear(),
   gridLocation: 'Customer',
   ownership: 'Customer',
-  resultsData: null,
+  optimizationHorizon: 'year',
+  optimizationHorizonNum: 0,
+
   technologySpecsSolarPV: [],
   technologySpecsICE: [],
   technologySpecsBattery: [],
@@ -20,6 +24,7 @@ const getDefaultState = () => ({
   federalTaxRate: 0,
   stateTaxRate: 0,
   propertyTaxRate: 0,
+
   noChargingFromGrid: false,
   noDischargingToGrid: false,
   siteLoad: null,
@@ -28,6 +33,22 @@ const getDefaultState = () => ({
   deferralGrowth: 0,
   deferralPrice: 0,
   deferralLoad: null,
+
+  energyPriceSourceWholesale: false,
+  objectivesRetailEnergyChargeReduction: false,
+  objectivesDA: false,
+
+  listOfActiveServices: [],
+  objectivesResilience: false,
+  objectivesBackupPower: false,
+  objectivesRetailDemandChargeReduction: false,
+  objectivesSR: false,
+  objectivesNSR: false,
+  objectivesFR: false,
+  objectivesDeferral: false,
+  objectivesLoadFollowing: false,
+  objectivesUserDefined: false,
+
 });
 
 const state = getDefaultState();
@@ -165,6 +186,40 @@ const mutations = {
   SET_OWNERSHIP(state, newOwnership) {
     state.ownership = newOwnership;
   },
+  CHOOSE_ENERGY_STRUCTURE(state, wholesaleEnergyPrices) {
+    state.energyPriceSourceWholesale = wholesaleEnergyPrices;
+    if (wholesaleEnergyPrices) {
+      state.objectivesDA = true;
+    } else {
+      state.objectivesRetailEnergyChargeReduction = true;
+    }
+  },
+  SELECT_OTHER_SERVICES(state, listOfServices) {
+    let service;
+    state.listOfActiveServices = listOfServices;
+    for (let i = 0; i < listOfServices.length; i += 1) {
+      service = listOfServices[i];
+      if (service === 'Reliability') {
+        state.ObjectivesResilience = true;
+      } else if (service === 'BackupPower') {
+        state.ObjectivesBackupPower = true;
+      } else if (service === 'RetailDemandChargeReduction') {
+        state.ObjectivesRetailDemandChargeReduction = true;
+      } else if (service === 'SR') {
+        state.ObjectivesSR = true;
+      } else if (service === 'NSR') {
+        state.ObjectivesNSR = true;
+      } else if (service === 'FR') {
+        state.ObjectivesFR = true;
+      } else if (service === 'Deferral') {
+        state.ObjectivesDeferral = true;
+      } else if (service === 'LF') {
+        state.ObjectivesLoadFollowing = true;
+      } else if (service === 'UserDefined') {
+        state.ObjectivesUserDefined = true;
+      }
+    }
+  },
 };
 
 const actions = {
@@ -257,6 +312,12 @@ const actions = {
   },
   setOwnership({ commit }, newOwnership) {
     commit('SET_OWNERSHIP', newOwnership);
+  },
+  chooseEnergyStructure({ commit }, energyPriceStructure) {
+    commit('CHOOSE_ENERGY_STRUCTURE', energyPriceStructure);
+  },
+  selectOtherServices({ commit }, listOfServices) {
+    commit('SELECT_OTHER_SERVICES', listOfServices);
   },
 };
 

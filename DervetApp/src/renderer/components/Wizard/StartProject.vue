@@ -20,7 +20,7 @@
         <div class="col-md-9">
           <input v-model.number="inputStartYear" class="form-control numberbox" id="startYear" type="number" min="1980" step="1">
           <p class="help-block">Year the project starts.</p>
-          <p class="tool-tip">Currently: {{projStartYear}}</p>
+          <!-- <p class="tool-tip">Currently: {{projStartYear}}</p> -->
         </div>
       </div>
       <fieldset class="section-group">
@@ -38,7 +38,7 @@
           </div>
           <div class="col-md-5">
             <p class="tool-tip">Defines when/how to end CBA analysis</p>
-            <p class="tool-tip">Currently: {{projAnalysisHorizonMode}}</p>
+            <!-- <p class="tool-tip">Currently: {{projAnalysisHorizonMode}}</p> -->
           </div>
         </div>
         <div class="row form-group" v-if="inputHorizonMode === '1'">
@@ -51,7 +51,7 @@
           </div>
           <div class="col-md-5">
             <p class="tool-tip">The number of years the analysis will go for. The analysis will not consider equipment lifetime or anything else when determining the number of years to run for.</p>
-            <p class="tool-tip">Currently: {{projectAnalysisHorizon}}</p>
+            <!-- <p class="tool-tip">Currently: {{projectAnalysisHorizon}}</p> -->
           </div>
         </div>
         <div class="row form-group">
@@ -63,7 +63,7 @@
           </div>
           <div class="col-md-5">
             <p class="tool-tip">DER-VET uses exactly one year of data. If the year this data comes from is different from the year the optimization is run against, it will be escalated from the data year to the optimization year.</p>
-            <p class="tool-tip">Currently: {{projDataYear}}</p>
+            <!-- <p class="tool-tip">Currently: {{projDataYear}}</p> -->
           </div>
         </div>
       </fieldset>
@@ -80,7 +80,7 @@
         </div>
         <div class="col-md-5">
           <p class="tool-tip">Which grid domain the project will be connected to. This limits which services are available.</p>
-          <p class="tool-tip">Currently: {{projGridLocation}}</p>
+          <!-- <p class="tool-tip">Currently: {{projGridLocation}}</p> -->
         </div>
       </div>
       <div class="row form-group">
@@ -96,26 +96,27 @@
         </div>
         <div class="col-md-5">
           <p class="tool-tip">Who owns the assets.</p>
-          <p class="tool-tip">Currently: {{projOwnership}}</p>
+          <!-- <p class="tool-tip">Currently: {{projOwnership}}</p> -->
         </div>
       </div>
       <hr />
-      <div class="form-group form-buffer">
-        <div class="col-md-12">
-          <!-- <router-link @click="saveAndContinue()" to="/wizard/technology-specs" type="submit" class="btn btn-primary pull-right">Save and Continue</router-link> -->
-          <button @click="saveAndContinue()" type="submit" class="btn btn-primary pull-right">Save and Continue</button>
-        </div>
-      </div>
+      <nav-buttons
+        back-link="/new-project"
+        continue-link="/wizard/technology-specs"
+        :save="saveAndContinue"
+      />
     </div>
   </div>
 </template>
 
 <script>
   import model from '../../models/StartProject';
+  import NavButtons from './NavButtons';
 
   const { validation } = model;
 
   export default {
+    components: { NavButtons },
     computed: {
       projectAnalysisHorizon() {
         return this.$store.state.Project.analysisHorizon;
