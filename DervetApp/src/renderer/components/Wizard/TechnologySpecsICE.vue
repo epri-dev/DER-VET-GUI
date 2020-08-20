@@ -308,8 +308,7 @@
         };
       },
       getDataFromProject() {
-        const techSpecsICE = this.$store.state.Project.technologySpecsICE;
-        const iceSpecs = techSpecsICE.find(x => x.id === this.iceId);
+        const iceSpecs = this.$store.getters.getICEById(this.iceId);
         return {
           inputId: iceSpecs.id,
           inputName: iceSpecs.name,

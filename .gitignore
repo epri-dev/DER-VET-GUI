@@ -6,6 +6,7 @@ DervetApp/dervetpy/.python-version
 DervetApp/dervetpy/__pycache__/*
 DervetApp/dervetpy/build/*
 DervetApp/dervetpy/dist/*
+DervetApp/dervetpy/venv
 DervetApp/extraResources/*
 
 # Electron build and dist files
