@@ -104,18 +104,18 @@
   import '../../assets/samples/SampleSiteLoad-8784.csv';
   import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
   import SiteLoadTimeSeries from '../../models/SiteLoadTimeSeries';
-  import helpers from '../../util/helpers';
+  import csvUploadMixin from '../../mixins/csvUploadMixin';
   import NavButtons from './NavButtons';
 
   export default {
     components: { NavButtons },
+    mixins: [csvUploadMixin],
     data() {
       const p = this.$store.state.Project;
       return {
         sharedValidation,
         inputNoChargingFromGrid: p.noChargingFromGrid,
         inputNoDischargingToGrid: p.noDischargingToGrid,
-        inputTimeseries: null,
         inputTimestep: sharedDefaults.generationProfileTimestep,
         dataYear: p.dataYear,
       };
@@ -126,10 +126,6 @@
         this.$store.dispatch('setSiteLoad', siteLoad);
         this.$store.dispatch('setNoChargingFromGrid', this.inputNoChargingFromGrid);
         this.$store.dispatch('setNoDischargingToGrid', this.inputNoDischargingToGrid);
-      },
-      onFileUpload(e) {
-        const onSuccess = (flatResults) => { this.inputTimeseries = flatResults; };
-        helpers.parseCsvFromFile(e, onSuccess);
       },
     },
   };

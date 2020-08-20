@@ -61,6 +61,11 @@ export default new Router({
           component: require('@/components/Wizard/FinancialInputs').default,
         },
         {
+          path: 'objectives-parameters-deferral',
+          name: 'objectivesParametersDeferral',
+          component: require('@/components/Wizard/ObjectivesParametersDeferral').default,
+        },
+        {
           path: 'objectives-parameters-site-information',
           name: 'objectivesParametersSiteInformation',
           component: require('@/components/Wizard/ObjectivesParametersSiteInformation').default,
