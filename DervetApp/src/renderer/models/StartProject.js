@@ -11,6 +11,9 @@ const validation = {
     type: String,
     allowedValues: ['Customer', 'Utility', '3rd Party'],
   },
+  optimizationHorizonOptions: {
+    allowedValues: ['Year', 'Month', 'Hours'],
+  },
 };
 
 export default {

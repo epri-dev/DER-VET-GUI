@@ -70,6 +70,10 @@ export default new Router({
           name: 'objectivesParametersSiteInformation',
           component: require('@/components/Wizard/ObjectivesParametersSiteInformation').default,
         },
+        {
+          path: 'objectives',
+          component: require('@/components/Wizard/Objectives').default,
+        },
       ],
     },
     {

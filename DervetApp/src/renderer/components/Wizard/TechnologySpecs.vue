@@ -34,19 +34,24 @@
           </div>
         </div>
         <hr>
-        <div class="row">
-          <div class="form-group form-buffer">
-            <div class="col-md-12">
-              <a class="btn btn-default" href="/Wizard/StartProject">&lt;&lt; Back</a>
-            </div>
-          </div>
-        </div>
+        <nav-buttons
+          back-link="/wizard/start-project"
+          continue-link="/wizard/objectives"
+          :save="this.save"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import NavButtons from './NavButtons';
+
   export default {
+    components: { NavButtons },
+    methods: {
+      save() {
+      },
+    },
   };
 </script>
