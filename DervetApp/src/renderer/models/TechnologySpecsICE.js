@@ -1,3 +1,5 @@
+import { sharedDefaults, sharedValidation } from './Shared.js';
+
 const defaults = {
   id: '',
   name: '',
@@ -11,7 +13,7 @@ const defaults = {
   fixedOMCostIncludingExercise: 0,
   constructionDate: '',
   operationDate: '',
-  macrsTerm: undefined,
+  macrsTerm: sharedDefaults.macrsTerm,
   shouldSize: true,
   numGenerators: 0,
   minGenerators: 0,
@@ -19,10 +21,7 @@ const defaults = {
 };
 
 const validation = {
-  macrsTerm: {
-    type: Number,
-    allowedValues: [3, 5, 7, 10, 15, 20, 25, 27.5, 39],
-  },
+  macrsTerm: sharedValidation.macrsTerm,
 };
 
 export default {

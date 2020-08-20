@@ -19,7 +19,7 @@
             </div>
             <div class="form-group">
               <div class="col-md-12">
-                <router-link to="/wizard/technology-specs-battery-storage" class="btn btn-primary btn-w250">
+                <router-link to="/wizard/technology-specs-battery/null" class="btn btn-primary btn-w250">
                   Battery Storage
                 </router-link>
               </div>

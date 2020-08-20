@@ -46,8 +46,10 @@ export default new Router({
           props: true,
         },
         {
-          path: 'technology-specs-battery-storage',
-          component: require('@/components/Wizard/TechnologySpecsBatteryStorage').default,
+          path: 'technology-specs-battery/:batteryId',
+          name: 'technologySpecsBattery',
+          component: require('@/components/Wizard/TechnologySpecsBattery').default,
+          props: true,
         },
         {
           path: 'technology-specs-ice/:iceId',
