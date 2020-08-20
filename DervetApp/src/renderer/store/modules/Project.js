@@ -49,6 +49,9 @@ const getDefaultState = () => ({
   objectivesLoadFollowing: false,
   objectivesUserDefined: false,
 
+  daGrowth: 0,
+  daPrice: null,
+
 });
 
 const state = getDefaultState();

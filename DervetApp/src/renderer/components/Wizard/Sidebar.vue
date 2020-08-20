@@ -76,6 +76,12 @@
           :to="this.objectivesDeferralPath">
           Deferral
         </router-link>
+        <router-link
+          class="nav nav-sidebar sidebar-indent"
+          v-bind:class="{ current: isActive(this.objectivesDAPath) }"
+          :to="this.objectivesDAPath">
+          Day Ahead Pricing
+        </router-link>
 
         <router-link
           class="nav nav-sidebar sidebar-root-el"
@@ -118,6 +124,7 @@
         objectivesPath: '/wizard/objectives',
         objectivesSiteInformationPath: '/wizard/objectives-parameters-site-information',
         objectivesDeferralPath: '/wizard/objectives-parameters-deferral',
+        objectivesDAPath: '/wizard/objectives-parameters-da',
         financialInputsPath: '/wizard/financial-inputs',
         financialInputsExternalIncentivesPath: '/wizard/financial-inputs-external-incentives',
         sensitivityAnalysisPath: '/wizard/sensitivity-analysis',
