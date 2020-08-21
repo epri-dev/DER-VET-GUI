@@ -80,6 +80,10 @@ export default new Router({
           path: 'objectives-parameters-da',
           component: require('@/components/Wizard/ObjectivesParametersDA').default,
         },
+        {
+          path: 'objectives-parameters-reliability',
+          component: require('@/components/Wizard/ObjectivesParametersReliabilityTarget').default,
+        },
       ],
     },
     {

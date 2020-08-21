@@ -80,8 +80,8 @@
         <hr />
         <!-- TODO continue link should be dependent on selections in Services component -->
         <nav-buttons
-          back-link="/wizard/objectives-parameters-site-information"
-          continue-link="/wizard/objectives-parameters-site-information"
+          back-link="/wizard/objectives-parameters-da"
+          continue-link="/wizard/objectives-parameters-da"
           :save="this.save"
         />
     </div>
