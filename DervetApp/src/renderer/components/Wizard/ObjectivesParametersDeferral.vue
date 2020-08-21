@@ -59,64 +59,32 @@
           <p class="tool-tip tooltip-col">Yearly Cost Avoided for deferring a T and D asset upgrade</p>
         </div>
       </div>
-      <div id="DataFile-Form" style="">
-        <!-- <timesseries-data-upload
-          :data-year="dataYear",
-          :time-step="timestep",
-          data-name='Deferral Load',
+      <div v-if="deferralLoad !== null" class="form-group">
+        <div class="col-md-12">
+          <label for="UseExistingData" class="control-label">The deferral load has already been uploaded for this project. Do you want to use the existing data?</label>
+        </div>
+        <div class="col-md-12">
+          <b-form-group>
+            <b-form-radio-group
+              v-model="useExisting"
+              :options="sharedValidation.optionsYN.allowedValues"
+            ></b-form-radio-group> 
+          </b-form-group>
+        </div>
+      </div>
+      <div id="DataFile-Form" style="" v-if="!(useExisting)||(deferralLoad === null)">
+        <timeseries-data-upload
+          :data-year="dataYear"
+          :time-step="Number(timestep)"
+          data-name='Deferral Load'
           units='kW'
-        /> -->
-        <hr>
-        <div class="form-group row">
-          <div class="col-md-12">
-            Upload the deferral load as a <code>.csv</code> file that contains a reading at each time interval on a separate line.
-            The number of total lines expected depends on the selected year and timestep. 
-            Data Year: {{dataYear}}
-            Timestep: {{timestep}}
-            For instance, an upload with a timestep
-            of 30-minutes for a year with 365 days would require an input file with 17,520 readings.
-          </div>
-        </div>
-        <hr>
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label for="DataFile" class="control-label">
-              Deferral Load data for the year {{dataYear}}
-              <span class="unit-label">(kW)</span>
-            </label>
-          </div>
-          <div class="col-md-9">
-            <input
-              type="file"
-              id="deferral-timeseries"
-              class="form-control"
-              @change="onFileUpload">
-          </div>
-        </div>
-        <div class="row form-group">
-          <div class="col-md-4">
-            <label class="control-label">Timestep</label>
-          </div>
-          <div class="col-md-3">
-            <select
-              class="form-control numberbox"
-              id="timestep"
-              v-model="timestep">
-              <option
-                v-for="value in sharedValidation.generationProfileTimestep.allowedValues"
-                v-bind:value="value" :disabled="true">
-                {{value}}
-              </option>
-            </select>
-            <span class="unit-label">minutes</span>
-          </div>
-        </div>
+        />
       </div>
       <hr>
       <!-- TODO continue link should be dependent on selections in Services component -->
       <nav-buttons
-        back-link="/wizard/objectives-parameters-site-information"
-        continue-link="/wizard/objectives-parameters-site-information"
+        back-link="/wizard/objectives-parameters-deferral"
+        continue-link="/wizard/objectives-parameters-deferral"
         :save="this.save"
       />
     </form>
@@ -124,7 +92,7 @@
 </template>
 
 <script>
-  import { sharedValidation } from '../../models/Shared.js';
+  import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
   import DeferralLoadTimeSeries from '../../models/DeferralLoadTimeSeries';
   import csvUploadMixin from '../../mixins/csvUploadMixin';
   import NavButtons from './NavButtons';
@@ -132,13 +100,14 @@
 
 
   export default {
-    // components: { NavButtons },
     components: { NavButtons, TimeseriesDataUpload },
     mixins: [csvUploadMixin],
     data() {
       const p = this.$store.state.Project;
       return {
+        useExisting: sharedDefaults.useExistingTimeSeriesData,
         sharedValidation,
+        deferralLoad: p.deferralLoad,
         dataYear: p.dataYear,
         timestep: p.timestep,
         inputDeferralPlannedLoadLimit: p.deferralPlannedLoadLimit,
@@ -149,7 +118,7 @@
     },
     methods: {
       save() {
-        const deferralLoad = new DeferralLoadTimeSeries(this.inputTimestep, this.inputTimeseries);
+        const deferralLoad = new DeferralLoadTimeSeries(this.timestep, this.inputTimeseries);
         this.$store.dispatch('setDeferralLoad', deferralLoad);
         this.$store.dispatch('setDeferralPlannedLoadLimit', this.inputDeferralPlannedLoadLimit);
         this.$store.dispatch('setDeferralReversePowerFlowLimit', this.inputDeferralReversePowerFlowLimit);

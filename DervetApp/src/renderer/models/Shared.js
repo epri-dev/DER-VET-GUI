@@ -1,7 +1,7 @@
 export const sharedDefaults = {
   macrsTerm: undefined,
   generationProfile: undefined,
-  generationProfileTimestep: '60',
+  useExistingTimeSeriesData: true,
 };
 
 export const sharedValidation = {
@@ -12,5 +12,12 @@ export const sharedValidation = {
   generationProfileTimestep: {
     type: String,
     allowedValues: ['1', '5', '15', '30', '60'],
+  },
+  optionsYN: {
+    type: Boolean,
+    allowedValues: [
+      { text: 'Yes', value: true },
+      { text: 'No', value: false },
+    ],
   },
 };

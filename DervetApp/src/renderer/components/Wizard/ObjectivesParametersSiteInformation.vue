@@ -116,7 +116,7 @@
         sharedValidation,
         inputNoChargingFromGrid: p.noChargingFromGrid,
         inputNoDischargingToGrid: p.noDischargingToGrid,
-        timestep: p.generationProfileTimestep,
+        timestep: p.timestep,
         dataYear: p.dataYear,
       };
     },

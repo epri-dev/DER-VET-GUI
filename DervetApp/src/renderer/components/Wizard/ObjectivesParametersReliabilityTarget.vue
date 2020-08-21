@@ -94,7 +94,7 @@
         <b-form-group>
           <b-form-radio-group
             v-model="useExisting"
-            :options="optionsYN"
+            :options="sharedValidation.optionsYN.allowedValues"
           ></b-form-radio-group> 
         </b-form-group>
       </div>
@@ -138,7 +138,7 @@
           <span class="unit-label">minutes</span>
         </div>
         <div class="col-md-5">
-          <p class="tool-tip tooltip-col">What is the timestep that the optimization will use??</p>
+          <p class="tool-tip tooltip-col">What is the timestep that the optimization will use?</p>
         </div>
       </div>
     </div>
@@ -153,7 +153,7 @@
 </template>
 
 <script>
-  import { sharedValidation } from '../../models/Shared.js';
+  import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
   import CriticalLoadTimeSeries from '../../models/CriticalLoadTimeSeries';
   import csvUploadMixin from '../../mixins/csvUploadMixin';
   import NavButtons from './NavButtons';
@@ -169,7 +169,7 @@
     data() {
       const p = this.$store.state.Project;
       return {
-        useExisting: true,
+        useExisting: sharedDefaults.useExistingTimeSeriesData,
         sharedValidation,
         criticalLoad: p.criticalLoad,
         reliabilityTarget: p.reliabilityTarget,
@@ -180,10 +180,6 @@
         timestep: p.timestep,
         dataYear: p.dataYear,
         pvTechnologies: p.technologySpecsSolarPV,
-        optionsYN: [
-          { text: 'Yes', value: true },
-          { text: 'No', value: false },
-        ],
       };
     },
     methods: {
