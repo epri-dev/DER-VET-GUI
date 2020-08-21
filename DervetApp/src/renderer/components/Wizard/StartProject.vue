@@ -17,10 +17,11 @@
         <div class="col-md-3 control-label">
           <b>Start year</b>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-4">
           <input v-model.number="inputStartYear" class="form-control numberbox" id="startYear" type="number" min="1980" step="1">
-          <p class="help-block">Year the project starts.</p>
-          <!-- <p class="tool-tip">Currently: {{projStartYear}}</p> -->
+        </div>
+        <div class="col-md-5">
+          <p class="tool-tip">Year the project starts.</p>
         </div>
       </div>
       <fieldset class="section-group">
