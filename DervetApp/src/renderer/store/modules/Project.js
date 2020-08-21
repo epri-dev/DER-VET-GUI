@@ -52,6 +52,13 @@ const getDefaultState = () => ({
   daGrowth: 0,
   daPrice: null,
 
+  reliabilityTarget: 4,
+  postOptimizationOnly: false,
+  reliabilityNu: 20,
+  reliabilityGamma: 43,
+  reliabilityMaxOutageDuration: 168,
+  criticalLoad: null,
+
 });
 
 const state = getDefaultState();
@@ -135,6 +142,24 @@ const mutations = {
   SET_DEFERRAL_LOAD(state, newDeferralLoad) {
     state.deferralLoad = newDeferralLoad;
   },
+  SET_RELIABILITY_POST_OPTIMIZATION_ONLY(state, newPostOptimizationOnly) {
+    state.postOptimizationOnly = newPostOptimizationOnly;
+  },
+  SET_RELIABILITY_TARGET(state, newReliabilityTarget) {
+    state.reliabilityTarget = newReliabilityTarget;
+  },
+  SET_RELIABILITY_NU(state, newReliabilityNu) {
+    state.reliabilityNu = newReliabilityNu;
+  },
+  SET_RELIABILITY_GAMMA(state, newReliabilityGamma) {
+    state.reliabilityGamma = newReliabilityGamma;
+  },
+  SET_RELIABILITY_MAX_OUTAGE_DURATION(state, newReliabilityMaxOutageDuration) {
+    state.reliabilityMaxOutageDuration = newReliabilityMaxOutageDuration;
+  },
+  SET_CRITICAL_LOAD(state, newCriticalLoad) {
+    state.criticalLoad = newCriticalLoad;
+  },
   SET_DA_GROWTH(state, newDAGrowth) {
     state.daGrowth = newDAGrowth;
   },
@@ -194,6 +219,12 @@ const mutations = {
   },
   SET_OWNERSHIP(state, newOwnership) {
     state.ownership = newOwnership;
+  },
+  SET_OPTIMIZATION_HORIZON(state, newOptimizataionHorizon) {
+    state.optimizationHorizon = newOptimizataionHorizon;
+  },
+  SET_OPTIMIZATION_HORIZON_NUM(state, newOptimizataionHorizonNum) {
+    state.optimizationHorizonNum = newOptimizataionHorizonNum;
   },
   CHOOSE_ENERGY_STRUCTURE(state, wholesaleEnergyPrices) {
     state.energyPriceSourceWholesale = wholesaleEnergyPrices;
@@ -280,6 +311,24 @@ const actions = {
   setDeferralLoad({ commit }, newDeferralLoad) {
     commit('SET_DEFERRAL_LOAD', newDeferralLoad);
   },
+  setReliabilityPostOptimizationOnly({ commit }, newPostOptimizationOnly) {
+    commit('SET_RELIABILITY_POST_OPTIMIZATION_ONLY', newPostOptimizationOnly);
+  },
+  setReliabilityTarget({ commit }, newReliabilityTarget) {
+    commit('SET_RELIABILITY_TARGET', newReliabilityTarget);
+  },
+  setReliabilityNu({ commit }, newReliabilityNu) {
+    commit('SET_RELIABILITY_NU', newReliabilityNu);
+  },
+  setReliabilityGamma({ commit }, newReliabilityGamma) {
+    commit('SET_RELIABILITY_GAMMA', newReliabilityGamma);
+  },
+  setReliabilityMaxOutageDuration({ commit }, newReliabilityMaxOutageDuration) {
+    commit('SET_RELIABILITY_MAX_OUTAGE_DURATION', newReliabilityMaxOutageDuration);
+  },
+  setCriticalLoad({ commit }, newCriticalLoad) {
+    commit('SET_CRITICAL_LOAD', newCriticalLoad);
+  },
   setDAGrowth({ commit }, newDAGrowth) {
     commit('SET_DA_GROWTH', newDAGrowth);
   },
@@ -327,6 +376,12 @@ const actions = {
   },
   setOwnership({ commit }, newOwnership) {
     commit('SET_OWNERSHIP', newOwnership);
+  },
+  setOptimizationHorizon({ commit }, newOptimizataionHorizon) {
+    commit('SET_OPTIMIZATION_HORIZON', newOptimizataionHorizon);
+  },
+  setOptimizationHorizonNum({ commit }, newOptimizataionHorizonNum) {
+    commit('SET_OPTIMIZATION_HORIZON_NUM', newOptimizataionHorizonNum);
   },
   chooseEnergyStructure({ commit }, energyPriceStructure) {
     commit('CHOOSE_ENERGY_STRUCTURE', energyPriceStructure);
