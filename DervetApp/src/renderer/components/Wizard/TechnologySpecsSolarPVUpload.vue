@@ -33,7 +33,7 @@
             </label>
           </div>
           <div class="col-md-7">
-            <input 
+            <input
               type="file"
               id="generation-profile-timeseries"
               class="form-control"

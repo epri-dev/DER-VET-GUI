@@ -521,7 +521,7 @@
 
       <nav-buttons
         back-link="/wizard/technology-specs"
-        continue-link="/wizard/technology-specs"
+        :continue-link="`/wizard/technology-specs-battery-cycle/${this.inputId}`"
         :save="this.save"
       />
 
@@ -571,6 +571,7 @@
           inputDailyCycleLimit: defaults.dailyCycleLimit,
           inputCalendarDegradationRate: defaults.calendarDegradationRate,
           inputIncludeCycleDegradation: defaults.includeCycleDegradation,
+          inputBatteryCycles: defaults.batteryCycles,
           inputIncludeAuxiliaryLoad: defaults.includeAuxiliaryLoad,
           inputAuxiliaryLoad: defaults.auxiliaryLoad,
           inputIncludeStartupCost: defaults.includeStartupCost,
@@ -608,6 +609,7 @@
           inputDailyCycleLimit: batterySpecs.dailyCycleLimit,
           inputCalendarDegradationRate: batterySpecs.calendarDegradationRate,
           inputIncludeCycleDegradation: batterySpecs.includeCycleDegradation,
+          inputBatteryCycles: batterySpecs.batteryCycles,
           inputIncludeAuxiliaryLoad: batterySpecs.includeAuxiliaryLoad,
           inputAuxiliaryLoad: batterySpecs.auxiliaryLoad,
           inputIncludeStartupCost: batterySpecs.includeStartupCost,
@@ -655,6 +657,7 @@
           dailyCycleLimit: this.inputDailyCycleLimit,
           calendarDegradationRate: this.inputCalendarDegradationRate,
           includeCycleDegradation: this.inputIncludeCycleDegradation,
+          batteryCycles: this.inputBatteryCycles,
           includeAuxiliaryLoad: this.inputIncludeAuxiliaryLoad,
           auxiliaryLoad: this.inputAuxiliaryLoad,
           includeStartupCost: this.inputIncludeStartupCost,
