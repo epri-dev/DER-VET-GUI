@@ -128,7 +128,7 @@
           <select
             class="form-control numberbox"
             id="timestep"
-            v-model="inputTimestep">
+            v-model="timestep">
             <option
               v-for="value in sharedValidation.generationProfileTimestep.allowedValues"
               v-bind:value="value">
@@ -153,7 +153,7 @@
 </template>
 
 <script>
-  import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
+  import { sharedValidation } from '../../models/Shared.js';
   import CriticalLoadTimeSeries from '../../models/CriticalLoadTimeSeries';
   import csvUploadMixin from '../../mixins/csvUploadMixin';
   import NavButtons from './NavButtons';
@@ -177,7 +177,7 @@
         reliabilityNu: p.reliabilityNu,
         reliabilityGamma: p.reliabilityGamma,
         reliabilityMaxOutageDuration: p.reliabilityMaxOutageDuration,
-        inputTimestep: sharedDefaults.generationProfileTimestep,
+        timestep: p.timestep,
         dataYear: p.dataYear,
         pvTechnologies: p.technologySpecsSolarPV,
         optionsYN: [
@@ -188,7 +188,7 @@
     },
     methods: {
       save() {
-        const criticalLoad = new CriticalLoadTimeSeries(this.inputTimestep, this.inputTimeseries);
+        const criticalLoad = new CriticalLoadTimeSeries(this.timestep, this.inputTimeseries);
         this.$store.dispatch('setReliabilityPostOptimizationOnly', this.postOptimizationOnly);
         this.$store.dispatch('setReliabilityTarget', this.reliabilityTarget);
         this.$store.dispatch('setReliabilityNu', this.reliabilityNu);

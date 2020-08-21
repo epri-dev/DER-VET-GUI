@@ -76,10 +76,10 @@
           <select
             class="form-control numberbox"
             id="timestep"
-            v-model="inputTimestep">
+            v-model="timestep">
             <option
               v-for="value in sharedValidation.generationProfileTimestep.allowedValues"
-              v-bind:value="value">
+              v-bind:value="value" :disabled="true">
               {{value}}
             </option>
           </select>
@@ -102,7 +102,7 @@
 <script>
   import '../../assets/samples/SampleSiteLoad-8760.csv';
   import '../../assets/samples/SampleSiteLoad-8784.csv';
-  import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
+  import { sharedValidation } from '../../models/Shared.js';
   import SiteLoadTimeSeries from '../../models/SiteLoadTimeSeries';
   import csvUploadMixin from '../../mixins/csvUploadMixin';
   import NavButtons from './NavButtons';
@@ -116,13 +116,13 @@
         sharedValidation,
         inputNoChargingFromGrid: p.noChargingFromGrid,
         inputNoDischargingToGrid: p.noDischargingToGrid,
-        inputTimestep: sharedDefaults.generationProfileTimestep,
+        timestep: p.generationProfileTimestep,
         dataYear: p.dataYear,
       };
     },
     methods: {
       save() {
-        const siteLoad = new SiteLoadTimeSeries(this.inputTimestep, this.inputTimeseries);
+        const siteLoad = new SiteLoadTimeSeries(this.timestep, this.inputTimeseries);
         this.$store.dispatch('setSiteLoad', siteLoad);
         this.$store.dispatch('setNoChargingFromGrid', this.inputNoChargingFromGrid);
         this.$store.dispatch('setNoDischargingToGrid', this.inputNoDischargingToGrid);

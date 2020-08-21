@@ -63,17 +63,14 @@
               <select
                 class="form-control numberbox"
                 id="timestep"
-                v-model="inputTimestep">
+                v-model="timestep">
                 <option
                   v-for="value in sharedValidation.generationProfileTimestep.allowedValues"
-                  v-bind:value="value">
+                  v-bind:value="value" :disabled="true">
                   {{value}}
                 </option>
               </select>
               <span class="unit-label">minutes</span>
-            </div>
-            <div class="col-md-5">
-              <p class="tool-tip tooltip-col">What is the timestep that the optimization will use??</p>
             </div>
           </div>
         </div>
@@ -89,7 +86,7 @@
 </template>
 
 <script>
-  import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
+  import { sharedValidation } from '../../models/Shared.js';
   import PriceTimeSeries from '../../models/PriceTimeSeries';
   import csvUploadMixin from '../../mixins/csvUploadMixin';
   import NavButtons from './NavButtons';
@@ -104,7 +101,7 @@
         sharedValidation,
         daGrowth: p.daGrowth,
         daPrice: p.daPrice,
-        inputTimestep: sharedDefaults.generationProfileTimestep,
+        timestep: p.timestep,
         dataYear: p.dataYear,
         optionsYN: [
           { text: 'Yes', value: true },
