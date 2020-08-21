@@ -55,6 +55,9 @@
             <!-- <p class="tool-tip">Currently: {{projectAnalysisHorizon}}</p> -->
           </div>
         </div>
+      </fieldset>
+      <fieldset class="section-group">
+        <legend>Time Series Data</legend>
         <div class="row form-group">
           <div class="col-md-3 control-label">
             <b>Data Year</b>
@@ -63,8 +66,29 @@
             <input v-model.number="inputDataYear" class="form-control numberbox" id="dataYear" type="number" min="1980" step="1">
           </div>
           <div class="col-md-5">
-            <p class="tool-tip">DER-VET uses exactly one year of data. If the year this data comes from is different from the year the optimization is run against, it will be escalated from the data year to the optimization year.</p>
+            <p class="tool-tip">Wizard mode only allows one year of data. If the year this data comes from is different from the year the optimization is run against, it will be escalated from the data year to the optimization year.</p>
             <!-- <p class="tool-tip">Currently: {{projDataYear}}</p> -->
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-md-3">
+            <label class="control-label">Timestep</label>
+          </div>
+          <div class="col-md-4">
+            <select
+              class="form-control numberbox"
+              id="timestep"
+              v-model="inputTimestep">
+              <option
+                v-for="value in validation.timestep.allowedValues"
+                v-bind:value="value">
+                {{value}}
+              </option>
+            </select>
+            <span class="unit-label">minutes</span>
+          </div>
+          <div class="col-md-5">
+            <p class="tool-tip tooltip-col tt-col-0">What is the timestep that the optimization will use?</p>
           </div>
         </div>
       </fieldset>
@@ -149,6 +173,7 @@
       getDataFromProject() {
         const projectSpecs = this.$store.state.Project;
         return {
+          inputTimestep: projectSpecs.timestep,
           inputStartYear: projectSpecs.startYear,
           inputOwnership: projectSpecs.ownership,
           inputLocation: projectSpecs.gridLocation,
@@ -164,6 +189,7 @@
         this.$store.dispatch('setDataYear', this.inputDataYear);
         this.$store.dispatch('setGridLocation', this.inputLocation);
         this.$store.dispatch('setOwnership', this.inputOwnership);
+        this.$store.dispatch('setTimestep', this.inputTimestep);
       },
     },
   };

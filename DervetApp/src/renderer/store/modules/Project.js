@@ -15,6 +15,7 @@ const getDefaultState = () => ({
   ownership: 'Customer',
   optimizationHorizon: 'year',
   optimizationHorizonNum: 0,
+  timestep: 60,
 
   technologySpecsSolarPV: [],
   technologySpecsICE: [],
@@ -287,6 +288,9 @@ const mutations = {
   SET_OWNERSHIP(state, newOwnership) {
     state.ownership = newOwnership;
   },
+  SET_TIMESTEP(state, newTimestep) {
+    state.timestep = newTimestep;
+  },
   SET_OPTIMIZATION_HORIZON(state, newOptimizataionHorizon) {
     state.optimizationHorizon = newOptimizataionHorizon;
   },
@@ -491,6 +495,9 @@ const actions = {
   },
   setOwnership({ commit }, newOwnership) {
     commit('SET_OWNERSHIP', newOwnership);
+  },
+  setTimestep({ commit }, newTimestep) {
+    commit('SET_TIMESTEP', newTimestep);
   },
   setOptimizationHorizon({ commit }, newOptimizataionHorizon) {
     commit('SET_OPTIMIZATION_HORIZON', newOptimizataionHorizon);
