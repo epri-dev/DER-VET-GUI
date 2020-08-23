@@ -52,6 +52,24 @@ const getDefaultState = () => ({
   daGrowth: 0,
   daPrice: null,
 
+  srGrowth: 0,
+  srDuration: 0,
+  srPrice: null,
+
+  nsrGrowth: 0,
+  nsrDuration: 0,
+  nsrPrice: null,
+
+  frEOU: 0.3,
+  frEOD: 0.3,
+  frGrowth: 0,
+  frEnergyPriceGrowth: 0,
+  frCombinedMarket: false,
+  frDuration: 0,
+  frPrice: null,
+  frUpPrice: null,
+  frDownPrice: null,
+
   reliabilityTarget: 4,
   postOptimizationOnly: false,
   reliabilityNu: 20,
@@ -166,6 +184,51 @@ const mutations = {
   },
   SET_DA_PRICE(state, newDAPrice) {
     state.daPrice = newDAPrice;
+  },
+  SET_SR_GROWTH(state, newSRGrowth) {
+    state.srGrowth = newSRGrowth;
+  },
+  SET_SR_PRICE(state, newSRPrice) {
+    state.srPrice = newSRPrice;
+  },
+  SET_SR_DURATION(state, newSRDuration) {
+    state.srDuration = newSRDuration;
+  },
+  SET_NSR_GROWTH(state, newNSRGrowth) {
+    state.nsrGrowth = newNSRGrowth;
+  },
+  SET_NSR_PRICE(state, newNSRPrice) {
+    state.nsrPrice = newNSRPrice;
+  },
+  SET_NSR_DURATION(state, newNSRDuration) {
+    state.nsrDuration = newNSRDuration;
+  },
+  SET_FR_EOU(state, newFReou) {
+    state.frEou = newFReou;
+  },
+  SET_FR_EOD(state, newFReod) {
+    state.frEod = newFReod;
+  },
+  SET_FR_GROWTH(state, newFRGrowth) {
+    state.frGrowth = newFRGrowth;
+  },
+  SET_FR_ENERGY_GROWTH(state, newFREnergyGrowth) {
+    state.frEnergyPriceGrowth = newFREnergyGrowth;
+  },
+  SET_FR_COMBINED_MARKET(state, newFRCombinedMarket) {
+    state.frCombinedMarket = newFRCombinedMarket;
+  },
+  SET_FR_DURATION(state, newFRDuration) {
+    state.frDuration = newFRDuration;
+  },
+  SET_FR_PRICE(state, newFRPrice) {
+    state.frPrice = newFRPrice;
+  },
+  SET_FR_UP_PRICE(state, newFRUpPrice) {
+    state.frUpPrice = newFRUpPrice;
+  },
+  SET_FR_DOWN_PRICE(state, newFRDownPrice) {
+    state.frDownPrice = newFRDownPrice;
   },
   ADD_TECHNOLOGY_SPECS_SOLAR_PV(state, newSolar) {
     state.technologySpecsSolarPV.push(newSolar);
@@ -338,6 +401,51 @@ const actions = {
   },
   setDAPrice({ commit }, newDAPrice) {
     commit('SET_DA_PRICE', newDAPrice);
+  },
+  setSRGrowth({ commit }, newSRGrowth) {
+    commit('SET_SR_GROWTH', newSRGrowth);
+  },
+  setSRPrice({ commit }, newSRPrice) {
+    commit('SET_SR_PRICE', newSRPrice);
+  },
+  setSRDuration({ commit }, newSRDuration) {
+    commit('SET_SR_DURATION', newSRDuration);
+  },
+  setNSRGrowth({ commit }, newNSRGrowth) {
+    commit('SET_NSR_GROWTH', newNSRGrowth);
+  },
+  setNSRPrice({ commit }, newNSRPrice) {
+    commit('SET_NSR_PRICE', newNSRPrice);
+  },
+  setNSRDuration({ commit }, newNSRDuration) {
+    commit('SET_NSR_DURATION', newNSRDuration);
+  },
+  setFReou({ commit }, newFReou) {
+    commit('SET_FR_EOU', newFReou);
+  },
+  setFReod({ commit }, newFReod) {
+    commit('SET_FR_EOD', newFReod);
+  },
+  setFRGrowth({ commit }, newFRGrowth) {
+    commit('SET_FR_GROWTH', newFRGrowth);
+  },
+  setFREnergyGrowth({ commit }, newFREnergyGrowth) {
+    commit('SET_FR_ENERGY_GROWTH', newFREnergyGrowth);
+  },
+  setFRCombinedMarket({ commit }, newFRCombinedMarket) {
+    commit('SET_FR_COMBINED_MARKET', newFRCombinedMarket);
+  },
+  setFRDuration({ commit }, newFRDuration) {
+    commit('SET_FR_DURATION', newFRDuration);
+  },
+  setFRPrice({ commit }, newFRPrice) {
+    commit('SET_FR_PRICE', newFRPrice);
+  },
+  setFRUpPrice({ commit }, newFRUpPrice) {
+    commit('SET_FR_UP_PRICE', newFRUpPrice);
+  },
+  setFRDownPrice({ commit }, newFRDownPrice) {
+    commit('SET_FR_DOWN_PRICE', newFRDownPrice);
   },
   addTechnologySpecsSolarPV({ commit }, newSolar) {
     commit('ADD_TECHNOLOGY_SPECS_SOLAR_PV', newSolar);
