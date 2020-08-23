@@ -7,6 +7,7 @@
 body {
     padding-top: 50px;
     padding-bottom: 20px;
+    font-size: 0.95em;
 }
 
 .body-content {
@@ -134,6 +135,16 @@ body {
 
 .main .alert-warning, .expert-mode-main .alert-warning {
     margin: 25px 0 0 0;
+}
+
+
+/*
+ * Trash button hover css
+*/
+
+ .fas.fa-trash:hover {
+  color: steelblue;
+  cursor: pointer;
 }
 
 /*

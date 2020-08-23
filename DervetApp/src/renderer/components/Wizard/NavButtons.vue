@@ -7,7 +7,7 @@
     </div>
     <div class="col-md-9">
       <router-link v-on:click.native="save" :to="this.continueLink" class="btn btn-primary pull-right">
-        Save and Continue
+        Save and Continue &gt;&gt;
       </router-link>
     </div>
   </div>

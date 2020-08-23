@@ -102,6 +102,13 @@
           External Incentives
         </router-link>
         <router-link
+          class="nav nav-sidebar sidebar-indent"
+          v-bind:class="{ current: isActive(this.financialInputsRetailTariffPath) }"
+          :to="this.financialInputsRetailTariffPath">
+          Retail Tariff
+        </router-link>
+
+        <router-link
           class="nav nav-sidebar sidebar-root-el"
           v-bind:class="{ current: isActive(this.sensitivityAnalysisPath) }"
           :to="this.sensitivityAnalysisPath">
@@ -134,6 +141,7 @@
         objectivesReliabilityPath: '/wizard/objectives-parameters-reliability',
         financialInputsPath: '/wizard/financial-inputs',
         financialInputsExternalIncentivesPath: '/wizard/financial-inputs-external-incentives',
+        financialInputsRetailTariffPath: '/wizard/financial-inputs-retail-tariff',
         sensitivityAnalysisPath: '/wizard/sensitivity-analysis',
       };
     },

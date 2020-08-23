@@ -59,6 +59,7 @@ const getDefaultState = () => ({
   reliabilityMaxOutageDuration: 168,
   criticalLoad: null,
 
+  retailTariffBillingPeriods: [],
 });
 
 const state = getDefaultState();
@@ -198,6 +199,9 @@ const mutations = {
     const indexMatchingId = getters.getIndexOfSolarId(state)(payload.solarId);
     tmpSolarPVSpecs[indexMatchingId].generationProfile = payload.generationProfile;
     state.technologySpecsSolarPV = tmpSolarPVSpecs;
+  },
+  REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS(state) {
+    state.retailTariffBillingPeriods = [];
   },
   RESET_PROJECT_TO_DEFAULT(state) {
     Object.assign(state, getDefaultState());
@@ -355,6 +359,9 @@ const actions = {
   },
   addGenerationProfileToTechnologySpecsPV({ commit }, payload) {
     commit('ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV', payload);
+  },
+  removeAllRetailTariffBillingPeriods({ commit }) {
+    commit('REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS');
   },
   resetProjectToDefault({ commit }) {
     commit('RESET_PROJECT_TO_DEFAULT');
