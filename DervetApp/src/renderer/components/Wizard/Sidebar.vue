@@ -88,6 +88,24 @@
           :to="this.objectivesReliabilityPath">
           Reliability
         </router-link>
+        <router-link
+          class="nav nav-sidebar sidebar-indent"
+          v-bind:class="{ current: isActive(this.objectivesFRPath) }"
+          :to="this.objectivesFRPath">
+          Frequency Regulation
+        </router-link>
+        <router-link
+          class="nav nav-sidebar sidebar-indent"
+          v-bind:class="{ current: isActive(this.objectivesSRPath) }"
+          :to="this.objectivesSRPath">
+          Spinning Reserves
+        </router-link>
+        <router-link
+          class="nav nav-sidebar sidebar-indent"
+          v-bind:class="{ current: isActive(this.objectivesNSRPath) }"
+          :to="this.objectivesNSRPath">
+          Non-Spinning Reserves
+        </router-link>
 
         <router-link
           class="nav nav-sidebar sidebar-root-el"
@@ -131,6 +149,10 @@
         objectivesSiteInformationPath: '/wizard/objectives-parameters-site-information',
         objectivesDeferralPath: '/wizard/objectives-parameters-deferral',
         objectivesDAPath: '/wizard/objectives-parameters-da',
+        objectivesFRPath: '/wizard/objectives-parameters-fr',
+        objectivesSRPath: '/wizard/objectives-parameters-sr',
+        objectivesNSRPath: '/wizard/objectives-parameters-nsr',
+
         objectivesReliabilityPath: '/wizard/objectives-parameters-reliability',
         financialInputsPath: '/wizard/financial-inputs',
         financialInputsExternalIncentivesPath: '/wizard/financial-inputs-external-incentives',

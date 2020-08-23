@@ -1,27 +1,43 @@
 ﻿<template>
   <div>
-    <h3>Services: Day Ahead Energy Price</h3>
+    <h3>Services: Non-Spinning Reserve Price</h3>
     <hr>
     <div class="form-horizontal form-buffer">
       <div class="row form-group">
           <div class="col-md-4">
-            <label class="control-label" for="Growth">Growth Rate of Day Ahead Energy Prices</label>
+            <label class="control-label" for="Growth">Growth Rate of Non-Spinning Reserve Prices</label>
           </div>
           <div class="col-md-3">
             <input
               class="form-control numberbox"
               id="growth"
               type="text"
-              v-model.number="inputDAGrowth">
+              v-model.number="inputNSRGrowth">
             <span class="unit-label">%/year</span>
           </div>
           <div class="col-md-5">
-            <p class="tool-tip tooltip-col">What is the growth rate of Day Ahead Energy Price?</p>
+            <p class="tool-tip tooltip-col">What is the growth rate of Non-Spinning Reserve Price?</p>
           </div>
       </div>
-        <div v-if="daPrice !== null" class="form-group">
+      <div class="row form-group">
+        <div class="col-md-4">
+          <label class="control-label" for="Growth">Duration for Energy Reservation Requirments</label>
+        </div>
+        <div class="col-md-3">
+          <input
+            class="form-control numberbox"
+            id="growth"
+            type="text"
+            v-model.number="inputDuration">
+          <span class="unit-label">hours</span>
+        </div>
+        <div class="col-md-5">
+          <p class="tool-tip">How much energy capability (kWh) should the DERs reserve for each kW of participation in Non-Spinning Reserve? The DERs will not use this energy capability for other services to be ready for the worst-case scenario.</p>
+        </div>
+      </div>
+        <div v-if="nsrPrice !== null" class="form-group">
           <div class="col-md-12">
-            <label for="UseExistingData" class="control-label">Day Ahead Energy Price data has already been uploaded for this project. Do you want to use the existing data?</label>
+            <label for="UseExistingData" class="control-label">Non-Spinning Reserve Price data has already been uploaded for this project. Do you want to use the existing data?</label>
           </div>
           <div class="col-md-12">
             <b-form-group>
@@ -33,11 +49,11 @@
             </b-form-group>
           </div>
         </div>
-        <div id="DataFile-Form" v-if="!(useExisting)||(daPrice === null)">
+        <div id="DataFile-Form" v-if="!(useExisting) || (nsrPrice === null)">
           <hr />
           <div class="form-group">
             <div class="col-md-12">
-              Upload the day ahead energy price as a .csv file that contains a reading at each time interval on a separate line.
+              Upload the non-spinning reserve price as a .csv file that contains a reading at each time interval on a separate line.
               The number of total lines expected depends on the selected year and timestep selected below. For instance, an upload with a timestep
               of 30-minutes for a year with 365 days would require an input file with 17,520 readings.
             </div>
@@ -45,43 +61,22 @@
           <hr />
           <div class="row form-group">
             <div class="col-md-3">
-              <label for="DataFile" class="control-label">Day Ahead Energy Price data for the year {{dataYear}} <span class="unit-label"> ($/kWh)</span></label>
+              <label for="DataFile" class="control-label">Non-Spinning Reserve Price data for the year {{dataYear}} <span class="unit-label"> ($/kWh)</span></label>
             </div>
             <div class="col-md-9">
               <input
               type="file"
-              id="da-price-timeseries"
+              id="sr-price-timeseries"
               class="form-control"
               @change="onFileUpload">
-            </div>
-          </div>
-          <div class="row form-group">
-            <div class="col-md-4">
-              <label class="control-label">Timestep</label>
-            </div>
-            <div class="col-md-3">
-              <select
-                class="form-control numberbox"
-                id="timestep"
-                v-model="inputTimestep">
-                <option
-                  v-for="value in sharedValidation.generationProfileTimestep.allowedValues"
-                  v-bind:value="value">
-                  {{value}}
-                </option>
-              </select>
-              <span class="unit-label">minutes</span>
-            </div>
-            <div class="col-md-5">
-              <p class="tool-tip tooltip-col">What is the timestep that the optimization will use??</p>
             </div>
           </div>
         </div>
         <hr />
         <!-- TODO continue link should be dependent on selections in Services component -->
         <nav-buttons
-          back-link="/wizard/objectives-parameters-da"
-          continue-link="/wizard/objectives-parameters-da"
+          back-link="/wizard/objectives-parameters-sr"
+          continue-link="/wizard/objectives-parameters-sr"
           :save="this.save"
         />
     </div>
@@ -102,8 +97,9 @@
       return {
         useExisting: true,
         sharedValidation,
-        daGrowth: p.daGrowth,
-        daPrice: p.daPrice,
+        inputNSRGrowth: p.nsrGrowth,
+        inputDuration: p.nsrDuration,
+        nsrPrice: p.nsrPrice,
         inputTimestep: sharedDefaults.generationProfileTimestep,
         dataYear: p.dataYear,
         optionsYN: [
@@ -114,9 +110,11 @@
     },
     methods: {
       save() {
-        const price = new PriceTimeSeries(this.inputTimestep, 'DA', this.inputTimeseries);
-        this.$store.dispatch('setDAGrowth', this.daGrowth);
-        this.$store.dispatch('setDAPrice', price);
+        const price = new PriceTimeSeries(this.inputTimestep, 'NSR', this.inputTimeseries);
+        this.$store.dispatch('newNSRPrice', price);
+
+        this.$store.dispatch('setNSRGrowth', this.inputNSRGrowth);
+        this.$store.dispatch('setNSRDuration', this.inputDuration);
       },
     },
   };
