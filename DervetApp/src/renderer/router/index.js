@@ -58,9 +58,19 @@ export default new Router({
           props: true,
         },
         {
-          path: 'financial-inputs',
-          name: 'financialInputs',
-          component: require('@/components/Wizard/FinancialInputs').default,
+          path: 'financial-inputs-retail-tariff',
+          name: 'financialInputsRetailTariff',
+          component: require('@/components/Wizard/FinancialInputsRetailTariff').default,
+        },
+        {
+          path: 'financial-inputs-retail-tariff-billing-period',
+          name: 'financialInputsRetailTariffBillingPeriod',
+          component: require('@/components/Wizard/FinancialInputsRetailTariffBillingPeriod').default,
+        },
+        {
+          path: 'financial-inputs-retail-tariff-import',
+          name: 'financialInputsRetailTariffImport',
+          component: require('@/components/Wizard/FinancialInputsRetailTariffImport').default,
         },
         {
           path: 'objectives-parameters-deferral',
