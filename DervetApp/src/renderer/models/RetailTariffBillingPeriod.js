@@ -15,7 +15,16 @@ const defaults = {
 const validation = {
   chargeType: {
     type: String,
-    allowedValues: ['Energy', 'Demand'],
+    allowedValues: [{
+      value: 'Energy',
+      unit: '$/kWh',
+      valueText: 'Energy Price',
+    },
+    {
+      value: 'Demand',
+      unit: '$/kW',
+      valueText: 'Demand Rate',
+    }],
   },
   weekday: {
     allowedValues: [

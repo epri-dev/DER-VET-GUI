@@ -48,7 +48,7 @@
                   <router-link to="/wizard/financial-inputs-retail-tariff-billing-period" class="nav">
                     Edit
                   </router-link> | 
-                  <div class="fas fa-trash"></div>
+                  <div @click="removeOne(pd.id)" class="fas fa-trash"></div>
                 </td>
               </tr>
             </tbody>
@@ -104,6 +104,9 @@
       },
       removeAll() {
         this.$store.dispatch('removeAllRetailTariffBillingPeriods');
+      },
+      removeOne(id) {
+        this.$store.dispatch('removeRetailTariffBillingPeriod', id);
       },
       save() {
         return 'placeholder';
