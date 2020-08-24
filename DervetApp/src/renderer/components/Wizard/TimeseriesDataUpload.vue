@@ -3,8 +3,8 @@
     <hr>
     <div class="row">
       <div class="col-md-12">
-        Upload the deferral load as a <code>.csv</code> file that contains a reading at each time interval on a separate line.
-        The number of total lines expected depends on the selected year and timestep. 
+        Upload the {{this.dataName}} as a <code>.csv</code> file that contains a reading at each time interval on a separate line.
+        The number of total lines expected depends on the selected year and timestep. For instance, an upload with a timestep of 30-minutes for a year with 365 days would require an input file with 17,520 readings, whereas an upload with a timestep of 60-minutes on a year with 366 days would require an input file with 8,784 readings.
       </div>
     </div>
     <br>
@@ -19,7 +19,7 @@
         <label>Timestep:</label>
       </div>
       <div class="col-md-5">
-        <label>{{this.timeStep}}</label>
+        <label>{{this.timestep}}</label>
         <span class="unit-label">minutes</span>
       </div>
 
@@ -31,7 +31,7 @@
     </div>
     <div class="form-group row">
       <div class="col-md-5">
-        <label for="DataFile" class="control-label">
+        <label for="DataFile" class="control-label capitalize">
           {{this.dataName}} data
           <span class="unit-label">({{this.units}})</span>
         </label>
@@ -48,10 +48,16 @@
 </template>
 
 <script>
-  import csvUploadMixin from '../../mixins/csvUploadMixin';
+  import helpers from '@/util/helpers';
+
   export default {
-    mixins: [csvUploadMixin],
     computed: {
+      dataYear() {
+        return this.$store.state.Project.dataYear;
+      },
+      timestep() {
+        return this.$store.state.Project.timestep;
+      },
       isLeapYear() {
         const conditionOne = (this.dataYear % 4 === 0);
         const conditionTwo = (this.dataYear % 100 !== 0) || (this.dataYear % 400 === 0);
@@ -59,16 +65,20 @@
       },
       numberOfEntriesRequired() {
         if (this.isLeapYear) {
-          return (8784 * this.timeStep) / 60;
+          return (8784 * this.timestep) / 60;
         }
-        return (8760 * this.timeStep) / 60;
+        return (8760 * this.timestep) / 60;
       },
     },
     props: {
-      dataYear: Number,
-      timeStep: Number,
       dataName: String,
       units: String,
+    },
+    methods: {
+      onFileUpload(e) {
+        const onSuccess = (flatResults) => { this.$emit('uploaded', flatResults); };
+        helpers.parseCsvFromFile(e, onSuccess);
+      },
     },
   };
 </script>

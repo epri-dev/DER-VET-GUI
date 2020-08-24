@@ -4,11 +4,12 @@
     <hr>
     <form>
       <div class="form-horizontal form-buffer">
-        <div class="form-group row">
-          <div class="col-md-12">
-            Upload the PV solar generation profile as a <code>.csv</code> file that contains the <i>per rated capacity</i> reading at each time interval on a separate line. The number of total lines expected depends on the selected year and timestep selected below. For instance, an upload with a timestep of 30-minutes for a year with 365 days would require an input file with 17,520 readings, whereas an upload with a timestep of 60-minutes on a year with 366 days would require an input file with 8,784 readings.
-          </div>
-        </div>
+        <timeseries-data-upload
+          data-name="solar generation profile"
+          units="kW"
+          @uploaded="receiveTimeseriesData"
+        />
+
         <br>
         <div class="form-group row">
           <div class="col-md-12">
@@ -25,39 +26,6 @@
           </div>
         </div>
         <br>
-        <div class="form-group row">
-          <div class="col-md-5">
-            <label class="control-label" for="generation-profile-timeseries">
-              Generation Profile File for {{dataYear}}
-              <span class="unit-label">(kW / rated kW)</span>
-            </label>
-          </div>
-          <div class="col-md-7">
-            <input 
-              type="file"
-              id="generation-profile-timeseries"
-              class="form-control"
-              @change="onFileUpload">
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-md-5">
-            <label class="control-label">Timestep</label>
-          </div>
-          <div class="col-md-7">
-            <select
-              class="form-control numberbox"
-              id="timestep"
-              v-model="inputTimestep">
-              <option
-                v-for="value in sharedValidation.generationProfileTimestep.allowedValues"
-                v-bind:value="value">
-                {{value}}
-              </option>
-            </select>
-            <span class="unit-label">minutes</span>
-          </div>
-        </div>
         <hr>
 
         <nav-buttons
@@ -74,19 +42,19 @@
 <script>
   import '../../assets/samples/SamplePVgen-8760.csv';
   import '../../assets/samples/SamplePVgen-8784.csv';
-  import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
+  import { sharedDefaults } from '../../models/Shared.js';
   import PVGenerationTimeSeries from '../../models/PVGenerationTimeSeries';
   import csvUploadMixin from '../../mixins/csvUploadMixin';
   import NavButtons from './NavButtons';
+  import TimeseriesDataUpload from './TimeseriesDataUpload';
 
   export default {
-    components: { NavButtons },
+    components: { NavButtons, TimeseriesDataUpload },
     mixins: [csvUploadMixin],
     props: ['solarId'],
     data() {
       const p = this.$store.state.Project;
       return {
-        sharedValidation,
         inputTimestep: sharedDefaults.generationProfileTimestep,
         dataYear: p.dataYear,
       };

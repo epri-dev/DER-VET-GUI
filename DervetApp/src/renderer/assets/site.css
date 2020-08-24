@@ -148,6 +148,13 @@ body {
 }
 
 /*
+ * Capitalize first letter of text in element
+ */
+.capitalize {
+    text-transform: capitalize;
+}
+
+/*
  * Placeholder dashboard ideas
  */
 

@@ -1,5 +1,3 @@
-import helpers from '../util/helpers';
-
 const csvUploadMixin = {
   data() {
     return {
@@ -7,9 +5,8 @@ const csvUploadMixin = {
     };
   },
   methods: {
-    onFileUpload(e) {
-      const onSuccess = (flatResults) => { this.inputTimeseries = flatResults; };
-      helpers.parseCsvFromFile(e, onSuccess);
+    receiveTimeseriesData(timeseries) {
+      this.inputTimeseries = timeseries;
     },
   },
 };

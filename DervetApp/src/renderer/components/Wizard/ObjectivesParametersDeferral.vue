@@ -74,10 +74,9 @@
       </div>
       <div id="DataFile-Form" style="" v-if="!(useExisting)||(deferralLoad === null)">
         <timeseries-data-upload
-          :data-year="dataYear"
-          :time-step="Number(timestep)"
-          data-name='Deferral Load'
-          units='kW'
+          data-name="deferral load"
+          units="kW"
+          @uploaded="receiveTimeseriesData"
         />
       </div>
       <hr>
