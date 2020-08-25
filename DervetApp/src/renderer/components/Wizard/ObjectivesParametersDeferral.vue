@@ -59,26 +59,12 @@
           <p class="tool-tip tooltip-col">Yearly Cost Avoided for deferring a T and D asset upgrade</p>
         </div>
       </div>
-      <div v-if="deferralLoad !== null" class="form-group">
-        <div class="col-md-12">
-          <label for="UseExistingData" class="control-label">The deferral load has already been uploaded for this project. Do you want to use the existing data?</label>
-        </div>
-        <div class="col-md-12">
-          <b-form-group>
-            <b-form-radio-group
-              v-model="useExisting"
-              :options="sharedValidation.optionsYN.allowedValues"
-            ></b-form-radio-group> 
-          </b-form-group>
-        </div>
-      </div>
-      <div id="DataFile-Form" style="" v-if="!(useExisting)||(deferralLoad === null)">
-        <timeseries-data-upload
-          data-name="deferral load"
-          units="kW"
-          @uploaded="receiveTimeseriesData"
-        />
-      </div>
+      <timeseries-data-upload
+        data-name="deferral load"
+        units="kW"
+        @uploaded="receiveTimeseriesData"
+        :data-exists="deferralLoad !== null"
+      />
       <hr>
       <!-- TODO continue link should be dependent on selections in Services component -->
       <nav-buttons
@@ -91,7 +77,7 @@
 </template>
 
 <script>
-  import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
+  import { sharedValidation } from '../../models/Shared.js';
   import DeferralLoadTimeSeries from '../../models/DeferralLoadTimeSeries';
   import csvUploadMixin from '../../mixins/csvUploadMixin';
   import NavButtons from './NavButtons';
@@ -104,7 +90,6 @@
     data() {
       const p = this.$store.state.Project;
       return {
-        useExisting: sharedDefaults.useExistingTimeSeriesData,
         sharedValidation,
         deferralLoad: p.deferralLoad,
         inputDeferralPlannedLoadLimit: p.deferralPlannedLoadLimit,

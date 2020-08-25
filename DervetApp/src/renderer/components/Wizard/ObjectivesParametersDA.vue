@@ -19,26 +19,12 @@
             <p class="tool-tip tooltip-col">What is the growth rate of Day Ahead Energy Price?</p>
           </div>
       </div>
-      <div v-if="daPrice !== null" class="form-group">
-        <div class="col-md-12">
-          <label for="UseExistingData" class="control-label">Day Ahead Energy Price data has already been uploaded for this project. Do you want to use the existing data?</label>
-        </div>
-        <div class="col-md-12">
-          <b-form-group>
-            <b-form-radio-group
-              v-model="useExisting"
-              :options="sharedValidation.optionsYN.allowedValues"
-            ></b-form-radio-group> 
-          </b-form-group>
-        </div>
-      </div>
-      <div id="DataFile-Form" v-if="!(useExisting)||(daPrice === null)">
-        <timeseries-data-upload
-          data-name="day ahead price"
-          units="kW"
-          @uploaded="receiveTimeseriesData"
-        />
-      </div>
+      <timeseries-data-upload
+        data-name="day ahead price"
+        units="kW"
+        @uploaded="receiveTimeseriesData"
+        :data-exists="daPrice !== null"
+      />
       <hr />
       <!-- TODO continue link should be dependent on selections in Services component -->
       <nav-buttons
@@ -51,7 +37,7 @@
 </template>
 
 <script>
-  import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
+  import { sharedValidation } from '../../models/Shared.js';
   import PriceTimeSeries from '../../models/PriceTimeSeries';
   import csvUploadMixin from '../../mixins/csvUploadMixin';
   import NavButtons from './NavButtons';
@@ -63,7 +49,6 @@
     data() {
       const p = this.$store.state.Project;
       return {
-        useExisting: sharedDefaults.useExistingTimeSeriesData,
         sharedValidation,
         daGrowth: p.daGrowth,
         daPrice: p.daPrice,

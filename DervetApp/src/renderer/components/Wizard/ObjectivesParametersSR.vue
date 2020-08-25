@@ -35,40 +35,25 @@
           <p class="tool-tip">How much energy capability (kWh) should the DERs reserve for each kW of participation in Spinning Reserve? The DERs will not use this energy capability for other services to be ready for the worst-case scenario.</p>
         </div>
       </div>
-        <div v-if="srPrice !== null" class="form-group">
-          <div class="col-md-12">
-            <label for="UseExistingData" class="control-label">Spinning Reserve Price data has already been uploaded for this project. Do you want to use the existing data?</label>
-          </div>
-          <div class="col-md-12">
-            <b-form-group>
-              <b-form-radio-group
-                v-model="useExisting"
-                :options="sharedValidation.optionsYN.allowedValues"
-                name="radio-inline"
-              ></b-form-radio-group> 
-            </b-form-group>
-          </div>
-        </div>
-        <div id="DataFile-Form" v-if="!(useExisting) || (srPrice === null)">
-          <timeseries-data-upload
-            data-name="spinning reserve price"
-            units="kW"
-            @uploaded="receiveTimeseriesData"
-          />
-        </div>
-        <hr />
-        <!-- TODO continue link should be dependent on selections in Services component -->
-        <nav-buttons
-          back-link="/wizard/objectives-parameters-sr"
-          continue-link="/wizard/objectives-parameters-sr"
-          :save="this.save"
-        />
+      <timeseries-data-upload
+        data-name="spinning reserve price"
+        units="$/kW"
+        @uploaded="receiveTimeseriesData"
+        :data-exists="srPrice !== null"
+      />
+      <hr />
+      <!-- TODO continue link should be dependent on selections in Services component -->
+      <nav-buttons
+        back-link="/wizard/objectives-parameters-sr"
+        continue-link="/wizard/objectives-parameters-sr"
+        :save="this.save"
+      />
     </div>
   </div>
 </template>
 
 <script>
-  import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
+  import { sharedValidation } from '../../models/Shared.js';
   import PriceTimeSeries from '../../models/PriceTimeSeries';
   import csvUploadMixin from '../../mixins/csvUploadMixin';
   import NavButtons from './NavButtons';
@@ -80,7 +65,6 @@
     data() {
       const p = this.$store.state.Project;
       return {
-        useExisting: sharedDefaults.useExistingTimeSeriesData,
         sharedValidation,
         inputSRGrowth: p.srGrowth,
         inputDuration: p.srDuration,

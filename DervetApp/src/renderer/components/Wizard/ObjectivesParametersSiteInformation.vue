@@ -28,26 +28,14 @@
         </div>
       </div>
       <!-- TODO whether upload section shows is dependent on selections in Services component -->
-      <div v-if="siteLoad !== null" class="form-group">
-        <div class="col-md-12">
-          <label for="UseExistingData" class="control-label">Site losd data has already been uploaded for this project. Do you want to use the existing data?</label>
-        </div>
-        <div class="col-md-12">
-          <b-form-group>
-            <b-form-radio-group
-              v-model="useExisting"
-              :options="sharedValidation.optionsYN.allowedValues"
-            ></b-form-radio-group> 
-          </b-form-group>
-        </div>
-      </div>
-      <div id="DataFile-Form" v-if="!(useExisting)||(siteLoad === null)">
-        <timeseries-data-upload
-          data-name="site load"
-          units="kW"
-          @uploaded="receiveTimeseriesData"
-        />
-        <hr>
+      <timeseries-data-upload
+        data-name="site load"
+        units="kW"
+        @uploaded="receiveTimeseriesData"
+        :data-exists="siteLoad !== null"
+      />
+      <hr>
+      <div v-if="!(useExisting)||(siteLoad === null)">
         <div class="form-group row">
           <div class="col-md-12">
             <i>
@@ -79,7 +67,7 @@
 <script>
   import '../../assets/samples/SampleSiteLoad-8760.csv';
   import '../../assets/samples/SampleSiteLoad-8784.csv';
-  import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
+  import { sharedValidation } from '../../models/Shared.js';
   import SiteLoadTimeSeries from '../../models/SiteLoadTimeSeries';
   import csvUploadMixin from '../../mixins/csvUploadMixin';
   import NavButtons from './NavButtons';
@@ -91,7 +79,6 @@
     data() {
       const p = this.$store.state.Project;
       return {
-        useExisting: sharedDefaults.useExistingTimeSeriesData,
         sharedValidation,
         inputNoChargingFromGrid: p.noChargingFromGrid,
         inputNoDischargingToGrid: p.noDischargingToGrid,

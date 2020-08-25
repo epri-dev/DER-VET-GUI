@@ -101,66 +101,32 @@
       </div>
     </div>
     <div class="form-horizontal form-buffer">
-      <div v-if="frPrice !== null" class="form-group">
-        <div class="col-md-12">
-          <label for="UseExistingData" class="control-label">Frequency price data has already been uploaded for this project. Do you want to use the existing data?</label>
-        </div>
-        <div class="col-md-12">
-          <b-form-group>
-            <b-form-radio-group
-              v-model="useExistingRegulationPrices"
-              :options="sharedValidation.optionsYN.allowedValues"
-            ></b-form-radio-group> 
-          </b-form-group>
-        </div>
-      </div>
-      <div id="DataFile-Form-combined-price" v-if="(!(useExistingRegulationPrices)||(frPrice === null)) && inputCombinedMarket">
-        <timeseries-data-upload
-          data-name="frequency regulation price"
-          units="kW"
-          @uploaded="receiveTimeseriesData"
-        />
-      </div>
-      <div v-if="frUpPrice !== null" class="form-group">
-        <div class="col-md-12">
-          <label for="UseExistingData" class="control-label">Frequency price data has already been uploaded for this project. Do you want to use the existing data?</label>
-        </div>
-        <div class="col-md-12">
-          <b-form-group>
-            <b-form-radio-group
-              v-model="useExistingUpPrices"
-              :options="sharedValidation.optionsYN.allowedValues"
-            ></b-form-radio-group> 
-          </b-form-group>
-        </div>
-      </div>
-      <div id="DataFile-Form-prices" v-if="!(useExistingUpPrices)||((frUpPrice === null)&&!(inputCombinedMarket))">
-        <timeseries-data-upload
-          data-name="frequency regulation up price"
-          units="kW"
-          @uploaded="receiveTimeseriesDataUpPrice"
-        />
-      </div>
-      <div v-if="frDownPrice !== null" class="form-group">
-        <div class="col-md-12">
-          <label for="UseExistingData" class="control-label">Frequency price data has already been uploaded for this project. Do you want to use the existing data?</label>
-        </div>
-        <div class="col-md-12">
-          <b-form-group>
-            <b-form-radio-group
-              v-model="useExistingDownPrices"
-              :options="sharedValidation.optionsYN.allowedValues"
-            ></b-form-radio-group> 
-          </b-form-group>
-        </div>
-      </div>
-      <div id="DataFile-Form-prices" v-if="!(useExistingDownPrices)||((frDownPrice === null)&&!(inputCombinedMarket))">
-        <timeseries-data-upload
-          data-name="frequency regulation down price"
-          units="kW"
-          @uploaded="receiveTimeseriesDataDownPrice"
-        />
-      </div>
+
+      <timeseries-data-upload
+        data-name="frequency regulation price"
+        units="$/kW"
+        @uploaded="receiveTimeseriesData"
+        :data-exists="frPrice !== null"
+        v-if="inputCombinedMarket"
+      />
+      
+      
+      <timeseries-data-upload
+        data-name="frequency regulation up price"
+        units="$/kW"
+        @uploaded="receiveTimeseriesDataUpPrice"
+        :data-exists="frUpPrice !== null"
+        v-if="!(inputCombinedMarket)"
+      />
+
+      <timeseries-data-upload
+        data-name="frequency regulation down price"
+        units="$/kW"
+        @uploaded="receiveTimeseriesDataDownPrice"
+        :data-exists="frDownPrice !== null"
+        v-if="!(inputCombinedMarket)"
+      />
+
       <hr />
       <!-- TODO continue link should be dependent on selections in Services component -->
       <nav-buttons
@@ -173,7 +139,7 @@
 </template>
 
 <script>
-  import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
+  import { sharedValidation } from '../../models/Shared.js';
   import PriceTimeSeries from '../../models/PriceTimeSeries';
   import csvUploadMixin from '../../mixins/csvUploadMixin';
   import NavButtons from './NavButtons';
@@ -185,9 +151,6 @@
     data() {
       const p = this.$store.state.Project;
       return {
-        useExistingRegulationPrices: sharedDefaults.useExistingTimeSeriesData,
-        useExistingUpPrices: sharedDefaults.useExistingTimeSeriesData,
-        useExistingDownPrices: sharedDefaults.useExistingTimeSeriesData,
         sharedValidation,
         inputEOU: p.frEOU,
         inputEOD: p.frEOD,

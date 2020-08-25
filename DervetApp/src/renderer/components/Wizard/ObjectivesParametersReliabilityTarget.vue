@@ -33,7 +33,7 @@
         </div>
       </div>
       <div class="form-group" id="PV-Form">
-        <div class="row">
+        <div class="row form-group">
           <div class="col-md-4">
             <label class="control-label">Minimum Percentage of PV Generation</label>
           </div>
@@ -49,7 +49,7 @@
             <p class="tool-tip tooltip-col">Minimum percent of PV generation that one can expect within a timestep</p>
           </div>
         </div>
-        <div class="row">
+        <div class="row form-group">
           <div class="col-md-4">
             <label class="control-label">Timestep Percentage of PV Minimum Generation</label>
           </div>
@@ -86,26 +86,12 @@
     </div>
     <br>
     <hr />
-    <div v-if="criticalLoad !== null" class="form-group">
-      <div class="col-md-12">
-        <label for="UseExistingData" class="control-label">The critical load has already been uploaded for this project. Do you want to use the existing data?</label>
-      </div>
-      <div class="col-md-12">
-        <b-form-group>
-          <b-form-radio-group
-            v-model="useExisting"
-            :options="sharedValidation.optionsYN.allowedValues"
-          ></b-form-radio-group> 
-        </b-form-group>
-      </div>
-    </div>
-    <div id="DataFile-Form" v-if="!(useExisting)||(criticalLoad === null)">
-      <timeseries-data-upload
+    <timeseries-data-upload
         data-name="critical load"
         units="kW"
         @uploaded="receiveTimeseriesData"
+        :data-exists="criticalLoad !== null"
       />
-    </div>
     <hr />
     <!-- TODO continue link should be dependent on selections in Services component -->
     <nav-buttons
@@ -117,7 +103,7 @@
 </template>
 
 <script>
-  import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
+  import { sharedValidation } from '../../models/Shared.js';
   import CriticalLoadTimeSeries from '../../models/CriticalLoadTimeSeries';
   import csvUploadMixin from '../../mixins/csvUploadMixin';
   import NavButtons from './NavButtons';
@@ -134,7 +120,6 @@
     data() {
       const p = this.$store.state.Project;
       return {
-        useExisting: sharedDefaults.useExistingTimeSeriesData,
         sharedValidation,
         criticalLoad: p.criticalLoad,
         reliabilityTarget: p.reliabilityTarget,

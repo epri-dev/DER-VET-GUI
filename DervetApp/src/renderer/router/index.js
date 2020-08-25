@@ -95,16 +95,20 @@ export default new Router({
           component: require('@/components/Wizard/ObjectivesParametersFR').default,
         },
         {
-          path: 'objectives-parameters-sr',
-          component: require('@/components/Wizard/ObjectivesParametersSR').default,
-        },
-        {
           path: 'objectives-parameters-nsr',
           component: require('@/components/Wizard/ObjectivesParametersNSR').default,
         },
         {
           path: 'objectives-parameters-reliability',
           component: require('@/components/Wizard/ObjectivesParametersReliabilityTarget').default,
+        },
+        {
+          path: 'objectives-parameters-sr',
+          component: require('@/components/Wizard/ObjectivesParametersSR').default,
+        },
+        {
+          path: 'objectives-parameters-user-defined',
+          component: require('@/components/Wizard/ObjectivesParametersUserDefined').default,
         },
       ],
     },

@@ -1,46 +1,61 @@
 <template>
   <div id="timseries-data-upload">
-    <hr>
-    <div class="row">
+    <div v-if="this.dataExists" class="form-group">
       <div class="col-md-12">
-        Upload the {{this.dataName}} as a <code>.csv</code> file that contains a reading at each time interval on a separate line.
-        The number of total lines expected depends on the selected year and timestep. For instance, an upload with a timestep of 30-minutes for a year with 365 days would require an input file with 17,520 readings, whereas an upload with a timestep of 60-minutes on a year with 366 days would require an input file with 8,784 readings.
+        <label for="UseExistingData" class="control-label">{{this.dataName}} data has already been uploaded for this project. Do you want to use the existing data?</label>
+      </div>
+      <div class="col-md-12">
+        <b-form-group>
+          <b-form-radio-group
+            v-model="useExisting"
+            :options="sharedValidation.optionsYN.allowedValues"
+          ></b-form-radio-group> 
+        </b-form-group>
       </div>
     </div>
-    <br>
-    <div class="row">
-      <div class="col-md-2 control-label">
-        <label>Data Year:</label>
+    <div id="DataFile-Form" v-if="!(useExisting)||!(this.dataExists)">
+      <hr>
+      <div class="row">
+        <div class="col-md-12">
+          Upload the <b>{{this.dataName}}</b> as a <code>.csv</code> file that contains a reading at each time interval on a separate line.
+          The number of total lines expected depends on the selected year and timestep. For instance, an upload with a timestep of 30-minutes for a year with 365 days would require an input file with 17,520 readings, whereas an upload with a timestep of 60-minutes on a year with 366 days would require an input file with 8,784 readings.
+        </div>
       </div>
-      <div class="col-md-3">
-        <label>{{this.dataYear}}</label>
-      </div>
-      <div class="col-md-2 control-label">
-        <label>Timestep:</label>
-      </div>
-      <div class="col-md-5">
-        <label>{{this.timestep}}</label>
-        <span class="unit-label">minutes</span>
-      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-2 control-label">
+          <label>Data Year:</label>
+        </div>
+        <div class="col-md-3">
+          <label>{{this.dataYear}}</label>
+        </div>
+        <div class="col-md-2 control-label">
+          <label>Timestep:</label>
+        </div>
+        <div class="col-md-5">
+          <label>{{this.timestep}}</label>
+          <span class="unit-label">minutes</span>
+        </div>
 
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <p>We require an input file with <b>{{this.numberOfEntriesRequired}}</b> entires.</p>
       </div>
-    </div>
-    <div class="form-group row">
-      <div class="col-md-5">
-        <label class="control-label capitalize">
-          {{this.dataName}} data
+      <div class="row">
+        <div class="col-md-12">
+          <p>We require an input file with <b>{{this.numberOfEntriesRequired}}</b> entires.</p>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-md-5">
+          <label class="control-label capitalize">
+            {{this.dataName}} data
+          </label>
           <span class="unit-label">({{this.units}})</span>
-        </label>
-      </div>
-      <div class="col-md-7">
-        <input
-          type="file"
-          class="form-control"
-          @change="onFileUpload">
+        </div>
+        <div class="col-md-7">
+          <input
+            type="file"
+            class="form-control"
+            @change="onFileUpload">
+        </div>
       </div>
     </div>
   </div>  
@@ -48,8 +63,14 @@
 
 <script>
   import helpers from '@/util/helpers';
+  import { sharedDefaults } from '../../models/Shared.js';
 
   export default {
+    data() {
+      return {
+        useExisting: sharedDefaults.useExistingTimeSeriesData,
+      };
+    },
     computed: {
       dataYear() {
         return this.$store.state.Project.dataYear;
@@ -72,6 +93,7 @@
     props: {
       dataName: String,
       units: String,
+      dataExists: Boolean,
     },
     methods: {
       onFileUpload(e) {

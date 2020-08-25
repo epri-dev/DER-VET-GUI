@@ -8,8 +8,8 @@
           data-name="solar generation profile"
           units="kW"
           @uploaded="receiveTimeseriesData"
+          :data-exists="false"
         />
-
         <br>
         <div class="form-group row">
           <div class="col-md-12">

@@ -106,6 +106,12 @@
           :to="this.objectivesNSRPath">
           Non-Spinning Reserves
         </router-link>
+        <router-link
+          class="nav nav-sidebar sidebar-indent"
+          v-bind:class="{ current: isActive(this.objectivesUserDefinedPath) }"
+          :to="this.objectivesUserDefinedPath">
+          Custom Service
+        </router-link>
 
         <router-link
           class="nav nav-sidebar sidebar-root-el"
@@ -159,7 +165,7 @@
         objectivesFRPath: '/wizard/objectives-parameters-fr',
         objectivesSRPath: '/wizard/objectives-parameters-sr',
         objectivesNSRPath: '/wizard/objectives-parameters-nsr',
-
+        objectivesUserDefinedPath: '/wizard/objectives-parameters-user-defined',
         objectivesReliabilityPath: '/wizard/objectives-parameters-reliability',
         financialInputsPath: '/wizard/financial-inputs',
         financialInputsExternalIncentivesPath: '/wizard/financial-inputs-external-incentives',
