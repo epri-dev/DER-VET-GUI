@@ -11,7 +11,7 @@
           <b-form-group>
             <b-form-radio-group
               v-model="postOptimizationOnly"
-              :options="optionsYN"
+              :options="sharedValidation.optionsYN.allowedValues"
             ></b-form-radio-group> 
           </b-form-group>
         </div>
@@ -100,47 +100,11 @@
       </div>
     </div>
     <div id="DataFile-Form" v-if="!(useExisting)||(criticalLoad === null)">
-      <div class="form-group">
-        <div class="col-md-12">
-          Upload the critical as a .csv file that contains a reading at each time interval on a separate line.
-          The number of total lines expected depends on the selected year and timestep selected below. For instance, an upload with a timestep
-          of 30-minutes for a year with 365 days would require an input file with 17,520 readings.
-        </div>
-      </div>
-      <hr />
-      <div class="row form-group">
-        <div class="col-md-3">
-          <label for="DataFile" class="control-label">Critical Load for the year {{dataYear}} <span class="unit-label"> (kW)</span></label>
-        </div>
-        <div class="col-md-9">
-          <input
-          type="file"
-          id="da-price-timeseries"
-          class="form-control"
-          @change="onFileUpload">
-        </div>
-      </div>
-      <div class="row form-group">
-        <div class="col-md-4">
-          <label class="control-label">Timestep</label>
-        </div>
-        <div class="col-md-3">
-          <select
-            class="form-control numberbox"
-            id="timestep"
-            v-model="timestep">
-            <option
-              v-for="value in sharedValidation.generationProfileTimestep.allowedValues"
-              v-bind:value="value">
-              {{value}}
-            </option>
-          </select>
-          <span class="unit-label">minutes</span>
-        </div>
-        <div class="col-md-5">
-          <p class="tool-tip tooltip-col">What is the timestep that the optimization will use?</p>
-        </div>
-      </div>
+      <timeseries-data-upload
+        data-name="critical load"
+        units="kW"
+        @uploaded="receiveTimeseriesData"
+      />
     </div>
     <hr />
     <!-- TODO continue link should be dependent on selections in Services component -->
@@ -157,9 +121,10 @@
   import CriticalLoadTimeSeries from '../../models/CriticalLoadTimeSeries';
   import csvUploadMixin from '../../mixins/csvUploadMixin';
   import NavButtons from './NavButtons';
+  import TimeseriesDataUpload from './TimeseriesDataUpload';
 
   export default {
-    components: { NavButtons },
+    components: { NavButtons, TimeseriesDataUpload },
     mixins: [csvUploadMixin],
     computed: {
       solarSpecified() {
@@ -177,14 +142,12 @@
         reliabilityNu: p.reliabilityNu,
         reliabilityGamma: p.reliabilityGamma,
         reliabilityMaxOutageDuration: p.reliabilityMaxOutageDuration,
-        timestep: p.timestep,
-        dataYear: p.dataYear,
         pvTechnologies: p.technologySpecsSolarPV,
       };
     },
     methods: {
       save() {
-        const criticalLoad = new CriticalLoadTimeSeries(this.timestep, this.inputTimeseries);
+        const criticalLoad = new CriticalLoadTimeSeries(this.inputTimeseries);
         this.$store.dispatch('setReliabilityPostOptimizationOnly', this.postOptimizationOnly);
         this.$store.dispatch('setReliabilityTarget', this.reliabilityTarget);
         this.$store.dispatch('setReliabilityNu', this.reliabilityNu);

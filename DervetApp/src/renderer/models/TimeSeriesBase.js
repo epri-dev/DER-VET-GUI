@@ -1,7 +1,6 @@
 class TimeSeriesBase {
-  constructor(columnHeaderName, timestep, data) {
+  constructor(columnHeaderName, data) {
     this.columnHeaderName = columnHeaderName;
-    this.timestep = timestep;
     this.data = data;
   }
 }

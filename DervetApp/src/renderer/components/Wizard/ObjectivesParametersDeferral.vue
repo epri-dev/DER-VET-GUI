@@ -107,8 +107,6 @@
         useExisting: sharedDefaults.useExistingTimeSeriesData,
         sharedValidation,
         deferralLoad: p.deferralLoad,
-        dataYear: p.dataYear,
-        timestep: p.timestep,
         inputDeferralPlannedLoadLimit: p.deferralPlannedLoadLimit,
         inputDeferralReversePowerFlowLimit: p.deferralReversePowerFlowLimit,
         inputDeferralGrowth: p.deferralGrowth,
@@ -117,7 +115,7 @@
     },
     methods: {
       save() {
-        const deferralLoad = new DeferralLoadTimeSeries(this.timestep, this.inputTimeseries);
+        const deferralLoad = new DeferralLoadTimeSeries(this.inputTimeseries);
         this.$store.dispatch('setDeferralLoad', deferralLoad);
         this.$store.dispatch('setDeferralPlannedLoadLimit', this.inputDeferralPlannedLoadLimit);
         this.$store.dispatch('setDeferralReversePowerFlowLimit', this.inputDeferralReversePowerFlowLimit);

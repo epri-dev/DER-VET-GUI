@@ -31,7 +31,7 @@
     </div>
     <div class="form-group row">
       <div class="col-md-5">
-        <label for="DataFile" class="control-label capitalize">
+        <label class="control-label capitalize">
           {{this.dataName}} data
           <span class="unit-label">({{this.units}})</span>
         </label>
@@ -39,7 +39,6 @@
       <div class="col-md-7">
         <input
           type="file"
-          id="timeseries"
           class="form-control"
           @change="onFileUpload">
       </div>
@@ -65,9 +64,9 @@
       },
       numberOfEntriesRequired() {
         if (this.isLeapYear) {
-          return (8784 * this.timestep) / 60;
+          return (8784 * 60) / this.timestep;
         }
-        return (8760 * this.timestep) / 60;
+        return (8760 * 60) / this.timestep;
       },
     },
     props: {

@@ -1,8 +1,8 @@
 import TimeSeriesBase from './TimeSeriesBase';
 
 class SiteLoadTimeSeries extends TimeSeriesBase {
-  constructor(timestep, data) {
-    super('Site Load (kW)', timestep, data);
+  constructor(data) {
+    super('Site Load (kW)', data);
   }
 }
 

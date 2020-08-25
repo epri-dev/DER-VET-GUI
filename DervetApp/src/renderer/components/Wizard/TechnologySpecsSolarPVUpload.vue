@@ -42,7 +42,6 @@
 <script>
   import '../../assets/samples/SamplePVgen-8760.csv';
   import '../../assets/samples/SamplePVgen-8784.csv';
-  import { sharedDefaults } from '../../models/Shared.js';
   import PVGenerationTimeSeries from '../../models/PVGenerationTimeSeries';
   import csvUploadMixin from '../../mixins/csvUploadMixin';
   import NavButtons from './NavButtons';
@@ -52,20 +51,13 @@
     components: { NavButtons, TimeseriesDataUpload },
     mixins: [csvUploadMixin],
     props: ['solarId'],
-    data() {
-      const p = this.$store.state.Project;
-      return {
-        inputTimestep: sharedDefaults.generationProfileTimestep,
-        dataYear: p.dataYear,
-      };
-    },
     methods: {
       save() {
         const payload = this.makeSavePayload();
         this.$store.dispatch('addGenerationProfileToTechnologySpecsPV', payload);
       },
       makeSavePayload() {
-        const ts = new PVGenerationTimeSeries(this.inputTimestep, this.inputTimeseries);
+        const ts = new PVGenerationTimeSeries(this.inputTimeseries);
         return {
           solarId: this.solarId,
           generationProfile: ts,

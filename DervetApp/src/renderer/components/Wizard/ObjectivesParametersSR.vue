@@ -43,34 +43,18 @@
             <b-form-group>
               <b-form-radio-group
                 v-model="useExisting"
-                :options="optionsYN"
+                :options="sharedValidation.optionsYN.allowedValues"
                 name="radio-inline"
               ></b-form-radio-group> 
             </b-form-group>
           </div>
         </div>
         <div id="DataFile-Form" v-if="!(useExisting) || (srPrice === null)">
-          <hr />
-          <div class="form-group">
-            <div class="col-md-12">
-              Upload the spinning reserve price as a .csv file that contains a reading at each time interval on a separate line.
-              The number of total lines expected depends on the selected year and timestep selected below. For instance, an upload with a timestep
-              of 30-minutes for a year with 365 days would require an input file with 17,520 readings.
-            </div>
-          </div>
-          <hr />
-          <div class="row form-group">
-            <div class="col-md-3">
-              <label for="DataFile" class="control-label">Spinning Reserve Price data for the year {{dataYear}} <span class="unit-label"> ($/kWh)</span></label>
-            </div>
-            <div class="col-md-9">
-              <input
-              type="file"
-              id="sr-price-timeseries"
-              class="form-control"
-              @change="onFileUpload">
-            </div>
-          </div>
+          <timeseries-data-upload
+            data-name="spinning reserve price"
+            units="kW"
+            @uploaded="receiveTimeseriesData"
+          />
         </div>
         <hr />
         <!-- TODO continue link should be dependent on selections in Services component -->
@@ -88,29 +72,24 @@
   import PriceTimeSeries from '../../models/PriceTimeSeries';
   import csvUploadMixin from '../../mixins/csvUploadMixin';
   import NavButtons from './NavButtons';
+  import TimeseriesDataUpload from './TimeseriesDataUpload';
 
   export default {
-    components: { NavButtons },
+    components: { NavButtons, TimeseriesDataUpload },
     mixins: [csvUploadMixin],
     data() {
       const p = this.$store.state.Project;
       return {
-        useExisting: true,
+        useExisting: sharedDefaults.useExistingTimeSeriesData,
         sharedValidation,
         inputSRGrowth: p.srGrowth,
         inputDuration: p.srDuration,
         srPrice: p.srPrice,
-        inputTimestep: sharedDefaults.generationProfileTimestep,
-        dataYear: p.dataYear,
-        optionsYN: [
-          { text: 'Yes', value: true },
-          { text: 'No', value: false },
-        ],
       };
     },
     methods: {
       save() {
-        const price = new PriceTimeSeries(this.inputTimestep, 'SR', this.inputTimeseries);
+        const price = new PriceTimeSeries('SR', this.inputTimeseries);
         this.$store.dispatch('newSRPrice', price);
 
         this.$store.dispatch('setSRGrowth', this.inputSRGrowth);
