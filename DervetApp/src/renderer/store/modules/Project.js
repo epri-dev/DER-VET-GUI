@@ -276,6 +276,12 @@ const mutations = {
   REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS(state) {
     state.retailTariffBillingPeriods = [];
   },
+  ADD_BATTERY_CYCLES_TO_TECHNOLOGY_SPECS_BATTERY(state, payload) {
+    const tmpBatterySpecs = getters.getBatterySpecsClone(state)();
+    const indexMatchingId = getters.getIndexOfBatteryId(state)(payload.batteryId);
+    tmpBatterySpecs[indexMatchingId].batteryCycles = payload.batteryCycles;
+    state.technologySpecsBattery = tmpBatterySpecs;
+  },
   RESET_PROJECT_TO_DEFAULT(state) {
     Object.assign(state, getDefaultState());
   },
@@ -486,6 +492,9 @@ const actions = {
   },
   removeAllRetailTariffBillingPeriods({ commit }) {
     commit('REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS');
+  },
+  addBatteryCyclesToTechnologySpecsBattery({ commit }, payload) {
+    commit('ADD_BATTERY_CYCLES_TO_TECHNOLOGY_SPECS_BATTERY', payload);
   },
   resetProjectToDefault({ commit }) {
     commit('RESET_PROJECT_TO_DEFAULT');
