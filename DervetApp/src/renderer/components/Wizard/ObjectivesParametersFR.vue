@@ -101,7 +101,7 @@
       </div>
     </div>
     <div class="form-horizontal form-buffer">
-      <div v-if="frPrice !== null && (frUpPrice !== null || frDownPrice !== null)" class="form-group">
+      <div v-if="frPrice !== null" class="form-group">
         <div class="col-md-12">
           <label for="UseExistingData" class="control-label">Frequency price data has already been uploaded for this project. Do you want to use the existing data?</label>
         </div>
@@ -114,7 +114,6 @@
           </b-form-group>
         </div>
       </div>
-      <!-- TODO: make sure that data is being uploaded and saved in appropriate place -->
       <div id="DataFile-Form-combined-price" v-if="(!(useExistingRegulationPrices)||(frPrice === null)) && inputCombinedMarket">
         <timeseries-data-upload
           data-name="frequency regulation price"
@@ -122,14 +121,40 @@
           @uploaded="receiveTimeseriesData"
         />
       </div>
-      <div id="DataFile-Form-prices" v-if="(!(useExistingRegulationPrices)||(frUpPrice === null)) && !(inputCombinedMarket)">
+      <div v-if="frUpPrice !== null" class="form-group">
+        <div class="col-md-12">
+          <label for="UseExistingData" class="control-label">Frequency price data has already been uploaded for this project. Do you want to use the existing data?</label>
+        </div>
+        <div class="col-md-12">
+          <b-form-group>
+            <b-form-radio-group
+              v-model="useExistingUpPrices"
+              :options="sharedValidation.optionsYN.allowedValues"
+            ></b-form-radio-group> 
+          </b-form-group>
+        </div>
+      </div>
+      <div id="DataFile-Form-prices" v-if="!(useExistingUpPrices)||((frUpPrice === null)&&!(inputCombinedMarket))">
         <timeseries-data-upload
           data-name="frequency regulation up price"
           units="kW"
           @uploaded="receiveTimeseriesDataUpPrice"
         />
       </div>
-      <div id="DataFile-Form-prices" v-if="(!(useExistingRegulationPrices)||(frDownPrice === null)) && !(inputCombinedMarket)">
+      <div v-if="frDownPrice !== null" class="form-group">
+        <div class="col-md-12">
+          <label for="UseExistingData" class="control-label">Frequency price data has already been uploaded for this project. Do you want to use the existing data?</label>
+        </div>
+        <div class="col-md-12">
+          <b-form-group>
+            <b-form-radio-group
+              v-model="useExistingDownPrices"
+              :options="sharedValidation.optionsYN.allowedValues"
+            ></b-form-radio-group> 
+          </b-form-group>
+        </div>
+      </div>
+      <div id="DataFile-Form-prices" v-if="!(useExistingDownPrices)||((frDownPrice === null)&&!(inputCombinedMarket))">
         <timeseries-data-upload
           data-name="frequency regulation down price"
           units="kW"
@@ -160,8 +185,9 @@
     data() {
       const p = this.$store.state.Project;
       return {
-        useExisting: sharedDefaults.useExistingTimeSeriesData,
-        useExistingEnergyPrices: true,
+        useExistingRegulationPrices: sharedDefaults.useExistingTimeSeriesData,
+        useExistingUpPrices: sharedDefaults.useExistingTimeSeriesData,
+        useExistingDownPrices: sharedDefaults.useExistingTimeSeriesData,
         sharedValidation,
         inputEOU: p.frEOU,
         inputEOD: p.frEOD,
@@ -179,12 +205,18 @@
     },
     methods: {
       save() {
-        const price = new PriceTimeSeries('FR', this.inputTimeseries);
-        const upPrice = new PriceTimeSeries('Reg Up', this.inputUpTimeseries);
-        const downPrice = new PriceTimeSeries('Reg Down', this.inputDownTimeseries);
-        this.$store.dispatch('newFRPrice', price);
-        this.$store.dispatch('setFRUpPrice', upPrice);
-        this.$store.dispatch('setFRDownPrice', downPrice);
+        if (this.inputTimeseries !== null) {
+          const price = new PriceTimeSeries('FR', this.inputTimeseries);
+          this.$store.dispatch('newFRPrice', price);
+        }
+        if (this.inputUpTimeseries !== null) {
+          const upPrice = new PriceTimeSeries('Reg Up', this.inputUpTimeseries);
+          this.$store.dispatch('setFRUpPrice', upPrice);
+        }
+        if (this.inputDownTimeseries !== null) {
+          const downPrice = new PriceTimeSeries('Reg Down', this.inputDownTimeseries);
+          this.$store.dispatch('setFRDownPrice', downPrice);
+        }
         this.$store.dispatch('setFReou', this.inputEOU);
         this.$store.dispatch('setFReod', this.inputEOD);
         this.$store.dispatch('setFRGrowth', this.inputGrowth);
