@@ -40,7 +40,7 @@
         @uploaded="receiveTimeseriesDataDownEnergyMax"
         :data-exists="userEnergyMax !== null"
       />
-      
+
       <timeseries-data-upload
         data-name="minimum energy"
         units="kWh"
@@ -59,7 +59,7 @@
 </template>
 
 <script>
-  import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
+  import { sharedValidation } from '../../models/Shared.js';
   import PriceTimeSeries from '../../models/PriceTimeSeries';
   import csvUploadMixin from '../../mixins/csvUploadMixin';
   import NavButtons from './NavButtons';
@@ -71,10 +71,6 @@
     data() {
       const p = this.$store.state.Project;
       return {
-        useExistingPowerMax: sharedDefaults.useExistingTimeSeriesData,
-        useExistingPowerMin: sharedDefaults.useExistingTimeSeriesData,
-        useExistingEnergyMax: sharedDefaults.useExistingTimeSeriesData,
-        useExistingEnergyMin: sharedDefaults.useExistingTimeSeriesData,
         sharedValidation,
         inputPrice: p.userPrice,
         userPowerMin: p.userPowerMin,

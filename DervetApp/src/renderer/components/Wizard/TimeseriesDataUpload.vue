@@ -1,8 +1,9 @@
 <template>
   <div id="timseries-data-upload">
+    <hr />
     <div v-if="this.dataExists" class="form-group">
       <div class="col-md-12">
-        <label for="UseExistingData" class="control-label">{{this.dataName}} data has already been uploaded for this project. Do you want to use the existing data?</label>
+        <label for="UseExistingData" class="control-label">{{this.firstLetterCapitalized}} data has already been uploaded for this project. Do you want to use the existing data?</label>
       </div>
       <div class="col-md-12">
         <b-form-group>
@@ -14,7 +15,6 @@
       </div>
     </div>
     <div id="DataFile-Form" v-if="!(useExisting)||!(this.dataExists)">
-      <hr>
       <div class="row">
         <div class="col-md-12">
           Upload the <b>{{this.dataName}}</b> as a <code>.csv</code> file that contains a reading at each time interval on a separate line.
@@ -63,15 +63,19 @@
 
 <script>
   import helpers from '@/util/helpers';
-  import { sharedDefaults } from '../../models/Shared.js';
+  import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
 
   export default {
     data() {
       return {
+        sharedValidation,
         useExisting: sharedDefaults.useExistingTimeSeriesData,
       };
     },
     computed: {
+      firstLetterCapitalized() {
+        return this.dataName.charAt(0).toUpperCase() + this.dataName.slice(1);
+      },
       dataYear() {
         return this.$store.state.Project.dataYear;
       },
