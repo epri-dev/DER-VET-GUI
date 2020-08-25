@@ -72,7 +72,8 @@
             <label class="control-label" for="loc">Coupled System Type</label>
           </div>
           <div class="col-md-9">
-            <select class="form-control valid"
+            <select
+              class="form-control valid"
               id="loc"
               v-model="inputLoc">
               <option value="">-</option>

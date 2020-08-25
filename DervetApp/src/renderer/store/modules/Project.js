@@ -101,6 +101,9 @@ const getters = {
   getIndexOfICEId(state) {
     return id => state.technologySpecsICE.findIndex(x => x.id === id);
   },
+  getIndexOfBillingPeriodId(state) {
+    return id => state.retailTariffBillingPeriods.findIndex(x => x.id === id);
+  },
   getBatteryById(state) {
     return id => state.technologySpecsBattery.find(x => x.id === id);
   },
@@ -262,6 +265,13 @@ const mutations = {
     const indexMatchingId = getters.getIndexOfSolarId(state)(payload.solarId);
     tmpSolarPVSpecs[indexMatchingId].generationProfile = payload.generationProfile;
     state.technologySpecsSolarPV = tmpSolarPVSpecs;
+  },
+  ADD_RETAIL_TARIFF_BILLING_PERIOD(state, newBillingPeriod) {
+    state.retailTariffBillingPeriods.push(newBillingPeriod);
+  },
+  REMOVE_RETAIL_TARIFF_BILLING_PERIOD(state, id) {
+    const index = getters.getIndexOfBillingPeriodId(state)(id);
+    state.retailTariffBillingPeriods.splice(index, 1);
   },
   REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS(state) {
     state.retailTariffBillingPeriods = [];
@@ -467,6 +477,12 @@ const actions = {
   },
   addGenerationProfileToTechnologySpecsPV({ commit }, payload) {
     commit('ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV', payload);
+  },
+  addRetailTariffBillingPeriod({ commit }, newBillingPeriod) {
+    commit('ADD_RETAIL_TARIFF_BILLING_PERIOD', newBillingPeriod);
+  },
+  removeRetailTariffBillingPeriod({ commit }, id) {
+    commit('REMOVE_RETAIL_TARIFF_BILLING_PERIOD', id);
   },
   removeAllRetailTariffBillingPeriods({ commit }) {
     commit('REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS');
