@@ -148,6 +148,13 @@ body {
 }
 
 /*
+ * Capitalize first letter of text in element
+ */
+.capitalize {
+    text-transform: capitalize;
+}
+
+/*
  * Placeholder dashboard ideas
  */
 
@@ -760,7 +767,7 @@ p.selected-tool-tip {
     min-height: 1px;
     padding-right: 15px;
     padding-left: 15px;
-    top: -8px;
+    /*top: -8px;*/
     margin-bottom: 5px;
 }
 

@@ -91,7 +91,7 @@
           <b-form-group>
             <b-form-radio-group
               v-model="inputCombinedMarket"
-              :options="optionsYN"
+              :options="sharedValidation.optionsYN.allowedValues"
             ></b-form-radio-group> 
           </b-form-group>
         </div>
@@ -101,89 +101,32 @@
       </div>
     </div>
     <div class="form-horizontal form-buffer">
-      <div v-if="frPrice !== null && (frUpPrice !== null || frDownPrice !== null)" class="form-group">
-        <div class="col-md-12">
-          <label for="UseExistingData" class="control-label">Frequency price data has already been uploaded for this project. Do you want to use the existing data?</label>
-        </div>
-        <div class="col-md-12">
-          <b-form-group>
-            <b-form-radio-group
-              v-model="useExistingRegulationPrices"
-              :options="optionsYN"
-              name="radio-inline"
-            ></b-form-radio-group> 
-          </b-form-group>
-        </div>
-      </div>
-      <div id="DataFile-Form-combined-price" v-if="(!(useExistingRegulationPrices)||(frPrice === null)) && inputCombinedMarket">
-        <hr />
-        <div class="form-group">
-          <div class="col-md-12">
-            Upload the frequency regulation price as a .csv file that contains a reading at each time interval on a separate line.
-            The number of total lines expected depends on the selected year and timestep selected below. For instance, an upload with a timestep
-            of 30-minutes for a year with 365 days would require an input file with 17,520 readings.
-          </div>
-        </div>
-        <hr />
-        <div class="row form-group">
-          <div class="col-md-3">
-            <label class="control-label">Frequency Regulation Price data for the year {{dataYear}} <span class="unit-label"> ($/kW)</span></label>
-          </div>
-          <!-- <div class="col-md-9">
-            <input
-            type="file"
-            id="da-price-timeseries"
-            class="form-control"
-            @change="onFileUpload">
-          </div> -->
-        </div>
-      </div>
-      <div id="DataFile-Form-prices" v-if="(!(useExistingRegulationPrices)||(frUpPrice === null)) && !(inputCombinedMarket)">
-        <hr />
-        <div class="form-group">
-          <div class="col-md-12">
-            Upload the frequency regulation up price as a .csv file that contains a reading at each time interval on a separate line.
-            The number of total lines expected depends on the selected year and timestep selected below. For instance, an upload with a timestep
-            of 30-minutes for a year with 365 days would require an input file with 17,520 readings.
-          </div>
-        </div>
-        <hr />
-        <div class="row form-group">
-          <div class="col-md-3">
-            <label for="DataFile" class="control-label">Frequency Regulation Up Price data for the year {{dataYear}} <span class="unit-label"> ($/kW)</span></label>
-          </div>
-          <!-- <div class="col-md-9">
-            <input
-            type="file"
-            id="up-price-timeseries"
-            class="form-control"
-            @change="onFileUpload">
-          </div> -->
-        </div>
-      </div>
-      <div id="DataFile-Form-prices" v-if="(!(useExistingRegulationPrices)||(frDownPrice === null)) && !(inputCombinedMarket)">
-        <hr />
-        <div class="form-group">
-          <div class="col-md-12">
-            Upload the frequency regulation up price as a .csv file that contains a reading at each time interval on a separate line.
-            The number of total lines expected depends on the selected year and timestep selected below. For instance, an upload with a timestep
-            of 30-minutes for a year with 365 days would require an input file with 17,520 readings.
-          </div>
-        </div>
-        <hr />
-        <div class="row form-group">
-          <div class="col-md-3">
-            <label for="DataFile" class="control-label">Frequency Regulation Down Price data for the year {{dataYear}} <span class="unit-label"> ($/kW)</span></label>
-          </div>
-          <!-- <div class="col-md-9">
-            <input
-            type="file"
-            id="da-price-timeseries"
-            class="form-control"
-            @change="onFileUpload">
-          </div> -->
-        </div>
-      </div>
+
+      <timeseries-data-upload
+        data-name="frequency regulation price"
+        units="$/kW"
+        @uploaded="receiveTimeseriesData"
+        :data-exists="frPrice !== null"
+        v-if="inputCombinedMarket"
+      />
+      
+      
+      <timeseries-data-upload
+        data-name="frequency regulation up price"
+        units="$/kW"
+        @uploaded="receiveTimeseriesDataUpPrice"
+        :data-exists="frUpPrice !== null"
+        v-if="!(inputCombinedMarket)"
+      />
+
+      <timeseries-data-upload
+        data-name="frequency regulation down price"
+        units="$/kW"
+        @uploaded="receiveTimeseriesDataDownPrice"
+        :data-exists="frDownPrice !== null"
+        v-if="!(inputCombinedMarket)"
+      />
+
       <hr />
       <!-- TODO continue link should be dependent on selections in Services component -->
       <nav-buttons
@@ -196,19 +139,18 @@
 </template>
 
 <script>
-  import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
+  import { sharedValidation } from '../../models/Shared.js';
   import PriceTimeSeries from '../../models/PriceTimeSeries';
   import csvUploadMixin from '../../mixins/csvUploadMixin';
   import NavButtons from './NavButtons';
+  import TimeseriesDataUpload from './TimeseriesDataUpload';
 
   export default {
-    components: { NavButtons },
+    components: { NavButtons, TimeseriesDataUpload },
     mixins: [csvUploadMixin],
     data() {
       const p = this.$store.state.Project;
       return {
-        useExistingRegulationPrices: true,
-        useExistingEnergyPrices: true,
         sharedValidation,
         inputEOU: p.frEOU,
         inputEOD: p.frEOD,
@@ -220,27 +162,36 @@
 
         frUpPrice: p.frUpPrice,
         frDownPrice: p.frDownPrice,
-
-        inputTimestep: sharedDefaults.generationProfileTimestep,
-        dataYear: p.dataYear,
-        optionsYN: [
-          { text: 'Yes', value: true },
-          { text: 'No', value: false },
-        ],
+        inputUpTimeseries: null,
+        inputDownTimeseries: null,
       };
     },
     methods: {
       save() {
-        const price = new PriceTimeSeries(this.inputTimestep, 'FR', this.inputTimeseries);
-        // const upPrice = new PriceTimeSeries(this.inputTimestep, 'Reg Up', this.inputTimeseries);
-        this.$store.dispatch('newFRPrice', price);
-
+        if (this.inputTimeseries !== null) {
+          const price = new PriceTimeSeries('FR', this.inputTimeseries);
+          this.$store.dispatch('newFRPrice', price);
+        }
+        if (this.inputUpTimeseries !== null) {
+          const upPrice = new PriceTimeSeries('Reg Up', this.inputUpTimeseries);
+          this.$store.dispatch('setFRUpPrice', upPrice);
+        }
+        if (this.inputDownTimeseries !== null) {
+          const downPrice = new PriceTimeSeries('Reg Down', this.inputDownTimeseries);
+          this.$store.dispatch('setFRDownPrice', downPrice);
+        }
         this.$store.dispatch('setFReou', this.inputEOU);
         this.$store.dispatch('setFReod', this.inputEOD);
         this.$store.dispatch('setFRGrowth', this.inputGrowth);
         this.$store.dispatch('setFREnergyGrowth', this.inputEnergyPriceGrowth);
         this.$store.dispatch('setFRCombinedMarket', this.inputCombinedMarket);
         this.$store.dispatch('setFRDuration', this.inputDuration);
+      },
+      receiveTimeseriesDataUpPrice(timeseries) {
+        this.inputUpTimeseries = timeseries;
+      },
+      receiveTimeseriesDataDownPrice(timeseries) {
+        this.inputDownTimeseries = timeseries;
       },
     },
   };

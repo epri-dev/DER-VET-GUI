@@ -15,6 +15,7 @@ const getDefaultState = () => ({
   ownership: 'Customer',
   optimizationHorizon: 'year',
   optimizationHorizonNum: 0,
+  timestep: 60,
 
   technologySpecsSolarPV: [],
   technologySpecsICE: [],
@@ -76,6 +77,12 @@ const getDefaultState = () => ({
   reliabilityGamma: 43,
   reliabilityMaxOutageDuration: 168,
   criticalLoad: null,
+
+  userPrice: 0,
+  userPowerMin: null,
+  userPowerMax: null,
+  userEnergyMin: null,
+  userEnergyMax: null,
 
   retailTariffBillingPeriods: [],
 });
@@ -233,6 +240,21 @@ const mutations = {
   SET_FR_DOWN_PRICE(state, newFRDownPrice) {
     state.frDownPrice = newFRDownPrice;
   },
+  SET_USER_PRICE(state, newUserPrice) {
+    state.userPrice = newUserPrice;
+  },
+  SET_USER_POWER_MAX(state, newUserPowerMax) {
+    state.userPowerMax = newUserPowerMax;
+  },
+  SET_USER_POWER_MIN(state, newUserPowerMin) {
+    state.userPowerMin = newUserPowerMin;
+  },
+  SET_USER_ENERGY_MAX(state, newUserEnergyMax) {
+    state.userEnergyMax = newUserEnergyMax;
+  },
+  SET_USER_ENERGY_MIN(state, newUserEnergyMin) {
+    state.userEnergyMin = newUserEnergyMin;
+  },
   ADD_TECHNOLOGY_SPECS_SOLAR_PV(state, newSolar) {
     state.technologySpecsSolarPV.push(newSolar);
   },
@@ -302,6 +324,9 @@ const mutations = {
   },
   SET_OWNERSHIP(state, newOwnership) {
     state.ownership = newOwnership;
+  },
+  SET_TIMESTEP(state, newTimestep) {
+    state.timestep = newTimestep;
   },
   SET_OPTIMIZATION_HORIZON(state, newOptimizataionHorizon) {
     state.optimizationHorizon = newOptimizataionHorizon;
@@ -463,6 +488,21 @@ const actions = {
   setFRDownPrice({ commit }, newFRDownPrice) {
     commit('SET_FR_DOWN_PRICE', newFRDownPrice);
   },
+  setUserPrice({ commit }, newUserPrice) {
+    commit('SET_USER_PRICE', newUserPrice);
+  },
+  setUserPowerMax({ commit }, newUserPowerMax) {
+    commit('SET_USER_POWER_MAX', newUserPowerMax);
+  },
+  setUserPowerMin({ commit }, newUserPowerMin) {
+    commit('SET_USER_POWER_Min', newUserPowerMin);
+  },
+  setUserEnergyMax({ commit }, newUserEnergyMax) {
+    commit('SET_USER_ENERGY_MAX', newUserEnergyMax);
+  },
+  setUserEnergyMin({ commit }, newUserEnergyMin) {
+    commit('SET_USER_ENERGY_Min', newUserEnergyMin);
+  },
   addTechnologySpecsSolarPV({ commit }, newSolar) {
     commit('ADD_TECHNOLOGY_SPECS_SOLAR_PV', newSolar);
   },
@@ -516,6 +556,9 @@ const actions = {
   },
   setOwnership({ commit }, newOwnership) {
     commit('SET_OWNERSHIP', newOwnership);
+  },
+  setTimestep({ commit }, newTimestep) {
+    commit('SET_TIMESTEP', newTimestep);
   },
   setOptimizationHorizon({ commit }, newOptimizataionHorizon) {
     commit('SET_OPTIMIZATION_HORIZON', newOptimizataionHorizon);

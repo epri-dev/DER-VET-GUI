@@ -14,6 +14,10 @@ const validation = {
   optimizationHorizonOptions: {
     allowedValues: ['Year', 'Month', 'Hours'],
   },
+  timestep: {
+    type: String,
+    allowedValues: ['1', '5', '15', '30', '60'],
+  },
 };
 
 export default {
