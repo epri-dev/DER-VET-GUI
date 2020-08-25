@@ -52,6 +52,12 @@ export default new Router({
           props: true,
         },
         {
+          path: 'technology-specs-battery-cycle/:batteryId',
+          name: 'technologySpecsBatteryCycle',
+          component: require('@/components/Wizard/TechnologySpecsBatteryCycleLifeCurve').default,
+          props: true,
+        },
+        {
           path: 'technology-specs-ice/:iceId',
           name: 'technologySpecsICE',
           component: require('@/components/Wizard/TechnologySpecsICE').default,

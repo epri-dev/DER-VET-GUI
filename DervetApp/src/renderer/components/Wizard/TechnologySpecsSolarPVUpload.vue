@@ -6,7 +6,7 @@
       <div class="form-horizontal form-buffer">
         <timeseries-data-upload
           data-name="solar generation profile"
-          units="kW"
+          units="kW / rated kW"
           @uploaded="receiveTimeseriesData"
           :data-exists="false"
         />

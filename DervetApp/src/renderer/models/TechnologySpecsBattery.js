@@ -21,6 +21,10 @@ const defaults = {
   dailyCycleLimit: 0.0,
   calendarDegradationRate: 0,
   includeCycleDegradation: false,
+  batteryCycles: [
+    { ulimit: 0.05, val: 75000 },
+    { ulimit: 0.1, val: 40500 },
+  ],
   includeAuxiliaryLoad: false,
   auxiliaryLoad: 0.0,
   includeStartupCost: false,
