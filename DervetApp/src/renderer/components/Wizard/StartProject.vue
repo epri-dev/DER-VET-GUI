@@ -135,7 +135,7 @@
 </template>
 
 <script>
-  import model from '../../models/StartProject';
+  import model from '@/models/StartProject';
   import NavButtons from './NavButtons';
 
   const { validation } = model;
