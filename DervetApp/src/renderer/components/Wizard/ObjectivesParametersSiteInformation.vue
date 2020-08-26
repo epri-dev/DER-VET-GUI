@@ -65,11 +65,11 @@
 </template>
 
 <script>
-  import '../../assets/samples/SampleSiteLoad-8760.csv';
-  import '../../assets/samples/SampleSiteLoad-8784.csv';
-  import { sharedValidation } from '../../models/Shared.js';
-  import SiteLoadTimeSeries from '../../models/SiteLoadTimeSeries';
-  import csvUploadMixin from '../../mixins/csvUploadMixin';
+  import '@/assets/samples/SampleSiteLoad-8760.csv';
+  import '@/assets/samples/SampleSiteLoad-8784.csv';
+  import csvUploadMixin from '@/mixins/csvUploadMixin';
+  import SiteLoadTimeSeries from '@/models/SiteLoadTimeSeries';
+  import { sharedValidation } from '@/models/Shared';
   import NavButtons from './NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 

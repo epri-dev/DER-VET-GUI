@@ -77,9 +77,9 @@
 </template>
 
 <script>
-  import { sharedValidation } from '../../models/Shared.js';
-  import DeferralLoadTimeSeries from '../../models/DeferralLoadTimeSeries';
-  import csvUploadMixin from '../../mixins/csvUploadMixin';
+  import csvUploadMixin from '@/mixins/csvUploadMixin';
+  import DeferralLoadTimeSeries from '@/models/DeferralLoadTimeSeries';
+  import { sharedValidation } from '@/models/Shared';
   import NavButtons from './NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 

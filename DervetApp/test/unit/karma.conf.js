@@ -12,6 +12,7 @@ process.env.BABEL_ENV = 'test'
 
 let webpackConfig = merge(baseConfig, {
   devtool: '#inline-source-map',
+  mode: 'production',
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"testing"'
@@ -44,7 +45,6 @@ module.exports = config => {
     customLaunchers: {
       'visibleElectron': {
         base: 'Electron',
-        flags: ['--show']
       }
     },
     frameworks: ['mocha', 'chai'],

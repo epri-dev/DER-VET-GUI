@@ -1,13 +1,13 @@
 <template>
   <div class="form-group form-buffer row">
-    <div class="col-md-3">
+    <div class="col-md-6 back-btn">
       <router-link :to="this.backLink" class="btn btn-primary">
-        &lt;&lt; Back
+        {{this.backText}}
       </router-link>
     </div>
-    <div class="col-md-9">
+    <div class="col-md-6 continue-btn">
       <router-link v-on:click.native="save" :to="this.continueLink" class="btn btn-primary pull-right">
-        Save and Continue &gt;&gt;
+        {{this.continueText}}
       </router-link>
     </div>
   </div>
@@ -17,7 +17,15 @@
   export default {
     props: {
       backLink: String,
+      backText: {
+        type: String,
+        default: '<< Back',
+      },
       continueLink: String,
+      continueText: {
+        type: String,
+        default: 'Save and Continue >>',
+      },
       save: Function,
     },
   };

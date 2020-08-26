@@ -103,9 +103,9 @@
 </template>
 
 <script>
-  import { sharedValidation } from '../../models/Shared.js';
-  import CriticalLoadTimeSeries from '../../models/CriticalLoadTimeSeries';
-  import csvUploadMixin from '../../mixins/csvUploadMixin';
+  import csvUploadMixin from '@/mixins/csvUploadMixin';
+  import CriticalLoadTimeSeries from '@/models/CriticalLoadTimeSeries';
+  import { sharedValidation } from '@/models/Shared';
   import NavButtons from './NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 

@@ -53,9 +53,9 @@
 </template>
 
 <script>
-  import { sharedValidation } from '../../models/Shared.js';
-  import PriceTimeSeries from '../../models/PriceTimeSeries';
-  import csvUploadMixin from '../../mixins/csvUploadMixin';
+  import PriceTimeSeries from '@/models/PriceTimeSeries';
+  import { sharedValidation } from '@/models/Shared';
+  import csvUploadMixin from '@/mixins/csvUploadMixin';
   import NavButtons from './NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 

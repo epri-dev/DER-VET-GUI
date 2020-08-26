@@ -3,7 +3,7 @@ import project from '@/store/modules/Project';
 const { mutations } = project;
 
 
-describe('mutations', () => {
+describe('project mutations', () => {
   it('should set project ID', () => {
     const state = { id: null };
     const newId = 'e4ccd19f-0f3c-49ef-a955-bf063687982d';

@@ -118,7 +118,7 @@
         <legend>Optimization Horizon</legend>
         <div class="row">
           <b-form-select class="col-md-4" v-model="optimizationHorizon">
-            <b-form-select-option v-for="value in validation.optimizationHorizonOptions.allowedValues" :value="value">
+            <b-form-select-option v-for="value in validation.optimizationHorizonOptions.allowedValues" :value="value" :key="value">
                 {{value}} </b-form-select-option>
           </b-form-select>
           <div class="col-md-7">
@@ -146,7 +146,7 @@
 </template>
 
 <script>
-  import model from '../../models/StartProject';
+  import model from '@/models/StartProject';
   import NavButtons from './NavButtons';
 
   const { validation } = model;

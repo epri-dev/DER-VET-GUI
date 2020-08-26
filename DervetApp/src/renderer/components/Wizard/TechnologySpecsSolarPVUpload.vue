@@ -40,10 +40,10 @@
 </template>
 
 <script>
-  import '../../assets/samples/SamplePVgen-8760.csv';
-  import '../../assets/samples/SamplePVgen-8784.csv';
-  import PVGenerationTimeSeries from '../../models/PVGenerationTimeSeries';
-  import csvUploadMixin from '../../mixins/csvUploadMixin';
+  import '@/assets/samples/SamplePVgen-8760.csv';
+  import '@/assets/samples/SamplePVgen-8784.csv';
+  import csvUploadMixin from '@/mixins/csvUploadMixin';
+  import PVGenerationTimeSeries from '@/models/PVGenerationTimeSeries';
   import NavButtons from './NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 
