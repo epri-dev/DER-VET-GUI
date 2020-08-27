@@ -291,6 +291,9 @@ const mutations = {
   ADD_RETAIL_TARIFF_BILLING_PERIOD(state, newBillingPeriod) {
     state.retailTariffBillingPeriods.push(newBillingPeriod);
   },
+  REPLACE_RETAIL_TARIFF_BILLING_PERIODS(state, newBillingPeriods) {
+    state.retailTariffBillingPeriods = newBillingPeriods;
+  },
   REMOVE_RETAIL_TARIFF_BILLING_PERIOD(state, id) {
     const index = getters.getIndexOfBillingPeriodId(state)(id);
     state.retailTariffBillingPeriods.splice(index, 1);
@@ -526,6 +529,9 @@ const actions = {
   },
   addRetailTariffBillingPeriod({ commit }, newBillingPeriod) {
     commit('ADD_RETAIL_TARIFF_BILLING_PERIOD', newBillingPeriod);
+  },
+  replaceRetailTariffBillingPeriods({ commit }, newBillingPeriods) {
+    commit('REPLACE_RETAIL_TARIFF_BILLING_PERIODS', newBillingPeriods);
   },
   removeRetailTariffBillingPeriod({ commit }, id) {
     commit('REMOVE_RETAIL_TARIFF_BILLING_PERIOD', id);
