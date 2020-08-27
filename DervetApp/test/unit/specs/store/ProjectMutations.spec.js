@@ -41,4 +41,18 @@ describe('project mutations', () => {
     expect(state.retailTariffBillingPeriods).to.have.lengthOf(1);
     expect(state.retailTariffBillingPeriods[0]).to.equal(bp2);
   });
+
+  it('should replace billing periods', () => {
+    const bp1 = { id: '47', startTime: 0, endTime: 12 };
+    const bp2 = { id: '42', startTime: 2, endTime: 3 };
+    const bp3 = { id: '7', startTime: 1, endTime: 10 };
+    const bp4 = { id: '19', startTime: 11, endTime: 15 };
+    const state = { retailTariffBillingPeriods: [bp1, bp2] };
+
+    mutations.REPLACE_RETAIL_TARIFF_BILLING_PERIODS(state, [bp3, bp4]);
+
+    expect(state.retailTariffBillingPeriods).to.have.lengthOf(2);
+    expect(state.retailTariffBillingPeriods[0]).to.equal(bp3);
+    expect(state.retailTariffBillingPeriods[1]).to.equal(bp4);
+  });
 });
