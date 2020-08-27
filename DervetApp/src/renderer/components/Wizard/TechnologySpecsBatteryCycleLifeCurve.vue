@@ -1,9 +1,10 @@
 <template>
   <div>
     <h3>Battery Storage: Cycle Life Curve</h3>
-    Specify the cycle life curve for this battery
 
-    <b-table-lite fixed striped hover
+    <b-table-lite
+      fixed striped hover caption-top sticky-header="400px"
+      caption="Specify the cycle life curve for this battery"
       :items="items"
       :fields="fields">
       <template v-slot:cell(ulimit)="row">
