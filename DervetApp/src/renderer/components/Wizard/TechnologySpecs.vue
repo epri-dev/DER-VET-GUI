@@ -37,7 +37,7 @@
         <nav-buttons
           back-link="/wizard/start-project"
           continue-link="/wizard/objectives"
-          continue-text="Done Adding Technologies >>"
+          continue-text="Done Adding Technologies"
           :save="this.save"
         />
       </div>
