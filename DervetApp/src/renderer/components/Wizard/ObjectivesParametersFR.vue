@@ -130,8 +130,6 @@
       <hr />
       <!-- TODO continue link should be dependent on selections in Services component -->
       <nav-buttons
-        back-link="/wizard/objectives-parameters-fr"
-        continue-link="/wizard/objectives-parameters-fr"
         :save="this.save"
       />
     </div>

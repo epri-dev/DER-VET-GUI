@@ -81,8 +81,6 @@
     <hr>
 
     <nav-buttons
-      back-link="/wizard/financial-inputs-external-incentives"
-      continue-link="/wizard/financial-inputs-external-incentives"
       :save="this.save"
     />
   </div>

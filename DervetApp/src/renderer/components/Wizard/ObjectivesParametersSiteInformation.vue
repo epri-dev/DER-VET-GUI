@@ -35,7 +35,7 @@
         :data-exists="siteLoad !== null"
       />
       <hr>
-      <div v-if="!(useExisting)||(siteLoad === null)">
+      <div v-if="(siteLoad === null)">
         <div class="form-group row">
           <div class="col-md-12">
             <i>
@@ -55,8 +55,6 @@
 
       <!-- TODO continue link should be dependent on selections in Services component -->
       <nav-buttons
-        back-link="/wizard/objectives"
-        continue-link="/wizard/objectives-parameters-da"
         :save="this.save"
       />
 

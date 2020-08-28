@@ -68,8 +68,6 @@
       <hr>
       <!-- TODO continue link should be dependent on selections in Services component -->
       <nav-buttons
-        back-link="/wizard/objectives-parameters-deferral"
-        continue-link="/wizard/objectives-parameters-deferral"
         :save="this.save"
       />
     </form>
