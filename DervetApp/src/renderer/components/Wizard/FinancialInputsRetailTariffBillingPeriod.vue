@@ -155,10 +155,10 @@
 <script>
   import { v4 as uuidv4 } from 'uuid';
 
-  import model from '@/models/RetailTariffBillingPeriod';
+  import { RetailTariffBillingPeriod, validation } from '@/models/RetailTariffBillingPeriod';
   import NavButtons from './NavButtons';
 
-  const { defaults, validation } = model;
+  const defaults = RetailTariffBillingPeriod.getDefaults();
 
   export default {
     components: { NavButtons },
@@ -197,7 +197,7 @@
         this.$store.dispatch('addRetailTariffBillingPeriod', this.buildBillingPeriod());
       },
       buildBillingPeriod() {
-        return {
+        return RetailTariffBillingPeriod({
           retailTariffBillingPeriodId: this.inputRetailTariffBillingPeriodId,
           startMonth: this.inputStartMonth,
           endMonth: this.inputEndMonth,
@@ -209,7 +209,7 @@
           value: this.inputValue,
           chargeType: this.inputChargeType,
           name: this.inputName,
-        };
+        });
       },
     },
   };

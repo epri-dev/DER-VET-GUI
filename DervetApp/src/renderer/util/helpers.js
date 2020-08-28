@@ -1,4 +1,3 @@
-import { flatten } from 'lodash';
 import Papa from 'papaparse';
 
 const papaParsePromise = file => new Promise((complete, error) => {
@@ -12,8 +11,7 @@ const parseCsvFromFile = (e, successCallback) => {
   const file = getFileFromEvent(e);
   papaParsePromise(file)
     .then((results) => {
-      const flatResults = flatten(results.data);
-      successCallback(flatResults);
+      successCallback(results.data);
     });
   // TODO add catch with errorCallback
 };
