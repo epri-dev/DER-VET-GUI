@@ -11,28 +11,20 @@
 
     <div class="form-horizontal form-buffer">
       <div class="form-group" v-if="billingPeriodsExist()">
-        <div class="col-md-12 table-bordered">
-          <table class="table">
+        <div class="col-md-12">
+          <table class="table table-bordered">
             <thead>
-              <tr>
-                <th>Billing Period</th>
-                <th>Start Month</th>
-                <th>End Month</th>
-                <th>Start Time</th>
-                <th>End Time</th>
-                <th>Excluding Start Time</th>
-                <th>Excluding End Time</th>
-                <th>Weekday</th>
-                <th>Value</th>
-                <th>Charge</th>
-                <th>Name</th>
-                <th>
+              <tr class="table-align-center" >
+                <th v-for="label in RETAIL_TARIFF_HEADERS">
+                  {{label}}
+                </th>
+                <th class="table-align-center">
                   <div @click="removeAll" class="fas fa-trash"></div>
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="pd in billingPeriods">
+              <tr class="table-align-center" v-for="pd in billingPeriods">
                 <td>{{pd.id}}</td>
                 <td>{{pd.startMonth}}</td>
                 <td>{{pd.endMonth}}</td>
@@ -44,11 +36,11 @@
                 <td>{{pd.value}}</td>
                 <td>{{pd.chargeType}}</td>
                 <td>{{pd.name}}</td>
-                <td>
-                  <router-link to="/wizard/financial-inputs-retail-tariff-billing-period" class="nav">
-                    Edit
-                  </router-link> | 
-                  <div @click="removeOne(pd.id)" class="fas fa-trash"></div>
+                <td class="table-ensure-width">
+                    <!-- TODO: pass ID -->
+                  <router-link to="/wizard/financial-inputs-retail-tariff-billing-period">Edit</router-link>
+                  <span> | </span>
+                  <span @click="removeOne(pd.id)" class="fas fa-trash"></span>
                 </td>
               </tr>
             </tbody>
@@ -70,6 +62,7 @@
         <router-link to="/wizard/financial-inputs-retail-tariff-import" class="btn btn-secondary">
           <i class="fas fa-upload"/> Import Tariff
         </router-link>
+        <!-- TODO export functionality -->
         <div class="btn btn-secondary pull-right" v-if="billingPeriodsExist()">
           <i class="fas fa-download"/> Export Tariff
         </div>
@@ -80,15 +73,16 @@
 
     <hr>
 
+    <!-- TODO dependent on user selections -->
     <nav-buttons
       back-link="/wizard/financial-inputs-external-incentives"
       continue-link="/wizard/financial-inputs-external-incentives"
-      :save="this.save"
     />
   </div>
 </template>
 
 <script>
+  import { RETAIL_TARIFF_HEADERS } from '@/models/RetailTariffBillingPeriod';
   import NavButtons from './NavButtons';
 
   export default {
@@ -97,6 +91,9 @@
       billingPeriods() {
         return this.$store.state.Project.retailTariffBillingPeriods;
       },
+    },
+    data() {
+      return { RETAIL_TARIFF_HEADERS };
     },
     methods: {
       billingPeriodsExist() {
@@ -107,9 +104,6 @@
       },
       removeOne(id) {
         this.$store.dispatch('removeRetailTariffBillingPeriod', id);
-      },
-      save() {
-        return 'placeholder';
       },
     },
   };
