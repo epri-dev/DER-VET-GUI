@@ -1,12 +1,9 @@
 <template>
   <div class="form-group form-buffer row">
     <div class="col-md-6 back-btn">
-      <button class="btn btn-primary" @click="goBack">
+      <router-link :to="prevPagePath" class="btn btn-primary">
         {{backText}}
-      </button> 
-      <!-- </router-link :to="getPrevPagePath" class="btn btn-primary">
-        {{backText}}
-      </router-link> -->
+      </router-link>
     </div>
     <!-- <h1>{{this.$route.path}}</h1> -->
     <div class="col-md-6 continue-btn">
@@ -32,16 +29,27 @@
         if (this.continueLink !== null) {
           return this.continueLink;
         }
-        let headLL = this.routeLL;
-        while (headLL.path !== this.currPath) {
-          // check next link
-          headLL = headLL.next;
+        let nextPath = 'wizard/summary';
+        for (let headLL = this.routeLL; headLL !== null; headLL = headLL.next) {
+          if (headLL.path.localeCompare(this.currPath) === 0 && headLL.next !== null) {
+            nextPath = headLL.next.path;
+          }
         }
-        // page link found -- check for next
-        if (headLL === null) {
-          return 'wizard/summary'; // direct to the summary page
+        return nextPath;
+      },
+      prevPagePath() {
+        if (this.backLink !== null) {
+          return this.backLink;
         }
-        return headLL.next.path;
+        let prevLL = null;
+        let prevPath = 'wizard/objectives';
+        for (let headLL = this.routeLL; headLL !== null; headLL = headLL.next) {
+          if (headLL.path.localeCompare(this.currPath) === 0) {
+            prevPath = prevLL.path;
+          }
+          prevLL = headLL;
+        }
+        return prevPath;
       },
     },
     methods: {

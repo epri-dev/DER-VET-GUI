@@ -55,6 +55,7 @@
 
       <!-- TODO continue link should be dependent on selections in Services component -->
       <nav-buttons
+        :back-link="objectivesPath"
         :save="this.save"
       />
 
@@ -81,6 +82,7 @@
         inputNoChargingFromGrid: p.noChargingFromGrid,
         inputNoDischargingToGrid: p.noDischargingToGrid,
         siteLoad: p.siteLoad,
+        objectivesPath: p.paths.objectives,
       };
     },
     methods: {

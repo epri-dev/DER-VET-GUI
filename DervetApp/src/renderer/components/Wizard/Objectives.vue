@@ -125,7 +125,7 @@
       </fieldset>
       <hr />
       <nav-buttons
-        back-link="/wizard/technology-specs"
+        :back-link="techSpecsPath"
         :continue-link="siteInformationPath"
         :save="save"
       />
@@ -150,6 +150,7 @@
         ...data,
         ...this.getDataFromProject(),
         siteInformationPath: p.paths.objectivesSiteInformation,
+        techSpecsPath: p.paths.techSpecs,
       };
     },
     methods: {

@@ -25,19 +25,20 @@ const getDefaultState = () => ({
   paths: {
     startProject: '/wizard/start-project',
     techSpecs: '/wizard/technology-specs',
-    sensitivityAnalysis: '/wizard/sensitivity-analysis',
     objectives: '/wizard/objectives',
     objectivesSiteInformation: '/wizard/objectives-parameters-site-information',
     objectivesDeferral: '/wizard/objectives-parameters-deferral',
-    objectivesDA: '/wizard/objectives-parameters-da',
     objectivesFR: '/wizard/objectives-parameters-fr',
-    objectivesSR: '/wizard/objectives-parameters-sr',
+
     objectivesNSR: '/wizard/objectives-parameters-nsr',
+    objectivesResilience: '/wizard/objectives-parameters-reliability',
+    objectivesSR: '/wizard/objectives-parameters-sr',
     objectivesUserDefined: '/wizard/objectives-parameters-user-defined',
-    objectivesReliability: '/wizard/objectives-parameters-reliability',
+    objectivesDA: '/wizard/objectives-parameters-da',
     financialInputs: '/wizard/financial-inputs',
     financialInputsExternalIncentives: '/wizard/financial-inputs-external-incentives',
     financialInputsRetailTariff: '/wizard/financial-inputs-retail-tariff',
+    sensitivityAnalysis: '/wizard/sensitivity-analysis',
   },
   routeObjectivesFinancialsLL: null,
 
@@ -407,14 +408,11 @@ const mutations = {
     if (state.objectivesNSR) {
       tail = new PageLink(state.paths.objectivesNSR, tail);
     }
-    if (state.objectivesLoadFollowing) {
-      tail = new PageLink(state.paths.objectivesLoadFollowing, tail);
-    }
+    // if (state.objectivesLoadFollowing) {
+    //   tail = new PageLink(state.paths.objectivesLoadFollowing, tail);
+    // }
     if (state.objectivesFR) {
       tail = new PageLink(state.paths.objectivesFR, tail);
-    }
-    if (state.objectivesRetailDemandChargeReduction) {
-      tail = new PageLink(state.paths.objectivesRetailDemandChargeReduction, tail);
     }
     if (state.objectivesDeferral) {
       tail = new PageLink(state.paths.objectivesDeferral, tail);

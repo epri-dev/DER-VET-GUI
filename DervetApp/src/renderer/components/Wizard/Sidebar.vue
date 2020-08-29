@@ -86,8 +86,8 @@
         </router-link>
         <router-link
           class="nav nav-sidebar sidebar-indent"
-          v-bind:class="{ current: isActive(this.pagePaths.objectivesReliability) }"
-          :to="this.pagePaths.objectivesReliability"
+          v-bind:class="{ current: isActive(this.pagePaths.objectivesResilience) }"
+          :to="this.pagePaths.objectivesResilience"
           v-if="objectivesResilience">
           Reliability
         </router-link>
