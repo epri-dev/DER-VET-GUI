@@ -521,7 +521,7 @@
 
       <nav-buttons
         back-link="/wizard/technology-specs"
-        :continue-link="`/wizard/technology-specs-battery-cycle/${this.inputId}`"
+        :continue-link="inputIncludeCycleDegradation ? `/wizard/technology-specs-battery-cycle/${this.inputId}` : '/wizard/technology-specs'"
         :save="this.save"
       />
 

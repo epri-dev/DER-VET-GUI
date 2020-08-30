@@ -1,9 +1,10 @@
 <template>
   <div>
     <h3>Battery Storage: Cycle Life Curve</h3>
-    Specify the cycle life curve for this battery
+      Specify the cycle life curve for this battery
 
-    <b-table-lite fixed striped hover
+    <b-table-lite
+      fixed striped hover sticky-header="350px"
       :items="items"
       :fields="fields">
       <template v-slot:cell(ulimit)="row">
@@ -30,6 +31,7 @@
     <nav-buttons
       :back-link="`/wizard/technology-specs-battery/${this.batteryId}`"
       continue-link="/wizard/technology-specs"
+      continue-text="Done Adding Cycles"
       :save="this.save"
     />
 
