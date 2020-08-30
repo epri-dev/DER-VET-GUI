@@ -1,6 +1,7 @@
 import { sharedDefaults, sharedValidation } from './Shared.js';
 
 const defaults = {
+  active: false,
   tag: 'ICE',
   technologyType: 'Generator',
   id: '',

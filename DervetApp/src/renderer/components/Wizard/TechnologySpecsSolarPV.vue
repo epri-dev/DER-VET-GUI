@@ -178,6 +178,9 @@
     methods: {
       getDefaultData() {
         return {
+          inputActive: defaults.active,
+          inputTag: defaults.tag,
+          inputTechnologyType: defaults.technologyType,
           inputId: uuidv4(),
           inputName: defaults.name,
           inputCost: defaults.cost,
@@ -193,6 +196,9 @@
       getDataFromProject() {
         const solarPVSpecs = this.$store.getters.getSolarPVById(this.solarId);
         return {
+          inputActive: solarPVSpecs.active,
+          inputTag: solarPVSpecs.tag,
+          inputTechnologyType: solarPVSpecs.technologyType,
           inputId: solarPVSpecs.id,
           inputName: solarPVSpecs.name,
           inputCost: solarPVSpecs.cost,
@@ -218,6 +224,9 @@
       },
       buildSolarPV() {
         return {
+          active: this.inputActive,
+          tag: this.inputTag,
+          technologyType: this.inputTechnologyType,
           id: this.inputId,
           name: this.inputName,
           cost: this.inputCost,

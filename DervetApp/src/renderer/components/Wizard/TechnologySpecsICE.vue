@@ -289,6 +289,7 @@
     methods: {
       getDefaultData() {
         return {
+          inputActive: defaults.active,
           inputTag: defaults.tag,
           inputTechnologyType: defaults.technologyType,
           inputId: uuidv4(),
@@ -313,6 +314,7 @@
       getDataFromProject() {
         const iceSpecs = this.$store.getters.getICEById(this.iceId);
         return {
+          inputActive: iceSpecs.active,
           inputTag: iceSpecs.tag,
           inputTechnologyType: iceSpecs.technologyType,
           inputId: iceSpecs.id,
@@ -335,6 +337,7 @@
         };
       },
       save() {
+        const activePayload = this.makeSaveActivePayload();
         if (this.iceId === 'null') {
           this.$store.dispatch('addTechnologySpecsICE', this.buildICE());
         } else {
@@ -344,9 +347,17 @@
           };
           this.$store.dispatch('replaceTechnologySpecsICE', payload);
         }
+        this.$store.dispatch('makeActiveTech', activePayload);
+      },
+      makeSaveActivePayload() {
+        return {
+          id: this.iceId,
+          tag: 'ICE',
+        };
       },
       buildICE() {
         return {
+          active: this.inputActive,
           tag: this.inputTag,
           technologyType: this.inputTechnologyType,
           id: this.inputId,

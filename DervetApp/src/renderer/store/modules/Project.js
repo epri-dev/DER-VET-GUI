@@ -323,6 +323,18 @@ const mutations = {
     tmpBatterySpecs[indexMatchingId] = payload.newBattery;
     state.technologySpecsBattery = tmpBatterySpecs;
   },
+  MAKE_ACTIVE_TECH_SOLAR_PV(state, payload) {
+    const indexMatchingId = getters.getIndexOfSolarId(state)(payload.id);
+    state.technologySpecsSolarPV[indexMatchingId].active = true;
+  },
+  MAKE_ACTIVE_TECH_BATTERY(state, payload) {
+    const indexMatchingId = getters.getIndexOfBatteryId(state)(payload.id);
+    state.technologySpecsBattery[indexMatchingId].active = true;
+  },
+  MAKE_ACTIVE_TECH_ICE(state, payload) {
+    const indexMatchingId = getters.getIndexOfICEId(state)(payload.id);
+    state.technologySpecsICE[indexMatchingId].active = true;
+  },
   ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV(state, payload) {
     const tmpSolarPVSpecs = getters.getSolarPVSpecsClone(state)();
     const indexMatchingId = getters.getIndexOfSolarId(state)(payload.solarId);
@@ -589,6 +601,15 @@ const actions = {
   },
   replaceTechnologySpecsBattery({ commit }, payload) {
     commit('REPLACE_TECHNOLOGY_SPECS_BATTERY', payload);
+  },
+  makeActiveTech({ commit }, payload) {
+    if (payload.tag === 'ICE') {
+      commit('MAKE_ACTIVE_TECH_ICE', payload);
+    } else if (payload.tag === 'PV') {
+      commit('MAKE_ACTIVE_TECH_SOLAR_PV', payload);
+    } else if (payload.tag === 'Battery') {
+      commit('MAKE_ACTIVE_TECH_BATTERY', payload);
+    }
   },
   addGenerationProfileToTechnologySpecsPV({ commit }, payload) {
     commit('ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV', payload);

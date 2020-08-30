@@ -54,7 +54,15 @@
     methods: {
       save() {
         const payload = this.makeSavePayload();
+        const activePayload = this.makeSaveActivePayload();
         this.$store.dispatch('addGenerationProfileToTechnologySpecsPV', payload);
+        this.$store.dispatch('makeActiveTech', activePayload);
+      },
+      makeSaveActivePayload() {
+        return {
+          id: this.solarId,
+          tag: 'PV',
+        };
       },
       makeSavePayload() {
         const ts = new PVGenerationTimeSeries(this.inputTimeseries);
