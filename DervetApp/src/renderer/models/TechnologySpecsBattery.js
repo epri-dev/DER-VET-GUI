@@ -1,6 +1,8 @@
 import { sharedDefaults, sharedValidation } from './Shared.js';
 
 const defaults = {
+  tag: 'Battery',
+  technologyType: 'Energy Storage System',
   id: '',
   name: '',
   energyCapacity: 0,

@@ -20,6 +20,11 @@ const getDefaultState = () => ({
   technologySpecsSolarPV: [],
   technologySpecsICE: [],
   technologySpecsBattery: [],
+  listOfActiveTechnologies: {
+    Generator: [],
+    'Energy Storage System': [],
+    'Intermittent Resource': [],
+  },
   discountRate: 0,
   inflationRate: 0,
   federalTaxRate: 0,
@@ -90,6 +95,18 @@ const getDefaultState = () => ({
 const state = getDefaultState();
 
 const getters = {
+  getListTechClone(state) {
+    return () => cloneDeep(state.listOfActiveTechnologies);
+  },
+  getIndexOfListTechGenId(state) {
+    return id => state.listOfActiveTechnologies.Generator.findIndex(x => x.id === id);
+  },
+  getIndexOfListTechESSId(state) {
+    return id => state.listOfActiveTechnologies['Energy Storage System'].findIndex(x => x.id === id);
+  },
+  getIndexOfListTechIRId(state) {
+    return id => state.listOfActiveTechnologies['Intermittent Resource'].findIndex(x => x.id === id);
+  },
   getSolarPVById(state) {
     return id => state.technologySpecsSolarPV.find(x => x.id === id);
   },
@@ -264,6 +281,30 @@ const mutations = {
   ADD_TECHNOLOGY_SPECS_BATTERY(state, newBattery) {
     state.technologySpecsBattery.push(newBattery);
   },
+  ADD_TO_LIST_OF_TECHNOLOGIES(state, newTech) {
+    state.listOfActiveTechnologies[newTech.technologyType].push(newTech);
+  },
+  REPLACE_ON_LIST_OF_TECHNOLOGIES_GEN(state, listPayload) {
+    const tmpListOfTech = getters.getListTechClone(state)();
+    const indexMatchingId = getters.getIndexOfListTechGenId(state)(listPayload.oldId);
+    tmpListOfTech[listPayload.params.technologyType][indexMatchingId] = listPayload.params;
+    state.listOfActiveTechnologies = tmpListOfTech;
+  },
+  REPLACE_ON_LIST_OF_TECHNOLOGIES_ESS(state, listPayload) {
+    const tmpListOfTech = getters.getListTechClone(state)();
+    const indexMatchingId = getters.getIndexOfListTechESSId(state)(listPayload.oldId);
+    tmpListOfTech[listPayload.params.technologyType][indexMatchingId] = listPayload.params;
+    state.listOfActiveTechnologies = tmpListOfTech;
+  },
+  REPLACE_ON_LIST_OF_TECHNOLOGIES_IR(state, listPayload) {
+    const tmpListOfTech = getters.getListTechClone(state)();
+    const indexMatchingId = getters.getIndexOfListTechIRId(state)(listPayload.oldId);
+    tmpListOfTech[listPayload.params.technologyType][indexMatchingId] = listPayload.params;
+    state.listOfActiveTechnologies = tmpListOfTech;
+  },
+
+  // REMOVE_FROM_LIST_OF_TECHNOLOGIES() {
+  // },
   REPLACE_TECHNOLOGY_SPECS_SOLAR_PV(state, payload) {
     const tmpSolarPVSpecs = getters.getSolarPVSpecsClone(state)();
     const indexMatchingId = getters.getIndexOfSolarId(state)(payload.solarId);
@@ -351,23 +392,23 @@ const mutations = {
     for (let i = 0; i < listOfServices.length; i += 1) {
       service = listOfServices[i];
       if (service === 'Reliability') {
-        state.ObjectivesResilience = true;
-      } else if (service === 'BackupPower') {
-        state.ObjectivesBackupPower = true;
-      } else if (service === 'RetailDemandChargeReduction') {
-        state.ObjectivesRetailDemandChargeReduction = true;
+        state.objectivesResilience = true;
+      } else if (service === 'Backup Power') {
+        state.objectivesBackupPower = true;
+      } else if (service === 'Retail Demand Charge Reduction') {
+        state.objectivesRetailDemandChargeReduction = true;
       } else if (service === 'SR') {
-        state.ObjectivesSR = true;
+        state.objectivesSR = true;
       } else if (service === 'NSR') {
-        state.ObjectivesNSR = true;
+        state.objectivesNSR = true;
       } else if (service === 'FR') {
-        state.ObjectivesFR = true;
+        state.objectivesFR = true;
       } else if (service === 'Deferral') {
-        state.ObjectivesDeferral = true;
+        state.objectivesDeferral = true;
       } else if (service === 'LF') {
-        state.ObjectivesLoadFollowing = true;
-      } else if (service === 'UserDefined') {
-        state.ObjectivesUserDefined = true;
+        state.objectivesLoadFollowing = true;
+      } else if (service === 'User Defined') {
+        state.objectivesUserDefined = true;
       }
     }
   },
@@ -508,18 +549,43 @@ const actions = {
   },
   addTechnologySpecsSolarPV({ commit }, newSolar) {
     commit('ADD_TECHNOLOGY_SPECS_SOLAR_PV', newSolar);
+    // commit('ADD_TO_LIST_OF_TECHNOLOGIES', 'PV', newSolar.name);
   },
   addTechnologySpecsICE({ commit }, newICE) {
     commit('ADD_TECHNOLOGY_SPECS_ICE', newICE);
+    const payload = {
+      technologyType: newICE.technologyType,
+      tag: newICE.tag,
+      name: newICE.name,
+      id: newICE.id,
+    };
+    commit('ADD_TO_LIST_OF_TECHNOLOGIES', payload);
   },
   addTechnologySpecsBattery({ commit }, newBattery) {
     commit('ADD_TECHNOLOGY_SPECS_BATTERY', newBattery);
+    // commit('ADD_TO_LIST_OF_TECHNOLOGIES', 'Battery', newBattery.name);
   },
   replaceTechnologySpecsSolarPV({ commit }, payload) {
     commit('REPLACE_TECHNOLOGY_SPECS_SOLAR_PV', payload);
   },
   replaceTechnologySpecsICE({ commit }, payload) {
     commit('REPLACE_TECHNOLOGY_SPECS_ICE', payload);
+    const listPayload = {
+      oldId: payload.iceId,
+      params: {
+        technologyType: payload.newICE.technologyType,
+        tag: payload.newICE.tag,
+        name: payload.newICE.name,
+        id: payload.newICE.id,
+      },
+    };
+    if (payload.newICE.technologyType === 'Generator') {
+      commit('REPLACE_ON_LIST_OF_TECHNOLOGIES_GEN', listPayload);
+    } else if (payload.newICE.technologyType === 'Energy Storage System') {
+      commit('REPLACE_ON_LIST_OF_TECHNOLOGIES_ESS', listPayload);
+    } else if (payload.newICE.technologyType === 'Intermittent Resource') {
+      commit('REPLACE_ON_LIST_OF_TECHNOLOGIES_IR', listPayload);
+    }
   },
   replaceTechnologySpecsBattery({ commit }, payload) {
     commit('REPLACE_TECHNOLOGY_SPECS_BATTERY', payload);

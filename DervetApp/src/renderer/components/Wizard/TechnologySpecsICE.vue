@@ -289,6 +289,8 @@
     methods: {
       getDefaultData() {
         return {
+          inputTag: defaults.tag,
+          inputTechnologyType: defaults.technologyType,
           inputId: uuidv4(),
           inputName: defaults.name,
           inputRatedCapacity: defaults.ratedCapacity,
@@ -311,6 +313,8 @@
       getDataFromProject() {
         const iceSpecs = this.$store.getters.getICEById(this.iceId);
         return {
+          inputTag: iceSpecs.tag,
+          inputTechnologyType: iceSpecs.technologyType,
           inputId: iceSpecs.id,
           inputName: iceSpecs.name,
           inputRatedCapacity: iceSpecs.ratedCapacity,
@@ -343,6 +347,8 @@
       },
       buildICE() {
         return {
+          tag: this.inputTag,
+          technologyType: this.inputTechnologyType,
           id: this.inputId,
           name: this.inputName,
           ratedCapacity: this.inputRatedCapacity,

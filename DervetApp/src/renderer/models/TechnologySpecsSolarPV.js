@@ -1,6 +1,8 @@
 import { sharedDefaults, sharedValidation } from './Shared.js';
 
 const defaults = {
+  tag: 'PV',
+  technologyType: 'Intermittent Resource',
   id: '',
   name: '',
   cost: 0,

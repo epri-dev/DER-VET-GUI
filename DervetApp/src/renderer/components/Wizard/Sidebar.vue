@@ -12,11 +12,11 @@
           class="nav nav-sidebar sidebar-root-el"
           v-bind:class="{ current: isActive(this.techSpecsPath) }"
           :to="this.techSpecsPath">
-          Technology Specification
+          Technology Specifications
         </router-link>
 
         <router-link
-          class="nav nav-sidebar sidebar-indent"
+          class="nav nav-sidebar sidebar-indent incomplete"
           v-for="solar in solarPVItems"
           :to="{ name: 'technologySpecsSolarPV', params: { solarId: solar.id }}"
           :key="solar.id"
@@ -34,7 +34,7 @@
         </router-link>
 
         <router-link
-          class="nav nav-sidebar sidebar-indent"
+          class="nav nav-sidebar sidebar-indent complete"
           v-for="ice in iceItems"
           :to="{ name: 'technologySpecsICE', params: { iceId: ice.id }}"
           :key="ice.id"
@@ -138,12 +138,18 @@
           :to="this.sensitivityAnalysisPath">
           Scenario Analysis
         </router-link>
-        <li class="nav nav-sidebar sidebar-root-el">
-          <div class="menutext">Summary</div>
-        </li>
-        <li class="nav nav-sidebar sidebar-root-el">
-          <div class="menutext">Results</div>
-        </li>
+        <router-link
+          class="nav nav-sidebar sidebar-root-el"
+          v-bind:class="{ current: isActive(this.summaryPath) }"
+          :to="this.summaryPath">
+          Summary
+        </router-link>
+        <router-link
+          class="nav nav-sidebar sidebar-root-el"
+          v-bind:class="{ current: isActive(this.resultsPath) }"
+          :to="this.resultsPath">
+          Results
+        </router-link>
     </b-nav>
     <div class="export-project">
       <router-link class="btn btn-md btn-primary" to="/">Export Project</router-link>
@@ -171,9 +177,13 @@
         financialInputsExternalIncentivesPath: '/wizard/financial-inputs-external-incentives',
         financialInputsRetailTariffPath: '/wizard/financial-inputs-retail-tariff',
         sensitivityAnalysisPath: '/wizard/sensitivity-analysis',
+        summaryPath: '/wizard/summary',
+        resultsPath: '/wizard/results',
       };
     },
     methods: {
+      // techSpecsComplete()
+      // techSpecsIncomplete()
       techSpecsActiveSaved(tech, id) {
         return RegExp(`${this.techSpecsPath}-${tech}.*/${id}`).test(this.$route.path);
       },
