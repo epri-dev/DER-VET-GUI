@@ -1,3 +1,17 @@
+export const RETAIL_TARIFF_HEADERS = [
+  'ID',
+  'Start Month',
+  'End Month',
+  'Start Time',
+  'End Time',
+  'Excluding Start Time',
+  'Excluding End Time',
+  'Weekday',
+  'Value',
+  'Charge',
+  'Name',
+];
+
 export class RetailTariffBillingPeriod {
   constructor(arg) {
     this.id = arg.id;
