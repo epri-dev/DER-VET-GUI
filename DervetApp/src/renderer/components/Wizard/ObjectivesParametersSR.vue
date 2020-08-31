@@ -72,7 +72,7 @@
     methods: {
       save() {
         const price = new PriceTimeSeries('SR', this.inputTimeseries);
-        this.$store.dispatch('newSRPrice', price);
+        this.$store.dispatch('setSRPrice', price);
 
         this.$store.dispatch('setSRGrowth', this.inputSRGrowth);
         this.$store.dispatch('setSRDuration', this.inputDuration);

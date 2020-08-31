@@ -1,6 +1,7 @@
+import getCurrentYear from '@/util/time';
 import { cloneDeep } from 'lodash';
 import PageLink from '../../models/PageRouting';
-import getCurrentYear from '@/util/time';
+
 
 const getDefaultState = () => ({
   id: null,
@@ -29,7 +30,6 @@ const getDefaultState = () => ({
     objectivesSiteInformation: '/wizard/objectives-parameters-site-information',
     objectivesDeferral: '/wizard/objectives-parameters-deferral',
     objectivesFR: '/wizard/objectives-parameters-fr',
-
     objectivesNSR: '/wizard/objectives-parameters-nsr',
     objectivesResilience: '/wizard/objectives-parameters-reliability',
     objectivesSR: '/wizard/objectives-parameters-sr',

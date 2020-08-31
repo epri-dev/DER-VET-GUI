@@ -79,31 +79,10 @@
         </router-link>
         <router-link
           class="nav nav-sidebar sidebar-indent"
-          v-bind:class="{ current: isActive(this.pagePaths.objectivesDA) }"
-          :to="this.pagePaths.objectivesDA"
-          v-if="objectivesDA">
-          Day Ahead Pricing
-        </router-link>
-        <router-link
-          class="nav nav-sidebar sidebar-indent"
-          v-bind:class="{ current: isActive(this.pagePaths.objectivesResilience) }"
-          :to="this.pagePaths.objectivesResilience"
-          v-if="objectivesResilience">
-          Reliability
-        </router-link>
-        <router-link
-          class="nav nav-sidebar sidebar-indent"
           v-bind:class="{ current: isActive(this.pagePaths.objectivesFR) }"
           :to="this.pagePaths.objectivesFR"
           v-if="objectivesFR">
           Frequency Regulation
-        </router-link>
-        <router-link
-          class="nav nav-sidebar sidebar-indent"
-          v-bind:class="{ current: isActive(this.pagePaths.objectivesSR) }"
-          :to="this.pagePaths.objectivesSR"
-          v-if="objectivesSR">
-          Spinning Reserves
         </router-link>
         <router-link
           class="nav nav-sidebar sidebar-indent"
@@ -114,10 +93,31 @@
         </router-link>
         <router-link
           class="nav nav-sidebar sidebar-indent"
+          v-bind:class="{ current: isActive(this.pagePaths.objectivesResilience) }"
+          :to="this.pagePaths.objectivesResilience"
+          v-if="objectivesResilience">
+          Reliability
+        </router-link>
+        <router-link
+          class="nav nav-sidebar sidebar-indent"
+          v-bind:class="{ current: isActive(this.pagePaths.objectivesSR) }"
+          :to="this.pagePaths.objectivesSR"
+          v-if="objectivesSR">
+          Spinning Reserves
+        </router-link>
+        <router-link
+          class="nav nav-sidebar sidebar-indent"
           v-bind:class="{ current: isActive(this.pagePaths.objectivesUserDefined) }"
           :to="this.pagePaths.objectivesUserDefined"
           v-if="objectivesUserDefined">
           Custom Service
+        </router-link>
+        <router-link
+          class="nav nav-sidebar sidebar-indent"
+          v-bind:class="{ current: isActive(this.pagePaths.objectivesDA) }"
+          :to="this.pagePaths.objectivesDA"
+          v-if="objectivesDA">
+          Day Ahead Pricing
         </router-link>
 
         <router-link
