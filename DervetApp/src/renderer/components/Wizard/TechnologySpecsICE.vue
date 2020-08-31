@@ -337,7 +337,6 @@
         };
       },
       save() {
-        const activePayload = this.makeSaveActivePayload();
         if (this.iceId === 'null') {
           this.$store.dispatch('addTechnologySpecsICE', this.buildICE());
         } else {
@@ -347,17 +346,10 @@
           };
           this.$store.dispatch('replaceTechnologySpecsICE', payload);
         }
-        this.$store.dispatch('makeActiveTech', activePayload);
-      },
-      makeSaveActivePayload() {
-        return {
-          id: this.iceId,
-          tag: 'ICE',
-        };
       },
       buildICE() {
         return {
-          active: this.inputActive,
+          active: true,
           tag: this.inputTag,
           technologyType: this.inputTechnologyType,
           id: this.inputId,

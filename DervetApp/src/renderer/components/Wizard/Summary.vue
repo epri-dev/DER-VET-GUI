@@ -13,11 +13,34 @@
         </template>
         </br>
 
-        {{ this.$store.state.Project }}
+<!--        {{ this.$store.state.Project }} -->
 
         <h4>Technology Specifications</h4>
+        <ul>
+          <h5>Generators:</h5>
+          <ul>
+            <li v-for="tech in techGen">
+              {{ tech.tag + ': ' + tech.name }}
+            </li>
+          </ul>
+        </ul>
+        <ul>
+          <h5>Intermittent Resources:</h5>
+          <ul>
+            <li v-for="tech in techIR">
+              {{ tech.tag + ': ' + tech.name }}
+            </li>
+          </ul>
+        </ul>
+        <ul>
+          <h5>Energy Storage Systems:</h5>
+          <ul>
+            <li v-for="tech in techESS">
+              {{ tech.tag + ': ' + tech.name }}
+            </li>
+          </ul>
+        </ul>
         </br>
-
 
         <h4>Services</h4>
         <ul>
@@ -26,12 +49,11 @@
             {{ item.display }}
           </li>
 -->
-          <li v-for="item in services" :key="item">
-            {{ item }}
+          <li v-for="service in services">
+            {{ service }}
           </li>
         </ul>
         </br>
-
 
         <h4>Financial Inputs</h4>
         <template>
@@ -95,6 +117,9 @@
           ['Latitude', this.$store.state.Project.latitude],
           ['Longitude', this.$store.state.Project.longitude],
         ],
+        techGen: this.$store.state.Project.listOfActiveTechnologies.Generator,
+        techIR: this.$store.state.Project.listOfActiveTechnologies['Intermittent Resource'],
+        techESS: this.$store.state.Project.listOfActiveTechnologies['Energy Storage System'],
         services: this.$store.state.Project.listOfActiveServices,
         services2: [
           { active: this.$store.state.Project.objectivesResilience, display: 'Reliability' },
@@ -117,7 +142,7 @@
           ['Property tax rate', `${this.$store.state.Project.propertyTaxRate} %`],
         ],
         scenario: [
-          ['Number of Scenario Analysis Cases', 'Baseline'],
+          ['FIXME Number of Scenario Analysis Cases', 'Baseline'],
         ],
       };
     },

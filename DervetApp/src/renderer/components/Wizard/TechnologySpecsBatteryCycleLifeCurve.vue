@@ -81,7 +81,15 @@
       },
       save() {
         const payload = this.makeSavePayload();
+        const activePayload = this.makeSaveActivePayload();
         this.$store.dispatch('addBatteryCyclesToTechnologySpecsBattery', payload);
+        this.$store.dispatch('activateTech', activePayload);
+      },
+      makeSaveActivePayload() {
+        return {
+          id: this.batteryId,
+          tag: 'Battery',
+        };
       },
       makeSavePayload() {
         return {

@@ -50,8 +50,25 @@
 
   export default {
     components: { NavButtons },
+    data() {
+      return {
+        ...this.getTechDataFromProject(),
+      };
+    },
     methods: {
+      getTechDataFromProject() {
+        const projectSpecs = this.$store.state.Project;
+        return {
+          iceTechList: projectSpecs.technologySpecsICE,
+          batteryTechList: projectSpecs.technologySpecsBattery,
+          solarPVTechList: projectSpecs.technologySpecsSolarPV,
+        };
+      },
       save() {
+        this.$store.dispatch('resetListOfActiveTechnologies');
+        this.$store.dispatch('makeListOfActiveTechnologies', this.iceTechList);
+        this.$store.dispatch('makeListOfActiveTechnologies', this.batteryTechList);
+        this.$store.dispatch('makeListOfActiveTechnologies', this.solarPVTechList);
       },
     },
   };

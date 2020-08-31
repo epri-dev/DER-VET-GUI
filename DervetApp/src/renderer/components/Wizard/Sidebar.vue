@@ -16,11 +16,14 @@
         </router-link>
 
         <router-link
-          class="nav nav-sidebar sidebar-indent incomplete"
+          class="nav nav-sidebar sidebar-indent"
           v-for="solar in solarPVItems"
           :to="{ name: 'technologySpecsSolarPV', params: { solarId: solar.id }}"
           :key="solar.id"
-          v-bind:class="{ current: techSpecsActiveSaved('solar-pv', solar.id) }">
+          v-bind:class="{
+            current: techSpecsActiveSaved('solar-pv', solar.id),
+            complete: solar.active,
+            incomplete: !solar.active }">
           Solar PV ({{ solar.name }})
         </router-link>
 
@@ -29,16 +32,20 @@
           v-for="battery in batteryItems"
           :to="{ name: 'technologySpecsBattery', params: { batteryId: battery.id }}"
           :key="battery.id"
-          v-bind:class="{ current: techSpecsActiveSaved('battery', battery.id) }">
+          v-bind:class="{ current: techSpecsActiveSaved('battery', battery.id),
+            complete: battery.active,
+            incomplete: !battery.active }">
           Battery Storage ({{ battery.name }})
         </router-link>
 
         <router-link
-          class="nav nav-sidebar sidebar-indent complete"
+          class="nav nav-sidebar sidebar-indent"
           v-for="ice in iceItems"
           :to="{ name: 'technologySpecsICE', params: { iceId: ice.id }}"
           :key="ice.id"
-          v-bind:class="{ current: techSpecsActiveSaved('ice', ice.id) }">
+          v-bind:class="{ current: techSpecsActiveSaved('ice', ice.id),
+            complete: ice.active,
+            incomplete: !ice.active }">
           Internal Combustion Engine ({{ ice.name }})
         </router-link>
 
@@ -182,7 +189,9 @@
       };
     },
     methods: {
-      // techSpecsComplete()
+      techSpecsComplete(active) {
+        return active;
+      },
       // techSpecsIncomplete()
       techSpecsActiveSaved(tech, id) {
         return RegExp(`${this.techSpecsPath}-${tech}.*/${id}`).test(this.$route.path);

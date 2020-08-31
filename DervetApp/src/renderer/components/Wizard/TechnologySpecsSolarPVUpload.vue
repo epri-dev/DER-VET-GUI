@@ -54,9 +54,9 @@
     methods: {
       save() {
         const payload = this.makeSavePayload();
-        const activePayload = this.makeSaveActivePayload();
         this.$store.dispatch('addGenerationProfileToTechnologySpecsPV', payload);
-        this.$store.dispatch('makeActiveTech', activePayload);
+        const activePayload = this.makeSaveActivePayload();
+        this.$store.dispatch('activateTech', activePayload);
       },
       makeSaveActivePayload() {
         return {

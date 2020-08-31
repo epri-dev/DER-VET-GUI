@@ -552,6 +552,9 @@
     methods: {
       getDefaultData() {
         return {
+          inputActive: defaults.active,
+          inputTag: defaults.tag,
+          inputTechnologyType: defaults.technologyType,
           inputId: uuidv4(),
           inputName: defaults.name,
           inputShouldEnergySize: defaults.shouldEnergySize,
@@ -590,6 +593,9 @@
       getDataFromProject() {
         const batterySpecs = this.$store.getters.getBatteryById(this.batteryId);
         return {
+          inputActive: batterySpecs.active,
+          inputTag: batterySpecs.tag,
+          inputTechnologyType: batterySpecs.technologyType,
           inputId: batterySpecs.id,
           inputName: batterySpecs.name,
           inputShouldEnergySize: batterySpecs.shouldEnergySize,
@@ -638,6 +644,9 @@
       },
       buildBattery() {
         return {
+          active: !this.inputIncludeCycleDegradation,
+          tag: this.inputTag,
+          technologyType: this.inputTechnologyType,
           id: this.inputId,
           name: this.inputName,
           shouldEnergySize: this.inputShouldEnergySize,
