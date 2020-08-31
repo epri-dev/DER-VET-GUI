@@ -93,13 +93,8 @@
     components: { NavButtons },
     methods: {
       modeDescription() {
-        const modeNum = 1;
+        const modeNum = parseInt(this.$store.state.Project.analysisHorizonMode, 10) - 1;
         return validation.analysisHorizonMode.allowedValues[modeNum].description;
-        // const modeNum = parseInt(this.$store.state.Project.analysisHorizonMode, 10);
-        // return validation.analysisHorizonMode.allowedValues[modeNum].description;
-      },
-      getAnalysisHorizonModeDescription() {
-        return this.$store.getters.getAnalysisHorizonModeDescription;
       },
     },
     data() {
@@ -108,9 +103,7 @@
           ['Project Name', this.$store.state.Project.name],
           ['Start Year', this.$store.state.Project.startYear],
           ['Analysis Horizon', `${this.$store.state.Project.analysisHorizon} years`],
-          ['FIXME Analysis Horizon Mode', this.$store.state.Project.analysisHorizonMode],
-          ['FIXME Mode', this.getAnalysisHorizonModeDescription()],
-          ['FIXME Mode', this.modeDescription()],
+          ['Analysis Horizon Mode', this.modeDescription()],
           ['Data year', this.$store.state.Project.dataYear],
           ['Grid Domain', this.$store.state.Project.gridLocation],
           ['Ownership', this.$store.state.Project.ownership],
