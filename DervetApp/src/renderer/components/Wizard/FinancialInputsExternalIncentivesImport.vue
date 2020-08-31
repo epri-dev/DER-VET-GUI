@@ -41,8 +41,8 @@
 </template>
 
 <script>
-  import { ExternalIncentives } from '@/models/ExternalIncentives';
-  import helpers from '@/util/helpers';
+  import { parsedCsvToExternalIncentives } from '@/models/ExternalIncentives';
+  import { parseCsvFromFile } from '@/util/helpers';
   import NavButtons from './NavButtons';
 
   export default {
@@ -55,10 +55,10 @@
     methods: {
       onFileUpload(e) {
         const onSuccess = (results) => { this.parsedExternalIncentiveCsv = results; };
-        helpers.parseCsvFromFile(e, onSuccess);
+        parseCsvFromFile(e, onSuccess);
       },
       save() {
-        const eis = ExternalIncentives.fromParsedCsv(this.parsedExternalIncentiveCsv);
+        const eis = parsedCsvToExternalIncentives(this.parsedExternalIncentiveCsv);
         this.$store.dispatch('replaceExternalIncentives', eis);
       },
     },

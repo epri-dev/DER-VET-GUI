@@ -62,10 +62,13 @@
         <router-link to="/wizard/financial-inputs-retail-tariff-import" class="btn btn-secondary">
           <i class="fas fa-upload"/> Import Tariff
         </router-link>
-        <!-- TODO export functionality -->
-        <div class="btn btn-secondary pull-right" v-if="billingPeriodsExist()">
+        <a
+          :href="exportCsv()"
+          download="RetailTariff.csv"
+          class="btn btn-secondary pull-right"
+          v-if="billingPeriodsExist()">
           <i class="fas fa-download"/> Export Tariff
-        </div>
+        </a>
       </div>
       <div class="col-md-6">
       </div>
@@ -82,7 +85,7 @@
 </template>
 
 <script>
-  import { RETAIL_TARIFF_HEADERS } from '@/models/RetailTariffBillingPeriod';
+  import { RETAIL_TARIFF_HEADERS, billingPeriodsToCsv } from '@/models/RetailTariffBillingPeriod';
   import NavButtons from './NavButtons';
 
   export default {
@@ -96,6 +99,9 @@
       return { RETAIL_TARIFF_HEADERS };
     },
     methods: {
+      exportCsv() {
+        return billingPeriodsToCsv(this.billingPeriods);
+      },
       billingPeriodsExist() {
         return this.billingPeriods.length > 0;
       },

@@ -41,8 +41,8 @@
 </template>
 
 <script>
-  import { RetailTariffBillingPeriod } from '@/models/RetailTariffBillingPeriod';
-  import helpers from '@/util/helpers';
+  import { parsedCsvToBillingPeriods } from '@/models/RetailTariffBillingPeriod';
+  import { parseCsvFromFile } from '@/util/helpers';
   import NavButtons from './NavButtons';
 
 
@@ -56,10 +56,10 @@
     methods: {
       onFileUpload(e) {
         const onSuccess = (results) => { this.parsedBillingPeriodCsv = results; };
-        helpers.parseCsvFromFile(e, onSuccess);
+        parseCsvFromFile(e, onSuccess);
       },
       save() {
-        const pds = RetailTariffBillingPeriod.fromParsedCsv(this.parsedBillingPeriodCsv);
+        const pds = parsedCsvToBillingPeriods(this.parsedBillingPeriodCsv);
         this.$store.dispatch('replaceRetailTariffBillingPeriods', pds);
       },
     },

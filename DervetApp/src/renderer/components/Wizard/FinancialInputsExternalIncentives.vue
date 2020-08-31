@@ -11,7 +11,7 @@
 
     <div class="form-horizontal form-buffer">
       <div class="form-group" v-if="externalIncentivesExist()">
-        <div class="col-md-8">
+        <div class="col-md-12">
           <table class="table table-bordered">
             <thead>
               <tr>
@@ -56,10 +56,13 @@
         <router-link to="/wizard/financial-inputs-external-incentives-import" class="btn btn-secondary">
           <i class="fas fa-upload"/> Import Incentives
         </router-link>
-        <!-- TODO export functionality -->
-        <div class="btn btn-secondary pull-right" v-if="externalIncentivesExist()">
+        <a
+          :href="exportCsv()"
+          download="ExternalIncentives.csv"
+          class="btn btn-secondary pull-right"
+          v-if="externalIncentivesExist()">
           <i class="fas fa-download"/> Export Incentives
-        </div>
+        </a>
       </div>
       <div class="col-md-6">
       </div>
@@ -76,7 +79,7 @@
 </template>
 
 <script>
-  import { INCENTIVES_HEADERS } from '@/models/ExternalIncentives';
+  import { INCENTIVES_HEADERS, externalIncentivesToCsv } from '@/models/ExternalIncentives';
   import NavButtons from './NavButtons';
 
   export default {
@@ -90,6 +93,9 @@
       return { INCENTIVES_HEADERS };
     },
     methods: {
+      exportCsv() {
+        return externalIncentivesToCsv(this.externalIncentives);
+      },
       externalIncentivesExist() {
         return this.externalIncentives.length > 0;
       },
