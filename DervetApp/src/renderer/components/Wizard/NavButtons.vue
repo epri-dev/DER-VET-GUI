@@ -74,7 +74,10 @@
         type: String,
         default: 'Save and Continue >>',
       },
-      save: Function,
+      save: {
+        type: Function,
+        default: () => null,
+      },
     },
   };
 </script>

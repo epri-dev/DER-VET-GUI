@@ -7,7 +7,7 @@ describe('RetailTariffBillingPeriod model', () => {
       [1, 1, 10, 9, 10, 2, 2, 0, 10, 'Demand', 'bp1'],
     ];
     const expected = new RetailTariffBillingPeriod({
-      retailTariffBillingPeriodId: 1,
+      id: 1,
       startMonth: 1,
       endMonth: 10,
       startTime: 9,
