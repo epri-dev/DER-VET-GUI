@@ -64,7 +64,7 @@
 <script>
   import { flatten } from 'lodash';
 
-  import helpers from '@/util/helpers';
+  import { parseCsvFromFile } from '@/util/helpers';
   import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
 
   export default {
@@ -104,7 +104,7 @@
     methods: {
       onFileUpload(e) {
         const onSuccess = (results) => { this.$emit('uploaded', flatten(results)); };
-        helpers.parseCsvFromFile(e, onSuccess);
+        parseCsvFromFile(e, onSuccess);
       },
     },
   };

@@ -7,7 +7,7 @@ const papaParsePromise = file => new Promise((complete, error) => {
 
 const getFileFromEvent = e => e.target.files[0];
 
-const parseCsvFromFile = (e, successCallback) => {
+export const parseCsvFromFile = (e, successCallback) => {
   const file = getFileFromEvent(e);
   papaParsePromise(file)
     .then((results) => {
@@ -16,6 +16,9 @@ const parseCsvFromFile = (e, successCallback) => {
   // TODO add catch with errorCallback
 };
 
-export default {
-  parseCsvFromFile,
+export const classObjectsToCsv = (classData, fields, headers) => {
+  const csvData = Papa.unparse(classData, { fields, header: false });
+  const csvHeaders = Papa.unparse({ fields: headers, data: [] });
+  const csv = encodeURI(`${csvHeaders}${csvData}`);
+  return `data:text/csv;charset=utf-8,${csv}`;
 };

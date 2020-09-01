@@ -1,3 +1,5 @@
+import { classObjectsToCsv } from '@/util/helpers';
+
 export const RETAIL_TARIFF_HEADERS = [
   'ID',
   'Start Month',
@@ -42,29 +44,46 @@ export class RetailTariffBillingPeriod {
       name: '',
     });
   }
-
-  static fromParsedCsv(csv) {
-    // TODO validate headers to ensure order of fields is correct
-    let csvValues = csv.slice(1);
-    csvValues = csvValues.filter(row => row.length === 11);
-
-    return csvValues.map(row => (
-      new RetailTariffBillingPeriod({
-        id: row[0],
-        startMonth: row[1],
-        endMonth: row[2],
-        startTime: row[3],
-        endTime: row[4],
-        excludingStartTime: row[5],
-        excludingEndTime: row[6],
-        weekday: row[7],
-        value: row[8],
-        chargeType: row[9],
-        name: row[10],
-      })
-    ));
-  }
 }
+
+export const parsedCsvToBillingPeriods = (csv) => {
+  // TODO validate headers to ensure order of fields is correct
+  let csvValues = csv.slice(1);
+  csvValues = csvValues.filter(row => row.length === 11);
+
+  return csvValues.map(row => (
+    new RetailTariffBillingPeriod({
+      id: row[0],
+      startMonth: row[1],
+      endMonth: row[2],
+      startTime: row[3],
+      endTime: row[4],
+      excludingStartTime: row[5],
+      excludingEndTime: row[6],
+      weekday: row[7],
+      value: row[8],
+      chargeType: row[9],
+      name: row[10],
+    })
+  ));
+};
+
+export const billingPeriodsToCsv = (billingPeriods) => {
+  const fields = [
+    'id',
+    'startMonth',
+    'endMonth',
+    'startTime',
+    'endTime',
+    'excludingStartTime',
+    'excludingEndTime',
+    'weekday',
+    'value',
+    'chargeType',
+    'name',
+  ];
+  return classObjectsToCsv(billingPeriods, fields, RETAIL_TARIFF_HEADERS);
+};
 
 export const validation = {
   chargeType: {
