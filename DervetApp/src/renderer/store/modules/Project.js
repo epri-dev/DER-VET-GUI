@@ -114,6 +114,15 @@ const getDefaultState = () => ({
 const state = getDefaultState();
 
 const getters = {
+  getListFieldById(state) {
+    return (field, id) => state[field].find(x => x.id === id);
+  },
+  getIndexOfListFieldById(state) {
+    return (field, id) => state[field].findIndex(x => x.id === id);
+  },
+  cloneListField(state) {
+    return field => cloneDeep(state[field]);
+  },
   getSolarPVById(state) {
     return id => state.technologySpecsSolarPV.find(x => x.id === id);
   },
@@ -290,6 +299,12 @@ const mutations = {
   },
   ADD_TECHNOLOGY_SPECS_BATTERY(state, newBattery) {
     state.technologySpecsBattery.push(newBattery);
+  },
+  REPLACE_LIST_FIELD(state, payload) {
+    const clonedList = getters.cloneListField(state)(payload.field);
+    const index = getters.getIndexOfListFieldById(state)(payload.field, payload.id);
+    clonedList[index] = payload.newListItem;
+    state[payload.field] = clonedList;
   },
   REPLACE_TECHNOLOGY_SPECS_SOLAR_PV(state, payload) {
     const tmpSolarPVSpecs = getters.getSolarPVSpecsClone(state)();
@@ -584,6 +599,9 @@ const actions = {
   },
   addTechnologySpecsBattery({ commit }, newBattery) {
     commit('ADD_TECHNOLOGY_SPECS_BATTERY', newBattery);
+  },
+  replaceListField({ commit }, payload) {
+    commit('REPLACE_LIST_FIELD', payload);
   },
   replaceTechnologySpecsSolarPV({ commit }, payload) {
     commit('REPLACE_TECHNOLOGY_SPECS_SOLAR_PV', payload);

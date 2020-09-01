@@ -66,24 +66,41 @@
 
   export default {
     components: { NavButtons },
+    props: ['incentiveId'],
     data() {
-      return {
-        validation,
-        ...this.getDefaultData(),
-      };
+      if (this.incentiveId === 'null') {
+        return { validation, ...this.getDefaultData() };
+      }
+      return { validation, ...this.getDataFromProject() };
     },
     methods: {
       getDefaultData() {
         const defaults = ExternalIncentives.getDefaults();
+        return this.unpackData(defaults);
+      },
+      getDataFromProject() {
+        const incentive = this.$store.getters.getListFieldById('externalIncentives', this.incentiveId);
+        return this.unpackData(incentive);
+      },
+      unpackData(source) {
         return {
-          inputId: defaults.id,
-          inputYear: defaults.year,
-          inputTaxCredit: defaults.taxCredit,
-          inputOtherIncentive: defaults.otherIncentive,
+          inputId: source.id,
+          inputYear: source.year,
+          inputTaxCredit: source.taxCredit,
+          inputOtherIncentive: source.otherIncentive,
         };
       },
       save() {
-        this.$store.dispatch('addExternalIncentive', this.buildExternalIncentives());
+        if (this.incentiveId === 'null') {
+          this.$store.dispatch('addExternalIncentive', this.buildExternalIncentives());
+        } else {
+          const payload = {
+            id: this.incentiveId,
+            field: 'externalIncentives',
+            newListItem: this.buildExternalIncentives(),
+          };
+          this.$store.dispatch('replaceListField', payload);
+        }
       },
       buildExternalIncentives() {
         return new ExternalIncentives({

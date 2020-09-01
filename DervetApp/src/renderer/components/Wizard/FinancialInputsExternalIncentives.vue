@@ -29,8 +29,8 @@
                 <td>{{incentive.taxCredit}}</td>
                 <td>{{incentive.otherIncentive}}</td>
                 <td>
-                    <!-- TODO: pass ID -->
-                  <router-link to="/wizard/financial-inputs-external-incentives-year">
+                  <router-link
+                    :to="{ name: 'financialInputsExternalIncentivesYear', params: { incentiveId: incentive.id }}">
                     Edit
                   </router-link>
                   <span> | </span>
@@ -50,7 +50,7 @@
 
     <div class="form-group row">
       <div class="col-md-12">
-        <router-link to="/wizard/financial-inputs-external-incentives-year" class="btn btn-secondary">
+        <router-link to="/wizard/financial-inputs-external-incentives-year/null" class="btn btn-secondary">
           Add External Incentives
         </router-link>
         <router-link to="/wizard/financial-inputs-external-incentives-import" class="btn btn-secondary">

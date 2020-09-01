@@ -153,34 +153,40 @@
 </template>
 
 <script>
-  import { v4 as uuidv4 } from 'uuid';
-
   import { RetailTariffBillingPeriod, validation } from '@/models/RetailTariffBillingPeriod';
   import NavButtons from './NavButtons';
 
   export default {
     components: { NavButtons },
+    props: ['billingPeriodId'],
     data() {
-      return {
-        validation,
-        ...this.getDefaultData(),
-      };
+      if (this.billingPeriodId === 'null') {
+        return { validation, ...this.getDefaultData() };
+      }
+      return { validation, ...this.getDataFromProject() };
     },
     methods: {
       getDefaultData() {
         const defaults = RetailTariffBillingPeriod.getDefaults();
+        return this.unpackData(defaults);
+      },
+      getDataFromProject() {
+        const pd = this.$store.getters.getListFieldById('retailTariffBillingPeriods', this.billingPeriodId);
+        return this.unpackData(pd);
+      },
+      unpackData(source) {
         return {
-          inputRetailTariffBillingPeriodId: uuidv4(),
-          inputStartMonth: defaults.startMonth,
-          inputEndMonth: defaults.endMonth,
-          inputStartTime: defaults.startTime,
-          inputEndTime: defaults.endTime,
-          inputExcludingStartTime: defaults.excludingStartTime,
-          inputExcludingEndTime: defaults.excludingEndTime,
-          inputWeekday: defaults.weekday,
-          inputValue: defaults.value,
-          inputChargeType: defaults.chargeType,
-          inputName: defaults.name,
+          inputId: source.id,
+          inputStartMonth: source.startMonth,
+          inputEndMonth: source.endMonth,
+          inputStartTime: source.startTime,
+          inputEndTime: source.endTime,
+          inputExcludingStartTime: source.excludingStartTime,
+          inputExcludingEndTime: source.excludingEndTime,
+          inputWeekday: source.weekday,
+          inputValue: source.value,
+          inputChargeType: source.chargeType,
+          inputName: source.name,
         };
       },
       getChargeTypeFromValue(chargeTypeValue) {
@@ -193,7 +199,16 @@
         return this.getChargeTypeFromValue(chargeTypeValue).unit;
       },
       save() {
-        this.$store.dispatch('addRetailTariffBillingPeriod', this.buildBillingPeriod());
+        if (this.billingPeriodId === 'null') {
+          this.$store.dispatch('addRetailTariffBillingPeriod', this.buildBillingPeriod());
+        } else {
+          const payload = {
+            id: this.billingPeriodId,
+            field: 'retailTariffBillingPeriods',
+            newListItem: this.buildBillingPeriod(),
+          };
+          this.$store.dispatch('replaceListField', payload);
+        }
       },
       buildBillingPeriod() {
         return new RetailTariffBillingPeriod({
