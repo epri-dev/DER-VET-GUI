@@ -69,6 +69,11 @@ export default new Router({
           component: require('@/components/Wizard/Summary').default,
         },
         {
+          path: 'financial-inputs',
+          name: 'financialInputs',
+          component: require('@/components/Wizard/FinancialInputs').default,
+        },
+        {
           path: 'financial-inputs-retail-tariff',
           name: 'financialInputsRetailTariff',
           component: require('@/components/Wizard/FinancialInputsRetailTariff').default,
@@ -82,6 +87,21 @@ export default new Router({
           path: 'financial-inputs-retail-tariff-import',
           name: 'financialInputsRetailTariffImport',
           component: require('@/components/Wizard/FinancialInputsRetailTariffImport').default,
+        },
+        {
+          path: 'financial-inputs-external-incentives',
+          name: 'financialInputsExternalIncentives',
+          component: require('@/components/Wizard/FinancialInputsExternalIncentives').default,
+        },
+        {
+          path: 'financial-inputs-external-incentives-year',
+          name: 'financialInputsExternalIncentivesYear',
+          component: require('@/components/Wizard/FinancialInputsExternalIncentivesYear').default,
+        },
+        {
+          path: 'financial-inputs-external-incentives-import',
+          name: 'financialInputsExternalIncentivesImport',
+          component: require('@/components/Wizard/FinancialInputsExternalIncentivesImport').default,
         },
         {
           path: 'objectives-parameters-deferral',

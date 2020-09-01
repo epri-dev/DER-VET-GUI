@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash';
-
+import getCurrentYear from '@/util/time';
 
 const getDefaultState = () => ({
   id: null,
@@ -7,10 +7,10 @@ const getDefaultState = () => ({
   type: null,
   resultsData: null,
 
-  startYear: (new Date()).getFullYear(),
+  startYear: getCurrentYear(),
   analysisHorizon: 0,
   analysisHorizonMode: '1',
-  dataYear: (new Date()).getFullYear(),
+  dataYear: getCurrentYear(),
   gridLocation: 'Customer',
   ownership: 'Customer',
   optimizationHorizon: 'year',
@@ -90,6 +90,7 @@ const getDefaultState = () => ({
   userEnergyMax: null,
 
   retailTariffBillingPeriods: [],
+  externalIncentives: [],
 });
 
 const state = getDefaultState();
@@ -115,6 +116,9 @@ const getters = {
   },
   getIndexOfBillingPeriodId(state) {
     return id => state.retailTariffBillingPeriods.findIndex(x => x.id === id);
+  },
+  getIndexOfExternalIncentiveId(state) {
+    return id => state.externalIncentives.findIndex(x => x.id === id);
   },
   getBatteryById(state) {
     return id => state.technologySpecsBattery.find(x => x.id === id);
@@ -335,6 +339,21 @@ const mutations = {
     tmpSolarPVSpecs[indexMatchingId].generationProfile = payload.generationProfile;
     state.technologySpecsSolarPV = tmpSolarPVSpecs;
   },
+
+  ADD_EXTERNAL_INCENTIVE(state, newExternalIncentive) {
+    state.externalIncentives.push(newExternalIncentive);
+  },
+  REPLACE_EXTERNAL_INCENTIVES(state, newExternalIncentives) {
+    state.externalIncentives = newExternalIncentives;
+  },
+  REMOVE_EXTERNAL_INCENTIVE(state, id) {
+    const index = getters.getIndexOfExternalIncentiveId(state)(id);
+    state.externalIncentives.splice(index, 1);
+  },
+  REMOVE_ALL_EXTERNAL_INCENTIVES(state) {
+    state.externalIncentives = [];
+  },
+
   ADD_RETAIL_TARIFF_BILLING_PERIOD(state, newBillingPeriod) {
     state.retailTariffBillingPeriods.push(newBillingPeriod);
   },
@@ -620,8 +639,20 @@ const actions = {
   addGenerationProfileToTechnologySpecsPV({ commit }, payload) {
     commit('ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV', payload);
   },
-  addRetailTariffBillingPeriod({ commit }, newBillingPeriod) {
-    commit('ADD_RETAIL_TARIFF_BILLING_PERIOD', newBillingPeriod);
+  addExternalIncentive({ commit }, newExternalIncentive) {
+    commit('ADD_EXTERNAL_INCENTIVE', newExternalIncentive);
+  },
+  replaceExternalIncentives({ commit }, newExternalIncentives) {
+    commit('REPLACE_EXTERNAL_INCENTIVES', newExternalIncentives);
+  },
+  removeExternalIncentive({ commit }, id) {
+    commit('REMOVE_EXTERNAL_INCENTIVE', id);
+  },
+  removeAllExternalIncentives({ commit }) {
+    commit('REMOVE_ALL_EXTERNAL_INCENTIVES');
+  },
+  addRetailTariffBillingPeriod({ commit }, newExternalIncentive) {
+    commit('ADD_RETAIL_TARIFF_BILLING_PERIOD', newExternalIncentive);
   },
   replaceRetailTariffBillingPeriods({ commit }, newBillingPeriods) {
     commit('REPLACE_RETAIL_TARIFF_BILLING_PERIODS', newBillingPeriods);
