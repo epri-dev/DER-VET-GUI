@@ -111,10 +111,18 @@
           { key: 'tagname', label: 'Energy Storage Systems' },
           { key: 'buttons', label: '' },
         ],
-        techGen: this.$store.state.Project.listOfActiveTechnologies.Generator,
-        techIR: this.$store.state.Project.listOfActiveTechnologies['Intermittent Resource'],
-        techESS: this.$store.state.Project.listOfActiveTechnologies['Energy Storage System'],
       };
+    },
+    computed: {
+      techGen() {
+        return this.$store.state.Project.listOfActiveTechnologies.Generator;
+      },
+      techIR() {
+        return this.$store.state.Project.listOfActiveTechnologies['Intermittent Resource'];
+      },
+      techESS() {
+        return this.$store.state.Project.listOfActiveTechnologies['Energy Storage System'];
+      },
     },
     methods: {
       deactivateTech(payload) {

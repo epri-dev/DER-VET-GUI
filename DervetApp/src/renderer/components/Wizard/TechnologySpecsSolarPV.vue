@@ -191,6 +191,7 @@
           inputConstructionDate: defaults.constructionDate,
           inputOperationDate: defaults.operationDate,
           inputMacrsTerm: defaults.macrsTerm,
+          inputGenerationProfile: defaults.generationProfile,
         };
       },
       getDataFromProject() {
@@ -209,14 +210,7 @@
           inputConstructionDate: solarPVSpecs.constructionDate,
           inputOperationDate: solarPVSpecs.operationDate,
           inputMacrsTerm: solarPVSpecs.macrsTerm,
-        };
-      },
-      getTechLists() {
-        const projectSpecs = this.$store.state.Project;
-        return {
-          iceTechList: projectSpecs.technologySpecsICE,
-          batteryTechList: projectSpecs.technologySpecsBattery,
-          solarPVTechList: projectSpecs.technologySpecsSolarPV,
+          inputGenerationProfile: solarPVSpecs.generationProfile,
         };
       },
       save() {
@@ -246,6 +240,7 @@
           constructionDate: this.inputConstructionDate,
           operationDate: this.inputOperationDate,
           macrsTerm: this.inputMacrsTerm,
+          generationProfile: this.inputGenerationProfile,
         };
       },
     },
