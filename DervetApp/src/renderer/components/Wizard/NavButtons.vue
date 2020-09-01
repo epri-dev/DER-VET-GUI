@@ -1,13 +1,12 @@
 <template>
   <div class="form-group form-buffer row">
     <div class="col-md-6 back-btn">
-      <router-link :to="prevPagePath" class="btn btn-primary">
+      <router-link :to="computedBackLink" class="btn btn-primary">
         {{backText}}
       </router-link>
     </div>
-    <!-- <h1>{{this.$route.path}}</h1> -->
     <div class="col-md-6 continue-btn">
-      <router-link v-on:click.native="save" :to="nextPagePath" class="btn btn-primary pull-right">
+      <router-link v-on:click.native="save" :to="computedContinueLink" class="btn btn-primary pull-right">
         {{continueText}}
       </router-link>
     </div>
@@ -25,7 +24,7 @@
       routeLL() {
         return this.$store.state.Project.routeObjectivesFinancialsLL;
       },
-      nextPagePath() {
+      computedContinueLink() {
         if (this.continueLink !== null) {
           return this.continueLink;
         }
@@ -37,7 +36,7 @@
         }
         return nextPath;
       },
-      prevPagePath() {
+      computedBackLink() {
         if (this.backLink !== null) {
           return this.backLink;
         }

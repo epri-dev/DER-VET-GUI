@@ -66,8 +66,6 @@
     </div>
 
     <hr>
-
-    <!-- TODO dependent on user selections -->
     <nav-buttons/>
   </div>
 </template>

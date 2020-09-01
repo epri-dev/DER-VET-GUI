@@ -48,7 +48,6 @@
         :data-exists="userEnergyMin !== null"
       />
       <hr />
-     <!-- TODO continue link should be dependent on selections in Services component -->
       <nav-buttons
         :save="this.save"
       />

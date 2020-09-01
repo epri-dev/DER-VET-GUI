@@ -27,7 +27,6 @@
           </p>
         </div>
       </div>
-      <!-- TODO whether upload section shows is dependent on selections in Services component -->
       <timeseries-data-upload
         data-name="site load"
         units="kW"

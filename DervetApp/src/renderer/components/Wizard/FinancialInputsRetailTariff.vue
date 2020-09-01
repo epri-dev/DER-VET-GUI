@@ -73,7 +73,6 @@
 
     <hr>
 
-    <!-- TODO dependent on user selections -->
     <nav-buttons
       :save="this.save"
     />

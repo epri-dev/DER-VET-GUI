@@ -427,9 +427,6 @@ const mutations = {
     if (state.objectivesNSR) {
       tail = new PageLink(state.paths.objectivesNSR, tail);
     }
-    // if (state.objectivesLoadFollowing) {
-    //   tail = new PageLink(state.paths.objectivesLoadFollowing, tail);
-    // }
     if (state.objectivesFR) {
       tail = new PageLink(state.paths.objectivesFR, tail);
     }
