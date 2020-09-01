@@ -9,7 +9,7 @@
         </router-link>
 
         <router-link
-          class="nav nav-sidebar sidebar-root-el"
+          class="nav nav-sidebar sidebar-root-el text-decoration-none"
           v-bind:class="{ current: isActive(this.techSpecsPath) }"
           :to="this.techSpecsPath">
           Technology Specifications

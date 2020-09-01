@@ -544,12 +544,21 @@ const actions = {
   resetListOfActiveTechnologies({ commit }) {
     commit('RESET_LIST_OF_ACTIVE_TECHNOLOGIES');
   },
-  makeListOfActiveTechnologies({ commit }, techList) {
+  makeListOfActiveTechnologies({ commit }, projectSpecs) {
+    let spec;
     let tech;
-    for (let i = 0; i < techList.length; i += 1) {
-      tech = techList[i];
-      if (tech.active) {
-        commit('ADD_TO_LIST_OF_ACTIVE_TECHNOLOGIES', tech);
+    const specs = [
+      projectSpecs.technologySpecsICE,
+      projectSpecs.technologySpecsBattery,
+      projectSpecs.technologySpecsSolarPV,
+    ];
+    for (let j = 0; j < specs.length; j += 1) {
+      spec = specs[j];
+      for (let i = 0; i < spec.length; i += 1) {
+        tech = spec[i];
+        if (tech.active) {
+          commit('ADD_TO_LIST_OF_ACTIVE_TECHNOLOGIES', tech);
+        }
       }
     }
   },

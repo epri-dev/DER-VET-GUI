@@ -211,6 +211,14 @@
           inputMacrsTerm: solarPVSpecs.macrsTerm,
         };
       },
+      getTechLists() {
+        const projectSpecs = this.$store.state.Project;
+        return {
+          iceTechList: projectSpecs.technologySpecsICE,
+          batteryTechList: projectSpecs.technologySpecsBattery,
+          solarPVTechList: projectSpecs.technologySpecsSolarPV,
+        };
+      },
       save() {
         if (this.solarId === 'null') {
           this.$store.dispatch('addTechnologySpecsSolarPV', this.buildSolarPV());
@@ -221,6 +229,8 @@
           };
           this.$store.dispatch('replaceTechnologySpecsSolarPV', payload);
         }
+        this.$store.dispatch('resetListOfActiveTechnologies');
+        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
       buildSolarPV() {
         return {
