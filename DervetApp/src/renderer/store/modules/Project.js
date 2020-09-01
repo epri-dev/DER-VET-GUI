@@ -1,39 +1,13 @@
-import { cloneDeep } from 'lodash';
 import getCurrentYear from '@/util/time';
+import { cloneDeep } from 'lodash';
+import PageLink from '../../models/PageRouting';
+
 
 const getDefaultState = () => ({
   id: null,
   name: null,
   type: null,
   resultsData: null,
-
-  startYear: getCurrentYear(),
-  analysisHorizon: 0,
-  analysisHorizonMode: '1',
-  dataYear: getCurrentYear(),
-  gridLocation: 'Customer',
-  ownership: 'Customer',
-  optimizationHorizon: 'year',
-  optimizationHorizonNum: 0,
-  timestep: 60,
-
-  technologySpecsSolarPV: [],
-  technologySpecsICE: [],
-  technologySpecsBattery: [],
-  discountRate: 0,
-  inflationRate: 0,
-  federalTaxRate: 0,
-  stateTaxRate: 0,
-  propertyTaxRate: 0,
-
-  noChargingFromGrid: false,
-  noDischargingToGrid: false,
-  siteLoad: null,
-  deferralPlannedLoadLimit: 0,
-  deferralReversePowerFlowLimit: 0,
-  deferralGrowth: 0,
-  deferralPrice: 0,
-  deferralLoad: null,
 
   energyPriceSourceWholesale: false,
   objectivesRetailEnergyChargeReduction: false,
@@ -49,36 +23,85 @@ const getDefaultState = () => ({
   objectivesDeferral: false,
   objectivesLoadFollowing: false,
   objectivesUserDefined: false,
+  paths: {
+    startProject: '/wizard/start-project',
+    techSpecs: '/wizard/technology-specs',
+    objectives: '/wizard/objectives',
+    objectivesSiteInformation: '/wizard/objectives-parameters-site-information',
+    objectivesDeferral: '/wizard/objectives-parameters-deferral',
+    objectivesFR: '/wizard/objectives-parameters-fr',
+    objectivesNSR: '/wizard/objectives-parameters-nsr',
+    objectivesResilience: '/wizard/objectives-parameters-reliability',
+    objectivesSR: '/wizard/objectives-parameters-sr',
+    objectivesUserDefined: '/wizard/objectives-parameters-user-defined',
+    objectivesDA: '/wizard/objectives-parameters-da',
+    financialInputs: '/wizard/financial-inputs',
+    financialInputsExternalIncentives: '/wizard/financial-inputs-external-incentives',
+    financialInputsRetailTariff: '/wizard/financial-inputs-retail-tariff',
+    sensitivityAnalysis: '/wizard/sensitivity-analysis',
+  },
+  routeObjectivesFinancialsLL: null,
 
+  // SCENARIO
+  startYear: getCurrentYear(),
+  analysisHorizon: 0,
+  analysisHorizonMode: '1',
+  dataYear: getCurrentYear(),
+  gridLocation: 'Customer',
+  ownership: 'Customer',
+  optimizationHorizon: 'year',
+  optimizationHorizonNum: 0,
+  timestep: 60,
+  noChargingFromGrid: false,
+  noDischargingToGrid: false,
+  // FINANCES
+  discountRate: 0,
+  inflationRate: 0,
+  federalTaxRate: 0,
+  stateTaxRate: 0,
+  propertyTaxRate: 0,
+  // DEFERRAL
+  deferralPlannedLoadLimit: 0,
+  deferralReversePowerFlowLimit: 0,
+  deferralGrowth: 0,
+  deferralPrice: 0,
+  // DA
   daGrowth: 0,
-  daPrice: null,
-
+  // SR
   srGrowth: 0,
   srDuration: 0,
-  srPrice: null,
-
+  // NSR
   nsrGrowth: 0,
   nsrDuration: 0,
-  nsrPrice: null,
-
+  // FR
   frEOU: 0.3,
   frEOD: 0.3,
   frGrowth: 0,
   frEnergyPriceGrowth: 0,
   frCombinedMarket: false,
   frDuration: 0,
-  frPrice: null,
-  frUpPrice: null,
-  frDownPrice: null,
-
+  // RELIABILITY
   reliabilityTarget: 4,
   postOptimizationOnly: false,
   reliabilityNu: 20,
   reliabilityGamma: 43,
   reliabilityMaxOutageDuration: 168,
-  criticalLoad: null,
-
+  // USER
   userPrice: 0,
+  // DERS
+  technologySpecsSolarPV: [],
+  technologySpecsICE: [],
+  technologySpecsBattery: [],
+  // TIMESERIES ARRAYS
+  siteLoad: null,
+  deferralLoad: null,
+  daPrice: null,
+  srPrice: null,
+  nsrPrice: null,
+  frPrice: null,
+  frUpPrice: null,
+  frDownPrice: null,
+  criticalLoad: null,
   userPowerMin: null,
   userPowerMax: null,
   userEnergyMin: null,
@@ -365,30 +388,58 @@ const mutations = {
     }
   },
   SELECT_OTHER_SERVICES(state, listOfServices) {
-    let service;
     state.listOfActiveServices = listOfServices;
-    for (let i = 0; i < listOfServices.length; i += 1) {
-      service = listOfServices[i];
-      if (service === 'Reliability') {
-        state.ObjectivesResilience = true;
-      } else if (service === 'BackupPower') {
-        state.ObjectivesBackupPower = true;
-      } else if (service === 'RetailDemandChargeReduction') {
-        state.ObjectivesRetailDemandChargeReduction = true;
-      } else if (service === 'SR') {
-        state.ObjectivesSR = true;
-      } else if (service === 'NSR') {
-        state.ObjectivesNSR = true;
-      } else if (service === 'FR') {
-        state.ObjectivesFR = true;
-      } else if (service === 'Deferral') {
-        state.ObjectivesDeferral = true;
-      } else if (service === 'LF') {
-        state.ObjectivesLoadFollowing = true;
-      } else if (service === 'UserDefined') {
-        state.ObjectivesUserDefined = true;
-      }
+    state.objectivesResilience = (listOfServices.indexOf('Reliability') > -1);
+    state.objectivesBackupPower = (listOfServices.indexOf('BackupPower') > -1);
+    state.objectivesRetailDemandChargeReduction = (listOfServices.indexOf('RetailDemandChargeReduction') > -1);
+    state.objectivesSR = (listOfServices.indexOf('SR') > -1);
+    state.objectivesNSR = (listOfServices.indexOf('NSR') > -1);
+    state.objectivesFR = (listOfServices.indexOf('FR') > -1);
+    state.objectivesLoadFollowing = (listOfServices.indexOf('LF') > -1);
+    state.objectivesDeferral = (listOfServices.indexOf('Deferral') > -1);
+    state.objectivesUserDefined = (listOfServices.indexOf('UserDefined') > -1);
+  },
+  SET_OBJECTIVE_FINANCES_ORDER(state) {
+    let tail = null;
+    // retail energy price link
+    let activateTariff = state.objectivesRetailEnergyChargeReduction;
+    activateTariff = (activateTariff || state.objectivesRetailDemandChargeReduction);
+    if (activateTariff) {
+      tail = new PageLink(state.paths.financialInputsRetailTariff, tail);
     }
+    // link rest of financials
+    tail = new PageLink(state.paths.financialInputsExternalIncentives, tail);
+    tail = new PageLink(state.paths.financialInputs, tail);
+    // da energy price link
+    if (state.objectivesDA) {
+      tail = new PageLink(state.paths.objectivesDA, tail);
+    }
+    // link up service pages (aka objectives)
+    if (state.objectivesUserDefined) {
+      tail = new PageLink(state.paths.objectivesUserDefined, tail);
+    }
+    if (state.objectivesSR) {
+      tail = new PageLink(state.paths.objectivesSR, tail);
+    }
+    if (state.objectivesResilience) {
+      tail = new PageLink(state.paths.objectivesResilience, tail);
+    }
+    if (state.objectivesNSR) {
+      tail = new PageLink(state.paths.objectivesNSR, tail);
+    }
+    if (state.objectivesFR) {
+      tail = new PageLink(state.paths.objectivesFR, tail);
+    }
+    if (state.objectivesDeferral) {
+      tail = new PageLink(state.paths.objectivesDeferral, tail);
+    }
+    if (state.objectivesBackupPower) {
+      tail = new PageLink(state.paths.objectivesBackupPower, tail);
+    }
+    // add objectives to head of link list
+    tail = new PageLink(state.paths.objectivesSiteInformation, tail);
+    tail = new PageLink(state.paths.objectives, tail);
+    state.routeObjectivesFinancialsLL = tail;
   },
 };
 
@@ -608,6 +659,9 @@ const actions = {
   },
   selectOtherServices({ commit }, listOfServices) {
     commit('SELECT_OTHER_SERVICES', listOfServices);
+  },
+  setObjectiveFinancesOrder({ commit }) {
+    commit('SET_OBJECTIVE_FINANCES_ORDER');
   },
 };
 

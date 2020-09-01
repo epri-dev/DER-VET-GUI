@@ -42,10 +42,7 @@
         :data-exists="srPrice !== null"
       />
       <hr />
-      <!-- TODO continue link should be dependent on selections in Services component -->
       <nav-buttons
-        back-link="/wizard/objectives-parameters-sr"
-        continue-link="/wizard/objectives-parameters-sr"
         :save="this.save"
       />
     </div>
@@ -74,7 +71,7 @@
     methods: {
       save() {
         const price = new PriceTimeSeries('SR', this.inputTimeseries);
-        this.$store.dispatch('newSRPrice', price);
+        this.$store.dispatch('setSRPrice', price);
 
         this.$store.dispatch('setSRGrowth', this.inputSRGrowth);
         this.$store.dispatch('setSRDuration', this.inputDuration);

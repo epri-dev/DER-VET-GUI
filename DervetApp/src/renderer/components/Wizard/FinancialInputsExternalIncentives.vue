@@ -66,12 +66,7 @@
     </div>
 
     <hr>
-
-    <!-- TODO dependent on user selections -->
-    <nav-buttons
-      back-link="/wizard/financial-inputs"
-      continue-link="/wizard/financial-inputs-summary"
-    />
+    <nav-buttons/>
   </div>
 </template>
 

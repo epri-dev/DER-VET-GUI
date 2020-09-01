@@ -99,16 +99,6 @@ export default new Router({
           component: require('@/components/Wizard/FinancialInputsExternalIncentivesImport').default,
         },
         {
-          path: 'objectives-parameters-deferral',
-          name: 'objectivesParametersDeferral',
-          component: require('@/components/Wizard/ObjectivesParametersDeferral').default,
-        },
-        {
-          path: 'objectives-parameters-site-information',
-          name: 'objectivesParametersSiteInformation',
-          component: require('@/components/Wizard/ObjectivesParametersSiteInformation').default,
-        },
-        {
           path: 'objectives',
           component: require('@/components/Wizard/Objectives').default,
         },
@@ -135,6 +125,16 @@ export default new Router({
         {
           path: 'objectives-parameters-user-defined',
           component: require('@/components/Wizard/ObjectivesParametersUserDefined').default,
+        },
+        {
+          path: 'objectives-parameters-deferral',
+          name: 'objectivesParametersDeferral',
+          component: require('@/components/Wizard/ObjectivesParametersDeferral').default,
+        },
+        {
+          path: 'objectives-parameters-site-information',
+          name: 'objectivesParametersSiteInformation',
+          component: require('@/components/Wizard/ObjectivesParametersSiteInformation').default,
         },
       ],
     },

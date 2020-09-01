@@ -42,10 +42,7 @@
         :data-exists="nsrPrice !== null"
       />
       <hr />
-      <!-- TODO continue link should be dependent on selections in Services component -->
       <nav-buttons
-        back-link="/wizard/objectives-parameters-nsr"
-        continue-link="/wizard/objectives-parameters-nsr"
         :save="this.save"
       />
     </div>

@@ -93,10 +93,7 @@
         :data-exists="criticalLoad !== null"
       />
     <hr />
-    <!-- TODO continue link should be dependent on selections in Services component -->
     <nav-buttons
-      back-link="/wizard/objectives-parameters-reliability"
-      continue-link="/wizard/objectives-parameters-reliability"
       :save="this.save"
     />
   </div>
