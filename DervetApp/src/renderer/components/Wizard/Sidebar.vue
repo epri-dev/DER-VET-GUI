@@ -24,7 +24,7 @@
             current: techSpecsActiveSaved('solar-pv', solar.id),
             complete: solar.active,
             incomplete: !solar.active }">
-          Solar PV ({{ solar.name }})
+          PV: {{ solar.name }}
         </router-link>
 
         <router-link
@@ -35,7 +35,7 @@
           v-bind:class="{ current: techSpecsActiveSaved('battery', battery.id),
             complete: battery.active,
             incomplete: !battery.active }">
-          Battery Storage ({{ battery.name }})
+          Battery: {{ battery.name }}
         </router-link>
 
         <router-link
@@ -46,7 +46,7 @@
           v-bind:class="{ current: techSpecsActiveSaved('ice', ice.id),
             complete: ice.active,
             incomplete: !ice.active }">
-          Internal Combustion Engine ({{ ice.name }})
+          ICE: {{ ice.name }}
         </router-link>
 
         <div

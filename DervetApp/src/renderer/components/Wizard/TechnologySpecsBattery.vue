@@ -641,7 +641,6 @@
           };
           this.$store.dispatch('replaceTechnologySpecsBattery', payload);
         }
-        this.$store.dispatch('resetListOfActiveTechnologies');
         this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
       buildBattery() {

@@ -317,6 +317,18 @@ const mutations = {
     const indexMatchingId = getters.getIndexOfICEId(state)(payload.id);
     state.technologySpecsICE[indexMatchingId].active = false;
   },
+  REMOVE_TECH_SOLAR_PV(state, payload) {
+    const indexMatchingId = getters.getIndexOfSolarId(state)(payload.id);
+    state.technologySpecsSolarPV.splice(indexMatchingId, 1);
+  },
+  REMOVE_TECH_BATTERY(state, payload) {
+    const indexMatchingId = getters.getIndexOfBatteryId(state)(payload.id);
+    state.technologySpecsBattery.splice(indexMatchingId, 1);
+  },
+  REMOVE_TECH_ICE(state, payload) {
+    const indexMatchingId = getters.getIndexOfICEId(state)(payload.id);
+    state.technologySpecsICE.splice(indexMatchingId, 1);
+  },
   ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV(state, payload) {
     const tmpSolarPVSpecs = getters.getSolarPVSpecsClone(state)();
     const indexMatchingId = getters.getIndexOfSolarId(state)(payload.solarId);
@@ -541,10 +553,8 @@ const actions = {
   setUserEnergyMin({ commit }, newUserEnergyMin) {
     commit('SET_USER_ENERGY_Min', newUserEnergyMin);
   },
-  resetListOfActiveTechnologies({ commit }) {
-    commit('RESET_LIST_OF_ACTIVE_TECHNOLOGIES');
-  },
   makeListOfActiveTechnologies({ commit }, projectSpecs) {
+    commit('RESET_LIST_OF_ACTIVE_TECHNOLOGIES');
     let spec;
     let tech;
     const specs = [
@@ -596,6 +606,15 @@ const actions = {
       commit('DEACTIVATE_TECH_SOLAR_PV', payload);
     } else if (payload.tag === 'Battery') {
       commit('DEACTIVATE_TECH_BATTERY', payload);
+    }
+  },
+  removeTech({ commit }, payload) {
+    if (payload.tag === 'ICE') {
+      commit('REMOVE_TECH_ICE', payload);
+    } else if (payload.tag === 'PV') {
+      commit('REMOVE_TECH_SOLAR_PV', payload);
+    } else if (payload.tag === 'Battery') {
+      commit('REMOVE_TECH_BATTERY', payload);
     }
   },
   addGenerationProfileToTechnologySpecsPV({ commit }, payload) {

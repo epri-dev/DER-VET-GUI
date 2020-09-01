@@ -229,7 +229,6 @@
           };
           this.$store.dispatch('replaceTechnologySpecsSolarPV', payload);
         }
-        this.$store.dispatch('resetListOfActiveTechnologies');
         this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
       buildSolarPV() {

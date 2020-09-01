@@ -57,7 +57,6 @@
         this.$store.dispatch('addGenerationProfileToTechnologySpecsPV', payload);
         const activePayload = this.makeSaveActivePayload();
         this.$store.dispatch('activateTech', activePayload);
-        this.$store.dispatch('resetListOfActiveTechnologies');
         this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
       makeSaveActivePayload() {

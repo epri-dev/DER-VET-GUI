@@ -346,7 +346,6 @@
           };
           this.$store.dispatch('replaceTechnologySpecsICE', payload);
         }
-        this.$store.dispatch('resetListOfActiveTechnologies');
         this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
       buildICE() {
