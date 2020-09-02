@@ -1,6 +1,9 @@
 import { sharedDefaults, sharedValidation } from './Shared.js';
 
 const defaults = {
+  active: false,
+  tag: 'Battery',
+  technologyType: 'Energy Storage System',
   id: '',
   name: '',
   energyCapacity: 0,
@@ -24,6 +27,16 @@ const defaults = {
   batteryCycles: [
     { ulimit: 0.05, val: 75000 },
     { ulimit: 0.1, val: 40500 },
+    { ulimit: 0.15, val: 27000 },
+    { ulimit: 0.2, val: 20250 },
+    { ulimit: 0.3, val: 11250 },
+    { ulimit: 0.4, val: 6750 },
+    { ulimit: 0.5, val: 4500 },
+    { ulimit: 0.6, val: 3750 },
+    { ulimit: 0.7, val: 3225 },
+    { ulimit: 0.8, val: 2813 },
+    { ulimit: 0.9, val: 2475 },
+    { ulimit: 1, val: 2250 },
   ],
   includeAuxiliaryLoad: false,
   auxiliaryLoad: 0.0,

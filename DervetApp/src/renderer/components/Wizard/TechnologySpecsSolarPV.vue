@@ -178,6 +178,9 @@
     methods: {
       getDefaultData() {
         return {
+          inputActive: defaults.active,
+          inputTag: defaults.tag,
+          inputTechnologyType: defaults.technologyType,
           inputId: uuidv4(),
           inputName: defaults.name,
           inputCost: defaults.cost,
@@ -188,11 +191,15 @@
           inputConstructionDate: defaults.constructionDate,
           inputOperationDate: defaults.operationDate,
           inputMacrsTerm: defaults.macrsTerm,
+          inputGenerationProfile: defaults.generationProfile,
         };
       },
       getDataFromProject() {
         const solarPVSpecs = this.$store.getters.getSolarPVById(this.solarId);
         return {
+          inputActive: solarPVSpecs.active,
+          inputTag: solarPVSpecs.tag,
+          inputTechnologyType: solarPVSpecs.technologyType,
           inputId: solarPVSpecs.id,
           inputName: solarPVSpecs.name,
           inputCost: solarPVSpecs.cost,
@@ -203,6 +210,7 @@
           inputConstructionDate: solarPVSpecs.constructionDate,
           inputOperationDate: solarPVSpecs.operationDate,
           inputMacrsTerm: solarPVSpecs.macrsTerm,
+          inputGenerationProfile: solarPVSpecs.generationProfile,
         };
       },
       save() {
@@ -215,9 +223,13 @@
           };
           this.$store.dispatch('replaceTechnologySpecsSolarPV', payload);
         }
+        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
       buildSolarPV() {
         return {
+          active: this.inputActive,
+          tag: this.inputTag,
+          technologyType: this.inputTechnologyType,
           id: this.inputId,
           name: this.inputName,
           cost: this.inputCost,
@@ -228,6 +240,7 @@
           constructionDate: this.inputConstructionDate,
           operationDate: this.inputOperationDate,
           macrsTerm: this.inputMacrsTerm,
+          generationProfile: this.inputGenerationProfile,
         };
       },
     },

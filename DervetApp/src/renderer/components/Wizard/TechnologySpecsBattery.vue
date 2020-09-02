@@ -521,7 +521,7 @@
 
       <nav-buttons
         back-link="/wizard/technology-specs"
-        :continue-link="`/wizard/technology-specs-battery-cycle/${this.inputId}`"
+        :continue-link=this.getContinueLink()
         :save="this.save"
       />
 
@@ -550,8 +550,17 @@
       return { ...data, ...this.getDataFromProject() };
     },
     methods: {
+      getContinueLink() {
+        if (this.inputIncludeCycleDegradation) {
+          return `/wizard/technology-specs-battery-cycle/${this.inputId}`;
+        }
+        return '/wizard/technology-specs';
+      },
       getDefaultData() {
         return {
+          inputActive: defaults.active,
+          inputTag: defaults.tag,
+          inputTechnologyType: defaults.technologyType,
           inputId: uuidv4(),
           inputName: defaults.name,
           inputShouldEnergySize: defaults.shouldEnergySize,
@@ -590,6 +599,9 @@
       getDataFromProject() {
         const batterySpecs = this.$store.getters.getBatteryById(this.batteryId);
         return {
+          inputActive: batterySpecs.active,
+          inputTag: batterySpecs.tag,
+          inputTechnologyType: batterySpecs.technologyType,
           inputId: batterySpecs.id,
           inputName: batterySpecs.name,
           inputShouldEnergySize: batterySpecs.shouldEnergySize,
@@ -635,9 +647,13 @@
           };
           this.$store.dispatch('replaceTechnologySpecsBattery', payload);
         }
+        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
       buildBattery() {
         return {
+          active: !this.inputIncludeCycleDegradation,
+          tag: this.inputTag,
+          technologyType: this.inputTechnologyType,
           id: this.inputId,
           name: this.inputName,
           shouldEnergySize: this.inputShouldEnergySize,

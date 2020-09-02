@@ -9,7 +9,7 @@
         <b-form-group>
           <div class="row form-group">
             <div class="col-md-4">
-              <b-form-radio type="radio" v-bind:value="false" v-model="energyPriceSourceWholesale"><b>Retail tariff, PPA, or other fixed contract (define energy price structure)</b></b-form-radio> 
+              <b-form-radio type="radio" v-bind:value="false" v-model="energyPriceSourceWholesale"><b>Retail tariff, PPA, or other fixed contract (define energy price structure)</b></b-form-radio>
             </div>
             <div class="col-md-7">
               <p class="tool-tip">Will the project be reducing energy charges on a retail electricity bill?</p>
@@ -17,7 +17,7 @@
           </div>
           <div class="row form-group">
             <div class="col-md-4">
-              <b-form-radio type="radio" v-bind:value="true" v-model="energyPriceSourceWholesale"><b>Wholesale energy market, production cost model, or other time-varying source (upload time series data)</b></b-form-radio> 
+              <b-form-radio type="radio" v-bind:value="true" v-model="energyPriceSourceWholesale"><b>Wholesale energy market, production cost model, or other time-varying source (upload time series data)</b></b-form-radio>
             </div>
             <div class="col-md-7">
               <p class="tool-tip">Day ahead energy time shift</p>
@@ -39,7 +39,7 @@
 
           <div class="row form-group">
             <div class="col-md-4 checkboxes">
-              <b-form-checkbox size='lg' v-model="listOfActiveServices" value="RetailDemandChargeReduction"><b>Demand Charge Reduction</b></b-form-checkbox>
+              <b-form-checkbox size='lg' v-model="listOfActiveServices" value="Retail Demand Charge Reduction"><b>Demand Charge Reduction</b></b-form-checkbox>
             </div>
             <div class="col-md-7">
               <p class="tool-tip">Will the project be reducing demand charges on a retail electricity bill?</p>
@@ -89,7 +89,7 @@
                   <legend>Other</legend>
                     <div class="row form-group">
                       <div class="col-md-4 checkboxes">
-                        <b-form-checkbox size='lg' v-model="listOfActiveServices" value="UserDefined"><b>User-Defined Storage Technology Settings</b></b-form-checkbox>
+                        <b-form-checkbox size='lg' v-model="listOfActiveServices" value="User Defined"><b>User-Defined Storage Technology Settings</b></b-form-checkbox>
                       </div>
                       <div class="col-md-7">
                         <p class="tool-tip">Impose timestep by timestep constraints on the power from DERs (and SOC for storage) and service participation. Assign a financial value to meeting these constraints.</p>

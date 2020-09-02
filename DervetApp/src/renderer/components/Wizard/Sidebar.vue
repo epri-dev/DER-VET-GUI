@@ -12,7 +12,7 @@
           class="nav nav-sidebar sidebar-root-el"
           v-bind:class="{ current: isActive(this.pagePaths.techSpecs) }"
           :to="this.pagePaths.techSpecs">
-          Technology Specification
+          Technology Specifications
         </router-link>
 
         <router-link
@@ -20,8 +20,11 @@
           v-for="solar in solarPVItems"
           :to="{ name: 'technologySpecsSolarPV', params: { solarId: solar.id }}"
           :key="solar.id"
-          v-bind:class="{ current: techSpecsActiveSaved('solar-pv', solar.id) }">
-          Solar PV ({{ solar.name }})
+          v-bind:class="{
+            current: techSpecsActiveSaved('solar-pv', solar.id),
+            complete: solar.active,
+            incomplete: !solar.active }">
+          PV: {{ solar.name }}
         </router-link>
 
         <router-link
@@ -29,8 +32,10 @@
           v-for="battery in batteryItems"
           :to="{ name: 'technologySpecsBattery', params: { batteryId: battery.id }}"
           :key="battery.id"
-          v-bind:class="{ current: techSpecsActiveSaved('battery', battery.id) }">
-          Battery Storage ({{ battery.name }})
+          v-bind:class="{ current: techSpecsActiveSaved('battery', battery.id),
+            complete: battery.active,
+            incomplete: !battery.active }">
+          Battery: {{ battery.name }}
         </router-link>
 
         <router-link
@@ -38,8 +43,10 @@
           v-for="ice in iceItems"
           :to="{ name: 'technologySpecsICE', params: { iceId: ice.id }}"
           :key="ice.id"
-          v-bind:class="{ current: techSpecsActiveSaved('ice', ice.id) }">
-          Internal Combustion Engine ({{ ice.name }})
+          v-bind:class="{ current: techSpecsActiveSaved('ice', ice.id),
+            complete: ice.active,
+            incomplete: !ice.active }">
+          ICE: {{ ice.name }}
         </router-link>
 
         <div
@@ -146,12 +153,19 @@
           :to="this.pagePaths.sensitivityAnalysis">
           Scenario Analysis
         </router-link>
-        <li class="nav nav-sidebar sidebar-root-el">
-          <div class="menutext">Summary</div>
-        </li>
-        <li class="nav nav-sidebar sidebar-root-el">
-          <div class="menutext">Results</div>
-        </li>
+        <router-link
+          class="nav nav-sidebar sidebar-root-el"
+          v-bind:class="{ current: isActive(this.pagePaths.summary) }"
+          :to="this.pagePaths.summary
+          ">
+          Summary
+        </router-link>
+        <router-link
+          class="nav nav-sidebar sidebar-root-el"
+          v-bind:class="{ current: isActive(this.pagePaths.results) }"
+          :to="this.pagePaths.results">
+          Results
+        </router-link>
     </b-nav>
     <div class="export-project">
       <router-link class="btn btn-md btn-primary" to="/">Export Project</router-link>
@@ -169,11 +183,14 @@
       };
     },
     methods: {
+      techSpecsComplete(active) {
+        return active;
+      },
       techSpecsActiveSaved(tech, id) {
-        return RegExp(`${this.techSpecsPath}-${tech}.*/${id}`).test(this.$route.path);
+        return RegExp(`${this.pagePaths.techSpecs}-${tech}.*/${id}`).test(this.$route.path);
       },
       techSpecsActiveUnsaved(tech) {
-        return RegExp(`${this.techSpecsPath}-${tech}/null`).test(this.$route.path);
+        return RegExp(`${this.pagePaths.techSpecs}-${tech}/null`).test(this.$route.path);
       },
       isActive(path) {
         return RegExp(path).test(this.$route.path);

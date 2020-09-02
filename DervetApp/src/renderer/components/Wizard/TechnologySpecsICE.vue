@@ -289,6 +289,9 @@
     methods: {
       getDefaultData() {
         return {
+          inputActive: defaults.active,
+          inputTag: defaults.tag,
+          inputTechnologyType: defaults.technologyType,
           inputId: uuidv4(),
           inputName: defaults.name,
           inputRatedCapacity: defaults.ratedCapacity,
@@ -311,6 +314,9 @@
       getDataFromProject() {
         const iceSpecs = this.$store.getters.getICEById(this.iceId);
         return {
+          inputActive: iceSpecs.active,
+          inputTag: iceSpecs.tag,
+          inputTechnologyType: iceSpecs.technologyType,
           inputId: iceSpecs.id,
           inputName: iceSpecs.name,
           inputRatedCapacity: iceSpecs.ratedCapacity,
@@ -340,9 +346,13 @@
           };
           this.$store.dispatch('replaceTechnologySpecsICE', payload);
         }
+        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
       buildICE() {
         return {
+          active: true,
+          tag: this.inputTag,
+          technologyType: this.inputTechnologyType,
           id: this.inputId,
           name: this.inputName,
           ratedCapacity: this.inputRatedCapacity,

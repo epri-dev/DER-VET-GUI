@@ -64,6 +64,11 @@ export default new Router({
           props: true,
         },
         {
+          path: 'summary',
+          name: 'summary',
+          component: require('@/components/Wizard/Summary').default,
+        },
+        {
           path: 'financial-inputs',
           name: 'financialInputs',
           component: require('@/components/Wizard/FinancialInputs').default,

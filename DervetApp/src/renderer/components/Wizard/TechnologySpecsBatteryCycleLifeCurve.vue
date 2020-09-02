@@ -1,9 +1,10 @@
 <template>
   <div>
     <h3>Battery Storage: Cycle Life Curve</h3>
-    Specify the cycle life curve for this battery
+      Specify the cycle life curve for this battery
 
-    <b-table-lite fixed striped hover
+    <b-table-lite
+      fixed striped hover sticky-header="350px"
       :items="items"
       :fields="fields">
       <template v-slot:cell(ulimit)="row">
@@ -30,6 +31,7 @@
     <nav-buttons
       :back-link="`/wizard/technology-specs-battery/${this.batteryId}`"
       continue-link="/wizard/technology-specs"
+      continue-text="Done Adding Cycles"
       :save="this.save"
     />
 
@@ -79,7 +81,16 @@
       },
       save() {
         const payload = this.makeSavePayload();
+        const activePayload = this.makeSaveActivePayload();
         this.$store.dispatch('addBatteryCyclesToTechnologySpecsBattery', payload);
+        this.$store.dispatch('activateTech', activePayload);
+        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
+      },
+      makeSaveActivePayload() {
+        return {
+          id: this.batteryId,
+          tag: 'Battery',
+        };
       },
       makeSavePayload() {
         return {

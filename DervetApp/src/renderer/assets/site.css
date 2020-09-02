@@ -214,6 +214,14 @@ textarea {
     color: darkblue;
 }
 
+.incomplete {
+    color: darkred;
+}
+
+.complete {
+    color: darkgreen;
+}
+
 .menutext {
     font-weight: normal;
 }

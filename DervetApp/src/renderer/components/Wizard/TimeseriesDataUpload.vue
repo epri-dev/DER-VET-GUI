@@ -10,7 +10,7 @@
           <b-form-radio-group
             v-model="useExisting"
             :options="sharedValidation.optionsYN.allowedValues"
-          ></b-form-radio-group> 
+          ></b-form-radio-group>
         </b-form-group>
       </div>
     </div>
@@ -40,7 +40,7 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <p>We require an input file with <b>{{this.numberOfEntriesRequired}}</b> entires.</p>
+          <p>We require an input file with <b>{{this.numberOfEntriesRequired}}</b> entries.</p>
         </div>
       </div>
       <div class="form-group row">
@@ -58,7 +58,7 @@
         </div>
       </div>
     </div>
-  </div>  
+  </div>
 </template>
 
 <script>
