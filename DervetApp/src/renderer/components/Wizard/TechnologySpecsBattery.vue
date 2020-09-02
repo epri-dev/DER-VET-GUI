@@ -521,7 +521,7 @@
 
       <nav-buttons
         back-link="/wizard/technology-specs"
-        :continue-link="inputIncludeCycleDegradation ? `/wizard/technology-specs-battery-cycle/${this.inputId}` : '/wizard/technology-specs'"
+        :continue-link=this.getContinueLink()
         :save="this.save"
       />
 
@@ -550,6 +550,12 @@
       return { ...data, ...this.getDataFromProject() };
     },
     methods: {
+      getContinueLink() {
+        if (this.inputIncludeCycleDegradation) {
+          return `/wizard/technology-specs-battery-cycle/${this.inputId}`;
+        }
+        return '/wizard/technology-specs';
+      },
       getDefaultData() {
         return {
           inputActive: defaults.active,

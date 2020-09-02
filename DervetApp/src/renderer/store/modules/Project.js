@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash';
+import { cloneDeep, flatten } from 'lodash';
 import getCurrentYear from '@/util/time';
 
 const getDefaultState = () => ({
@@ -574,22 +574,16 @@ const actions = {
   },
   makeListOfActiveTechnologies({ commit }, projectSpecs) {
     commit('RESET_LIST_OF_ACTIVE_TECHNOLOGIES');
-    let spec;
-    let tech;
     const specs = [
       projectSpecs.technologySpecsICE,
       projectSpecs.technologySpecsBattery,
       projectSpecs.technologySpecsSolarPV,
     ];
-    for (let j = 0; j < specs.length; j += 1) {
-      spec = specs[j];
-      for (let i = 0; i < spec.length; i += 1) {
-        tech = spec[i];
-        if (tech.active) {
-          commit('ADD_TO_LIST_OF_ACTIVE_TECHNOLOGIES', tech);
-        }
+    flatten(specs).forEach( tech => {
+      if (tech.active) {
+        commit('ADD_TO_LIST_OF_ACTIVE_TECHNOLOGIES', tech);
       }
-    }
+    })
   },
   addTechnologySpecsSolarPV({ commit }, newSolar) {
     commit('ADD_TECHNOLOGY_SPECS_SOLAR_PV', newSolar);

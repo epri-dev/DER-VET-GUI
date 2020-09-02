@@ -5,30 +5,32 @@
     <hr>
     <form>
 
-    <div v-if="inputGenProfileExists" class="form-group row">
+      <div v-if="inputGenProfileExists" class="form-group row">
 
-      <div class="form-group row">
-        <div class="col-md-3">
-          <label class="control-label" for="gen">Provide data:</label>
+        <div class="form-group row">
+          <div class="col-md-3">
+            <label class="control-label" for="gen">Provide data:</label>
+          </div>
+          <div class="col-md-9">
+            <input
+              id="gen-yes"
+              type="radio"
+              v-model="inputUseExistingGenProfile"
+              v-bind:value="true">
+            <label for="gen-yes">Use existing generation profile</label>
+            <br>
+            <input
+              id="gen-no"
+              type="radio"
+              v-model="inputUseExistingGenProfile"
+              v-bind:value="false">
+            <label for="gen-no">Upload a new generation profile</label>
+          </div>
         </div>
-        <div class="col-md-9">
-          <input
-            id="gen-yes"
-            type="radio"
-            v-model="inputUseExistingGenProfile"
-            v-bind:value="true">
-          <label for="gen-yes">Use existing generation profile</label>
-          <br>
-          <input
-            id="gen-no"
-            type="radio"
-            v-model="inputUseExistingGenProfile"
-            v-bind:value="false">
-          <label for="gen-no">Upload a new generation profile</label>
-        </div>
+
       </div>
 
-      <div v-if="!inputUseExistingGenProfile" class="form-group row">
+      <div v-if="!inputUseExistingGenProfile | !inputGenProfileExists" class="form-group row">
 
         <div class="form-horizontal form-buffer">
           <timeseries-data-upload
@@ -55,36 +57,6 @@
         </div>
 
       </div>
-    </div>
-
-    <div v-if="!inputGenProfileExists" class="form-group row">
-
-        <div class="form-horizontal form-buffer">
-          <timeseries-data-upload
-            data-name="solar generation profile"
-            units="kW / rated kW"
-            @uploaded="receiveTimeseriesData"
-            :data-exists="false"
-          />
-          <br>
-          <div class="form-group row">
-            <div class="col-md-12">
-              <i>
-                <a href="files/SamplePVgen-8760.csv" download class="important-link">Click here to download a sample <code>.csv</code> file</a> with a 60-minute timestep for a year with 365 days (8,760 readings)
-              </i>
-            </div>
-          </div>
-          <div class="form-group row">
-            <div class="col-md-12">
-              <i>
-                <a href="files/SamplePVgen-8784.csv" download class="important-link">Click here to download a sample <code>.csv</code> file</a> with a 60-minute timestep <b>for a leap year with 366 days</b> (8,784 readings)
-              </i>
-            </div>
-          </div>
-        </div>
-
-    </div>
-
 
       <br>
       <hr>
@@ -120,7 +92,7 @@
     methods: {
       generationProfileExists() {
         const solarPVSpecs = this.$store.getters.getSolarPVById(this.solarId);
-        return solarPVSpecs && solarPVSpecs.generationProfile !== 'null';
+        return solarPVSpecs && solarPVSpecs.generationProfile !== null;
       },
       save() {
         const payload = this.makeSavePayload();

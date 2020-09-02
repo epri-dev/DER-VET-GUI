@@ -192,7 +192,6 @@
       techSpecsComplete(active) {
         return active;
       },
-      // techSpecsIncomplete()
       techSpecsActiveSaved(tech, id) {
         return RegExp(`${this.techSpecsPath}-${tech}.*/${id}`).test(this.$route.path);
       },
