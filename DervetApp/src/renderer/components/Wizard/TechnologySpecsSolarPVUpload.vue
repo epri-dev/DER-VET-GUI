@@ -114,16 +114,13 @@
     data() {
       return {
         inputUseExistingGenProfile: true,
-        inputGenProfileExists: false,
-        ...this.getDataFromProject(),
+        inputGenProfileExists: this.generationProfileExists(),
       };
     },
     methods: {
-      getDataFromProject() {
+      generationProfileExists() {
         const solarPVSpecs = this.$store.getters.getSolarPVById(this.solarId);
-        return {
-          inputGenProfileExists: !(solarPVSpecs.generationProfile === 'null'),
-        };
+        return solarPVSpecs && solarPVSpecs.generationProfile !== 'null';
       },
       save() {
         const payload = this.makeSavePayload();
