@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 import { classObjectsToCsv } from '@/util/helpers';
 
 export const RETAIL_TARIFF_HEADERS = [
@@ -31,7 +33,7 @@ export class RetailTariffBillingPeriod {
 
   static getDefaults() {
     return new RetailTariffBillingPeriod({
-      id: null,
+      id: uuidv4(),
       startMonth: 0,
       endMonth: 0,
       startTime: 0,

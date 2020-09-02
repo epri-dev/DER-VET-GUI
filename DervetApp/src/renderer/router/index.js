@@ -74,9 +74,10 @@ export default new Router({
           component: require('@/components/Wizard/FinancialInputsRetailTariff').default,
         },
         {
-          path: 'financial-inputs-retail-tariff-billing-period',
+          path: 'financial-inputs-retail-tariff-billing-period/:billingPeriodId',
           name: 'financialInputsRetailTariffBillingPeriod',
           component: require('@/components/Wizard/FinancialInputsRetailTariffBillingPeriod').default,
+          props: true,
         },
         {
           path: 'financial-inputs-retail-tariff-import',
@@ -89,9 +90,10 @@ export default new Router({
           component: require('@/components/Wizard/FinancialInputsExternalIncentives').default,
         },
         {
-          path: 'financial-inputs-external-incentives-year',
+          path: 'financial-inputs-external-incentives-year/:incentiveId',
           name: 'financialInputsExternalIncentivesYear',
           component: require('@/components/Wizard/FinancialInputsExternalIncentivesYear').default,
+          props: true,
         },
         {
           path: 'financial-inputs-external-incentives-import',

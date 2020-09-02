@@ -1,7 +1,7 @@
-import { RetailTariffBillingPeriod } from '@/models/RetailTariffBillingPeriod';
+import { RetailTariffBillingPeriod, parsedCsvToBillingPeriods } from '@/models/RetailTariffBillingPeriod';
 
 describe('RetailTariffBillingPeriod model', () => {
-  it('should construct an class instance from parsed CSV', () => {
+  it('should construct a class instance from parsed CSV', () => {
     const testCsv = [
       ['Billing Period', 'Start Month', 'End Month', 'Start Time', 'End Time', 'Excluding Start Time', 'Excluding End Time', 'Weekday?', 'Value', 'Charge', 'Name_optional'],
       [1, 1, 10, 9, 10, 2, 2, 0, 10, 'Demand', 'bp1'],
@@ -20,7 +20,7 @@ describe('RetailTariffBillingPeriod model', () => {
       name: 'bp1',
     });
 
-    const actual = RetailTariffBillingPeriod.fromParsedCsv(testCsv).shift();
+    const actual = parsedCsvToBillingPeriods(testCsv).shift();
     expect(actual).to.eql(expected);
   });
 });

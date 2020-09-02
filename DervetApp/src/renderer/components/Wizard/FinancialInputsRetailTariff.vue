@@ -37,8 +37,10 @@
                 <td>{{pd.chargeType}}</td>
                 <td>{{pd.name}}</td>
                 <td class="table-ensure-width">
-                    <!-- TODO: pass ID -->
-                  <router-link to="/wizard/financial-inputs-retail-tariff-billing-period">Edit</router-link>
+                  <router-link
+                    :to="{ name: 'financialInputsRetailTariffBillingPeriod', params: { billingPeriodId: pd.id }}">
+                    Edit
+                  </router-link>
                   <span> | </span>
                   <span @click="removeOne(pd.id)" class="fas fa-trash"></span>
                 </td>
@@ -56,7 +58,7 @@
 
     <div class="form-group row">
       <div class="col-md-12">
-        <router-link to="/wizard/financial-inputs-retail-tariff-billing-period" class="btn btn-secondary">
+        <router-link to="/wizard/financial-inputs-retail-tariff-billing-period/null" class="btn btn-secondary">
           Add Billing Period
         </router-link>
         <router-link to="/wizard/financial-inputs-retail-tariff-import" class="btn btn-secondary">
