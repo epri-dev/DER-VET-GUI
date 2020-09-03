@@ -94,6 +94,7 @@ const getDefaultState = () => ({
   technologySpecsSolarPV: [],
   technologySpecsICE: [],
   technologySpecsBattery: [],
+  technologySpecsDieselGen: [],
   listOfActiveTechnologies: {
     Generator: [],
     'Energy Storage System': [],
@@ -147,6 +148,15 @@ const getters = {
   },
   getIndexOfICEId(state) {
     return id => state.technologySpecsICE.findIndex(x => x.id === id);
+  },
+  getDieselGenById(state) {
+    return id => state.technologySpecsDieselGen.find(x => x.id === id);
+  },
+  getDieselGenSpecsClone(state) {
+    return () => cloneDeep(state.technologySpecsDieselGen);
+  },
+  getIndexOfDieselGenId(state) {
+    return id => state.technologySpecsDieselGen.findIndex(x => x.id === id);
   },
   getIndexOfBillingPeriodId(state) {
     return id => state.retailTariffBillingPeriods.findIndex(x => x.id === id);
@@ -304,6 +314,9 @@ const mutations = {
   ADD_TECHNOLOGY_SPECS_ICE(state, newICE) {
     state.technologySpecsICE.push(newICE);
   },
+  ADD_TECHNOLOGY_SPECS_DIESEL_GEN(state, newDieselGen) {
+    state.technologySpecsDieselGen.push(newDieselGen);
+  },
   ADD_TECHNOLOGY_SPECS_BATTERY(state, newBattery) {
     state.technologySpecsBattery.push(newBattery);
   },
@@ -331,6 +344,12 @@ const mutations = {
     tmpICESpecs[indexMatchingId] = payload.newICE;
     state.technologySpecsICE = tmpICESpecs;
   },
+  REPLACE_TECHNOLOGY_SPECS_DIESEL_GEN(state, payload) {
+    const tmpDieselGenSpecs = getters.getDieselGenSpecsClone(state)();
+    const indexMatchingId = getters.getIndexOfDieselGenId(state)(payload.dieselGenId);
+    tmpDieselGenSpecs[indexMatchingId] = payload.newDieselGen;
+    state.technologySpecsDieselGen = tmpDieselGenSpecs;
+  },
   REPLACE_TECHNOLOGY_SPECS_BATTERY(state, payload) {
     const tmpBatterySpecs = getters.getBatterySpecsClone(state)();
     const indexMatchingId = getters.getIndexOfBatteryId(state)(payload.batteryId);
@@ -349,6 +368,10 @@ const mutations = {
     const indexMatchingId = getters.getIndexOfICEId(state)(payload.id);
     state.technologySpecsICE[indexMatchingId].active = true;
   },
+  ACTIVATE_TECH_DIESEL_GEN(state, payload) {
+    const indexMatchingId = getters.getIndexOfDieselGenId(state)(payload.id);
+    state.technologySpecsDieselGen[indexMatchingId].active = true;
+  },
   DEACTIVATE_TECH_SOLAR_PV(state, payload) {
     const indexMatchingId = getters.getIndexOfSolarId(state)(payload.id);
     state.technologySpecsSolarPV[indexMatchingId].active = false;
@@ -361,6 +384,10 @@ const mutations = {
     const indexMatchingId = getters.getIndexOfICEId(state)(payload.id);
     state.technologySpecsICE[indexMatchingId].active = false;
   },
+  DEACTIVATE_TECH_DIESEL_GEN(state, payload) {
+    const indexMatchingId = getters.getIndexOfDieselGenId(state)(payload.id);
+    state.technologySpecsDieselGen[indexMatchingId].active = false;
+  },
   REMOVE_TECH_SOLAR_PV(state, payload) {
     const indexMatchingId = getters.getIndexOfSolarId(state)(payload.id);
     state.technologySpecsSolarPV.splice(indexMatchingId, 1);
@@ -372,6 +399,10 @@ const mutations = {
   REMOVE_TECH_ICE(state, payload) {
     const indexMatchingId = getters.getIndexOfICEId(state)(payload.id);
     state.technologySpecsICE.splice(indexMatchingId, 1);
+  },
+  REMOVE_TECH_DIESEL_GEN(state, payload) {
+    const indexMatchingId = getters.getIndexOfDieselGenId(state)(payload.id);
+    state.technologySpecsDieselGen.splice(indexMatchingId, 1);
   },
   ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV(state, payload) {
     const tmpSolarPVSpecs = getters.getSolarPVSpecsClone(state)();
@@ -644,6 +675,7 @@ const actions = {
     commit('RESET_LIST_OF_ACTIVE_TECHNOLOGIES');
     const specs = [
       projectSpecs.technologySpecsICE,
+      projectSpecs.technologySpecsDieselGen,
       projectSpecs.technologySpecsBattery,
       projectSpecs.technologySpecsSolarPV,
     ];
@@ -659,6 +691,9 @@ const actions = {
   addTechnologySpecsICE({ commit }, newICE) {
     commit('ADD_TECHNOLOGY_SPECS_ICE', newICE);
   },
+  addTechnologySpecsDieselGen({ commit }, newDieselGen) {
+    commit('ADD_TECHNOLOGY_SPECS_DIESEL_GEN', newDieselGen);
+  },
   addTechnologySpecsBattery({ commit }, newBattery) {
     commit('ADD_TECHNOLOGY_SPECS_BATTERY', newBattery);
   },
@@ -671,12 +706,17 @@ const actions = {
   replaceTechnologySpecsICE({ commit }, payload) {
     commit('REPLACE_TECHNOLOGY_SPECS_ICE', payload);
   },
+  replaceTechnologySpecsDieselGen({ commit }, payload) {
+    commit('REPLACE_TECHNOLOGY_SPECS_DIESEL_GEN', payload);
+  },
   replaceTechnologySpecsBattery({ commit }, payload) {
     commit('REPLACE_TECHNOLOGY_SPECS_BATTERY', payload);
   },
   activateTech({ commit }, payload) {
     if (payload.tag === 'ICE') {
       commit('ACTIVATE_TECH_ICE', payload);
+    } else if (payload.tag === 'DieselGen') {
+      commit('ACTIVATE_TECH_DIESEL_GEN', payload);
     } else if (payload.tag === 'PV') {
       commit('ACTIVATE_TECH_SOLAR_PV', payload);
     } else if (payload.tag === 'Battery') {
@@ -686,6 +726,8 @@ const actions = {
   deactivateTech({ commit }, payload) {
     if (payload.tag === 'ICE') {
       commit('DEACTIVATE_TECH_ICE', payload);
+    } else if (payload.tag === 'DieselGen') {
+      commit('DEACTIVATE_TECH_DIESEL_GEN', payload);
     } else if (payload.tag === 'PV') {
       commit('DEACTIVATE_TECH_SOLAR_PV', payload);
     } else if (payload.tag === 'Battery') {
@@ -695,6 +737,8 @@ const actions = {
   removeTech({ commit }, payload) {
     if (payload.tag === 'ICE') {
       commit('REMOVE_TECH_ICE', payload);
+    } else if (payload.tag === 'DieselGen') {
+      commit('REMOVE_TECH_DIESEL_GEN', payload);
     } else if (payload.tag === 'PV') {
       commit('REMOVE_TECH_SOLAR_PV', payload);
     } else if (payload.tag === 'Battery') {

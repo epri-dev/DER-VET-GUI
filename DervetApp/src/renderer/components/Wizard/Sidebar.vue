@@ -32,7 +32,8 @@
           v-for="battery in batteryItems"
           :to="{ name: 'technologySpecsBattery', params: { batteryId: battery.id }}"
           :key="battery.id"
-          v-bind:class="{ current: techSpecsActiveSaved('battery', battery.id),
+          v-bind:class="{
+            current: techSpecsActiveSaved('battery', battery.id),
             complete: battery.active,
             incomplete: !battery.active }">
           Battery: {{ battery.name }}
@@ -43,10 +44,23 @@
           v-for="ice in iceItems"
           :to="{ name: 'technologySpecsICE', params: { iceId: ice.id }}"
           :key="ice.id"
-          v-bind:class="{ current: techSpecsActiveSaved('ice', ice.id),
+          v-bind:class="{
+            current: techSpecsActiveSaved('ice', ice.id),
             complete: ice.active,
             incomplete: !ice.active }">
           ICE: {{ ice.name }}
+        </router-link>
+
+        <router-link
+          class="nav nav-sidebar sidebar-indent"
+          v-for="dieselGen in dieselGenItems"
+          :to="{ name: 'technologySpecsDieselGen', params: { dieselGenId: dieselGen.id }}"
+          :key="dieselGen.id"
+          v-bind:class="{
+            current: techSpecsActiveSaved('diesel-gen', dieselGen.id),
+            complete: dieselGen.active,
+            incomplete: !dieselGen.active }">
+          DieselGen: {{ dieselGen.name }}
         </router-link>
 
         <div
@@ -63,6 +77,11 @@
           class="nav nav-sidebar sidebar-indent current"
           v-if="techSpecsActiveUnsaved('ice')">
           Internal Combustion Engine
+        </div>
+        <div
+          class="nav nav-sidebar sidebar-indent current"
+          v-if="techSpecsActiveUnsaved('diesel-gen')">
+          Diesel Generator
         </div>
 
         <router-link
@@ -202,6 +221,9 @@
       },
       iceItems() {
         return this.$store.state.Project.technologySpecsICE;
+      },
+      dieselGenItems() {
+        return this.$store.state.Project.technologySpecsDieselGen;
       },
       batteryItems() {
         return this.$store.state.Project.technologySpecsBattery;

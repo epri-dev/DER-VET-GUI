@@ -31,6 +31,13 @@
                 </router-link>
               </div>
             </div>
+            <div class="form-group">
+              <div class="col-md-12">
+                <router-link to="/wizard/technology-specs-diesel-gen/null" class="btn btn-primary btn-w250">
+                  Diesel Generator
+                </router-link>
+              </div>
+            </div>
           </div>
 
           <div class="col-md-7 table-bordered">
