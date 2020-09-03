@@ -4,7 +4,7 @@
       Specify the cycle life curve for this battery
 
     <b-table-lite
-      fixed striped hover sticky-header="350px"
+      small fixed striped hover sticky-header="315px"
       :items="items"
       :fields="fields">
       <template v-slot:cell(ulimit)="row">
@@ -14,9 +14,9 @@
         <b-form-input v-model="row.item.val" class="text-right"/>
       </template>
       <template v-slot:cell(remove)="row">
-        <td>
-          <button type="button" class="btn-xs btn-danger delete-tech" v-on:click="removeRow(row.index)">remove</button>
-        </td>
+        <b-col class="text-right">
+          <b-button size="sm" class="btn-xs btn-danger delete-tech" v-on:click="removeRow(row.index)">remove</b-button>
+        </b-col>
       </template>
     </b-table-lite>
 

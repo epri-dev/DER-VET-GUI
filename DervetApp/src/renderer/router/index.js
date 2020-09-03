@@ -64,6 +64,12 @@ export default new Router({
           props: true,
         },
         {
+          path: 'technology-specs-diesel-gen/:dieselGenId',
+          name: 'technologySpecsDieselGen',
+          component: require('@/components/Wizard/TechnologySpecsDieselGen').default,
+          props: true,
+        },
+        {
           path: 'summary',
           name: 'summary',
           component: require('@/components/Wizard/Summary').default,
