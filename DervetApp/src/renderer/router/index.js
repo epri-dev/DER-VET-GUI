@@ -149,6 +149,11 @@ export default new Router({
           name: 'objectivesParametersSiteInformation',
           component: require('@/components/Wizard/ObjectivesParametersSiteInformation').default,
         },
+        {
+          path: 'results',
+          name: 'results',
+          component: require('@/components/Wizard/Results').default,
+        },
       ],
     },
     {

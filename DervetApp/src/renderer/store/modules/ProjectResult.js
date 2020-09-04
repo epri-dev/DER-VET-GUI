@@ -5,7 +5,6 @@
   errorMessage: null,
   data: [], // save result models here
   sensitivitySummary: null,
-
 });
 
 const state = getDefaultResultState();
@@ -17,14 +16,12 @@ const mutations = {
   SET_ID(state, newId) {
     state.id = newId;
   },
-  
 };
 
 const actions = {
   setId({ commit }, newId) {
     commit('SET_ID', newId);
   },
-  
 };
 
 export default {
@@ -33,5 +30,3 @@ export default {
   mutations,
   actions,
 };
-
-
