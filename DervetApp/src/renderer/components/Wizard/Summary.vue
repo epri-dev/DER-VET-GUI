@@ -66,10 +66,12 @@
         </template>
         </br>
 
+      <!-- TODO rename save prop to something agnostic to the performed action -->
       <nav-buttons
         back-link="/wizard/sensitivity-analysis"
         continue-link="/wizard/run-analysis"
         continue-text="Run Analysis"
+        :save="this.runDervet"
       />
 
       </div>
@@ -90,6 +92,9 @@
       modeDescription() {
         const modeNum = parseInt(this.$store.state.Project.analysisHorizonMode, 10) - 1;
         return validation.analysisHorizonMode.allowedValues[modeNum].description;
+      },
+      runDervet() {
+        this.$store.dispatch('runDervet', this.$store.state.Project);
       },
     },
     data() {
