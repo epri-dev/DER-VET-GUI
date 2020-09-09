@@ -1,4 +1,4 @@
-﻿const getDefaultResultState = () => ({
+const getDefaultResultState = () => ({
   id: null,
   sensitivityAnalysisCase: null,
   resultsLoaded: false,

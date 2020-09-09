@@ -68,6 +68,7 @@
     "lodash": "^4.17.19",
     "numeral": "^2.0.6",
     "papaparse": "^5.2.0",
+    "plotly.js": "^1.55.2",
     "uuid": "^8.3.0",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",

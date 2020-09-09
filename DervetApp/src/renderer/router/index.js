@@ -154,6 +154,11 @@ export default new Router({
           name: 'results',
           component: require('@/components/Wizard/Results').default,
         },
+        {
+          path: 'results-reliability',
+          name: 'resultsReliability',
+          component: require('@/components/Wizard/ResultsReliability').default,
+        },
       ],
     },
     {
