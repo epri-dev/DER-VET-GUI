@@ -1,32 +1,34 @@
 class BaseTableData {
-  constructor(fileName, hasHeaderRow) {
+  constructor(fileName, data, hasHeaderRow) {
     this.fileName = fileName;
-    this.data = null;
+    this.data = data;
     this.hasHeaderRow = hasHeaderRow;
     this.columnHeaders = null;
-    this.results_loaded = false;
   }
   getColumnIndex(colHeader) {
-    const colInd = this.data[colHeader];
-    // TODO
-    return colInd;
+    let i = 0;
+    while (this.columnHeaders[i] !== colHeader) {
+      if (i === this.columnHeaders.length) {
+        i = -1;
+        break;
+      }
+      i += 1;
+    }
+    return i;
   }
   getDataValueByColHeader(rowIndex, colHeader) {
-    const dataVal = this.data[rowIndex][colHeader];
-    // TODO
-    return dataVal;
+    const colIndex = this.getColumnIndex(colHeader);
+    return this.getDataValueByColIndex(rowIndex, colIndex);
   }
   getDataValueByColIndex(rowIndex, colIndex) {
-    const dataVal = this.data[rowIndex][colIndex];
-    // TODO
-    return dataVal;
+    return this.data[rowIndex][colIndex];
   }
-  set loadDataFromFile(folderPath) {
-    this.results_loaded = true;
-    this.data = folderPath; // read data at folder path
-    // TODO
-    // TODO set COLUMN_HEADERS attribute
-    return this.results_loaded;
+  loadDataFromFile(folderPath) {
+    this.data = folderPath; // TODO read raw data at location
+    if (this.hasHeaderRow) {
+      [this.columnHeaders, ...this.data] = this.data;
+    }
+    return true;
   }
 }
 
