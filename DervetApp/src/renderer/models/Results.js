@@ -4,20 +4,20 @@ const defaults = {
   size: null,
   dispatch: null,
   proforma: null,
-  
+
   costBenefit: null,
   beforeAfterMonthlyEnergyBill: null,
-  energyPriceMap
+  energyPriceMap: null,
   peakLoadDay: null,
   deferral: null,
   loadCoverageProbability: null,
-  outageContribution: null
+  outageContribution: null,
   reliability: null,
 
   // show/hide plot booleans
   showCostBenefitSummary: true,
-  showReiabilitySummary: false
-  
+  showReiabilitySummary: false,
+
 };
 
 
