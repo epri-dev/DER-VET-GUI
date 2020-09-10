@@ -185,6 +185,12 @@
           :to="this.pagePaths.results">
           Results
         </router-link>
+        <router-link
+          class="nav nav-sidebar sidebar-indent"
+          v-bind:class="{ current: isActive(this.pagePaths.resultsReliability) }"
+          :to="this.pagePaths.resultsReliability">
+          Reliability
+        </router-link>
     </b-nav>
     <div class="export-project">
       <router-link class="btn btn-md btn-primary" to="/">Export Project</router-link>
