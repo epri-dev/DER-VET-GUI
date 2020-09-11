@@ -29,6 +29,7 @@
 
 <script>
   import Plotly from 'plotly.js';
+  import NavButtons from '@/components/Shared/NavButtons';
   // import Chart from 'chart.js';
 
   // TODO import this dummy data from store.Results
@@ -38,36 +39,57 @@
     6346, 8398];
   const yearValues = [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
 
+  const essData = {
+    energyCapacity: 2340,
+    powerCapacity: 732,
+    name: 'sto1',
+  };
+
+  const deferralPowerChartData = {
+    type: 'Power',
+    units: '(kW)',
+    essValue: essData.powerCapacity,
+    essName: 'sto1',
+    requirementValues: powerRequirement,
+    years: yearValues,
+  };
+  const deferralEnergyChartData = {
+    type: 'Energy',
+    units: '(kWh)',
+    essValue: essData.energyCapacity,
+    essName: 'sto1',
+    requirementValues: energyRequirement,
+    years: yearValues,
+  };
+
   export default {
+    components: { NavButtons },
     mounted() {
-      this.createChartPowerCapacityVsTime('chartPowerCapacityVsTime');
-      this.createChartEnergyCapacityVsTime('chartEnergyCapacityVsTime');
+      this.createChartCapacityVsTime('chartPowerCapacityVsTime', deferralPowerChartData);
+      this.createChartCapacityVsTime('chartEnergyCapacityVsTime', deferralEnergyChartData);
     },
     data() {
       const p = this.$store.state.Project;
       return {
         resultsPath: p.paths.results,
-        energyCapacity: 2340,
-        powerCapacity: 732,
       };
     },
     methods: {
-      createChartPowerCapacityVsTime(chartId) {
+      createChartCapacityVsTime(chartId, chartData) {
         const ctx = document.getElementById(chartId);
-        const powerCapArr = new Array(yearValues.length).fill(this.powerCapacity);
+        const capArr = new Array(chartData.years.length).fill(chartData.essValue);
         const data = [
           {
-            name: 'Power Requirement (kW)',
-            x: yearValues,
-            y: powerRequirement,
+            name: 'Requirement',
+            x: chartData.years,
+            y: chartData.requirementValues,
             mode: 'lines',
             connectgaps: true,
-            cliponaxis: true,
           },
           {
-            name: 'ESS Power Capacity (kW)',
-            x: yearValues,
-            y: powerCapArr,
+            name: `${chartData.type} Cap`,
+            x: chartData.years,
+            y: capArr,
             mode: 'lines',
             connectgaps: true,
             cliponaxis: true,
@@ -76,22 +98,23 @@
         const layout = {
           showlegend: false,
           title: {
-            text: 'Power Required to Defer an Asset Upgrade over the Project Lifetime',
+            text: `${chartData.type} Required to Defer an Asset Upgrade over the Project Lifetime`,
           },
           xaxis: {
             title: {
               text: 'Year',
             },
             showgrid: true,
-            tick0: yearValues[0],
+            tick0: chartData.years[0],
             dtick: 1,
-            range: [yearValues[0], yearValues[-1]],
+            range: [chartData.years[0], chartData.years[-1]],
           },
           yaxis: {
             title: {
-              text: 'Power Requirement (kW)',
+              text: `${chartData.type} Requirement ${chartData.units}`,
             },
             showgrid: true,
+            standoff: 25,
           },
         };
         const config = {
@@ -102,62 +125,7 @@
           toImageButtonOptions: {
             // set defaults for saving plot image
             format: 'png',
-            filename: 'power-capacity-requirements',
-          },
-        };
-        return Plotly.newPlot(ctx, data, layout, config);
-      },
-      createChartEnergyCapacityVsTime(chartId) {
-        const ctx = document.getElementById(chartId);
-        const energyCapArr = new Array(yearValues.length).fill(this.energyCapacity);
-        const data = [
-          {
-            name: 'Energy Requirement (kh)',
-            x: yearValues,
-            y: energyRequirement,
-            mode: 'lines',
-            connectgaps: true,
-            cliponaxis: true,
-          },
-          {
-            name: 'ESS Energy Capacity (kWh)',
-            x: yearValues,
-            y: energyCapArr,
-            mode: 'lines',
-            connectgaps: true,
-            cliponaxis: true,
-          },
-        ];
-        const layout = {
-          showlegend: false,
-          title: {
-            text: 'Energy Required to Defer an Asset Upgrade over the Project Lifetime',
-          },
-          xaxis: {
-            title: {
-              text: 'Year',
-            },
-            showgrid: true,
-            tick0: yearValues[0],
-            dtick: 1,
-            range: [yearValues[0], yearValues[-1]],
-          },
-          yaxis: {
-            title: {
-              text: 'Energy Requirement (kWh)',
-            },
-          },
-        };
-        const config = {
-          displaylogo: false, // hides the plotly logo from the modebar when false
-          scrollZoom: true, // allows mouse wheel scroll when true
-          staticPlot: false, // disable modebar options when true
-          responsive: true, // responsive to window size
-          autosizeable: true,
-          toImageButtonOptions: {
-            // set defaults for saving plot image
-            format: 'png', // 'jpeg',
-            filename: 'energy-capacity-requirements',
+            filename: `deferral-${chartData.type}-capacity-requirements`,
           },
         };
         return Plotly.newPlot(ctx, data, layout, config);
