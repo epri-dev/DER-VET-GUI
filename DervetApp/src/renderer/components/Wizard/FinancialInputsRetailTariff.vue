@@ -86,7 +86,7 @@
 
 <script>
   import { RETAIL_TARIFF_HEADERS, billingPeriodsToCsv } from '@/models/RetailTariffBillingPeriod';
-  import NavButtons from './NavButtons';
+  import NavButtons from '@/components/Shared/NavButtons';
 
   export default {
     components: { NavButtons },

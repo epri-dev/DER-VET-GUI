@@ -2,7 +2,7 @@
   <div>
     <div class="row">
       <div class="col-md-6">
-        <h3>Results: Design</h3>
+        <h3>Design</h3>
       </div>
     </div>
     <hr />
@@ -56,7 +56,7 @@
 </template>
 
 <script>
-  import NavButtons from './NavButtons';
+  import NavButtons from '@/components/Shared/NavButtons';
   // TODO import this dummy data from store.Results
   const sizeData = [
     {

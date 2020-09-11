@@ -198,6 +198,18 @@
           :to="this.pagePaths.resultsReliability">
           Reliability
         </router-link>
+        <router-link
+          class="nav nav-sidebar sidebar-indent"
+          v-bind:class="{ current: isActive(this.pagePaths.resultsDeferral) }"
+          :to="this.pagePaths.resultsDeferral">
+          Deferral
+        </router-link>
+        <router-link
+          class="nav nav-sidebar sidebar-indent"
+          v-bind:class="{ current: isActive(this.pagePaths.resultsFinancial) }"
+          :to="this.pagePaths.resultsFinancial">
+          Financial
+        </router-link>
     </b-nav>
     <div class="export-project">
       <router-link class="btn btn-md btn-primary" to="/">Export Project</router-link>

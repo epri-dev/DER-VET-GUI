@@ -87,7 +87,7 @@
 </template>
 
 <script>
-  import NavButtons from './NavButtons';
+  import NavButtons from '@/components/Shared/NavButtons';
 
   export default {
     components: { NavButtons },

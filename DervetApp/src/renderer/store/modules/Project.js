@@ -43,6 +43,8 @@ const getDefaultState = () => ({
     results: '/results',
     resultsDesign: '/results/design',
     resultsReliability: '/results/reliability',
+    resultsDeferral: '/results/deferral',
+    resultsFinancial: '/results/financial',
   },
   routeObjectivesFinancialsLL: null,
 

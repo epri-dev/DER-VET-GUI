@@ -56,10 +56,10 @@
 </template>
 
 <script>
-  import { sharedValidation } from '../../models/Shared.js';
-  import PriceTimeSeries from '../../models/PriceTimeSeries';
-  import csvUploadMixin from '../../mixins/csvUploadMixin';
-  import NavButtons from './NavButtons';
+  import { sharedValidation } from '@/models/Shared.js';
+  import PriceTimeSeries from '@/models/PriceTimeSeries';
+  import csvUploadMixin from '@/mixins/csvUploadMixin';
+  import NavButtons from '@/components/Shared/NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 
   export default {
