@@ -179,11 +179,18 @@
           ">
           Summary
         </router-link>
+        
         <router-link
           class="nav nav-sidebar sidebar-root-el"
           v-bind:class="{ current: isActive(this.pagePaths.results) }"
           :to="this.pagePaths.results">
           Results
+        </router-link>
+        <router-link
+          class="nav nav-sidebar sidebar-indent"
+          v-bind:class="{ current: isActive(this.pagePaths.resultsDesign) }"
+          :to="this.pagePaths.resultsDesign">
+          Results Design
         </router-link>
     </b-nav>
     <div class="export-project">

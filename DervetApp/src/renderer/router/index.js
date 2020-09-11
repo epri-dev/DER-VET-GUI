@@ -4,6 +4,8 @@ import Router from 'vue-router';
 Vue.use(Router);
 
 export default new Router({
+  // todo can we move the list of routes into a .js page,
+  // then import it into the index and the project state?
   routes: [
     {
       path: '/',
@@ -149,10 +151,19 @@ export default new Router({
           name: 'objectivesParametersSiteInformation',
           component: require('@/components/Wizard/ObjectivesParametersSiteInformation').default,
         },
+      ],
+    },
+    {
+      path: '/results',
+      component: require('@/components/Wizard/Layout').default,
+      children: [
         {
-          path: 'results',
-          name: 'results',
+          path: '',
           component: require('@/components/Wizard/Results').default,
+        },
+        {
+          path: 'design',
+          component: require('@/components/Wizard/ResultsDesign').default,
         },
       ],
     },

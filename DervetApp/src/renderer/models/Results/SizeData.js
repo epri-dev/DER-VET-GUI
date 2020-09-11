@@ -3,18 +3,49 @@ import BaseTableData from './BaseTableData';
 class SizeData extends BaseTableData {
   constructor() {
     super('size.csv', true);
-    this.systemNameColumnName = 'System Name';
-    this.energyCapacityColumnName = 'Energy Rating (kWh)';
-    this.durationColumnName = 'Duration (hours)';
 
     this.cCostColumnName = 'Capital Cost ($)';
     this.cCostkWColumnName = 'Capital Cost ($/kW)';
     this.cCostkWhColumnName = 'Capital Cost ($/kWh)';
 
-    this.batteryChargeRatingColumnName = 'Charge Rating (kW)'; // this column only exists when Battery has been considered
-    this.batteryDischargeRatingColumnName = 'Discharge Rating (kW)'; // this column only exists when Battery has been considered
-    this.powerCapacityColumnName = 'Power Capacity (kW)'; // this column only exists when PV and/or ICE has been considered
-    this.iceColumnName = 'Quantity'; // this column only exists when ICE has been considered
+    this.fields = [
+      {
+        key: 'system_name',
+        sortable: false,
+        label: 'System Name',
+      },
+      {
+        key: 'energy_rating',
+        sortable: false,
+        label: 'Energy Rating (kWh)',
+      },
+      {
+        key: 'charge_rating',
+        sortable: false,
+        label: 'Charge Rating (kW)',
+
+      },
+      {
+        key: 'duration',
+        sortable: false,
+        label: 'Duration (hours)',
+      },
+      {
+        key: 'quantity',
+        sortable: false,
+        label: 'Discharge Rating (kW)',
+      },
+      {
+        key: 'discharge_rating',
+        sortable: false,
+        label: 'Disharge Rating (kW)',
+      },
+      {
+        key: 'power_capacity',
+        sortable: false,
+        label: 'Power Capacity (kW)',
+      },
+    ];
   }
   set loadDataFromFile(folderPath) {
     this.results_loaded = true;

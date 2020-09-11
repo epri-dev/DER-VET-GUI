@@ -40,7 +40,8 @@ const getDefaultState = () => ({
     financialInputsRetailTariff: '/wizard/financial-inputs-retail-tariff',
     sensitivityAnalysis: '/wizard/sensitivity-analysis',
     summary: '/wizard/summary',
-    results: '/wizard/results',
+    results: '/results',
+    resultsDesign: '/results/design',
   },
   routeObjectivesFinancialsLL: null,
 
