@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
 
-import { app, BrowserWindow } from 'electron' // eslint-disable-line
+import { app, BrowserWindow, ipcMain } from 'electron' // eslint-disable-line
 
 /**
  * Set `__static` path to static files in production
@@ -41,6 +41,14 @@ function createWindow() {
 
   mainWindow.on('closed', () => {
     mainWindow = null;
+  });
+}
+
+
+function registerIpcChannels() {
+  ipcMain.on('dervet-inputs', (event, dervetInputs) => {
+    const results = { data: [dervetInputs] }; // TODO: replace with DERVET run results
+    event.sender.send('dervet-results', results);
   });
 }
 
@@ -121,3 +129,5 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
+registerIpcChannels();
