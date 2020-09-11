@@ -1,6 +1,6 @@
 import { cloneDeep, flatten } from 'lodash';
 import getCurrentYear from '@/util/time';
-import PageLink from '../../models/PageRouting';
+import PageLink from '@/models/PageRouting';
 
 
 const getDefaultState = () => ({
