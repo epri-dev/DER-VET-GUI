@@ -176,6 +176,10 @@ export default new Router({
           name: 'resultsDeferral',
           component: require('@/components/Results/Deferral').default,
         },
+        {
+          path: 'financial',
+          component: require('@/components/Results/Financial').default,
+        },
       ],
     },
     {

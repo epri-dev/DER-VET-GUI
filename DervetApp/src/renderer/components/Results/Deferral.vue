@@ -9,12 +9,7 @@
     <div class="form-group">
       <div class="col-md-12">
         <div
-          id="chartPowerCapacityVsTime">
-        </div>
-      </div>
-      <div class="col-md-12">
-        <div
-          id="chartEnergyCapacityVsTime">
+          id="chartCapacityVsTime">
         </div>
       </div>
     </div>
@@ -33,40 +28,29 @@
   // import Chart from 'chart.js';
 
   // TODO import this dummy data from store.Results
-  const powerRequirement = [0, 188, 425, 668, 951, 1167,
-    1425, 1687];
-  const energyRequirement = [0, 301, 989, 1871, 2877, 4430,
-    6346, 8398];
-  const yearValues = [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
-
-  const essData = {
-    energyCapacity: 2340,
-    powerCapacity: 732,
-    name: 'sto1',
-  };
-
-  const deferralPowerChartData = {
-    type: 'Power',
-    units: '(kW)',
-    essValue: essData.powerCapacity,
+  const deferralData = {
+    years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024],
     essName: 'sto1',
-    requirementValues: powerRequirement,
-    years: yearValues,
-  };
-  const deferralEnergyChartData = {
-    type: 'Energy',
-    units: '(kWh)',
-    essValue: essData.energyCapacity,
-    essName: 'sto1',
-    requirementValues: energyRequirement,
-    years: yearValues,
+    chartData: [{
+      type: 'Power',
+      units: '(kW)',
+      essValue: 732,
+      requirementValues: [0, 188, 425, 668, 951, 1167,
+        1425, 1687],
+    },
+    {
+      type: 'Energy',
+      units: '(kWh)',
+      essValue: 2340,
+      requirementValues: [0, 301, 989, 1871, 2877, 4430,
+        6346, 8398],
+    }],
   };
 
   export default {
     components: { NavButtons },
     mounted() {
-      this.createChartCapacityVsTime('chartPowerCapacityVsTime', deferralPowerChartData);
-      this.createChartCapacityVsTime('chartEnergyCapacityVsTime', deferralEnergyChartData);
+      this.createChartCapacityVsTime('chartCapacityVsTime', deferralData);
     },
     data() {
       const p = this.$store.state.Project;
@@ -77,28 +61,37 @@
     methods: {
       createChartCapacityVsTime(chartId, chartData) {
         const ctx = document.getElementById(chartId);
-        const capArr = new Array(chartData.years.length).fill(chartData.essValue);
-        const data = [
-          {
-            name: 'Requirement',
-            x: chartData.years,
-            y: chartData.requirementValues,
-            mode: 'lines',
-            connectgaps: true,
-          },
-          {
-            name: `${chartData.type} Cap`,
-            x: chartData.years,
-            y: capArr,
-            mode: 'lines',
-            connectgaps: true,
-            cliponaxis: true,
-          },
-        ];
+        let data = [];
+        let i = 0;
+        while (i !== 2) {
+          const subChart = chartData.chartData[i];
+          const capArr = new Array(chartData.years.length).fill(subChart.essValue);
+          const traces = [
+            {
+              name: `${subChart.type[0]} Required`,
+              x: chartData.years,
+              y: subChart.requirementValues,
+              mode: 'lines',
+              connectgaps: true,
+              yaxis: `y${i + 1}`,
+            },
+            {
+              name: `${subChart.type} Cap`,
+              x: chartData.years,
+              y: capArr,
+              mode: 'lines',
+              connectgaps: true,
+              cliponaxis: true,
+              yaxis: `y${i + 1}`,
+            },
+          ];
+          data = [...data, ...traces];
+          i += 1;
+        }
         const layout = {
           showlegend: false,
           title: {
-            text: `${chartData.type} Required to Defer an Asset Upgrade over the Project Lifetime`,
+            text: 'Power and Energy Required to Defer an Asset Upgrade over the Project Lifetime',
           },
           xaxis: {
             title: {
@@ -109,12 +102,24 @@
             dtick: 1,
             range: [chartData.years[0], chartData.years[-1]],
           },
-          yaxis: {
+          yaxis1: {
             title: {
-              text: `${chartData.type} Requirement ${chartData.units}`,
+              text: `${chartData.chartData[0].type} ${chartData.chartData[0].units}`,
             },
             showgrid: true,
-            standoff: 25,
+            // standoff: 25,
+          },
+          yaxis2: {
+            title: {
+              text: `${chartData.chartData[1].type} ${chartData.chartData[1].units}`,
+            },
+            showgrid: true,
+            // standoff: 25,
+          },
+          grid: {
+            rows: 2,
+            columns: 1,
+            roworder: 'bottom to top',
           },
         };
         const config = {
@@ -125,7 +130,7 @@
           toImageButtonOptions: {
             // set defaults for saving plot image
             format: 'png',
-            filename: `deferral-${chartData.type}-capacity-requirements`,
+            filename: 'deferral-capacity-requirements',
           },
         };
         return Plotly.newPlot(ctx, data, layout, config);
