@@ -47,9 +47,10 @@
       </div>
     </div>
     <hr />
+    <!-- TODO get rid of save & continue button -->
     <nav-buttons
-      :back-link="techSpecsPath"
-      :continue-link="siteInformationPath"
+      :back-link="resultsPath"
+      back-text="<< Return to results summary"
     />
   </div>
 </template>
@@ -155,8 +156,7 @@
     data() {
       const p = this.$store.state.Project;
       return {
-        siteInformationPath: p.paths.objectivesSiteInformation,
-        techSpecsPath: p.paths.techSpecs,
+        resultsPath: p.paths.results,
         sizeItems: sizeData,
         sizeFields: [
           {
