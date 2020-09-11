@@ -171,6 +171,11 @@ export default new Router({
           name: 'resultsReliability',
           component: require('@/components/Results/Reliability').default,
         },
+        {
+          path: 'deferral',
+          name: 'resultsDeferral',
+          component: require('@/components/Results/Deferral').default,
+        },
       ],
     },
     {

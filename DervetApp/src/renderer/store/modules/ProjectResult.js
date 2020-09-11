@@ -1,4 +1,4 @@
-﻿import IpcService from '@/IpcService';
+import IpcService from '@/IpcService';
 
 const getDefaultResultState = () => ({
   id: null,

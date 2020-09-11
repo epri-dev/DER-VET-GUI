@@ -2,7 +2,7 @@
   <div>
     <div class="row">
       <div class="col-md-6">
-        <h3>Results: Design</h3>
+        <h3>Design</h3>
       </div>
     </div>
     <hr />
