@@ -75,7 +75,7 @@
 
 <script>
   import { INCENTIVES_HEADERS, externalIncentivesToCsv } from '@/models/ExternalIncentives';
-  import NavButtons from './NavButtons';
+  import NavButtons from '@/components/Shared/NavButtons';
 
   export default {
     components: { NavButtons },

@@ -77,7 +77,7 @@
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import DeferralLoadTimeSeries from '@/models/DeferralLoadTimeSeries';
   import { sharedValidation } from '@/models/Shared';
-  import NavButtons from './NavButtons';
+  import NavButtons from '@/components/Shared/NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 
 

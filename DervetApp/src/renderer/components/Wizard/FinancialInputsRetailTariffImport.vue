@@ -43,7 +43,7 @@
 <script>
   import { parsedCsvToBillingPeriods } from '@/models/RetailTariffBillingPeriod';
   import { parseCsvFromFile } from '@/util/helpers';
-  import NavButtons from './NavButtons';
+  import NavButtons from '@/components/Shared/NavButtons';
 
 
   export default {

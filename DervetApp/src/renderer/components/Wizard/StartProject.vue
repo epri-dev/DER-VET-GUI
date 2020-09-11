@@ -136,7 +136,7 @@
 
 <script>
   import model from '@/models/StartProject';
-  import NavButtons from './NavButtons';
+  import NavButtons from '@/components/Shared/NavButtons';
 
   const { validation } = model;
 

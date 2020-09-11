@@ -154,21 +154,22 @@ export default new Router({
       ],
     },
     {
+      // TODO switch component to the Results specific side bar
       path: '/results',
       component: require('@/components/Wizard/Layout').default,
       children: [
         {
           path: '',
-          component: require('@/components/Wizard/Results').default,
+          component: require('@/components/Results/Summary').default,
         },
         {
           path: 'design',
-          component: require('@/components/Wizard/ResultsDesign').default,
+          component: require('@/components/Results/Design').default,
         },
         {
           path: 'reliability',
           name: 'resultsReliability',
-          component: require('@/components/Wizard/ResultsReliability').default,
+          component: require('@/components/Results/Reliability').default,
         },
       ],
     },

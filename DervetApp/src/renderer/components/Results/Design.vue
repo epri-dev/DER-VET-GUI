@@ -56,7 +56,7 @@
 </template>
 
 <script>
-  import NavButtons from './NavButtons';
+  import NavButtons from '@/components/Shared/NavButtons';
   // TODO import this dummy data from store.Results
   const sizeData = [
     {
