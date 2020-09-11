@@ -11,3 +11,31 @@ export const formatYAxisCurrency = (tick, index, ticks) => {
 };
 
 export const formatYAxis = tick => numeral(tick).format('0,0.[000]');
+
+export const arrayMax = (arr) => {
+  let max = arr[0];
+  for (let i = 1; i < arr.length; i += 1) {
+    if (arr[i] > max) {
+      max = arr[i];
+    }
+  }
+  return max;
+};
+
+export const formatXAxis6Hour = (tick) => {
+  // Only show ticks for hours 0, 6, 12 and 18
+  if (tick === 0) {
+    return '00:00';
+  }
+  if (tick === 6) {
+    return '06:00';
+  }
+  if (tick === 12) {
+    return '12:00';
+  }
+  if (tick === 18) {
+    return '18:00';
+  }
+  return '';
+};
+

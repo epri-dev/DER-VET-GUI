@@ -17,7 +17,6 @@ const defaults = {
   // show/hide plot booleans
   showCostBenefitSummary: true,
   showReiabilitySummary: false,
-
 };
 
 
