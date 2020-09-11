@@ -41,6 +41,7 @@ const getDefaultState = () => ({
     sensitivityAnalysis: '/wizard/sensitivity-analysis',
     summary: '/wizard/summary',
     results: '/wizard/results',
+    resultsReliability: '/wizard/results-reliability',
   },
   routeObjectivesFinancialsLL: null,
 
