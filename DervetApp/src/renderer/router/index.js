@@ -162,14 +162,13 @@ export default new Router({
           component: require('@/components/Wizard/Results').default,
         },
         {
-<<<<<<< HEAD
           path: 'design',
           component: require('@/components/Wizard/ResultsDesign').default,
-=======
-          path: 'results-reliability',
+        },
+        {
+          path: 'reliability',
           name: 'resultsReliability',
           component: require('@/components/Wizard/ResultsReliability').default,
->>>>>>> origin/DEV
         },
       ],
     },
