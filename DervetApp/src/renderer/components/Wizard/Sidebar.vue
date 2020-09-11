@@ -190,7 +190,13 @@
           class="nav nav-sidebar sidebar-indent"
           v-bind:class="{ current: isActive(this.pagePaths.resultsDesign) }"
           :to="this.pagePaths.resultsDesign">
-          Results Design
+          Design
+          </router-link>
+        <router-link
+          class="nav nav-sidebar sidebar-indent"
+          v-bind:class="{ current: isActive(this.pagePaths.resultsReliability) }"
+          :to="this.pagePaths.resultsReliability">
+          Reliability
         </router-link>
     </b-nav>
     <div class="export-project">

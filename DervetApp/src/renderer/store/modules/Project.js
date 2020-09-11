@@ -42,6 +42,7 @@ const getDefaultState = () => ({
     summary: '/wizard/summary',
     results: '/results',
     resultsDesign: '/results/design',
+    resultsReliability: '/results/reliability',
   },
   routeObjectivesFinancialsLL: null,
 
