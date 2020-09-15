@@ -180,6 +180,11 @@ export default new Router({
           path: 'financial',
           component: require('@/components/Results/Financial').default,
         },
+        {
+          path: 'dispatch',
+          name: 'resultsDispatch',
+          component: require('@/components/Results/Dispatch').default,
+        },
       ],
     },
     {

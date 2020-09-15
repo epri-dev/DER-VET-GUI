@@ -179,7 +179,7 @@
           ">
           Summary
         </router-link>
-        
+
         <router-link
           class="nav nav-sidebar sidebar-root-el"
           v-bind:class="{ current: isActive(this.pagePaths.results) }"
@@ -200,6 +200,12 @@
         </router-link>
         <router-link
           class="nav nav-sidebar sidebar-indent"
+          v-bind:class="{ current: isActive(this.pagePaths.resultsDispatch) }"
+          :to="this.pagePaths.resultsDispatch">
+          Dispatch
+        </router-link>
+        <router-link
+          class="nav nav-sidebar sidebar-indent"
           v-bind:class="{ current: isActive(this.pagePaths.resultsDeferral) }"
           :to="this.pagePaths.resultsDeferral">
           Deferral
@@ -208,7 +214,7 @@
           class="nav nav-sidebar sidebar-indent"
           v-bind:class="{ current: isActive(this.pagePaths.resultsFinancial) }"
           :to="this.pagePaths.resultsFinancial">
-          Financial
+          Financials
         </router-link>
     </b-nav>
     <div class="export-project">

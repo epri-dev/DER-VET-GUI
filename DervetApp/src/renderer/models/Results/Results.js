@@ -13,10 +13,11 @@ const defaults = {
   loadCoverageProbability: null,
   outageContribution: null,
   reliability: null,
+  ts: null,
 
   // show/hide plot booleans
   showCostBenefitSummary: true,
-  showReiabilitySummary: false,
+  showReliabilitySummary: false,
 };
 
 
