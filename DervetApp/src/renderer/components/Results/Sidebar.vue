@@ -9,10 +9,16 @@
         </router-link>
         <router-link
           class="nav nav-sidebar sidebar-root-el"
+          v-bind:class="{ current: isActive(this.pagePaths.resultsDispatch) }"
+          :to="this.pagePaths.resultsDispatch">
+          Dispatch
+        </router-link>
+        <router-link
+          class="nav nav-sidebar sidebar-root-el"
           v-bind:class="{ current: isActive(this.pagePaths.resultsDesign) }"
           :to="this.pagePaths.resultsDesign">
           Design
-          </router-link>
+        </router-link>
         <router-link
           class="nav nav-sidebar sidebar-root-el"
           v-bind:class="{ current: isActive(this.pagePaths.resultsReliability) }"

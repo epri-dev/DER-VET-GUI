@@ -2,19 +2,19 @@ import { sharedDefaults, sharedValidation } from './Shared.js';
 
 const defaults = {
   active: false,
+  constructionDate: '',
+  cost: 0,
+  generationProfile: null,
+  id: '',
+  inverterMax: 1000000000,
+  loc: '',
+  macrsTerm: sharedDefaults.macrsTerm,
+  name: '',
+  operationDate: '',
+  ratedCapacity: 0,
+  shouldSize: true,
   tag: 'PV',
   technologyType: 'Intermittent Resource',
-  id: '',
-  name: '',
-  cost: 0,
-  shouldSize: true,
-  ratedCapacity: 0,
-  loc: '',
-  inverterMax: 1000000000,
-  constructionDate: '',
-  operationDate: '',
-  macrsTerm: sharedDefaults.macrsTerm,
-  generationProfile: null,
 };
 
 const validation = {
