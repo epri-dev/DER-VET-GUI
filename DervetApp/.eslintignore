@@ -1,3 +1,4 @@
-test/unit/coverage/**
-test/unit/*.js
-test/e2e/*.js
+test/unit/renderer/coverage/**
+test/unit/renderer/*.js
+test/unit/main/coverage/**
+test/unit/main/*.js
