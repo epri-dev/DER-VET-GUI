@@ -75,7 +75,7 @@ export const makeBatteryParameters = (project) => {
       dis_min_rated: makeBaseKey(ZERO, FLOAT), // TODO: hardcoded in old GUI
       duration_max: makeBaseKey(battery.maxDuration, FLOAT),
       ene_max_rated: makeBaseKey(battery.energyCapacity, FLOAT),
-      expected_lifetime: makeBaseKey(14, INT), // TODO: new, verify value
+      expected_lifetime: makeBaseKey(9e10, INT), // TODO: new, verify value
       fixedOM: makeBaseKey(battery.fixedOMCosts, FLOAT),
       hp: makeBaseKey(battery.auxiliaryLoad, FLOAT),
       incl_cycle_degrade: makeBaseKey(convertToOneZero(battery.includeCycleDegradation), BOOL),
@@ -139,7 +139,7 @@ export const makeFinanceParameters = (project) => {
 
 export const makeScenarioParameters = (project) => {
   const keys = {
-    apply_interconnection_constraints: makeBaseKey(ZERO, BOOL), // TODO: new, verify value
+    apply_interconnection_constraints: makeBaseKey(ZERO, BOOL), // TODO: new, see issue 130
     binary: makeBaseKey(ONE, BOOL), // TODO LL: depends on technology properties
     def_growth: makeBaseKey(project.deferralGrowth, FLOAT),
     dt: makeBaseKey(ONE, FLOAT), // TODO LL
@@ -153,10 +153,10 @@ export const makeScenarioParameters = (project) => {
     kappa_ene_max: makeBaseKey('100000', FLOAT), // TODO: hardcoded in old GUI
     kappa_ene_min: makeBaseKey('100000', FLOAT), // TODO: hardcoded in old GUI
     location: makeBaseKey(project.gridLocation.toLowerCase(), STRING),
-    max_export: makeBaseKey('40000', FLOAT), // TODO: new, verify value
-    max_import: makeBaseKey('-10000', FLOAT), // TODO: new, verify value
+    max_export: makeBaseKey('40000', FLOAT), // TODO: new, see issue 131
+    max_import: makeBaseKey('-10000', FLOAT), // TODO: new, see issue 131
     monthly_data_filename: makeBaseKey('./inputs/000-001-monthly.csv', STRING), // TODO LL generate file
-    n: makeBaseKey(project.optimizationHorizon, STRING_INT), // TODO LL: use optimizationHorizonNum
+    n: makeBaseKey(project.optimizationHorizon, STRING_INT), // TODO optimizationHorizonNum if hrs
     opt_years: makeBaseKey(project.dataYear, LIST_INT),
     ownership: makeBaseKey(project.ownership.toLowerCase(), STRING),
     slack: makeBaseKey(ZERO, BOOL), // TODO: hardcoded in old GUI
