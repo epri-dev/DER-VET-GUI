@@ -417,6 +417,7 @@
         const layout = {
           barmode: 'stack',
           showlegend: true,
+          hovermode: 'closest',
           title: {
             text: 'Cost versus Benefit by Value Stream',
           },
