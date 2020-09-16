@@ -21,7 +21,7 @@
       </div>
       <div class="row form-group">
         <div class="col-md-4">
-          <label class="control-label" for="Growth">Duration for Energy Reservation Requirments</label>
+          <label class="control-label" for="Growth">Duration for Energy Reservation Requirements</label>
         </div>
         <div class="col-md-3">
           <input

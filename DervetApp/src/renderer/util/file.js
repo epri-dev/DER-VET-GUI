@@ -16,9 +16,10 @@ export const parseCsvFromFile = (e, successCallback) => {
   // TODO add catch with errorCallback
 };
 
-export const classObjectsToCsv = (classData, fields, headers) => {
-  const csvData = Papa.unparse(classData, { fields, header: false });
+export const objectToCsv = (data, fields, headers) => {
+  const csvData = Papa.unparse(data, { fields, header: false });
   const csvHeaders = Papa.unparse({ fields: headers, data: [] });
-  const csv = encodeURI(`${csvHeaders}${csvData}`);
-  return `data:text/csv;charset=utf-8,${csv}`;
+  return `${csvHeaders}${csvData}`;
 };
+
+export const formatCsvForHref = csv => `data:text/csv;charset=utf-8,${encodeURI(csv)}`;

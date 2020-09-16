@@ -1,3 +1,10 @@
+import * as d3 from 'd3';
+import path from 'path';
+
+import { billingPeriodsToCsv } from '@/models/RetailTariffBillingPeriod';
+import { externalIncentivesToCsv } from '@/models/ExternalIncentives';
+import { objectToCsv } from '@/util/file';
+
 const NO = 'no';
 const YES = 'yes';
 
@@ -15,6 +22,33 @@ const PERIOD = 'Period';
 const STRING = 'string';
 const STRING_INT = 'string/int';
 
+const TIMESERIES_DATETIME_INDEX = 'datetime';
+const TIMESERIES_DATETIME_HEADER = 'Datetime (he)';
+
+// Timeseries file names
+const CYCLE = 'cycle';
+const MONTHLY = 'monthly';
+const TARIFF = 'tariff';
+const TIMESERIES = 'timeseries';
+const YEARLY = 'yearly';
+
+// TODO add PV gen profile(s)
+const TIMESERIES_FIELDS = [
+  'criticalLoad',
+  'deferralLoad',
+  'daPrice',
+  'frPrice',
+  'frUpPrice',
+  'frDownPrice',
+  'srPrice',
+  'siteLoad',
+  'nsrPrice',
+  'userPowerMin',
+  'userPowerMax',
+  'userEnergyMin',
+  'userEnergyMax',
+];
+
 export const convertToYesNo = condition => (condition ? YES : NO);
 
 export const convertToOneZero = condition => (condition ? ONE : ZERO);
@@ -23,6 +57,10 @@ export const convertDateToYear = dateString => (new Date(dateString)).getFullYea
 
 export const calculateEndYear = (startYear, analysisHorizon) => (
   (Number(startYear) + Number(analysisHorizon)).toString()
+);
+
+export const makeCsvFilePath = (directory, fileName) => (
+  path.join(directory, `${fileName}.csv`)
 );
 
 export const makeBaseKey = (value, type) => ({
@@ -68,7 +106,7 @@ export const makeBatteryParameters = (project) => {
       ch_max_rated: makeBaseKey(battery.chargingCapacity, FLOAT),
       ch_min_rated: makeBaseKey(ZERO, FLOAT), // TODO: hardcoded in old GUI
       construction_year: makeBaseKey(convertDateToYear(battery.constructionDate), PERIOD),
-      cycle_life_filename: makeBaseKey('./inputs/000-001-cycle.csv', STRING), // TODO LL: generate file
+      cycle_life_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, CYCLE), STRING),
       daily_cycle_limit: makeBaseKey(battery.dailyCycleLimit, FLOAT),
       decommissioning_cost: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
       dis_max_rated: makeBaseKey(battery.dischargingCapacity, FLOAT),
@@ -125,14 +163,14 @@ export const makeFinanceParameters = (project) => {
   const externalIncentivesExist = convertToOneZero(checkNotNullOrEmpty(project.externalIncentives));
   const keys = {
     analysis_horizon_mode: makeBaseKey(project.analysisHorizonMode, INT),
-    customer_tariff_filename: makeBaseKey('./inputs/000-001-tariff.csv', STRING), // TODO generate file
+    customer_tariff_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, TARIFF), STRING),
     external_incentives: makeBaseKey(externalIncentivesExist, BOOL),
     federal_tax_rate: makeBaseKey(project.federalTaxRate, FLOAT),
     inflation_rate: makeBaseKey(project.inflationRate, FLOAT),
     npv_discount_rate: makeBaseKey(project.discountRate, FLOAT),
     property_tax_rate: makeBaseKey(project.propertyTaxRate, FLOAT),
     state_tax_rate: makeBaseKey(project.stateTaxRate, FLOAT),
-    yearly_data_filename: makeBaseKey('./inputs/000-001-yearly.csv', STRING), // TODO generate file
+    yearly_data_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, YEARLY), STRING),
   };
   return makeGroup('', YES, keys);
 };
@@ -155,13 +193,13 @@ export const makeScenarioParameters = (project) => {
     location: makeBaseKey(project.gridLocation.toLowerCase(), STRING),
     max_export: makeBaseKey('40000', FLOAT), // TODO: new, see issue 131
     max_import: makeBaseKey('-10000', FLOAT), // TODO: new, see issue 131
-    monthly_data_filename: makeBaseKey('./inputs/000-001-monthly.csv', STRING), // TODO LL generate file
+    monthly_data_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, MONTHLY), STRING),
     n: makeBaseKey(project.optimizationHorizon, STRING_INT), // TODO optimizationHorizonNum if hrs
     opt_years: makeBaseKey(project.dataYear, LIST_INT),
     ownership: makeBaseKey(project.ownership.toLowerCase(), STRING),
     slack: makeBaseKey(ZERO, BOOL), // TODO: hardcoded in old GUI
     start_year: makeBaseKey(project.startYear, PERIOD),
-    time_series_filename: makeBaseKey('./inputs/000-001-timeseries.csv', STRING), // TODO LL generate file
+    time_series_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, TIMESERIES), STRING),
     verbose: makeBaseKey(ONE, BOOL),
     verbose_opt: makeBaseKey(ZERO, BOOL),
   };
@@ -177,4 +215,97 @@ export const makeModelParameters = project => ({
     Scenario: makeScenarioParameters(project),
   },
   type: 'Expert',
+});
+
+export const makeBatteryCycleLifeCsv = (project) => {
+  /* TODO:
+    - see if batteryCycleLife could be part of model parameters (i.e. not written to CSV)
+    - check if batteryCycles exist
+    - extend to support multiple battery case
+  */
+  const data = project.technologySpecsBattery[0].batteryCycles;
+  const fields = ['ulimit', 'val'];
+  const headers = ['Cycle Depth Upper Limit', 'Cycle Life Value'];
+  return objectToCsv(data, fields, headers);
+};
+
+export const makeTariffCsv = project => billingPeriodsToCsv(project.retailTariffBillingPeriods);
+
+export const makeYearlyCsv = project => externalIncentivesToCsv(project.externalIncentives);
+
+export const makeDatetimeIndex = (dataYear) => {
+  const start = new Date(dataYear, 0, 1);
+  const end = new Date(dataYear + 1, 0, 1);
+
+  // TODO this hardcodes the timestep to 1 hour: extend to others based on input
+  const timedelta = d3.timeHour.every(1);
+  return timedelta.range(start, end);
+};
+
+export const makeEmptyCsvDataWithDatetimeIndex = (project) => {
+  const datetimeIndex = makeDatetimeIndex(project.dataYear);
+  return datetimeIndex.map(d => ({ [TIMESERIES_DATETIME_INDEX]: d }));
+};
+
+/* TODO: new timeseries fields
+  - RA Active (y/n)
+  - VAR Reservation (%)
+  - ch_max
+  - ch_min
+  - dis_max
+  - dis_min
+  - ene_max
+  - ene_min
+  - POI: max export (kW)
+  - POI: max import (kW)
+  - Aggregate Energy Max (kWh)
+  - Aggregate Energy Min (kWh)
+  - LF Price ($/kW)
+  - LF Up Price ($/kW)
+  - LF Down Price ($/kW)
+  - LF Energy Option Up (kWh/kW-hr)
+  - LF Energy Option Down (kWh/kW-hr)
+  - LF Reg Up Max (kW)
+  - LF Reg Up Min (kW)
+  - LF Reg Down Max (kW)
+  - LF Reg Down Min (kW)
+  - Battery: Charge Min (kW)/1
+  - Battery: Charge Max (kW)/1
+  - Battery: Energy Max (kWh)/1
+  - Battery: Energy Min (kWh)/1
+  - Battery: Discharge Min (kW)/1
+  - Battery: Discharge Max (kW)/1
+  - FR Reg Up Max (kW)
+  - FR Reg Up Min (kW)
+  - FR Reg Down Max (kW)
+  - FR Reg Down Min (kW)
+  - SR Max (kW)
+  - SR Min (kW)
+  - NSR Max (kW)
+  - NSR Min (kW)
+*/
+export const makeTimeSeriesCsv = (project) => {
+  // Make datetime index
+  const data = makeEmptyCsvDataWithDatetimeIndex(project);
+  const fields = [TIMESERIES_DATETIME_INDEX];
+  const headers = [TIMESERIES_DATETIME_HEADER];
+
+  // Add all available timeseries to CSV
+  TIMESERIES_FIELDS.forEach((ts) => {
+    if (data[ts]) {
+      data[ts] = project[ts];
+      fields[ts] = ts;
+      headers[ts] = ts.columnHeaderName;
+    }
+  });
+
+  return objectToCsv(data, fields, headers);
+};
+
+export const makeCsvs = project => ({
+  batteryCycleLife: makeBatteryCycleLifeCsv(project),
+  customerTariff: makeTariffCsv(project),
+  yearlyData: makeYearlyCsv(project),
+  monthlyData: '', // TODO new, check where this comes from
+  timeSeriesData: makeTimeSeriesCsv(project),
 });

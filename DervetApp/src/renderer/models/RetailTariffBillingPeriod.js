@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { classObjectsToCsv } from '@/util/helpers';
+import { objectToCsv } from '@/util/file';
 
 export const RETAIL_TARIFF_HEADERS = [
   'ID',
@@ -84,7 +84,7 @@ export const billingPeriodsToCsv = (billingPeriods) => {
     'chargeType',
     'name',
   ];
-  return classObjectsToCsv(billingPeriods, fields, RETAIL_TARIFF_HEADERS);
+  return objectToCsv(billingPeriods, fields, RETAIL_TARIFF_HEADERS);
 };
 
 export const validation = {

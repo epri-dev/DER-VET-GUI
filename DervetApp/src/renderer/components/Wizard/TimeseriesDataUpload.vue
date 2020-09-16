@@ -64,7 +64,7 @@
 <script>
   import { flatten } from 'lodash';
 
-  import { parseCsvFromFile } from '@/util/helpers';
+  import { parseCsvFromFile } from '@/util/file';
   import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
 
   export default {
