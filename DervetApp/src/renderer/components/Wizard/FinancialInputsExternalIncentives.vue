@@ -75,6 +75,7 @@
 
 <script>
   import { INCENTIVES_HEADERS, externalIncentivesToCsv } from '@/models/ExternalIncentives';
+  import { formatCsvForHref } from '@/util/file';
   import NavButtons from '@/components/Shared/NavButtons';
 
   export default {
@@ -89,7 +90,8 @@
     },
     methods: {
       exportCsv() {
-        return externalIncentivesToCsv(this.externalIncentives);
+        const csv = externalIncentivesToCsv(this.externalIncentives);
+        return formatCsvForHref(csv);
       },
       externalIncentivesExist() {
         return this.externalIncentives.length > 0;

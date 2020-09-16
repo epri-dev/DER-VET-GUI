@@ -78,7 +78,7 @@
                         "type": "Period"
                     },
                     "cycle_life_filename": {
-                        "opt_value": "./inputs/000-001-cycle.csv",
+                        "opt_value": "/path/to/inputs/cycle.csv",
                         "sensitivity": {
                             "active": "no",
                             "coupled": "None",
@@ -141,7 +141,7 @@
                         "type": "float"
                     },
                     "expected_lifetime": {
-                        "opt_value": "14",
+                        "opt_value": "90000000000",
                         "sensitivity": {
                             "active": "no",
                             "coupled": "None",
@@ -479,7 +479,7 @@
                         "type": "int"
                     },
                     "customer_tariff_filename": {
-                        "opt_value": "./inputs/000-001-tariff.csv",
+                        "opt_value": "/path/to/inputs/tariff.csv",
                         "sensitivity": {
                             "active": "no",
                             "coupled": "None",
@@ -542,7 +542,7 @@
                         "type": "float"
                     },
                     "yearly_data_filename": {
-                        "opt_value": "./inputs/000-001-yearly.csv",
+                        "opt_value": "/path/to/inputs/yearly.csv",
                         "sensitivity": {
                             "active": "no",
                             "coupled": "None",
@@ -702,7 +702,7 @@
                         "type": "float"
                     },
                     "monthly_data_filename": {
-                        "opt_value": "./inputs/000-001-monthly.csv",
+                        "opt_value": "/path/to/inputs/monthly.csv",
                         "sensitivity": {
                             "active": "no",
                             "coupled": "None",
@@ -756,7 +756,7 @@
                         "type": "Period"
                     },
                     "time_series_filename": {
-                        "opt_value": "./inputs/000-001-timeseries.csv",
+                        "opt_value": "/path/to/inputs/timeseries.csv",
                         "sensitivity": {
                             "active": "no",
                             "coupled": "None",
