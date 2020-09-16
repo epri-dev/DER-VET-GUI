@@ -2,7 +2,7 @@ import formatYAxisCurrency from '../../util/chart';
 import BaseTableData from './BaseTableData';
 
 export const toCamelCaseString = (text) => {
-  text = text.replace(/[-&()$_\s.]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''));
+  text = text.replace(/([^a-zA-Z0-9.])/g, ' ').replace(/[\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''));
   return text.substr(0, 1).toLowerCase() + text.substr(1);
 };
 
