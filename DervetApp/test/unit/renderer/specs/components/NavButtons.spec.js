@@ -1,4 +1,4 @@
-import NavButtons from '@/components/Wizard/NavButtons';
+import NavButtons from '@/components/Shared/NavButtons';
 import mountVueElement from './helper';
 
 describe('NavButtons', () => {

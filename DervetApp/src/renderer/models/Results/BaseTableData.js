@@ -1,9 +1,10 @@
 class BaseTableData {
   constructor(fileName, data, hasHeaderRow) {
     this.fileName = fileName;
-    this.data = data;
+    this.data = null;
     this.hasHeaderRow = hasHeaderRow;
     this.columnHeaders = null;
+    this.loadDataFromFile(data);
   }
   getColumnIndex(colHeader) {
     let i = 0;
@@ -23,8 +24,8 @@ class BaseTableData {
   getDataValueByColIndex(rowIndex, colIndex) {
     return this.data[rowIndex][colIndex];
   }
-  loadDataFromFile(folderPath) {
-    this.data = folderPath; // TODO read raw data at location
+  loadDataFromFile(arrayData) {
+    this.data = arrayData; // TODO read raw data at location
     if (this.hasHeaderRow) {
       [this.columnHeaders, ...this.data] = this.data;
     }
