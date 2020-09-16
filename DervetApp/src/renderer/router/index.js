@@ -154,9 +154,8 @@ export default new Router({
       ],
     },
     {
-      // TODO switch component to the Results specific side bar
       path: '/results',
-      component: require('@/components/Wizard/Layout').default,
+      component: require('@/components/Results/Layout').default,
       children: [
         {
           path: '',

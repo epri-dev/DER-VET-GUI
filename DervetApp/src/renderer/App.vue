@@ -4,20 +4,16 @@
     <link
       rel="stylesheet"
       href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
-    <b-navbar fixed="top" type="dark" variant="dark">
-      <b-navbar-brand>DER-VET</b-navbar-brand>
-      <b-collapse id="nav-collapse" is-nav>
-        <b-navbar-nav>
-          <b-nav-item to="/">Home</b-nav-item>
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar>
+    <top-nav-bar></top-nav-bar>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+  import TopNavBar from '@/components/Shared/TopNavBar';
+
   export default {
+    components: { TopNavBar },
     name: 'dervetapp',
   };
 </script>

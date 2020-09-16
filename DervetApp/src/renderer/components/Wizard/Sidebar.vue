@@ -186,36 +186,7 @@
           :to="this.pagePaths.results">
           Results
         </router-link>
-        <router-link
-          class="nav nav-sidebar sidebar-indent"
-          v-bind:class="{ current: isActive(this.pagePaths.resultsDesign) }"
-          :to="this.pagePaths.resultsDesign">
-          Design
-          </router-link>
-        <router-link
-          class="nav nav-sidebar sidebar-indent"
-          v-bind:class="{ current: isActive(this.pagePaths.resultsReliability) }"
-          :to="this.pagePaths.resultsReliability">
-          Reliability
-        </router-link>
-        <router-link
-          class="nav nav-sidebar sidebar-indent"
-          v-bind:class="{ current: isActive(this.pagePaths.resultsDispatch) }"
-          :to="this.pagePaths.resultsDispatch">
-          Dispatch
-        </router-link>
-        <router-link
-          class="nav nav-sidebar sidebar-indent"
-          v-bind:class="{ current: isActive(this.pagePaths.resultsDeferral) }"
-          :to="this.pagePaths.resultsDeferral">
-          Deferral
-        </router-link>
-        <router-link
-          class="nav nav-sidebar sidebar-indent"
-          v-bind:class="{ current: isActive(this.pagePaths.resultsFinancial) }"
-          :to="this.pagePaths.resultsFinancial">
-          Financials
-        </router-link>
+
     </b-nav>
     <div class="export-project">
       <router-link class="btn btn-md btn-primary" to="/">Export Project</router-link>
