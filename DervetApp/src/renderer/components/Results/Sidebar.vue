@@ -49,7 +49,8 @@
   export default {
     methods: {
       isActive(path) {
-        return RegExp(path).test(this.$route.path);
+        // match to end of string here
+        return RegExp(`${path}$`).test(this.$route.path);
       },
     },
     data() {

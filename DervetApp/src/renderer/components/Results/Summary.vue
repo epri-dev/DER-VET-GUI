@@ -26,7 +26,10 @@
               </div>
               <div class="buffer-top text-center">
                 <a class="btn btn-sm btn-default">
+                  <router-link
+                  :to="this.pagePaths.resultsFinancial">
                   View Detailed Financials Results...
+                  </router-link>
                 </a>
               </div>
             </div>
@@ -46,7 +49,10 @@
               </div>
               <div class="buffer-top text-center">
                 <a class="btn btn-sm btn-default">
+                  <router-link
+                  :to="this.pagePaths.resultsReliability">
                   View Detailed Reliability Results...
+                  </router-link>
                 </a>
               </div>
             </div>
@@ -67,7 +73,10 @@
               </div>
               <div class="buffer-top text-center">
                 <a class="btn btn-sm btn-default">
+                  <router-link
+                  :to="this.pagePaths.resultsDispatch">
                   View Detailed Dispatch Results...
+                  </router-link>
                 </a>
               </div>
             </div>
@@ -87,7 +96,10 @@
               </div>
               <div class="buffer-top text-center">
                 <a class="btn btn-sm btn-default">
+                  <router-link
+                  :to="this.pagePaths.resultsDesign">
                   View Detailed Design Results...
+                  </router-link>
                 </a>
               </div>
             </div>
@@ -115,6 +127,12 @@
   const reliabilityLabels = ['ICE', 'ESS', 'PV'];
 
   export default {
+    data() {
+      const p = this.$store.state.Project;
+      return {
+        pagePaths: p.paths,
+      };
+    },
     mounted() {
       this.createChartCostBenefit('chartCostBenefit', chartData);
       this.createChartPeakLoadDay('chartPeakLoadDay', [peakLoadDayValues, peakLoadDayLabels]);
@@ -325,6 +343,7 @@
           y: y1,
           z: zz,
           colorscale: 'Viridis', // ''YlGnBu',
+          reversescale: true,
           colorbar: {
             thickness: 10,
             ticksuffix: ' kWh',
@@ -334,6 +353,7 @@
         };
         const data = [trace1];
         const layout = {
+          height: 280,
           modebar: {
             orientation: 'h', // 'h' set how modebar will appear
           },
@@ -342,11 +362,11 @@
             font: {
               size: 12,
             },
-            yanchor: 'top',
+            y: 0.9,
           },
           xaxis: {
             title: {
-              text: 'First Year of Project', // 'Days Since Project Start',
+              text: 'Time', // 'Days Since Project Start',
               font: {
                 size: 12,
               },
@@ -359,10 +379,19 @@
               font: {
                 size: 12,
               },
-              standoff: 5, // create gap between axis and title
+              standoff: 3, // create gap between axis and title
             },
             autorange: 'reversed',
             fixedrange: true,
+            range: [0, 23],
+            dtick: 4,
+            tick0: 0,
+          },
+          margin: {
+            l: 40, // 80 is default
+            // r: 60, // 80 is default
+            t: 45, // 100 is default
+            b: 40, // 80 is default
           },
         };
         const config = {

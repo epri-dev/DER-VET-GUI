@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <div class="row">
@@ -26,7 +25,7 @@
         </div>
       </div>
     </form>
-
+    <hr />
     <!-- TODO get rid of save & continue button -->
     <nav-buttons
       :back-link="resultsPath"
@@ -168,6 +167,11 @@
         };
         const layout = {
           // showlegend: false,
+          // legend: {
+          //   orientation: 'h', // 'v'
+          //   x: 0,
+          //   y: 1.12,
+          // },
           height: 900,
           grid: {
             rows: 5,
@@ -294,6 +298,7 @@
           y: y1,
           z: zz,
           colorscale: 'Viridis', // ''YlGnBu',
+          reversescale: true,
           colorbar: {
             thickness: 10,
             tickprefix: '$ ',
@@ -316,7 +321,7 @@
           },
           xaxis: {
             title: {
-              text: 'First Year of Project', // 'Days Since Project Start',
+              text: 'Time', // 'Days Since Project Start',
               font: {
                 size: 12,
               },
@@ -329,10 +334,16 @@
               font: {
                 size: 12,
               },
-              standoff: 5, // create gap between axis and title
+              standoff: 3, // create gap between axis and title
             },
             autorange: 'reversed',
             fixedrange: true,
+            range: [0, 23],
+            dtick: 4,
+            tick0: 0,
+          },
+          margin: {
+            l: 40,
           },
         };
         const config = {

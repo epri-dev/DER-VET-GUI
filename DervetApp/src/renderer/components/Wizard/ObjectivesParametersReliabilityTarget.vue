@@ -12,13 +12,13 @@
             <b-form-radio-group
               v-model="postOptimizationOnly"
               :options="sharedValidation.optionsYN.allowedValues"
-            ></b-form-radio-group> 
+            ></b-form-radio-group>
           </b-form-group>
         </div>
       </div>
       <div v-if="!(postOptimizationOnly)" class="row form-group">
         <div class="col-md-4">
-          <label class="control-label">How many hours of gauranteed outage coverage does the project need to supply based on the load</label>
+          <label class="control-label">How many hours of guaranteed outage coverage does the project need to supply based on the load</label>
         </div>
         <div class="col-md-3">
           <input
@@ -81,7 +81,7 @@
         <span class="unit-label">hours</span>
       </div>
       <div class="col-md-5">
-        <p class="tool-tip tooltip-col">How many hours of guaranteed outage coverage does the project need to supply based on the load?</p>
+        <p class="tool-tip tooltip-col">Calculate the post-facto reliability for an outage that can last up t this many hours</p>
       </div>
     </div>
     <br>
