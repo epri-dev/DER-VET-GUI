@@ -15,8 +15,8 @@ describe('ProFormaData model', () => {
   const actualData = new ProFormaData(testCsv);
 
   it('should convert the string to camel case', () => {
-    const testString = 'Solar PV Fixed O&M Cost';
-    const expected = 'solarPvFixedOMCost';
+    const testString = 'Solar PV Fixed O&M Cost ($)';
+    const expected = 'solarPVFixedOMCost';
 
     const actual = toCamelCaseString(testString);
 
@@ -45,13 +45,13 @@ describe('ProFormaData model', () => {
       {
         year: 'CAPEX YEAR',
         storageCapitalCost: -6711650,
-        solarPvCapitalCost: -1660000,
+        solarPVCapitalCost: -1660000,
       },
       {
         year: 2017,
         storageFixedOMCost: -23030,
         storageVariableOMCost: -23030,
-        solarPvFixedOMCost: -23030,
+        solarPVFixedOMCost: -23030,
         avoidedDemandCharge: 23030,
         avoidedEnergyCharge: 23030,
       },
@@ -59,7 +59,7 @@ describe('ProFormaData model', () => {
         year: 2018,
         storageFixedOMCost: -23030,
         storageVariableOMCost: -23030,
-        solarPvFixedOMCost: -23030,
+        solarPVFixedOMCost: -23030,
         avoidedDemandCharge: 23030,
         avoidedEnergyCharge: 23030,
       },
@@ -67,7 +67,7 @@ describe('ProFormaData model', () => {
         year: 2019,
         storageFixedOMCost: -23030,
         storageVariableOMCost: -23030,
-        solarPvFixedOMCost: -23030,
+        solarPVFixedOMCost: -23030,
         avoidedDemandCharge: 23030,
         avoidedEnergyCharge: 23030,
       },
@@ -75,7 +75,7 @@ describe('ProFormaData model', () => {
         year: 2020,
         storageFixedOMCost: -23030,
         storageVariableOMCost: -23030,
-        solarPvFixedOMCost: -23030,
+        solarPVFixedOMCost: -23030,
         avoidedDemandCharge: 23030,
         avoidedEnergyCharge: 23030,
       },
@@ -83,7 +83,7 @@ describe('ProFormaData model', () => {
         year: 2021,
         storageFixedOMCost: -23030,
         storageVariableOMCost: -23030,
-        solarPvFixedOMCost: -23030,
+        solarPVFixedOMCost: -23030,
         avoidedDemandCharge: 23030,
         avoidedEnergyCharge: 23030,
       },
@@ -91,7 +91,7 @@ describe('ProFormaData model', () => {
         year: 2022,
         storageFixedOMCost: -23030,
         storageVariableOMCost: -23030,
-        solarPvFixedOMCost: -23030,
+        solarPVFixedOMCost: -23030,
         avoidedDemandCharge: 23030,
         avoidedEnergyCharge: 23030,
       },
@@ -119,7 +119,7 @@ describe('ProFormaData model', () => {
         formatter: formatYAxisCurrency,
       },
       {
-        key: 'solarPvCapitalCost',
+        key: 'solarPVCapitalCost',
         sortable: true,
         label: 'Solar PV Capital Cost',
         formatter: formatYAxisCurrency,
@@ -137,7 +137,7 @@ describe('ProFormaData model', () => {
         formatter: formatYAxisCurrency,
       },
       {
-        key: 'solarPvFixedOMCost',
+        key: 'solarPVFixedOMCost',
         sortable: true,
         label: 'Solar PV Fixed O&M Cost',
         formatter: formatYAxisCurrency,
