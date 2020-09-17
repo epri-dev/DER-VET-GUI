@@ -1,10 +1,14 @@
 import {
   makeBaseKey,
+  makeBatteryCycleLifeCsv,
   makeBatteryParameters,
+  makeCsvs,
   makeDAParameters,
+  makeDatetimeIndex,
   makeFinanceParameters,
   makeModelParameters,
   makeScenarioParameters,
+  makeTimeSeriesCsv,
 } from '@/models/dto/ModelParametersDto';
 
 import modelParametersFixture from '../../../fixtures/case0/000-DA_battery_month.json';
@@ -14,17 +18,31 @@ const project = {
   analysisHorizon: 0,
   analysisHorizonMode: '1',
   daGrowth: 0,
-  dataYear: '2017',
+  dataYear: 2017,
   discountRate: 7,
   deferralGrowth: 2,
   externalIncentives: [],
   federalTaxRate: 3,
   gridLocation: 'Customer',
   inflationRate: 3,
+  inputsDirectory: '/path/to/inputs',
   objectivesDA: true,
   optimizationHorizon: 'month',
   ownership: 'Customer',
   propertyTaxRate: 3,
+  retailTariffBillingPeriods: [{
+    id: 1,
+    startMonth: 1,
+    endMonth: 12,
+    startTime: 1,
+    endTime: 24,
+    excludingStartTime: null,
+    excludingEndTime: null,
+    weekday: 2,
+    value: 0.47,
+    chargeType: 'Energy',
+    name: '',
+  }],
   startYear: '2017',
   stateTaxRate: 3,
   technologySpecsBattery: [{
@@ -80,10 +98,34 @@ const project = {
   }],
 };
 
-describe('makeModelParameters', () => {
+describe('modelParametersDto', () => {
   it('should translate a Project object into a ModelParameters object', () => {
     const actual = makeModelParameters(project);
     expect(actual).to.eql(modelParametersFixture);
+  });
+
+  it('should create an object containing CSVs needed to run DERVET', () => {
+    const actual = makeCsvs(project);
+    const expected = ['batteryCycleLife', 'customerTariff', 'yearlyData', 'monthlyData', 'timeSeriesData'];
+    expect(Object.keys(actual)).to.eql(expected);
+  });
+
+  it('should create a CSV containing battery cycle life data', () => {
+    const actual = makeBatteryCycleLifeCsv(project);
+    expect(actual).to.have.string('0.05,75000');
+    expect(actual).to.have.string('Cycle Depth Upper Limit');
+  });
+
+  it('should create a CSV containing timeseries data', () => {
+    const actual = makeTimeSeriesCsv(project);
+    expect(actual).to.have.string('Datetime (he)');
+  });
+
+  it('should generate a datetime index given a data year and timestep', () => {
+    const actualLeap = makeDatetimeIndex(2020);
+    const actualNonLeap = makeDatetimeIndex(2021);
+    expect(actualLeap.length).to.equal(8784);
+    expect(actualNonLeap.length).to.equal(8760);
   });
 
   it('should make battery parameters', () => {

@@ -1,7 +1,7 @@
 import { range } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
-import { classObjectsToCsv } from '@/util/helpers';
+import { objectToCsv } from '@/util/file';
 import getCurrentYear from '@/util/time';
 
 export const INCENTIVES_HEADERS = ['Year', 'Tax Credit (nominal $)', 'Other Incentive (nominal $)'];
@@ -42,7 +42,7 @@ export const parsedCsvToExternalIncentives = (csv) => {
 
 export const externalIncentivesToCsv = (incentives) => {
   const fields = ['year', 'taxCredit', 'otherIncentive'];
-  return classObjectsToCsv(incentives, fields, INCENTIVES_HEADERS);
+  return objectToCsv(incentives, fields, INCENTIVES_HEADERS);
 };
 
 export const validation = {

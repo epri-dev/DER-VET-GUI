@@ -86,6 +86,7 @@
 
 <script>
   import { RETAIL_TARIFF_HEADERS, billingPeriodsToCsv } from '@/models/RetailTariffBillingPeriod';
+  import { formatCsvForHref } from '@/util/file';
   import NavButtons from '@/components/Shared/NavButtons';
 
   export default {
@@ -100,7 +101,8 @@
     },
     methods: {
       exportCsv() {
-        return billingPeriodsToCsv(this.billingPeriods);
+        const csv = billingPeriodsToCsv(this.billingPeriods);
+        return formatCsvForHref(csv);
       },
       billingPeriodsExist() {
         return this.billingPeriods.length > 0;

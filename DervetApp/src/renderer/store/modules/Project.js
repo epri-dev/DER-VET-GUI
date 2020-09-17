@@ -1,13 +1,14 @@
 import { cloneDeep, flatten } from 'lodash';
+
 import getCurrentYear from '@/util/time';
 import PageLink from '@/models/PageRouting';
-
 
 const getDefaultState = () => ({
   id: null,
   name: null,
   type: null,
   resultsData: null,
+  inputsDirectory: null,
 
   energyPriceSourceWholesale: false,
   objectivesRetailEnergyChargeReduction: false,
