@@ -9,7 +9,7 @@ import {
   makeModelParameters,
   makeScenarioParameters,
   makeTimeSeriesCsv,
-} from '@/models/dto/ModelParametersDto';
+} from '@/models/dto/ProjectDto';
 
 import modelParametersFixture from '../../../fixtures/case0/000-DA_battery_month.json';
 

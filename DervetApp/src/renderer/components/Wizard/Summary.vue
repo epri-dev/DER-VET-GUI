@@ -13,8 +13,6 @@
         </template>
         </br>
 
-<!--        {{ this.$store.state.Project }} -->
-
         <h4>Technology Specifications</h4>
         <ul>
           <h5>Generators:</h5>
@@ -94,6 +92,8 @@
         return validation.analysisHorizonMode.allowedValues[modeNum].description;
       },
       runDervet() {
+        // TODO: note that there is currently no validation, so calling this with an
+        // incomplete Project object will likely result in an unhandled exception
         this.$store.dispatch('runDervet', this.$store.state.Project);
       },
     },

@@ -1,4 +1,5 @@
 import IpcService from '@/IpcService';
+import { makeDervetInputs } from '@/models/dto/ProjectDto';
 
 const getDefaultResultState = () => ({
   id: null,
@@ -34,7 +35,8 @@ const actions = {
   setId({ commit }, newId) {
     commit('SET_ID', newId);
   },
-  runDervet({ commit }, dervetInputs) {
+  runDervet({ commit }, project) {
+    const dervetInputs = makeDervetInputs(project);
     commit('SET_RUN_IN_PROGRESS');
     IpcService.sendProject(dervetInputs);
   },

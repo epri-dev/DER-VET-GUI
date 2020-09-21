@@ -309,3 +309,8 @@ export const makeCsvs = project => ({
   monthlyData: '', // TODO new, check where this comes from
   timeSeriesData: makeTimeSeriesCsv(project),
 });
+
+export const makeDervetInputs = project => ({
+  csvs: makeCsvs(project),
+  modelParameters: makeModelParameters(project),
+});
