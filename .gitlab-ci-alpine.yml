@@ -1,0 +1,33 @@
+image: alpine:latest  # a docker-image which loads the runtime environment
+
+stages:
+  # all jobs for each stage are completed before moving to the next stage
+  # - build
+  - test
+
+#cache:
+#  # list paths to cache for performance boost
+#  paths:
+#    - DervetBackEnd/
+#    # - DervetApp/node_modules/
+
+before_script:
+  # a list of commands to execute prior to each job
+  - echo '... doing all before_script things ...'
+  - cd DervetApp
+  - node -v
+  - npm -v
+  - echo '... installing dependencies ...'
+  - npm install -g @vue/cli
+  - npm install -g @vue/cli-init
+  - npm install
+
+test:
+  # a job that executes in the test stage
+  stage: test
+  script:
+    # a list of commands to execute in order
+    - echo '... doing test ...'
+    - npm test
+  tags:
+    - 'docker'  # invokes the docker-based group runner for EPRI Gitlab
