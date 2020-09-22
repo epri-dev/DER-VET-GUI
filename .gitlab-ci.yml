@@ -43,4 +43,4 @@ test:
     - 'docker'  # invokes the docker-based group runner for EPRI Gitlab
   only:
     # limit this job to specific branch(es)
-    - DEV
+    - merge_requests
