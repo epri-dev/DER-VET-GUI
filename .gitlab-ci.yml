@@ -1,0 +1,46 @@
+image: node:latest
+
+stages:
+  # all jobs for each stage are completed before moving to the next stage
+  # - build
+  - test
+
+cache:
+  # list paths to cache for performance boost
+  paths:
+    - DervetBackEnd/
+    - DervetApp/node_modules/
+
+before_script:
+  # a list of commands to execute prior to each job
+  - echo '... doing all before_script things ...'
+  # the following libraries are required
+  - apt-get update && apt-get install -y --no-install-recommends --no-install-suggests libgtk-3-0 libgconf-2-4 libasound2 libxtst6 libxss1 libnss3 xvfb
+  # x-virtual-frame-buffer is an in-memory display server for Linux
+  #   it enables a graphical apps to run without a display (headless)
+  #   it has the ability to take screenshots
+  #   allows the browser to launch virtually
+  #   the command below will keep Xvfb running in the background
+  - Xvfb -ac -screen scrn 1280x2000x24 :9.0 &
+  - export DISPLAY=:9.0
+  - cd DervetApp
+  - npm install --no-progress --quiet --depth 0
+
+after_script:
+  # failures on these commands are ignored
+  - node -v
+  - npm -v
+  - python3 -V
+
+test:
+  # a job that executes in the test stage
+  stage: test
+  script:
+    # a list of commands to execute in order
+    - echo '... doing test ...'
+    - npm test
+  tags:
+    - 'docker'  # invokes the docker-based group runner for EPRI Gitlab
+  only:
+    # limit this job to specific branch(es)
+    - DEV
