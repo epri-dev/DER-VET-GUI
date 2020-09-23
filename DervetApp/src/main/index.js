@@ -1,6 +1,5 @@
-const childProcess = require('child_process');
-const fs = require('fs');
-const path = require('path');
+import DervetService from './service/dervet';
+
 require('dotenv').config();
 
 import { app, BrowserWindow, ipcMain } from 'electron' // eslint-disable-line
@@ -47,74 +46,20 @@ function createWindow() {
 
 function registerIpcChannels() {
   ipcMain.on('dervet-inputs', (event, dervetInputs) => {
-    const results = { data: [dervetInputs] }; // TODO: replace with DERVET run results
-    event.sender.send('dervet-results', results);
+    const modelParametersPath = ''; // TODO get from dervetInputs
+    // TODO Account for async writing before calling DERVET
+    DervetService.writeDervetInputs(dervetInputs);
+    DervetService.callDervet(modelParametersPath);
+    event.sender.send('dervet-results', 'done');
   });
 }
-
-/**
- * Spawn python process
- */
-
-let pythonProcess = null;
-
-const getPythonExe = () => path.join(process.resourcesPath, 'extraResources/api');
-
-const pythonExeExists = exePath => fs.existsSync(exePath);
-
-const getDevPythonDirectory = () => path.resolve(__dirname, '../..', 'dervetpy');
-
-const getDevPythonRuntime = () => process.env.DERVET_PYTHON_PATH;
-
-const getDevPythonScript = pythonDirectory => path.join(pythonDirectory, 'api.py');
-
-const spawnPackagedPythonProcess = pythonExe => childProcess.execFile(pythonExe);
-
-const spawnDevPythonProcess = () => {
-  const pythonDirectory = getDevPythonDirectory();
-  const pythonPath = getDevPythonRuntime();
-  const pythonScript = getDevPythonScript(pythonDirectory);
-  return childProcess.spawn(pythonPath, [pythonScript]);
-};
-
-const listenToPythonProcessLogs = (pythonProcess) => {
-  pythonProcess.stdout.on('data', (data) => {
-    console.log(`python stdout: ${data}`); // eslint-disable-line
-  });
-  pythonProcess.stderr.on('data', (data) => {
-    console.error(`python stderr: ${data}`); // eslint-disable-line
-  });
-};
-
-const createPythonProcess = () => {
-  const pythonExe = getPythonExe();
-
-  // getPythonExe is used to determine whether this code is running within the
-  // packaged application: if the packaged python api executable does not exist
-  // in the expected directory, we assume we are running in the development
-  // environment and the raw python code is called.
-  if (pythonExeExists(pythonExe)) {
-    pythonProcess = spawnPackagedPythonProcess(pythonExe);
-  } else {
-    pythonProcess = spawnDevPythonProcess();
-  } // TODO handle case where neither executable nor source exists
-
-  if (pythonProcess != null) {
-    listenToPythonProcessLogs(pythonProcess);
-  }
-};
-
-const exitPythonProcess = () => {
-  pythonProcess.kill();
-  pythonProcess = null;
-};
 
 /**
  * Application event handlers
  */
 
 app.on('ready', createWindow);
-app.on('ready', createPythonProcess);
+app.on('ready', registerIpcChannels);
 
 app.on('activate', () => {
   if (mainWindow === null) {
@@ -122,12 +67,8 @@ app.on('activate', () => {
   }
 });
 
-app.on('will-quit', exitPythonProcess);
-
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
 });
-
-registerIpcChannels();
