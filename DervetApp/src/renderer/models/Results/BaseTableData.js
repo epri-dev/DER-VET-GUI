@@ -17,6 +17,17 @@ class BaseTableData {
     }
     return i;
   }
+  getColumnIndexThatContains(text) {
+    let i = 0;
+    while (this.columnHeaders[i].toLowerCase().indexOf(text) === -1) {
+      if ((i + 1) === this.columnHeaders.length) {
+        i = -1;
+        break;
+      }
+      i += 1;
+    }
+    return i;
+  }
   getDataValueByColHeader(rowIndex, colHeader) {
     const colIndex = this.getColumnIndex(colHeader);
     return this.getDataValueByColIndex(rowIndex, colIndex);
@@ -30,6 +41,10 @@ class BaseTableData {
       [this.columnHeaders, ...this.data] = this.data;
     }
     return true;
+  }
+  static toCamelCaseString(text) {
+    text = text.replace(/([^a-zA-Z0-9.])/g, ' ').replace(/[\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''));
+    return text.substr(0, 1).toLowerCase() + text.substr(1);
   }
 }
 

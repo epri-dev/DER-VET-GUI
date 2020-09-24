@@ -48,6 +48,7 @@
   import Plotly from 'plotly.js';
   import NavButtons from '@/components/Shared/NavButtons';
   import { formatYAxisCurrency } from '@/util/chart';
+  import { proFormaTableFields, proFormaTableData } from '@/models/Results/ProFormaData';
 
   const costBenefitXAxis = ['Costs ($)', 'Benefit ($)'];
   const costBenefitTraces = [
@@ -143,112 +144,6 @@
       y: [0, 8e5],
       name: 'Day Ahead ETS',
       type: 'bar',
-    },
-  ];
-
-  const proformaData = [
-    {
-      year: 'CAPEX YEAR',
-      storageCCost: -6711650,
-      pvCCost: -1660000,
-    },
-    {
-      year: 2017,
-      storageFixedOM: -23030,
-      storageVariableOM: -23030,
-      pvFixedOM: -23030,
-      avoidedDemand: 23030,
-      avoidedEnergy: 23030,
-    },
-    {
-      year: 2018,
-      storageFixedOM: -23030,
-      storageVariableOM: -23030,
-      pvFixedOM: -23030,
-      avoidedDemand: 23030,
-      avoidedEnergy: 23030,
-    },
-    {
-      year: 2019,
-      storageFixedOM: -23030,
-      storageVariableOM: -23030,
-      pvFixedOM: -23030,
-      avoidedDemand: 23030,
-      avoidedEnergy: 23030,
-    },
-    {
-      year: 2020,
-      storageFixedOM: -23030,
-      storageVariableOM: -23030,
-      pvFixedOM: -23030,
-      avoidedDemand: 23030,
-      avoidedEnergy: 23030,
-    },
-    {
-      year: 2021,
-      storageFixedOM: -23030,
-      storageVariableOM: -23030,
-      pvFixedOM: -23030,
-      avoidedDemand: 23030,
-      avoidedEnergy: 23030,
-    },
-    {
-      year: 2022,
-      storageFixedOM: -23030,
-      storageVariableOM: -23030,
-      pvFixedOM: -23030,
-      avoidedDemand: 23030,
-      avoidedEnergy: 23030,
-    },
-  ];
-
-  const mutableProformaFields = [
-    {
-      key: 'year',
-      sortable: true,
-      label: 'Year',
-    },
-    {
-      key: 'storageCCost',
-      sortable: true,
-      label: 'Storage Capital Cost',
-      formatter: formatYAxisCurrency,
-    },
-    {
-      key: 'pvCCost',
-      sortable: true,
-      label: 'Solar PV Capital Cost',
-      formatter: formatYAxisCurrency,
-    },
-    {
-      key: 'storageFixedOM',
-      sortable: true,
-      label: 'Storage Fixed O&M Cost',
-      formatter: formatYAxisCurrency,
-    },
-    {
-      key: 'storageVariableOM',
-      sortable: true,
-      label: 'Storage Variable O&M Cost',
-      formatter: formatYAxisCurrency,
-    },
-    {
-      key: 'pvFixedOM',
-      sortable: true,
-      label: 'Solar PV Fixed O&M Cost',
-      formatter: formatYAxisCurrency,
-    },
-    {
-      key: 'avoidedDemand',
-      sortable: true,
-      label: 'Avoided Demand Charge',
-      formatter: formatYAxisCurrency,
-    },
-    {
-      key: 'avoidedEnergy',
-      sortable: true,
-      label: 'Avoided Demand Charge',
-      formatter: formatYAxisCurrency,
     },
   ];
 
@@ -407,8 +302,8 @@
       const p = this.$store.state.Project;
       return {
         resultsPath: p.paths.results,
-        proformaItems: proformaData,
-        proformaFields: mutableProformaFields,
+        proformaItems: proFormaTableData,
+        proformaFields: proFormaTableFields,
       };
     },
     methods: {
