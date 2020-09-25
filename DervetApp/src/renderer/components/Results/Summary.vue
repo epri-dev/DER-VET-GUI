@@ -113,11 +113,10 @@
 <script>
   import Chart from 'chart.js';
   import Plotly from 'plotly.js';
-
+  import { costBenefitSummaryData } from '@/models/Results/CostBenefitData';
   import { formatYAxisCurrency, formatXAxis6Hour, formatYAxis, arrayMax } from '@/util/chart';
 
   // TODO import this dummy data from store.Results
-  const chartData = [210000000, 390000000];
   const peakLoadDayValues = [613, 613, 613, 1105, 745, 2103,
     2278, 3477, 3446, 3378, 3399, 3292, 3485, 3566, 3711,
     3914, 3531, 2870, 2743, 2467, 2414, 1443, 1559, 1330];
@@ -134,7 +133,7 @@
       };
     },
     mounted() {
-      this.createChartCostBenefit('chartCostBenefit', chartData);
+      this.createChartCostBenefit('chartCostBenefit', costBenefitSummaryData);
       this.createChartPeakLoadDay('chartPeakLoadDay', [peakLoadDayValues, peakLoadDayLabels]);
       this.createChartReliability('chartReliability', reliabilityValues, reliabilityLabels);
       this.createChartBatteryDispatchHeatMap('chartBatteryDispatchHeatMap');
