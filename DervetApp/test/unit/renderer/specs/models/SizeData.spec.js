@@ -151,5 +151,4 @@ describe('SizeData model', () => {
   it('(2C-2b) second object should create the correct number of items in a ICE cost table', () => {
     expect(costTableDataRows2[1].items.length).to.eql(5);
   });
-
 });
