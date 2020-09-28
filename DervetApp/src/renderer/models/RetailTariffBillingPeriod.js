@@ -3,14 +3,14 @@ import { v4 as uuidv4 } from 'uuid';
 import { objectToCsv } from '@/util/file';
 
 export const RETAIL_TARIFF_HEADERS = [
-  'ID',
+  'Billing Period',
   'Start Month',
   'End Month',
   'Start Time',
   'End Time',
   'Excluding Start Time',
   'Excluding End Time',
-  'Weekday',
+  'Weekday?',
   'Value',
   'Charge',
   'Name',

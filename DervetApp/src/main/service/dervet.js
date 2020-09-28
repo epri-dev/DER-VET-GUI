@@ -2,13 +2,26 @@ const childProcess = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const writeCsvsToFile = csvs => csvs;
+const writeSingleCsvToFile = (filePath, csv) => (
+  new Promise((resolve) => {
+    fs.writeFile(filePath, csv, err => resolve(err));
+  })
+);
 
-const writeModelParametersToFile = modelParameters => modelParameters;
+const writeCsvsToFile = csvs => (
+  csvs.map(({ filePath, csv }) => writeSingleCsvToFile(filePath, csv))
+);
 
-const writeDervetInputs = (inputs) => {
-  writeCsvsToFile(inputs.csvs);
-  writeModelParametersToFile(inputs.modelParameters);
+const writeModelParametersToFile = (modelParameters, modelParametersPath) => (
+  new Promise((resolve) => {
+    fs.writeFile(modelParametersPath, JSON.stringify(modelParameters), 'utf8', err => resolve(err));
+  })
+);
+
+export const writeDervetInputs = (inputs, path) => {
+  const csvPromises = writeCsvsToFile(inputs.csvs); // array of promises
+  const modelParametersPromises = writeModelParametersToFile(inputs.modelParameters, path);
+  return csvPromises.concat(modelParametersPromises);
 };
 
 const getPythonExe = () => path.join(process.resourcesPath, 'extraResources/api');
@@ -45,7 +58,7 @@ const listenToPythonProcessLogs = (pythonProcess) => {
 //   pythonProcess = null;
 // };
 
-const callDervet = (modelParametersPath) => {
+export const callDervet = (modelParametersPath) => {
   console.log('Spawning DERVET subprocess'); // eslint-disable-line
 
   let pythonProcess = null;
@@ -68,5 +81,6 @@ const callDervet = (modelParametersPath) => {
 
 export default {
   writeDervetInputs,
+  writeCsvsToFile,
   callDervet,
 };

@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import moment from 'moment';
 import path from 'path';
 
 import { billingPeriodsToCsv } from '@/models/RetailTariffBillingPeriod';
@@ -113,7 +114,7 @@ export const makeBatteryParameters = (project) => {
       dis_min_rated: makeBaseKey(ZERO, FLOAT), // TODO: hardcoded in old GUI
       duration_max: makeBaseKey(battery.maxDuration, FLOAT),
       ene_max_rated: makeBaseKey(battery.energyCapacity, FLOAT),
-      expected_lifetime: makeBaseKey(9e10, INT), // TODO: new, verify value
+      expected_lifetime: makeBaseKey(14, INT), // TODO: new, verify value
       fixedOM: makeBaseKey(battery.fixedOMCosts, FLOAT),
       hp: makeBaseKey(battery.auxiliaryLoad, FLOAT),
       incl_cycle_degrade: makeBaseKey(convertToOneZero(battery.includeCycleDegradation), BOOL),
@@ -234,12 +235,13 @@ export const makeTariffCsv = project => billingPeriodsToCsv(project.retailTariff
 export const makeYearlyCsv = project => externalIncentivesToCsv(project.externalIncentives);
 
 export const makeDatetimeIndex = (dataYear) => {
-  const start = new Date(dataYear, 0, 1);
-  const end = new Date(dataYear + 1, 0, 1);
+  const start = new Date(Date.UTC(dataYear, 0, 1, 1));
+  const end = new Date(Date.UTC(dataYear + 1, 0, 1, 1));
 
   // TODO this hardcodes the timestep to 1 hour: extend to others based on input
   const timedelta = d3.timeHour.every(1);
-  return timedelta.range(start, end);
+  const datetimeIndex = timedelta.range(start, end);
+  return datetimeIndex.map(d => moment.utc(d).format('M/D/YYYY H:mm'));
 };
 
 export const makeEmptyCsvDataWithDatetimeIndex = (project) => {
@@ -302,13 +304,41 @@ export const makeTimeSeriesCsv = (project) => {
   return objectToCsv(data, fields, headers);
 };
 
-export const makeCsvs = project => ({
-  batteryCycleLife: makeBatteryCycleLifeCsv(project),
-  customerTariff: makeTariffCsv(project),
-  yearlyData: makeYearlyCsv(project),
-  monthlyData: '', // TODO new, check where this comes from
-  timeSeriesData: makeTimeSeriesCsv(project),
-});
+class CycleDto {
+  constructor(project) {
+    this.csv = makeBatteryCycleLifeCsv(project);
+    this.filePath = makeCsvFilePath(project.inputsDirectory, CYCLE);
+  }
+}
+
+class TariffDto {
+  constructor(project) {
+    this.csv = makeTariffCsv(project);
+    this.filePath = makeCsvFilePath(project.inputsDirectory, TARIFF);
+  }
+}
+
+class YearlyDto {
+  constructor(project) {
+    this.csv = makeYearlyCsv(project);
+    this.filePath = makeCsvFilePath(project.inputsDirectory, YEARLY);
+  }
+}
+
+class TimeSeriesDto {
+  constructor(project) {
+    this.csv = makeTimeSeriesCsv(project);
+    this.filePath = makeCsvFilePath(project.inputsDirectory, TIMESERIES);
+  }
+}
+
+export const makeCsvs = project => ([
+  // TODO add monthly data
+  (new TariffDto(project)),
+  (new YearlyDto(project)),
+  (new TimeSeriesDto(project)),
+  (new CycleDto(project)),
+]);
 
 export const makeDervetInputs = project => ({
   csvs: makeCsvs(project),
