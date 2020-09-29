@@ -35,7 +35,7 @@
 
 <script>
   import csvUploadMixin from '@/mixins/csvUploadMixin';
-  import PriceTimeSeries from '@/models/PriceTimeSeries';
+  import DAPriceTimeSeries from '@/models/DAPriceTimeSeries';
   import { sharedValidation } from '@/models/Shared';
   import NavButtons from '@/components/Shared/NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
@@ -53,7 +53,7 @@
     },
     methods: {
       save() {
-        const price = new PriceTimeSeries('DA', this.inputTimeseries);
+        const price = new DAPriceTimeSeries(this.inputTimeseries);
         this.$store.dispatch('setDAGrowth', this.daGrowth);
         this.$store.dispatch('setDAPrice', price);
       },

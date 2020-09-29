@@ -51,7 +51,7 @@
 
 <script>
   import csvUploadMixin from '@/mixins/csvUploadMixin';
-  import PriceTimeSeries from '@/models/PriceTimeSeries';
+  import NSRPriceTimeSeries from '@/models/NSRPriceTimeSeries';
   import { sharedValidation } from '@/models/Shared';
   import NavButtons from '@/components/Shared/NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
@@ -71,9 +71,8 @@
     },
     methods: {
       save() {
-        const price = new PriceTimeSeries(this.inputTimestep, 'NSR', this.inputTimeseries);
+        const price = new NSRPriceTimeSeries(this.inputTimeseries);
         this.$store.dispatch('newNSRPrice', price);
-
         this.$store.dispatch('setNSRGrowth', this.inputNSRGrowth);
         this.$store.dispatch('setNSRDuration', this.inputDuration);
       },

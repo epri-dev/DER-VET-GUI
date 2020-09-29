@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import _ from 'lodash';
 import moment from 'moment';
 import path from 'path';
 
@@ -41,9 +42,9 @@ const TIMESERIES_FIELDS = [
   'frPrice',
   'frUpPrice',
   'frDownPrice',
+  'nsrPrice',
   'srPrice',
   'siteLoad',
-  'nsrPrice',
   'userPowerMin',
   'userPowerMax',
   'userEnergyMin',
@@ -89,6 +90,10 @@ export const makeEmptyGroup = () => ({
 
 export const checkNotNullOrEmpty = technologySpecs => (
   technologySpecs !== null && technologySpecs.length > 0
+);
+
+export const mapListToObjectList = (lst, fieldName) => (
+  lst.map(d => ({ [fieldName]: d }))
 );
 
 export const makeBatteryParameters = (project) => {
@@ -288,20 +293,23 @@ export const makeEmptyCsvDataWithDatetimeIndex = (project) => {
 */
 export const makeTimeSeriesCsv = (project) => {
   // Make datetime index
-  const data = makeEmptyCsvDataWithDatetimeIndex(project);
-  const fields = [TIMESERIES_DATETIME_INDEX];
-  const headers = [TIMESERIES_DATETIME_HEADER];
+  let data = [makeEmptyCsvDataWithDatetimeIndex(project)];
+  let fields = [TIMESERIES_DATETIME_INDEX];
+  let headers = [TIMESERIES_DATETIME_HEADER];
 
   // Add all available timeseries to CSV
   TIMESERIES_FIELDS.forEach((ts) => {
-    if (data[ts]) {
-      data[ts] = project[ts];
-      fields[ts] = ts;
-      headers[ts] = ts.columnHeaderName;
+    const tsClass = project[ts];
+    if (tsClass) {
+      // TODO Move this to standalone function
+      data = data.concat([mapListToObjectList(tsClass.data, ts)]);
+      fields = fields.concat(ts);
+      headers = headers.concat(tsClass.columnHeaderName);
     }
   });
 
-  return objectToCsv(data, fields, headers);
+  const unzippedData = _.unzipWith(data, Object.assign);
+  return objectToCsv(unzippedData, fields, headers);
 };
 
 class CycleDto {
