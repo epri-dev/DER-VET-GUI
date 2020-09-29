@@ -1,3 +1,4 @@
+import tinycolor from 'tinycolor2';
 import BaseTableData from './BaseTableData';
 
 export class CostBenefitData extends BaseTableData {
@@ -6,7 +7,9 @@ export class CostBenefitData extends BaseTableData {
     this.ess_colors = ['#326581', '#6ca6c6', '#a2c7db'];
     this.ess_types = ['battery'];
     this.intermittent_resource_type = ['pv'];
+    this.intermittent_resource_colors = ['#807019', '#c0a926'];
     this.generator_types = ['diesel', 'ice'];
+    this.generator_colors = ['#393939', '#6a6a6a', '#999999', '#bfbfbf'];
   }
   summaryData() {
     // look for row with 'Lieftime Present Value' in first index and return rest of row
@@ -23,17 +26,24 @@ export class CostBenefitData extends BaseTableData {
     const traces = [];
     let rowNum = 0;
     while (rowNum < this.data.length) {
-      // create trace  TODO
-      const traceTemplate = {
-        x: costBenefitXAxis,
-        y: [0, 6e5],
-        name: 'Avoided Demand Charge',
-        type: 'bar',
-      };
-      // add color if technology  TODO
+      const valueStream = this.data[rowNum][0];
+      if (valueStream !== 'Lifetime Present Value') {
+        // create trace
+        const traceTemplate = {
+          x: [this.columnHeaders[1], this.columnHeaders[2]],
+          y: [0, 6e5],
+          name: valueStream,
+          type: 'bar',
+        };
+        // add color if technology
+        if (valueStream.indexOf(':') !== -1) {
+          const derTag = valueStream.split(':')[0].toLowerCase();
+          // select color based on tag grouping TODO
 
-      // add trace to list
-      traces.pop(traceTemplate);
+        }
+        // add trace to list
+        traces.pop(traceTemplate);
+      }
       rowNum += 1;
     }
     return traces;

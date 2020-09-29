@@ -72,6 +72,7 @@
     "papaparse": "^5.2.0",
     "path": "^0.12.7",
     "plotly.js": "^1.55.2",
+    "tinycolor2": "^1.4.2",
     "uuid": "^8.3.0",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
