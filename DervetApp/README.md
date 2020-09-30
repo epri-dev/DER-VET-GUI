@@ -7,15 +7,15 @@ start
  |
  V
 +-------------------+
-|                   |     start
-|     electron      + ---------------> +-------------------+
-|                   |    subprocess    |                   |
-|    (basically     |                  | python web server |
-|      browser)     |       http       |                   |
-|                   | <--------------> |  (business logic  |
-|        vue        |  communication   |     & dervet)     |
+|                   |
+|     electron      |                  +-------------------+
+|                   |       IPC        |                   |
+|    (basically     |  communication   |  (business logic  |
+|      browser)     | <--------------> |     & dervet)     |
 |                   |                  |                   |
-| (all html/css/js) |                  +-------------------+
+|        vue        |                  +-------------------+
+|                   |
+| (all html/css/js) |
 |                   |
 +-------------------+
 ```
@@ -44,8 +44,9 @@ virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-# Add a .env file in the root of DervetApp with the following variable set to your python3 executable path
-DERVET_PYTHON_PATH="/path/to/venv/python3"
+# Add a .env file in the root of DervetApp with the following variables set to your python3 executable path and the main DERVET script
+DERVET_PYTHON_RUNTIME="/path/to/venv/python3"
+DERVET_PYTHON_SCRIPT="/path/to/dervet/run_DERVET.py"
 ```
 
 #### Development Commands

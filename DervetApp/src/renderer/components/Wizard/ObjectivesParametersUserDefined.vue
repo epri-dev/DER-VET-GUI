@@ -57,7 +57,10 @@
 
 <script>
   import { sharedValidation } from '@/models/Shared.js';
-  import PriceTimeSeries from '@/models/PriceTimeSeries';
+  import UserEnergyMaxTimeSeries from '@/models/UserEnergyMaxTimeSeries';
+  import UserEnergyMinTimeSeries from '@/models/UserEnergyMinTimeSeries';
+  import UserPowerMaxTimeSeries from '@/models/UserPowerMaxTimeSeries';
+  import UserPowerMinTimeSeries from '@/models/UserPowerMinTimeSeries';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import NavButtons from '@/components/Shared/NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
@@ -82,19 +85,19 @@
     methods: {
       save() {
         if (this.inputEnergyMin !== null) {
-          const energyMin = new PriceTimeSeries('Energy Min', this.inputEnergyMin);
+          const energyMin = new UserEnergyMinTimeSeries(this.inputEnergyMin);
           this.$store.dispatch('setUserEnergyMin', energyMin);
         }
         if (this.inputEnergyMax !== null) {
-          const energyMax = new PriceTimeSeries('Energy Max', this.inputEnergyMax);
+          const energyMax = new UserEnergyMaxTimeSeries(this.inputEnergyMax);
           this.$store.dispatch('setUserEnergyMax', energyMax);
         }
         if (this.inputTimeseries !== null) {
-          const powerMin = new PriceTimeSeries('Power Min', this.inputTimeseries);
+          const powerMin = new UserPowerMinTimeSeries(this.inputTimeseries);
           this.$store.dispatch('setUserPowerMin', powerMin);
         }
         if (this.inputPowerMax !== null) {
-          const powerMax = new PriceTimeSeries('Power Max', this.inputPowerMax);
+          const powerMax = new UserPowerMaxTimeSeries(this.inputPowerMax);
           this.$store.dispatch('setUserPowerMax', powerMax);
         }
         this.$store.dispatch('setUserPrice', this.inputPrice);

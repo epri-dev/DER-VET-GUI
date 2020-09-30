@@ -137,7 +137,9 @@
 
 <script>
   import csvUploadMixin from '@/mixins/csvUploadMixin';
-  import PriceTimeSeries from '@/models/PriceTimeSeries';
+  import FRPriceTimeSeries from '@/models/FRPriceTimeSeries';
+  import FRDownPriceTimeSeries from '@/models/FRDownPriceTimeSeries';
+  import FRUpPriceTimeSeries from '@/models/FRUpPriceTimeSeries';
   import { sharedValidation } from '@/models/Shared';
   import NavButtons from '@/components/Shared/NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
@@ -166,15 +168,15 @@
     methods: {
       save() {
         if (this.inputTimeseries !== null) {
-          const price = new PriceTimeSeries('FR', this.inputTimeseries);
+          const price = new FRPriceTimeSeries(this.inputTimeseries);
           this.$store.dispatch('newFRPrice', price);
         }
         if (this.inputUpTimeseries !== null) {
-          const upPrice = new PriceTimeSeries('Reg Up', this.inputUpTimeseries);
+          const upPrice = new FRUpPriceTimeSeries(this.inputUpTimeseries);
           this.$store.dispatch('setFRUpPrice', upPrice);
         }
         if (this.inputDownTimeseries !== null) {
-          const downPrice = new PriceTimeSeries('Reg Down', this.inputDownTimeseries);
+          const downPrice = new FRDownPriceTimeSeries(this.inputDownTimeseries);
           this.$store.dispatch('setFRDownPrice', downPrice);
         }
         this.$store.dispatch('setFReou', this.inputEOU);
