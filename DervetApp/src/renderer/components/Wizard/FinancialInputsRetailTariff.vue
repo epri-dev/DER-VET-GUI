@@ -78,9 +78,7 @@
 
     <hr>
 
-    <nav-buttons
-      :save="this.save"
-    />
+    <nav-buttons />
   </div>
 </template>
 
