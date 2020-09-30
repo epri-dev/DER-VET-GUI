@@ -2,7 +2,7 @@ import TimeSeriesBase from './TimeSeriesBase';
 
 class UserPowerMinTimeSeries extends TimeSeriesBase {
   constructor(data) {
-    super('Power Min (kW)', data);
+    super('POI: max import (kW)', data);
   }
 }
 
