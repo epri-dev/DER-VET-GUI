@@ -191,6 +191,9 @@ const mutations = {
   SET_TYPE(state, type) {
     state.type = type;
   },
+  SET_INPUTS_DIRECTORY(state, newInputsDirectory) {
+    state.inputsDirectory = newInputsDirectory;
+  },
   SET_DISCOUNT_RATE(state, newDiscountRate) {
     state.discountRate = newDiscountRate;
   },
@@ -553,6 +556,9 @@ const actions = {
   },
   setType({ commit }, type) {
     commit('SET_TYPE', type);
+  },
+  setInputsDirectory({ commit }, newInputsDirectory) {
+    commit('SET_INPUTS_DIRECTORY', newInputsDirectory);
   },
   setDiscountRate({ commit }, newDiscountRate) {
     commit('SET_DISCOUNT_RATE', newDiscountRate);
