@@ -105,7 +105,6 @@
         </div>
         <div class="col-md-5">
           <p class="tool-tip">Which grid domain the project will be connected to. This limits which services are available.</p>
-          <!-- <p class="tool-tip">Currently: {{projGridLocation}}</p> -->
         </div>
       </div>
       <div class="row form-group">
@@ -121,9 +120,26 @@
         </div>
         <div class="col-md-5">
           <p class="tool-tip">Who owns the assets.</p>
-          <!-- <p class="tool-tip">Currently: {{projOwnership}}</p> -->
         </div>
       </div>
+
+      <fieldset class="section-group">
+        <legend>Run Configuration</legend>
+        <div class="row form-group">
+          <div class="col-md-5 control-label">
+            <b>Inputs Folder</b>
+            <div>{{this.inputsDirectory}}</div>
+          </div>
+          <div class="col-md-3">
+            <label for="inputsFilePicker" class="btn btn-secondary btn-md">Select folder</label>
+            <input id="inputsFilePicker" style="visibility:hidden;" type="file" @change="onInputsDirectorySelection" webkitdirectory directory>
+          </div>
+          <div class="col-md-4">
+            <p class="tool-tip">Folder where input files will be saved</p>
+          </div>
+        </div>
+      </fieldset>
+
       <hr />
       <nav-buttons
         back-link="/new-project"
@@ -180,7 +196,13 @@
           inputHorizonMode: projectSpecs.analysisHorizonMode,
           inputAnalysisHorizon: projectSpecs.analysisHorizon,
           inputDataYear: projectSpecs.dataYear,
+          inputsDirectory: projectSpecs.inputsDirectory,
         };
+      },
+      // TODO validate that directory is received using accepted answer here:
+      // https://stackoverflow.com/questions/52667995/how-to-check-if-selected-file-is-a-directory-or-regular-file
+      onInputsDirectorySelection(e) {
+        this.inputsDirectory = e.target.files[0].path;
       },
       saveAndContinue() {
         this.$store.dispatch('setStartYear', this.inputStartYear);
@@ -190,6 +212,7 @@
         this.$store.dispatch('setGridLocation', this.inputLocation);
         this.$store.dispatch('setOwnership', this.inputOwnership);
         this.$store.dispatch('setTimestep', this.inputTimestep);
+        this.$store.dispatch('setInputsDirectory', this.inputsDirectory);
       },
     },
   };
