@@ -1,4 +1,4 @@
-import { callDervet, writeDervetInputs } from './service/dervet';
+import { callDervet, readDervetResults, writeDervetInputs } from './service/dervet';
 
 require('dotenv').config();
 
@@ -43,16 +43,20 @@ function createWindow() {
   });
 }
 
+function sendResults(event, results) {
+  event.sender.send('dervet-results', Object.assign(...results));
+}
 
 function registerIpcChannels() {
   ipcMain.on('dervet-inputs', (event, dervetInputs) => {
-    // TODO get modelParametersPath from dervetInputs
-    const modelParametersPath = '/Users/leah/inputs/model_parameters.json';
+    const { modelParametersPath, resultsPath } = dervetInputs.meta;
+
     // TODO catch file-writing errors
-    Promise.all(writeDervetInputs(dervetInputs, modelParametersPath)).then(() => {
-      callDervet(modelParametersPath);
-    });
-    event.sender.send('dervet-results', 'done');
+    Promise.all(writeDervetInputs(dervetInputs, modelParametersPath))
+      .then(() => callDervet(modelParametersPath))
+      .then(() => readDervetResults(resultsPath, dervetInputs.expectedResultCsvs))
+      .then(results => sendResults(event, results))
+      .catch(err => console.log(`error: ${err}`));
   });
 }
 

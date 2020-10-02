@@ -12,16 +12,18 @@ import UserEnergyMinTimeSeries from '@/models/UserEnergyMinTimeSeries';
 import UserPowerMaxTimeSeries from '@/models/UserPowerMaxTimeSeries';
 import UserPowerMinTimeSeries from '@/models/UserPowerMinTimeSeries';
 
+import csvs from './csvs';
+
 const projectFixture = {
   analysisHorizon: 0,
   analysisHorizonMode: '1',
-  criticalLoad: new CriticalLoadTimeSeries([...Array(8760).keys()]),
+  criticalLoad: new CriticalLoadTimeSeries(csvs.criticalLoad),
   daGrowth: 0,
-  daPrice: new DAPriceTimeSeries([...Array(8760).keys()]),
+  daPrice: new DAPriceTimeSeries(csvs.daPrice),
   dataYear: 2017,
   discountRate: 7,
   deferralGrowth: 2,
-  deferralLoad: new DeferralLoadTimeSeries([...Array(8760).keys()]),
+  deferralLoad: new DeferralLoadTimeSeries(csvs.deferralLoad),
   externalIncentives: [
     {
       id: '1',
@@ -37,17 +39,18 @@ const projectFixture = {
     },
   ],
   federalTaxRate: 3,
-  frPrice: new FRPriceTimeSeries([...Array(8760).keys()]),
-  frUpPrice: new FRUpPriceTimeSeries([...Array(8760).keys()]),
-  frDownPrice: new FRDownPriceTimeSeries([...Array(8760).keys()]),
+  frPrice: new FRPriceTimeSeries(csvs.frPrice),
+  frUpPrice: new FRUpPriceTimeSeries(csvs.frUpPrice),
+  frDownPrice: new FRDownPriceTimeSeries(csvs.frDownPrice),
   gridLocation: 'Customer',
   inflationRate: 3,
-  inputsDirectory: '/Users/leah/inputs',
-  nsrPrice: new NSRPriceTimeSeries([...Array(8760).keys()]),
+  inputsDirectory: '/path/to/inputs',
+  nsrPrice: new NSRPriceTimeSeries(csvs.nsrPrice),
   objectivesDA: true,
   optimizationHorizon: 'month',
   ownership: 'Customer',
   propertyTaxRate: 3,
+  resultsDirectory: './Results/foo',
   retailTariffBillingPeriods: [
     {
       id: 1,
@@ -128,8 +131,8 @@ const projectFixture = {
       name: '',
     },
   ],
-  siteLoad: new SiteLoadTimeSeries([...Array(8760).keys()]),
-  srPrice: new SRPriceTimeSeries([...Array(8760).keys()]),
+  siteLoad: new SiteLoadTimeSeries(csvs.siteLoad),
+  srPrice: new SRPriceTimeSeries(csvs.srPrice),
   startYear: '2017',
   stateTaxRate: 3,
   technologySpecsBattery: [{
@@ -183,10 +186,10 @@ const projectFixture = {
     upperSOCLimit: 100,
     variableOMCosts: 0,
   }],
-  userEnergyMax: new UserEnergyMaxTimeSeries([...Array(8760).keys()]),
-  userEnergyMin: new UserEnergyMinTimeSeries([...Array(8760).keys()]),
-  userPowerMax: new UserPowerMaxTimeSeries([...Array(8760).keys()]),
-  userPowerMin: new UserPowerMinTimeSeries([...Array(8760).keys()]),
+  userEnergyMax: new UserEnergyMaxTimeSeries(csvs.userEnergyMax),
+  userEnergyMin: new UserEnergyMinTimeSeries(csvs.userEnergyMin),
+  userPowerMax: new UserPowerMaxTimeSeries(csvs.userPowerMax),
+  userPowerMin: new UserPowerMinTimeSeries(csvs.userPowerMin),
 };
 
 export default projectFixture;
