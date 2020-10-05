@@ -553,6 +553,40 @@
         }
       }
     },
+    "Results": {
+      "": {
+        "active": "yes",
+        "keys": {
+          "dir_absolute_path": {
+            "opt_value": "./Results/foo",
+            "sensitivity": {
+              "active": "no",
+              "coupled": "None",
+              "value": "nan"
+            },
+            "type": "string"
+          },
+          "errors_log_path": {
+            "opt_value": "./Results/foo",
+            "sensitivity": {
+              "active": "no",
+              "coupled": "None",
+              "value": "nan"
+            },
+            "type": "string"
+          },
+          "label": {
+            "opt_value": "",
+            "sensitivity": {
+              "active": "no",
+              "coupled": "None",
+              "value": "nan"
+            },
+            "type": "string"
+          }
+        }
+      }
+    },
     "Scenario": {
       "": {
         "active": "yes",

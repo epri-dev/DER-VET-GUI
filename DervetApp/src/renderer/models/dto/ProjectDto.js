@@ -34,6 +34,8 @@ const TARIFF = 'tariff';
 const TIMESERIES = 'timeseries';
 const YEARLY = 'yearly';
 
+const MODEL_PARAMETERS = 'model_parameters.json';
+
 // TODO add PV gen profile(s)
 const TIMESERIES_FIELDS = [
   'criticalLoad',
@@ -181,6 +183,15 @@ export const makeFinanceParameters = (project) => {
   return makeGroup('', YES, keys);
 };
 
+export const makeResultsParameters = (project) => {
+  const keys = {
+    dir_absolute_path: makeBaseKey(project.resultsDirectory, STRING),
+    errors_log_path: makeBaseKey(project.resultsDirectory, STRING),
+    label: makeBaseKey('', STRING),
+  };
+  return makeGroup('', YES, keys);
+};
+
 export const makeScenarioParameters = (project) => {
   const keys = {
     apply_interconnection_constraints: makeBaseKey(ZERO, BOOL), // TODO: new, see issue 130
@@ -218,6 +229,7 @@ export const makeModelParameters = project => ({
     Battery: makeBatteryParameters(project),
     DA: makeDAParameters(project),
     Finance: makeFinanceParameters(project),
+    Results: makeResultsParameters(project),
     Scenario: makeScenarioParameters(project),
   },
   type: 'Expert',
@@ -238,6 +250,16 @@ export const makeBatteryCycleLifeCsv = (project) => {
 export const makeTariffCsv = project => billingPeriodsToCsv(project.retailTariffBillingPeriods);
 
 export const makeYearlyCsv = project => externalIncentivesToCsv(project.externalIncentives);
+
+export const makeMonthlyCsv = (project) => {
+  const data = _.map(_.range(1, 13), i => ({
+    year: project.dataYear,
+    month: i,
+  }));
+  const fields = ['year', 'month'];
+  const headers = ['Year', 'Month']; // TODO LL string constants
+  return objectToCsv(data, fields, headers);
+};
 
 export const makeDatetimeIndex = (dataYear) => {
   const start = new Date(Date.UTC(dataYear, 0, 1, 1));
@@ -319,6 +341,13 @@ class CycleDto {
   }
 }
 
+class MonthlyDto {
+  constructor(project) {
+    this.csv = makeMonthlyCsv(project);
+    this.filePath = makeCsvFilePath(project.inputsDirectory, MONTHLY);
+  }
+}
+
 class TariffDto {
   constructor(project) {
     this.csv = makeTariffCsv(project);
@@ -340,15 +369,36 @@ class TimeSeriesDto {
   }
 }
 
+export const makeExpectedResultCsvs = () => ([
+  // TODO add remaining results files, use string constants
+  {
+    fieldName: 'proForma',
+    fileName: 'pro_forma.csv',
+  },
+  {
+    fieldName: 'costBenefit',
+    fileName: 'cost_benefit.csv',
+  },
+]);
+
 export const makeCsvs = project => ([
   // TODO add monthly data
+  (new MonthlyDto(project)),
   (new TariffDto(project)),
   (new YearlyDto(project)),
   (new TimeSeriesDto(project)),
   (new CycleDto(project)),
 ]);
 
+
+export const makeMeta = project => ({
+  modelParametersPath: path.join(project.inputsDirectory, MODEL_PARAMETERS),
+  resultsPath: project.resultsDirectory,
+});
+
 export const makeDervetInputs = project => ({
-  csvs: makeCsvs(project),
+  expectedResultCsvs: makeExpectedResultCsvs(),
+  inputCsvs: makeCsvs(project),
+  meta: makeMeta(project),
   modelParameters: makeModelParameters(project),
 });

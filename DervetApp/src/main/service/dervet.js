@@ -1,27 +1,18 @@
-const childProcess = require('child_process');
-const fs = require('fs');
-const path = require('path');
+import _ from 'lodash';
+import childProcess from 'child_process';
+import fs from 'fs';
+import path from 'path';
 
-const writeSingleCsvToFile = (filePath, csv) => (
-  new Promise((resolve) => {
-    fs.writeFile(filePath, csv, err => resolve(err));
-  })
-);
+import { parseCsvFromFile, writeCsvToFile, writeJsonToFile } from '../util/file';
 
 const writeCsvsToFile = csvs => (
-  csvs.map(({ filePath, csv }) => writeSingleCsvToFile(filePath, csv))
-);
-
-const writeModelParametersToFile = (modelParameters, modelParametersPath) => (
-  new Promise((resolve) => {
-    fs.writeFile(modelParametersPath, JSON.stringify(modelParameters), 'utf8', err => resolve(err));
-  })
+  csvs.map(({ filePath, csv }) => writeCsvToFile(filePath, csv))
 );
 
 export const writeDervetInputs = (inputs, path) => {
-  const csvPromises = writeCsvsToFile(inputs.csvs); // array of promises
-  const modelParametersPromises = writeModelParametersToFile(inputs.modelParameters, path);
-  return csvPromises.concat(modelParametersPromises);
+  const csvPromises = writeCsvsToFile(inputs.inputCsvs);
+  const modelParametersPromise = writeJsonToFile(path, inputs.modelParameters);
+  return csvPromises.concat(modelParametersPromise);
 };
 
 const getPythonExe = () => path.join(process.resourcesPath, 'extraResources/api');
@@ -52,6 +43,18 @@ const listenToPythonProcessLogs = (pythonProcess) => {
   });
 };
 
+const listenForExit = pythonProcess => (
+  new Promise((resolve, reject) => {
+    pythonProcess.on('exit', (val) => {
+      if (val === 0) {
+        resolve(val);
+      } else {
+        reject(new Error('DERVET run error'));
+      }
+    });
+  })
+);
+
 // TODO will use this eventually
 // const exitPythonProcess = () => {
 //   pythonProcess.kill();
@@ -59,7 +62,7 @@ const listenToPythonProcessLogs = (pythonProcess) => {
 // };
 
 export const callDervet = (modelParametersPath) => {
-  console.log('Spawning DERVET subprocess'); // eslint-disable-line
+  console.log('Spawning DERVET subprocess...'); // eslint-disable-line
 
   let pythonProcess = null;
   const pythonExe = getPythonExe();
@@ -76,11 +79,18 @@ export const callDervet = (modelParametersPath) => {
 
   if (pythonProcess != null) {
     listenToPythonProcessLogs(pythonProcess);
+    return listenForExit(pythonProcess);
   }
+  return new Promise((_, reject) => { reject(new Error('Failed to spawn python process')); });
 };
 
-export default {
-  writeDervetInputs,
-  writeCsvsToFile,
-  callDervet,
+export const readDervetResults = (resultsPath, expectedResultCsvs) => {
+  console.log('Reading dervet results...'); // eslint-disable-line
+
+  const promises = (_.map(expectedResultCsvs, (csvMeta) => {
+    const filePath = path.join(resultsPath, csvMeta.fileName);
+    return parseCsvFromFile(filePath, csvMeta.fieldName);
+  }));
+
+  return Promise.all(promises);
 };

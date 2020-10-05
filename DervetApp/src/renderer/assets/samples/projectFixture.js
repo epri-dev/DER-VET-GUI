@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import CriticalLoadTimeSeries from '@/models/CriticalLoadTimeSeries';
 import DeferralLoadTimeSeries from '@/models/DeferralLoadTimeSeries';
 import DAPriceTimeSeries from '@/models/DAPriceTimeSeries';
@@ -12,16 +14,20 @@ import UserEnergyMinTimeSeries from '@/models/UserEnergyMinTimeSeries';
 import UserPowerMaxTimeSeries from '@/models/UserPowerMaxTimeSeries';
 import UserPowerMinTimeSeries from '@/models/UserPowerMinTimeSeries';
 
+import csvs from './csvs';
+
+const INPUTS_DIRECTORY = '/path/to/inputs';
+
 const projectFixture = {
   analysisHorizon: 0,
   analysisHorizonMode: '1',
-  criticalLoad: new CriticalLoadTimeSeries([...Array(8760).keys()]),
+  criticalLoad: new CriticalLoadTimeSeries(csvs.siteLoad), // note: using hardcoded site load
   daGrowth: 0,
-  daPrice: new DAPriceTimeSeries([...Array(8760).keys()]),
+  daPrice: new DAPriceTimeSeries(csvs.daPrice),
   dataYear: 2017,
   discountRate: 7,
   deferralGrowth: 2,
-  deferralLoad: new DeferralLoadTimeSeries([...Array(8760).keys()]),
+  deferralLoad: new DeferralLoadTimeSeries(csvs.deferralLoad),
   externalIncentives: [
     {
       id: '1',
@@ -37,17 +43,18 @@ const projectFixture = {
     },
   ],
   federalTaxRate: 3,
-  frPrice: new FRPriceTimeSeries([...Array(8760).keys()]),
-  frUpPrice: new FRUpPriceTimeSeries([...Array(8760).keys()]),
-  frDownPrice: new FRDownPriceTimeSeries([...Array(8760).keys()]),
+  frPrice: new FRPriceTimeSeries(csvs.price),
+  frUpPrice: new FRUpPriceTimeSeries(csvs.price),
+  frDownPrice: new FRDownPriceTimeSeries(csvs.price),
   gridLocation: 'Customer',
   inflationRate: 3,
-  inputsDirectory: '/Users/leah/inputs',
-  nsrPrice: new NSRPriceTimeSeries([...Array(8760).keys()]),
+  inputsDirectory: INPUTS_DIRECTORY,
+  nsrPrice: new NSRPriceTimeSeries(csvs.price),
   objectivesDA: true,
   optimizationHorizon: 'month',
   ownership: 'Customer',
   propertyTaxRate: 3,
+  resultsDirectory: './Results/foo',
   retailTariffBillingPeriods: [
     {
       id: 1,
@@ -128,8 +135,8 @@ const projectFixture = {
       name: '',
     },
   ],
-  siteLoad: new SiteLoadTimeSeries([...Array(8760).keys()]),
-  srPrice: new SRPriceTimeSeries([...Array(8760).keys()]),
+  siteLoad: new SiteLoadTimeSeries(csvs.siteLoad),
+  srPrice: new SRPriceTimeSeries(csvs.price),
   startYear: '2017',
   stateTaxRate: 3,
   technologySpecsBattery: [{
@@ -183,10 +190,10 @@ const projectFixture = {
     upperSOCLimit: 100,
     variableOMCosts: 0,
   }],
-  userEnergyMax: new UserEnergyMaxTimeSeries([...Array(8760).keys()]),
-  userEnergyMin: new UserEnergyMinTimeSeries([...Array(8760).keys()]),
-  userPowerMax: new UserPowerMaxTimeSeries([...Array(8760).keys()]),
-  userPowerMin: new UserPowerMinTimeSeries([...Array(8760).keys()]),
+  userEnergyMax: new UserEnergyMaxTimeSeries(_.fill(Array(8760), 9000)),
+  userEnergyMin: new UserEnergyMinTimeSeries(_.fill(Array(8760), 0)),
+  userPowerMax: new UserPowerMaxTimeSeries(_.fill(Array(8760), 1900)),
+  userPowerMin: new UserPowerMinTimeSeries(_.fill(Array(8760), -1900)),
 };
 
 export default projectFixture;

@@ -1,4 +1,5 @@
 import { cloneDeep, flatten } from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 
 import getCurrentYear from '@/util/time';
 import PageLink from '@/models/PageRouting';
@@ -9,6 +10,7 @@ const getDefaultState = () => ({
   type: null,
   resultsData: null,
   inputsDirectory: null,
+  resultsDirectory: `./Results/${uuidv4()}`,
 
   energyPriceSourceWholesale: false,
   objectivesRetailEnergyChargeReduction: false,

@@ -7,23 +7,23 @@ import {
   makeDatetimeIndex,
   makeFinanceParameters,
   makeModelParameters,
+  makeResultsParameters,
   makeScenarioParameters,
   makeTimeSeriesCsv,
 } from '@/models/dto/ProjectDto';
 
-import projectFixture from '../../../../fixtures/case0/projectFixture.js';
+import projectFixture from '@/assets/samples/projectFixture.js';
 import modelParametersFixture from '../../../../fixtures/case0/000-DA_battery_month.json';
 
 describe('modelParametersDto', () => {
   it('should translate a Project object into a ModelParameters object', () => {
     const actual = makeModelParameters(projectFixture);
-    require('fs').writeFile('myjsonfile.json', JSON.stringify(actual), 'utf8');
     expect(actual).to.eql(modelParametersFixture);
   });
 
   it('should create an object containing CSVs needed to run DERVET', () => {
     const actual = makeCsvs(projectFixture);
-    expect(actual.length).to.eql(4);
+    expect(actual.length).to.eql(5);
   });
 
   it('should create a CSV containing battery cycle life data', () => {
@@ -60,6 +60,11 @@ describe('modelParametersDto', () => {
   it('should make finance parameters', () => {
     const actual = makeFinanceParameters(projectFixture);
     expect(Object.keys(actual[''].keys).length).to.eql(9);
+  });
+
+  it('should make results parameters', () => {
+    const actual = makeResultsParameters(projectFixture);
+    expect(Object.keys(actual[''].keys).length).to.eql(3);
   });
 
   it('should make scenario parameters', () => {
