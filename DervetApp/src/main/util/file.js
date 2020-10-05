@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-const parseCsvFromFile = (filePath, fieldName) => (
+export const parseCsvFromFile = (filePath, fieldName) => (
   new Promise((resolve, reject) => {
     fs.readFile(filePath, 'utf8', (err, data) => {
       if (err === null) {
@@ -12,7 +12,7 @@ const parseCsvFromFile = (filePath, fieldName) => (
   })
 );
 
-const writeCsvToFile = (filePath, csv) => (
+export const writeCsvToFile = (filePath, csv) => (
   new Promise((resolve, reject) => {
     fs.writeFile(filePath, csv, (err) => {
       if (err === null) {
@@ -23,7 +23,7 @@ const writeCsvToFile = (filePath, csv) => (
   })
 );
 
-const writeJsonToFile = (filePath, json) => (
+export const writeJsonToFile = (filePath, json) => (
   new Promise((resolve, reject) => {
     fs.writeFile(filePath, JSON.stringify(json), 'utf8', (err) => {
       if (err === null) {
@@ -33,5 +33,3 @@ const writeJsonToFile = (filePath, json) => (
     });
   })
 );
-
-export default { parseCsvFromFile, writeCsvToFile, writeJsonToFile };

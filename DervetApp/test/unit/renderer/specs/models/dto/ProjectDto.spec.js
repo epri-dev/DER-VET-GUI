@@ -18,7 +18,6 @@ import modelParametersFixture from '../../../../fixtures/case0/000-DA_battery_mo
 describe('modelParametersDto', () => {
   it('should translate a Project object into a ModelParameters object', () => {
     const actual = makeModelParameters(projectFixture);
-    require('fs').writeFile('myjsonfile.json', JSON.stringify(actual), 'utf8');
     expect(actual).to.eql(modelParametersFixture);
   });
 

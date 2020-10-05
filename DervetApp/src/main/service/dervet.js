@@ -11,7 +11,7 @@ const writeCsvsToFile = csvs => (
 
 export const writeDervetInputs = (inputs, path) => {
   const csvPromises = writeCsvsToFile(inputs.inputCsvs);
-  const modelParametersPromise = writeJsonToFile(inputs.modelParameters, path);
+  const modelParametersPromise = writeJsonToFile(path, inputs.modelParameters);
   return csvPromises.concat(modelParametersPromise);
 };
 
@@ -93,11 +93,4 @@ export const readDervetResults = (resultsPath, expectedResultCsvs) => {
   }));
 
   return Promise.all(promises);
-};
-
-export default {
-  readDervetResults,
-  writeDervetInputs,
-  writeCsvsToFile,
-  callDervet,
 };

@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import CriticalLoadTimeSeries from '@/models/CriticalLoadTimeSeries';
 import DeferralLoadTimeSeries from '@/models/DeferralLoadTimeSeries';
 import DAPriceTimeSeries from '@/models/DAPriceTimeSeries';
@@ -14,10 +16,12 @@ import UserPowerMinTimeSeries from '@/models/UserPowerMinTimeSeries';
 
 import csvs from './csvs';
 
+const INPUTS_DIRECTORY = '/path/to/inputs';
+
 const projectFixture = {
   analysisHorizon: 0,
   analysisHorizonMode: '1',
-  criticalLoad: new CriticalLoadTimeSeries(csvs.criticalLoad),
+  criticalLoad: new CriticalLoadTimeSeries(csvs.siteLoad), // note: using hardcoded site load
   daGrowth: 0,
   daPrice: new DAPriceTimeSeries(csvs.daPrice),
   dataYear: 2017,
@@ -39,13 +43,13 @@ const projectFixture = {
     },
   ],
   federalTaxRate: 3,
-  frPrice: new FRPriceTimeSeries(csvs.frPrice),
-  frUpPrice: new FRUpPriceTimeSeries(csvs.frUpPrice),
-  frDownPrice: new FRDownPriceTimeSeries(csvs.frDownPrice),
+  frPrice: new FRPriceTimeSeries(csvs.price),
+  frUpPrice: new FRUpPriceTimeSeries(csvs.price),
+  frDownPrice: new FRDownPriceTimeSeries(csvs.price),
   gridLocation: 'Customer',
   inflationRate: 3,
-  inputsDirectory: '/path/to/inputs',
-  nsrPrice: new NSRPriceTimeSeries(csvs.nsrPrice),
+  inputsDirectory: INPUTS_DIRECTORY,
+  nsrPrice: new NSRPriceTimeSeries(csvs.price),
   objectivesDA: true,
   optimizationHorizon: 'month',
   ownership: 'Customer',
@@ -132,7 +136,7 @@ const projectFixture = {
     },
   ],
   siteLoad: new SiteLoadTimeSeries(csvs.siteLoad),
-  srPrice: new SRPriceTimeSeries(csvs.srPrice),
+  srPrice: new SRPriceTimeSeries(csvs.price),
   startYear: '2017',
   stateTaxRate: 3,
   technologySpecsBattery: [{
@@ -186,10 +190,10 @@ const projectFixture = {
     upperSOCLimit: 100,
     variableOMCosts: 0,
   }],
-  userEnergyMax: new UserEnergyMaxTimeSeries(csvs.userEnergyMax),
-  userEnergyMin: new UserEnergyMinTimeSeries(csvs.userEnergyMin),
-  userPowerMax: new UserPowerMaxTimeSeries(csvs.userPowerMax),
-  userPowerMin: new UserPowerMinTimeSeries(csvs.userPowerMin),
+  userEnergyMax: new UserEnergyMaxTimeSeries(_.fill(Array(8760), 9000)),
+  userEnergyMin: new UserEnergyMinTimeSeries(_.fill(Array(8760), 0)),
+  userPowerMax: new UserPowerMaxTimeSeries(_.fill(Array(8760), 1900)),
+  userPowerMin: new UserPowerMinTimeSeries(_.fill(Array(8760), -1900)),
 };
 
 export default projectFixture;
