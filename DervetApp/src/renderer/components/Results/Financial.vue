@@ -50,156 +50,13 @@
   import { formatYAxisCurrency } from '@/util/chart';
   import { proFormaTableFields, proFormaTableData } from '@/models/Results/ProFormaData';
   import { costBenefitTraces } from '@/models/Results/CostBenefitData';
-
-  // const plotlyMonthlyBillDataTraces = [
-  //   {
-  //     x: ['Before', 'After'],
-  //     y: [0.8, 0.49],
-  //     type: 'bar',
-  //     name: 'Energy',
-  //     xaxis: 'x1',
-  //     barmode: 'stack',
-  //   },
-  //   {
-  //     x: ['Before', 'After'],
-  //     y: [0.6, 0.50],
-  //     type: 'bar',
-  //     name: 'Demand',
-  //     xaxis: 'x1',
-  //     barmode: 'stack',
-  //   },
-  //   {
-  //     x: ['Before', 'After'],
-  //     y: [0.1, 0.1],
-  //     type: 'bar',
-  //     name: 'Energy',
-  //     xaxis: 'x2',
-  //     barmode: 'stack',
-  //   },
-  //   {
-  //     x: ['Before', 'After'],
-  //     y: [0.3, 0.35],
-  //     type: 'bar',
-  //     name: 'Demand',
-  //     xaxis: 'x2',
-  //     barmode: 'stack',
-  //   },
-  //   {
-  //     x: ['Before', 'After'],
-  //     y: [0.25, 0.15],
-  //     type: 'bar',
-  //     name: 'Energy',
-  //     xaxis: 'x3',
-  //     barmode: 'stack',
-  //   },
-  //   {
-  //     x: ['Before', 'After'],
-  //     y: [0.45, 0.50],
-  //     type: 'bar',
-  //     name: 'Demand',
-  //     xaxis: 'x3',
-  //     barmode: 'stack',
-  //   },
-  //   {
-  //     x: ['Before', 'After'],
-  //     y: [0.3, 0.35],
-  //     type: 'bar',
-  //     name: 'Energy',
-  //     xaxis: 'x4',
-  //     barmode: 'stack',
-  //   },
-  //   {
-  //     x: ['Before', 'After'],
-  //     y: [0.6, 0.50],
-  //     type: 'bar',
-  //     name: 'Demand',
-  //     xaxis: 'x4',
-  //     barmode: 'stack',
-  //   },
-  // ];
-  const monthlyBillDataTraces = [
-    {
-      label: 'Orignal Demand Charge ($)',
-      backgroundColor: '#6bd32a',
-      stack: 'Stack 2',
-      data: [
-        105620.1844,
-        112796.2978,
-        119607.5331,
-        121938.6236,
-        122573.839,
-        163561.4688,
-        167237.1945,
-        183541.1412,
-        164910.8468,
-        82472.17225,
-        75384.2572,
-        71278.7625,
-      ],
-    },
-    {
-      label: 'Demand Charge ($)',
-      backgroundColor: '#618a2a',
-      stack: 'Stack 1',
-      data: [
-        24105.49174,
-        22110.09026,
-        27875.18851,
-        28106.5267,
-        32971.54708,
-        36293.41722,
-        36937.17683,
-        38207.55854,
-        34999.04347,
-        30552.73122,
-        27220.86176,
-        23844.61009,
-      ],
-    },
-    {
-      label: 'Energy Charge ($)',
-      data: [
-        105620.1844,
-        112796.2978,
-        119607.5331,
-        121938.6236,
-        122573.839,
-        163561.4688,
-        167237.1945,
-        183541.1412,
-        164910.8468,
-        82472.17225,
-        75384.2572,
-        71278.7625,
-      ],
-      stack: 'Stack 1',
-      backgroundColor: '#226db6',
-    },
-    {
-      label: 'Original Energy Charge ($)',
-      data: [
-        24105.49174,
-        22110.09026,
-        27875.18851,
-        28106.5267,
-        32971.54708,
-        36293.41722,
-        36937.17683,
-        38207.55854,
-        34999.04347,
-        30552.73122,
-        27220.86176,
-        23844.61009,
-      ],
-      stack: 'Stack 2',
-      backgroundColor: '#182e44',
-    },
-  ];
+  import { monthlyBillDataTraces } from '@/models/Results/BeforeAndAfterMonthlyBillData';
+  
   export default {
     components: { NavButtons },
     mounted() {
       this.createStackedCostBenefit('chartStackedCostBenefit', costBenefitTraces);
-      this.createMonthlyBillBeforeAndAfter('chartjsMonthlyBill', monthlyBillDataTraces);
+      this.createMonthlyBillBeforeAndAfter('chartjsMonthlyBill', monthlyBillDataTraces, '2017');
       // this.createPlotlyMonthlyBillBeforeAndAfter('plotlyMonthlyBill', plotlyMonthlyBillDataTraces);
     },
     data() {
@@ -329,7 +186,7 @@
         };
         return Plotly.newPlot(ctx, chartData, layout, config);
       },
-      createMonthlyBillBeforeAndAfter(chartId, chartData) {
+      createMonthlyBillBeforeAndAfter(chartId, chartData, dataYear) {
         const ctx = document.getElementById(chartId);
         const chart = new Chart(ctx, {
           type: 'bar',
@@ -347,7 +204,7 @@
               'October',
               'November',
               'December',
-            ],
+            ], // TODO based off of data
             datasets: chartData,
           },
           options: {
@@ -357,7 +214,7 @@
             },
             title: {
               display: true,
-              text: 'Before and After Monthly Energy Bill',
+              text: `Before and After Monthly Energy Bill in ${{ dataYear }}`, // based of of data
             },
             scales: {
               xAxes: [{

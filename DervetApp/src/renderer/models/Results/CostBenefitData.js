@@ -4,12 +4,12 @@ import BaseTableData from './BaseTableData';
 export class CostBenefitData extends BaseTableData {
   constructor(data) {
     super('cost_benefit.csv', data, true);
-    this.ess_colors = ['#326581', '#6ca6c6', '#a2c7db'];
-    this.ess_types = ['battery'];
-    this.intermittent_resource_type = ['pv'];
-    this.intermittent_resource_colors = ['#807019', '#c0a926'];
-    this.generator_types = ['diesel', 'ice'];
-    this.generator_colors = ['#393939', '#6a6a6a', '#999999', '#bfbfbf'];
+    this.essBaseColor = tinycolor('#326581');
+    this.essTypes = ['battery'];
+    this.intermittentResourceType = ['pv'];
+    this.intermittentResourceBaseColor = tinycolor('#807019');
+    this.generatorTypes = ['diesel', 'ice'];
+    this.generatorBaseColor = tinycolor('#393939');
   }
   summaryData() {
     // look for row with 'Lieftime Present Value' in first index and return rest of row
@@ -20,27 +20,31 @@ export class CostBenefitData extends BaseTableData {
       }
       rowNum += 1;
     }
-    return this.data[rowNum].splice(1);
+    return [this.data[rowNum][1], this.data[rowNum][2]];
   }
   createBarChartTraces() {
     const traces = [];
     let rowNum = 0;
+    const traceX = [this.columnHeaders[1], this.columnHeaders[2]];
     while (rowNum < this.data.length) {
-      const valueStream = this.data[rowNum][0];
+      const rowData = this.data[rowNum];
+      const valueStream = rowData[0];
       if (valueStream !== 'Lifetime Present Value') {
         // create trace
         const traceTemplate = {
-          x: [this.columnHeaders[1], this.columnHeaders[2]],
-          y: [0, 6e5],
+          x: traceX,
+          y: [rowData[1], rowData[2]],
           name: valueStream,
           type: 'bar',
         };
-        // add color if technology
-        if (valueStream.indexOf(':') !== -1) {
-          const derTag = valueStream.split(':')[0].toLowerCase();
-          // select color based on tag grouping TODO
+        // TODO add color if technology
+        // if (valueStream.indexOf(':') !== -1) {
+        //   const derTag = valueStream.split(':')[0].toLowerCase();
+        //   // TODO select color based on tag grouping TODO
+        //   // TODO select color based on name TODO
+        //   // TODO select color base on valuestream TODO
+        // }
 
-        }
         // add trace to list
         traces.pop(traceTemplate);
       }
