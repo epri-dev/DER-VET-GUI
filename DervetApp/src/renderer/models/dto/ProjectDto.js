@@ -1,4 +1,6 @@
 import * as d3 from 'd3';
+import _ from 'lodash';
+import moment from 'moment';
 import path from 'path';
 
 import { billingPeriodsToCsv } from '@/models/RetailTariffBillingPeriod';
@@ -32,6 +34,8 @@ const TARIFF = 'tariff';
 const TIMESERIES = 'timeseries';
 const YEARLY = 'yearly';
 
+const MODEL_PARAMETERS = 'model_parameters.json';
+
 // TODO add PV gen profile(s)
 const TIMESERIES_FIELDS = [
   'criticalLoad',
@@ -40,9 +44,9 @@ const TIMESERIES_FIELDS = [
   'frPrice',
   'frUpPrice',
   'frDownPrice',
+  'nsrPrice',
   'srPrice',
   'siteLoad',
-  'nsrPrice',
   'userPowerMin',
   'userPowerMax',
   'userEnergyMin',
@@ -90,6 +94,10 @@ export const checkNotNullOrEmpty = technologySpecs => (
   technologySpecs !== null && technologySpecs.length > 0
 );
 
+export const mapListToObjectList = (lst, fieldName) => (
+  lst.map(d => ({ [fieldName]: d }))
+);
+
 export const makeBatteryParameters = (project) => {
   const includeBattery = checkNotNullOrEmpty(project.technologySpecsBattery);
 
@@ -113,7 +121,7 @@ export const makeBatteryParameters = (project) => {
       dis_min_rated: makeBaseKey(ZERO, FLOAT), // TODO: hardcoded in old GUI
       duration_max: makeBaseKey(battery.maxDuration, FLOAT),
       ene_max_rated: makeBaseKey(battery.energyCapacity, FLOAT),
-      expected_lifetime: makeBaseKey(9e10, INT), // TODO: new, verify value
+      expected_lifetime: makeBaseKey(14, INT), // TODO: new, verify value
       fixedOM: makeBaseKey(battery.fixedOMCosts, FLOAT),
       hp: makeBaseKey(battery.auxiliaryLoad, FLOAT),
       incl_cycle_degrade: makeBaseKey(convertToOneZero(battery.includeCycleDegradation), BOOL),
@@ -175,6 +183,15 @@ export const makeFinanceParameters = (project) => {
   return makeGroup('', YES, keys);
 };
 
+export const makeResultsParameters = (project) => {
+  const keys = {
+    dir_absolute_path: makeBaseKey(project.resultsDirectory, STRING),
+    errors_log_path: makeBaseKey(project.resultsDirectory, STRING),
+    label: makeBaseKey('', STRING),
+  };
+  return makeGroup('', YES, keys);
+};
+
 export const makeScenarioParameters = (project) => {
   const keys = {
     apply_interconnection_constraints: makeBaseKey(ZERO, BOOL), // TODO: new, see issue 130
@@ -212,6 +229,7 @@ export const makeModelParameters = project => ({
     Battery: makeBatteryParameters(project),
     DA: makeDAParameters(project),
     Finance: makeFinanceParameters(project),
+    Results: makeResultsParameters(project),
     Scenario: makeScenarioParameters(project),
   },
   type: 'Expert',
@@ -233,13 +251,24 @@ export const makeTariffCsv = project => billingPeriodsToCsv(project.retailTariff
 
 export const makeYearlyCsv = project => externalIncentivesToCsv(project.externalIncentives);
 
+export const makeMonthlyCsv = (project) => {
+  const data = _.map(_.range(1, 13), i => ({
+    year: project.dataYear,
+    month: i,
+  }));
+  const fields = ['year', 'month'];
+  const headers = ['Year', 'Month']; // TODO LL string constants
+  return objectToCsv(data, fields, headers);
+};
+
 export const makeDatetimeIndex = (dataYear) => {
-  const start = new Date(dataYear, 0, 1);
-  const end = new Date(dataYear + 1, 0, 1);
+  const start = new Date(Date.UTC(dataYear, 0, 1, 1));
+  const end = new Date(Date.UTC(dataYear + 1, 0, 1, 1));
 
   // TODO this hardcodes the timestep to 1 hour: extend to others based on input
   const timedelta = d3.timeHour.every(1);
-  return timedelta.range(start, end);
+  const datetimeIndex = timedelta.range(start, end);
+  return datetimeIndex.map(d => moment.utc(d).format('M/D/YYYY H:mm'));
 };
 
 export const makeEmptyCsvDataWithDatetimeIndex = (project) => {
@@ -286,31 +315,90 @@ export const makeEmptyCsvDataWithDatetimeIndex = (project) => {
 */
 export const makeTimeSeriesCsv = (project) => {
   // Make datetime index
-  const data = makeEmptyCsvDataWithDatetimeIndex(project);
-  const fields = [TIMESERIES_DATETIME_INDEX];
-  const headers = [TIMESERIES_DATETIME_HEADER];
+  let data = [makeEmptyCsvDataWithDatetimeIndex(project)];
+  let fields = [TIMESERIES_DATETIME_INDEX];
+  let headers = [TIMESERIES_DATETIME_HEADER];
 
   // Add all available timeseries to CSV
   TIMESERIES_FIELDS.forEach((ts) => {
-    if (data[ts]) {
-      data[ts] = project[ts];
-      fields[ts] = ts;
-      headers[ts] = ts.columnHeaderName;
+    const tsClass = project[ts];
+    if (tsClass) {
+      // TODO Move this to standalone function
+      data = data.concat([mapListToObjectList(tsClass.data, ts)]);
+      fields = fields.concat(ts);
+      headers = headers.concat(tsClass.columnHeaderName);
     }
   });
 
-  return objectToCsv(data, fields, headers);
+  const unzippedData = _.unzipWith(data, Object.assign);
+  return objectToCsv(unzippedData, fields, headers);
 };
 
-export const makeCsvs = project => ({
-  batteryCycleLife: makeBatteryCycleLifeCsv(project),
-  customerTariff: makeTariffCsv(project),
-  yearlyData: makeYearlyCsv(project),
-  monthlyData: '', // TODO new, check where this comes from
-  timeSeriesData: makeTimeSeriesCsv(project),
+class CycleDto {
+  constructor(project) {
+    this.csv = makeBatteryCycleLifeCsv(project);
+    this.filePath = makeCsvFilePath(project.inputsDirectory, CYCLE);
+  }
+}
+
+class MonthlyDto {
+  constructor(project) {
+    this.csv = makeMonthlyCsv(project);
+    this.filePath = makeCsvFilePath(project.inputsDirectory, MONTHLY);
+  }
+}
+
+class TariffDto {
+  constructor(project) {
+    this.csv = makeTariffCsv(project);
+    this.filePath = makeCsvFilePath(project.inputsDirectory, TARIFF);
+  }
+}
+
+class YearlyDto {
+  constructor(project) {
+    this.csv = makeYearlyCsv(project);
+    this.filePath = makeCsvFilePath(project.inputsDirectory, YEARLY);
+  }
+}
+
+class TimeSeriesDto {
+  constructor(project) {
+    this.csv = makeTimeSeriesCsv(project);
+    this.filePath = makeCsvFilePath(project.inputsDirectory, TIMESERIES);
+  }
+}
+
+export const makeExpectedResultCsvs = () => ([
+  // TODO add remaining results files, use string constants
+  {
+    fieldName: 'proForma',
+    fileName: 'pro_forma.csv',
+  },
+  {
+    fieldName: 'costBenefit',
+    fileName: 'cost_benefit.csv',
+  },
+]);
+
+export const makeCsvs = project => ([
+  // TODO add monthly data
+  (new MonthlyDto(project)),
+  (new TariffDto(project)),
+  (new YearlyDto(project)),
+  (new TimeSeriesDto(project)),
+  (new CycleDto(project)),
+]);
+
+
+export const makeMeta = project => ({
+  modelParametersPath: path.join(project.inputsDirectory, MODEL_PARAMETERS),
+  resultsPath: project.resultsDirectory,
 });
 
 export const makeDervetInputs = project => ({
-  csvs: makeCsvs(project),
+  expectedResultCsvs: makeExpectedResultCsvs(),
+  inputCsvs: makeCsvs(project),
+  meta: makeMeta(project),
   modelParameters: makeModelParameters(project),
 });

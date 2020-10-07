@@ -34,24 +34,19 @@
               </div>
             </div>
             <div class="col-md-6">
-              <h4 class="result-summary-title">
-              <a>
-                Reliability Summary
-              </a>
-              </h4>
-              <div class="form-group">
-                <div class="col-md-12">
-                  <canvas
-                  id="chartReliability"
-                  class="chartjs-render-monitor">
-                  </canvas>
-                </div>
-              </div>
               <div class="buffer-top text-center">
                 <a class="btn btn-sm btn-default">
                   <router-link
                   :to="this.pagePaths.resultsReliability">
                   View Detailed Reliability Results...
+                  </router-link>
+                </a>
+              </div>
+              <div class="buffer-top text-center">
+                <a class="btn btn-sm btn-default">
+                  <router-link
+                  :to="this.pagePaths.resultsDeferral">
+                  View Detailed Deferral Results...
                   </router-link>
                 </a>
               </div>
@@ -122,8 +117,6 @@
     3914, 3531, 2870, 2743, 2467, 2414, 1443, 1559, 1330];
   const peakLoadDayLabels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
     12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
-  const reliabilityValues = [0.5, 0.3, 0.2];
-  const reliabilityLabels = ['ICE', 'ESS', 'PV'];
 
   export default {
     data() {
@@ -135,7 +128,6 @@
     mounted() {
       this.createChartCostBenefit('chartCostBenefit', costBenefitSummaryData);
       this.createChartPeakLoadDay('chartPeakLoadDay', [peakLoadDayValues, peakLoadDayLabels]);
-      this.createChartReliability('chartReliability', reliabilityValues, reliabilityLabels);
       this.createChartBatteryDispatchHeatMap('chartBatteryDispatchHeatMap');
     },
     methods: {
@@ -191,52 +183,6 @@
                   },
                 },
               ],
-            },
-          },
-        });
-      },
-
-      createChartReliability(chartID, chartData, chartLabels) {
-        const ctx = document.getElementById('chartReliability');
-        const orderedBackgroundColors = [];
-        for (let i = 0; i < chartLabels.length; i += 1) {
-          const derType = chartLabels[i];
-          if (derType === 'PV') {
-            orderedBackgroundColors.push('#e2d06b');
-          } else if (derType === 'ESS') {
-            orderedBackgroundColors.push('#a2c7db');
-          } else if (derType === 'ICE') {
-            orderedBackgroundColors.push('#999999');
-          } else {
-            orderedBackgroundColors.push('#666666');
-          }
-        }
-        function labels(tooltipItem, data) {
-          return `${data.labels[tooltipItem.index]}: ${data.datasets[0].data[tooltipItem.index]}%`;
-        }
-        return new Chart(ctx, {
-          type: 'pie',
-          data: {
-            datasets: [{
-              data: chartData,
-              backgroundColor: orderedBackgroundColors,
-            }],
-            labels: chartLabels,
-          },
-          options: {
-            responsive: true,
-            title: {
-              display: true,
-              text: 'Reliability contribution',
-            },
-            legend: {
-              display: true,
-              position: 'bottom',
-            },
-            tooltips: {
-              callbacks: {
-                label: labels,
-              },
             },
           },
         });

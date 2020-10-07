@@ -1,4 +1,4 @@
-import DervetService from './service/dervet';
+import { callDervet, readDervetResults, writeDervetInputs } from './service/dervet';
 
 require('dotenv').config();
 
@@ -43,14 +43,20 @@ function createWindow() {
   });
 }
 
+function sendResults(event, results) {
+  event.sender.send('dervet-results', Object.assign(...results));
+}
 
 function registerIpcChannels() {
   ipcMain.on('dervet-inputs', (event, dervetInputs) => {
-    const modelParametersPath = ''; // TODO get from dervetInputs
-    // TODO Account for async writing before calling DERVET
-    DervetService.writeDervetInputs(dervetInputs);
-    DervetService.callDervet(modelParametersPath);
-    event.sender.send('dervet-results', 'done');
+    const { modelParametersPath, resultsPath } = dervetInputs.meta;
+
+    // TODO catch file-writing errors
+    Promise.all(writeDervetInputs(dervetInputs, modelParametersPath))
+      .then(() => callDervet(modelParametersPath))
+      .then(() => readDervetResults(resultsPath, dervetInputs.expectedResultCsvs))
+      .then(results => sendResults(event, results))
+      .catch(err => console.log(`error: ${err}`));
   });
 }
 

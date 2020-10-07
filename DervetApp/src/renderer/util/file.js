@@ -16,8 +16,9 @@ export const parseCsvFromFile = (e, successCallback) => {
   // TODO add catch with errorCallback
 };
 
+// TODO add test
 export const objectToCsv = (data, fields, headers) => {
-  const csvData = Papa.unparse(data, { fields, header: false });
+  const csvData = Papa.unparse({ data, fields }, { header: false });
   const csvHeaders = Papa.unparse({ fields: headers, data: [] });
   return `${csvHeaders}${csvData}`;
 };

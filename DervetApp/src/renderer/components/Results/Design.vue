@@ -58,7 +58,7 @@
 
 <script>
   import NavButtons from '@/components/Shared/NavButtons';
-  import { createCostTableData, sizeTableExpectedData, sizeTableExpectedFeilds } from '@/models/Results/sizeData';
+  import { createCostTableData, sizeTableExpectedData, sizeTableExpectedFeilds } from '@/models/Results/SizeData';
 
   export default {
     components: { NavButtons },

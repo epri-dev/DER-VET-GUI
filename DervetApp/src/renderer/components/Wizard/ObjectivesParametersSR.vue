@@ -50,7 +50,7 @@
 </template>
 
 <script>
-  import PriceTimeSeries from '@/models/PriceTimeSeries';
+  import SRPriceTimeSeries from '@/models/SRPriceTimeSeries';
   import { sharedValidation } from '@/models/Shared';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import NavButtons from '@/components/Shared/NavButtons';
@@ -70,7 +70,7 @@
     },
     methods: {
       save() {
-        const price = new PriceTimeSeries('SR', this.inputTimeseries);
+        const price = new SRPriceTimeSeries(this.inputTimeseries);
         this.$store.dispatch('setSRPrice', price);
 
         this.$store.dispatch('setSRGrowth', this.inputSRGrowth);
