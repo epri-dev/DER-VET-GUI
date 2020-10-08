@@ -87,10 +87,13 @@
     <br>
     <hr />
     <timeseries-data-upload
+        chart-name="chartUploadedTimeSeries"
         data-name="critical load"
         units="kW"
         @uploaded="receiveTimeseriesData"
-        :data-exists="criticalLoad !== null"
+        :data-exists="(tsData !== null)"
+        :data-time-series="tsData"
+        :key="childKey"
       />
     <hr />
     <nav-buttons
@@ -113,6 +116,12 @@
       solarSpecified() {
         return this.pvTechnologies.length > 0;
       },
+      tsData() {
+        if (this.inputTimeseries === null) {
+          return this.criticalLoad;
+        }
+        return new CriticalLoadTimeSeries(this.inputTimeseries);
+      },
     },
     data() {
       const p = this.$store.state.Project;
@@ -129,13 +138,14 @@
     },
     methods: {
       save() {
-        const criticalLoad = new CriticalLoadTimeSeries(this.inputTimeseries);
+        if (this.inputTimeseries !== null) {
+          this.$store.dispatch('setCriticalLoad', this.tsData);
+        }
         this.$store.dispatch('setReliabilityPostOptimizationOnly', this.postOptimizationOnly);
         this.$store.dispatch('setReliabilityTarget', this.reliabilityTarget);
         this.$store.dispatch('setReliabilityNu', this.reliabilityNu);
         this.$store.dispatch('setReliabilityGamma', this.reliabilityGamma);
         this.$store.dispatch('setReliabilityMaxOutageDuration', this.reliabilityMaxOutageDuration);
-        this.$store.dispatch('setCriticalLoad', criticalLoad);
       },
     },
   };

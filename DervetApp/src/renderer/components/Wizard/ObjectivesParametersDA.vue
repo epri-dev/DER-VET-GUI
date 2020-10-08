@@ -20,10 +20,13 @@
           </div>
       </div>
       <timeseries-data-upload
+        chart-name="chartUploadedTimeSeries"
         data-name="day ahead price"
         units="kW"
         @uploaded="receiveTimeseriesData"
-        :data-exists="daPrice !== null"
+        :data-exists="(tsData !== null)"
+        :data-time-series="tsData"
+        :key="childKey"
       />
       <hr />
       <nav-buttons
@@ -47,15 +50,24 @@
       const p = this.$store.state.Project;
       return {
         sharedValidation,
-        daGrowth: p.daGrowth,
+        inputDAGrowth: p.daGrowth,
         daPrice: p.daPrice,
       };
     },
+    computed: {
+      tsData() {
+        if (this.inputTimeseries === null) {
+          return this.daPrice;
+        }
+        return new DAPriceTimeSeries(this.inputTimeseries);
+      },
+    },
     methods: {
       save() {
-        const price = new DAPriceTimeSeries(this.inputTimeseries);
-        this.$store.dispatch('setDAGrowth', this.daGrowth);
-        this.$store.dispatch('setDAPrice', price);
+        if (this.inputTimeseries !== null) {
+          this.$store.dispatch('setDAPrice', this.tsData);
+        }
+        this.$store.dispatch('setDAGrowth', this.inputDAGrowth);
       },
     },
   };

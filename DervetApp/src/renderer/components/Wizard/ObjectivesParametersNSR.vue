@@ -36,10 +36,13 @@
         </div>
       </div>
       <timeseries-data-upload
+        chart-name="chartUploadedTimeSeries"
         data-name="non-spinning reserve price"
         units="$/kW"
         @uploaded="receiveTimeseriesData"
-        :data-exists="nsrPrice !== null"
+        :data-exists="(tsData !== null)"
+        :data-time-series="tsData"
+        :key="childKey"
       />
       <hr />
       <nav-buttons
@@ -69,10 +72,19 @@
         dataYear: p.dataYear,
       };
     },
+    computed: {
+      tsData() {
+        if (this.inputTimeseries === null) {
+          return this.nsrPrice;
+        }
+        return new NSRPriceTimeSeries(this.inputTimeseries);
+      },
+    },
     methods: {
       save() {
-        const price = new NSRPriceTimeSeries(this.inputTimeseries);
-        this.$store.dispatch('newNSRPrice', price);
+        if (this.inputTimeseries !== null) {
+          this.$store.dispatch('setNSRPrice', this.tsData);
+        }
         this.$store.dispatch('setNSRGrowth', this.inputNSRGrowth);
         this.$store.dispatch('setNSRDuration', this.inputDuration);
       },

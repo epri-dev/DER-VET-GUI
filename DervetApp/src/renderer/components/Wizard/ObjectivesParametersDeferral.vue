@@ -60,10 +60,13 @@
         </div>
       </div>
       <timeseries-data-upload
+        chart-name="chartUploadedTimeSeries"
         data-name="deferral load"
         units="kW"
         @uploaded="receiveTimeseriesData"
-        :data-exists="deferralLoad !== null"
+        :data-exists="(tsData !== null)"
+        :data-time-series="tsData"
+        :key="childKey"
       />
       <hr>
       <nav-buttons
@@ -95,10 +98,19 @@
         inputDeferralPrice: p.deferralPrice,
       };
     },
+    computed: {
+      tsData() {
+        if (this.inputTimeseries === null) {
+          return this.deferralLoad;
+        }
+        return new DeferralLoadTimeSeries(this.inputTimeseries);
+      },
+    },
     methods: {
       save() {
-        const deferralLoad = new DeferralLoadTimeSeries(this.inputTimeseries);
-        this.$store.dispatch('setDeferralLoad', deferralLoad);
+        if (this.inputTimeseries !== null) {
+          this.$store.dispatch('setDeferralLoad', this.tsData);
+        }
         this.$store.dispatch('setDeferralPlannedLoadLimit', this.inputDeferralPlannedLoadLimit);
         this.$store.dispatch('setDeferralReversePowerFlowLimit', this.inputDeferralReversePowerFlowLimit);
         this.$store.dispatch('setDeferralGrowth', this.inputDeferralGrowth);

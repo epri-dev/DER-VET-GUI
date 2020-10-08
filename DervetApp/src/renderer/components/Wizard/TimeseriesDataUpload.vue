@@ -1,9 +1,9 @@
 <template>
-  <div id="timseries-data-upload">
+  <div id="timeseries-data-upload">
     <hr />
     <div v-if="this.dataExists" class="form-group">
       <div class="col-md-12">
-        <label for="UseExistingData" class="control-label">{{this.firstLetterCapitalized}} data has already been uploaded for this project. Do you want to use the existing data?</label>
+        <label for="UseExistingData" class="control-label"><b>{{this.firstLetterCapitalized}}</b> data have been uploaded for this project. Do you want to use these data?</label>
       </div>
       <div class="col-md-12">
         <b-form-group>
@@ -58,16 +58,44 @@
         </div>
       </div>
     </div>
+    <div v-if="this.dataExists">
+      <div v-if="this.chartName === 'chartUploadedTimeSeries'">
+        <div class="col-md-10"
+          id="chartUploadedTimeSeries">
+        </div>
+      </div>
+      <div v-if="this.chartName === 'chartUploadedTimeSeries2'">
+        <div class="col-md-10"
+          id="chartUploadedTimeSeries2">
+        </div>
+      </div>
+      <div v-if="this.chartName === 'chartUploadedTimeSeries3'">
+        <div class="col-md-10"
+          id="chartUploadedTimeSeries3">
+        </div>
+      </div>
+      <div v-if="this.chartName === 'chartUploadedTimeSeries4'">
+        <div class="col-md-10"
+          id="chartUploadedTimeSeries4">
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+  import Plotly from 'plotly.js';
   import { flatten } from 'lodash';
 
   import { parseCsvFromFile } from '@/util/file';
   import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
 
   export default {
+    mounted() {
+      if (this.dataExists) {
+        this.createChartUploadedTimeSeriesPlot(this.chartName);
+      }
+    },
     data() {
       return {
         sharedValidation,
@@ -100,11 +128,89 @@
       dataName: String,
       units: String,
       dataExists: Boolean,
+      dataTimeSeries: Object,
+      chartName: String,
     },
     methods: {
       onFileUpload(e) {
         const onSuccess = (results) => { this.$emit('uploaded', flatten(results)); };
         parseCsvFromFile(e, onSuccess);
+      },
+      createChartUploadedTimeSeriesPlot(chartId) {
+        const ctx = document.getElementById(chartId);
+        const xstart = (new Date(`${this.dataYear}-01-01`)).getTime();
+        const xx = [];
+        for (let i = 0; i < this.numberOfEntriesRequired; i += 1) {
+          xx[i] = new Date(xstart + ((i * 36e5 * 60) / this.timestep));
+        }
+        const uploadedTS = {
+          x: xx,
+          y: this.dataTimeSeries.data,
+          unit: this.units,
+          mode: 'lines',
+          name: '', // this.firstLetterCapitalized,
+          hovertemplate: `%{y} ${this.units}`,
+        };
+        const data = [uploadedTS];
+        const layout = {
+          // showlegend: true,
+          legend: {
+            orientation: 'h', // 'v'
+            x: 0,
+            y: 1.12,
+          },
+          height: 500,
+          modebar: {
+            orientation: 'v', // 'h' set how modebar will appear
+          },
+          title: {
+            text: this.dataTimeSeries.columnHeaderName,
+            font: {
+              size: 20,
+            },
+            yanchor: 'top',
+          },
+          yaxis: {
+            title: {
+              text: this.units,
+              font: {
+                size: 12,
+              },
+              standoff: 0,
+            },
+          },
+          xaxis: {
+            rangeslider: {
+              thickness: 0.06,
+            },
+            title: {
+              text: '',
+              font: {
+                size: 12,
+              },
+              standoff: 30, // create gap between axis and title
+            },
+            // layer: 'below traces',
+          },
+          margin: {
+            l: 50, // 80 is default
+            r: 60, // 80 is default
+            t: 20, // 100 is default
+          },
+        };
+        const config = {
+          displaylogo: false, // hides the plotly logo from the modebar when false
+          scrollZoom: true, // allows mouse wheel scroll when true
+          staticPlot: false, // disable modebar options when true
+          responsive: true, // responsive to window size
+          autosizeable: true,
+          toImageButtonOptions: {
+            // set defaults for saving plot image
+            format: 'png', // 'jpeg',
+            filename: `${this.dataName.replace(/ /g, '-')}-uploaded-time-series-plot`,
+          },
+        };
+        return Plotly.newPlot(ctx, data, layout, config);
       },
     },
   };

@@ -1,63 +1,34 @@
 <template>
   <div>
-    <h3>Technology Specs: Solar PV</h3>
-    Solar generation profile upload
+    <h3>Technology Specs: Solar PV Generation Profile Upload</h3>
     <hr>
-    <form>
-
-      <div v-if="inputGenProfileExists" class="form-group row">
-
+    <form class="form-horizontal form-buffer">
+      <timeseries-data-upload
+        chart-name="chartUploadedTimeSeries"
+        data-name="solar generation profile"
+        units="kW / rated kW"
+        @uploaded="receiveTimeseriesData"
+        :data-exists="(tsData !== null)"
+        :data-time-series="tsData"
+        :key="childKey"
+      />
+      <div v-if="(generationProfile === null)">
+        <hr>
         <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="gen">Provide data:</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              id="gen-yes"
-              type="radio"
-              v-model="inputUseExistingGenProfile"
-              v-bind:value="true">
-            <label for="gen-yes">Use existing generation profile</label>
-            <br>
-            <input
-              id="gen-no"
-              type="radio"
-              v-model="inputUseExistingGenProfile"
-              v-bind:value="false">
-            <label for="gen-no">Upload a new generation profile</label>
+          <div class="col-md-12">
+            <i>
+              <a href="files/SamplePVgen-8760.csv" download class="important-link">Click here to download a sample <code>.csv</code> file</a> with a 60-minute timestep for a year with 365 days (8,760 readings)
+            </i>
           </div>
         </div>
-
-      </div>
-
-      <div v-if="!inputUseExistingGenProfile | !inputGenProfileExists" class="form-group row">
-
-        <div class="form-horizontal form-buffer">
-          <timeseries-data-upload
-            data-name="solar generation profile"
-            units="kW / rated kW"
-            @uploaded="receiveTimeseriesData"
-            :data-exists="false"
-          />
-          <br>
-          <div class="form-group row">
-            <div class="col-md-12">
-              <i>
-                <a href="files/SamplePVgen-8760.csv" download class="important-link">Click here to download a sample <code>.csv</code> file</a> with a 60-minute timestep for a year with 365 days (8,760 readings)
-              </i>
-            </div>
-          </div>
-          <div class="form-group row">
-            <div class="col-md-12">
-              <i>
-                <a href="files/SamplePVgen-8784.csv" download class="important-link">Click here to download a sample <code>.csv</code> file</a> with a 60-minute timestep <b>for a leap year with 366 days</b> (8,784 readings)
-              </i>
-            </div>
+        <div class="form-group row">
+          <div class="col-md-12">
+            <i>
+              <a href="files/SamplePVgen-8784.csv" download class="important-link">Click here to download a sample <code>.csv</code> file</a> with a 60-minute timestep <b>for a leap year with 366 days</b> (8,784 readings)
+            </i>
           </div>
         </div>
-
       </div>
-
       <br>
       <hr>
 
@@ -76,27 +47,44 @@
   import '@/assets/samples/SamplePVgen-8784.csv';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import PVGenerationTimeSeries from '@/models/PVGenerationTimeSeries';
+  import model from '@/models/TechnologySpecsSolarPV';
   import NavButtons from '@/components/Shared/NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
+
+  const { defaults } = model;
 
   export default {
     components: { NavButtons, TimeseriesDataUpload },
     mixins: [csvUploadMixin],
     props: ['solarId'],
     data() {
-      return {
-        inputUseExistingGenProfile: true,
-        inputGenProfileExists: this.generationProfileExists(),
-      };
+      if (this.generationProfileExists()) {
+        return { generationProfile: this.getGenerationProfile() };
+      }
+      return { generationProfile: defaults.generationProfile };
+    },
+    computed: {
+      tsData() {
+        if (this.inputTimeseries === null) {
+          return this.generationProfile;
+        }
+        return new PVGenerationTimeSeries(this.inputTimeseries);
+      },
     },
     methods: {
       generationProfileExists() {
         const solarPVSpecs = this.$store.getters.getSolarPVById(this.solarId);
         return solarPVSpecs && solarPVSpecs.generationProfile !== null;
       },
+      getGenerationProfile() {
+        const solarPVSpecs = this.$store.getters.getSolarPVById(this.solarId);
+        return solarPVSpecs.generationProfile;
+      },
       save() {
-        const payload = this.makeSavePayload();
-        this.$store.dispatch('addGenerationProfileToTechnologySpecsPV', payload);
+        if (this.inputTimeseries !== null) {
+          const payload = this.makeSavePayload();
+          this.$store.dispatch('addGenerationProfileToTechnologySpecsPV', payload);
+        }
         const activePayload = this.makeSaveActivePayload();
         this.$store.dispatch('activateTech', activePayload);
         this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
@@ -108,10 +96,9 @@
         };
       },
       makeSavePayload() {
-        const ts = new PVGenerationTimeSeries(this.inputTimeseries);
         return {
           solarId: this.solarId,
-          generationProfile: ts,
+          generationProfile: this.tsData,
         };
       },
     },
