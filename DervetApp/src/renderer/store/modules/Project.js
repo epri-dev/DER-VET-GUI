@@ -489,21 +489,23 @@ const mutations = {
     state.energyPriceSourceWholesale = wholesaleEnergyPrices;
     if (wholesaleEnergyPrices) {
       state.objectivesDA = true;
+      state.objectivesRetailEnergyChargeReduction = false;
     } else {
+      state.objectivesDA = false;
       state.objectivesRetailEnergyChargeReduction = true;
     }
   },
   SELECT_OTHER_SERVICES(state, listOfServices) {
     state.listOfActiveServices = listOfServices;
     state.objectivesResilience = (listOfServices.indexOf('Reliability') > -1);
-    state.objectivesBackupPower = (listOfServices.indexOf('BackupPower') > -1);
-    state.objectivesRetailDemandChargeReduction = (listOfServices.indexOf('RetailDemandChargeReduction') > -1);
+    state.objectivesBackupPower = (listOfServices.indexOf('Backup Power') > -1);
+    state.objectivesRetailDemandChargeReduction = (listOfServices.indexOf('Retail Demand Charge Reduction') > -1);
     state.objectivesSR = (listOfServices.indexOf('SR') > -1);
     state.objectivesNSR = (listOfServices.indexOf('NSR') > -1);
     state.objectivesFR = (listOfServices.indexOf('FR') > -1);
     state.objectivesLoadFollowing = (listOfServices.indexOf('LF') > -1);
     state.objectivesDeferral = (listOfServices.indexOf('Deferral') > -1);
-    state.objectivesUserDefined = (listOfServices.indexOf('UserDefined') > -1);
+    state.objectivesUserDefined = (listOfServices.indexOf('User Defined') > -1);
   },
   SET_OBJECTIVE_FINANCES_ORDER(state) {
     let tail = null;

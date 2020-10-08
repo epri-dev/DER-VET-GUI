@@ -5,7 +5,7 @@
     <form class="form-horizontal form-buffer">
       <div class="form-group row">
         <div class="col-md-12 checkboxes">
-          <input 
+          <input
             id="no-charging-from-grid"
             type="checkbox"
             v-model="inputNoChargingFromGrid">
@@ -28,13 +28,16 @@
         </div>
       </div>
       <timeseries-data-upload
+        chart-name="chartUploadedTimeSeries"
         data-name="site load"
         units="kW"
         @uploaded="receiveTimeseriesData"
-        :data-exists="siteLoad !== null"
+        :data-exists="(tsData !== null)"
+        :data-time-series="tsData"
+        :key="childKey"
       />
-      <hr>
       <div v-if="(siteLoad === null)">
+        <hr>
         <div class="form-group row">
           <div class="col-md-12">
             <i>
@@ -84,10 +87,19 @@
         objectivesPath: p.paths.objectives,
       };
     },
+    computed: {
+      tsData() {
+        if (this.inputTimeseries === null) {
+          return this.siteLoad;
+        }
+        return new SiteLoadTimeSeries(this.inputTimeseries);
+      },
+    },
     methods: {
       save() {
-        const siteLoad = new SiteLoadTimeSeries(this.inputTimeseries);
-        this.$store.dispatch('setSiteLoad', siteLoad);
+        if (this.inputTimeseries !== null) {
+          this.$store.dispatch('setSiteLoad', this.tsData);
+        }
         this.$store.dispatch('setNoChargingFromGrid', this.inputNoChargingFromGrid);
         this.$store.dispatch('setNoDischargingToGrid', this.inputNoDischargingToGrid);
       },

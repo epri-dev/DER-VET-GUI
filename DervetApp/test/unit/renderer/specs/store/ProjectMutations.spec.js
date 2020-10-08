@@ -1,4 +1,6 @@
 import project from '@/store/modules/Project';
+// import project, { state as defaultState } from '@/store/modules/Project';
+
 
 const { mutations } = project;
 
@@ -55,4 +57,77 @@ describe('Project Mutations', () => {
     expect(state.retailTariffBillingPeriods[0]).to.equal(bp3);
     expect(state.retailTariffBillingPeriods[1]).to.equal(bp4);
   });
+
+  it('should set retail and wholesale booleans accordingly when true', () => {
+    const state = { objectivesDA: false };
+
+    mutations.CHOOSE_ENERGY_STRUCTURE(state, true);
+
+    expect(state.objectivesDA).to.equal(true);
+    expect(state.objectivesRetailEnergyChargeReduction).to.equal(false);
+    expect(state.energyPriceSourceWholesale).to.equal(true);
+  });
+
+  it('should set retail and wholesale booleans accordingly when false', () => {
+    const state = { objectivesDA: true };
+
+    mutations.CHOOSE_ENERGY_STRUCTURE(state, false);
+
+    expect(state.objectivesDA).to.equal(false);
+    expect(state.objectivesRetailEnergyChargeReduction).to.equal(true);
+    expect(state.energyPriceSourceWholesale).to.equal(false);
+  });
+
+  it('should set services accordingly from list', () => {
+    const list1 = ['User Defined', 'Retail Demand Charge Reduction', 'SR'];
+    const state = {};
+
+    mutations.SELECT_OTHER_SERVICES(state, list1);
+
+    expect(state.listOfActiveServices).to.equal(list1);
+    expect(state.objectivesUserDefined).to.equal(true);
+    expect(state.objectivesRetailDemandChargeReduction).to.equal(true);
+    expect(state.objectivesSR).to.equal(true);
+    expect(state.objectivesResilience).to.equal(false);
+    expect(state.objectivesBackupPower).to.equal(false);
+    expect(state.objectivesNSR).to.equal(false);
+    expect(state.objectivesFR).to.equal(false);
+    expect(state.objectivesLoadFollowing).to.equal(false);
+    expect(state.objectivesDeferral).to.equal(false);
+    expect(state.objectivesFR).to.equal(false);
+  });
+
+  /*
+  it('should set ordered routes from objectives state', () => {
+    const state = {
+      ...defaultState,
+      objectivesDA: true,
+      objectivesRetailEnergyChargeReduction: false,
+    }
+
+    const newLL = {
+      next: {
+        next: {
+          next: {
+            next: {
+              next: {
+                next: null,
+                path: '/wizard/financial-inputs-retail-tariff'
+              },
+              path: '/wizard/financial-inputs-external-incentives'
+            },
+            path: '/wizard/financial-inputs'
+          },
+          path: '/wizard/objectives-parameters-da'
+        },
+        path: '/wizard/objectives-parameters-site-information'
+      },
+      path: '/wizard/objectives'
+    };
+
+    mutations.SET_OBJECTIVE_FINANCES_ORDER(state);
+
+    expect(state.routeObjectivesFinancialsLL).to.equal(newLL);
+  });
+  */
 });
