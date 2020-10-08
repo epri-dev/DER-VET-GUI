@@ -1,5 +1,4 @@
 import { cloneDeep, flatten } from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
 
 import getCurrentYear from '@/util/time';
 import PageLink from '@/models/PageRouting';
@@ -11,7 +10,7 @@ const getDefaultState = () => ({
   type: null,
   resultsData: null,
   inputsDirectory: null,
-  resultsDirectory: `./Results/${uuidv4()}`,
+  resultsDirectory: null,
 
   energyPriceSourceWholesale: false,
   objectivesRetailEnergyChargeReduction: false,
@@ -172,6 +171,9 @@ const mutations = {
   },
   SET_INPUTS_DIRECTORY(state, newInputsDirectory) {
     state.inputsDirectory = newInputsDirectory;
+  },
+  SET_RESULTS_DIRECTORY(state, newResultsDirectory) {
+    state.resultsDirectory = newResultsDirectory;
   },
   SET_DISCOUNT_RATE(state, newDiscountRate) {
     state.discountRate = newDiscountRate;
@@ -541,6 +543,9 @@ const actions = {
   },
   setInputsDirectory({ commit }, newInputsDirectory) {
     commit('SET_INPUTS_DIRECTORY', newInputsDirectory);
+  },
+  setResultsDirectory({ commit }, newResultsDirectory) {
+    commit('SET_RESULTS_DIRECTORY', newResultsDirectory);
   },
   setDiscountRate({ commit }, newDiscountRate) {
     commit('SET_DISCOUNT_RATE', newDiscountRate);

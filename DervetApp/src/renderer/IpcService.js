@@ -4,9 +4,7 @@ import store from './store';
 export default class IpcService {
   static registerChannels() {
     ipcRenderer.on('dervet-results', (event, results) => {
-      console.log('Received DERVET results');
-      console.log(`Pro forma: ${results.proForma}`);
-      console.log(`Cost benefit: ${results.costBenefit}`);
+      console.log(`Received DERVET results: ${JSON.stringify(results)}`);
       store.dispatch('receiveResults', results);
     });
   }

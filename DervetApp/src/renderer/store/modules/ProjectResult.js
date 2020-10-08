@@ -6,7 +6,7 @@ const getDefaultResultState = () => ({
   sensitivityAnalysisCase: null,
   resultsLoaded: false,
   errorMessage: null,
-  data: [], // save result models here
+  data: null, // save result models here
   sensitivitySummary: null,
   runInProgress: false,
 });
@@ -18,10 +18,11 @@ const mutations = {
     state.id = newId;
   },
   SET_RUN_IN_PROGRESS(state) {
+    state.data = null;
     state.runInProgress = true;
   },
-  SET_RESULT_SUCCESS(state, result) {
-    state.data = result.data;
+  SET_RESULT_SUCCESS(state, results) {
+    state.data = results;
     state.resultsLoaded = true;
     state.runInProgress = false;
   },

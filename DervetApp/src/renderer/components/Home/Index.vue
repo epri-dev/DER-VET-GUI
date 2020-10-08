@@ -12,7 +12,7 @@
         </router-link>
       </div>
       <div class="col-md-6 text-center">
-        <router-link v-on:click.native="runDervet()" to="/import-project" class="btn btn-lg btn-info">
+        <router-link to="/import-project" class="btn btn-lg btn-info">
           Import Existing Project
         </router-link>
       </div>
@@ -43,18 +43,11 @@
 </template>
 
 <script>
-  import projectFixture from '@/assets/samples/projectFixture.js';
-
   export default {
     name: 'index',
     methods: {
       resetProjectToDefault() {
         this.$store.dispatch('resetProjectToDefault');
-      },
-      runDervet() {
-        // TODO: note that there is currently no validation, so calling this with an
-        // incomplete Project object will likely result in an unhandled exception
-        this.$store.dispatch('runDervet', projectFixture);
       },
     },
   };

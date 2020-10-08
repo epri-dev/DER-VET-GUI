@@ -1,7 +1,6 @@
+import log from 'electron-log';
 import { callDervet, readDervetResults, writeDervetInputs } from './service/dervet';
-
 require('dotenv').config();
-
 import { app, BrowserWindow, ipcMain } from 'electron' // eslint-disable-line
 
 /**
@@ -56,7 +55,10 @@ function registerIpcChannels() {
       .then(() => callDervet(modelParametersPath))
       .then(() => readDervetResults(resultsPath, dervetInputs.expectedResultCsvs))
       .then(results => sendResults(event, results))
-      .catch(err => console.log(`error: ${err}`));
+      .catch((err) => {
+        log.error(JSON.stringify(err));
+        event.sender.send('dervet-results', err);
+      });
   });
 }
 

@@ -12,7 +12,7 @@ process.env.BABEL_ENV = 'test'
 
 let webpackConfig = merge(baseConfig, {
   devtool: '#inline-source-map',
-  mode: 'production',
+  mode: 'development',
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"testing"'

@@ -64,9 +64,31 @@ npm run lint
 
 #### Application Packaging
 
+Setup & Dependencies
+
+1. Install [pyenv](https://github.com/pyenv/pyenv) and [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv).
+2. Create a virtual environment with necessary dependencies:
+```
+env PYTHON_CONFIGURE_OPTS='--enable-shared' pyenv install 3.6.5
+cd dervet-gui/DervetBackEnd
+pyenv local 3.6.5
+pyenv virtualenv 3.6.5 venv
+pip install -r requirements.txt -r packaging-requirements.txt
+```
+
+Package
+
 ``` bash
-# package python flask backend with pyinstaller TODO: automate this
-pyinstaller --onefile dervetpy/api.py
-cp dervetpy/dist/api extraResources/
+# package dervet backend with pyinstaller (note: change absolute dervet and storagevet paths in pyinstaller command)
+cd dervet-gui/DervetBackEnd/dervet
+pyinstaller --paths=/path/to/dervet-gui/DervetBackEnd/dervet/storagevet --paths=/path/to/dervet-gui/DervetBackEnd/dervet --additional-hooks-dir=. --add-data "Schema.json:."  --onefile run_DERVET.py
+cp dist/run_DERVET ../../DervetApp/extraResources/
+cd dervet-gui/DervetApp
 npm run build
 ```
+
+The resulting disk image (if building for e.g. mac) will be saved to:  
+`DervetApp/build/dervetapp-x.x.x-mac.dmg`
+
+Log files (when running on a mac) will be saved here:
+`~/Library/Logs/{app name}/{process type}.log`
