@@ -92,7 +92,7 @@
             <b-form-radio-group
               v-model="inputCombinedMarket"
               :options="sharedValidation.optionsYN.allowedValues"
-            ></b-form-radio-group> 
+            ></b-form-radio-group>
           </b-form-group>
         </div>
         <div class="col-md-5">
@@ -103,27 +103,35 @@
     <div class="form-horizontal form-buffer">
 
       <timeseries-data-upload
+        chart-name="chartUploadedTimeSeries"
         data-name="frequency regulation price"
         units="$/kW"
         @uploaded="receiveTimeseriesData"
-        :data-exists="frPrice !== null"
+        :data-exists="(tsData !== null)"
+        :data-time-series="tsData"
+        :key="childKey"
         v-if="inputCombinedMarket"
       />
-      
-      
+
       <timeseries-data-upload
+        chart-name="chartUploadedTimeSeries2"
         data-name="frequency regulation up price"
         units="$/kW"
-        @uploaded="receiveTimeseriesDataUpPrice"
-        :data-exists="frUpPrice !== null"
+        @uploaded="receiveTimeseriesData2"
+        :data-exists="(tsData2 !== null)"
+        :data-time-series="tsData2"
+        :key="childKey2"
         v-if="!(inputCombinedMarket)"
       />
 
       <timeseries-data-upload
+        chart-name="chartUploadedTimeSeries3"
         data-name="frequency regulation down price"
         units="$/kW"
-        @uploaded="receiveTimeseriesDataDownPrice"
-        :data-exists="frDownPrice !== null"
+        @uploaded="receiveTimeseriesData3"
+        :data-exists="(tsData3 !== null)"
+        :data-time-series="tsData3"
+        :key="childKey3"
         v-if="!(inputCombinedMarket)"
       />
 
@@ -138,8 +146,8 @@
 <script>
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import FRPriceTimeSeries from '@/models/FRPriceTimeSeries';
-  import FRDownPriceTimeSeries from '@/models/FRDownPriceTimeSeries';
   import FRUpPriceTimeSeries from '@/models/FRUpPriceTimeSeries';
+  import FRDownPriceTimeSeries from '@/models/FRDownPriceTimeSeries';
   import { sharedValidation } from '@/models/Shared';
   import NavButtons from '@/components/Shared/NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
@@ -158,26 +166,40 @@
         inputCombinedMarket: p.frCombinedMarket,
         inputDuration: p.frDuration,
         frPrice: p.frPrice,
-
         frUpPrice: p.frUpPrice,
         frDownPrice: p.frDownPrice,
-        inputUpTimeseries: null,
-        inputDownTimeseries: null,
       };
+    },
+    computed: {
+      tsData() {
+        if (this.inputTimeseries === null) {
+          return this.frPrice;
+        }
+        return new FRPriceTimeSeries(this.inputTimeseries);
+      },
+      tsData2() {
+        if (this.inputTimeseries2 === null) {
+          return this.frUpPrice;
+        }
+        return new FRUpPriceTimeSeries(this.inputTimeseries2);
+      },
+      tsData3() {
+        if (this.inputTimeseries3 === null) {
+          return this.frDownPrice;
+        }
+        return new FRDownPriceTimeSeries(this.inputTimeseries3);
+      },
     },
     methods: {
       save() {
         if (this.inputTimeseries !== null) {
-          const price = new FRPriceTimeSeries(this.inputTimeseries);
-          this.$store.dispatch('newFRPrice', price);
+          this.$store.dispatch('setFRPrice', this.tsData);
         }
-        if (this.inputUpTimeseries !== null) {
-          const upPrice = new FRUpPriceTimeSeries(this.inputUpTimeseries);
-          this.$store.dispatch('setFRUpPrice', upPrice);
+        if (this.inputTimeseries2 !== null) {
+          this.$store.dispatch('setFRUpPrice', this.tsData2);
         }
-        if (this.inputDownTimeseries !== null) {
-          const downPrice = new FRDownPriceTimeSeries(this.inputDownTimeseries);
-          this.$store.dispatch('setFRDownPrice', downPrice);
+        if (this.inputTimeseries3 !== null) {
+          this.$store.dispatch('setFRDownPrice', this.tsData3);
         }
         this.$store.dispatch('setFReou', this.inputEOU);
         this.$store.dispatch('setFReod', this.inputEOD);
@@ -185,12 +207,6 @@
         this.$store.dispatch('setFREnergyGrowth', this.inputEnergyPriceGrowth);
         this.$store.dispatch('setFRCombinedMarket', this.inputCombinedMarket);
         this.$store.dispatch('setFRDuration', this.inputDuration);
-      },
-      receiveTimeseriesDataUpPrice(timeseries) {
-        this.inputUpTimeseries = timeseries;
-      },
-      receiveTimeseriesDataDownPrice(timeseries) {
-        this.inputDownTimeseries = timeseries;
       },
     },
   };

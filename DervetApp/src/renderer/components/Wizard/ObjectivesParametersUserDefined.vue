@@ -19,33 +19,45 @@
           <p class="tool-tip">Yearly Cost Avoided for meeting the user-defined constraints</p>
         </div>
       </div>
-      
+
       <timeseries-data-upload
+        chart-name="chartUploadedTimeSeries"
         data-name="maximum power"
         units="kW"
-        @uploaded="receiveTimeseriesDataPowerMax"
-        :data-exists="userPowerMax !== null"
-      />
-      
-      <timeseries-data-upload
-        data-name="minimum power"
-        units="kW"
         @uploaded="receiveTimeseriesData"
-        :data-exists="userPowerMin !== null"
-      />
-            
-      <timeseries-data-upload
-        data-name="maximum energy"
-        units="kWh"
-        @uploaded="receiveTimeseriesDataDownEnergyMax"
-        :data-exists="userEnergyMax !== null"
+        :data-exists="(tsData !== null)"
+        :data-time-series="tsData"
+        :key="childKey"
       />
 
       <timeseries-data-upload
+        chart-name="chartUploadedTimeSeries2"
+        data-name="minimum power"
+        units="kW"
+        @uploaded="receiveTimeseriesData2"
+        :data-exists="(tsData2 !== null)"
+        :data-time-series="tsData2"
+        :key="childKey2"
+      />
+
+      <timeseries-data-upload
+        chart-name="chartUploadedTimeSeries3"
+        data-name="maximum energy"
+        units="kWh"
+        @uploaded="receiveTimeseriesData3"
+        :data-exists="(tsData3 !== null)"
+        :data-time-series="tsData3"
+        :key="childKey3"
+      />
+
+      <timeseries-data-upload
+        chart-name="chartUploadedTimeSeries4"
         data-name="minimum energy"
         units="kWh"
-        @uploaded="receiveTimeseriesDataDownEnergyMin"
-        :data-exists="userEnergyMin !== null"
+        @uploaded="receiveTimeseriesData4"
+        :data-exists="(tsData4 !== null)"
+        :data-time-series="tsData4"
+        :key="childKey4"
       />
       <hr />
       <nav-buttons
@@ -57,10 +69,10 @@
 
 <script>
   import { sharedValidation } from '@/models/Shared.js';
-  import UserEnergyMaxTimeSeries from '@/models/UserEnergyMaxTimeSeries';
-  import UserEnergyMinTimeSeries from '@/models/UserEnergyMinTimeSeries';
   import UserPowerMaxTimeSeries from '@/models/UserPowerMaxTimeSeries';
   import UserPowerMinTimeSeries from '@/models/UserPowerMinTimeSeries';
+  import UserEnergyMaxTimeSeries from '@/models/UserEnergyMaxTimeSeries';
+  import UserEnergyMinTimeSeries from '@/models/UserEnergyMinTimeSeries';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import NavButtons from '@/components/Shared/NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
@@ -73,43 +85,54 @@
       return {
         sharedValidation,
         inputPrice: p.userPrice,
-        userPowerMin: p.userPowerMin,
         userPowerMax: p.userPowerMax,
-        userEnergyMin: p.userEnergyMin,
+        userPowerMin: p.userPowerMin,
         userEnergyMax: p.userEnergyMax,
-        inputPowerMax: null,
-        inputEnergyMin: null,
-        inputEnergyMax: null,
+        userEnergyMin: p.userEnergyMin,
       };
     },
+    computed: {
+      tsData() {
+        if (this.inputTimeseries === null) {
+          return this.userPowerMax;
+        }
+        return new UserPowerMaxTimeSeries(this.inputTimeseries);
+      },
+      tsData2() {
+        if (this.inputTimeseries2 === null) {
+          return this.userPowerMin;
+        }
+        return new UserPowerMinTimeSeries(this.inputTimeseries2);
+      },
+      tsData3() {
+        if (this.inputTimeseries3 === null) {
+          return this.userEnergyMax;
+        }
+        return new UserEnergyMaxTimeSeries(this.inputTimeseries3);
+      },
+      tsData4() {
+        if (this.inputTimeseries4 === null) {
+          return this.userEnergyMin;
+        }
+        return new UserEnergyMinTimeSeries(this.inputTimeseries4);
+      },
+    },
+
     methods: {
       save() {
-        if (this.inputEnergyMin !== null) {
-          const energyMin = new UserEnergyMinTimeSeries(this.inputEnergyMin);
-          this.$store.dispatch('setUserEnergyMin', energyMin);
-        }
-        if (this.inputEnergyMax !== null) {
-          const energyMax = new UserEnergyMaxTimeSeries(this.inputEnergyMax);
-          this.$store.dispatch('setUserEnergyMax', energyMax);
-        }
         if (this.inputTimeseries !== null) {
-          const powerMin = new UserPowerMinTimeSeries(this.inputTimeseries);
-          this.$store.dispatch('setUserPowerMin', powerMin);
+          this.$store.dispatch('setUserPowerMax', this.tsData);
         }
-        if (this.inputPowerMax !== null) {
-          const powerMax = new UserPowerMaxTimeSeries(this.inputPowerMax);
-          this.$store.dispatch('setUserPowerMax', powerMax);
+        if (this.inputTimeseries2 !== null) {
+          this.$store.dispatch('setUserPowerMin', this.tsData2);
+        }
+        if (this.inputTimeseries3 !== null) {
+          this.$store.dispatch('setUserEnergyMax', this.tsData3);
+        }
+        if (this.inputTimeseries4 !== null) {
+          this.$store.dispatch('setUserEnergyMin', this.tsData4);
         }
         this.$store.dispatch('setUserPrice', this.inputPrice);
-      },
-      receiveTimeseriesDataPowerMax(timeseries) {
-        this.inputPowerMax = timeseries;
-      },
-      receiveTimeseriesDataDownEnergyMin(timeseries) {
-        this.inputEnergyMin = timeseries;
-      },
-      receiveTimeseriesDataDownEnergyMax(timeseries) {
-        this.inputEnergyMax = timeseries;
       },
     },
   };
