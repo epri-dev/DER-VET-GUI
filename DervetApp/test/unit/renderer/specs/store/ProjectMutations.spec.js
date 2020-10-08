@@ -1,5 +1,6 @@
 import project from '@/store/modules/Project';
-import { state as defaultState } from '@/store/modules/Project';
+// import project, { state as defaultState } from '@/store/modules/Project';
+
 
 const { mutations } = project;
 
@@ -83,7 +84,7 @@ describe('Project Mutations', () => {
 
     mutations.SELECT_OTHER_SERVICES(state, list1);
 
-    expect(state.listOfActiveServices).to.equal(list1)
+    expect(state.listOfActiveServices).to.equal(list1);
     expect(state.objectivesUserDefined).to.equal(true);
     expect(state.objectivesRetailDemandChargeReduction).to.equal(true);
     expect(state.objectivesSR).to.equal(true);
@@ -104,12 +105,29 @@ describe('Project Mutations', () => {
       objectivesRetailEnergyChargeReduction: false,
     }
 
-    const newLL = { next: { next: { next: { next: { next: { next: null, path: '/wizard/financial-inputs-retail-tariff' }, path: '/wizard/financial-inputs-external-incentives' }, path: '/wizard/financial-inputs' }, path: '/wizard/objectives-parameters-da' }, path: '/wizard/objectives-parameters-site-information' }, path: '/wizard/objectives' };
+    const newLL = {
+      next: {
+        next: {
+          next: {
+            next: {
+              next: {
+                next: null,
+                path: '/wizard/financial-inputs-retail-tariff'
+              },
+              path: '/wizard/financial-inputs-external-incentives'
+            },
+            path: '/wizard/financial-inputs'
+          },
+          path: '/wizard/objectives-parameters-da'
+        },
+        path: '/wizard/objectives-parameters-site-information'
+      },
+      path: '/wizard/objectives'
+    };
 
     mutations.SET_OBJECTIVE_FINANCES_ORDER(state);
 
     expect(state.routeObjectivesFinancialsLL).to.equal(newLL);
   });
   */
-
 });
