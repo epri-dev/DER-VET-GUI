@@ -125,7 +125,7 @@
       </fieldset>
       <hr />
       <nav-buttons
-        :back-link="techSpecsPath"
+        :back-link="TECH_SPECS_PATH"
         :continue-link="siteInformationPath"
         :save="save"
       />
@@ -136,13 +136,12 @@
 <script>
   import model from '@/models/StartProject';
   import NavButtons from '@/components/Shared/NavButtons';
+  import { TECH_SPECS_PATH } from '@/router/constants';
 
   const { validation } = model;
 
   export default {
     components: { NavButtons },
-    // computed: {
-    // },
     data() {
       const p = this.$store.state.Project;
       const data = { validation };
@@ -150,7 +149,7 @@
         ...data,
         ...this.getDataFromProject(),
         siteInformationPath: p.paths.objectivesSiteInformation,
-        techSpecsPath: p.paths.techSpecs,
+        TECH_SPECS_PATH,
       };
     },
     methods: {

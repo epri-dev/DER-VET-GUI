@@ -1,5 +1,6 @@
 <template>
   <div class="container body-content">
+
     <h3>Project Configuration</h3>
     <div class="form-horizontal form-buffer">
       <div class="row form-group">
@@ -15,10 +16,16 @@
       </div>
       <div class="row form-group">
         <div class="col-md-3 control-label">
-          <b>Start year</b>
+          <b>Start Year</b>
         </div>
         <div class="col-md-4">
-          <input v-model.number="inputStartYear" class="form-control numberbox" id="startYear" type="number" min="1980" step="1">
+          <input
+            v-model.number="inputStartYear.value"
+            class="form-control numberbox"
+            id="startYear"
+            type="number"
+            min="1980"
+            step="1">
         </div>
         <div class="col-md-5">
           <p class="tool-tip">Year the project starts.</p>
@@ -39,7 +46,6 @@
           </div>
           <div class="col-md-5">
             <p class="tool-tip">Defines when/how to end CBA analysis</p>
-            <!-- <p class="tool-tip">Currently: {{projAnalysisHorizonMode}}</p> -->
           </div>
         </div>
         <div class="row form-group" v-if="inputHorizonMode === '1'">
@@ -47,12 +53,15 @@
             <b>Analysis Horizon</b>
           </div>
           <div class="col-md-4">
-            <input v-model.number="inputAnalysisHorizon" class="form-control numberbox" id="AnalysisHorizon">
+            <input
+              v-model.number="inputAnalysisHorizon"
+              type="number"
+              class="form-control numberbox"
+              id="AnalysisHorizon">
             <span class="unit-label">years</span>
           </div>
           <div class="col-md-5">
             <p class="tool-tip">The number of years the analysis will go for. The analysis will not consider equipment lifetime or anything else when determining the number of years to run for.</p>
-            <!-- <p class="tool-tip">Currently: {{projectAnalysisHorizon}}</p> -->
           </div>
         </div>
       </fieldset>
@@ -67,7 +76,6 @@
           </div>
           <div class="col-md-5">
             <p class="tool-tip">Wizard mode only allows one year of data. If the year this data comes from is different from the year the optimization is run against, it will be escalated from the data year to the optimization year.</p>
-            <!-- <p class="tool-tip">Currently: {{projDataYear}}</p> -->
           </div>
         </div>
         <div class="form-group row">
@@ -140,57 +148,75 @@
         </div>
       </fieldset>
 
-      <hr />
+      <hr/>
+
+      <div v-if="showErrors">
+        Please correct the following errors:
+        <div v-for="error in errorsAtLastSubmit">{{error}}</div>
+        <hr/>
+      </div>
+
       <nav-buttons
         back-link="/new-project"
         continue-link="/wizard/technology-specs"
-        :save="saveAndContinue"
+        :save="wrappedSave"
+        :disabled="!isValid"
       />
     </div>
   </div>
 </template>
 
 <script>
+  import { cloneDeep } from 'lodash';
+
   import model from '@/models/StartProject';
   import NavButtons from '@/components/Shared/NavButtons';
+  import { StartYear } from '@/models/Project/Fields';
 
   const { validation } = model;
 
   export default {
     components: { NavButtons },
     computed: {
+      errors() {
+        const errors = [];
+        errors.push(...this.inputStartYear.getValidationErrors());
+        return errors;
+      },
+      isValid() {
+        return this.errors.length === 0;
+      },
+      wrappedSave() {
+        if (!this.isValid) {
+          return () => {
+            this.showErrors = !this.isValid;
+            this.errorsAtLastSubmit = cloneDeep(this.errors);
+          };
+        }
+        return this.saveAndContinue;
+      },
       projectAnalysisHorizon() {
         return this.$store.state.Project.analysisHorizon;
       },
       projectName() {
         return this.$store.state.Project.name;
       },
-      projStartYear() {
-        return this.$store.state.Project.startYear;
-      },
-      projAnalysisHorizonMode() {
-        return this.$store.state.Project.analysisHorizonMode;
-      },
-      projDataYear() {
-        return this.$store.state.Project.dataYear;
-      },
-      projGridLocation() {
-        return this.$store.state.Project.gridLocation;
-      },
-      projOwnership() {
-        return this.$store.state.Project.ownership;
-      },
     },
     data() {
       const data = { validation };
-      return { ...data, ...this.getDataFromProject() };
+      return {
+        ...data,
+        ...this.getDataFromProject(),
+        showErrors: false,
+        errorsAtLastSubmit: null,
+      };
     },
     methods: {
       getDataFromProject() {
         const projectSpecs = this.$store.state.Project;
         return {
           inputTimestep: projectSpecs.timestep,
-          inputStartYear: projectSpecs.startYear,
+          inputStartYear: new StartYear(projectSpecs.startYear),
           inputOwnership: projectSpecs.ownership,
           inputLocation: projectSpecs.gridLocation,
           inputHorizonMode: projectSpecs.analysisHorizonMode,
@@ -205,7 +231,7 @@
         this.inputsDirectory = e.target.files[0].path;
       },
       saveAndContinue() {
-        this.$store.dispatch('setStartYear', this.inputStartYear);
+        this.$store.dispatch('setStartYear', this.inputStartYear.value);
         this.$store.dispatch('setAnalysisHorizonMode', this.inputHorizonMode);
         this.$store.dispatch('setAnalysisHorizon', this.inputAnalysisHorizon);
         this.$store.dispatch('setDataYear', this.inputDataYear);
