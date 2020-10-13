@@ -1,15 +1,18 @@
 class BaseTableData {
-  constructor(fileName, data, hasHeaderRow) {
+  constructor(fileName, rawArrayData, hasHeaderRow, hasIndexRow = false, dateTimeColName = null) {
     this.fileName = fileName;
-    this.data = null;
     this.hasHeaderRow = hasHeaderRow;
+    this.hasIndexRow = hasIndexRow;
+    this.dateTimeColName = dateTimeColName;
+    this.data = null;
     this.columnHeaders = null;
-    this.loadDataFromFile(data);
+    this.columnDataByYear = null;
+    this.loadDataFromFile(rawArrayData);
   }
   getColumnIndex(colHeader) {
     let i = 0;
     while (this.columnHeaders[i] !== colHeader) {
-      if (i === this.columnHeaders.length) {
+      if ((i + 1) === this.columnHeaders.length) {
         i = -1;
         break;
       }
@@ -36,15 +39,90 @@ class BaseTableData {
     return this.data[rowIndex][colIndex];
   }
   loadDataFromFile(arrayData) {
-    this.data = arrayData; // TODO read raw data at location
+    this.data = arrayData;
     if (this.hasHeaderRow) {
       [this.columnHeaders, ...this.data] = this.data;
+    }
+    if (typeof (this.dateTimeColName) === 'string') {
+      this.columnDataByYear = this.columnifyDataByYear();
     }
     return true;
   }
   static toCamelCaseString(text) {
     text = text.replace(/([^a-zA-Z0-9.])/g, ' ').replace(/[\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''));
     return text.substr(0, 1).toLowerCase() + text.substr(1);
+  }
+  emptyRowObjectTemplate() {
+    // creates an object where the keys are CamelCased column headers
+    // and the values are empty lists
+    const template = {};
+    let colNum = 0;
+    while (colNum < this.columnHeaders.length) {
+      const currentHeader = this.columnHeaders[colNum];
+      if (currentHeader !== this.dateTimeColName) {
+        const key = BaseTableData.toCamelCaseString(this.columnHeaders[colNum]);
+        template[key] = [];
+      }
+      colNum += 1;
+    }
+    return template;
+  }
+  static getYearFromString(text) {
+    const yearList = text.match(/\d{4}/g);
+    if (yearList.length) {
+      return yearList[0];
+    }
+    return 0;
+  }
+  columnifyDataByYear() {
+    // organize data by column instead of by row (in an object)
+    const dataByYear = []; // each year of data will be saved here
+
+    const indexOfDateTime = this.getColumnIndex(this.dateTimeColName);
+    // intialize data object
+    let currentData = this.emptyRowObjectTemplate();
+    // dataByYear.push(currentData);
+    // determine first year of data
+    const currentYear = BaseTableData.getYearFromString(this.data[0][indexOfDateTime]);
+    // save year of data
+    currentData.year = currentYear;
+
+    // iterate over all rows
+    let rowNum = 0;
+    while (rowNum < this.data.length) {
+      const rowData = this.data[rowNum];
+      // check if year has changed
+      const currentYear = BaseTableData.getYearFromString(rowData[indexOfDateTime]);
+      if (currentYear !== currentData.year) {
+        // TRUE --> append currentData to list, reset currentData and currentData.year
+        dataByYear.push(currentData);
+        // intialize data object, again...
+        currentData = this.emptyRowObjectTemplate();
+        // save year of data
+        currentData.year = currentYear;
+      }
+      // FALSE --> append row's data to corresponding column's value list
+      // iterate over all columns
+      let colNum = 0;
+      while (colNum < this.columnHeaders.length) {
+        if (colNum !== indexOfDateTime) {
+          const key = BaseTableData.toCamelCaseString(this.columnHeaders[colNum]);
+          let value = null;
+          if (key === 'billingPeriod') {
+            value = rowData[colNum];
+          } else {
+            value = parseFloat(rowData[colNum]);
+          }
+
+          currentData[key].push(value);
+        }
+        colNum += 1;
+      }
+      rowNum += 1;
+    }
+    // append last year of data (bc loop breaks before it appends)
+    dataByYear.push(currentData);
+    return dataByYear;
   }
 }
 

@@ -50,13 +50,13 @@
   import { formatYAxisCurrency } from '@/util/chart';
   import { proFormaTableFields, proFormaTableData } from '@/models/Results/ProFormaData';
   import { costBenefitTraces } from '@/models/Results/CostBenefitData';
-  import { monthlyBillDataTraces } from '@/models/Results/BeforeAndAfterMonthlyBillData';
+  import { monthlyBillData } from '@/models/Results/BeforeAndAfterMonthlyBillData';
   
   export default {
     components: { NavButtons },
     mounted() {
       this.createStackedCostBenefit('chartStackedCostBenefit', costBenefitTraces);
-      this.createMonthlyBillBeforeAndAfter('chartjsMonthlyBill', monthlyBillDataTraces, '2017');
+      this.createMonthlyBillBeforeAndAfter('chartjsMonthlyBill', monthlyBillData);
       // this.createPlotlyMonthlyBillBeforeAndAfter('plotlyMonthlyBill', plotlyMonthlyBillDataTraces);
     },
     data() {
@@ -186,8 +186,9 @@
         };
         return Plotly.newPlot(ctx, chartData, layout, config);
       },
-      createMonthlyBillBeforeAndAfter(chartId, chartData, dataYear) {
+      createMonthlyBillBeforeAndAfter(chartId, chartData) {
         const ctx = document.getElementById(chartId);
+        const dataYear = chartData.year;
         const chart = new Chart(ctx, {
           type: 'bar',
           data: {
@@ -204,8 +205,33 @@
               'October',
               'November',
               'December',
-            ], // TODO based off of data
-            datasets: chartData,
+            ],
+            datasets: [
+              {
+                label: 'Orignal Demand Charge ($)',
+                backgroundColor: '#6bd32a',
+                stack: 'Stack 2',
+                data: chartData.originalDemandCharge,
+              },
+              {
+                label: 'Demand Charge ($)',
+                backgroundColor: '#618a2a',
+                stack: 'Stack 1',
+                data: chartData.demandCharge,
+              },
+              {
+                label: 'Energy Charge ($)',
+                data: chartData.energyCharge,
+                stack: 'Stack 1',
+                backgroundColor: '#226db6',
+              },
+              {
+                label: 'Original Energy Charge ($)',
+                data: chartData.originalEnergyCharge,
+                stack: 'Stack 2',
+                backgroundColor: '#182e44',
+              },
+            ],
           },
           options: {
             responsive: true,
@@ -214,7 +240,7 @@
             },
             title: {
               display: true,
-              text: `Before and After Monthly Energy Bill in ${{ dataYear }}`, // based of of data
+              text: `Before and After Monthly Energy Bill in ${{ dataYear }}`,
             },
             scales: {
               xAxes: [{

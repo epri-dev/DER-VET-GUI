@@ -69,8 +69,6 @@ export const createCostTableData = (rowSizeData) => {
 export class SizeData extends BaseTableData {
   constructor(data) {
     super('size.csv', data, true);
-    // this.sizeColumnsOrdered = ['Discharge Rating (kW)', 'Power Capacity (kW)',
-    //   'Charge Rating (kW)', 'Energy Rating (kWh)', 'Duration (hours)', 'Quantity'];
     this.powerCols = ['discharge', 'power', 'charge'];
     this.energyCols = ['energy', 'duration'];
     this.numPowerCols = 0;
