@@ -1,5 +1,4 @@
 import project from '@/store/modules/Project';
-// import project, { state as defaultState } from '@/store/modules/Project';
 
 
 const { mutations } = project;
@@ -97,37 +96,44 @@ describe('Project Mutations', () => {
     expect(state.objectivesFR).to.equal(false);
   });
 
-  /*
   it('should set ordered routes from objectives state', () => {
     const state = {
-      ...defaultState,
+      // load a defaultState
+      ...project.state,
+      // and set these to true
       objectivesDA: true,
-      objectivesRetailEnergyChargeReduction: false,
-    }
+      objectivesRetailEnergyChargeReduction: true,
+    };
 
-    const newLL = {
+    const orderedRoutes = {
+      path: '/wizard/objectives',
       next: {
+        path: '/wizard/objectives-parameters-site-information',
         next: {
+          path: '/wizard/objectives-parameters-da',
           next: {
+            path: '/wizard/financial-inputs',
             next: {
+              path: '/wizard/financial-inputs-external-incentives',
               next: {
+                path: '/wizard/financial-inputs-retail-tariff',
                 next: null,
-                path: '/wizard/financial-inputs-retail-tariff'
               },
-              path: '/wizard/financial-inputs-external-incentives'
             },
-            path: '/wizard/financial-inputs'
           },
-          path: '/wizard/objectives-parameters-da'
         },
-        path: '/wizard/objectives-parameters-site-information'
       },
-      path: '/wizard/objectives'
     };
 
     mutations.SET_OBJECTIVE_FINANCES_ORDER(state);
 
-    expect(state.routeObjectivesFinancialsLL).to.equal(newLL);
+    /* for debugging
+    console.log('orderedRoutes:');
+    console.log(JSON.stringify(orderedRoutes, null, 2));
+    console.log('actual:');
+    console.log(JSON.stringify(state.routeObjectivesFinancialsLL, null, 2));
+    */
+
+    expect(state.routeObjectivesFinancialsLL).to.eql(orderedRoutes);
   });
-  */
 });
