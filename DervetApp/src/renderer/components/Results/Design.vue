@@ -50,7 +50,7 @@
     <hr />
     <!-- TODO get rid of save & continue button -->
     <nav-buttons
-      :back-link="resultsPath"
+      :back-link="RESULTS_PATH"
       back-text="<< Return to results summary"
     />
   </div>
@@ -59,13 +59,13 @@
 <script>
   import NavButtons from '@/components/Shared/NavButtons';
   import { createCostTableData, sizeTableExpectedData, sizeTableExpectedFeilds } from '@/models/Results/SizeData';
+  import { RESULTS_PATH } from '@/router/constants';
 
   export default {
     components: { NavButtons },
     data() {
-      const p = this.$store.state.Project;
       return {
-        resultsPath: p.paths.results,
+        RESULTS_PATH,
         sizeItems: sizeTableExpectedData,
         sizeFields: sizeTableExpectedFeilds,
         costTableFields: [

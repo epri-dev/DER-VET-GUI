@@ -1,0 +1,24 @@
+// TODO use these constants in the router, sidebar, and router-links
+export const FINANCIAL_INPUTS_PATH = '/wizard/financial-inputs';
+export const FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH = '/wizard/financial-inputs-external-incentives';
+export const FINANCIAL_INPUTS_RETAIL_TARIFF_PATH = '/wizard/financial-inputs-retail-tariff';
+export const OBJECTIVES_BACKUP_POWER_PATH = '/wizard/objectives-backup-power';
+export const OBJECTIVES_PATH = '/wizard/objectives';
+export const OBJECTIVES_SITE_INFORMATION_PATH = '/wizard/objectives-parameters-site-information';
+export const OBJECTIVES_DEFERRAL_PATH = '/wizard/objectives-parameters-deferral';
+export const OBJECTIVES_FR_PATH = '/wizard/objectives-parameters-fr';
+export const OBJECTIVES_NSR_PATH = '/wizard/objectives-parameters-nsr';
+export const OBJECTIVES_RESILIENCE_PATH = '/wizard/objectives-parameters-reliability';
+export const OBJECTIVES_SR_PATH = '/wizard/objectives-parameters-sr';
+export const OBJECTIVES_USER_DEFINED_PATH = '/wizard/objectives-parameters-user-defined';
+export const OBJECTIVES_DA_PATH = '/wizard/objectives-parameters-da';
+export const RESULTS_PATH = '/results';
+export const RESULTS_DESIGN_PATH = '/results/design';
+export const RESULTS_RELIABILITY_PATH = '/results/reliability';
+export const RESULTS_DEFERRAL_PATH = '/results/deferral';
+export const RESULTS_DISPATCH_PATH = '/results/dispatch';
+export const RESULTS_FINANCIAL_PATH = '/results/financial';
+export const SENSITIVITY_ANALYSIS_PATH = '/wizard/sensitivity-analysis';
+export const START_PROJECT_PATH = '/wizard/start-project';
+export const SUMMARY_PATH = '/wizard/summary';
+export const TECH_SPECS_PATH = '/wizard/technology-specs';

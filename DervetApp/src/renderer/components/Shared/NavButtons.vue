@@ -6,7 +6,11 @@
       </router-link>
     </div>
     <div class="col-md-6 continue-btn">
-      <router-link v-on:click.native="save" :to="computedContinueLink" class="btn btn-primary pull-right">
+      <router-link
+        v-on:click.native="save"
+        :event="disabled ? '' : 'click'"
+        :to="computedContinueLink"
+        class="btn btn-primary pull-right">
         {{continueText}}
       </router-link>
     </div>
@@ -76,6 +80,10 @@
       save: {
         type: Function,
         default: () => null,
+      },
+      disabled: {
+        type: Boolean,
+        default: false,
       },
     },
   };

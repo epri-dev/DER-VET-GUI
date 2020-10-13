@@ -16,7 +16,7 @@
     <hr />
     <!-- TODO get rid of save & continue button -->
     <nav-buttons
-      :back-link="resultsPath"
+      :back-link="RESULTS_PATH"
       back-text="<< Return to results summary"
     />
   </div>
@@ -25,6 +25,7 @@
 <script>
   import Plotly from 'plotly.js';
   import NavButtons from '@/components/Shared/NavButtons';
+  import { RESULTS_PATH } from '@/router/constants';
   // import Chart from 'chart.js';
 
   // TODO import this dummy data from store.Results
@@ -53,9 +54,8 @@
       this.createChartCapacityVsTime('chartCapacityVsTime', deferralData);
     },
     data() {
-      const p = this.$store.state.Project;
       return {
-        resultsPath: p.paths.results,
+        RESULTS_PATH,
       };
     },
     methods: {

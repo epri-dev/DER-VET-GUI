@@ -51,7 +51,8 @@
   import { proFormaTableFields, proFormaTableData } from '@/models/Results/ProFormaData';
   import { costBenefitTraces } from '@/models/Results/CostBenefitData';
   import { monthlyBillData } from '@/models/Results/BeforeAndAfterMonthlyBillData';
-  
+  import { RESULTS_PATH } from '@/router/constants';
+
   export default {
     components: { NavButtons },
     mounted() {
@@ -60,9 +61,8 @@
       // this.createPlotlyMonthlyBillBeforeAndAfter('plotlyMonthlyBill', plotlyMonthlyBillDataTraces);
     },
     data() {
-      const p = this.$store.state.Project;
       return {
-        resultsPath: p.paths.results,
+        resultsPath: RESULTS_PATH,
         proformaItems: proFormaTableData,
         proformaFields: proFormaTableFields,
       };
