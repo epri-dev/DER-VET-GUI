@@ -49,6 +49,7 @@
   import NavButtons from '@/components/Shared/NavButtons';
   import { formatYAxisCurrency } from '@/util/chart';
   import { proFormaTableFields, proFormaTableData } from '@/models/Results/ProFormaData';
+  import { RESULTS_PATH } from '@/router/constants';
 
   const costBenefitXAxis = ['Costs ($)', 'Benefit ($)'];
   const costBenefitTraces = [
@@ -299,9 +300,8 @@
       // this.createPlotlyMonthlyBillBeforeAndAfter('plotlyMonthlyBill', plotlyMonthlyBillDataTraces);
     },
     data() {
-      const p = this.$store.state.Project;
       return {
-        resultsPath: p.paths.results,
+        resultsPath: RESULTS_PATH,
         proformaItems: proFormaTableData,
         proformaFields: proFormaTableFields,
       };

@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import getCurrentYear from '@/util/time';
 import PageLink from '@/models/PageRouting';
+import * as paths from '@/router/constants';
 
 const getDefaultState = () => ({
   id: null,
@@ -26,30 +27,6 @@ const getDefaultState = () => ({
   objectivesDeferral: false,
   objectivesLoadFollowing: false,
   objectivesUserDefined: false,
-  paths: {
-    startProject: '/wizard/start-project',
-    techSpecs: '/wizard/technology-specs',
-    objectives: '/wizard/objectives',
-    objectivesSiteInformation: '/wizard/objectives-parameters-site-information',
-    objectivesDeferral: '/wizard/objectives-parameters-deferral',
-    objectivesFR: '/wizard/objectives-parameters-fr',
-    objectivesNSR: '/wizard/objectives-parameters-nsr',
-    objectivesResilience: '/wizard/objectives-parameters-reliability',
-    objectivesSR: '/wizard/objectives-parameters-sr',
-    objectivesUserDefined: '/wizard/objectives-parameters-user-defined',
-    objectivesDA: '/wizard/objectives-parameters-da',
-    financialInputs: '/wizard/financial-inputs',
-    financialInputsExternalIncentives: '/wizard/financial-inputs-external-incentives',
-    financialInputsRetailTariff: '/wizard/financial-inputs-retail-tariff',
-    sensitivityAnalysis: '/wizard/sensitivity-analysis',
-    summary: '/wizard/summary',
-    results: '/results',
-    resultsDesign: '/results/design',
-    resultsReliability: '/results/reliability',
-    resultsDeferral: '/results/deferral',
-    resultsDispatch: '/results/dispatch',
-    resultsFinancial: '/results/financial',
-  },
   routeObjectivesFinancialsLL: null,
 
   // SCENARIO
@@ -513,40 +490,41 @@ const mutations = {
     let activateTariff = state.objectivesRetailEnergyChargeReduction;
     activateTariff = (activateTariff || state.objectivesRetailDemandChargeReduction);
     if (activateTariff) {
-      tail = new PageLink(state.paths.financialInputsRetailTariff, tail);
+      tail = new PageLink(paths.FINANCIAL_INPUTS_RETAIL_TARIFF_PATH, tail);
     }
     // link rest of financials
-    tail = new PageLink(state.paths.financialInputsExternalIncentives, tail);
-    tail = new PageLink(state.paths.financialInputs, tail);
+    tail = new PageLink(paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH, tail);
+    tail = new PageLink(paths.FINANCIAL_INPUTS_PATH, tail);
     // da energy price link
     if (state.objectivesDA) {
-      tail = new PageLink(state.paths.objectivesDA, tail);
+      tail = new PageLink(paths.OBJECTIVES_DA_PATH, tail);
     }
     // link up service pages (aka objectives)
     if (state.objectivesUserDefined) {
-      tail = new PageLink(state.paths.objectivesUserDefined, tail);
+      tail = new PageLink(paths.OBJECTIVES_USER_DEFINED_PATH, tail);
     }
     if (state.objectivesSR) {
-      tail = new PageLink(state.paths.objectivesSR, tail);
+      tail = new PageLink(paths.OBJECTIVES_SR_PATH, tail);
     }
     if (state.objectivesResilience) {
-      tail = new PageLink(state.paths.objectivesResilience, tail);
+      tail = new PageLink(paths.OBJECTIVES_RESILIENCE_PATH, tail);
     }
     if (state.objectivesNSR) {
-      tail = new PageLink(state.paths.objectivesNSR, tail);
+      tail = new PageLink(paths.OBJECTIVES_NSR_PATH, tail);
     }
     if (state.objectivesFR) {
-      tail = new PageLink(state.paths.objectivesFR, tail);
+      tail = new PageLink(paths.OBJECTIVES_FR_PATH, tail);
     }
     if (state.objectivesDeferral) {
-      tail = new PageLink(state.paths.objectivesDeferral, tail);
+      tail = new PageLink(paths.OBJECTIVES_DEFERRAL_PATH, tail);
     }
+    // exists yet?
     if (state.objectivesBackupPower) {
-      tail = new PageLink(state.paths.objectivesBackupPower, tail);
+      tail = new PageLink(paths.OBJECTIVES_BACKUP_POWER_PATH, tail);
     }
     // add objectives to head of link list
-    tail = new PageLink(state.paths.objectivesSiteInformation, tail);
-    tail = new PageLink(state.paths.objectives, tail);
+    tail = new PageLink(paths.OBJECTIVES_SITE_INFORMATION_PATH, tail);
+    tail = new PageLink(paths.OBJECTIVES_PATH, tail);
     state.routeObjectivesFinancialsLL = tail;
   },
 };

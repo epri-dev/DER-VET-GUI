@@ -55,9 +55,8 @@
       </div>
       <hr>
 
-      <!-- TODO continue link should be dependent on selections in Services component -->
       <nav-buttons
-        :back-link="objectivesPath"
+        :back-link="OBJECTIVES_PATH"
         :save="this.save"
       />
 
@@ -68,11 +67,13 @@
 <script>
   import '@/assets/samples/SampleSiteLoad-8760.csv';
   import '@/assets/samples/SampleSiteLoad-8784.csv';
+  import NavButtons from '@/components/Shared/NavButtons';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import SiteLoadTimeSeries from '@/models/SiteLoadTimeSeries';
   import { sharedValidation } from '@/models/Shared';
-  import NavButtons from '@/components/Shared/NavButtons';
+  import { OBJECTIVES_PATH } from '@/router/constants';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
+
 
   export default {
     components: { NavButtons, TimeseriesDataUpload },
@@ -84,7 +85,7 @@
         inputNoChargingFromGrid: p.noChargingFromGrid,
         inputNoDischargingToGrid: p.noDischargingToGrid,
         siteLoad: p.siteLoad,
-        objectivesPath: p.paths.objectives,
+        OBJECTIVES_PATH,
       };
     },
     computed: {

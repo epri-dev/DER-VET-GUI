@@ -38,6 +38,7 @@
 <script>
   import Plotly from 'plotly.js';
   import NavButtons from '@/components/Shared/NavButtons';
+  import { RESULTS_PATH } from '@/router/constants';
 
   export default {
     components: { NavButtons },
@@ -46,9 +47,8 @@
       this.createChartEnergyPriceHeatMap('chartEnergyPriceHeatMap');
     },
     data() {
-      const p = this.$store.state.Project;
       return {
-        resultsPath: p.paths.results,
+        resultsPath: RESULTS_PATH,
       };
     },
     methods: {
