@@ -28,14 +28,14 @@ describe('SizeData model', () => {
     const powerCapIndex = actualData.getColumnIndexThatContains('power');
     expect(powerCapIndex).to.eql(11);
   });
-  const sizeTableDataRows = actualData.createDataObject();
+  const sizeTableData = actualData.sizeTableDataRows;
   it('(1C-1) should create the correct data objects - a size table', () => {
-    expect(sizeTableDataRows.length).to.eql(sizeTableExpectedData.length);
+    expect(sizeTableData.length).to.eql(sizeTableExpectedData.length);
     let i = 0;
-    while (i < sizeTableDataRows.length) {
-      expect(sizeTableDataRows[i].systemName).to.eql(sizeTableExpectedData[i].systemName);
+    while (i < sizeTableData.length) {
+      expect(sizeTableData[i].systemName).to.eql(sizeTableExpectedData[i].systemName);
 
-      const actualProperties = Object.getOwnPropertyNames(sizeTableDataRows[i]);
+      const actualProperties = Object.getOwnPropertyNames(sizeTableData[i]);
       const expectedProperties = Object.getOwnPropertyNames(sizeTableExpectedData[i]);
       expect(actualProperties.length).to.eql(expectedProperties.length);
 

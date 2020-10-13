@@ -69,16 +69,16 @@ export const createCostTableData = (rowSizeData) => {
 export class SizeData extends BaseTableData {
   constructor(data) {
     super('size.csv', data, true);
-    // this.sizeColumnsOrdered = ['Discharge Rating (kW)', 'Power Capacity (kW)',
-    //   'Charge Rating (kW)', 'Energy Rating (kWh)', 'Duration (hours)', 'Quantity'];
     this.powerCols = ['discharge', 'power', 'charge'];
     this.energyCols = ['energy', 'duration'];
-    this.sizeTableDataRows = [];
     this.numPowerCols = 0;
     this.numEnergyCols = 0;
+    // organize data into objects -- makes it easier to convert into other structures
+    this.sizeTableDataRows = this.createDataObject();
   }
   createDataObject() {
     let rowNum = 0;
+    const rowDataObjects = [];
     while (rowNum < this.data.length) {
       const rawData = this.data[rowNum];
       const rowTamplate = {
@@ -98,10 +98,10 @@ export class SizeData extends BaseTableData {
       if (rowTamplate.quantity === undefined) {
         rowTamplate.quantity = 1;
       }
-      this.sizeTableDataRows.push(rowTamplate);
+      rowDataObjects.push(rowTamplate);
       rowNum += 1;
     }
-    return this.sizeTableDataRows;
+    return rowDataObjects;
   }
   static createSortableField(label) {
     return {
@@ -111,7 +111,6 @@ export class SizeData extends BaseTableData {
     };
   }
   createSizeTableFields() {
-    // this.createDataObject();
     // intialize fields with Name
     const dataColumnsFeilds = [{
       key: BaseTableData.toCamelCaseString('System Name'),
@@ -159,11 +158,76 @@ export class SizeData extends BaseTableData {
 
     return dataColumnsFeilds;
   }
+  static createCostTableData(rowSizeData) {
+    let costStructure = [];
+    let energyCost = 0;
+    let powerCost = 0;
+    let unitsCost = 0;
+    if ('capitalCostKWh' in rowSizeData) {
+      const cCostkWh = rowSizeData.capitalCostKWh;
+      const energyRating = rowSizeData.energyRatingKWh;
+      energyCost = cCostkWh * energyRating;
+      const costPerkWh = [
+        {
+          label: 'Cost per kWh',
+          subTotal: `$${energyCost.toLocaleString()}`,
+        },
+        {
+          subTotal: '=',
+          strEquation: `${energyRating.toLocaleString()}kWh x $${cCostkWh.toLocaleString()}/kWh`,
+        },
+      ];
+      costStructure = costPerkWh;
+    }
+    if ('capitalCostKW' in rowSizeData) {
+      const cCostkW = rowSizeData.capitalCostKW;
+      const powerCapacityKW = rowSizeData.dischargeRatingKW || rowSizeData.powerCapacityKW;
+      powerCost = powerCapacityKW * cCostkW;
+      const costPerkW = [
+        {
+          label: 'Cost per kW',
+          subTotal: `$${powerCost.toLocaleString()}`,
+        },
+        {
+          subTotal: '=',
+          strEquation: `${powerCapacityKW.toLocaleString()}kW x $${cCostkW.toLocaleString()}/kWh`,
+        },
+      ];
+      costStructure = [...costPerkW, ...costStructure];
+    }
+    if ('capitalCost' in rowSizeData) {
+      const cCost = rowSizeData.capitalCost;
+      unitsCost = rowSizeData.quantity * cCost;
+      const costPerUnit = [
+        {
+          label: 'Cost per Unit',
+          subTotal: `$${unitsCost.toLocaleString()}`,
+        },
+        {
+          subTotal: '=',
+          strEquation: `${rowSizeData.quantity} x $${cCost.toLocaleString()}`,
+        },
+      ];
+      costStructure = [...costPerUnit, ...costStructure];
+    }
+    const total = energyCost + powerCost + unitsCost;
+    const totalCost = [
+      {
+        label: 'Total Cost',
+        total: `$${total.toLocaleString()}`,
+      },
+    ];
+    costStructure = [...totalCost, ...costStructure];
+    return {
+      name: rowSizeData.systemName,
+      items: costStructure,
+    };
+  }
   createCostTables() {
     let i = 0;
     const tableData = [];
     while (i < this.sizeTableDataRows.length) {
-      const rowData = createCostTableData(this.sizeTableDataRows[i]);
+      const rowData = SizeData.createCostTableData(this.sizeTableDataRows[i]);
       tableData.push(rowData);
       i += 1;
     }

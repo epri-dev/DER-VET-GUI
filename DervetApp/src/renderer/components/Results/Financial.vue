@@ -49,254 +49,15 @@
   import NavButtons from '@/components/Shared/NavButtons';
   import { formatYAxisCurrency } from '@/util/chart';
   import { proFormaTableFields, proFormaTableData } from '@/models/Results/ProFormaData';
+  import { costBenefitTraces } from '@/models/Results/CostBenefitData';
+  import { monthlyBillData } from '@/models/Results/BeforeAndAfterMonthlyBillData';
   import { RESULTS_PATH } from '@/router/constants';
 
-  const costBenefitXAxis = ['Costs ($)', 'Benefit ($)'];
-  const costBenefitTraces = [
-    {
-      x: costBenefitXAxis,
-      y: [2e5, 0],
-      name: 'Battery Capital Cost',
-      marker: { color: '#326581' },
-      type: 'bar',
-    },
-    {
-      x: costBenefitXAxis,
-      y: [4e5, 0],
-      name: 'Battery Fixed O&M',
-      marker: { color: '#6ca6c6' },
-      type: 'bar',
-    },
-    {
-      x: costBenefitXAxis,
-      y: [3e5, 0],
-      name: 'Battery Variable O&M',
-      marker: { color: '#a2c7db' },
-      type: 'bar',
-    },
-    {
-      x: costBenefitXAxis,
-      y: [9e5, 0],
-      name: 'PV Capital Cost',
-      marker: { color: '#807019' },
-      type: 'bar',
-    },
-    {
-      x: costBenefitXAxis,
-      y: [4e5, 0],
-      name: 'PV Fixed O&M',
-      marker: { color: '#c0a926' },
-      type: 'bar',
-    },
-    {
-      x: costBenefitXAxis,
-      y: [3e5, 0],
-      name: 'ICE Capital Cost',
-      marker: { color: '#393939' },
-      type: 'bar',
-    },
-    {
-      x: costBenefitXAxis,
-      y: [8e5, 0],
-      name: 'ICE Fixed O&M',
-      marker: { color: '#6a6a6a' },
-      type: 'bar',
-    },
-    {
-      x: costBenefitXAxis,
-      y: [1e5, 0],
-      name: 'ICE Variable O&M',
-      marker: { color: '#999999' },
-      type: 'bar',
-    },
-    {
-      x: costBenefitXAxis,
-      y: [4e5, 0],
-      name: 'ICE Fuel',
-      marker: { color: '#bfbfbf' },
-      type: 'bar',
-    },
-    {
-      x: costBenefitXAxis,
-      y: [0, 6e5],
-      name: 'Avoided Demand Charge',
-      type: 'bar',
-    },
-    {
-      x: costBenefitXAxis,
-      y: [0, 7e5],
-      name: 'Avoided Energy Charge',
-      type: 'bar',
-    },
-    {
-      x: costBenefitXAxis,
-      y: [0, 9e5],
-      name: 'Spinning Reserves',
-      type: 'bar',
-    },
-    {
-      x: costBenefitXAxis,
-      y: [0, 6e5],
-      name: 'Non-Spinning Reserves',
-      type: 'bar',
-    },
-    {
-      x: costBenefitXAxis,
-      y: [0, 8e5],
-      name: 'Day Ahead ETS',
-      type: 'bar',
-    },
-  ];
-
-  // const plotlyMonthlyBillDataTraces = [
-  //   {
-  //     x: ['Before', 'After'],
-  //     y: [0.8, 0.49],
-  //     type: 'bar',
-  //     name: 'Energy',
-  //     xaxis: 'x1',
-  //     barmode: 'stack',
-  //   },
-  //   {
-  //     x: ['Before', 'After'],
-  //     y: [0.6, 0.50],
-  //     type: 'bar',
-  //     name: 'Demand',
-  //     xaxis: 'x1',
-  //     barmode: 'stack',
-  //   },
-  //   {
-  //     x: ['Before', 'After'],
-  //     y: [0.1, 0.1],
-  //     type: 'bar',
-  //     name: 'Energy',
-  //     xaxis: 'x2',
-  //     barmode: 'stack',
-  //   },
-  //   {
-  //     x: ['Before', 'After'],
-  //     y: [0.3, 0.35],
-  //     type: 'bar',
-  //     name: 'Demand',
-  //     xaxis: 'x2',
-  //     barmode: 'stack',
-  //   },
-  //   {
-  //     x: ['Before', 'After'],
-  //     y: [0.25, 0.15],
-  //     type: 'bar',
-  //     name: 'Energy',
-  //     xaxis: 'x3',
-  //     barmode: 'stack',
-  //   },
-  //   {
-  //     x: ['Before', 'After'],
-  //     y: [0.45, 0.50],
-  //     type: 'bar',
-  //     name: 'Demand',
-  //     xaxis: 'x3',
-  //     barmode: 'stack',
-  //   },
-  //   {
-  //     x: ['Before', 'After'],
-  //     y: [0.3, 0.35],
-  //     type: 'bar',
-  //     name: 'Energy',
-  //     xaxis: 'x4',
-  //     barmode: 'stack',
-  //   },
-  //   {
-  //     x: ['Before', 'After'],
-  //     y: [0.6, 0.50],
-  //     type: 'bar',
-  //     name: 'Demand',
-  //     xaxis: 'x4',
-  //     barmode: 'stack',
-  //   },
-  // ];
-  const monthlyBillDataTraces = [
-    {
-      label: 'Orignal Demand Charge ($)',
-      backgroundColor: '#6bd32a',
-      stack: 'Stack 2',
-      data: [
-        105620.1844,
-        112796.2978,
-        119607.5331,
-        121938.6236,
-        122573.839,
-        163561.4688,
-        167237.1945,
-        183541.1412,
-        164910.8468,
-        82472.17225,
-        75384.2572,
-        71278.7625,
-      ],
-    },
-    {
-      label: 'Demand Charge ($)',
-      backgroundColor: '#618a2a',
-      stack: 'Stack 1',
-      data: [
-        24105.49174,
-        22110.09026,
-        27875.18851,
-        28106.5267,
-        32971.54708,
-        36293.41722,
-        36937.17683,
-        38207.55854,
-        34999.04347,
-        30552.73122,
-        27220.86176,
-        23844.61009,
-      ],
-    },
-    {
-      label: 'Energy Charge ($)',
-      data: [
-        105620.1844,
-        112796.2978,
-        119607.5331,
-        121938.6236,
-        122573.839,
-        163561.4688,
-        167237.1945,
-        183541.1412,
-        164910.8468,
-        82472.17225,
-        75384.2572,
-        71278.7625,
-      ],
-      stack: 'Stack 1',
-      backgroundColor: '#226db6',
-    },
-    {
-      label: 'Original Energy Charge ($)',
-      data: [
-        24105.49174,
-        22110.09026,
-        27875.18851,
-        28106.5267,
-        32971.54708,
-        36293.41722,
-        36937.17683,
-        38207.55854,
-        34999.04347,
-        30552.73122,
-        27220.86176,
-        23844.61009,
-      ],
-      stack: 'Stack 2',
-      backgroundColor: '#182e44',
-    },
-  ];
   export default {
     components: { NavButtons },
     mounted() {
       this.createStackedCostBenefit('chartStackedCostBenefit', costBenefitTraces);
-      this.createMonthlyBillBeforeAndAfter('chartjsMonthlyBill', monthlyBillDataTraces);
+      this.createMonthlyBillBeforeAndAfter('chartjsMonthlyBill', monthlyBillData);
       // this.createPlotlyMonthlyBillBeforeAndAfter('plotlyMonthlyBill', plotlyMonthlyBillDataTraces);
     },
     data() {
@@ -427,6 +188,7 @@
       },
       createMonthlyBillBeforeAndAfter(chartId, chartData) {
         const ctx = document.getElementById(chartId);
+        const dataYear = chartData.year;
         const chart = new Chart(ctx, {
           type: 'bar',
           data: {
@@ -444,7 +206,32 @@
               'November',
               'December',
             ],
-            datasets: chartData,
+            datasets: [
+              {
+                label: 'Orignal Demand Charge ($)',
+                backgroundColor: '#6bd32a',
+                stack: 'Stack 2',
+                data: chartData.originalDemandCharge,
+              },
+              {
+                label: 'Demand Charge ($)',
+                backgroundColor: '#618a2a',
+                stack: 'Stack 1',
+                data: chartData.demandCharge,
+              },
+              {
+                label: 'Energy Charge ($)',
+                data: chartData.energyCharge,
+                stack: 'Stack 1',
+                backgroundColor: '#226db6',
+              },
+              {
+                label: 'Original Energy Charge ($)',
+                data: chartData.originalEnergyCharge,
+                stack: 'Stack 2',
+                backgroundColor: '#182e44',
+              },
+            ],
           },
           options: {
             responsive: true,
@@ -453,7 +240,7 @@
             },
             title: {
               display: true,
-              text: 'Before and After Monthly Energy Bill',
+              text: `Before and After Monthly Energy Bill in ${{ dataYear }}`,
             },
             scales: {
               xAxes: [{

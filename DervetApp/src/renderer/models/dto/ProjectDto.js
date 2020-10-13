@@ -278,13 +278,6 @@ export const makeEmptyCsvDataWithDatetimeIndex = (project) => {
 
 /* TODO: new timeseries fields
   - RA Active (y/n)
-  - VAR Reservation (%)
-  - ch_max
-  - ch_min
-  - dis_max
-  - dis_min
-  - ene_max
-  - ene_min
   - POI: max export (kW)
   - POI: max import (kW)
   - Aggregate Energy Max (kWh)
