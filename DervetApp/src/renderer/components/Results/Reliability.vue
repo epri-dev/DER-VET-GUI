@@ -38,6 +38,7 @@
   import Plotly from 'plotly.js';
   import NavButtons from '@/components/Shared/NavButtons';
   import { RESULTS_PATH } from '@/router/constants';
+  import { loadCoverageProbDefaultData } from '@/models/Results/LoadCoverageProbabilityData';
 
   export default {
     components: { NavButtons },
@@ -191,8 +192,8 @@
       createChartLoadCoverageProbability(chartId) {
         const ctx = document.getElementById(chartId);
         const trace1 = {
-          x: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13],
-          y: [1, 1, 1, 1, 0.99, 9.411 / 10, 8.999 / 10, 0.8, 3 / 4.1, 2 / 3, 1 / 2.004, null, 0.0],
+          x: loadCoverageProbDefaultData.outageLengthHrs,
+          y: loadCoverageProbDefaultData.loadCoverageProbability,
           mode: 'lines+markers', // 'lines' 'markers'
           connectgaps: true, // ignore null values when true
           name: '', // appears in legend, and next to hovertemplate
@@ -237,7 +238,7 @@
             // tickmode: 'linear', // 'auto', 'array',
             // type: 'linear', // '-', 'log', 'date'
             tick0: 0, // first tick mark will go here
-            dtick: 1, // tick interval
+            // dtick: 1, // tick interval
             fixedrange: true,
             // rangemode: 'tozero', // 'normal', 'nonnegative'
             // tickangle: 90,
