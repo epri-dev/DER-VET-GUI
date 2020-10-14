@@ -188,7 +188,7 @@
         // const storageSizeChartYMin = 1000;
         // const storageSizeChartXMax = 23;
         // const storageSizeChartXMin = 19;
-        const peakLoadDayYAxisMax = arrayMax(chartData.values);
+        const peakLoadDayYAxisMax = arrayMax(chartData.loadKW);
         const peakLoadDayOptions = {
           responsive: true,
           legend: false,
@@ -243,11 +243,11 @@
         return new Chart(ctx, {
           type: 'bar',
           data: {
-            labels: chartData.labels,
+            labels: chartData.timestepBeginning,
             datasets: [
               {
                 label: 'Load (kW)',
-                data: chartData.values,
+                data: chartData.loadKW,
                 backgroundColor: '#8B4513',
                 barPercentage: 1.0,
                 categoryPercentage: 1.0,

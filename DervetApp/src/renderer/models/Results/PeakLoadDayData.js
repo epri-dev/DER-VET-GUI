@@ -2,7 +2,13 @@ import BaseTableData from './BaseTableData';
 
 export class PeakLoadDayData extends BaseTableData {
   constructor(data) {
-    super('peak_day_load.csv', data, true, true);
+    super('peak_day_load.csv', data, true, true, 'Date');
+    this.updateColumnDataByYearWithDate();
+  }
+  updateColumnDataByYearWithDate() {
+    const date = this.data[0][this.indexOfDateTime()];
+    const [year, month, day] = date.split('-');
+    this.columnDataByYear[0].day = `${month}/${day}/${year}`;
   }
 }
 
@@ -39,7 +45,7 @@ const peakLoadDayLabels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
   12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
 
 export const peakLoadDayDefaultData = {
-  values: peakLoadDayValues,
-  labels: peakLoadDayLabels,
-  day: '8/17/2030',
+  loadKW: peakLoadDayValues,
+  timestepBeginning: peakLoadDayLabels,
+  day: '08/17/2030',
 };
