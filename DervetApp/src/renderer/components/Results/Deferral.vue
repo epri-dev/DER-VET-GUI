@@ -26,25 +26,24 @@
   import Plotly from 'plotly.js';
   import NavButtons from '@/components/Shared/NavButtons';
   import { RESULTS_PATH } from '@/router/constants';
+  import { deferralDefaultData } from '@/models/Results/DeferralData';
   // import Chart from 'chart.js';
 
   // TODO import this dummy data from store.Results
   const deferralData = {
-    years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024],
+    years: deferralDefaultData.year,
     essName: 'sto1',
     chartData: [{
       type: 'Power',
       units: '(kW)',
-      essValue: 732,
-      requirementValues: [0, 188, 425, 668, 951, 1167,
-        1425, 1687],
+      essValue: 4320,
+      requirementValues: deferralDefaultData.powerCapacityRequirementKW,
     },
     {
       type: 'Energy',
       units: '(kWh)',
-      essValue: 2340,
-      requirementValues: [0, 301, 989, 1871, 2877, 4430,
-        6346, 8398],
+      essValue: 23400,
+      requirementValues: deferralDefaultData.energyCapacityRequirementKWh,
     }],
   };
 
