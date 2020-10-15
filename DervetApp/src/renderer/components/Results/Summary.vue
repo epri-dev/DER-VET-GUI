@@ -109,14 +109,8 @@
   import Chart from 'chart.js';
   import Plotly from 'plotly.js';
   import { costBenefitSummaryData } from '@/models/Results/CostBenefitData';
+  import { peakLoadDayDefaultData } from '@/models/Results/PeakLoadDayData';
   import { formatYAxisCurrency, formatXAxis6Hour, formatYAxis, arrayMax } from '@/util/chart';
-
-  // TODO import this dummy data from store.Results
-  const peakLoadDayValues = [613, 613, 613, 1105, 745, 2103,
-    2278, 3477, 3446, 3378, 3399, 3292, 3485, 3566, 3711,
-    3914, 3531, 2870, 2743, 2467, 2414, 1443, 1559, 1330];
-  const peakLoadDayLabels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-    12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
 
   export default {
     data() {
@@ -127,7 +121,7 @@
     },
     mounted() {
       this.createChartCostBenefit('chartCostBenefit', costBenefitSummaryData);
-      this.createChartPeakLoadDay('chartPeakLoadDay', [peakLoadDayValues, peakLoadDayLabels]);
+      this.createChartPeakLoadDay('chartPeakLoadDay', peakLoadDayDefaultData);
       this.createChartBatteryDispatchHeatMap('chartBatteryDispatchHeatMap');
     },
     methods: {
@@ -190,18 +184,17 @@
 
       createChartPeakLoadDay(chartId, chartData) {
         const ctx = document.getElementById(chartId);
-        const dataDay = '8/17/2030';
         // const storageSizeChartYMax = 2000;
         // const storageSizeChartYMin = 1000;
         // const storageSizeChartXMax = 23;
         // const storageSizeChartXMin = 19;
-        const peakLoadDayYAxisMax = arrayMax(chartData[0]);
+        const peakLoadDayYAxisMax = arrayMax(chartData.loadKW);
         const peakLoadDayOptions = {
           responsive: true,
           legend: false,
           title: {
             display: true,
-            text: `Peak Load Day on ${dataDay}`,
+            text: `Peak Load Day on ${chartData.day}`,
           },
           scales: {
             xAxes: [
@@ -250,11 +243,11 @@
         return new Chart(ctx, {
           type: 'bar',
           data: {
-            labels: chartData[1],
+            labels: chartData.timestepBeginning,
             datasets: [
               {
                 label: 'Load (kW)',
-                data: chartData[0],
+                data: chartData.loadKW,
                 backgroundColor: '#8B4513',
                 barPercentage: 1.0,
                 categoryPercentage: 1.0,

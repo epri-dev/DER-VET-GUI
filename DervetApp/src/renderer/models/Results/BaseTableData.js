@@ -74,16 +74,18 @@ class BaseTableData {
     }
     return 0;
   }
+  indexOfDateTime() {
+    return this.getColumnIndex(this.dateTimeColName);
+  }
   columnifyDataByYear() {
     // organize data by column instead of by row (in an object)
     const dataByYear = []; // each year of data will be saved here
 
-    const indexOfDateTime = this.getColumnIndex(this.dateTimeColName);
     // intialize data object
     let currentData = this.emptyRowObjectTemplate();
     // dataByYear.push(currentData);
     // determine first year of data
-    const currentYear = BaseTableData.getYearFromString(this.data[0][indexOfDateTime]);
+    const currentYear = BaseTableData.getYearFromString(this.data[0][this.indexOfDateTime()]);
     // save year of data
     currentData.year = currentYear;
 
@@ -92,7 +94,7 @@ class BaseTableData {
     while (rowNum < this.data.length) {
       const rowData = this.data[rowNum];
       // check if year has changed
-      const currentYear = BaseTableData.getYearFromString(rowData[indexOfDateTime]);
+      const currentYear = BaseTableData.getYearFromString(rowData[this.indexOfDateTime()]);
       if (currentYear !== currentData.year) {
         // TRUE --> append currentData to list, reset currentData and currentData.year
         dataByYear.push(currentData);
@@ -105,7 +107,7 @@ class BaseTableData {
       // iterate over all columns
       let colNum = 0;
       while (colNum < this.columnHeaders.length) {
-        if (colNum !== indexOfDateTime) {
+        if (colNum !== this.indexOfDateTime()) {
           const key = BaseTableData.toCamelCaseString(this.columnHeaders[colNum]);
           let value = null;
           if (key === 'billingPeriod') {
