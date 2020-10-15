@@ -1,9 +1,19 @@
 class BaseTableData {
-  constructor(fileName, rawArrayData, hasHeaderRow, hasIndexRow = false, dateTimeColName = null) {
+  constructor(
+    fileName, rawArrayData, hasHeaderRow, columnifyData = false, dateTimeColName = null,
+    nonNumericalCols = null,
+  ) {
     this.fileName = fileName;
     this.hasHeaderRow = hasHeaderRow;
-    this.hasIndexRow = hasIndexRow;
+    this.columnifyData = columnifyData;
     this.dateTimeColName = dateTimeColName;
+    this.nonNumericalCols = [];
+    if (nonNumericalCols !== null) {
+      const col = 0;
+      while (col > nonNumericalCols.length) {
+        this.nonNumericalCols.push(BaseTableData.toCamelCaseString(nonNumericalCols[col]));
+      }
+    }
     this.data = null;
     this.columnHeaders = null;
     this.columnDataByYear = null;
@@ -43,7 +53,7 @@ class BaseTableData {
     if (this.hasHeaderRow) {
       [this.columnHeaders, ...this.data] = this.data;
     }
-    if (typeof (this.dateTimeColName) === 'string') {
+    if (this.columnifyData) {
       this.columnDataByYear = this.columnifyDataByYear();
     }
     return true;
@@ -77,40 +87,46 @@ class BaseTableData {
   indexOfDateTime() {
     return this.getColumnIndex(this.dateTimeColName);
   }
+  hasDateTimeColumn() {
+    return typeof (this.dateTimeColName) === 'string';
+  }
   columnifyDataByYear() {
     // organize data by column instead of by row (in an object)
     const dataByYear = []; // each year of data will be saved here
 
     // intialize data object
     let currentData = this.emptyRowObjectTemplate();
-    // dataByYear.push(currentData);
-    // determine first year of data
-    const currentYear = BaseTableData.getYearFromString(this.data[0][this.indexOfDateTime()]);
-    // save year of data
-    currentData.year = currentYear;
-
+    if (this.hasDateTimeColumn()) {
+      // dataByYear.push(currentData);
+      // determine first year of data
+      const currentYear = BaseTableData.getYearFromString(this.data[0][this.indexOfDateTime()]);
+      // save year of data
+      currentData.year = currentYear;
+    }
     // iterate over all rows
     let rowNum = 0;
     while (rowNum < this.data.length) {
       const rowData = this.data[rowNum];
-      // check if year has changed
-      const currentYear = BaseTableData.getYearFromString(rowData[this.indexOfDateTime()]);
-      if (currentYear !== currentData.year) {
-        // TRUE --> append currentData to list, reset currentData and currentData.year
-        dataByYear.push(currentData);
-        // intialize data object, again...
-        currentData = this.emptyRowObjectTemplate();
-        // save year of data
-        currentData.year = currentYear;
+      if (this.hasDateTimeColumn()) {
+        // check if year has changed
+        const currentYear = BaseTableData.getYearFromString(rowData[this.indexOfDateTime()]);
+        if (currentYear !== currentData.year) {
+          // TRUE --> append currentData to list, reset currentData and currentData.year
+          dataByYear.push(currentData);
+          // intialize data object, again...
+          currentData = this.emptyRowObjectTemplate();
+          // save year of data
+          currentData.year = currentYear;
+        }
+        // FALSE --> continue iteration
       }
-      // FALSE --> append row's data to corresponding column's value list
       // iterate over all columns
       let colNum = 0;
       while (colNum < this.columnHeaders.length) {
         if (colNum !== this.indexOfDateTime()) {
           const key = BaseTableData.toCamelCaseString(this.columnHeaders[colNum]);
           let value = null;
-          if (key === 'billingPeriod') {
+          if (this.nonNumericalCols.indexOf(key) >= 0) {
             value = rowData[colNum];
           } else {
             value = parseFloat(rowData[colNum]);
