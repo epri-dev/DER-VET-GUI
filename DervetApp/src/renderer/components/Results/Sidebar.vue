@@ -3,38 +3,38 @@
     <b-nav vertical>
         <router-link
           class="nav nav-sidebar sidebar-root-el"
-          v-bind:class="{ current: isActive(this.pagePaths.results) }"
-          :to="this.pagePaths.results">
+          v-bind:class="{ current: isActive(this.paths.RESULTS_PATH) }"
+          :to="this.paths.RESULTS_PATH">
           Summary
         </router-link>
         <router-link
           class="nav nav-sidebar sidebar-root-el"
-          v-bind:class="{ current: isActive(this.pagePaths.resultsDispatch) }"
-          :to="this.pagePaths.resultsDispatch">
+          v-bind:class="{ current: isActive(this.paths.RESULTS_DISPATCH_PATH) }"
+          :to="this.paths.RESULTS_DISPATCH_PATH">
           Dispatch
         </router-link>
         <router-link
           class="nav nav-sidebar sidebar-root-el"
-          v-bind:class="{ current: isActive(this.pagePaths.resultsDesign) }"
-          :to="this.pagePaths.resultsDesign">
+          v-bind:class="{ current: isActive(this.paths.RESULTS_DESIGN_PATH) }"
+          :to="this.paths.RESULTS_DESIGN_PATH">
           Design
         </router-link>
         <router-link
           class="nav nav-sidebar sidebar-root-el"
-          v-bind:class="{ current: isActive(this.pagePaths.resultsReliability) }"
-          :to="this.pagePaths.resultsReliability">
+          v-bind:class="{ current: isActive(this.paths.RESULTS_RELIABILITY_PATH) }"
+          :to="this.paths.RESULTS_RELIABILITY_PATH">
           Reliability
         </router-link>
         <router-link
           class="nav nav-sidebar sidebar-root-el"
-          v-bind:class="{ current: isActive(this.pagePaths.resultsDeferral) }"
-          :to="this.pagePaths.resultsDeferral">
+          v-bind:class="{ current: isActive(this.paths.RESULTS_DEFERRAL_PATH) }"
+          :to="this.paths.RESULTS_DEFERRAL_PATH">
           Deferral
         </router-link>
         <router-link
           class="nav nav-sidebar sidebar-root-el"
-          v-bind:class="{ current: isActive(this.pagePaths.resultsFinancial) }"
-          :to="this.pagePaths.resultsFinancial">
+          v-bind:class="{ current: isActive(this.paths.RESULTS_FINANCIAL_PATH) }"
+          :to="this.paths.RESULTS_FINANCIAL_PATH">
           Financial
         </router-link>
     </b-nav>
@@ -46,6 +46,8 @@
 
 
 <script>
+  import * as paths from '@/router/constants';
+
   export default {
     methods: {
       isActive(path) {
@@ -54,9 +56,8 @@
       },
     },
     data() {
-      const p = this.$store.state.Project;
       return {
-        pagePaths: p.paths,
+        paths,
       };
     },
   };
