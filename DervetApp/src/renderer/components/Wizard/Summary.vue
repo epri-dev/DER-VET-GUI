@@ -81,6 +81,7 @@
 <script>
   import model from '@/models/StartProject';
   import NavButtons from '@/components/Shared/NavButtons';
+  import { getProjectFixture } from '@/assets/samples/projectFixture.js';
 
   const { validation } = model;
 
@@ -94,7 +95,9 @@
       runDervet() {
         // TODO: note that there is currently no validation, so calling this with an
         // incomplete Project object will likely result in an unhandled exception
-        this.$store.dispatch('runDervet', this.$store.state.Project);
+        const p = this.$store.state.Project;
+        const projectFixture = getProjectFixture(p.inputsDirectory, p.resultsDirectory);
+        this.$store.dispatch('runDervet', projectFixture);
       },
     },
     data() {

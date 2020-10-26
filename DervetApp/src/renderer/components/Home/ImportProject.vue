@@ -7,7 +7,6 @@
         exported project you wish to import. Note that this file must be a ZIP file that includes the DER-VET metadata file (a <code>.json</code> or <code>.csv</code> file)
         and any associated time series files (solar performance time series files, site load time series files, etc.).
     </p>
-<!--    <form action="/Home/ImportProject" enctype="multipart/form-data" method="post"> -->
     <div class="form-horizontal form-buffer">
       <div class="form-group">
         <label for="ProjectDataFile" class="control-label col-md-4">Project Data ZIP File</label>
@@ -21,7 +20,7 @@
         </div>
       </div>
     </div>
-<!--    </form> -->
+
   </div>
 </template>
 

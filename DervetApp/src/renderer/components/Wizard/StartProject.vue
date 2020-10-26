@@ -133,6 +133,7 @@
 
       <fieldset class="section-group">
         <legend>Run Configuration</legend>
+
         <div class="row form-group">
           <div class="col-md-5 control-label">
             <b>Inputs Folder</b>
@@ -144,6 +145,20 @@
           </div>
           <div class="col-md-4">
             <p class="tool-tip">Folder where input files will be saved</p>
+          </div>
+        </div>
+
+        <div class="row form-group">
+          <div class="col-md-5 control-label">
+            <b>Results Folder</b>
+            <div>{{this.resultsDirectory}}</div>
+          </div>
+          <div class="col-md-3">
+            <label for="resultsFilePicker" class="btn btn-secondary btn-md">Select folder</label>
+            <input id="resultsFilePicker" style="visibility:hidden;" type="file" @change="onResultsDirectorySelection" webkitdirectory directory>
+          </div>
+          <div class="col-md-4">
+            <p class="tool-tip">Folder where results files will be saved</p>
           </div>
         </div>
       </fieldset>
@@ -223,12 +238,16 @@
           inputAnalysisHorizon: projectSpecs.analysisHorizon,
           inputDataYear: projectSpecs.dataYear,
           inputsDirectory: projectSpecs.inputsDirectory,
+          resultsDirectory: projectSpecs.resultsDirectory,
         };
       },
       // TODO validate that directory is received using accepted answer here:
       // https://stackoverflow.com/questions/52667995/how-to-check-if-selected-file-is-a-directory-or-regular-file
       onInputsDirectorySelection(e) {
         this.inputsDirectory = e.target.files[0].path;
+      },
+      onResultsDirectorySelection(e) {
+        this.resultsDirectory = e.target.files[0].path;
       },
       saveAndContinue() {
         this.$store.dispatch('setStartYear', this.inputStartYear.value);
@@ -239,6 +258,7 @@
         this.$store.dispatch('setOwnership', this.inputOwnership);
         this.$store.dispatch('setTimestep', this.inputTimestep);
         this.$store.dispatch('setInputsDirectory', this.inputsDirectory);
+        this.$store.dispatch('setResultsDirectory', this.resultsDirectory);
       },
     },
   };

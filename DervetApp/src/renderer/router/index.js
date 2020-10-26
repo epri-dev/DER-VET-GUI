@@ -6,6 +6,7 @@ Vue.use(Router);
 export default new Router({
   // todo can we move the list of routes into a .js page,
   // then import it into the index and the project state?
+  mode: 'hash',
   routes: [
     {
       path: '/',
@@ -150,6 +151,11 @@ export default new Router({
           path: 'objectives-parameters-site-information',
           name: 'objectivesParametersSiteInformation',
           component: require('@/components/Wizard/ObjectivesParametersSiteInformation').default,
+        },
+        {
+          path: 'run-analysis',
+          name: 'runAnalysis',
+          component: require('@/components/Wizard/RunAnalysis').default,
         },
       ],
     },

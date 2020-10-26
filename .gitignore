@@ -1,12 +1,13 @@
 # NOTE: this .gitignore file operates on files NOT under revision.
 #       files already under revision cannot be ignored here.
 
-# Python/Flask build and dist files
-DervetApp/dervetpy/.python-version
-DervetApp/dervetpy/__pycache__/*
-DervetApp/dervetpy/build/*
-DervetApp/dervetpy/dist/*
-DervetApp/dervetpy/venv
+# Python/DERVET build and dist files
+DervetBackEnd/.python-version
+DervetBackEnd/__pycache__/*
+DervetBackEnd/build/*
+DervetBackEnd/dist/*
+DervetBackEnd/venv
+DervetBackEnd/*spec
 DervetApp/extraResources/*
 
 # Electron build and dist files

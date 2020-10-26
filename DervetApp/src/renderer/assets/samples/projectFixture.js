@@ -18,7 +18,7 @@ import csvs from './csvs';
 
 const INPUTS_DIRECTORY = '/path/to/inputs';
 
-const projectFixture = {
+export const projectFixture = {
   analysisHorizon: 0,
   analysisHorizonMode: '1',
   criticalLoad: new CriticalLoadTimeSeries(csvs.siteLoad), // note: using hardcoded site load
@@ -196,4 +196,9 @@ const projectFixture = {
   userPowerMin: new UserPowerMinTimeSeries(_.fill(Array(8760), -1900)),
 };
 
-export default projectFixture;
+export const getProjectFixture = (inputsDir, resultsDir) => {
+  const res = _.cloneDeep(projectFixture);
+  res.inputsDirectory = inputsDir;
+  res.resultsDirectory = resultsDir;
+  return res;
+};

@@ -2,6 +2,7 @@ import _ from 'lodash';
 import childProcess from 'child_process';
 import fs from 'fs';
 import path from 'path';
+import log from 'electron-log';
 
 import { parseCsvFromFile, writeCsvToFile, writeJsonToFile } from '../util/file';
 
@@ -15,7 +16,7 @@ export const writeDervetInputs = (inputs, path) => {
   return csvPromises.concat(modelParametersPromise);
 };
 
-const getPythonExe = () => path.join(process.resourcesPath, 'extraResources/api');
+const getPythonExe = () => path.join(process.resourcesPath, 'extraResources/run_DERVET');
 
 const pythonExeExists = exePath => fs.existsSync(exePath);
 
@@ -36,9 +37,11 @@ const spawnDevPythonProcess = (modelParametersPath) => {
 // TODO refactor into a python service
 const listenToPythonProcessLogs = (pythonProcess) => {
   pythonProcess.stdout.on('data', (data) => {
+    log.info(data);
     console.log(`python stdout: ${data}`); // eslint-disable-line
   });
   pythonProcess.stderr.on('data', (data) => {
+    log.info(data);
     console.error(`python stderr: ${data}`); // eslint-disable-line
   });
 };
@@ -68,11 +71,11 @@ export const callDervet = (modelParametersPath) => {
   const pythonExe = getPythonExe();
 
   // getPythonExe is used to determine whether this code is running within the
-  // packaged application: if the packaged python api executable does not exist
+  // packaged application: if the packaged python executable does not exist
   // in the expected directory, we assume we are running in the development
   // environment and the raw python code is called.
   if (pythonExeExists(pythonExe)) {
-    pythonProcess = spawnPackagedPythonProcess(pythonExe);
+    pythonProcess = spawnPackagedPythonProcess(pythonExe, modelParametersPath);
   } else {
     pythonProcess = spawnDevPythonProcess(modelParametersPath);
   } // TODO handle case where neither executable nor source exists

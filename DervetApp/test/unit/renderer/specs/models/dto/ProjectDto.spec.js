@@ -12,7 +12,7 @@ import {
   makeTimeSeriesCsv,
 } from '@/models/dto/ProjectDto';
 
-import projectFixture from '@/assets/samples/projectFixture.js';
+import { projectFixture } from '@/assets/samples/projectFixture.js';
 import modelParametersFixture from '../../../../fixtures/case0/000-DA_battery_month.json';
 
 describe('modelParametersDto', () => {
