@@ -238,7 +238,7 @@ textarea {
 
 .numberbox {
     display: inline-block;
-    width: 80px;
+    width: 100px;
 }
 
 .numberbox-lg {
@@ -878,4 +878,9 @@ input#NoDischargingToGrid ~ p.tool-tip {
 
 #OptimizationHorizon {
     max-width: 130px;
+}
+
+.invalid-feedback {
+    font-size: 14px;
+    font-weight: bold;
 }

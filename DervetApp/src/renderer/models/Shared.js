@@ -6,8 +6,10 @@ export const sharedDefaults = {
 
 export const sharedValidation = {
   macrsTerm: {
+    required: true,
     type: Number,
     allowedValues: [3, 5, 7, 10, 15, 20, 25, 27.5, 39],
+    defaultVal: '',
   },
   generationProfileTimestep: {
     type: String,

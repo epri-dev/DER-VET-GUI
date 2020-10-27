@@ -51,7 +51,7 @@
   import NavButtons from '@/components/Shared/NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 
-  const { defaults } = model;
+  const { validation } = model;
 
   export default {
     components: { NavButtons, TimeseriesDataUpload },
@@ -61,7 +61,7 @@
       if (this.generationProfileExists()) {
         return { generationProfile: this.getGenerationProfile() };
       }
-      return { generationProfile: defaults.generationProfile };
+      return { generationProfile: validation.generationProfile.defaultVal };
     },
     computed: {
       tsData() {

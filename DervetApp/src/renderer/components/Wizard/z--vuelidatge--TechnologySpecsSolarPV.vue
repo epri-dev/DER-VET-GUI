@@ -188,7 +188,7 @@
   import { v4 as uuidv4 } from 'uuid';
   import { required, minValue, decimal } from 'vuelidate/lib/validators';
 
-  import model from '@/models/TechnologySpecs/TechnologySpecsSolarPV';
+  import model from '@/models/TechnologySpecsSolarPV';
   import NavButtons from '@/components/Shared/NavButtons';
 
   // const { validation, schemaValidations } = model;

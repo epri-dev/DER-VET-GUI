@@ -6,61 +6,57 @@
 
         <div class="form-group row">
           <div class="col-md-3">
-            <label class="control-label" for="name">{{ getDisplayName('name') }}</label>
+            <label class="control-label" for="name">Name</label>
           </div>
           <div class="col-md-9">
-            <input
+            <b-form-input trim
               class="form-control valid"
-              :class="{'is-invalid': submitted && $v.inputName.$error}"
               id="name"
-              v-model.trim="inputName">
-            </input>
-            <span class="unit-label">{{ getDisplayUnit('name') }}</span>
-            <div
-              v-if="submitted && $v.inputName.$params.required && !$v.inputName.required"
-              class="invalid-feedback">
-              '{{ getDisplayName('name') }}' is required.
-            </div>
-            <div
-              v-if="submitted && $v.inputName.$params.decimal && !$v.inputName.decimal"
-              class="invalid-feedback">
-              '{{ getDisplayName('name') }}' must be a number
-            </div>
+              type="text"
+              :state="stateName"
+              v-model="$v.inputName.$model">
+            </b-form-input>
+            <b-form-invalid-feedback id="name-feedback">
+              {{ errorName }}
+            </b-form-invalid-feedback>
+          </div>
+        </div>
+        {{ $v.inputName }}
+<!--
+        <div class="form-group row">
+          <div class="col-md-3">
+            <label class="control-label" for="name">Name</label>
+          </div>
+          <div class="col-md-9">
+            <b-form-input trim lazy
+              class="form-control valid"
+              id="name"
+              type="text"
+              :state="stateName"
+              v-model="inputName">
+            </b-form-input>
+            <b-form-invalid-feedback id="name-feedback">
+              {{ errorName }}
+            </b-form-invalid-feedback>
+          </div>
+        </div>
+-->
+        <div class="form-group row">
+          <div class="col-md-3">
+            <label class="control-label" for="cost">Cost per kW</label>
+          </div>
+          <div class="col-md-9">
+            <b-form-input trim lazy
+              class="form-control numberbox valid"
+              id="cost"
+              v-model.number="inputCost">
+            </b-form-input>
+              <span class="unit-label">$/kW</span>
+              <br/>
+              <p class="tool-tip tooltip-col">Capital cost per kW of rated power capacity (applied in year 0 of the analysis)</p>
           </div>
         </div>
 
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="cost">{{ getDisplayName('cost') }}</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              class="form-control numberbox valid"
-              :class="{'is-invalid': submitted && $v.inputCost.$error}"
-              id="cost"
-              v-model.number="inputCost">
-            </input>
-            <span class="unit-label">{{ getDisplayUnit('cost') }}</span>
-            <div
-              v-if="submitted && !$v.inputCost.required"
-              class="invalid-feedback">
-              '{{ getDisplayName('cost') }}' is required.
-            </div>
-            <div
-              v-if="submitted && !$v.inputCost.minValue"
-              class="invalid-feedback">
-              '{{ getDisplayName('cost') }}' must be greater than or equal to 0
-            </div>
-            <div
-              v-if="submitted && !$v.inputCost.decimal"
-              class="invalid-feedback">
-              '{{ getDisplayName('cost') }}' must be a number
-            </div>
-            <br/>
-            <p class="tool-tip tooltip-col">Capital cost per kW of rated power capacity (applied in year 0 of the analysis)</p>
-          </div>
-        </div>
-<!--
         <div class="form-group row">
           <div class="col-md-3">
             <label class="control-label" for="size">Sizing</label>
@@ -89,6 +85,7 @@
             <input
               class="form-control numberbox valid"
               id="rated-capacity"
+              type="text"
               v-model.number="inputRatedCapacity">
             <span class="unit-label">kW</span>
           </div>
@@ -120,6 +117,7 @@
             <input
               class="form-control numberbox-lg"
               id="inverter-max"
+              type="text"
               v-model.number="inputInverterMax">
             <span class="unit-label">kW</span>
           </div>
@@ -170,12 +168,12 @@
             <p class="tool-tip tooltip-col">Which MACRS GDS category does solar PV fall into?</p>
           </div>
         </div>
--->
+
         <nav-buttons
           back-link="/wizard/technology-specs"
           :continue-link="`/wizard/technology-specs-solar-pv-upload/${this.inputId}`"
-          :save="validatedSave"
-          :disabled=$v.$invalid
+          :save="wrappedSave"
+          :disabled="!isValid"
         />
 
       </div>
@@ -186,89 +184,71 @@
 
 <script>
   import { v4 as uuidv4 } from 'uuid';
-  import { required, minValue, decimal } from 'vuelidate/lib/validators';
+  import { required, minValue, numeric, minLength } from 'vuelidate/lib/validators';
+  import { validationMixin } from 'vuelidate';
 
-  import model from '@/models/TechnologySpecs/TechnologySpecsSolarPV';
+  import model from '@/models/TechnologySpecsSolarPV';
   import NavButtons from '@/components/Shared/NavButtons';
 
-  // const { validation, schemaValidations } = model;
-  const { validation } = model;
+  const { defaults, validation } = model;
 
   export default {
+    mixins: [validationMixin],
     components: { NavButtons },
     props: ['solarId'],
     data() {
-      const data = {
-        validation,
-        // schemaValidations,
-        submitted: false,
-      };
+      const data = { validation };
       if (this.solarId === 'null') {
         return { ...data, ...this.getDefaultData() };
       }
       return { ...data, ...this.getDataFromProject() };
     },
     computed: {
-    },
-
-    // TODO: automate the creation of validations object, from validation
-    /*
-    validations: {
-      // inputName: { required },
-      inputName: this.getValidations('xname'),
-      inputCost: { required, decimal, minValue: minValue(0) },
-    },
-    validations: schemaValidations,
-    */
-    validations: {
-      inputCost: { required, decimal, minValue: minValue(0) },
-      inputName: { required },
-    },
-
-    methods: {
-
-      // TODO: move these to a shared place for import
-      validatedSave() {
-        this.submitted = true;
-        this.$v.$touch();
-        if (!this.$v.$invalid) {
-          return this.saveAndContinue();
+      errors() {
+        const errors = [1];
+        return errors;
+      },
+      isValid() {
+        return this.errors.length === 0;
+      },
+      wrappedSave() {
+        if (this.isValid) {
+          return this.saveAndContinue;
         }
         return () => {};
-        // return alert('invalid save. please correct errors.');
       },
-      getDisplayName(param) {
-        return validation[param].displayName;
+      stateName() {
+        // return this.inputName.length !== 0;
+        return this.inputName.length !== 0 ? null : false;
       },
-      getDisplayUnit(param) {
-        return validation[param].unit;
+      errorName() {
+        return 'You must enter a name for this technology.';
       },
-      /*
-      getValidations(param) {
-        if (param === 'name') {
-          return { required };
-        }
-        return {};
+    },
+    validations: {
+      inputName: {
+        required,
+        minLength: minLength(4),
       },
-      */
-      // ------------
-
+      inputCost: { required, numeric, minValue: minValue(0) },
+    },
+    methods: {
       getDefaultData() {
         return {
-          inputActive: validation.active.defaultVal,
-          inputTag: validation.tag.defaultVal,
-          inputTechnologyType: validation.technologyType.defaultVal,
+          inputActive: defaults.active,
+          inputTag: defaults.tag,
+          inputTechnologyType: defaults.technologyType,
           inputId: uuidv4(),
-          inputName: validation.name.defaultVal,
-          inputCost: validation.cost.defaultVal,
-          inputShouldSize: validation.shouldSize.defaultVal,
-          inputRatedCapacity: validation.ratedCapacity.defaultVal,
-          inputLoc: validation.loc.defaultVal,
-          inputInverterMax: validation.inverterMax.defaultVal,
-          inputConstructionDate: validation.constructionDate.defaultVal,
-          inputOperationDate: validation.operationDate.defaultVal,
-          inputMacrsTerm: validation.macrsTerm.defaultVal,
-          inputGenerationProfile: validation.generationProfile.defaultVal,
+          inputName: defaults.name,
+          inputCost: defaults.cost,
+          inputShouldSize: defaults.shouldSize,
+          inputRatedCapacity: defaults.ratedCapacity,
+          inputLoc: defaults.loc,
+          inputInverterMax: defaults.inverterMax,
+          inputConstructionDate: defaults.constructionDate,
+          inputOperationDate: defaults.operationDate,
+          inputMacrsTerm: defaults.macrsTerm,
+          inputGenerationProfile: defaults.generationProfile,
         };
       },
       getDataFromProject() {
