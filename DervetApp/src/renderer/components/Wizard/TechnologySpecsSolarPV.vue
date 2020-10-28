@@ -17,15 +17,23 @@
             </input>
             <span class="unit-label">{{ getDisplayUnit('name') }}</span>
             <div
-              v-if="submitted && $v.inputName.$params.required && !$v.inputName.required"
+              v-for="param in schemaValidations.inputName"
+              v-if="submitted && !$v.inputName.param"
+              class="invalid-feedback">
+              '{{ getDisplayName('name') }}' is required.
+            </div>
+<!--
+            <div
+              v-if="submitted && !$v.inputName.required"
               class="invalid-feedback">
               '{{ getDisplayName('name') }}' is required.
             </div>
             <div
-              v-if="submitted && $v.inputName.$params.decimal && !$v.inputName.decimal"
+              v-if="submitted && !$v.inputName.decimal"
               class="invalid-feedback">
               '{{ getDisplayName('name') }}' must be a number
             </div>
+-->
           </div>
         </div>
 
@@ -42,6 +50,13 @@
             </input>
             <span class="unit-label">{{ getDisplayUnit('cost') }}</span>
             <div
+              v-for="param in schemaValidations.inputCost"
+              v-if="submitted && !$v.inputCost.param"
+              class="invalid-feedback">
+              '{{ getDisplayName('cost') }}' is required.
+            </div>
+<!--
+            <div
               v-if="submitted && !$v.inputCost.required"
               class="invalid-feedback">
               '{{ getDisplayName('cost') }}' is required.
@@ -56,6 +71,7 @@
               class="invalid-feedback">
               '{{ getDisplayName('cost') }}' must be a number
             </div>
+-->
             <br/>
             <p class="tool-tip tooltip-col">Capital cost per kW of rated power capacity (applied in year 0 of the analysis)</p>
           </div>
@@ -186,13 +202,13 @@
 
 <script>
   import { v4 as uuidv4 } from 'uuid';
-  import { required, minValue, decimal } from 'vuelidate/lib/validators';
+  // import { required, minValue, decimal } from 'vuelidate/lib/validators';
 
   import model from '@/models/TechnologySpecs/TechnologySpecsSolarPV';
   import NavButtons from '@/components/Shared/NavButtons';
 
-  // const { validation, schemaValidations } = model;
-  const { validation } = model;
+  const { validation, schemaValidations } = model;
+  // const { validation } = model;
 
   export default {
     components: { NavButtons },
@@ -200,7 +216,7 @@
     data() {
       const data = {
         validation,
-        // schemaValidations,
+        schemaValidations,
         submitted: false,
       };
       if (this.solarId === 'null') {
@@ -218,12 +234,12 @@
       inputName: this.getValidations('xname'),
       inputCost: { required, decimal, minValue: minValue(0) },
     },
-    validations: schemaValidations,
-    */
     validations: {
       inputCost: { required, decimal, minValue: minValue(0) },
       inputName: { required },
     },
+    */
+    validations: schemaValidations,
 
     methods: {
 

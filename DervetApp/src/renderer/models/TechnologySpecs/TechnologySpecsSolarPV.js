@@ -1,4 +1,4 @@
-// import { required, minValue, decimal } from 'vuelidate/lib/validators';
+import { required, minValue, decimal } from 'vuelidate/lib/validators';
 import { sharedValidation } from './Shared.js';
 
 /*
@@ -85,12 +85,12 @@ const validation = {
 };
 
 
-/*
 const schemaValidations = {
   inputCost: { required, decimal, minValue: minValue(0) },
   inputName: { required },
 };
 
+/*
 Object.keys(validation).map(key {
   schemaValidations[key] = 7;
 });
@@ -132,5 +132,5 @@ schemaValidations = { inputCost };
 
 export default {
   validation,
-  // schemaValidations,
+  schemaValidations,
 };
