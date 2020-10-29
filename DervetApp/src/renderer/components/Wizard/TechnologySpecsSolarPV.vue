@@ -4,6 +4,7 @@
     <form>
       <div class="form-horizontal form-buffer container">
 
+        <!-- String/Text box Example -->
         <div class="form-group row">
           <div class="col-md-3">
             <label class="control-label" for="name">{{ getDisplayName('name') }}</label>
@@ -17,106 +18,88 @@
             </input>
             <span class="unit-label">{{ getDisplayUnit('name') }}</span>
             <div
-              v-for="param in schemaValidations.inputName"
-              v-if="submitted && !$v.inputName.param"
+              v-if="submitted && $v.inputName.$error"
               class="invalid-feedback">
-              '{{ getDisplayName('name') }}' is required.
+              {{ getErrorMsg('name') }}
             </div>
-<!--
-            <div
-              v-if="submitted && !$v.inputName.required"
-              class="invalid-feedback">
-              '{{ getDisplayName('name') }}' is required.
-            </div>
-            <div
-              v-if="submitted && !$v.inputName.decimal"
-              class="invalid-feedback">
-              '{{ getDisplayName('name') }}' must be a number
-            </div>
--->
+            <p class="tool-tip tooltip-col">{{ getDescription('name') }}</p>
           </div>
         </div>
 
+        <!-- numberbox Example -->
         <div class="form-group row">
           <div class="col-md-3">
             <label class="control-label" for="cost">{{ getDisplayName('cost') }}</label>
           </div>
           <div class="col-md-9">
             <input
-              class="form-control numberbox valid"
+              class="form-control valid numberbox"
               :class="{'is-invalid': submitted && $v.inputCost.$error}"
               id="cost"
               v-model.number="inputCost">
             </input>
             <span class="unit-label">{{ getDisplayUnit('cost') }}</span>
             <div
-              v-for="param in schemaValidations.inputCost"
-              v-if="submitted && !$v.inputCost.param"
+              v-if="submitted && $v.inputCost.$error"
               class="invalid-feedback">
-              '{{ getDisplayName('cost') }}' is required.
+              {{ getErrorMsg('cost') }}
             </div>
-<!--
-            <div
-              v-if="submitted && !$v.inputCost.required"
-              class="invalid-feedback">
-              '{{ getDisplayName('cost') }}' is required.
-            </div>
-            <div
-              v-if="submitted && !$v.inputCost.minValue"
-              class="invalid-feedback">
-              '{{ getDisplayName('cost') }}' must be greater than or equal to 0
-            </div>
-            <div
-              v-if="submitted && !$v.inputCost.decimal"
-              class="invalid-feedback">
-              '{{ getDisplayName('cost') }}' must be a number
-            </div>
--->
-            <br/>
-            <p class="tool-tip tooltip-col">Capital cost per kW of rated power capacity (applied in year 0 of the analysis)</p>
+            <p class="tool-tip tooltip-col">{{ getDescription('cost') }}</p>
           </div>
         </div>
-<!--
+
+        <!-- Boolean (radio button) Example -->
         <div class="form-group row">
           <div class="col-md-3">
-            <label class="control-label" for="size">Sizing</label>
+            <label class="control-label" for="size">{{ getDisplayName('shouldSize') }}</label>
           </div>
           <div class="col-md-9">
             <input
-              id="size-yes"
               type="radio"
+              id="size-yes"
               v-model="inputShouldSize"
               v-bind:value="true">
-            <label for="size-yes" class="buffer-right">Have DER-VET size the Solar PV</label>
+            <label for="size-yes" class="buffer-right">{{ getLabelTrue('shouldSize') }}</label>
             <input
-              id="size-no"
               type="radio"
+              id="size-no"
               v-model="inputShouldSize"
               v-bind:value="false">
-            <label for="size-no">Known size</label>
+            <label for="size-no">{{ getLabelFalse('shouldSize') }}</label>
+            <p class="tool-tip tooltip-col">{{ getDescription('shouldSize') }}</p>
           </div>
         </div>
 
+        <!-- Conditional numberbox Example -->
         <div v-if="!inputShouldSize" class="form-group row">
           <div class="col-md-3">
-            <label class="control-label" for="rated-capacity">Rated Capacity</label>
+            <label class="control-label" for="rated-capacity">{{ getDisplayName('ratedCapacity') }}</label>
           </div>
           <div class="col-md-3">
             <input
-              class="form-control numberbox valid"
+              class="form-control valid numberbox"
+              :class="{'is-invalid': submitted && $v.inputRatedCapacity.$error}"
               id="rated-capacity"
               v-model.number="inputRatedCapacity">
-            <span class="unit-label">kW</span>
+            <span class="unit-label">{{ getDisplayUnit('ratedCapacity') }}</span>
+            <div
+              v-if="submitted && $v.inputRatedCapacity.$error"
+              class="invalid-feedback">
+              {{ getErrorMsg('ratedCapacity') }}
+            </div>
+            <p class="tool-tip tooltip-col">{{ getDescription('ratedCapacity') }}</p>
           </div>
         </div>
 
+        <!-- Box with a List of Allowed Values Example -->
         <div class="form-group row">
           <div class="col-md-3">
-            <label class="control-label" for="loc">Coupled System Type</label>
+            <label class="control-label" for="loc">{{ getDisplayName('loc') }}</label>
           </div>
           <div class="col-md-9">
             <select
-              class="form-control valid"
+              class="form-control valid numberbox"
+              :class="{'is-invalid': submitted && $v.inputLoc.$error}"
               id="loc"
               v-model="inputLoc">
               <option value="">-</option>
@@ -124,69 +107,110 @@
                 {{value}}
               </option>
             </select>
-            <p class="tool-tip tooltip-col">Solar plus storage AC or DC coupled system</p>
+            <span class="unit-label">{{ getDisplayUnit('loc') }}</span>
+            <div
+              v-if="submitted && $v.inputLoc.$error"
+              class="invalid-feedback">
+              {{ getErrorMsg('loc') }}
+            </div>
+            <p class="tool-tip tooltip-col">{{ getDescription('loc') }}</p>
           </div>
         </div>
 
+        <!-- numberbox-lg Example -->
         <div class="form-group row">
           <div class="col-md-3">
-            <label class="control-label" for="inverter-max">Solar (+storage) Inverter Rating (kVA)</label>
+            <label class="control-label" for="inverter-max">{{ getDisplayName('inverterMax') }}</label>
           </div>
           <div class="col-md-9">
             <input
-              class="form-control numberbox-lg"
-              id="inverter-max"
+              class="form-control valid numberbox-lg"
+              :class="{'is-invalid': submitted && $v.inputInverterMax.$error}"
+              id="cost"
               v-model.number="inputInverterMax">
-            <span class="unit-label">kW</span>
+            </input>
+            <span class="unit-label">{{ getDisplayUnit('inverterMax') }}</span>
+            <div
+              v-if="submitted && $v.inputInverterMax.$error"
+              class="invalid-feedback">
+              {{ getErrorMsg('inverterMax') }}
+            </div>
+            <p class="tool-tip tooltip-col">{{ getDescription('inverterMax') }}</p>
           </div>
         </div>
 
+        <!-- Date box Example -->
         <div class="form-group row">
           <div class="col-md-3">
-            <label class="control-label" for="construction-date">Construction Date</label>
+            <label class="control-label" for="construction-date">{{ getDisplayName('constructionDate') }}</label>
           </div>
           <div class="col-md-9">
             <input
-              type="date"
               class="form-control valid"
+              :class="{'is-invalid': submitted && $v.inputConstructionDate.$error}"
+              type="date"
               id="construction-date"
               v-model="inputConstructionDate">
+            </input>
+            <span class="unit-label">{{ getDisplayUnit('constructionDate') }}</span>
+            <div
+              v-if="submitted && $v.inputConstructionDate.$error"
+              class="invalid-feedback">
+              {{ getErrorMsg('constructionDate') }}
+            </div>
+            <p class="tool-tip tooltip-col">{{ getDescription('constructionDate') }}</p>
           </div>
         </div>
 
+        <!-- Date box Example -->
         <div class="form-group row">
           <div class="col-md-3">
-            <label class="control-label" for="operation-date">Operation Date</label>
+            <label class="control-label" for="operation-date">{{ getDisplayName('operationDate') }}</label>
           </div>
           <div class="col-md-9">
             <input
-              type="date"
               class="form-control valid"
+              :class="{'is-invalid': submitted && $v.inputOperationDate.$error}"
+              type="date"
               id="operation-date"
               v-model="inputOperationDate">
+            </input>
+            <span class="unit-label">{{ getDisplayUnit('operationDate') }}</span>
+            <div
+              v-if="submitted && $v.inputOperationDate.$error"
+              class="invalid-feedback">
+              {{ getErrorMsg('operationDate') }}
+            </div>
+            <p class="tool-tip tooltip-col">{{ getDescription('operationDate') }}</p>
           </div>
         </div>
 
+        <!-- Box with a List of Allowed Values Example -->
         <div class="form-group row">
           <div class="col-md-3">
-            <label class="control-label" for="macrs-term">MACRS Term</label>
+            <label class="control-label" for="macrs-term">{{ getDisplayName('macrsTerm') }}</label>
           </div>
           <div class="col-md-9">
             <select
-            class="form-control numberbox"
-            id="macrs-term"
-            v-model.number="inputMacrsTerm">
-              <option v-bind:value="undefined">-</option>
+              class="form-control valid numberbox"
+              :class="{'is-invalid': submitted && $v.inputMacrsTerm.$error}"
+              id="macrs-term"
+              v-model="inputMacrsTerm">
+              <option value="">--</option>
               <option v-for="value in validation.macrsTerm.allowedValues" v-bind:value="value">
                 {{value}}
               </option>
             </select>
-            <span class="unit-label">years</span>
-            <br/>
-            <p class="tool-tip tooltip-col">Which MACRS GDS category does solar PV fall into?</p>
+            <span class="unit-label">{{ getDisplayUnit('macrsTerm') }}</span>
+            <div
+              v-if="submitted && $v.inputMacrsTerm.$error"
+              class="invalid-feedback">
+              {{ getErrorMsg('macrsTerm') }}
+            </div>
+            <p class="tool-tip tooltip-col">{{ getDescription('macrsTerm') }}</p>
           </div>
         </div>
--->
+
         <nav-buttons
           back-link="/wizard/technology-specs"
           :continue-link="`/wizard/technology-specs-solar-pv-upload/${this.inputId}`"
@@ -202,13 +226,11 @@
 
 <script>
   import { v4 as uuidv4 } from 'uuid';
-  // import { required, minValue, decimal } from 'vuelidate/lib/validators';
 
   import model from '@/models/TechnologySpecs/TechnologySpecsSolarPV';
   import NavButtons from '@/components/Shared/NavButtons';
 
   const { validation, schemaValidations } = model;
-  // const { validation } = model;
 
   export default {
     components: { NavButtons },
@@ -224,26 +246,35 @@
       }
       return { ...data, ...this.getDataFromProject() };
     },
-    computed: {
-    },
 
-    // TODO: automate the creation of validations object, from validation
-    /*
-    validations: {
-      // inputName: { required },
-      inputName: this.getValidations('xname'),
-      inputCost: { required, decimal, minValue: minValue(0) },
-    },
-    validations: {
-      inputCost: { required, decimal, minValue: minValue(0) },
-      inputName: { required },
-    },
-    */
     validations: schemaValidations,
 
     methods: {
-
-      // TODO: move these to a shared place for import
+      // TODO: move these methods to a shared place for import
+      getErrorMsg(fieldName) {
+        // this method returns a single validation error message (String)
+        // input argument is the name of a single input varible  (String)
+        const displayName = this.getDisplayName(fieldName);
+        const varName = `input${fieldName.charAt(0).toUpperCase()}${fieldName.slice(1)}`;
+        let displayMsg = displayName;
+        if (!this.$v[varName].required) {
+          displayMsg += ' is required';
+          return displayMsg;
+        }
+        if (this.schemaValidations[varName].decimal && !this.$v[varName].decimal) {
+          displayMsg += ' must be a number';
+          return displayMsg;
+        }
+        if (this.schemaValidations[varName].minValue && !this.$v[varName].minValue) {
+          displayMsg += ` must be >= ${this.validation[fieldName].min}`;
+          return displayMsg;
+        }
+        if (this.schemaValidations[varName].maxValue && !this.$v[varName].maxValue) {
+          displayMsg += ` must be <= ${this.validation[fieldName].max}`;
+          return displayMsg;
+        }
+        return '';
+      },
       validatedSave() {
         this.submitted = true;
         this.$v.$touch();
@@ -251,7 +282,8 @@
           return this.saveAndContinue();
         }
         return () => {};
-        // return alert('invalid save. please correct errors.');
+        // TODO: report 'invalid save. please correct errors.'
+        //   have it appear for 2 seconds on a disabled click, and then fade away
       },
       getDisplayName(param) {
         return validation[param].displayName;
@@ -259,15 +291,18 @@
       getDisplayUnit(param) {
         return validation[param].unit;
       },
-      /*
-      getValidations(param) {
-        if (param === 'name') {
-          return { required };
-        }
-        return {};
+      getDefaultVal(param) {
+        return validation[param].defaultVal;
       },
-      */
-      // ------------
+      getDescription(param) {
+        return validation[param].description;
+      },
+      getLabelTrue(param) {
+        return validation[param].labelTrue;
+      },
+      getLabelFalse(param) {
+        return validation[param].labelFalse;
+      },
 
       getDefaultData() {
         return {

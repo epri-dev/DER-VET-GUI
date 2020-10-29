@@ -1,3 +1,4 @@
+// TODO-- add validators here as neeeded, for vuelidate
 import { required, minValue, decimal } from 'vuelidate/lib/validators';
 import { sharedValidation } from './Shared.js';
 
@@ -29,6 +30,8 @@ const validation = {
   constructionDate: {
     isOptional: true,
     valType: Date,
+    defaultVal: undefined,
+    displayName: 'Construction Date',
   },
   cost: {
     valType: Number,
@@ -36,6 +39,7 @@ const validation = {
     min: 0,
     displayName: 'Cost per kW',
     unit: '$/kW',
+    description: 'Capital cost per kW of rated power capacity (applied in year 0 of the analysis)',
     schemaKey: 'ccost_kW',
   },
   generationProfile: {
@@ -49,11 +53,16 @@ const validation = {
   inverterMax: {
     valType: Number,
     defaultVal: 1e9,
+    min: 0,
+    displayName: 'Solar (+storage) Inverter Rating (kVA)',
+    unit: 'kW',
   },
   loc: {
     valType: String,
-    defaultVal: '',
+    defaultVal: undefined,
+    displayName: 'Coupled System Type',
     allowedValues: ['AC', 'DC'],
+    description: 'Solar plus storage AC or DC coupled system',
   },
   macrsTerm: sharedValidation.macrsTerm,
   name: {
@@ -64,15 +73,21 @@ const validation = {
   operationDate: {
     isOptional: true,
     valType: Date,
-    defaultVal: '',
+    defaultVal: undefined,
+    displayName: 'Operation Date',
   },
   ratedCapacity: {
     valType: Number,
     defaultVal: 0,
+    displayName: 'Rated Capacity',
+    unit: 'kW',
   },
   shouldSize: {
     valType: Boolean,
     defaultVal: true,
+    displayName: 'Sizing',
+    labelTrue: 'Have DER-VET size the Solar PV',
+    labelFalse: 'Known size',
   },
   tag: {
     valType: String,
@@ -84,30 +99,41 @@ const validation = {
   },
 };
 
-
+// this format is required for vuelidate to work
+//   it must be read in as 'validations'
+// TODO: automate the creation of this from validation object above
 const schemaValidations = {
+  inputActive: { },
+  inputConstructionDate: { },
   inputCost: { required, decimal, minValue: minValue(0) },
+  inputGenerationProfile: { },
+  inputId: { required },
+  inputInverterMax: { required, decimal, minValue: minValue(0) },
+  inputLoc: { required },
+  inputMacrsTerm: { required, decimal },
   inputName: { required },
+  inputOperationDate: { },
+  inputRatedCapacity: { required, decimal },
+  inputShouldSize: { required },
+  inputTag: { required },
+  inputTechnologyType: { required },
 };
 
 /*
-Object.keys(validation).map(key {
-  schemaValidations[key] = 7;
-});
+NOTE: these are failed attempts to create schemaValidations,
+      which vuelidate needs.
 
-for (const [key, params] of Object.entries(validation)) {
-  schemaValidations[key] = 7;
-}
+const schemaValidations = {};
 
-
-const keys = Object.keys(validation);
-keys.forEach((key) => {
-  if (validation.name.isOptional !== true) {
-    schemaValidations[key] = {
-      required,
-    };
+Object.keys(validation).forEach((key) => {
+  schemaValidations[key] = {};
+  if (validation[key].isOptional !== true) {
+    schemaValidations[key].required = function () { };
   }
-}
+  if (validation[key].vaslType === Number) {
+    schemaValidations[key].decimal = function () { };
+  }
+});
 
 if (validation.name.isOptional !== true) {
   schemaValidations.inputName = {
