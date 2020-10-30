@@ -6,6 +6,8 @@ import log from 'electron-log';
 
 import { parseCsvFromFile, writeCsvToFile, writeJsonToFile } from '../util/file';
 
+const DERVET_SCRIPT_NAME = 'run_DERVET';
+
 const writeCsvsToFile = csvs => (
   csvs.map(({ filePath, csv }) => writeCsvToFile(filePath, csv))
 );
@@ -16,7 +18,17 @@ export const writeDervetInputs = (inputs, path) => {
   return csvPromises.concat(modelParametersPromise);
 };
 
-const getPythonExe = () => path.join(process.resourcesPath, 'extraResources/run_DERVET');
+const getExeFileName = () => {
+  // Note that this will return win32 even on 64-bit Windows
+  if (process.platform === 'win32') {
+    return `${DERVET_SCRIPT_NAME}.exe`;
+  }
+  return DERVET_SCRIPT_NAME;
+};
+
+const getPythonExe = () => (
+  path.join(process.resourcesPath, 'extraResources', getExeFileName())
+);
 
 const pythonExeExists = exePath => fs.existsSync(exePath);
 

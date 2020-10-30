@@ -3,15 +3,15 @@
     <b-nav vertical>
         <router-link
           class="nav nav-sidebar sidebar-root-el"
-          v-bind:class="{ current: isActive(this.pagePaths.startProject) }"
-          :to="this.pagePaths.startProject">
+          v-bind:class="{ current: isActive(this.paths.START_PROJECT_PATH) }"
+          :to="this.paths.START_PROJECT_PATH">
           Project Configuration
         </router-link>
 
         <router-link
           class="nav nav-sidebar sidebar-root-el"
-          v-bind:class="{ current: isActive(this.pagePaths.techSpecs) }"
-          :to="this.pagePaths.techSpecs">
+          v-bind:class="{ current: isActive(this.paths.TECH_SPECS_PATH) }"
+          :to="this.paths.TECH_SPECS_PATH">
           Technology Specifications
         </router-link>
 
@@ -86,104 +86,104 @@
 
         <router-link
           class="nav nav-sidebar sidebar-root-el"
-          v-bind:class="{ current: isActive(this.pagePaths.objectives) }"
-          :to="this.pagePaths.objectives">
+          v-bind:class="{ current: isActive(this.paths.OBJECTIVES_PATH) }"
+          :to="this.paths.OBJECTIVES_PATH">
           Services
         </router-link>
         <router-link
           class="nav nav-sidebar sidebar-indent"
-          v-bind:class="{ current: isActive(this.pagePaths.objectivesSiteInformation) }"
-          :to="this.pagePaths.objectivesSiteInformation">
+          v-bind:class="{ current: isActive(this.paths.OBJECTIVES_SITE_INFORMATION_PATH) }"
+          :to="this.paths.OBJECTIVES_SITE_INFORMATION_PATH">
           Site Information
         </router-link>
         <router-link
           class="nav nav-sidebar sidebar-indent"
-          v-bind:class="{ current: isActive(this.pagePaths.objectivesDeferral) }"
-          :to="this.pagePaths.objectivesDeferral"
+          v-bind:class="{ current: isActive(this.paths.OBJECTIVES_DEFERRAL_PATH) }"
+          :to="this.paths.OBJECTIVES_DEFERRAL_PATH"
           v-if="objectivesDeferral">
           Deferral
         </router-link>
         <router-link
           class="nav nav-sidebar sidebar-indent"
-          v-bind:class="{ current: isActive(this.pagePaths.objectivesFR) }"
-          :to="this.pagePaths.objectivesFR"
+          v-bind:class="{ current: isActive(this.paths.OBJECTIVES_FR_PATH) }"
+          :to="this.paths.OBJECTIVES_FR_PATH"
           v-if="objectivesFR">
           Frequency Regulation
         </router-link>
         <router-link
           class="nav nav-sidebar sidebar-indent"
-          v-bind:class="{ current: isActive(this.pagePaths.objectivesNSR) }"
-          :to="this.pagePaths.objectivesNSR"
+          v-bind:class="{ current: isActive(this.paths.OBJECTIVES_NSR_PATH) }"
+          :to="this.paths.OBJECTIVES_NSR_PATH"
           v-if="objectivesNSR">
           Non-Spinning Reserves
         </router-link>
         <router-link
           class="nav nav-sidebar sidebar-indent"
-          v-bind:class="{ current: isActive(this.pagePaths.objectivesResilience) }"
-          :to="this.pagePaths.objectivesResilience"
+          v-bind:class="{ current: isActive(this.paths.OBJECTIVES_RESILIENCE_PATH) }"
+          :to="this.paths.OBJECTIVES_RESILIENCE_PATH"
           v-if="objectivesResilience">
           Reliability
         </router-link>
         <router-link
           class="nav nav-sidebar sidebar-indent"
-          v-bind:class="{ current: isActive(this.pagePaths.objectivesSR) }"
-          :to="this.pagePaths.objectivesSR"
+          v-bind:class="{ current: isActive(this.paths.OBJECTIVES_SR_PATH) }"
+          :to="this.paths.OBJECTIVES_SR_PATH"
           v-if="objectivesSR">
           Spinning Reserves
         </router-link>
         <router-link
           class="nav nav-sidebar sidebar-indent"
-          v-bind:class="{ current: isActive(this.pagePaths.objectivesUserDefined) }"
-          :to="this.pagePaths.objectivesUserDefined"
+          v-bind:class="{ current: isActive(this.paths.OBJECTIVES_USER_DEFINED_PATH) }"
+          :to="this.paths.OBJECTIVES_USER_DEFINED_PATH"
           v-if="objectivesUserDefined">
           Custom Service
         </router-link>
         <router-link
           class="nav nav-sidebar sidebar-indent"
-          v-bind:class="{ current: isActive(this.pagePaths.objectivesDA) }"
-          :to="this.pagePaths.objectivesDA"
+          v-bind:class="{ current: isActive(this.paths.OBJECTIVES_DA_PATH) }"
+          :to="this.paths.OBJECTIVES_DA_PATH"
           v-if="objectivesDA">
           Day Ahead Pricing
         </router-link>
 
         <router-link
           class="nav nav-sidebar sidebar-root-el"
-          v-bind:class="{ current: isActive(this.pagePaths.financialInputs) }"
-          :to="this.pagePaths.financialInputs">
+          v-bind:class="{ current: isActive(this.paths.FINANCIAL_INPUTS_PATH) }"
+          :to="this.paths.FINANCIAL_INPUTS_PATH">
           Financial Inputs
         </router-link>
         <router-link
           class="nav nav-sidebar sidebar-indent"
-          v-bind:class="{ current: isActive(this.pagePaths.financialInputsExternalIncentives) }"
-          :to="this.pagePaths.financialInputsExternalIncentives">
+          v-bind:class="{ current: isActive(this.paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH) }"
+          :to="this.paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH">
           External Incentives
         </router-link>
         <router-link
           class="nav nav-sidebar sidebar-indent"
-          v-bind:class="{ current: isActive(this.pagePaths.financialInputsRetailTariff) }"
-          :to="this.pagePaths.financialInputsRetailTariff"
+          v-bind:class="{ current: isActive(this.paths.FINANCIAL_INPUTS_RETAIL_TARIFF_PATH) }"
+          :to="this.paths.FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
           v-if="objectivesRetailEnergyChargeReduction||objectivesRetailDemandChargeReduction">
           Retail Tariff
         </router-link>
 
         <router-link
           class="nav nav-sidebar sidebar-root-el"
-          v-bind:class="{ current: isActive(this.pagePaths.sensitivityAnalysis) }"
-          :to="this.pagePaths.sensitivityAnalysis">
+          v-bind:class="{ current: isActive(this.paths.SENSITIVITY_ANALYSIS_PATH) }"
+          :to="this.paths.SENSITIVITY_ANALYSIS_PATH">
           Scenario Analysis
         </router-link>
         <router-link
           class="nav nav-sidebar sidebar-root-el"
-          v-bind:class="{ current: isActive(this.pagePaths.summary) }"
-          :to="this.pagePaths.summary
+          v-bind:class="{ current: isActive(this.paths.SUMMARY_PATH) }"
+          :to="this.paths.SUMMARY_PATH
           ">
           Summary
         </router-link>
 
         <router-link
           class="nav nav-sidebar sidebar-root-el"
-          v-bind:class="{ current: isActive(this.pagePaths.results) }"
-          :to="this.pagePaths.results">
+          v-bind:class="{ current: isActive(this.paths.RESULTS_PATH) }"
+          :to="this.paths.RESULTS_PATH">
           Results
         </router-link>
 
@@ -196,11 +196,12 @@
 
 
 <script>
+  import * as paths from '@/router/constants';
+
   export default {
     data() {
-      const p = this.$store.state.Project;
       return {
-        pagePaths: p.paths,
+        paths,
       };
     },
     methods: {
@@ -208,10 +209,10 @@
         return active;
       },
       techSpecsActiveSaved(tech, id) {
-        return RegExp(`${this.pagePaths.techSpecs}-${tech}.*/${id}`).test(this.$route.path);
+        return RegExp(`${this.paths.TECH_SPECS_PATH}-${tech}.*/${id}`).test(this.$route.path);
       },
       techSpecsActiveUnsaved(tech) {
-        return RegExp(`${this.pagePaths.techSpecs}-${tech}/null`).test(this.$route.path);
+        return RegExp(`${this.paths.TECH_SPECS_PATH}-${tech}/null`).test(this.$route.path);
       },
       isActive(path) {
         return RegExp(path).test(this.$route.path);
