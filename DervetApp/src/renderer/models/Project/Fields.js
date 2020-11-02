@@ -1,37 +1,55 @@
-export class ProjectField {
-  constructor(value, name, isRequired) {
+import { required, decimal, minValue } from 'vuelidate/lib/validators';
+
+export default class ProjectField {
+  constructor(args) {
+    this.value = args.value;
+    this.displayName = args.displayName;
+    this.isRequired = args.isRequired;
+    this.type = args.type;
+    this.minValue = args.minValue;
+    this.maxValue = args.maxValue;
+    this.unit = args.unit;
+    this.description = args.description;
+    this.allowedValues = args.allowedValues;
+  }
+
+  toValidationSchema() {
+    return {
+      ...(this.isRequired && { required }),
+      ...(this.type === Number && { decimal }),
+      ...(((typeof this.minValue) === 'number') && { minValue: minValue(this.minValue) }),
+    };
+  }
+
+  setValue(value) {
     this.value = value;
-    this.isRequired = isRequired;
+    return this;
   }
 
-  getValidationErrors() {
-    return [];
-  }
-
-  getIsRequiredError(validationErrors) {
-    if (this.value === null && this.required) {
-      validationErrors.push(`${this.name} is required`);
-    }
-    return validationErrors;
-  }
-}
-
-export class StartYear extends ProjectField {
-  constructor(value) {
-    super(value, 'Start year', true);
-  }
-
-  getValidationErrors() {
-    // TODO move to ProjectField class (use super?)
-    const validationErrors = this.getIsRequiredError([]);
-
-    // TODO these are placeholders: should come from shared dervet input schema
-    if (this.value < 1980) {
-      validationErrors.push('Start year must be greater than or equal to 1980');
-    }
-    if (this.value > 2100) {
-      validationErrors.push('Start year must be less than 2100');
-    }
-    return validationErrors;
+  /**
+  args:
+    value
+    displayName
+    isRequired
+    description
+    schemaTag
+    schemaKey
+  */
+  static fromSchema(args) {
+    // const d = getFromSchema(schemaTag, schemaKey);
+    const d = {
+      minValue: 0, maxValue: 1, allowedValues: 'foo', unit: 'x', type: 'y',
+    };
+    return new ProjectField({
+      value: args.value,
+      displayName: args.displayName,
+      isRequired: args.isRequired,
+      description: args.description,
+      minValue: d.minValue,
+      maxValue: d.maxValue,
+      allowedValues: d.allowedValues,
+      unit: d.unit,
+      type: d.type,
+    });
   }
 }

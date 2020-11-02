@@ -47,11 +47,9 @@
   import '@/assets/samples/SamplePVgen-8784.csv';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
-  import model from '@/models/TechnologySpecs/TechnologySpecsSolarPV';
+  import TechnologySpecsSolarPV from '@/models/TechnologySpecs/TechnologySpecsSolarPV';
   import NavButtons from '@/components/Shared/NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
-
-  const { validation } = model;
 
   export default {
     components: { NavButtons, TimeseriesDataUpload },
@@ -61,7 +59,8 @@
       if (this.generationProfileExists()) {
         return { generationProfile: this.getGenerationProfile() };
       }
-      return { generationProfile: validation.generationProfile.defaultVal };
+      const vals = TechnologySpecsSolarPV.getHardcodedDefaults();
+      return { generationProfile: vals.generationProfile };
     },
     computed: {
       tsData() {

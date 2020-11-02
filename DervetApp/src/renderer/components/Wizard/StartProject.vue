@@ -20,7 +20,7 @@
         </div>
         <div class="col-md-4">
           <input
-            v-model.number="inputStartYear.value"
+            v-model.number="inputStartYear"
             class="form-control numberbox"
             id="startYear"
             type="number"
@@ -174,42 +174,21 @@
       <nav-buttons
         back-link="/new-project"
         continue-link="/wizard/technology-specs"
-        :save="wrappedSave"
-        :disabled="!isValid"
+        :save="saveAndContinue"
       />
     </div>
   </div>
 </template>
 
 <script>
-  import { cloneDeep } from 'lodash';
-
   import model from '@/models/StartProject';
   import NavButtons from '@/components/Shared/NavButtons';
-  import { StartYear } from '@/models/Project/Fields';
 
   const { validation } = model;
 
   export default {
     components: { NavButtons },
     computed: {
-      errors() {
-        const errors = [];
-        errors.push(...this.inputStartYear.getValidationErrors());
-        return errors;
-      },
-      isValid() {
-        return this.errors.length === 0;
-      },
-      wrappedSave() {
-        if (!this.isValid) {
-          return () => {
-            this.showErrors = !this.isValid;
-            this.errorsAtLastSubmit = cloneDeep(this.errors);
-          };
-        }
-        return this.saveAndContinue;
-      },
       projectAnalysisHorizon() {
         return this.$store.state.Project.analysisHorizon;
       },
@@ -231,7 +210,7 @@
         const projectSpecs = this.$store.state.Project;
         return {
           inputTimestep: projectSpecs.timestep,
-          inputStartYear: new StartYear(projectSpecs.startYear),
+          inputStartYear: projectSpecs.startYear,
           inputOwnership: projectSpecs.ownership,
           inputLocation: projectSpecs.gridLocation,
           inputHorizonMode: projectSpecs.analysisHorizonMode,
@@ -250,7 +229,7 @@
         this.resultsDirectory = e.target.files[0].path;
       },
       saveAndContinue() {
-        this.$store.dispatch('setStartYear', this.inputStartYear.value);
+        this.$store.dispatch('setStartYear', this.inputStartYear);
         this.$store.dispatch('setAnalysisHorizonMode', this.inputHorizonMode);
         this.$store.dispatch('setAnalysisHorizon', this.inputAnalysisHorizon);
         this.$store.dispatch('setDataYear', this.inputDataYear);

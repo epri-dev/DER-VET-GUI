@@ -1,15 +1,9 @@
 import { includes, isEmpty } from 'lodash';
 
-import * as f from './Fields';
-
 class Project {
   constructor(arg) {
     this.validationErrorList = [];
-
-    this.id = new f.ProjectField(arg.id, true);
-    this.name = new f.ProjectField(arg.name, true);
-    this.startYear = new f.StartYear(arg.startYear);
-
+    this.id = arg.id;
     this.performValidationChecks();
   }
 
