@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Financial Inputs</h3>
+    <h3>CBA Inputs</h3>
     <hr>
     <form>
       <div class="form-horizontal form-buffer">
@@ -79,6 +79,7 @@
 
         <nav-buttons
           :save="this.save"
+          :continue-link="FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH"
         />
 
       </div>
@@ -88,6 +89,7 @@
 
 <script>
   import NavButtons from '@/components/Shared/NavButtons';
+  import { FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH } from '@/router/constants';
 
   export default {
     components: { NavButtons },
@@ -99,6 +101,7 @@
         inputFederalTaxRate: p.federalTaxRate,
         inputStateTaxRate: p.stateTaxRate,
         inputPropertyTaxRate: p.propertyTaxRate,
+        FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
       };
     },
     methods: {

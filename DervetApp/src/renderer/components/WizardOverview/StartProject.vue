@@ -172,15 +172,17 @@
       </div>
 
       <nav-buttons
-        back-link="/new-project"
-        continue-link="/wizard/technology-specs"
-        :save="saveAndContinue"
+        back-link="/"
+        :continue-link="this.paths.TECH_SPECS_PATH"
+        :save="wrappedSave"
+        :disabled="!isValid"
       />
     </div>
   </div>
 </template>
 
 <script>
+  import * as paths from '@/router/constants';
   import model from '@/models/StartProject';
   import NavButtons from '@/components/Shared/NavButtons';
 
@@ -203,6 +205,7 @@
         ...this.getDataFromProject(),
         showErrors: false,
         errorsAtLastSubmit: null,
+        paths,
       };
     },
     methods: {

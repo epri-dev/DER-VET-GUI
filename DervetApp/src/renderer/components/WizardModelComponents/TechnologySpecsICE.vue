@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Technology Specs: Diesel Generator</h3>
+    <h3>Technology Specs: Internal Combustion Engine</h3>
     <hr />
     <form>
       <div class="form-horizontal form-buffer container">
@@ -29,7 +29,7 @@
               type="text"
               v-model.number="inputRatedCapacity">
             <span class="unit-label">kW / generator</span>
-            <p class="tool-tip tooltip-col">What is the rated capacity of the diesel generator?</p>
+            <p class="tool-tip tooltip-col">What is the rated capacity of the internal combustion engine?</p>
           </div>
         </div>
 
@@ -44,7 +44,7 @@
               type="text"
               v-model.number="inputMinimumPower">
             <span class="unit-label">kW</span>
-            <p class="tool-tip tooltip-col">What is the mimimum power the diesel generator is capable of safely producing?</p>
+            <p class="tool-tip tooltip-col">What is the mimimum power the internal combustion engine is capable of safely producing?</p>
           </div>
         </div>
 
@@ -59,7 +59,7 @@
               type="text"
               v-model.number="inputStartupTime">
             <span class="unit-label">minutes</span>
-            <p class="tool-tip tooltip-col">How many minutes are required for the diesel generator to go from an off state to producing its full rated power?</p>
+            <p class="tool-tip tooltip-col">How many minutes are required for the internal combustion engine to go from an off state to producing its full rated power?</p>
           </div>
         </div>
 
@@ -104,7 +104,7 @@
               type="text"
               v-model.number="inputCapitalCost">
             <span class="unit-label">$ / generator</span>
-            <p class="tool-tip tooltip-col">What is the capital cost of each diesel generator?</p>
+            <p class="tool-tip tooltip-col">What is the capital cost of each internal combustion engine?</p>
           </div>
         </div>
 
@@ -134,7 +134,7 @@
               type="text"
               v-model.number="inputFixedOMCostIncludingExercise">
             <span class="unit-label">$ / kW-year</span>
-            <p class="tool-tip tooltip-col">What is the cost of fixed operations and maintenance, including the non-fuel expenses from exercising the diesel generator?</p>
+            <p class="tool-tip tooltip-col">What is the cost of fixed operations and maintenance, including the non-fuel expenses from exercising the internal combustion engine?</p>
           </div>
         </div>
 
@@ -179,14 +179,14 @@
               </option>
             </select>
             <span class="unit-label">years</span>
-            <p class="tool-tip tooltip-col">Which MACRS GDS category does diesel generator fall into?</p>
+            <p class="tool-tip tooltip-col">Which MACRS GDS category does internal combustion engine fall into?</p>
           </div>
         </div>
         <br/>
 
         <div class="form-group">
           <div class="col-md-6">
-            <label class="control-label" for="size">Number of Diesel Generators to Install:</label>
+            <label class="control-label" for="size">Number of Internal Combustion Engines to Install:</label>
           </div>
         </div>
 
@@ -197,7 +197,7 @@
             type="radio"
             v-model="inputShouldSize"
             v-bind:value="true">
-          <label for="size-yes" class="buffer-right">Have DER-VET determine the optimal number of Diesel Generators to install</label>
+          <label for="size-yes" class="buffer-right">Have DER-VET determine the optimal number of Internal Combustion Engines to install</label>
         </div>
         <div class="col-md-11 offset-md-1">
           <input
@@ -206,7 +206,7 @@
             type="radio"
             v-model="inputShouldSize"
             v-bind:value="false">
-          <label for="size-no" class="buffer-right">Known number of Diesel Generators</label>
+          <label for="size-no" class="buffer-right">Known number of Internal Combustion Engines</label>
         </div>
         <br/>
 
@@ -222,7 +222,7 @@
                 type="text"
                 v-model.number="inputMinGenerators">
               <span class="unit-label">generators</span>
-              <p class="tool-tip tooltip-col">What is the mimimum number of diesel generators to consider installing?</p>
+              <p class="tool-tip tooltip-col">What is the mimimum number of internal combustion engines to consider installing?</p>
             </div>
           </div>
           <div class="form-group row" style="; margin-left: 30px;">
@@ -236,7 +236,7 @@
                 type="text"
                 v-model.number="inputMaxGenerators">
               <span class="unit-label">generators</span>
-              <p class="tool-tip tooltip-col">What is the maximum number of diesel generators to consider installing?</p>
+              <p class="tool-tip tooltip-col">What is the maximum number of internal combustion engines to consider installing?</p>
             </div>
           </div>
         </div>
@@ -252,13 +252,13 @@
               type="text"
               v-model.number="inputNumGenerators">
             <span class="unit-label">generators</span>
-            <p class="tool-tip tooltip-col">What is the number of diesel generators to install?</p>
+            <p class="tool-tip tooltip-col">What is the number of internal combustion engines to install?</p>
           </div>
         </div>
 
         <nav-buttons
-          back-link="/wizard/technology-specs"
-          continue-link="/wizard/technology-specs"
+          :back-link="WIZARD_COMPONENT_PATH"
+          :continue-link="WIZARD_COMPONENT_PATH"
           :save="this.save"
         />
 
@@ -271,17 +271,18 @@
 <script>
   import { v4 as uuidv4 } from 'uuid';
 
-  import model from '@/models/TechnologySpecs/TechnologySpecsDieselGen';
+  import model from '@/models/TechnologySpecs/TechnologySpecsICE';
+  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import NavButtons from '@/components/Shared/NavButtons';
 
   const { defaults, validation } = model;
 
   export default {
     components: { NavButtons },
-    props: ['dieselGenId'],
+    props: ['iceId'],
     data() {
-      const data = { validation };
-      if (this.dieselGenId === 'null') {
+      const data = { ...validation, WIZARD_COMPONENT_PATH };
+      if (this.iceId === 'null') {
         return { ...data, ...this.getDefaultData() };
       }
       return { ...data, ...this.getDataFromProject() };
@@ -312,43 +313,43 @@
         };
       },
       getDataFromProject() {
-        const dieselGenSpecs = this.$store.getters.getDieselGenById(this.dieselGenId);
+        const iceSpecs = this.$store.getters.getICEById(this.iceId);
         return {
-          inputActive: dieselGenSpecs.active,
-          inputTag: dieselGenSpecs.tag,
-          inputTechnologyType: dieselGenSpecs.technologyType,
-          inputId: dieselGenSpecs.id,
-          inputName: dieselGenSpecs.name,
-          inputRatedCapacity: dieselGenSpecs.ratedCapacity,
-          inputMinimumPower: dieselGenSpecs.minimumPower,
-          inputStartupTime: dieselGenSpecs.startupTime,
-          inputEfficiency: dieselGenSpecs.efficiency,
-          inputFuelCost: dieselGenSpecs.fuelCost,
-          inputCapitalCost: dieselGenSpecs.capitalCost,
-          inputVariableOMCost: dieselGenSpecs.variableOMCost,
-          inputFixedOMCostIncludingExercise: dieselGenSpecs.fixedOMCostIncludingExercise,
-          inputConstructionDate: dieselGenSpecs.constructionDate,
-          inputOperationDate: dieselGenSpecs.operationDate,
-          inputMacrsTerm: dieselGenSpecs.macrsTerm,
-          inputShouldSize: dieselGenSpecs.shouldSize,
-          inputNumGenerators: dieselGenSpecs.numGenerators,
-          inputMinGenerators: dieselGenSpecs.minGenerators,
-          inputMaxGenerators: dieselGenSpecs.maxGenerators,
+          inputActive: iceSpecs.active,
+          inputTag: iceSpecs.tag,
+          inputTechnologyType: iceSpecs.technologyType,
+          inputId: iceSpecs.id,
+          inputName: iceSpecs.name,
+          inputRatedCapacity: iceSpecs.ratedCapacity,
+          inputMinimumPower: iceSpecs.minimumPower,
+          inputStartupTime: iceSpecs.startupTime,
+          inputEfficiency: iceSpecs.efficiency,
+          inputFuelCost: iceSpecs.fuelCost,
+          inputCapitalCost: iceSpecs.capitalCost,
+          inputVariableOMCost: iceSpecs.variableOMCost,
+          inputFixedOMCostIncludingExercise: iceSpecs.fixedOMCostIncludingExercise,
+          inputConstructionDate: iceSpecs.constructionDate,
+          inputOperationDate: iceSpecs.operationDate,
+          inputMacrsTerm: iceSpecs.macrsTerm,
+          inputShouldSize: iceSpecs.shouldSize,
+          inputNumGenerators: iceSpecs.numGenerators,
+          inputMinGenerators: iceSpecs.minGenerators,
+          inputMaxGenerators: iceSpecs.maxGenerators,
         };
       },
       save() {
-        if (this.dieselGenId === 'null') {
-          this.$store.dispatch('addTechnologySpecsDieselGen', this.buildDieselGen());
+        if (this.iceId === 'null') {
+          this.$store.dispatch('addTechnologySpecsICE', this.buildICE());
         } else {
           const payload = {
-            newDieselGen: this.buildDieselGen(),
-            dieselGenId: this.dieselGenId,
+            newICE: this.buildICE(),
+            iceId: this.iceId,
           };
-          this.$store.dispatch('replaceTechnologySpecsDieselGen', payload);
+          this.$store.dispatch('replaceTechnologySpecsICE', payload);
         }
         this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
-      buildDieselGen() {
+      buildICE() {
         return {
           active: true,
           tag: this.inputTag,

@@ -33,8 +33,8 @@
       <hr>
 
       <nav-buttons
-        :back-link="`/wizard/technology-specs-solar-pv/${this.solarId}`"
-        continue-link="/wizard/technology-specs"
+        :back-link="`${TECH_SPECS_PV_PATH}/${this.inputId}`"
+        :continue-link="WIZARD_COMPONENT_PATH"
         :save="this.save"
       />
 
@@ -49,6 +49,7 @@
   import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
   import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecsSolarPV';
   import NavButtons from '@/components/Shared/NavButtons';
+  import { WIZARD_COMPONENT_PATH, TECH_SPECS_PV_PATH } from '@/router/constants';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 
   export default {
@@ -57,10 +58,18 @@
     props: ['solarId'],
     data() {
       if (this.generationProfileExists()) {
-        return { generationProfile: this.getGenerationProfile() };
+        return {
+          generationProfile: this.getGenerationProfile(),
+          WIZARD_COMPONENT_PATH,
+          TECH_SPECS_PV_PATH,
+        };
       }
       const defaultValues = TechnologySpecsSolarPVMetadata.getHardcodedMetadata().getDefaultValues();
-      return { generationProfile: defaultValues.generationProfile };
+      return {
+        generationProfile: defaultValues.generationProfile,
+        WIZARD_COMPONENT_PATH,
+        TECH_SPECS_PV_PATH,
+      };
     },
     computed: {
       tsData() {

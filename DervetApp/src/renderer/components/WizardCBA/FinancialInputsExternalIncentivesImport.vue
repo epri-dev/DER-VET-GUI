@@ -29,9 +29,9 @@
         <hr>
 
         <nav-buttons
-          backLink="/wizard/financial-inputs-external-incentives"
+          :backLink="FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH"
           backText="Cancel"
-          continueLink="/wizard/financial-inputs-external-incentives"
+          :continueLink="FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH"
           continueText="Import External Incentives"
           :save="this.save"
         />
@@ -44,12 +44,14 @@
   import { parsedCsvToExternalIncentives } from '@/models/ExternalIncentives';
   import { parseCsvFromFile } from '@/util/file';
   import NavButtons from '@/components/Shared/NavButtons';
+  import { FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH } from '@/router/constants';
 
   export default {
     components: { NavButtons },
     data() {
       return {
         parsedExternalIncentiveCsv: null,
+        FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
       };
     },
     methods: {
