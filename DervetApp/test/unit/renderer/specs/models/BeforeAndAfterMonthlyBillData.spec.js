@@ -40,7 +40,7 @@ describe('BeforeAndAfterMonthlyBillData model', () => {
   it('(1A) should have 2 years of data ', () => {
     expect(actualData.columnDataByYear.length).to.eql(2);
   });
-  const actualMonthlyData = actualData.columnDataByYear[0];
+  const actualMonthlyData = actualData.getFirstYearChartData();
   it('(2A) should have the expected Original Demand Charge ', () => {
     expect(actualMonthlyData.originalDemandCharge).to.eql(monthlyBillData.originalDemandCharge);
   });

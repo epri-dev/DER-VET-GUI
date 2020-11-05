@@ -8,7 +8,7 @@ export class PeakLoadDayData extends BaseTableData {
   updateColumnDataByYearWithDate() {
     const date = this.data[0][this.indexOfDateTime()];
     const [year, month, day] = date.split('-');
-    this.columnDataByYear[0].day = `${month}/${day}/${year}`;
+    this.getFirstYearChartData().day = `${month}/${day}/${year}`;
   }
 }
 

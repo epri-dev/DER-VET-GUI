@@ -1,5 +1,6 @@
 import IpcService from '@/IpcService';
 import { makeDervetInputs } from '@/models/dto/ProjectDto';
+import ResultsData from '@/models/Results/Results';
 
 const getDefaultResultState = () => ({
   id: null,
@@ -22,6 +23,7 @@ const mutations = {
     state.runInProgress = true;
   },
   SET_RESULT_SUCCESS(state, results) {
+    // state.data.push(results);
     state.data = results;
     state.resultsLoaded = true;
     state.runInProgress = false;
@@ -29,6 +31,8 @@ const mutations = {
   SET_RESULT_ERROR(state, errorMessage) {
     state.errorMessage = errorMessage;
     state.runInProgress = false;
+  },
+  SET_CHARTS() {
   },
 };
 
@@ -43,7 +47,8 @@ const actions = {
   },
   receiveResults({ commit }, results) {
     // TODO handle error
-    commit('SET_RESULT_SUCCESS', results);
+    const resultDataObject = new ResultsData(0, results);
+    commit('SET_RESULT_SUCCESS', resultDataObject);
   },
 };
 

@@ -362,17 +362,53 @@ class TimeSeriesDto {
   }
 }
 
-export const makeExpectedResultCsvs = () => ([
-  // TODO add remaining results files, use string constants
-  {
-    fieldName: 'proForma',
-    fileName: 'pro_forma.csv',
-  },
-  {
-    fieldName: 'costBenefit',
-    fileName: 'cost_benefit.csv',
-  },
-]);
+export const makeExpectedResultCsvs = (project) => {
+  const expectedResultsCsvs = [
+    {
+      fieldName: 'proForma',
+      fileName: 'pro_forma.csv',
+    },
+    {
+      fieldName: 'costBenefit',
+      fileName: 'cost_benefit.csv',
+    },
+    {
+      fieldName: 'size',
+      fileName: 'size.csv',
+    },
+    {
+      fieldName: 'timeSeries',
+      fileName: 'timeseries_results.csv',
+    },
+  ];
+  if (('DCM' in project) || ('retailETS' in project)) {
+    expectedResultsCsvs.push({
+      fieldName: 'simpleMonthlyBill',
+      fileName: 'simple_monthly_bill.csv',
+    });
+    expectedResultsCsvs.push({
+      fieldName: 'peakLoadDay',
+      fileName: 'peak_day_load.csv',
+    });
+  }
+  if ('Reliability' in project) {
+    expectedResultsCsvs.push({
+      fieldName: 'loadCoverageProbability',
+      fileName: 'load_coverage_prob.csv',
+    });
+    expectedResultsCsvs.push({
+      fieldName: 'outageContribution',
+      fileName: 'outage_energy_contributions.csv',
+    });
+  }
+  if ('Deferral' in project) {
+    expectedResultsCsvs.push({
+      fieldName: 'deferral',
+      fileName: 'deferral_results.csv',
+    });
+  }
+  return expectedResultsCsvs;
+};
 
 export const makeCsvs = project => ([
   // TODO add monthly data
@@ -390,7 +426,7 @@ export const makeMeta = project => ({
 });
 
 export const makeDervetInputs = project => ({
-  expectedResultCsvs: makeExpectedResultCsvs(),
+  expectedResultCsvs: makeExpectedResultCsvs(project),
   inputCsvs: makeCsvs(project),
   meta: makeMeta(project),
   modelParameters: makeModelParameters(project),

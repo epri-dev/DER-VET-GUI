@@ -158,6 +158,12 @@ export class SizeData extends BaseTableData {
 
     return dataColumnsFeilds;
   }
+  createSizeTable() {
+    return {
+      data: this.sizeTableDataRows,
+      fields: this.createSizeTableFields(),
+    };
+  }
   static createCostTableData(rowSizeData) {
     let costStructure = [];
     let energyCost = 0;
@@ -232,6 +238,22 @@ export class SizeData extends BaseTableData {
       i += 1;
     }
     return tableData;
+  }
+  findEssSize() {
+    // todo write test for this
+    // assumes that there is only 1 ESS -- chooses the largest
+    let i = 0;
+    let essEnergy = 0;
+    let essPower = 0;
+    while (i < this.sizeTableDataRows.length) {
+      const row = this.sizeTableDataRows[i];
+      if (row.energyRatingKWh !== undefined) {
+        essEnergy = Math.max(essEnergy, row.energyRatingKWh);
+        essPower = Math.max(essPower, row.dischargeRatingKW);
+      }
+      i += 1;
+    }
+    return { essEnergy, essPower };
   }
 }
 

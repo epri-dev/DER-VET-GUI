@@ -4,7 +4,7 @@ import store from './store';
 export default class IpcService {
   static registerChannels() {
     ipcRenderer.on('dervet-results', (event, results) => {
-      console.log(`Received DERVET results: ${JSON.stringify(results)}`);
+      // console.log(`Received DERVET results: ${JSON.stringify(results, null, 2)}`);
       store.dispatch('receiveResults', results);
     });
   }

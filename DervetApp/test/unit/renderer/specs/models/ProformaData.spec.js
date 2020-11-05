@@ -25,7 +25,7 @@ describe('ProFormaData model', () => {
     expect(actualData.columnHeaders).to.eql(expectedColumnHeaders);
   });
 
-  const tableObject = actualData.createTableData();
+  const tableObject = actualData.createTable();
 
   it('should create the correct data objects to create a table', () => {
     let i = 0;

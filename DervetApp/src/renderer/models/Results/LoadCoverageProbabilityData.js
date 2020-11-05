@@ -4,11 +4,6 @@ export class LoadCoverageProbabilityData extends BaseTableData {
   constructor(data) {
     super('load_coverage_prob.csv', data, true, true);
   }
-  updateColumnDataByYearWithDate() {
-    const date = this.data[0][this.indexOfDateTime()];
-    const [year, month, day] = date.split('-');
-    this.columnDataByYear[0].day = `${month}/${day}/${year}`;
-  }
 }
 
 export const loadCoverageArrayData = [

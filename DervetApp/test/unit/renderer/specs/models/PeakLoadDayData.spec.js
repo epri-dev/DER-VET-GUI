@@ -38,7 +38,7 @@ describe('PeakLoadDayData model', () => {
   it('(1A) should have data belonging to 1 year', () => {
     expect(actualData.columnDataByYear.length).to.eql(1);
   });
-  const actualDataObj = actualData.columnDataByYear[0];
+  const actualDataObj = actualData.getFirstYearChartData();
   it('(2A) should have the expected values ', () => {
     expect(actualDataObj.values).to.eql(peakLoadDayDefaultData.values);
   });

@@ -5,7 +5,7 @@ export class ProFormaData extends BaseTableData {
   constructor(data) {
     super('pro_forma.csv', data, true);
   }
-  createTableData() {
+  createTable() {
     // create fields
     const dataColumns = [];
     const keys = [];

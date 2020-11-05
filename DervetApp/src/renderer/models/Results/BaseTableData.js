@@ -142,6 +142,9 @@ class BaseTableData {
     dataByYear.push(currentData);
     return dataByYear;
   }
+  getFirstYearChartData() {
+    return this.columnDataByYear[0];
+  }
 }
 
 export default BaseTableData;
