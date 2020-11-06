@@ -4,6 +4,14 @@ export class DeferralData extends BaseTableData {
   constructor(data) {
     super('deferral_results.csv', data, true, true);
   }
+  createBarChart() {
+    const chartData = this.getFirstYearChartData();
+    return {
+      yearValues: chartData.year,
+      powerValues: chartData.powerCapacityRequirementKW,
+      energyValues: chartData.energyCapacityRequirementKWh,
+    };
+  }
 }
 
 export const deferralArrayData = [
@@ -85,3 +93,21 @@ export const deferralDefaultData = {
   powerCapacityRequirementKW: powerCapacityValues,
   energyCapacityRequirementKWh: energyCapacityValues,
 };
+
+export const deferralData = {
+  years: deferralDefaultData.year,
+  essName: 'sto1',
+  chartData: [{
+    type: 'Power',
+    units: '(kW)',
+    essValue: 4320,
+    requirementValues: deferralDefaultData.powerCapacityRequirementKW,
+  },
+  {
+    type: 'Energy',
+    units: '(kWh)',
+    essValue: 23400,
+    requirementValues: deferralDefaultData.energyCapacityRequirementKWh,
+  }],
+};
+

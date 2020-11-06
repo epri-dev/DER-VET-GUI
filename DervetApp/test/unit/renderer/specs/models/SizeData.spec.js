@@ -19,6 +19,7 @@ describe('SizeData model', () => {
       ['Storage', 19477, 2303, 2303, 0.85, 0.05, 1.0, 8.457, 1000, 800, 250, null, null],
       ['Solar PV', null, null, null, null, null, null, null, null, 1660, null, 3000, null],
       ['Generators', null, null, null, null, null, null, null, 750, 245, null, 1000, 3],
+      [null],
     ];
     const expectedColumnHeaders = ['DER', 'Energy Rating (kWh)', 'Charge Rating (kW)', 'Discharge Rating (kW)', 'Round Trip Efficiency (%)', 'Lower Limit on SOC (%)', 'Upper Limit on SOC (%)', 'Duration (hours)', 'Capital Cost ($)', 'Capital Cost ($/kW)', 'Capital Cost ($/kWh)', 'Power Capacity (kW)', 'Quantity'];
     expect(actualData.data).to.eql(expectedDataArr);

@@ -41,7 +41,7 @@ describe('DeferralData model', () => {
   it('(1A) should have data belonging to 1 year', () => {
     expect(actualData.columnDataByYear.length).to.eql(1);
   });
-  const actualObj = actualData.columnDataByYear[0];
+  const actualObj = actualData.getFirstYearChartData();
   it('(2A) should have the expected values - power requirement ', () => {
     const expectedPowReq = deferralDefaultData.powerCapacityRequirementKW;
     expect(actualObj.powerCapacityRequirementKW).to.eql(expectedPowReq);

@@ -153,6 +153,10 @@ export default new Router({
           component: require('@/components/Wizard/ObjectivesParametersSiteInformation').default,
         },
         {
+          path: 'sensitivity-analysis',
+          component: require('@/components/Wizard/SensitivityAnalysis').default,
+        },
+        {
           path: 'run-analysis',
           name: 'runAnalysis',
           component: require('@/components/Wizard/RunAnalysis').default,

@@ -12,88 +12,78 @@
           <div class="row">
             <div class="col-md-6">
               <h4 class="result-summary-title">
-              <a>
-                Financials Summary
-              </a>
+                <a>
+                  Financials Summary
+                </a>
               </h4>
               <div class="form-group">
                 <div class="col-md-12">
-                  <canvas
-                  id="chartCostBenefit"
-                  class="chartjs-render-monitor">
-                  </canvas>
+                  <div id="chartPlotlyCostBenefit">
+                  </div>
                 </div>
               </div>
               <div class="buffer-top text-center">
                 <a class="btn btn-sm btn-default">
-                  <router-link
-                  :to="this.pagePaths.resultsFinancial">
-                  View Detailed Financials Results...
+                  <router-link :to="pagePaths.resultsFinancial">
+                    View Detailed Financials Results...
                   </router-link>
                 </a>
               </div>
             </div>
             <div class="col-md-6">
-              <div class="buffer-top text-center">
-                <a class="btn btn-sm btn-default">
-                  <router-link
-                  :to="this.pagePaths.resultsReliability">
-                  View Detailed Reliability Results...
-                  </router-link>
+              <h4 class="result-summary-title">
+                <a>
+                  Dispatch Summary
                 </a>
+              </h4>
+              <div class="form-group">
+                <div class="col-md-12">
+                  <div id="chartBatteryDispatchHeatMap">
+                  </div>
+                </div>
               </div>
               <div class="buffer-top text-center">
                 <a class="btn btn-sm btn-default">
-                  <router-link
-                  :to="this.pagePaths.resultsDeferral">
-                  View Detailed Deferral Results...
+                  <router-link :to="pagePaths.resultsDispatch">
+                    View Detailed Dispatch Results...
                   </router-link>
                 </a>
               </div>
             </div>
           </div>
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6" v-if="summaryData.showDesign">
               <h4 class="result-summary-title">
-              <a>
-                Dispatch Summary
-              </a>
+                <a>
+                  Design Summary
+                </a>
               </h4>
               <div class="form-group">
                 <div class="col-md-12">
-                  <div
-                    id="chartBatteryDispatchHeatMap">
-                  </div>
+                  <canvas id="chartPeakLoadDay"
+                          class="chartjs-render-monitor"></canvas>
                 </div>
               </div>
               <div class="buffer-top text-center">
                 <a class="btn btn-sm btn-default">
-                  <router-link
-                  :to="this.pagePaths.resultsDispatch">
-                  View Detailed Dispatch Results...
+                  <router-link :to="pagePaths.resultsDesign">
+                    View Detailed Design Results...
                   </router-link>
                 </a>
               </div>
             </div>
             <div class="col-md-6">
-              <h4 class="result-summary-title">
-              <a>
-                Design Summary
-              </a>
-              </h4>
-              <div class="form-group">
-                <div class="col-md-12">
-                  <canvas
-                  id="chartPeakLoadDay"
-                  class="chartjs-render-monitor">
-                  </canvas>
-                </div>
-              </div>
-              <div class="buffer-top text-center">
+              <div class="buffer-top text-center" v-if="summaryData.showReliability">
                 <a class="btn btn-sm btn-default">
-                  <router-link
-                  :to="this.pagePaths.resultsDesign">
-                  View Detailed Design Results...
+                  <router-link :to="pagePaths.resultsReliability">
+                    View Detailed Reliability Results...
+                  </router-link>
+                </a>
+              </div>
+              <div class="buffer-top text-center" v-if="summaryData.showDeferral">
+                <a class="btn btn-sm btn-default">
+                  <router-link :to="pagePaths.resultsDeferral">
+                    View Detailed Deferral Results...
                   </router-link>
                 </a>
               </div>
@@ -108,24 +98,56 @@
 <script>
   import Chart from 'chart.js';
   import Plotly from 'plotly.js';
-  import { costBenefitSummaryData } from '@/models/Results/CostBenefitData';
-  import { peakLoadDayDefaultData } from '@/models/Results/PeakLoadDayData';
   import { formatYAxisCurrency, formatXAxis6Hour, formatYAxis, arrayMax } from '@/util/chart';
 
   export default {
     data() {
       const p = this.$store.state.Project;
+      const summaryData = this.$store.state.ProjectResult.data.getSummaryVueObjects();
       return {
         pagePaths: p.paths,
+        summaryData,
       };
     },
     mounted() {
-      this.createChartCostBenefit('chartCostBenefit', costBenefitSummaryData);
-      this.createChartPeakLoadDay('chartPeakLoadDay', peakLoadDayDefaultData);
+      this.createPLotlyCostBenefit('chartPlotlyCostBenefit', this.summaryData.financial);
+      if (this.summaryData.showDesign) {
+        this.createChartPeakLoadDay('chartPeakLoadDay', this.summaryData.design);
+      }
       this.createChartBatteryDispatchHeatMap('chartBatteryDispatchHeatMap');
     },
     methods: {
+      createPLotlyCostBenefit(chartId, chartData) {
+        const ctx = document.getElementById(chartId);
+        const trace1 = {
+          x: ['Cost ($)', 'Benefit ($)'],
+          y: chartData,
+          type: 'bar',
+          marker: {
+            color: 'rgb(142,124,195)',
+          },
+        };
 
+        const data = [trace1];
+
+        const layout = {
+          hovermode: 'closest',
+          title: {
+            text: 'Lifetime Present Value',
+          },
+          yaxis: {
+            title: {
+              text: 'Present Value ($)',
+            },
+            tickformat: formatYAxisCurrency,
+            showgrid: true,
+            tick0: 0,
+            tickprefix: '$',
+          },
+          showlegend: false,
+        };
+        return Plotly.newPlot(ctx, data, layout);
+      },
       createChartCostBenefit(chartId, chartData) {
         const ctx = document.getElementById(chartId);
         return new Chart(ctx, {
@@ -181,7 +203,6 @@
           },
         });
       },
-
       createChartPeakLoadDay(chartId, chartData) {
         const ctx = document.getElementById(chartId);
         // const storageSizeChartYMax = 2000;

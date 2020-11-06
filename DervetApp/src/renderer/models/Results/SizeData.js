@@ -81,24 +81,27 @@ export class SizeData extends BaseTableData {
     const rowDataObjects = [];
     while (rowNum < this.data.length) {
       const rawData = this.data[rowNum];
-      const rowTamplate = {
-        systemName: rawData[0],
-      };
-      let nameIndex = 1;
-      while (nameIndex < this.columnHeaders.length) {
-        const colString = this.columnHeaders[nameIndex];
-        const camelCol = BaseTableData.toCamelCaseString(colString);
+      const systemName = rawData[0];
+      if (systemName !== null) {
+        const rowTamplate = {
+          systemName,
+        };
+        let nameIndex = 1;
+        while (nameIndex < this.columnHeaders.length) {
+          const colString = this.columnHeaders[nameIndex];
+          const camelCol = BaseTableData.toCamelCaseString(colString);
 
-        const value = rawData[nameIndex];
-        if (value !== 0 && value !== null) {
-          rowTamplate[camelCol] = value;
+          const value = rawData[nameIndex];
+          if (value !== 0 && value !== null) {
+            rowTamplate[camelCol] = value;
+          }
+          nameIndex += 1;
         }
-        nameIndex += 1;
+        if (rowTamplate.quantity === undefined) {
+          rowTamplate.quantity = 1;
+        }
+        rowDataObjects.push(rowTamplate);
       }
-      if (rowTamplate.quantity === undefined) {
-        rowTamplate.quantity = 1;
-      }
-      rowDataObjects.push(rowTamplate);
       rowNum += 1;
     }
     return rowDataObjects;
@@ -170,6 +173,7 @@ export class SizeData extends BaseTableData {
     let powerCost = 0;
     let unitsCost = 0;
     if ('capitalCostKWh' in rowSizeData) {
+      console.log(JSON.stringify(rowSizeData));
       const cCostkWh = rowSizeData.capitalCostKWh;
       const energyRating = rowSizeData.energyRatingKWh;
       energyCost = cCostkWh * energyRating;
@@ -203,6 +207,7 @@ export class SizeData extends BaseTableData {
     }
     if ('capitalCost' in rowSizeData) {
       const cCost = rowSizeData.capitalCost;
+      console.log(typeof cCost);
       unitsCost = rowSizeData.quantity * cCost;
       const costPerUnit = [
         {
@@ -245,15 +250,17 @@ export class SizeData extends BaseTableData {
     let i = 0;
     let essEnergy = 0;
     let essPower = 0;
+    let essName = '';
     while (i < this.sizeTableDataRows.length) {
       const row = this.sizeTableDataRows[i];
       if (row.energyRatingKWh !== undefined) {
         essEnergy = Math.max(essEnergy, row.energyRatingKWh);
         essPower = Math.max(essPower, row.dischargeRatingKW);
+        essName = row.systemName;
       }
       i += 1;
     }
-    return { essEnergy, essPower };
+    return { essEnergy, essPower, essName };
   }
 }
 
@@ -262,6 +269,7 @@ export const sizeArrayData = [
   ['Storage', 19477, 2303, 2303, 0.85, 0.05, 1.0, 8.457, 1000, 800, 250, null, null],
   ['Solar PV', null, null, null, null, null, null, null, null, 1660, null, 3000, null],
   ['Generators', null, null, null, null, null, null, null, 750, 245, null, 1000, 3],
+  [null],
 ];
 
 export const sizeTableExpectedData = [

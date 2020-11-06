@@ -32,8 +32,6 @@ const mutations = {
     state.errorMessage = errorMessage;
     state.runInProgress = false;
   },
-  SET_CHARTS() {
-  },
 };
 
 const actions = {

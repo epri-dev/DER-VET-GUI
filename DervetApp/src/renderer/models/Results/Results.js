@@ -1,4 +1,4 @@
-import Papa from 'papaparse';
+import { papaParseCsvString } from '@/util/file';
 import { SizeData } from './SizeData';
 import { ProFormaData } from './ProFormaData';
 import { CostBenefitData } from './CostBenefitData';
@@ -7,20 +7,12 @@ import { DeferralData } from './DeferralData';
 import { LoadCoverageProbabilityData } from './LoadCoverageProbabilityData';
 import { PeakLoadDayData } from './PeakLoadDayData';
 
-const papaParseCsvString = (csvString) => {
-  if (csvString === undefined) {
-    return null;
-  }
-  return Papa.parse(csvString, { dynamicTyping: true });
-};
-
 export class ResultsData {
   constructor(id, data) {
     this.id = id;
 
     // RAW DATA - these will NEVER be NULL
     this.size = this.initializeSize(data.size);
-    console.log(`Papa parsed: ${this.size.data}`);
     this.dispatch = data.timeSeries; // TODO
     this.proForma = this.initializeProForma(data.proForma);
     this.costBenefit = this.initializeCostBenefit(data.costBenefit);
@@ -53,6 +45,8 @@ export class ResultsData {
     this.reliabilityOutageContributionBarChart = null;
     this.reliabilityLoadCoverageLineChart = null;
     this.deferralStackedBarChart = null;
+
+    this.createCharts();
   }
   initializeSize(csvString) {
     const papaParseObject = papaParseCsvString(csvString);
@@ -78,6 +72,15 @@ export class ResultsData {
     const data = new BeforeAndAfterMonthlyBillData(papaParseObject.data);
     return data;
   }
+  initializePeakLoadDay(csvString) {
+    const papaParseObject = papaParseCsvString(csvString);
+    this.showPeakLoadDay = papaParseObject === null;
+    if (this.showPeakLoadDay) {
+      return null;
+    }
+    const data = new PeakLoadDayData(papaParseObject.data);
+    return data;
+  }
   initializeDeferral(csvString) {
     const papaParseObject = papaParseCsvString(csvString);
     this.showDeferral = papaParseObject === null;
@@ -94,15 +97,6 @@ export class ResultsData {
       return null;
     }
     const data = new LoadCoverageProbabilityData(papaParseObject.data);
-    return data;
-  }
-  initializePeakLoadDay(csvString) {
-    const papaParseObject = papaParseCsvString(csvString);
-    this.showPeakLoadDay = papaParseObject === null;
-    if (this.showPeakLoadDay) {
-      return null;
-    }
-    const data = new PeakLoadDayData(papaParseObject.data);
     return data;
   }
   createCharts() {
@@ -138,31 +132,53 @@ export class ResultsData {
 
     // deferral chart
     if (this.showDeferral) {
-      const essSize = this.size.findEssSize();
-      this.deferralStackedBarChart = {
-        years: this.deferral.year,
-        essName: 'sto1',
-        chartData: [{
-          type: 'Power',
-          units: '(kW)',
-          essValue: essSize.essPower, // TODO mutablly grab this value
-          requirementValues: this.deferral.powerCapacityRequirementKW,
-        },
-        {
-          type: 'Energy',
-          units: '(kWh)',
-          essValue: essSize.essEnergy, // TODO mutablly grab this value
-          requirementValues: this.deferral.energyCapacityRequirementKWh,
-        }],
-      };
+      this.deferralStackedBarChart = this.deferral.createBarChart();
     }
   }
-  getDeferralVueObjects() { }
-  getDesignVueObjects() { }
-  getDispatchVueObjects() { }
-  getFinancialVueObjects() { }
-  getReliabilityVueObjects() { }
-  getSummaryVueObjects() { }
+  getDeferralVueObjects() {
+    return {
+      ...this.size.findEssSize(),
+      ...this.deferralStackedBarChart,
+    };
+  }
+  getDesignVueObjects() {
+    return {
+      sizeTable: this.designSizeResultsTable,
+      costsTable: this.designCostsTable,
+    };
+  }
+  getDispatchVueObjects() {
+    return {
+      stackedLineChart: this.dispatchStackedLineChart,
+      energyPriceMap: this.dispatchEnergyPriceMap,
+    };
+  }
+  getFinancialVueObjects() {
+    return {
+      costBenefit: this.financialCostBenefitBarChart,
+      proForma: this.financialProformaTable,
+      monthlyData: this.financialBeforeAfterBarChart,
+      showMonthlyData: this.showBeforeAfterMonthlyEnergyBill,
+    };
+  }
+  getReliabilityVueObjects() {
+    return {
+      loadCoverageProbability: this.reliabilityLoadCoverageLineChart,
+      outageContribution: this.reliabilityOutageContributionBarChart,
+      showLoadCoverageProbability: this.showLoadCoverageProbability,
+      showOutageContribution: this.showOutageContribution,
+    };
+  }
+  getSummaryVueObjects() {
+    return {
+      financial: this.financialSummaryBarChart,
+      dispatch: this.dispatchSummaryMap,
+      design: this.designSummaryBarChart,
+      showReliability: this.showLoadCoverageProbability,
+      showDeferral: this.showDeferral,
+      showDesign: this.showPeakLoadDay,
+    };
+  }
 }
 
 export default ResultsData;
