@@ -83,7 +83,7 @@ export class SizeData extends BaseTableData {
       const rawData = this.data[rowNum];
       const systemName = rawData[0];
       if (systemName !== null) {
-        const rowTamplate = {
+        const rowTemplate = {
           systemName,
         };
         let nameIndex = 1;
