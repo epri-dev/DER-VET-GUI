@@ -117,7 +117,7 @@
       this.createChartBatteryDispatchHeatMap('chartBatteryDispatchHeatMap');
     },
     methods: {
-      createPLotlyCostBenefit(chartId, chartData) {
+      createPlotlyCostBenefit(chartId, chartData) {
         const ctx = document.getElementById(chartId);
         const trace1 = {
           x: ['Cost ($)', 'Benefit ($)'],
