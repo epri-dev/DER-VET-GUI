@@ -93,14 +93,14 @@ export class SizeData extends BaseTableData {
 
           const value = rawData[nameIndex];
           if (value !== 0 && value !== null) {
-            rowTamplate[camelCol] = value;
+            rowTemplate[camelCol] = value;
           }
           nameIndex += 1;
         }
-        if (rowTamplate.quantity === undefined) {
-          rowTamplate.quantity = 1;
+        if (rowTemplate.quantity === undefined) {
+          rowTemplate.quantity = 1;
         }
-        rowDataObjects.push(rowTamplate);
+        rowDataObjects.push(rowTemplate);
       }
       rowNum += 1;
     }
