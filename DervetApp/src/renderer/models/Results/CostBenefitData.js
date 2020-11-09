@@ -60,7 +60,7 @@ export class CostBenefitData extends BaseTableData {
 }
 
 export const costBenefitArrayData = [
-  ['', 'Costs ($)', 'Benefit ($)'],
+  [null, 'Costs ($)', 'Benefit ($)'],
   ['Lifetime Present Value', 210000000, 390000000],
   ['BATTERY: ess1 - Capital Cost', 2e5, 0],
   ['BATTERY: ess1 - Fixed O&M', 4e5, 0],
@@ -80,6 +80,7 @@ export const costBenefitArrayData = [
   ['Spinning Reserves', 0, 9e5],
   ['Non-Spinning Reserves', 0, 6e5],
   ['Day Ahead ETS', 0, 8e5],
+  [null],
 ];
 
 export const costBenefitSummaryData = [210000000, 390000000];

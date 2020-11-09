@@ -110,7 +110,7 @@
       };
     },
     mounted() {
-      this.createPLotlyCostBenefit('chartPlotlyCostBenefit', this.summaryData.financial);
+      this.createPlotlyCostBenefit('chartPlotlyCostBenefit', this.summaryData.financial);
       if (this.summaryData.showDesign) {
         this.createChartPeakLoadDay('chartPeakLoadDay', this.summaryData.design);
       }

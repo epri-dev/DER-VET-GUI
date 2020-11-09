@@ -19,6 +19,7 @@ describe('ProFormaData model', () => {
       [2020, 0, 0, -23030, -23030, -23030, 23030, 23030],
       [2021, 0, 0, -23030, -23030, -23030, 23030, 23030],
       [2022, 0, 0, -23030, -23030, -23030, 23030, 23030],
+      [null],
     ];
     const expectedColumnHeaders = ['Year', 'Storage Capital Cost', 'Solar PV Capital Cost', 'Storage Fixed O&M Cost', 'Storage Variable O&M Cost', 'Solar PV Fixed O&M Cost', 'Avoided Demand Charge', 'Avoided Energy Charge'];
     expect(actualData.data).to.eql(expectedDataArr);

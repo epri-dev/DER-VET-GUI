@@ -21,32 +21,33 @@ class BaseTableData {
   }
   getColumnIndex(colHeader) {
     let i = 0;
-    while (this.columnHeaders[i] !== colHeader) {
+    let column = this.columnHeaders[i];
+    while ((column === null) || (column !== colHeader)) {
       if ((i + 1) === this.columnHeaders.length) {
         i = -1;
         break;
       }
       i += 1;
+      column = this.columnHeaders[i];
     }
     return i;
   }
   getColumnIndexThatContains(text) {
     let i = 0;
-    while (this.columnHeaders[i].toLowerCase().indexOf(text) === -1) {
+    let column = this.columnHeaders[i];
+    while ((column === null) || (column.toLowerCase().indexOf(text) === -1)) {
       if ((i + 1) === this.columnHeaders.length) {
         i = -1;
         break;
       }
       i += 1;
+      column = this.columnHeaders[i];
     }
     return i;
   }
   getDataValueByColHeader(rowIndex, colHeader) {
     const colIndex = this.getColumnIndex(colHeader);
     return this.getDataValueByColIndex(rowIndex, colIndex);
-  }
-  getDataValueByColIndex(rowIndex, colIndex) {
-    return this.data[rowIndex][colIndex];
   }
   loadDataFromFile(arrayData) {
     this.data = arrayData;
@@ -70,7 +71,7 @@ class BaseTableData {
     let colNum = 0;
     while (colNum < this.columnHeaders.length) {
       const currentHeader = this.columnHeaders[colNum];
-      if (currentHeader !== this.dateTimeColName) {
+      if ((currentHeader !== this.dateTimeColName) && (currentHeader !== null)) {
         const key = BaseTableData.toCamelCaseString(this.columnHeaders[colNum]);
         template[key] = [];
       }
@@ -91,6 +92,9 @@ class BaseTableData {
   hasDateTimeColumn() {
     return typeof (this.dateTimeColName) === 'string';
   }
+  static isRowNull(row) {
+    return row[0] === null;
+  }
   columnifyDataByYear() {
     // organize data by column instead of by row (in an object)
     const dataByYear = []; // each year of data will be saved here
@@ -108,34 +112,36 @@ class BaseTableData {
     let rowNum = 0;
     while (rowNum < this.data.length) {
       const rowData = this.data[rowNum];
-      if (this.hasDateTimeColumn()) {
-        // check if year has changed
-        const currentYear = BaseTableData.getYearFromString(rowData[this.indexOfDateTime()]);
-        if (currentYear !== currentData.year) {
-          // TRUE --> append currentData to list, reset currentData and currentData.year
-          dataByYear.push(currentData);
-          // intialize data object, again...
-          currentData = this.emptyRowObjectTemplate();
-          // save year of data
-          currentData.year = currentYear;
-        }
-        // FALSE --> continue iteration
-      }
-      // iterate over all columns
-      let colNum = 0;
-      while (colNum < this.columnHeaders.length) {
-        if (colNum !== this.indexOfDateTime()) {
-          const key = BaseTableData.toCamelCaseString(this.columnHeaders[colNum]);
-          let value = null;
-          if (this.nonNumericalCols.indexOf(key) >= 0) {
-            value = rowData[colNum];
-          } else {
-            value = parseFloat(rowData[colNum]);
+      if (!BaseTableData.isRowNull(rowData)) {
+        if (this.hasDateTimeColumn()) {
+          // check if year has changed
+          const currentYear = BaseTableData.getYearFromString(rowData[this.indexOfDateTime()]);
+          if (currentYear !== currentData.year) {
+            // TRUE --> append currentData to list, reset currentData and currentData.year
+            dataByYear.push(currentData);
+            // intialize data object, again...
+            currentData = this.emptyRowObjectTemplate();
+            // save year of data
+            currentData.year = currentYear;
           }
-
-          currentData[key].push(value);
+          // FALSE --> continue iteration
         }
-        colNum += 1;
+        // iterate over all columns
+        let colNum = 0;
+        while (colNum < this.columnHeaders.length) {
+          if (colNum !== this.indexOfDateTime()) {
+            const key = BaseTableData.toCamelCaseString(this.columnHeaders[colNum]);
+            let value = null;
+            if (this.nonNumericalCols.indexOf(key) >= 0) {
+              value = rowData[colNum];
+            } else {
+              value = parseFloat(rowData[colNum]);
+            }
+
+            currentData[key].push(value);
+          }
+          colNum += 1;
+        }
       }
       rowNum += 1;
     }

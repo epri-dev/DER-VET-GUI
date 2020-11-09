@@ -65,8 +65,8 @@ export class ResultsData {
   }
   initializeBeforeAfterMonthly(csvString) {
     const papaParseObject = papaParseCsvString(csvString);
-    this.showBeforeAfterMonthlyEnergyBill = papaParseObject === null;
-    if (this.showBeforeAfterMonthlyEnergyBill) {
+    this.showBeforeAfterMonthlyEnergyBill = papaParseObject !== null;
+    if (!this.showBeforeAfterMonthlyEnergyBill) {
       return null;
     }
     const data = new BeforeAndAfterMonthlyBillData(papaParseObject.data);
@@ -74,8 +74,8 @@ export class ResultsData {
   }
   initializePeakLoadDay(csvString) {
     const papaParseObject = papaParseCsvString(csvString);
-    this.showPeakLoadDay = papaParseObject === null;
-    if (this.showPeakLoadDay) {
+    this.showPeakLoadDay = papaParseObject !== null;
+    if (!this.showPeakLoadDay) {
       return null;
     }
     const data = new PeakLoadDayData(papaParseObject.data);
@@ -83,8 +83,8 @@ export class ResultsData {
   }
   initializeDeferral(csvString) {
     const papaParseObject = papaParseCsvString(csvString);
-    this.showDeferral = papaParseObject === null;
-    if (this.showDeferral) {
+    this.showDeferral = papaParseObject !== null;
+    if (!this.showDeferral) {
       return null;
     }
     const data = new DeferralData(papaParseObject.data);
@@ -92,8 +92,8 @@ export class ResultsData {
   }
   initializeLoadCoverageProb(csvString) {
     const papaParseObject = papaParseCsvString(csvString);
-    this.showLoadCoverageProbability = papaParseObject === null;
-    if (this.showLoadCoverageProbability) {
+    this.showLoadCoverageProbability = papaParseObject !== null;
+    if (!this.showLoadCoverageProbability) {
       return null;
     }
     const data = new LoadCoverageProbabilityData(papaParseObject.data);
