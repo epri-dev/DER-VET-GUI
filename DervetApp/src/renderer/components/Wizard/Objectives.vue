@@ -126,7 +126,7 @@
       <hr />
       <nav-buttons
         :back-link="TECH_SPECS_PATH"
-        :continue-link="siteInformationPath"
+        :continue-link="OBJECTIVES_SITE_INFORMATION_PATH"
         :save="save"
       />
     </div>
@@ -136,20 +136,18 @@
 <script>
   import model from '@/models/StartProject';
   import NavButtons from '@/components/Shared/NavButtons';
-  import { TECH_SPECS_PATH } from '@/router/constants';
+  import { OBJECTIVES_SITE_INFORMATION_PATH, TECH_SPECS_PATH } from '@/router/constants';
 
   const { validation } = model;
 
   export default {
     components: { NavButtons },
     data() {
-      const p = this.$store.state.Project;
-      const data = { validation };
       return {
-        ...data,
-        ...this.getDataFromProject(),
-        siteInformationPath: p.paths.objectivesSiteInformation,
+        validation,
+        OBJECTIVES_SITE_INFORMATION_PATH,
         TECH_SPECS_PATH,
+        ...this.getDataFromProject(),
       };
     },
     methods: {

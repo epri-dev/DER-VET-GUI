@@ -24,7 +24,7 @@
               </div>
               <div class="buffer-top text-center">
                 <a class="btn btn-sm btn-default">
-                  <router-link :to="pagePaths.resultsFinancial">
+                  <router-link :to="paths.RESULTS_FINANCIAL_PATH">
                     View Detailed Financials Results...
                   </router-link>
                 </a>
@@ -44,7 +44,7 @@
               </div>
               <div class="buffer-top text-center">
                 <a class="btn btn-sm btn-default">
-                  <router-link :to="pagePaths.resultsDispatch">
+                  <router-link :to="paths.RESULTS_DISPATCH_PATH">
                     View Detailed Dispatch Results...
                   </router-link>
                 </a>
@@ -66,7 +66,7 @@
               </div>
               <div class="buffer-top text-center">
                 <a class="btn btn-sm btn-default">
-                  <router-link :to="pagePaths.resultsDesign">
+                  <router-link :to="paths.RESULTS_DESIGN_PATH">
                     View Detailed Design Results...
                   </router-link>
                 </a>
@@ -82,7 +82,7 @@
               </div>
               <div class="buffer-top text-center" v-if="summaryData.showDeferral">
                 <a class="btn btn-sm btn-default">
-                  <router-link :to="pagePaths.resultsDeferral">
+                  <router-link :to="paths.RESULTS_DEFERRAL_PATH">
                     View Detailed Deferral Results...
                   </router-link>
                 </a>
@@ -99,13 +99,13 @@
   import Chart from 'chart.js';
   import Plotly from 'plotly.js';
   import { formatYAxisCurrency, formatXAxis6Hour, formatYAxis, arrayMax } from '@/util/chart';
+  import * as paths from '@/router/constants';
 
   export default {
     data() {
-      const p = this.$store.state.Project;
       const summaryData = this.$store.state.ProjectResult.data.getSummaryVueObjects();
       return {
-        pagePaths: p.paths,
+        paths,
         summaryData,
       };
     },

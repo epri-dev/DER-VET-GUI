@@ -1,4 +1,4 @@
-import { required, decimal, minValue } from 'vuelidate/lib/validators';
+import { required, decimal, maxValue, minValue } from 'vuelidate/lib/validators';
 
 export default class ProjectField {
   constructor(args) {
@@ -18,12 +18,8 @@ export default class ProjectField {
       ...(this.isRequired && { required }),
       ...(this.type === Number && { decimal }),
       ...(((typeof this.minValue) === 'number') && { minValue: minValue(this.minValue) }),
+      ...(((typeof this.maxValue) === 'number') && { maxValue: maxValue(this.maxValue) }),
     };
-  }
-
-  setValue(value) {
-    this.value = value;
-    return this;
   }
 
   /**
@@ -38,7 +34,7 @@ export default class ProjectField {
   static fromSchema(args) {
     // const d = getFromSchema(schemaTag, schemaKey);
     const d = {
-      minValue: 0, maxValue: 1, allowedValues: 'foo', unit: 'x', type: 'y',
+      minValue: 0, maxValue: 1, allowedValues: 'allowedVals', unit: 'unit', type: 'type',
     };
     return new ProjectField({
       value: args.value,

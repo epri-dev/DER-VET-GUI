@@ -51,7 +51,6 @@
           :errorMessage="getErrorMsg('inverterMax')">
         </text-input>
 
-        <!-- Date box Example -->
         <text-input
           v-model="constructionDate"
           v-bind:field="metadata.constructionDate"
@@ -68,7 +67,6 @@
           :errorMessage="getErrorMsg('operationDate')">
         </text-input>
 
-        <!-- Box with a List of Allowed Values Example -->
         <drop-down-input
           v-model="macrsTerm"
           v-bind:field="metadata.macrsTerm"
@@ -108,6 +106,7 @@
       RadioButtonInput,
       TextInput,
     },
+    name: 'TechnologySpecsSolarPV',
     // TODO maybe rename this to just 'id'
     props: ['solarId'],
     data() {
@@ -179,11 +178,12 @@
         //   have it appear for 2 seconds on a disabled click, and then fade away
       },
       saveAndContinue() {
+        const solarSpec = this.buildSolarPV();
         if (this.isNewSpec) {
-          this.$store.dispatch('addTechnologySpecsSolarPV', this.buildSolarPV());
+          this.$store.dispatch('addTechnologySpecsSolarPV', solarSpec);
         } else {
           const payload = {
-            newSolar: this.buildSolarPV(),
+            newSolar: solarSpec,
             solarId: this.solarId,
           };
           this.$store.dispatch('replaceTechnologySpecsSolarPV', payload);
@@ -191,24 +191,16 @@
         this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
       buildSolarPV() {
-        return {
-          active: this.metadata.active,
-          id: this.metadata.id,
-          tag: this.metadata.tag,
-          technologyType: this.metadata.technologyType,
-
-          name: this.metadata.name.setValue(this.name),
-          cost: this.metadata.cost.setValue(this.cost),
-          shouldSize: this.metadata.shouldSize.setValue(this.shouldSize),
-          ratedCapacity: this.metadata.ratedCapacity.setValue(this.ratedCapacity),
-          loc: this.metadata.loc.setValue(this.loc),
-          inverterMax: this.metadata.inverterMax.setValue(this.inverterMax),
-          constructionDate: this.metadata.constructionDate.setValue(this.constructionDate),
-          operationDate: this.metadata.operationDate.setValue(this.operationDate),
-          macrsTerm: this.metadata.macrsTerm.setValue(this.macrsTerm),
-
-          generationProfile: this.metadata.generationProfile,
-        };
+        this.metadata.name.value = this.name;
+        this.metadata.cost.value = this.cost;
+        this.metadata.shouldSize.value = this.shouldSize;
+        this.metadata.ratedCapacity.value = this.ratedCapacity;
+        this.metadata.loc.value = this.loc;
+        this.metadata.inverterMax.value = this.inverterMax;
+        this.metadata.constructionDate.value = this.constructionDate;
+        this.metadata.operationDate.value = this.operationDate;
+        this.metadata.macrsTerm.value = this.macrsTerm;
+        return this.metadata;
       },
     },
   };
