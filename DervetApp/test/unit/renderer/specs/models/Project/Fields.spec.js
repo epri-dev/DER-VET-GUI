@@ -4,20 +4,20 @@ import { required, decimal, minValue } from 'vuelidate/lib/validators';
 describe('Field model', () => {
   it('should initialize from schema properly', () => {
     const actual = ProjectField.fromSchema({
-      value: 0,
+      defaultValue: 0,
       displayName: 'Cost per kW',
       isRequired: true,
       description: 'Capital cost per kW of rated power capacity (applied in year 0 of the analysis)',
       schemaTag: 'foo',
       schemaKey: 'ccost_kW',
     });
-    expect(actual.value).to.eql(0);
+    expect(actual.defaultValue).to.eql(0);
   });
 
   it('should translate to a validation schema', () => {
     // Refactor into shared w/ other tests
     const cost = new ProjectField({
-      value: 0,
+      defaultValue: 0,
       displayName: 'Cost per kW',
       isRequired: true,
       type: Number,

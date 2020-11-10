@@ -63,9 +63,7 @@
       },
     },
     data() {
-      return {
-        paths,
-      };
+      return { paths };
     },
   };
 </script>

@@ -47,7 +47,7 @@
   import '@/assets/samples/SamplePVgen-8784.csv';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
-  import TechnologySpecsSolarPV from '@/models/TechnologySpecs/TechnologySpecsSolarPV';
+  import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecsSolarPV';
   import NavButtons from '@/components/Shared/NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 
@@ -59,8 +59,8 @@
       if (this.generationProfileExists()) {
         return { generationProfile: this.getGenerationProfile() };
       }
-      const vals = TechnologySpecsSolarPV.getHardcodedDefaults();
-      return { generationProfile: vals.generationProfile };
+      const defaultValues = TechnologySpecsSolarPVMetadata.getHardcodedMetadata().getDefaultValues();
+      return { generationProfile: defaultValues.generationProfile };
     },
     computed: {
       tsData() {

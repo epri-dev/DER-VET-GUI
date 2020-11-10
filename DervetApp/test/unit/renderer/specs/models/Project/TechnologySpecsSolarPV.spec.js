@@ -1,19 +1,19 @@
-import TechnologySpecsSolarPV from '@/models/Project/TechnologySpecsSolarPV';
+import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecsSolarPV';
 import { required, decimal, minValue } from 'vuelidate/lib/validators';
 
-describe('TechnologySpecsSolarPV model', () => {
+describe('TechnologySpecsSolarPVMetadata model', () => {
   it('should initialize from schema properly', () => {
-    const actual = TechnologySpecsSolarPV.getDefaults();
-    expect(actual.cost.value).to.equal(0);
+    const actual = TechnologySpecsSolarPVMetadata.getHardcodedMetadata().getDefaultValues();
+    expect(actual.cost).to.equal(0);
   });
 
   it('should initialize from hardcoded properly', () => {
-    const actual = TechnologySpecsSolarPV.getHardcodedDefaults();
-    expect(actual.cost.value).to.equal(0);
+    const actual = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
+    expect(actual.cost.defaultValue).to.equal(0);
   });
 
   it('should create a validation schema', () => {
-    const specs = TechnologySpecsSolarPV.getHardcodedDefaults();
+    const specs = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
     const expected = {
       constructionDate: { },
       cost: { required, decimal, minValue: minValue(0) },

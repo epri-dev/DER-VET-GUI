@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import ProjectField from '@/models/Project/Fields';
+import ProjectFieldMetadata from '@/models/Project/Fields';
 
 const PV = 'PV';
 
@@ -71,16 +71,9 @@ const MACRS_TERM_ALLOWED_VALUES = [
   },
 ];
 
-export default class TechnologySpecsSolarPV {
+export default class TechnologySpecsSolarPVMetadata {
   // TODO: refactor to use typescript interface + Object.assign(this, args);
   constructor(args) {
-    // TODO move active and ID to a parent TechnologySpecs class?
-    this.active = true;
-    this.id = uuidv4();
-    this.tag = PV;
-    this.technologyType = 'Intermittent Resource';
-    this.generationProfile = args.generationProfile;
-
     this.constructionDate = args.constructionDate;
     this.cost = args.cost;
     this.inverterMax = args.inverterMax;
@@ -90,6 +83,25 @@ export default class TechnologySpecsSolarPV {
     this.operationDate = args.operationDate;
     this.ratedCapacity = args.ratedCapacity;
     this.shouldSize = args.shouldSize;
+  }
+
+  getDefaultValues() {
+    return {
+      active: true,
+      tag: PV,
+      technologyType: 'Intermittent Resource',
+      id: uuidv4(),
+      generationProfile: null,
+      name: this.name.defaultValue,
+      cost: this.cost.defaultValue,
+      shouldSize: this.shouldSize.defaultValue,
+      ratedCapacity: this.ratedCapacity.defaultValue,
+      loc: this.loc.defaultValue,
+      inverterMax: this.inverterMax.defaultValue,
+      constructionDate: this.constructionDate.defaultValue,
+      operationDate: this.operationDate.defaultValue,
+      macrsTerm: this.macrsTerm.defaultValue,
+    };
   }
 
   toValidationSchema() {
@@ -108,10 +120,10 @@ export default class TechnologySpecsSolarPV {
   }
 
   // to be removed in favor of from schema
-  static getHardcodedDefaults() {
-    return new TechnologySpecsSolarPV({
-      constructionDate: new ProjectField({
-        value: null,
+  static getHardcodedMetadata() {
+    return new TechnologySpecsSolarPVMetadata({
+      constructionDate: new ProjectFieldMetadata({
+        defaultValue: null,
         displayName: 'Construction Date',
         isRequired: false,
         type: Date,
@@ -119,8 +131,8 @@ export default class TechnologySpecsSolarPV {
         description: null,
         allowedValues: null,
       }),
-      cost: new ProjectField({
-        value: 0,
+      cost: new ProjectFieldMetadata({
+        defaultValue: 0,
         displayName: 'Cost per kW',
         isRequired: true,
         type: Number,
@@ -130,8 +142,8 @@ export default class TechnologySpecsSolarPV {
         allowedValues: null,
       }),
       generationProfile: null,
-      inverterMax: new ProjectField({
-        value: 1e9,
+      inverterMax: new ProjectFieldMetadata({
+        defaultValue: 1e9,
         displayName: 'Solar (+storage) Inverter Rating (kVA)',
         isRequired: true,
         minValue: 0,
@@ -140,8 +152,8 @@ export default class TechnologySpecsSolarPV {
         description: null,
         allowedValues: null,
       }),
-      loc: new ProjectField({
-        value: null,
+      loc: new ProjectFieldMetadata({
+        defaultValue: null,
         displayName: 'Coupled System Type',
         isRequired: true,
         type: String,
@@ -149,8 +161,8 @@ export default class TechnologySpecsSolarPV {
         description: 'Solar plus storage AC or DC coupled system',
         allowedValues: LOC_ALLOWED_VALUES,
       }),
-      macrsTerm: new ProjectField({
-        value: null,
+      macrsTerm: new ProjectFieldMetadata({
+        defaultValue: null,
         displayName: 'MACRS Term',
         isRequired: true,
         type: Number,
@@ -158,8 +170,8 @@ export default class TechnologySpecsSolarPV {
         description: 'Which MACRS GDS category does solar PV fall into?',
         allowedValues: MACRS_TERM_ALLOWED_VALUES,
       }),
-      name: new ProjectField({
-        value: null,
+      name: new ProjectFieldMetadata({
+        defaultValue: null,
         displayName: 'Name',
         isRequired: true,
         type: String,
@@ -167,8 +179,8 @@ export default class TechnologySpecsSolarPV {
         description: null,
         allowedValues: null,
       }),
-      operationDate: new ProjectField({
-        value: null,
+      operationDate: new ProjectFieldMetadata({
+        defaultValue: null,
         displayName: 'Operation Date',
         isRequired: false,
         type: Date,
@@ -176,8 +188,8 @@ export default class TechnologySpecsSolarPV {
         description: null,
         allowedValues: null,
       }),
-      ratedCapacity: new ProjectField({
-        value: 0,
+      ratedCapacity: new ProjectFieldMetadata({
+        defaultValue: 0,
         displayName: 'Rated Capacity',
         isRequired: true,
         type: Number,
@@ -185,8 +197,8 @@ export default class TechnologySpecsSolarPV {
         description: null,
         allowedValues: null,
       }),
-      shouldSize: new ProjectField({
-        value: true,
+      shouldSize: new ProjectFieldMetadata({
+        defaultValue: true,
         displayName: 'Sizing',
         isRequired: true,
         type: Boolean,
@@ -198,10 +210,10 @@ export default class TechnologySpecsSolarPV {
   }
 
 
-  static getDefaults() {
-    return new TechnologySpecsSolarPV({
-      cost: ProjectField.fromSchema({
-        value: 0,
+  static getMetadataFromSchema() {
+    return new TechnologySpecsSolarPVMetadata({
+      cost: ProjectFieldMetadata.fromSchema({
+        defaultValue: 0,
         displayName: 'Cost per kW',
         isRequired: true,
         description: 'Capital cost per kW of rated power capacity (applied in year 0 of the analysis)',

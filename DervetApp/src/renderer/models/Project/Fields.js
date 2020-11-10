@@ -2,7 +2,7 @@ import { required, decimal, maxValue, minValue } from 'vuelidate/lib/validators'
 
 export default class ProjectField {
   constructor(args) {
-    this.value = args.value;
+    this.defaultValue = args.defaultValue;
     this.displayName = args.displayName;
     this.isRequired = args.isRequired;
     this.type = args.type;
@@ -37,7 +37,7 @@ export default class ProjectField {
       minValue: 0, maxValue: 1, allowedValues: 'allowedVals', unit: 'unit', type: 'type',
     };
     return new ProjectField({
-      value: args.value,
+      defaultValue: args.defaultValue,
       displayName: args.displayName,
       isRequired: args.isRequired,
       description: args.description,

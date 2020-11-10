@@ -95,9 +95,10 @@
   import NavButtons from '@/components/Shared/NavButtons';
   import RadioButtonInput from '@/components/Shared/RadioButtonInput';
   import TextInput from '@/components/Shared/TextInput';
-  import TechnologySpecsSolarPV from '@/models/Project/TechnologySpecsSolarPV';
+  import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecsSolarPV';
 
-  const vals = TechnologySpecsSolarPV.getHardcodedDefaults().toValidationSchema();
+  const metadata = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
+  const validations = metadata.toValidationSchema();
 
   export default {
     components: {
@@ -110,12 +111,12 @@
     // TODO maybe rename this to just 'id'
     props: ['solarId'],
     data() {
-      let metadata;
+      let values;
       const isNewSpec = this.solarId === 'null';
       if (isNewSpec) {
-        metadata = TechnologySpecsSolarPV.getHardcodedDefaults();
+        values = metadata.getDefaultValues();
       } else {
-        metadata = this.$store.getters.getSolarPVById(this.solarId);
+        values = this.$store.getters.getSolarPVById(this.solarId);
       }
       /**
       Get rid of copy pasta with spread
@@ -128,18 +129,10 @@
         submitted: false,
         isNewSpec,
         metadata,
-        name: metadata.name.value,
-        cost: metadata.cost.value,
-        shouldSize: metadata.shouldSize.value,
-        ratedCapacity: metadata.ratedCapacity.value,
-        loc: metadata.loc.value,
-        inverterMax: metadata.inverterMax.value,
-        constructionDate: metadata.constructionDate.value,
-        operationDate: metadata.operationDate.value,
-        macrsTerm: metadata.macrsTerm.value,
+        ...values,
       };
     },
-    validations: vals,
+    validations,
     methods: {
       // TODO: move these methods to a shared place for import
       getErrorMsg(fieldName) {
@@ -153,15 +146,15 @@
           displayMsg += ' is required';
           return displayMsg;
         }
-        if (vals[fieldName].decimal && !this.$v[fieldName].decimal) {
+        if (validations[fieldName].decimal && !this.$v[fieldName].decimal) {
           displayMsg += ' must be a number';
           return displayMsg;
         }
-        if (vals[fieldName].minValue && !this.$v[fieldName].minValue) {
+        if (validations[fieldName].minValue && !this.$v[fieldName].minValue) {
           displayMsg += ` must be >= ${this.metadata[fieldName].minValue}`;
           return displayMsg;
         }
-        if (vals[fieldName].maxValue && !this.$v[fieldName].maxValue) {
+        if (validations[fieldName].maxValue && !this.$v[fieldName].maxValue) {
           displayMsg += ` must be <= ${this.metadata[fieldName].maxValue}`;
           return displayMsg;
         }
@@ -191,16 +184,22 @@
         this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
       buildSolarPV() {
-        this.metadata.name.value = this.name;
-        this.metadata.cost.value = this.cost;
-        this.metadata.shouldSize.value = this.shouldSize;
-        this.metadata.ratedCapacity.value = this.ratedCapacity;
-        this.metadata.loc.value = this.loc;
-        this.metadata.inverterMax.value = this.inverterMax;
-        this.metadata.constructionDate.value = this.constructionDate;
-        this.metadata.operationDate.value = this.operationDate;
-        this.metadata.macrsTerm.value = this.macrsTerm;
-        return this.metadata;
+        return {
+          active: this.active,
+          tag: this.tag,
+          technologyType: this.technologyType,
+          id: this.id,
+          name: this.name,
+          cost: this.cost,
+          shouldSize: this.shouldSize,
+          ratedCapacity: this.ratedCapacity,
+          loc: this.loc,
+          inverterMax: this.inverterMax,
+          constructionDate: this.constructionDate,
+          operationDate: this.operationDate,
+          macrsTerm: this.macrsTerm,
+          generationProfile: this.generationProfile,
+        };
       },
     },
   };
