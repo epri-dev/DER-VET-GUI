@@ -69,7 +69,7 @@
   import '@/assets/samples/SampleSiteLoad-8784.csv';
   import NavButtons from '@/components/Shared/NavButtons';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
-  import SiteLoadTimeSeries from '@/models/SiteLoadTimeSeries';
+  import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
   import { sharedValidation } from '@/models/Shared';
   import { OBJECTIVES_PATH } from '@/router/constants';
   import TimeseriesDataUpload from './TimeseriesDataUpload';

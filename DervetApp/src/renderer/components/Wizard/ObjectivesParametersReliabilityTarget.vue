@@ -104,7 +104,7 @@
 
 <script>
   import csvUploadMixin from '@/mixins/csvUploadMixin';
-  import CriticalLoadTimeSeries from '@/models/CriticalLoadTimeSeries';
+  import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
   import { sharedValidation } from '@/models/Shared';
   import NavButtons from '@/components/Shared/NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';

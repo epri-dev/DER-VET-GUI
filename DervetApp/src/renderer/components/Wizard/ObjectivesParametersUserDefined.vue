@@ -69,10 +69,10 @@
 
 <script>
   import { sharedValidation } from '@/models/Shared.js';
-  import UserPowerMaxTimeSeries from '@/models/UserPowerMaxTimeSeries';
-  import UserPowerMinTimeSeries from '@/models/UserPowerMinTimeSeries';
-  import UserEnergyMaxTimeSeries from '@/models/UserEnergyMaxTimeSeries';
-  import UserEnergyMinTimeSeries from '@/models/UserEnergyMinTimeSeries';
+  import UserPowerMaxTimeSeries from '@/models/TimeSeries/UserPowerMaxTimeSeries';
+  import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
+  import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
+  import UserEnergyMinTimeSeries from '@/models/TimeSeries/UserEnergyMinTimeSeries';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import NavButtons from '@/components/Shared/NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';

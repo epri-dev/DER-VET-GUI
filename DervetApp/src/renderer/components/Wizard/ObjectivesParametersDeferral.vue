@@ -78,7 +78,7 @@
 
 <script>
   import csvUploadMixin from '@/mixins/csvUploadMixin';
-  import DeferralLoadTimeSeries from '@/models/DeferralLoadTimeSeries';
+  import DeferralLoadTimeSeries from '@/models/TimeSeries/DeferralLoadTimeSeries';
   import { sharedValidation } from '@/models/Shared';
   import NavButtons from '@/components/Shared/NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';

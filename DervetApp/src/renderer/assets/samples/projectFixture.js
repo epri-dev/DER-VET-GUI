@@ -1,18 +1,18 @@
 import _ from 'lodash';
 
-import CriticalLoadTimeSeries from '@/models/CriticalLoadTimeSeries';
-import DeferralLoadTimeSeries from '@/models/DeferralLoadTimeSeries';
-import DAPriceTimeSeries from '@/models/DAPriceTimeSeries';
-import FRDownPriceTimeSeries from '@/models/FRDownPriceTimeSeries';
-import FRPriceTimeSeries from '@/models/FRPriceTimeSeries';
-import FRUpPriceTimeSeries from '@/models/FRUpPriceTimeSeries';
-import NSRPriceTimeSeries from '@/models/NSRPriceTimeSeries';
-import SRPriceTimeSeries from '@/models/SRPriceTimeSeries';
-import SiteLoadTimeSeries from '@/models/SiteLoadTimeSeries';
-import UserEnergyMaxTimeSeries from '@/models/UserEnergyMaxTimeSeries';
-import UserEnergyMinTimeSeries from '@/models/UserEnergyMinTimeSeries';
-import UserPowerMaxTimeSeries from '@/models/UserPowerMaxTimeSeries';
-import UserPowerMinTimeSeries from '@/models/UserPowerMinTimeSeries';
+import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
+import DeferralLoadTimeSeries from '@/models/TimeSeries/DeferralLoadTimeSeries';
+import DAPriceTimeSeries from '@/models/TimeSeries/DAPriceTimeSeries';
+import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
+import FRPriceTimeSeries from '@/models/TimeSeries/FRPriceTimeSeries';
+import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
+import NSRPriceTimeSeries from '@/models/TimeSeries/NSRPriceTimeSeries';
+import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
+import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
+import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
+import UserEnergyMinTimeSeries from '@/models/TimeSeries/UserEnergyMinTimeSeries';
+import UserPowerMaxTimeSeries from '@/models/TimeSeries/UserPowerMaxTimeSeries';
+import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
 
 import csvs from './csvs';
 

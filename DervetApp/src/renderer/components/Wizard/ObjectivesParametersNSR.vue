@@ -54,7 +54,7 @@
 
 <script>
   import csvUploadMixin from '@/mixins/csvUploadMixin';
-  import NSRPriceTimeSeries from '@/models/NSRPriceTimeSeries';
+  import NSRPriceTimeSeries from '@/models/TimeSeries/NSRPriceTimeSeries';
   import { sharedValidation } from '@/models/Shared';
   import NavButtons from '@/components/Shared/NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';

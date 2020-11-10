@@ -1,8 +1,8 @@
-import { sharedDefaults, sharedValidation } from './Shared.js';
+import { sharedDefaults, sharedValidation } from '@/models/Shared.js';
 
 const defaults = {
   active: false,
-  tag: 'ICE',
+  tag: 'DieselGen',
   technologyType: 'Generator',
   id: '',
   name: '',
