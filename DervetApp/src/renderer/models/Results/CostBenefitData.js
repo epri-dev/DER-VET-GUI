@@ -31,27 +31,29 @@ export class CostBenefitData extends BaseTableData {
     const traceX = [this.columnHeaders[1], this.columnHeaders[2]];
     while (rowNum < this.data.length) {
       const rowData = this.data[rowNum];
-      const valueStream = rowData[0];
-      if (valueStream !== 'Lifetime Present Value') {
-        // create trace
-        const traceTemplate = {
-          x: traceX,
-          y: [rowData[1], rowData[2]],
-          name: valueStream,
-          type: 'bar',
-        };
-        // add color if technology
-        // assumes all DER rows are grouped by name
-        // if (valueStream.indexOf(':') !== -1) {
-        //   const derTag = valueStream.split(':')[0].toLowerCase();
-        //   // TODO select BASE color based on tag grouping
+      if (!BaseTableData.isRowNull(rowData)) {
+        const valueStream = rowData[0];
+        if (valueStream !== 'Lifetime Present Value') {
+          // create trace
+          const traceTemplate = {
+            x: traceX,
+            y: [rowData[1], rowData[2]],
+            name: valueStream,
+            type: 'bar',
+          };
+          // add color if technology
+          // assumes all DER rows are grouped by name
+          // if (valueStream.indexOf(':') !== -1) {
+          //   const derTag = valueStream.split(':')[0].toLowerCase();
+          //   // TODO select BASE color based on tag grouping
 
-        //   // TODO SPIN base color for each unique name
-        //   // TODO change darkness of base color for valuestream of given name
-        //   traceTemplate.marker = { color: valuestreamColor };
-        // }
-        // add trace to list
-        traces.push(traceTemplate);
+          //   // TODO SPIN base color for each unique name
+          //   // TODO change darkness of base color for valuestream of given name
+          //   traceTemplate.marker = { color: valuestreamColor };
+          // }
+          // add trace to list
+          traces.push(traceTemplate);
+        }
       }
       rowNum += 1;
     }

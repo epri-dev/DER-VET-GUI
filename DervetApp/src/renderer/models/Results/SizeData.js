@@ -15,10 +15,9 @@ export class SizeData extends BaseTableData {
     const rowDataObjects = [];
     while (rowNum < this.data.length) {
       const rawData = this.data[rowNum];
-      const systemName = rawData[0];
-      if (systemName !== null) {
+      if (!BaseTableData.isRowNull(rawData)) {
         const rowTemplate = {
-          systemName,
+          systemName: rawData[0],
         };
         let nameIndex = 1;
         while (nameIndex < this.columnHeaders.length) {
