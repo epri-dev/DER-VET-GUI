@@ -192,12 +192,20 @@ export const makeResultsParameters = (project) => {
   return makeGroup('', YES, keys);
 };
 
+export const valueOfN = (project) => {
+  let dt = project.optimizationHorizon;
+  if (dt === 'hours') {
+    dt = project.optimizationHorizonNum;
+  }
+  return dt;
+};
+
 export const makeScenarioParameters = (project) => {
   const keys = {
     apply_interconnection_constraints: makeBaseKey(ZERO, BOOL), // TODO: new, see issue 130
     binary: makeBaseKey(ONE, BOOL), // TODO LL: depends on technology properties
     def_growth: makeBaseKey(project.deferralGrowth, FLOAT),
-    dt: makeBaseKey(ONE, FLOAT), // TODO LL
+    dt: makeBaseKey(project.timestep, FLOAT),
     end_year: makeBaseKey(calculateEndYear(project.startYear, project.analysisHorizon), PERIOD),
     incl_site_load: makeBaseKey(ZERO, BOOL), // TODO LL: calculated based on objectives
     incl_thermal_load: makeBaseKey(ZERO, BOOL), // TODO: new, verify value
@@ -211,7 +219,7 @@ export const makeScenarioParameters = (project) => {
     max_export: makeBaseKey('40000', FLOAT), // TODO: new, see issue 131
     max_import: makeBaseKey('-10000', FLOAT), // TODO: new, see issue 131
     monthly_data_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, MONTHLY), STRING),
-    n: makeBaseKey(project.optimizationHorizon, STRING_INT), // TODO optimizationHorizonNum if hrs
+    n: makeBaseKey(valueOfN(project), STRING_INT), // TODO optimizationHorizonNum if hrs
     opt_years: makeBaseKey(project.dataYear, LIST_INT),
     ownership: makeBaseKey(project.ownership.toLowerCase(), STRING),
     slack: makeBaseKey(ZERO, BOOL), // TODO: hardcoded in old GUI
@@ -224,7 +232,7 @@ export const makeScenarioParameters = (project) => {
 };
 
 export const makeModelParameters = project => ({
-  name: NONE,
+  name: project.name,
   tags: {
     Battery: makeBatteryParameters(project),
     DA: makeDAParameters(project),
@@ -232,7 +240,7 @@ export const makeModelParameters = project => ({
     Results: makeResultsParameters(project),
     Scenario: makeScenarioParameters(project),
   },
-  type: 'Expert',
+  type: project.type,
 });
 
 export const makeBatteryCycleLifeCsv = (project) => {
