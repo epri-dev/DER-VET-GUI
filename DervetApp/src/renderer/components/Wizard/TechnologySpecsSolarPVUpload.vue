@@ -46,8 +46,8 @@
   import '@/assets/samples/SamplePVgen-8760.csv';
   import '@/assets/samples/SamplePVgen-8784.csv';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
-  import PVGenerationTimeSeries from '@/models/PVGenerationTimeSeries';
-  import model from '@/models/TechnologySpecsSolarPV';
+  import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
+  import model from '@/models/TechnologySpecs/TechnologySpecsSolarPV';
   import NavButtons from '@/components/Shared/NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 

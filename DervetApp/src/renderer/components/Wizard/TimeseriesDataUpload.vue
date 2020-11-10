@@ -88,7 +88,7 @@
   import { flatten } from 'lodash';
 
   import { parseCsvFromFile } from '@/util/file';
-  import { sharedDefaults, sharedValidation } from '../../models/Shared.js';
+  import { sharedDefaults, sharedValidation } from '@/models/Shared.js';
 
   export default {
     mounted() {
