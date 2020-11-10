@@ -5,7 +5,7 @@ export class ProFormaData extends BaseTableData {
   constructor(data) {
     super('pro_forma.csv', data, true);
   }
-  createTableData() {
+  createTable() {
     // create fields
     const dataColumns = [];
     const keys = [];
@@ -28,16 +28,18 @@ export class ProFormaData extends BaseTableData {
     i = 0; // reset index
     while (i < this.data.length) {
       const rawData = this.data[i];
-      const rowTamplate = {};
-      let nameIndex = 0;
-      while (nameIndex < dataColumns.length) {
-        const value = rawData[nameIndex];
-        if (value !== 0) {
-          rowTamplate[keys[nameIndex]] = value;
+      if (!BaseTableData.isRowNull(rawData)) {
+        const rowTamplate = {};
+        let nameIndex = 0;
+        while (nameIndex < dataColumns.length) {
+          const value = rawData[nameIndex];
+          if (value !== 0) {
+            rowTamplate[keys[nameIndex]] = value;
+          }
+          nameIndex += 1;
         }
-        nameIndex += 1;
+        rows.push(rowTamplate);
       }
-      rows.push(rowTamplate);
       i += 1;
     }
     return {
@@ -56,6 +58,7 @@ export const proFormaArrayData = [
   [2020, 0, 0, -23030, -23030, -23030, 23030, 23030],
   [2021, 0, 0, -23030, -23030, -23030, 23030, 23030],
   [2022, 0, 0, -23030, -23030, -23030, 23030, 23030],
+  [null],
 ];
 
 export const proFormaTableData = [

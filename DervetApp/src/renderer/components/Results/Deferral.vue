@@ -13,48 +13,37 @@
         </div>
       </div>
     </div>
-    <hr />
-    <!-- TODO get rid of save & continue button -->
-    <nav-buttons
-      :back-link="RESULTS_PATH"
-      back-text="<< Return to results summary"
-    />
   </div>
 </template>
 
 <script>
   import Plotly from 'plotly.js';
-  import NavButtons from '@/components/Shared/NavButtons';
   import { RESULTS_PATH } from '@/router/constants';
-  import { deferralDefaultData } from '@/models/Results/DeferralData';
-  // import Chart from 'chart.js';
-
-  // TODO import this dummy data from store.Results
-  const deferralData = {
-    years: deferralDefaultData.year,
-    essName: 'sto1',
-    chartData: [{
-      type: 'Power',
-      units: '(kW)',
-      essValue: 4320,
-      requirementValues: deferralDefaultData.powerCapacityRequirementKW,
-    },
-    {
-      type: 'Energy',
-      units: '(kWh)',
-      essValue: 23400,
-      requirementValues: deferralDefaultData.energyCapacityRequirementKWh,
-    }],
-  };
 
   export default {
-    components: { NavButtons },
     mounted() {
-      this.createChartCapacityVsTime('chartCapacityVsTime', deferralData);
+      this.createChartCapacityVsTime('chartCapacityVsTime', this.chart);
     },
     data() {
+      const chartData = this.$store.state.ProjectResult.data.getDeferralVueObjects();
       return {
         RESULTS_PATH,
+        chart: {
+          years: chartData.year,
+          essName: chartData.essName,
+          data: [{
+            type: 'Power',
+            units: '(kW)',
+            essValue: chartData.essPower,
+            requirementValues: chartData.powerCapacityRequirementKW,
+          },
+          {
+            type: 'Energy',
+            units: '(kWh)',
+            essValue: chartData.essEnergy,
+            requirementValues: chartData.energyCapacityRequirementKWh,
+          }],
+        },
       };
     },
     methods: {
@@ -63,7 +52,7 @@
         let data = [];
         let i = 0;
         while (i !== 2) {
-          const subChart = chartData.chartData[i];
+          const subChart = chartData.data[i];
           const capArr = new Array(chartData.years.length).fill(subChart.essValue);
           const traces = [
             {
@@ -103,14 +92,14 @@
           },
           yaxis1: {
             title: {
-              text: `${chartData.chartData[0].type} ${chartData.chartData[0].units}`,
+              text: `${chartData.data[0].type} ${chartData.data[0].units}`,
             },
             showgrid: true,
             // standoff: 25,
           },
           yaxis2: {
             title: {
-              text: `${chartData.chartData[1].type} ${chartData.chartData[1].units}`,
+              text: `${chartData.data[1].type} ${chartData.data[1].units}`,
             },
             showgrid: true,
             // standoff: 25,

@@ -14,8 +14,8 @@
             :striped="true"
             :hover="true"
             :bordered="true"
-            :items="sizeItems"
-            :fields="sizeFields"
+            :items="chartData.sizeTable.data"
+            :fields="chartData.sizeTable.fields"
           >
             <template v-slot:thead-top="data">
               <b-tr>
@@ -31,7 +31,7 @@
         <div class="col-md-12">
           <hr class="results" />
           <h4>Rated Power and Energy Costs</h4>
-          <div v-for="dataRow in costTableData">
+          <div v-for="dataRow in chartData.costsTable">
             <b-table
               :striped="true"
               :borderless="true"
@@ -47,27 +47,18 @@
         </div>
       </div>
     </div>
-    <hr />
-    <!-- TODO get rid of save & continue button -->
-    <nav-buttons
-      :back-link="RESULTS_PATH"
-      back-text="<< Return to results summary"
-    />
   </div>
 </template>
 
 <script>
-  import NavButtons from '@/components/Shared/NavButtons';
-  import { createCostTableData, sizeTableExpectedData, sizeTableExpectedFeilds } from '@/models/Results/SizeData';
   import { RESULTS_PATH } from '@/router/constants';
 
   export default {
-    components: { NavButtons },
     data() {
+      const chartData = this.$store.state.ProjectResult.data.getDesignVueObjects();
       return {
         RESULTS_PATH,
-        sizeItems: sizeTableExpectedData,
-        sizeFields: sizeTableExpectedFeilds,
+        chartData,
         costTableFields: [
           {
             key: 'total',
@@ -79,11 +70,6 @@
           },
           'strEquation',
           'label',
-        ],
-        costTableData: [
-          createCostTableData(sizeTableExpectedData[0]),
-          createCostTableData(sizeTableExpectedData[1]),
-          createCostTableData(sizeTableExpectedData[2]),
         ],
       };
     },

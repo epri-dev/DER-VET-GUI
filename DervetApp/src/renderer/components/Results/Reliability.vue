@@ -6,16 +6,15 @@
       </div>
     </div>
     <hr>
-    <form>
+    <form v-if="chartData.showOutageContribution">
       <div class="form-group">
         <div class="col-md-12">
-          <div
-            id="chartOutageContribution">
+          <p>Hard Coded Data</p>
+          <div id="chartOutageContribution">
           </div>
         </div>
       </div>
     </form>
-    <hr>
     <form>
       <div class="form-group">
         <div class="col-md-12">
@@ -25,32 +24,27 @@
         </div>
       </div>
     </form>
-    <hr />
-    <!-- TODO get rid of save & continue button -->
-    <nav-buttons
-      :back-link="resultsPath"
-      back-text="<< Return to results summary"
-    />
   </div>
 </template>
 
 <script>
   import Plotly from 'plotly.js';
-  import NavButtons from '@/components/Shared/NavButtons';
   import { RESULTS_PATH } from '@/router/constants';
-  import { loadCoverageProbDefaultData } from '@/models/Results/LoadCoverageProbabilityData';
 
   export default {
-    components: { NavButtons },
     mounted() {
       this.createChartLoadCoverageProbability('chartLoadCoverageProbability');
-      this.createChartOutageContribution('chartOutageContribution');
+      if (this.chartData.showOutageContribution) {
+        this.createChartOutageContribution('chartOutageContribution');
+      }
     },
     data() {
       const p = this.$store.state.Project;
+      const chartData = this.$store.state.ProjectResult.data.getReliabilityVueObjects();
       return {
         resultsPath: RESULTS_PATH,
         reliabilityTarget: p.reliabilityTarget,
+        chartData,
       };
     },
     methods: {
@@ -192,8 +186,8 @@
       createChartLoadCoverageProbability(chartId) {
         const ctx = document.getElementById(chartId);
         const trace1 = {
-          x: loadCoverageProbDefaultData.outageLengthHrs,
-          y: loadCoverageProbDefaultData.loadCoverageProbability,
+          x: this.chartData.loadCoverageProbability.outageLengthHrs,
+          y: this.chartData.loadCoverageProbability.loadCoverageProbability,
           mode: 'lines+markers', // 'lines' 'markers'
           connectgaps: true, // ignore null values when true
           name: '', // appears in legend, and next to hovertemplate

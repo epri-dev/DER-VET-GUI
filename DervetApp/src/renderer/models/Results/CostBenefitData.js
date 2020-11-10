@@ -31,27 +31,29 @@ export class CostBenefitData extends BaseTableData {
     const traceX = [this.columnHeaders[1], this.columnHeaders[2]];
     while (rowNum < this.data.length) {
       const rowData = this.data[rowNum];
-      const valueStream = rowData[0];
-      if (valueStream !== 'Lifetime Present Value') {
-        // create trace
-        const traceTemplate = {
-          x: traceX,
-          y: [rowData[1], rowData[2]],
-          name: valueStream,
-          type: 'bar',
-        };
-        // add color if technology
-        // assumes all DER rows are grouped by name
-        // if (valueStream.indexOf(':') !== -1) {
-        //   const derTag = valueStream.split(':')[0].toLowerCase();
-        //   // TODO select BASE color based on tag grouping
+      if (!BaseTableData.isRowNull(rowData)) {
+        const valueStream = rowData[0];
+        if (valueStream !== 'Lifetime Present Value') {
+          // create trace
+          const traceTemplate = {
+            x: traceX,
+            y: [rowData[1], rowData[2]],
+            name: valueStream,
+            type: 'bar',
+          };
+          // add color if technology
+          // assumes all DER rows are grouped by name
+          // if (valueStream.indexOf(':') !== -1) {
+          //   const derTag = valueStream.split(':')[0].toLowerCase();
+          //   // TODO select BASE color based on tag grouping
 
-        //   // TODO SPIN base color for each unique name
-        //   // TODO change darkness of base color for valuestream of given name
-        //   traceTemplate.marker = { color: valuestreamColor };
-        // }
-        // add trace to list
-        traces.push(traceTemplate);
+          //   // TODO SPIN base color for each unique name
+          //   // TODO change darkness of base color for valuestream of given name
+          //   traceTemplate.marker = { color: valuestreamColor };
+          // }
+          // add trace to list
+          traces.push(traceTemplate);
+        }
       }
       rowNum += 1;
     }
@@ -60,7 +62,7 @@ export class CostBenefitData extends BaseTableData {
 }
 
 export const costBenefitArrayData = [
-  ['', 'Costs ($)', 'Benefit ($)'],
+  [null, 'Costs ($)', 'Benefit ($)'],
   ['Lifetime Present Value', 210000000, 390000000],
   ['BATTERY: ess1 - Capital Cost', 2e5, 0],
   ['BATTERY: ess1 - Fixed O&M', 4e5, 0],
@@ -80,6 +82,7 @@ export const costBenefitArrayData = [
   ['Spinning Reserves', 0, 9e5],
   ['Non-Spinning Reserves', 0, 6e5],
   ['Day Ahead ETS', 0, 8e5],
+  [null],
 ];
 
 export const costBenefitSummaryData = [210000000, 390000000];

@@ -6,8 +6,8 @@
         <b-navbar-nav>
           <b-nav-item to="/">Home</b-nav-item>
           <!-- TODO add v-if to show/hide buttons based on the state of the project -->
-          <!-- <b-nav-item to="/">Project</b-nav-item> -->
-          <b-nav-item to="/results">Results</b-nav-item>
+          <b-nav-item to="/wizard">Project</b-nav-item> 
+          <b-nav-item to="/results" v-if="resultsExist">Results</b-nav-item>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
@@ -15,4 +15,12 @@
 </template>
 
 
-
+<script>
+  export default {
+    computed: {
+      resultsExist() {
+        return this.$store.state.ProjectResult.data !== null;
+      },
+    },
+  };
+</script>

@@ -23,4 +23,11 @@ export const objectToCsv = (data, fields, headers) => {
   return `${csvHeaders}${csvData}`;
 };
 
+export const papaParseCsvString = (csvString) => {
+  if (csvString === undefined) {
+    return null;
+  }
+  return Papa.parse(csvString, { dynamicTyping: true });
+};
+
 export const formatCsvForHref = csv => `data:text/csv;charset=utf-8,${encodeURI(csv)}`;

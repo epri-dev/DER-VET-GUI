@@ -18,12 +18,12 @@
           :striped="true"
           :hover="true"
           :bordered="false"
-          :items="proformaItems"
-          :fields="proformaFields"
+          :items="chartData.proForma.data"
+          :fields="chartData.proForma.fields"
         >
         </b-table>
       </div>
-      <div class="col-md-12">
+      <div class="col-md-12" v-if="chartData.showMonthlyData">
         <canvas
           id="chartjsMonthlyBill">
         </canvas>
@@ -34,37 +34,27 @@
         </div>
       </div> -->
     </div>
-    <hr />
-    <!-- TODO get rid of save & continue button -->
-    <nav-buttons
-      :back-link="resultsPath"
-      back-text="<< Return to results summary"
-    />
   </div>
 </template>
 
 <script>
   import Chart from 'chart.js';
   import Plotly from 'plotly.js';
-  import NavButtons from '@/components/Shared/NavButtons';
   import { formatYAxisCurrency } from '@/util/chart';
-  import { proFormaTableFields, proFormaTableData } from '@/models/Results/ProFormaData';
-  import { costBenefitTraces } from '@/models/Results/CostBenefitData';
-  import { monthlyBillData } from '@/models/Results/BeforeAndAfterMonthlyBillData';
   import { RESULTS_PATH } from '@/router/constants';
 
   export default {
-    components: { NavButtons },
     mounted() {
-      this.createStackedCostBenefit('chartStackedCostBenefit', costBenefitTraces);
-      this.createMonthlyBillBeforeAndAfter('chartjsMonthlyBill', monthlyBillData);
-      // this.createPlotlyMonthlyBillBeforeAndAfter('plotlyMonthlyBill', plotlyMonthlyBillDataTraces);
+      this.createStackedCostBenefit('chartStackedCostBenefit', this.chartData.costBenefit);
+      if (this.chartData.showMonthlyData) {
+        this.createMonthlyBillBeforeAndAfter('chartjsMonthlyBill', this.chartData.monthlyData);
+      }
     },
     data() {
+      const chartData = this.$store.state.ProjectResult.data.getFinancialVueObjects();
       return {
         resultsPath: RESULTS_PATH,
-        proformaItems: proFormaTableData,
-        proformaFields: proFormaTableFields,
+        chartData,
       };
     },
     methods: {

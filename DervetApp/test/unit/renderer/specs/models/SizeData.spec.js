@@ -19,6 +19,7 @@ describe('SizeData model', () => {
       ['Storage', 19477, 2303, 2303, 0.85, 0.05, 1.0, 8.457, 1000, 800, 250, null, null],
       ['Solar PV', null, null, null, null, null, null, null, null, 1660, null, 3000, null],
       ['Generators', null, null, null, null, null, null, null, 750, 245, null, 1000, 3],
+      [null],
     ];
     const expectedColumnHeaders = ['DER', 'Energy Rating (kWh)', 'Charge Rating (kW)', 'Discharge Rating (kW)', 'Round Trip Efficiency (%)', 'Lower Limit on SOC (%)', 'Upper Limit on SOC (%)', 'Duration (hours)', 'Capital Cost ($)', 'Capital Cost ($/kW)', 'Capital Cost ($/kWh)', 'Power Capacity (kW)', 'Quantity'];
     expect(actualData.data).to.eql(expectedDataArr);
@@ -28,7 +29,8 @@ describe('SizeData model', () => {
     const powerCapIndex = actualData.getColumnIndexThatContains('power');
     expect(powerCapIndex).to.eql(11);
   });
-  const sizeTableData = actualData.sizeTableDataRows;
+  const sizeTable = actualData.createSizeTable();
+  const sizeTableData = sizeTable.data;
   it('(1C-1) should create the correct data objects - a size table', () => {
     expect(sizeTableData.length).to.eql(sizeTableExpectedData.length);
     let i = 0;
@@ -42,7 +44,7 @@ describe('SizeData model', () => {
       i += 1;
     }
   });
-  const sizeTableDataFields = actualData.createSizeTableFields();
+  const sizeTableDataFields = sizeTable.fields;
   it('(1C-2) should create the correct field objects - size table', () => {
     expect(sizeTableDataFields.length).to.eql(sizeTableExpectedFeilds.length);
     let i = 0;
@@ -145,10 +147,16 @@ describe('SizeData model', () => {
     expect(costTableDataRows2.length).to.eql(2);
   });
 
-  it('(2C-2a) first object should create the correct number of items in an PV cost table', () => {
+  it('(3C-2a) first object should create the correct number of items in an PV cost table', () => {
     expect(costTableDataRows2[0].items.length).to.eql(3);
   });
-  it('(2C-2b) second object should create the correct number of items in a ICE cost table', () => {
+  it('(3C-2b) second object should create the correct number of items in a ICE cost table', () => {
     expect(costTableDataRows2[1].items.length).to.eql(5);
+  });
+
+  it('(4) should find an ESS and return the correct P and E', () => {
+    const essSize = actualData.findEssSize();
+    expect(essSize.essEnergy).to.eql(19477);
+    expect(essSize.essPower).to.eql(2303);
   });
 });

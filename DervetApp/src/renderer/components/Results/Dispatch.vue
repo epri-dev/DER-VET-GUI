@@ -9,6 +9,7 @@
     <form>
       <div class="form-group">
         <div class="col-md-12">
+          <p>Hard Coded Data</p>
           <div
             id="chartDispatchTimeSeriesPlots">
           </div>
@@ -19,29 +20,20 @@
     <form>
       <div class="form-group">
         <div class="col-md-12">
-          <div
-            id="chartEnergyPriceHeatMap">
+          <p>Hard Coded Data</p>
+          <div id="chartEnergyPriceHeatMap">
           </div>
         </div>
       </div>
     </form>
-    <hr />
-    <!-- TODO get rid of save & continue button -->
-    <nav-buttons
-      :back-link="resultsPath"
-      back-text="<< Return to results summary"
-    />
-
   </div>
 </template>
 
 <script>
   import Plotly from 'plotly.js';
-  import NavButtons from '@/components/Shared/NavButtons';
   import { RESULTS_PATH } from '@/router/constants';
 
   export default {
-    components: { NavButtons },
     mounted() {
       this.createChartDispatchTimeSeriesPlots('chartDispatchTimeSeriesPlots');
       this.createChartEnergyPriceHeatMap('chartEnergyPriceHeatMap');
