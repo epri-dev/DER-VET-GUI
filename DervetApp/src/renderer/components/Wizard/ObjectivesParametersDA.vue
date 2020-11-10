@@ -38,7 +38,7 @@
 
 <script>
   import csvUploadMixin from '@/mixins/csvUploadMixin';
-  import DAPriceTimeSeries from '@/models/DAPriceTimeSeries';
+  import DAPriceTimeSeries from '@/models/TimeSeries/DAPriceTimeSeries';
   import { sharedValidation } from '@/models/Shared';
   import NavButtons from '@/components/Shared/NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';

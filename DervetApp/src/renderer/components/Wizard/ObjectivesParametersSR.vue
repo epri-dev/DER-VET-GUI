@@ -53,7 +53,7 @@
 </template>
 
 <script>
-  import SRPriceTimeSeries from '@/models/SRPriceTimeSeries';
+  import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
   import { sharedValidation } from '@/models/Shared';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import NavButtons from '@/components/Shared/NavButtons';

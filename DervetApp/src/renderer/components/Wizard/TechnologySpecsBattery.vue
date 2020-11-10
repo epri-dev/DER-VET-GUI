@@ -534,7 +534,7 @@
 <script>
   import { v4 as uuidv4 } from 'uuid';
 
-  import model from '@/models/TechnologySpecsBattery';
+  import model from '@/models/TechnologySpecs/TechnologySpecsBattery';
   import NavButtons from '@/components/Shared/NavButtons';
 
   const { defaults, validation } = model;

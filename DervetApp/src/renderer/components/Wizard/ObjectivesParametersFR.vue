@@ -145,9 +145,9 @@
 
 <script>
   import csvUploadMixin from '@/mixins/csvUploadMixin';
-  import FRPriceTimeSeries from '@/models/FRPriceTimeSeries';
-  import FRUpPriceTimeSeries from '@/models/FRUpPriceTimeSeries';
-  import FRDownPriceTimeSeries from '@/models/FRDownPriceTimeSeries';
+  import FRPriceTimeSeries from '@/models/TimeSeries/FRPriceTimeSeries';
+  import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
+  import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
   import { sharedValidation } from '@/models/Shared';
   import NavButtons from '@/components/Shared/NavButtons';
   import TimeseriesDataUpload from './TimeseriesDataUpload';

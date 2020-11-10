@@ -271,7 +271,7 @@
 <script>
   import { v4 as uuidv4 } from 'uuid';
 
-  import model from '@/models/TechnologySpecsICE';
+  import model from '@/models/TechnologySpecs/TechnologySpecsICE';
   import NavButtons from '@/components/Shared/NavButtons';
 
   const { defaults, validation } = model;
