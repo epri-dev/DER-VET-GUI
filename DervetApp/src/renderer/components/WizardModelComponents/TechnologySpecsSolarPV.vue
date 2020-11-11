@@ -95,7 +95,6 @@
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecsSolarPV';
-  import model from '@/models/TechnologySpecs/TechnologySpecsSolarPV';
   import { WIZARD_COMPONENT_PATH, TECH_SPECS_PV_PATH } from '@/router/constants';
   import NavButtons from '@/components/Shared/NavButtons';
 
@@ -105,6 +104,7 @@
   export default {
     name: 'TechnologySpecsSolarPV',
     // TODO maybe rename this to just 'id'
+    components: { NavButtons },
     mixins: [wizardFormMixin],
     props: ['solarId'],
     data() {

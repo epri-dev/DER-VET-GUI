@@ -4,19 +4,22 @@
     <hr>
     <div class="form-horizontal form-buffer">
 
+      <h4>Technologies</h4>
       <div class="col-md-12">
-        <h4>Technologies</h4>
-        <router-link class="btn btn-lg btn-info"
-                     v-for="solar in solarPVItems"
+        <router-link v-for="solar in solarPVItems"
                      :to="{ name: 'technologySpecsSolarPV', params: { solarId: solar.id }}"
-                     :key="solar.id"
-                     v-bind:class="{
-          current: techSpecsActiveSaved('solar-pv', solar.id),
-          complete: solar.active,
-          incomplete: !solar.active }">
-          PV: {{ solar.name }}
+                     :key="solar.id">
+          <img src="../../assets/PVIconComplete.png" 
+               :key="`solar.id + 'complete'`" 
+               :alt="solar.name" 
+               v-if="solar.active"/>
+          <img src="../../assets/PVIconIncomplete.png"
+               :key="`solar.id + 'incomplete'`" 
+               :alt="solar.name" 
+               v-if="!solar.active"/>
         </router-link>
-
+      </div>
+      <div class="col-md-12">
         <router-link class="btn btn-lg btn-info"
                      v-for="battery in batteryItems"
                      :to="{ name: 'technologySpecsBattery', params: { batteryId: battery.id }}"
@@ -27,7 +30,8 @@
           incomplete: !battery.active }">
           Battery: {{ battery.name }}
         </router-link>
-
+      </div>
+      <div class="col-md-12">
         <router-link class="btn btn-lg btn-info"
                      v-for="ice in iceItems"
                      :to="{ name: 'technologySpecsICE', params: { iceId: ice.id }}"
@@ -38,7 +42,8 @@
           incomplete: !ice.active }">
           ICE: {{ ice.name }}
         </router-link>
-
+      </div>
+      <div class="col-md-12">
         <router-link class="btn btn-lg btn-info"
                      v-for="dieselGen in dieselGenItems"
                      :to="{ name: 'technologySpecsDieselGen', params: { dieselGenId: dieselGen.id }}"
@@ -49,12 +54,15 @@
           incomplete: !dieselGen.active }">
           DieselGen: {{ dieselGen.name }}
         </router-link>
+      </div>
+      <div class="col-md-12">
         <router-link class="btn btn-lg btn-info"
                      v-bind:class="{ current: isActive(this.paths.OBJECTIVES_SITE_INFORMATION_PATH) }"
                      :to="this.paths.OBJECTIVES_SITE_INFORMATION_PATH">
           Site Information
         </router-link>
       </div>
+
     </div>
     <hr>
     <div class="col-md-12">
@@ -224,6 +232,15 @@
         this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
       save() {
+      },
+      getPVImg(tech) {
+        let imageURL = '../../assets/PVIcon.png';
+        if (tech.active) {
+          imageURL = '../../assets/PVIconComplete.png';
+        } else {
+          imageURL = '../../assets/PVIconIncomplete.png';
+        }
+        return imageURL;
       },
     },
   };

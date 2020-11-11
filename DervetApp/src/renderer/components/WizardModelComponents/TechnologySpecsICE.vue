@@ -271,17 +271,15 @@
 <script>
   import { v4 as uuidv4 } from 'uuid';
 
-  import model from '@/models/TechnologySpecs/TechnologySpecsICE';
+  import { defaults, validation } from '@/models/TechnologySpecs/TechnologySpecsICE';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import NavButtons from '@/components/Shared/NavButtons';
-
-  const { defaults, validation } = model;
 
   export default {
     components: { NavButtons },
     props: ['iceId'],
     data() {
-      const data = { ...validation, WIZARD_COMPONENT_PATH };
+      const data = { validation, WIZARD_COMPONENT_PATH };
       if (this.iceId === 'null') {
         return { ...data, ...this.getDefaultData() };
       }

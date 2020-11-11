@@ -1,6 +1,7 @@
 import { sharedDefaults, sharedValidation } from '@/models/Shared.js';
+import { v4 as uuidv4 } from 'uuid';
 
-const defaults = {
+export const defaults = {
   active: false,
   auxiliaryLoad: 0.0,
   batteryCycles: [
@@ -29,7 +30,6 @@ const defaults = {
   energyCapacity: 0,
   fixedOMCosts: 0,
   name: '',
-  id: '',
   includeAuxiliaryLoad: false,
   includeCycleDegradation: false,
   includeStartupCost: false,
@@ -52,11 +52,11 @@ const defaults = {
   variableOMCosts: 0,
 };
 
-const validation = {
+export const validation = {
   macrsTerm: sharedValidation.macrsTerm,
 };
 
-export default {
-  defaults,
-  validation,
-};
+export const makeEmptyBattery = () => ({
+  id: uuidv4(),
+  ...defaults,
+});

@@ -1,7 +1,7 @@
 import { sharedDefaults, sharedValidation } from '@/models/Shared.js';
 import { v4 as uuidv4 } from 'uuid';
 
-const defaults = {
+export const defaults = {
   active: false,
   constructionDate: '',
   cost: 0,
@@ -17,22 +17,15 @@ const defaults = {
   technologyType: 'Intermittent Resource',
 };
 
-const makeEmptyPV = () => ({
+export const makeEmptyPV = () => ({
   id: uuidv4(),
   ...defaults,
 });
 
-const validation = {
+export const validation = {
   loc: {
     type: String,
     allowedValues: ['AC', 'DC'],
   },
   macrsTerm: sharedValidation.macrsTerm,
-};
-
-export default {
-  defaults,
-  validation,
-  makeEmptyPV,
-
 };

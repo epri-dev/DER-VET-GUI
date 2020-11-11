@@ -19,23 +19,23 @@
           </div>
           <div class="form-group">
             <div class="col-md-12">
-              <router-link to="/wizard-model-components/technology-specs-battery/null" class="btn btn-primary btn-w250">
+              <b-button @click="addBatteryTech" class="btn btn-primary btn-w250">
                 Battery Storage
-              </router-link>
+              </b-button>
             </div>
           </div>
           <div class="form-group">
             <div class="col-md-12">
-              <router-link to="/wizard-model-components/technology-specs-ice/null" class="btn btn-primary btn-w250">
+              <b-button @click="addICETech" class="btn btn-primary btn-w250">
                 Internal Combustion Engine
-              </router-link>
+              </b-button>
             </div>
           </div>
           <div class="form-group">
             <div class="col-md-12">
-              <router-link to="/wizard-model-components/technology-specs-diesel-gen/null" class="btn btn-primary btn-w250">
+              <b-button @click="addDieselGenTech" class="btn btn-primary btn-w250">
                 Diesel Generator
-              </router-link>
+              </b-button>
             </div>
           </div>
         </div>
@@ -51,7 +51,7 @@
             </template>
             <template v-slot:cell(buttons)="row">
               <b-col class="text-right">
-                <b-button size="sm" @click="deactivateTech(row.item)" variant="outline-danger" class="btn btn-xs">Deactivate</b-button>
+                <!--<b-button size="sm" @click="deactivateTech(row.item)" variant="outline-danger" class="btn btn-xs">Deactivate</b-button>-->
                 <b-button size="sm" @click="removeTech(row.item)" class="btn btn-xs btn-danger delete-tech">Remove</b-button>
               </b-col>
             </template>
@@ -63,10 +63,9 @@
             <template v-slot:cell(tagname)="row">
               <b-col class="text-left">{{ row.item.tag + ': ' + row.item.name }}</b-col>
             </template>
-            <p>{{num_pv}}</p>
             <template v-slot:cell(buttons)="row">
               <b-col class="text-right">
-                <b-button size="sm" @click="deactivateTech(row.item)" variant="outline-danger" class="btn btn-xs">Deactivate</b-button>
+                <!--<b-button size="sm" @click="deactivateTech(row.item)" variant="outline-danger" class="btn btn-xs">Deactivate</b-button>-->
                 <b-button size="sm" @click="removeTech(row.item)" class="btn btn-xs btn-danger delete-tech">Remove</b-button>
               </b-col>
             </template>
@@ -80,7 +79,7 @@
             </template>
             <template v-slot:cell(buttons)="row">
               <b-col class="text-right">
-                <b-button size="sm" @click="deactivateTech(row.item)" variant="outline-danger" class="btn btn-xs">Deactivate</b-button>
+                <!--<b-button size="sm" @click="deactivateTech(row.item)" variant="outline-danger" class="btn btn-xs">Deactivate</b-button>-->
                 <b-button size="sm" @click="removeTech(row.item)" class="btn btn-xs btn-danger delete-tech">Remove</b-button>
               </b-col>
             </template>
@@ -105,10 +104,11 @@
     OBJECTIVES_PATH,
     TECH_SPECS_PATH,
   } from '@/router/constants';
-  import model from '@/models/TechnologySpecs/TechnologySpecsSolarPV';
+  import { makeEmptyPV } from '@/models/TechnologySpecs/TechnologySpecsSolarPV';
+  import { makeEmptyBattery } from '@/models/TechnologySpecs/TechnologySpecsBattery';
+  import { makeEmptyICE } from '@/models/TechnologySpecs/TechnologySpecsICE';
+  import { makeEmptyDieselGen } from '@/models/TechnologySpecs/TechnologySpecsDieselGen';
   import NavButtons from '@/components/Shared/NavButtons';
-
-  const { makeEmptyPV } = model;
 
   export default {
     components: { NavButtons },
@@ -129,7 +129,10 @@
         WIZARD_COMPONENT_PATH,
         OBJECTIVES_PATH,
         TECH_SPECS_PATH,
-        num_pv: 0,
+        numPV: 0,
+        numBattery: 0,
+        numICE: 0,
+        numDieselGen: 0,
       };
     },
     computed: {
@@ -147,17 +150,41 @@
 
       addPVTech() {
         const newPV = makeEmptyPV();
-        this.num_pv = this.num_pv + 1;
+        this.numPV = this.numPV + 1;
         this.$store.dispatch('addTechnologySpecsSolarPV', newPV);
-        const activePayload = this.makeSaveActivePayload(newPV.id);
-        this.$store.dispatch('activateTech', activePayload);
-        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
+        const payload = this.makeSaveActivePayload(newPV);
+        this.activateTech(payload);
       },
-      makeSaveActivePayload(id) {
+      addBatteryTech() {
+        const newBattery = makeEmptyBattery();
+        this.numBattery = this.numBattery + 1;
+        this.$store.dispatch('addTechnologySpecsBattery', newBattery);
+        const payload = this.makeSaveActivePayload(newBattery);
+        this.activateTech(payload);
+      },
+      addICETech() {
+        const newICE = makeEmptyICE();
+        this.numICE = this.numICE + 1;
+        this.$store.dispatch('addTechnologySpecsICE', newICE);
+        const payload = this.makeSaveActivePayload(newICE);
+        this.activateTech(payload);
+      },
+      addDieselGenTech() {
+        const newDieselGen = makeEmptyDieselGen();
+        this.numDieselGen = this.numDieselGen + 1;
+        this.$store.dispatch('addTechnologySpecsDieselGen', newDieselGen);
+        const payload = this.makeSaveActivePayload(newDieselGen);
+        this.activateTech(payload);
+      },
+      makeSaveActivePayload(techSpec) {
         return {
-          id,
-          tag: 'PV',
+          id: techSpec.id,
+          tag: techSpec.tag,
         };
+      },
+      activateTech(payload) {
+        this.$store.dispatch('activateTech', payload);
+        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
       deactivateTech(payload) {
         this.$store.dispatch('deactivateTech', payload);

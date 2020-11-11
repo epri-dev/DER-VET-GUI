@@ -47,7 +47,11 @@
   import '@/assets/samples/SamplePVgen-8784.csv';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
+<<<<<<< HEAD
   import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecsSolarPV';
+=======
+  import { defaults } from '@/models/TechnologySpecs/TechnologySpecsSolarPV';
+>>>>>>> prototype with icon buttons complete
   import NavButtons from '@/components/Shared/NavButtons';
   import { WIZARD_COMPONENT_PATH, TECH_SPECS_PV_PATH } from '@/router/constants';
   import TimeseriesDataUpload from './TimeseriesDataUpload';

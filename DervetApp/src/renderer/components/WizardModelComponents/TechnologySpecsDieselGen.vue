@@ -1,6 +1,7 @@
 <template>
   <div>
     <h3>Technology Specs: Diesel Generator</h3>
+    <h2>Under Construction</h2>
     <hr />
     <form>
       <div class="form-horizontal form-buffer container">
@@ -10,11 +11,10 @@
             <label class="control-label" for="name">Name</label>
           </div>
           <div class="col-md-9">
-            <input
-              class="form-control valid"
-              id="name"
-              type="text"
-              v-model="inputName">
+            <input class="form-control valid"
+                   id="name"
+                   type="text"
+                   v-model="inputName">
           </div>
         </div>
 
@@ -23,11 +23,10 @@
             <label class="control-label" for="rated-capacity">Rated Capacity</label>
           </div>
           <div class="col-md-9">
-            <input
-              class="form-control numberbox"
-              id="rated-capacity"
-              type="text"
-              v-model.number="inputRatedCapacity">
+            <input class="form-control numberbox"
+                   id="rated-capacity"
+                   type="text"
+                   v-model.number="inputRatedCapacity">
             <span class="unit-label">kW / generator</span>
             <p class="tool-tip tooltip-col">What is the rated capacity of the diesel generator?</p>
           </div>
@@ -38,11 +37,10 @@
             <label class="control-label" for="minimum-power">Minimum Power</label>
           </div>
           <div class="col-md-9">
-            <input
-              class="form-control numberbox"
-              id="minimum-power"
-              type="text"
-              v-model.number="inputMinimumPower">
+            <input class="form-control numberbox"
+                   id="minimum-power"
+                   type="text"
+                   v-model.number="inputMinimumPower">
             <span class="unit-label">kW</span>
             <p class="tool-tip tooltip-col">What is the mimimum power the diesel generator is capable of safely producing?</p>
           </div>
@@ -53,11 +51,10 @@
             <label class="control-label" for="startup-time">Startup time</label>
           </div>
           <div class="col-md-9">
-            <input
-              class="form-control numberbox"
-              id="startup-time"
-              type="text"
-              v-model.number="inputStartupTime">
+            <input class="form-control numberbox"
+                   id="startup-time"
+                   type="text"
+                   v-model.number="inputStartupTime">
             <span class="unit-label">minutes</span>
             <p class="tool-tip tooltip-col">How many minutes are required for the diesel generator to go from an off state to producing its full rated power?</p>
           </div>
@@ -68,11 +65,10 @@
             <label class="control-label" for="efficiency">Efficiency</label>
           </div>
           <div class="col-md-9">
-            <input
-              class="form-control numberbox"
-              id="efficiency"
-              type="text"
-              v-model.number="inputEfficiency">
+            <input class="form-control numberbox"
+                   id="efficiency"
+                   type="text"
+                   v-model.number="inputEfficiency">
             <span class="unit-label">gallons / kWh</span>
             <p class="tool-tip tooltip-col">How many gallons of fuel does it take to generate 1 kWh of electricity? No variable efficiency is considered at this stage.</p>
           </div>
@@ -83,11 +79,10 @@
             <label class="control-label" for="fuel-cost">Fuel Cost</label>
           </div>
           <div class="col-md-9">
-            <input
-              class="form-control numberbox"
-              id="fuel-cost"
-              type="text"
-              v-model.number="inputFuelCost">
+            <input class="form-control numberbox"
+                   id="fuel-cost"
+                   type="text"
+                   v-model.number="inputFuelCost">
             <span class="unit-label">$ / gallon</span>
             <p class="tool-tip tooltip-col">What is the price of fuel (constant over analysis horizon)?</p>
           </div>
@@ -98,11 +93,10 @@
             <label class="control-label" for="capital-cost">Capital Cost</label>
           </div>
           <div class="col-md-9">
-            <input
-              class="form-control numberbox"
-              id="capital-cost"
-              type="text"
-              v-model.number="inputCapitalCost">
+            <input class="form-control numberbox"
+                   id="capital-cost"
+                   type="text"
+                   v-model.number="inputCapitalCost">
             <span class="unit-label">$ / generator</span>
             <p class="tool-tip tooltip-col">What is the capital cost of each diesel generator?</p>
           </div>
@@ -113,11 +107,10 @@
             <label class="control-label" for="variable-om-cost">Variable O&amp;M cost</label>
           </div>
           <div class="col-md-9">
-            <input
-              class="form-control numberbox"
-              id="variable-om-cost"
-              type="text"
-              v-model.number="inputVariableOMCost">
+            <input class="form-control numberbox"
+                   id="variable-om-cost"
+                   type="text"
+                   v-model.number="inputVariableOMCost">
             <span class="unit-label">$ / MWh</span>
             <p class="tool-tip tooltip-col">What is the cost of variable operations and maintenance for each MWh of AC energy delivered?</p>
           </div>
@@ -128,11 +121,10 @@
             <label class="control-label" for="fixed-om-cost-including-exercise">Fixed O&amp;M Cost, including exercise</label>
           </div>
           <div class="col-md-9">
-            <input
-              class="form-control numberbox"
-              id="fixed-om-cost-including-exercise"
-              type="text"
-              v-model.number="inputFixedOMCostIncludingExercise">
+            <input class="form-control numberbox"
+                   id="fixed-om-cost-including-exercise"
+                   type="text"
+                   v-model.number="inputFixedOMCostIncludingExercise">
             <span class="unit-label">$ / kW-year</span>
             <p class="tool-tip tooltip-col">What is the cost of fixed operations and maintenance, including the non-fuel expenses from exercising the diesel generator?</p>
           </div>
@@ -143,11 +135,10 @@
             <label class="control-label" for="construction-date">Construction Date</label>
           </div>
           <div class="col-md-9">
-            <input
-              class="form-control valid"
-              id="construction-date"
-              type="date"
-              v-model="inputConstructionDate">
+            <input class="form-control valid"
+                   id="construction-date"
+                   type="date"
+                   v-model="inputConstructionDate">
           </div>
         </div>
 
@@ -156,11 +147,10 @@
             <label class="control-label" for="operation-date">Operation Date</label>
           </div>
           <div class="col-md-9">
-            <input
-              class="form-control valid"
-              id="operation-date"
-              type="date"
-              v-model="inputOperationDate">
+            <input class="form-control valid"
+                   id="operation-date"
+                   type="date"
+                   v-model="inputOperationDate">
           </div>
         </div>
 
@@ -169,10 +159,9 @@
             <label class="control-label" for="macrs-term">MACRS Term</label>
           </div>
           <div class="col-md-9">
-            <select
-            class="form-control numberbox"
-            id="macrs-term"
-            v-model.number="inputMacrsTerm">
+            <select class="form-control numberbox"
+                    id="macrs-term"
+                    v-model.number="inputMacrsTerm">
               <option v-bind:value="undefined">-</option>
               <option v-for="value in validation.macrsTerm.allowedValues" v-bind:value="value">
                 {{value}}
@@ -182,7 +171,7 @@
             <p class="tool-tip tooltip-col">Which MACRS GDS category does diesel generator fall into?</p>
           </div>
         </div>
-        <br/>
+        <br />
 
         <div class="form-group">
           <div class="col-md-6">
@@ -191,24 +180,22 @@
         </div>
 
         <div class="col-md-11 offset-md-1">
-          <input
-            id="size-yes"
-            name="size"
-            type="radio"
-            v-model="inputShouldSize"
-            v-bind:value="true">
+          <input id="size-yes"
+                 name="size"
+                 type="radio"
+                 v-model="inputShouldSize"
+                 v-bind:value="true">
           <label for="size-yes" class="buffer-right">Have DER-VET determine the optimal number of Diesel Generators to install</label>
         </div>
         <div class="col-md-11 offset-md-1">
-          <input
-            id="size-no"
-            name="size"
-            type="radio"
-            v-model="inputShouldSize"
-            v-bind:value="false">
+          <input id="size-no"
+                 name="size"
+                 type="radio"
+                 v-model="inputShouldSize"
+                 v-bind:value="false">
           <label for="size-no" class="buffer-right">Known number of Diesel Generators</label>
         </div>
-        <br/>
+        <br />
 
         <div v-if="inputShouldSize">
           <div class="form-group row" style="; margin-left: 30px;">
@@ -216,11 +203,10 @@
               <label class="control-label" for="min-generators">Minimum Number of Generators to Install</label>
             </div>
             <div class="col-md-9">
-              <input
-                class="form-control numberbox valid"
-                id="min-generators"
-                type="text"
-                v-model.number="inputMinGenerators">
+              <input class="form-control numberbox valid"
+                     id="min-generators"
+                     type="text"
+                     v-model.number="inputMinGenerators">
               <span class="unit-label">generators</span>
               <p class="tool-tip tooltip-col">What is the mimimum number of diesel generators to consider installing?</p>
             </div>
@@ -230,11 +216,10 @@
               <label class="control-label" for="max-generators">Maximum Number of Generators to Install</label>
             </div>
             <div class="col-md-9">
-              <input
-                class="form-control numberbox valid"
-                id="max-generators"
-                type="text"
-                v-model.number="inputMaxGenerators">
+              <input class="form-control numberbox valid"
+                     id="max-generators"
+                     type="text"
+                     v-model.number="inputMaxGenerators">
               <span class="unit-label">generators</span>
               <p class="tool-tip tooltip-col">What is the maximum number of diesel generators to consider installing?</p>
             </div>
@@ -246,21 +231,18 @@
             <label class="control-label" for="num-generators">Number of Generators to Install</label>
           </div>
           <div class="col-md-9">
-            <input
-              class="form-control numberbox valid"
-              id="num-generators"
-              type="text"
-              v-model.number="inputNumGenerators">
+            <input class="form-control numberbox valid"
+                   id="num-generators"
+                   type="text"
+                   v-model.number="inputNumGenerators">
             <span class="unit-label">generators</span>
             <p class="tool-tip tooltip-col">What is the number of diesel generators to install?</p>
           </div>
         </div>
 
-        <nav-buttons
-          :back-link="WIZARD_COMPONENT_PATH"
-          :continue-link="WIZARD_COMPONENT_PATH"
-          :save="this.save"
-        />
+        <nav-buttons :back-link="WIZARD_COMPONENT_PATH"
+                     :continue-link="WIZARD_COMPONENT_PATH"
+                     :save="this.save" />
 
       </div>
     </form>
@@ -270,17 +252,15 @@
 
 <script>
   import { v4 as uuidv4 } from 'uuid';
-  import model from '@/models/TechnologySpecs/TechnologySpecsDieselGen';
+  import { defaults, validation } from '@/models/TechnologySpecs/TechnologySpecsDieselGen';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import NavButtons from '@/components/Shared/NavButtons';
-
-  const { defaults, validation } = model;
 
   export default {
     components: { NavButtons },
     props: ['dieselGenId'],
     data() {
-      const data = { ...validation, WIZARD_COMPONENT_PATH };
+      const data = { validation, WIZARD_COMPONENT_PATH };
       if (this.dieselGenId === 'null') {
         return { ...data, ...this.getDefaultData() };
       }

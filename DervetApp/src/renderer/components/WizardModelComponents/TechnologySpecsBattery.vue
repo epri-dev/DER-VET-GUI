@@ -534,17 +534,15 @@
 <script>
   import { v4 as uuidv4 } from 'uuid';
 
-  import model from '@/models/TechnologySpecs/TechnologySpecsBattery';
+  import { defaults, validation } from '@/models/TechnologySpecs/TechnologySpecsBattery';
   import { WIZARD_COMPONENT_PATH, TECH_SPECS_BATTERY_PATH } from '@/router/constants';
   import NavButtons from '@/components/Shared/NavButtons';
-
-  const { defaults, validation } = model;
 
   export default {
     components: { NavButtons },
     props: ['batteryId'],
     data() {
-      const data = { ...validation, WIZARD_COMPONENT_PATH, TECH_SPECS_BATTERY_PATH };
+      const data = { validation, WIZARD_COMPONENT_PATH, TECH_SPECS_BATTERY_PATH };
       if (this.batteryId === 'null') {
         return { ...data, ...this.getDefaultData() };
       }
