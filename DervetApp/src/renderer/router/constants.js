@@ -17,6 +17,7 @@ export const OBJECTIVES_RESILIENCE_PATH = `${WIZARD_PATH}/objectives-parameters-
 export const OBJECTIVES_SR_PATH = `${WIZARD_PATH}/objectives-parameters-sr`;
 export const OBJECTIVES_USER_DEFINED_PATH = `${WIZARD_PATH}/objectives-parameters-user-defined`;
 export const OBJECTIVES_DA_PATH = `${WIZARD_PATH}/objectives-parameters-da`;
+export const RUN_ANALYSIS_PATH = `${WIZARD_PATH}/run-analysis`;
 export const SENSITIVITY_ANALYSIS_PATH = `${WIZARD_PATH}/sensitivity-analysis`;
 export const START_PROJECT_PATH = `${WIZARD_PATH}/start-project`;
 export const SUMMARY_PATH = `${WIZARD_PATH}/summary`;
@@ -28,3 +29,4 @@ export const RESULTS_RELIABILITY_PATH = `${RESULTS_PATH}/reliability`;
 export const RESULTS_DEFERRAL_PATH = `${RESULTS_PATH}/deferral`;
 export const RESULTS_DISPATCH_PATH = `${RESULTS_PATH}/dispatch`;
 export const RESULTS_FINANCIAL_PATH = `${RESULTS_PATH}/financial`;
+

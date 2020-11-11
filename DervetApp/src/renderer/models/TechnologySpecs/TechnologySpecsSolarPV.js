@@ -1,31 +1,21 @@
-import { sharedDefaults, sharedValidation } from '@/models/Shared.js';
+// TODO-- add validators here as neeeded, for vuelidate
+import { required, minValue, decimal } from 'vuelidate/lib/validators';
 
-const defaults = {
-  active: false,
-  constructionDate: '',
-  cost: 0,
-  generationProfile: null,
-  id: '',
-  inverterMax: 1000000000,
-  loc: '',
-  macrsTerm: sharedDefaults.macrsTerm,
-  name: '',
-  operationDate: '',
-  ratedCapacity: 0,
-  shouldSize: true,
-  tag: 'PV',
-  technologyType: 'Intermittent Resource',
-};
+// this format is required for vuelidate to work
+//   it must be read in as 'validations'
 
-const validation = {
-  loc: {
-    type: String,
-    allowedValues: ['AC', 'DC'],
-  },
-  macrsTerm: sharedValidation.macrsTerm,
+const schemaValidations = {
+  constructionDate: { },
+  cost: { required, decimal, minValue: minValue(0) },
+  inverterMax: { required, decimal, minValue: minValue(0) },
+  loc: { required },
+  macrsTerm: { required, decimal },
+  name: { required },
+  operationDate: { },
+  ratedCapacity: { required, decimal },
+  shouldSize: { required },
 };
 
 export default {
-  defaults,
-  validation,
+  schemaValidations,
 };

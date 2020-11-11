@@ -151,14 +151,13 @@
       </router-link>
       <router-link class="nav nav-sidebar sidebar-root-el"
                    v-bind:class="{ current: isActive(this.paths.SUMMARY_PATH) }"
-                   :to="this.paths.SUMMARY_PATH
-          ">
+                   :to="this.paths.SUMMARY_PATH">
         Summary
       </router-link>
 
       <router-link class="nav nav-sidebar sidebar-root-el"
-                   v-bind:class="{ current: isActive(this.runAnalysis) }"
-                   :to="this.runAnalysis">
+                   v-bind:class="{ current: isActive(this.paths.RUN_ANALYSIS_PATH) }"
+                   :to="this.paths.RUN_ANALYSIS_PATH">
         Run Analysis
       </router-link>
 
@@ -181,10 +180,7 @@
 
   export default {
     data() {
-      return {
-        paths,
-        runAnalysis: '/wizard/run-analysis',
-      };
+      return { paths };
     },
     methods: {
       techSpecsComplete(active) {

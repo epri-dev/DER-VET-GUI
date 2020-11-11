@@ -1,11 +1,18 @@
 <template>
   <div class="form-group form-buffer row">
-    <div class="col-md-6 back-btn">
+    <div class="col-md-3 back-btn">
       <router-link :to="computedBackLink" class="btn btn-primary">
         {{backText}}
       </router-link>
     </div>
-    <div class="col-md-6 continue-btn">
+
+    <div v-if="displayError" class="col-md-6 error-text-color">
+      Please correct errors before continuing
+    </div>
+    <div v-else class="col-md-6">
+    </div>
+
+    <div class="col-md-3 continue-btn">
       <router-link
         v-on:click.native="save"
         :event="disabled ? '' : 'click'"
@@ -82,6 +89,10 @@
         default: () => null,
       },
       disabled: {
+        type: Boolean,
+        default: false,
+      },
+      displayError: {
         type: Boolean,
         default: false,
       },

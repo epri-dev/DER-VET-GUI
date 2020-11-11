@@ -23,6 +23,11 @@ body {
     color: white;
 }
 
+.error-text-color {
+    color: #dc3545;
+    font-weight: bold;
+    font-size: 14px;
+}
 
 .form-horizontal .control-label {
     text-align: left;
@@ -238,7 +243,7 @@ textarea {
 
 .numberbox {
     display: inline-block;
-    width: 80px;
+    width: 100px;
 }
 
 .numberbox-lg {
@@ -878,4 +883,9 @@ input#NoDischargingToGrid ~ p.tool-tip {
 
 #OptimizationHorizon {
     max-width: 130px;
+}
+
+.invalid-feedback {
+    font-size: 14px;
+    font-weight: bold;
 }

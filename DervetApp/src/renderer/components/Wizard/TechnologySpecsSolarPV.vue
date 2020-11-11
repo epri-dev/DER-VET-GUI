@@ -4,151 +4,84 @@
     <form>
       <div class="form-horizontal form-buffer container">
 
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="name">Name</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              class="form-control valid"
-              id="name"
-              type="text"
-              v-model="inputName">
-          </div>
+        <!-- TODO
+          - DRY more by just passing the field and generating parameters
+          - use nameData.getErrorMsg
+        -->
+        <text-input
+          v-model="name"
+          v-bind:field="metadata.name"
+          :isInvalid="submitted && $v.name.$error"
+          :errorMessage="getErrorMsg('name')">
+        </text-input>
+
+        <text-input
+          v-model="cost"
+          v-bind:field="metadata.cost"
+          :isInvalid="submitted && $v.cost.$error"
+          :errorMessage="getErrorMsg('cost')">
+        </text-input>
+
+        <radio-button-input
+          v-model="shouldSize"
+          v-bind:field="metadata.shouldSize"
+          :isInvalid="submitted && $v.shouldSize.$error"
+          :errorMessage="getErrorMsg('shouldSize')">>
+        </radio-button-input>
+
+        <div v-if="shouldSize === false">
+          <text-input
+            v-model="ratedCapacity"
+            v-bind:field="metadata.ratedCapacity"
+            :isInvalid="submitted && $v.ratedCapacity.$error"
+            :errorMessage="getErrorMsg('ratedCapacity')">
+          </text-input>
         </div>
 
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="cost">Cost per kW</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              class="form-control numberbox valid"
-              id="cost"
-              type="text"
-              v-model.number="inputCost">
-              <span class="unit-label">$/kW</span>
-              <br/>
-              <p class="tool-tip tooltip-col">Capital cost per kW of rated power capacity (applied in year 0 of the analysis)</p>
-          </div>
-        </div>
+        <drop-down-input
+          v-model="loc"
+          v-bind:field="metadata.loc"
+          :isInvalid="submitted && $v.loc.$error"
+          :errorMessage="getErrorMsg('loc')">
+        </drop-down-input>
 
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="size">Sizing</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              id="size-yes"
-              type="radio"
-              v-model="inputShouldSize"
-              v-bind:value="true">
-            <label for="size-yes" class="buffer-right">Have DER-VET size the Solar PV</label>
-            <input
-              id="size-no"
-              type="radio"
-              v-model="inputShouldSize"
-              v-bind:value="false">
-            <label for="size-no">Known size</label>
-          </div>
-        </div>
+        <text-input
+          v-model="inverterMax"
+          v-bind:field="metadata.inverterMax"
+          :isInvalid="submitted && $v.inverterMax.$error"
+          :isLargeBox="true"
+          :errorMessage="getErrorMsg('inverterMax')">
+        </text-input>
 
-        <div v-if="!inputShouldSize" class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="rated-capacity">Rated Capacity</label>
-          </div>
-          <div class="col-md-3">
-            <input
-              class="form-control numberbox valid"
-              id="rated-capacity"
-              type="text"
-              v-model.number="inputRatedCapacity">
-            <span class="unit-label">kW</span>
-          </div>
-        </div>
+        <text-input
+          v-model="constructionDate"
+          v-bind:field="metadata.constructionDate"
+          :isInvalid="submitted && $v.constructionDate.$error"
+          :isLargeBox="true"
+          :errorMessage="getErrorMsg('constructionDate')">
+        </text-input>
 
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="loc">Coupled System Type</label>
-          </div>
-          <div class="col-md-9">
-            <select
-              class="form-control valid"
-              id="loc"
-              v-model="inputLoc">
-              <option value="">-</option>
-              <option v-for="value in validation.loc.allowedValues" v-bind:value="value">
-                {{value}}
-              </option>
-            </select>
-            <p class="tool-tip tooltip-col">Solar plus storage AC or DC coupled system</p>
-          </div>
-        </div>
+        <text-input
+          v-model="operationDate"
+          v-bind:field="metadata.operationDate"
+          :isInvalid="submitted && $v.operationDate.$error"
+          :isLargeBox="true"
+          :errorMessage="getErrorMsg('operationDate')">
+        </text-input>
 
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="inverter-max">Solar (+storage) Inverter Rating (kVA)</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              class="form-control numberbox-lg"
-              id="inverter-max"
-              type="text"
-              v-model.number="inputInverterMax">
-            <span class="unit-label">kW</span>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="construction-date">Construction Date</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              type="date"
-              class="form-control valid"
-              id="construction-date"
-              v-model="inputConstructionDate">
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="operation-date">Operation Date</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              type="date"
-              class="form-control valid"
-              id="operation-date"
-              v-model="inputOperationDate">
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="macrs-term">MACRS Term</label>
-          </div>
-          <div class="col-md-9">
-            <select
-            class="form-control numberbox"
-            id="macrs-term"
-            v-model.number="inputMacrsTerm">
-              <option v-bind:value="undefined">-</option>
-              <option v-for="value in validation.macrsTerm.allowedValues" v-bind:value="value">
-                {{value}}
-              </option>
-            </select>
-            <span class="unit-label">years</span>
-            <br/>
-            <p class="tool-tip tooltip-col">Which MACRS GDS category does solar PV fall into?</p>
-          </div>
-        </div>
+        <drop-down-input
+          v-model="macrsTerm"
+          v-bind:field="metadata.macrsTerm"
+          :isInvalid="submitted && $v.macrsTerm.$error"
+          :errorMessage="getErrorMsg('macrsTerm')">
+        </drop-down-input>
 
         <nav-buttons
           back-link="/wizard/technology-specs"
-          :continue-link="`/wizard/technology-specs-solar-pv-upload/${this.inputId}`"
-          :save="this.save"
+          :continue-link="`/wizard/technology-specs-solar-pv-upload/${this.id}`"
+          :save="validatedSave"
+          :disabled=$v.$invalid
+          :displayError="submitted && $v.$anyError"
         />
 
       </div>
@@ -158,67 +91,93 @@
 </template>
 
 <script>
-  import { v4 as uuidv4 } from 'uuid';
+  import { requiredIf } from 'vuelidate/lib/validators';
 
-  import model from '@/models/TechnologySpecs/TechnologySpecsSolarPV';
+  import DropDownInput from '@/components/Shared/DropDownInput';
   import NavButtons from '@/components/Shared/NavButtons';
+  import RadioButtonInput from '@/components/Shared/RadioButtonInput';
+  import TextInput from '@/components/Shared/TextInput';
+  import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecsSolarPV';
 
-  const { defaults, validation } = model;
+  const metadata = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
+  const validations = metadata.toValidationSchema();
 
   export default {
-    components: { NavButtons },
+    components: {
+      DropDownInput,
+      NavButtons,
+      RadioButtonInput,
+      TextInput,
+    },
+    name: 'TechnologySpecsSolarPV',
+    // TODO maybe rename this to just 'id'
     props: ['solarId'],
     data() {
-      const data = { validation };
-      if (this.solarId === 'null') {
-        return { ...data, ...this.getDefaultData() };
-      }
-      return { ...data, ...this.getDataFromProject() };
+      const values = this.isNewSolar() ? metadata.getDefaultValues() : this.getSolarFromStore();
+      return {
+        submitted: false,
+        metadata,
+        ...values,
+      };
+    },
+    validations: {
+      ...validations,
+      ratedCapacity: {
+        ...validations.ratedCapacity,
+        required: requiredIf(function isRatedCapacityRequired() {
+          return this.shouldSize === false;
+        }),
+      },
     },
     methods: {
-      getDefaultData() {
-        return {
-          inputActive: defaults.active,
-          inputTag: defaults.tag,
-          inputTechnologyType: defaults.technologyType,
-          inputId: uuidv4(),
-          inputName: defaults.name,
-          inputCost: defaults.cost,
-          inputShouldSize: defaults.shouldSize,
-          inputRatedCapacity: defaults.ratedCapacity,
-          inputLoc: defaults.loc,
-          inputInverterMax: defaults.inverterMax,
-          inputConstructionDate: defaults.constructionDate,
-          inputOperationDate: defaults.operationDate,
-          inputMacrsTerm: defaults.macrsTerm,
-          inputGenerationProfile: defaults.generationProfile,
-        };
+      isNewSolar() {
+        return this.solarId === 'null';
       },
-      getDataFromProject() {
-        const solarPVSpecs = this.$store.getters.getSolarPVById(this.solarId);
-        return {
-          inputActive: solarPVSpecs.active,
-          inputTag: solarPVSpecs.tag,
-          inputTechnologyType: solarPVSpecs.technologyType,
-          inputId: solarPVSpecs.id,
-          inputName: solarPVSpecs.name,
-          inputCost: solarPVSpecs.cost,
-          inputShouldSize: solarPVSpecs.shouldSize,
-          inputRatedCapacity: solarPVSpecs.ratedCapacity,
-          inputLoc: solarPVSpecs.loc,
-          inputInverterMax: solarPVSpecs.inverterMax,
-          inputConstructionDate: solarPVSpecs.constructionDate,
-          inputOperationDate: solarPVSpecs.operationDate,
-          inputMacrsTerm: solarPVSpecs.macrsTerm,
-          inputGenerationProfile: solarPVSpecs.generationProfile,
-        };
+      getSolarFromStore() {
+        return this.$store.getters.getSolarPVById(this.solarId);
       },
-      save() {
-        if (this.solarId === 'null') {
-          this.$store.dispatch('addTechnologySpecsSolarPV', this.buildSolarPV());
+      // TODO: move these methods to a shared place for import
+      getErrorMsg(fieldName) {
+        // this method returns a single validation error message (String)
+        // input argument is the name of a single input varible  (String)
+        const { displayName } = this.metadata[fieldName];
+        let displayMsg = displayName;
+
+        if (!this.$v[fieldName].required) {
+          displayMsg += ' is required';
+          return displayMsg;
+        }
+        if (validations[fieldName].decimal && !this.$v[fieldName].decimal) {
+          displayMsg += ' must be a number';
+          return displayMsg;
+        }
+        if (validations[fieldName].minValue && !this.$v[fieldName].minValue) {
+          displayMsg += ` must be >= ${this.metadata[fieldName].minValue}`;
+          return displayMsg;
+        }
+        if (validations[fieldName].maxValue && !this.$v[fieldName].maxValue) {
+          displayMsg += ` must be <= ${this.metadata[fieldName].maxValue}`;
+          return displayMsg;
+        }
+        return '';
+      },
+      validatedSave() {
+        this.submitted = true;
+        this.$v.$touch();
+        if (!this.$v.$invalid) {
+          return this.saveAndContinue();
+        }
+        return () => {};
+        // TODO: report 'invalid save. please correct errors.'
+        //   have it appear for 2 seconds on a disabled click, and then fade away
+      },
+      saveAndContinue() {
+        const solarSpec = this.buildSolarPV();
+        if (this.isNewSolar()) {
+          this.$store.dispatch('addTechnologySpecsSolarPV', solarSpec);
         } else {
           const payload = {
-            newSolar: this.buildSolarPV(),
+            newSolar: solarSpec,
             solarId: this.solarId,
           };
           this.$store.dispatch('replaceTechnologySpecsSolarPV', payload);
@@ -227,20 +186,20 @@
       },
       buildSolarPV() {
         return {
-          active: this.inputActive,
-          tag: this.inputTag,
-          technologyType: this.inputTechnologyType,
-          id: this.inputId,
-          name: this.inputName,
-          cost: this.inputCost,
-          shouldSize: this.inputShouldSize,
-          ratedCapacity: this.inputRatedCapacity,
-          loc: this.inputLoc,
-          inverterMax: this.inputInverterMax,
-          constructionDate: this.inputConstructionDate,
-          operationDate: this.inputOperationDate,
-          macrsTerm: this.inputMacrsTerm,
-          generationProfile: this.inputGenerationProfile,
+          active: this.active,
+          tag: this.tag,
+          technologyType: this.technologyType,
+          id: this.id,
+          name: this.name,
+          cost: this.cost,
+          shouldSize: this.shouldSize,
+          ratedCapacity: this.ratedCapacity,
+          loc: this.loc,
+          inverterMax: this.inverterMax,
+          constructionDate: this.constructionDate,
+          operationDate: this.operationDate,
+          macrsTerm: this.macrsTerm,
+          generationProfile: this.generationProfile,
         };
       },
     },
