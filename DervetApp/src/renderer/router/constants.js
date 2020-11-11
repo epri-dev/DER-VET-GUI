@@ -2,7 +2,6 @@
 // Root routes
 export const WIZARD_START_PATH = '/wizard-overview';
 export const WIZARD_COMPONENT_PATH = '/wizard-model-components';
-export const WIZARD_CBA_PATH = '/wizard-cba';
 export const WIZARD_RUN_CASE_PATH = '/wizard-run-case';
 export const RESULTS_PATH = '/results';
 
@@ -16,6 +15,8 @@ export const TECH_SPECS_BATTERY_PATH = `${WIZARD_COMPONENT_PATH}/technology-spec
 export const TECH_SPECS_ICE_PATH = `${WIZARD_COMPONENT_PATH}/technology-specs-ice`;
 export const TECH_SPECS_DIESEL_PATH = `${WIZARD_COMPONENT_PATH}/technology-specs-diesel-gen`;
 
+export const FINANCIAL_INPUTS_PATH = `${WIZARD_COMPONENT_PATH}/financial-inputs`;
+export const FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH = `${WIZARD_COMPONENT_PATH}/financial-inputs-external-incentives`;
 export const FINANCIAL_INPUTS_RETAIL_TARIFF_PATH = `${WIZARD_COMPONENT_PATH}/financial-inputs-retail-tariff`;
 export const OBJECTIVES_BACKUP_POWER_PATH = `${WIZARD_COMPONENT_PATH}/objectives-backup-power`;
 export const OBJECTIVES_SITE_INFORMATION_PATH = `${WIZARD_COMPONENT_PATH}/objectives-parameters-site-information`;
@@ -27,9 +28,6 @@ export const OBJECTIVES_SR_PATH = `${WIZARD_COMPONENT_PATH}/objectives-parameter
 export const OBJECTIVES_USER_DEFINED_PATH = `${WIZARD_COMPONENT_PATH}/objectives-parameters-user-defined`;
 export const OBJECTIVES_DA_PATH = `${WIZARD_COMPONENT_PATH}/objectives-parameters-da`;
 export const SENSITIVITY_ANALYSIS_PATH = `${WIZARD_COMPONENT_PATH}/sensitivity-analysis`;
-
-export const FINANCIAL_INPUTS_PATH = `${WIZARD_CBA_PATH}/financial-inputs`;
-export const FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH = `${WIZARD_CBA_PATH}/financial-inputs-external-incentives`;
 
 export const SUMMARY_PATH = `${WIZARD_RUN_CASE_PATH}/summary`;
 export const RUN_ANALYSIS_PATH = `${WIZARD_RUN_CASE_PATH}/run-analysis`;

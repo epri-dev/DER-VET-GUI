@@ -8,7 +8,6 @@
           <!-- TODO add v-if to show/hide buttons based on the state of the project -->
           <b-nav-item :to="WIZARD_START_PATH">Project Overview</b-nav-item>
           <b-nav-item :to="WIZARD_COMPONENT_PATH">Model Components</b-nav-item>
-          <b-nav-item :to="WIZARD_CBA_PATH">Cost Benefit Analysis</b-nav-item>
           <b-nav-item :to="WIZARD_RUN_CASE_PATH">Run Case</b-nav-item>
           <b-nav-item :to="RESULTS_PATH" v-if="resultsExist">Results</b-nav-item>
         </b-navbar-nav>
@@ -21,17 +20,20 @@
   import {
     WIZARD_START_PATH,
     WIZARD_COMPONENT_PATH,
-    WIZARD_CBA_PATH,
     RESULTS_PATH,
     WIZARD_RUN_CASE_PATH,
   } from '@/router/constants';
 
   export default {
+    computed: {
+      resultsExist() {
+        return this.$store.state.ProjectResult.data !== null;
+      },
+    },
     data() {
       return {
         WIZARD_START_PATH,
         WIZARD_COMPONENT_PATH,
-        WIZARD_CBA_PATH,
         RESULTS_PATH,
         WIZARD_RUN_CASE_PATH,
       };
@@ -39,13 +41,3 @@
   };
 </script>
 
-
-<script>
-  export default {
-    computed: {
-      resultsExist() {
-        return this.$store.state.ProjectResult.data !== null;
-      },
-    },
-  };
-</script>

@@ -8,7 +8,7 @@
           <b>Project Name</b>
         </div>
         <div class="col-md-4 form-control-static">
-          <p>{{projectName}}</p>
+          <input v-model="inputName" type="text" class="form-control" id="ProjectName">
         </div>
         <div class="col-md-5">
           <p class="tool-tip">Name of the project.</p>
@@ -173,7 +173,7 @@
 
       <nav-buttons
         back-link="/"
-        :continue-link="this.paths.TECH_SPECS_PATH"
+        :continue-link="this.paths.OBJECTIVES_PATH"
         :save="wrappedSave"
         :disabled="!isValid"
       />
@@ -212,6 +212,7 @@
       getDataFromProject() {
         const projectSpecs = this.$store.state.Project;
         return {
+          inputName: '',
           inputTimestep: projectSpecs.timestep,
           inputStartYear: projectSpecs.startYear,
           inputOwnership: projectSpecs.ownership,
@@ -241,6 +242,7 @@
         this.$store.dispatch('setTimestep', this.inputTimestep);
         this.$store.dispatch('setInputsDirectory', this.inputsDirectory);
         this.$store.dispatch('setResultsDirectory', this.resultsDirectory);
+        this.$store.dispatch('setName', this.inputName);
       },
     },
   };

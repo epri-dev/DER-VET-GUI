@@ -134,32 +134,26 @@ export default new Router({
           name: 'financialInputsRetailTariffImport',
           component: require('@/components/WizardModelComponents/FinancialInputsRetailTariffImport').default,
         },
-      ],
-    },
-    {
-      path: '/wizard-cba',
-      component: require('@/components/WizardCBA/Layout').default,
-      children: [
         {
-          path: '',
+          path: 'financial-inputs',
           name: 'financialInputs',
-          component: require('@/components/WizardCBA/FinancialInputs').default,
+          component: require('@/components/WizardModelComponents/FinancialInputs').default,
         },
         {
           path: 'financial-inputs-external-incentives',
           name: 'financialInputsExternalIncentives',
-          component: require('@/components/WizardCBA/FinancialInputsExternalIncentives').default,
+          component: require('@/components/WizardModelComponents/FinancialInputsExternalIncentives').default,
         },
         {
           path: 'financial-inputs-external-incentives-year/:incentiveId',
           name: 'financialInputsExternalIncentivesYear',
-          component: require('@/components/WizardCBA/FinancialInputsExternalIncentivesYear').default,
+          component: require('@/components/WizardModelComponents/FinancialInputsExternalIncentivesYear').default,
           props: true,
         },
         {
           path: 'financial-inputs-external-incentives-import',
           name: 'financialInputsExternalIncentivesImport',
-          component: require('@/components/WizardCBA/FinancialInputsExternalIncentivesImport').default,
+          component: require('@/components/WizardModelComponents/FinancialInputsExternalIncentivesImport').default,
         },
       ],
     },
