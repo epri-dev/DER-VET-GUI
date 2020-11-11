@@ -23,6 +23,11 @@ body {
     color: white;
 }
 
+.error-text-color {
+    color: #dc3545;
+    font-weight: bold;
+    font-size: 14px;
+}
 
 .form-horizontal .control-label {
     text-align: left;

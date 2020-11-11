@@ -4,12 +4,12 @@ import { required, decimal, minValue } from 'vuelidate/lib/validators';
 describe('TechnologySpecsSolarPVMetadata model', () => {
   it('should initialize from schema properly', () => {
     const actual = TechnologySpecsSolarPVMetadata.getHardcodedMetadata().getDefaultValues();
-    expect(actual.cost).to.equal(0);
+    expect(actual.cost).to.equal(null);
   });
 
   it('should initialize from hardcoded properly', () => {
     const actual = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
-    expect(actual.cost.defaultValue).to.equal(0);
+    expect(actual.cost.defaultValue).to.equal(null);
   });
 
   it('should create a validation schema', () => {

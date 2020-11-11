@@ -4,13 +4,19 @@
       <label class="control-label" for="size">{{ field.displayName }}</label>
     </div>
     <div class="col-md-9 foo">
-      <div v-for="option in field.allowedValues">
+      <div v-for="option, idx in field.allowedValues">
         <input
           type="radio"
           v-model="$attrs.value"
+          :class="{'is-invalid': isInvalid}"
           :value="option.value"
           @change="onChange">
         <label>{{ option.label }}</label>
+        <div
+          v-if="isInvalid && idx === (field.allowedValues.length - 1)"
+          class="invalid-feedback">
+          {{ errorMessage }}
+        </div>
       </div>
       <p class="tool-tip tooltip-col">{{ field.description }}</p>
     </div>
@@ -19,7 +25,7 @@
 
 <script>
   export default {
-    props: ['field'],
+    props: ['field', 'isInvalid', 'errorMessage'],
     inheritAttrs: false,
     methods: {
       onChange(e) {

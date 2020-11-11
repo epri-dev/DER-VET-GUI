@@ -24,10 +24,12 @@
 
         <radio-button-input
           v-model="shouldSize"
-          v-bind:field="metadata.shouldSize">
+          v-bind:field="metadata.shouldSize"
+          :isInvalid="submitted && $v.shouldSize.$error"
+          :errorMessage="getErrorMsg('shouldSize')">>
         </radio-button-input>
 
-        <div v-if="!shouldSize">
+        <div v-if="shouldSize === false">
           <text-input
             v-model="ratedCapacity"
             v-bind:field="metadata.ratedCapacity"
@@ -76,9 +78,10 @@
 
         <nav-buttons
           back-link="/wizard/technology-specs"
-          :continue-link="`/wizard/technology-specs-solar-pv-upload/${this.metadata.id}`"
+          :continue-link="`/wizard/technology-specs-solar-pv-upload/${this.id}`"
           :save="validatedSave"
           :disabled=$v.$invalid
+          :displayError="submitted && $v.$anyError"
         />
 
       </div>
@@ -88,8 +91,7 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-  import { v4 as uuidv4 } from 'uuid';
+  import { requiredIf } from 'vuelidate/lib/validators';
 
   import DropDownInput from '@/components/Shared/DropDownInput';
   import NavButtons from '@/components/Shared/NavButtons';
@@ -111,36 +113,35 @@
     // TODO maybe rename this to just 'id'
     props: ['solarId'],
     data() {
-      let values;
-      const isNewSpec = this.solarId === 'null';
-      if (isNewSpec) {
-        values = metadata.getDefaultValues();
-      } else {
-        values = this.$store.getters.getSolarPVById(this.solarId);
-      }
-      /**
-      Get rid of copy pasta with spread
-      data = {
-        metadata: TechnologySpecsSolarPV.getDefaults(),
-        ... metadata.map(x => x.value)
-      }
-      */
+      const values = this.isNewSolar() ? metadata.getDefaultValues() : this.getSolarFromStore();
       return {
         submitted: false,
-        isNewSpec,
         metadata,
         ...values,
       };
     },
-    validations,
+    validations: {
+      ...validations,
+      ratedCapacity: {
+        ...validations.ratedCapacity,
+        required: requiredIf(function isRatedCapacityRequired() {
+          return this.shouldSize === false;
+        }),
+      },
+    },
     methods: {
+      isNewSolar() {
+        return this.solarId === 'null';
+      },
+      getSolarFromStore() {
+        return this.$store.getters.getSolarPVById(this.solarId);
+      },
       // TODO: move these methods to a shared place for import
       getErrorMsg(fieldName) {
         // this method returns a single validation error message (String)
         // input argument is the name of a single input varible  (String)
         const { displayName } = this.metadata[fieldName];
         let displayMsg = displayName;
-
 
         if (!this.$v[fieldName].required) {
           displayMsg += ' is required';
@@ -172,7 +173,7 @@
       },
       saveAndContinue() {
         const solarSpec = this.buildSolarPV();
-        if (this.isNewSpec) {
+        if (this.isNewSolar()) {
           this.$store.dispatch('addTechnologySpecsSolarPV', solarSpec);
         } else {
           const payload = {

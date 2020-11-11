@@ -1,4 +1,6 @@
+import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
+
 import ProjectFieldMetadata from '@/models/Project/Fields';
 
 const PV = 'PV';
@@ -71,6 +73,18 @@ const MACRS_TERM_ALLOWED_VALUES = [
   },
 ];
 
+const DYNAMIC_FIELDS = [
+  'constructionDate',
+  'cost',
+  'inverterMax',
+  'loc',
+  'macrsTerm',
+  'name',
+  'operationDate',
+  'ratedCapacity',
+  'shouldSize',
+];
+
 export default class TechnologySpecsSolarPVMetadata {
   // TODO: refactor to use typescript interface + Object.assign(this, args);
   constructor(args) {
@@ -85,6 +99,10 @@ export default class TechnologySpecsSolarPVMetadata {
     this.shouldSize = args.shouldSize;
   }
 
+  operateOnDynamicFields(callback) {
+    return _.mapValues(_.pick(this, DYNAMIC_FIELDS), callback);
+  }
+
   getDefaultValues() {
     return {
       active: true,
@@ -92,34 +110,15 @@ export default class TechnologySpecsSolarPVMetadata {
       technologyType: 'Intermittent Resource',
       id: uuidv4(),
       generationProfile: null,
-      name: this.name.defaultValue,
-      cost: this.cost.defaultValue,
-      shouldSize: this.shouldSize.defaultValue,
-      ratedCapacity: this.ratedCapacity.defaultValue,
-      loc: this.loc.defaultValue,
-      inverterMax: this.inverterMax.defaultValue,
-      constructionDate: this.constructionDate.defaultValue,
-      operationDate: this.operationDate.defaultValue,
-      macrsTerm: this.macrsTerm.defaultValue,
+      ...this.operateOnDynamicFields(f => f.defaultValue),
     };
   }
 
   toValidationSchema() {
-    // TODO: get rid of this copy pasta
-    return {
-      constructionDate: this.constructionDate.toValidationSchema(),
-      cost: this.cost.toValidationSchema(),
-      inverterMax: this.inverterMax.toValidationSchema(),
-      loc: this.loc.toValidationSchema(),
-      macrsTerm: this.macrsTerm.toValidationSchema(),
-      name: this.name.toValidationSchema(),
-      operationDate: this.operationDate.toValidationSchema(),
-      ratedCapacity: this.ratedCapacity.toValidationSchema(),
-      shouldSize: this.shouldSize.toValidationSchema(),
-    };
+    return this.operateOnDynamicFields(f => f.toValidationSchema());
   }
 
-  // to be removed in favor of from schema
+  // to be removed in favor of getMetadataFromSchema
   static getHardcodedMetadata() {
     return new TechnologySpecsSolarPVMetadata({
       constructionDate: new ProjectFieldMetadata({
@@ -132,7 +131,7 @@ export default class TechnologySpecsSolarPVMetadata {
         allowedValues: null,
       }),
       cost: new ProjectFieldMetadata({
-        defaultValue: 0,
+        defaultValue: null,
         displayName: 'Cost per kW',
         isRequired: true,
         type: Number,
@@ -143,7 +142,7 @@ export default class TechnologySpecsSolarPVMetadata {
       }),
       generationProfile: null,
       inverterMax: new ProjectFieldMetadata({
-        defaultValue: 1e9,
+        defaultValue: null,
         displayName: 'Solar (+storage) Inverter Rating (kVA)',
         isRequired: true,
         minValue: 0,
@@ -189,7 +188,7 @@ export default class TechnologySpecsSolarPVMetadata {
         allowedValues: null,
       }),
       ratedCapacity: new ProjectFieldMetadata({
-        defaultValue: 0,
+        defaultValue: null,
         displayName: 'Rated Capacity',
         isRequired: true,
         type: Number,
@@ -198,7 +197,7 @@ export default class TechnologySpecsSolarPVMetadata {
         allowedValues: null,
       }),
       shouldSize: new ProjectFieldMetadata({
-        defaultValue: true,
+        defaultValue: null,
         displayName: 'Sizing',
         isRequired: true,
         type: Boolean,
@@ -208,7 +207,6 @@ export default class TechnologySpecsSolarPVMetadata {
       }),
     });
   }
-
 
   static getMetadataFromSchema() {
     return new TechnologySpecsSolarPVMetadata({

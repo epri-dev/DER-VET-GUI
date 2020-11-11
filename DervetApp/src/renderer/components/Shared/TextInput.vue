@@ -8,23 +8,23 @@
         v-if="field.type === String"
         class="form-control valid"
         :class="{'is-invalid': isInvalid}"
-        v-model.trim="$attrs.value"
-        @input="$emit('input', $event.target.value)">
+        v-model="$attrs.value"
+        @input="onChange">
       </input>
       <input
         v-if="field.type === Number"
         class="form-control valid numberbox"
         :class="[{'is-invalid': isInvalid}, isLargeBox ? 'numberbox-lg' : 'numberbox']"
         v-model.number="$attrs.value"
-        @input="$emit('input', $event.target.value)">
+        @input="onChange">
       </input>
       <input
         v-if="field.type === Date"
         type="date"
         class="form-control valid"
         :class="{'is-invalid': isInvalid}"
-        v-model.number="$attrs.value"
-        @input="$emit('input', $event.target.value)">
+        v-model="$attrs.value"
+        @input="onChange">
       </input>
       <span class="unit-label">{{ field.unit }}</span>
       <div
@@ -40,5 +40,17 @@
 <script>
   export default {
     props: ['field', 'isInvalid', 'isLargeBox', 'errorMessage'],
+    methods: {
+      onChange(e) {
+        let val = e.target.value;
+        if (this.field.type === Number) {
+          const n = parseFloat(val);
+          val = Number.isNaN(n) ? val : n;
+        } else if (this.field.type === String) {
+          val = val.trim();
+        }
+        this.$emit('input', val);
+      },
+    },
   };
 </script>
