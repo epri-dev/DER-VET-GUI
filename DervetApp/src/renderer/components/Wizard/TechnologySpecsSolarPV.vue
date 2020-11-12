@@ -93,29 +93,20 @@
 <script>
   import { requiredIf } from 'vuelidate/lib/validators';
 
-  import DropDownInput from '@/components/Shared/DropDownInput';
-  import NavButtons from '@/components/Shared/NavButtons';
-  import RadioButtonInput from '@/components/Shared/RadioButtonInput';
-  import TextInput from '@/components/Shared/TextInput';
+  import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecsSolarPV';
 
   const metadata = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
 
   export default {
-    components: {
-      DropDownInput,
-      NavButtons,
-      RadioButtonInput,
-      TextInput,
-    },
     name: 'TechnologySpecsSolarPV',
     // TODO maybe rename this to just 'id'
+    mixins: [wizardFormMixin],
     props: ['solarId'],
     data() {
       const values = this.isNewSolar() ? metadata.getDefaultValues() : this.getSolarFromStore();
       return {
-        submitted: false,
         metadata,
         ...values,
       };
@@ -136,30 +127,8 @@
       getSolarFromStore() {
         return this.$store.getters.getSolarPVById(this.solarId);
       },
-      // TODO: move these methods to a shared place for import
       getErrorMsg(fieldName) {
-        // this method returns a single validation error message (String)
-        // input argument is the name of a single input varible  (String)
-        const { displayName } = this.metadata[fieldName];
-        let displayMsg = displayName;
-
-        if (!this.$v[fieldName].required) {
-          displayMsg += ' is required';
-          return displayMsg;
-        }
-        if (validations[fieldName].decimal && !this.$v[fieldName].decimal) {
-          displayMsg += ' must be a number';
-          return displayMsg;
-        }
-        if (validations[fieldName].minValue && !this.$v[fieldName].minValue) {
-          displayMsg += ` must be >= ${this.metadata[fieldName].minValue}`;
-          return displayMsg;
-        }
-        if (validations[fieldName].maxValue && !this.$v[fieldName].maxValue) {
-          displayMsg += ` must be <= ${this.metadata[fieldName].maxValue}`;
-          return displayMsg;
-        }
-        return '';
+        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       validatedSave() {
         this.submitted = true;
@@ -168,8 +137,6 @@
           return this.saveAndContinue();
         }
         return () => {};
-        // TODO: report 'invalid save. please correct errors.'
-        //   have it appear for 2 seconds on a disabled click, and then fade away
       },
       saveAndContinue() {
         const solarSpec = this.buildSolarPV();
