@@ -20,39 +20,30 @@
         </router-link>
       </div>
       <div class="col-md-12">
-        <router-link class="btn btn-lg btn-info"
-                     v-for="battery in batteryItems"
+        <router-link v-for="battery in batteryItems"
                      :to="{ name: 'technologySpecsBattery', params: { batteryId: battery.id }}"
-                     :key="battery.id"
-                     v-bind:class="{
-          current: techSpecsActiveSaved('battery', battery.id),
-          complete: battery.active,
-          incomplete: !battery.active }">
-          Battery: {{ battery.name }}
+                     :key="battery.id">
+          <img src="../../assets/batteryIcon.png"
+               :key="`battery.id + 'incomplete'`"
+               :alt="battery.name"/>
         </router-link>
       </div>
       <div class="col-md-12">
-        <router-link class="btn btn-lg btn-info"
-                     v-for="ice in iceItems"
+        <router-link v-for="ice in iceItems"
                      :to="{ name: 'technologySpecsICE', params: { iceId: ice.id }}"
-                     :key="ice.id"
-                     v-bind:class="{
-          current: techSpecsActiveSaved('ice', ice.id),
-          complete: ice.active,
-          incomplete: !ice.active }">
-          ICE: {{ ice.name }}
+                     :key="ice.id">
+          <img src="../../assets/generatorIcon.png"
+               :key="`ice.id + 'incomplete'`"
+               :alt="ice.name" />
         </router-link>
       </div>
       <div class="col-md-12">
-        <router-link class="btn btn-lg btn-info"
-                     v-for="dieselGen in dieselGenItems"
+        <router-link v-for="dieselGen in dieselGenItems"
                      :to="{ name: 'technologySpecsDieselGen', params: { dieselGenId: dieselGen.id }}"
-                     :key="dieselGen.id"
-                     v-bind:class="{
-          current: techSpecsActiveSaved('diesel-gen', dieselGen.id),
-          complete: dieselGen.active,
-          incomplete: !dieselGen.active }">
-          DieselGen: {{ dieselGen.name }}
+                     :key="dieselGen.id">
+          <img src="../../assets/generatorIcon.png"
+               :key="`dieselGen.id + 'incomplete'`"
+               :alt="dieselGen.name" />
         </router-link>
       </div>
       <div class="col-md-12">
