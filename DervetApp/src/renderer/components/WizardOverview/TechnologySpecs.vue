@@ -104,11 +104,13 @@
     OBJECTIVES_PATH,
     TECH_SPECS_PATH,
   } from '@/router/constants';
-  import { makeEmptyPV } from '@/models/TechnologySpecs/TechnologySpecsSolarPV';
-  import { makeEmptyBattery } from '@/models/TechnologySpecs/TechnologySpecsBattery';
-  import { makeEmptyICE } from '@/models/TechnologySpecs/TechnologySpecsICE';
-  import { makeEmptyDieselGen } from '@/models/TechnologySpecs/TechnologySpecsDieselGen';
+  import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
+  import { makeEmptyBattery } from '@/models/Project/TechnologySpecs/TechnologySpecsBattery';
+  import { makeEmptyICE } from '@/models/Project/TechnologySpecs/TechnologySpecsICE';
+  import { makeEmptyDieselGen } from '@/models/Project/TechnologySpecs/TechnologySpecsDieselGen';
   import NavButtons from '@/components/Shared/NavButtons';
+
+  const metadata = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
 
   export default {
     components: { NavButtons },
@@ -149,7 +151,7 @@
     methods: {
 
       addPVTech() {
-        const newPV = makeEmptyPV();
+        const newPV = metadata.getDefaultValues();
         this.numPV = this.numPV + 1;
         this.$store.dispatch('addTechnologySpecsSolarPV', newPV);
         const payload = this.makeSaveActivePayload(newPV);

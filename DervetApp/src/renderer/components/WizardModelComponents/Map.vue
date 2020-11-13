@@ -6,44 +6,35 @@
 
       <h4>Technologies</h4>
       <div class="col-md-12">
-        <router-link v-for="solar in solarPVItems"
+        <router-link class="btn btn-lg btn-info"
+                     v-for="solar in solarPVItems"
                      :to="{ name: 'technologySpecsSolarPV', params: { solarId: solar.id }}"
                      :key="solar.id">
-          <img src="../../assets/PVIconComplete.png" 
-               :key="`solar.id + 'complete'`" 
-               :alt="solar.name" 
-               v-if="solar.active"/>
-          <img src="../../assets/PVIconIncomplete.png"
-               :key="`solar.id + 'incomplete'`" 
-               :alt="solar.name" 
-               v-if="!solar.active"/>
+          PV
         </router-link>
       </div>
       <div class="col-md-12">
-        <router-link v-for="battery in batteryItems"
+        <router-link class="btn btn-lg btn-info"
+                     v-for="battery in batteryItems"
                      :to="{ name: 'technologySpecsBattery', params: { batteryId: battery.id }}"
                      :key="battery.id">
-          <img src="../../assets/batteryIcon.png"
-               :key="`battery.id + 'incomplete'`"
-               :alt="battery.name"/>
+          Battery
         </router-link>
       </div>
       <div class="col-md-12">
-        <router-link v-for="ice in iceItems"
+        <router-link class="btn btn-lg btn-info"
+                     v-for="ice in iceItems"
                      :to="{ name: 'technologySpecsICE', params: { iceId: ice.id }}"
                      :key="ice.id">
-          <img src="../../assets/generatorIcon.png"
-               :key="`ice.id + 'incomplete'`"
-               :alt="ice.name" />
+          ICE
         </router-link>
       </div>
       <div class="col-md-12">
-        <router-link v-for="dieselGen in dieselGenItems"
+        <router-link class="btn btn-lg btn-info"
+                     v-for="dieselGen in dieselGenItems"
                      :to="{ name: 'technologySpecsDieselGen', params: { dieselGenId: dieselGen.id }}"
                      :key="dieselGen.id">
-          <img src="../../assets/generatorIcon.png"
-               :key="`dieselGen.id + 'incomplete'`"
-               :alt="dieselGen.name" />
+          Diesel Gen
         </router-link>
       </div>
       <div class="col-md-12">
@@ -223,15 +214,6 @@
         this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
       save() {
-      },
-      getPVImg(tech) {
-        let imageURL = '../../assets/PVIcon.png';
-        if (tech.active) {
-          imageURL = '../../assets/PVIconComplete.png';
-        } else {
-          imageURL = '../../assets/PVIconIncomplete.png';
-        }
-        return imageURL;
       },
     },
   };

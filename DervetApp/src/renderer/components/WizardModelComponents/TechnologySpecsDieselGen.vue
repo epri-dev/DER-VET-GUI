@@ -252,7 +252,7 @@
 
 <script>
   import { v4 as uuidv4 } from 'uuid';
-  import { defaults, validation } from '@/models/TechnologySpecs/TechnologySpecsDieselGen';
+  import { defaults, validation } from '@/models/Project/TechnologySpecs/TechnologySpecsDieselGen';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import NavButtons from '@/components/Shared/NavButtons';
 

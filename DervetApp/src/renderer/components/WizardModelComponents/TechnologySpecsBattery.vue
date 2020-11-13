@@ -534,7 +534,7 @@
 <script>
   import { v4 as uuidv4 } from 'uuid';
 
-  import { defaults, validation } from '@/models/TechnologySpecs/TechnologySpecsBattery';
+  import { defaults, validation } from '@/models/Project/TechnologySpecs/TechnologySpecsBattery';
   import { WIZARD_COMPONENT_PATH, TECH_SPECS_BATTERY_PATH } from '@/router/constants';
   import NavButtons from '@/components/Shared/NavButtons';
 
