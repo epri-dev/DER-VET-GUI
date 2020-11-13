@@ -51,8 +51,8 @@
         <hr>
 
         <nav-buttons
-          back-link="/wizard/financial-inputs-external-incentives"
-          continue-link="/wizard/financial-inputs-external-incentives"
+          :back-link="FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH"
+          :continue-link="FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH"
           :save="this.save"
         />
       </div>
@@ -63,15 +63,25 @@
 <script>
   import { ExternalIncentives, validation } from '@/models/ExternalIncentives';
   import NavButtons from '@/components/Shared/NavButtons';
+  import { FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH } from '@/router/constants';
+
 
   export default {
     components: { NavButtons },
     props: ['incentiveId'],
     data() {
       if (this.incentiveId === 'null') {
-        return { validation, ...this.getDefaultData() };
+        return {
+          validation,
+          ...this.getDefaultData(),
+          FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
+        };
       }
-      return { validation, ...this.getDataFromProject() };
+      return {
+        validation,
+        ...this.getDataFromProject(),
+        FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
+      };
     },
     methods: {
       getDefaultData() {

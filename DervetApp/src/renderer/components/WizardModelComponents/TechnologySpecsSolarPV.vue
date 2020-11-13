@@ -77,11 +77,11 @@
         </drop-down-input>
 
         <nav-buttons
-          back-link="/wizard/technology-specs"
-          :continue-link="`/wizard/technology-specs-solar-pv-upload/${this.id}`"
           :save="validatedSave"
           :disabled=$v.$invalid
           :displayError="submitted && $v.$anyError"
+          :back-link="WIZARD_COMPONENT_PATH"
+          :continue-link="`${TECH_SPECS_PV_PATH}-upload/${this.inputId}`"
         />
 
       </div>
@@ -95,6 +95,8 @@
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecsSolarPV';
+  import { WIZARD_COMPONENT_PATH, TECH_SPECS_PV_PATH } from '@/router/constants';
+  import NavButtons from '@/components/Shared/NavButtons';
 
   const metadata = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
@@ -102,6 +104,7 @@
   export default {
     name: 'TechnologySpecsSolarPV',
     // TODO maybe rename this to just 'id'
+    components: { NavButtons },
     mixins: [wizardFormMixin],
     props: ['solarId'],
     data() {
@@ -109,6 +112,8 @@
       return {
         metadata,
         ...values,
+        WIZARD_COMPONENT_PATH,
+        TECH_SPECS_PV_PATH,
       };
     },
     validations: {

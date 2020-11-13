@@ -1,10 +1,10 @@
 import { sharedDefaults, sharedValidation } from '@/models/Shared.js';
+import { v4 as uuidv4 } from 'uuid';
 
-const defaults = {
+export const defaults = {
   active: false,
   tag: 'ICE',
   technologyType: 'Generator',
-  id: '',
   name: '',
   ratedCapacity: 0,
   minimumPower: 0,
@@ -23,11 +23,12 @@ const defaults = {
   maxGenerators: 1,
 };
 
-const validation = {
+export const validation = {
   macrsTerm: sharedValidation.macrsTerm,
 };
 
-export default {
-  defaults,
-  validation,
-};
+export const makeEmptyICE = () => ({
+  id: uuidv4(),
+  ...defaults,
+});
+

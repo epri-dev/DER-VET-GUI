@@ -29,8 +29,8 @@
     <hr/>
 
     <nav-buttons
-      :back-link="`/wizard/technology-specs-battery/${this.batteryId}`"
-      continue-link="/wizard/technology-specs"
+      :back-link="`${TECH_SPECS_BATTERY_PATH}/${this.batteryId}`"
+      :continue-link="WIZARD_COMPONENT_PATH"
       continue-text="Done Adding Cycles"
       :save="this.save"
     />
@@ -40,7 +40,7 @@
 
 <script>
   import { cloneDeep } from 'lodash';
-
+  import { WIZARD_COMPONENT_PATH, TECH_SPECS_BATTERY_PATH } from '@/router/constants';
   import NavButtons from '@/components/Shared/NavButtons';
 
   export default {
@@ -67,6 +67,8 @@
           { key: 'remove', label: '' },
         ],
         items: [],
+        WIZARD_COMPONENT_PATH,
+        TECH_SPECS_BATTERY_PATH,
       };
     },
     methods: {

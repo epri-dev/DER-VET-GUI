@@ -125,8 +125,8 @@
       </fieldset>
       <hr />
       <nav-buttons
-        :back-link="TECH_SPECS_PATH"
-        :continue-link="OBJECTIVES_SITE_INFORMATION_PATH"
+        :back-link="START_PROJECT_PATH"
+        :continue-link="TECH_SPECS_PATH"
         :save="save"
       />
     </div>
@@ -136,7 +136,7 @@
 <script>
   import model from '@/models/StartProject';
   import NavButtons from '@/components/Shared/NavButtons';
-  import { OBJECTIVES_SITE_INFORMATION_PATH, TECH_SPECS_PATH } from '@/router/constants';
+  import { TECH_SPECS_PATH, START_PROJECT_PATH } from '@/router/constants';
 
   const { validation } = model;
 
@@ -145,9 +145,9 @@
     data() {
       return {
         validation,
-        OBJECTIVES_SITE_INFORMATION_PATH,
-        TECH_SPECS_PATH,
         ...this.getDataFromProject(),
+        START_PROJECT_PATH,
+        TECH_SPECS_PATH,
       };
     },
     methods: {

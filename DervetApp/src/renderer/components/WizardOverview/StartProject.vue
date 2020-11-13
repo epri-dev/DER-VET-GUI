@@ -8,7 +8,7 @@
           <b>Project Name</b>
         </div>
         <div class="col-md-4 form-control-static">
-          <p>{{projectName}}</p>
+          <input v-model="inputName" type="text" class="form-control" id="ProjectName">
         </div>
         <div class="col-md-5">
           <p class="tool-tip">Name of the project.</p>
@@ -172,15 +172,17 @@
       </div>
 
       <nav-buttons
-        back-link="/new-project"
-        continue-link="/wizard/technology-specs"
-        :save="saveAndContinue"
+        back-link="/"
+        :continue-link="this.paths.OBJECTIVES_PATH"
+        :save="wrappedSave"
+        :disabled="!isValid"
       />
     </div>
   </div>
 </template>
 
 <script>
+  import * as paths from '@/router/constants';
   import model from '@/models/StartProject';
   import NavButtons from '@/components/Shared/NavButtons';
 
@@ -203,12 +205,14 @@
         ...this.getDataFromProject(),
         showErrors: false,
         errorsAtLastSubmit: null,
+        paths,
       };
     },
     methods: {
       getDataFromProject() {
         const projectSpecs = this.$store.state.Project;
         return {
+          inputName: '',
           inputTimestep: projectSpecs.timestep,
           inputStartYear: projectSpecs.startYear,
           inputOwnership: projectSpecs.ownership,
@@ -238,6 +242,7 @@
         this.$store.dispatch('setTimestep', this.inputTimestep);
         this.$store.dispatch('setInputsDirectory', this.inputsDirectory);
         this.$store.dispatch('setResultsDirectory', this.resultsDirectory);
+        this.$store.dispatch('setName', this.inputName);
       },
     },
   };
