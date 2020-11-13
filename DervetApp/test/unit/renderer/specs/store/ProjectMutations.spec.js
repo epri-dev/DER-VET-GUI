@@ -96,7 +96,7 @@ describe('Project Mutations', () => {
     expect(state.objectivesFR).to.equal(false);
   });
 
-  it('should set ordered routes from objectives state', () => {
+  xit('should set ordered routes from objectives state', () => {
     const state = {
       // load a defaultState
       ...project.state,
