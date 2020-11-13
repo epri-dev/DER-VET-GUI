@@ -26,7 +26,7 @@
           v-model="shouldSize"
           v-bind:field="metadata.shouldSize"
           :isInvalid="submitted && $v.shouldSize.$error"
-          :errorMessage="getErrorMsg('shouldSize')">>
+          :errorMessage="getErrorMsg('shouldSize')">
         </radio-button-input>
 
         <div v-if="shouldSize === false">
@@ -57,7 +57,6 @@
           v-model="constructionDate"
           v-bind:field="metadata.constructionDate"
           :isInvalid="submitted && $v.constructionDate.$error"
-          :isLargeBox="true"
           :errorMessage="getErrorMsg('constructionDate')">
         </text-input>
 
@@ -65,7 +64,6 @@
           v-model="operationDate"
           v-bind:field="metadata.operationDate"
           :isInvalid="submitted && $v.operationDate.$error"
-          :isLargeBox="true"
           :errorMessage="getErrorMsg('operationDate')">
         </text-input>
 

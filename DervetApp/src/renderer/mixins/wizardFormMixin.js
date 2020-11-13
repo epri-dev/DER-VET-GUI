@@ -12,12 +12,15 @@ export default {
   },
   data() {
     return {
+      // when a page is first navigated to, set submitted to false
+      //   so that un-populated fields do not appear invalid
       submitted: false,
     };
   },
   methods: {
     getErrorMsgWrapped(validation, $v, metadata, fieldName) {
       // this method returns a single validation error message (String)
+      // NOTE: the ordering of each if-block is intentional here
       const { displayName } = metadata[fieldName];
       let displayMsg = displayName;
 
