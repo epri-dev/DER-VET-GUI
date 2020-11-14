@@ -1,265 +1,134 @@
 <template>
   <div>
     <h3>Technology Specs: Diesel Generator</h3>
-    <hr />
     <form>
       <div class="form-horizontal form-buffer container">
 
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="name">Name</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              class="form-control valid"
-              id="name"
-              type="text"
-              v-model="inputName">
-          </div>
+        <!-- TODO
+          - DRY more by just passing the field and generating parameters
+          - use nameData.getErrorMsg
+        -->
+        <text-input
+          v-model="name"
+          v-bind:field="metadata.name"
+          :isInvalid="submitted && $v.name.$error"
+          :errorMessage="getErrorMsg('name')">
+        </text-input>
+
+        <text-input
+          v-model="ratedCapacity"
+          v-bind:field="metadata.ratedCapacity"
+          :isInvalid="submitted && $v.ratedCapacity.$error"
+          :errorMessage="getErrorMsg('ratedCapacity')">
+        </text-input>
+
+        <text-input
+          v-model="minimumPower"
+          v-bind:field="metadata.minimumPower"
+          :isInvalid="submitted && $v.minimumPower.$error"
+          :errorMessage="getErrorMsg('minimumPower')">
+        </text-input>
+
+        <text-input
+          v-model="startupTime"
+          v-bind:field="metadata.startupTime"
+          :isInvalid="submitted && $v.startupTime.$error"
+          :errorMessage="getErrorMsg('startupTime')">
+        </text-input>
+
+        <text-input
+          v-model="efficiency"
+          v-bind:field="metadata.efficiency"
+          :isInvalid="submitted && $v.efficiency.$error"
+          :errorMessage="getErrorMsg('efficiency')">
+        </text-input>
+
+        <text-input
+          v-model="fuelCost"
+          v-bind:field="metadata.fuelCost"
+          :isInvalid="submitted && $v.fuelCost.$error"
+          :errorMessage="getErrorMsg('fuelCost')">
+        </text-input>
+
+        <text-input
+          v-model="capitalCost"
+          v-bind:field="metadata.capitalCost"
+          :isInvalid="submitted && $v.capitalCost.$error"
+          :errorMessage="getErrorMsg('capitalCost')">
+        </text-input>
+
+        <text-input
+          v-model="variableOMCost"
+          v-bind:field="metadata.variableOMCost"
+          :isInvalid="submitted && $v.variableOMCost.$error"
+          :errorMessage="getErrorMsg('variableOMCost')">
+        </text-input>
+
+        <text-input
+          v-model="fixedOMCostIncludingExercise"
+          v-bind:field="metadata.fixedOMCostIncludingExercise"
+          :isInvalid="submitted && $v.fixedOMCostIncludingExercise.$error"
+          :errorMessage="getErrorMsg('fixedOMCostIncludingExercise')">
+        </text-input>
+
+        <text-input
+          v-model="constructionDate"
+          v-bind:field="metadata.constructionDate"
+          :isInvalid="submitted && $v.constructionDate.$error"
+          :errorMessage="getErrorMsg('constructionDate')">
+        </text-input>
+
+        <text-input
+          v-model="operationDate"
+          v-bind:field="metadata.operationDate"
+          :isInvalid="submitted && $v.operationDate.$error"
+          :errorMessage="getErrorMsg('operationDate')">
+        </text-input>
+
+        <drop-down-input
+          v-model="macrsTerm"
+          v-bind:field="metadata.macrsTerm"
+          :isInvalid="submitted && $v.macrsTerm.$error"
+          :errorMessage="getErrorMsg('macrsTerm')">
+        </drop-down-input>
+
+        <radio-button-input
+          v-model="shouldSize"
+          v-bind:field="metadata.shouldSize"
+          :isInvalid="submitted && $v.shouldSize.$error"
+          :errorMessage="getErrorMsg('shouldSize')">
+        </radio-button-input>
+
+        <div v-if="shouldSize === false">
+          <text-input
+            v-model="numGenerators"
+            v-bind:field="metadata.numGenerators"
+            :isInvalid="submitted && $v.numGenerators.$error"
+            :errorMessage="getErrorMsg('numGenerators')">
+          </text-input>
         </div>
 
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="rated-capacity">Rated Capacity</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              class="form-control numberbox"
-              id="rated-capacity"
-              type="text"
-              v-model.number="inputRatedCapacity">
-            <span class="unit-label">kW / generator</span>
-            <p class="tool-tip tooltip-col">What is the rated capacity of the diesel generator?</p>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="minimum-power">Minimum Power</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              class="form-control numberbox"
-              id="minimum-power"
-              type="text"
-              v-model.number="inputMinimumPower">
-            <span class="unit-label">kW</span>
-            <p class="tool-tip tooltip-col">What is the mimimum power the diesel generator is capable of safely producing?</p>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="startup-time">Startup time</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              class="form-control numberbox"
-              id="startup-time"
-              type="text"
-              v-model.number="inputStartupTime">
-            <span class="unit-label">minutes</span>
-            <p class="tool-tip tooltip-col">How many minutes are required for the diesel generator to go from an off state to producing its full rated power?</p>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="efficiency">Efficiency</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              class="form-control numberbox"
-              id="efficiency"
-              type="text"
-              v-model.number="inputEfficiency">
-            <span class="unit-label">gallons / kWh</span>
-            <p class="tool-tip tooltip-col">How many gallons of fuel does it take to generate 1 kWh of electricity? No variable efficiency is considered at this stage.</p>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="fuel-cost">Fuel Cost</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              class="form-control numberbox"
-              id="fuel-cost"
-              type="text"
-              v-model.number="inputFuelCost">
-            <span class="unit-label">$ / gallon</span>
-            <p class="tool-tip tooltip-col">What is the price of fuel (constant over analysis horizon)?</p>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="capital-cost">Capital Cost</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              class="form-control numberbox"
-              id="capital-cost"
-              type="text"
-              v-model.number="inputCapitalCost">
-            <span class="unit-label">$ / generator</span>
-            <p class="tool-tip tooltip-col">What is the capital cost of each diesel generator?</p>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="variable-om-cost">Variable O&amp;M cost</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              class="form-control numberbox"
-              id="variable-om-cost"
-              type="text"
-              v-model.number="inputVariableOMCost">
-            <span class="unit-label">$ / MWh</span>
-            <p class="tool-tip tooltip-col">What is the cost of variable operations and maintenance for each MWh of AC energy delivered?</p>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="fixed-om-cost-including-exercise">Fixed O&amp;M Cost, including exercise</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              class="form-control numberbox"
-              id="fixed-om-cost-including-exercise"
-              type="text"
-              v-model.number="inputFixedOMCostIncludingExercise">
-            <span class="unit-label">$ / kW-year</span>
-            <p class="tool-tip tooltip-col">What is the cost of fixed operations and maintenance, including the non-fuel expenses from exercising the diesel generator?</p>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="construction-date">Construction Date</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              class="form-control valid"
-              id="construction-date"
-              type="date"
-              v-model="inputConstructionDate">
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="operation-date">Operation Date</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              class="form-control valid"
-              id="operation-date"
-              type="date"
-              v-model="inputOperationDate">
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="macrs-term">MACRS Term</label>
-          </div>
-          <div class="col-md-9">
-            <select
-            class="form-control numberbox"
-            id="macrs-term"
-            v-model.number="inputMacrsTerm">
-              <option v-bind:value="undefined">-</option>
-              <option v-for="value in validation.macrsTerm.allowedValues" v-bind:value="value">
-                {{value}}
-              </option>
-            </select>
-            <span class="unit-label">years</span>
-            <p class="tool-tip tooltip-col">Which MACRS GDS category does diesel generator fall into?</p>
-          </div>
-        </div>
-        <br/>
-
-        <div class="form-group">
-          <div class="col-md-6">
-            <label class="control-label" for="size">Number of Diesel Generators to Install:</label>
-          </div>
-        </div>
-
-        <div class="col-md-11 offset-md-1">
-          <input
-            id="size-yes"
-            name="size"
-            type="radio"
-            v-model="inputShouldSize"
-            v-bind:value="true">
-          <label for="size-yes" class="buffer-right">Have DER-VET determine the optimal number of Diesel Generators to install</label>
-        </div>
-        <div class="col-md-11 offset-md-1">
-          <input
-            id="size-no"
-            name="size"
-            type="radio"
-            v-model="inputShouldSize"
-            v-bind:value="false">
-          <label for="size-no" class="buffer-right">Known number of Diesel Generators</label>
-        </div>
-        <br/>
-
-        <div v-if="inputShouldSize">
-          <div class="form-group row" style="; margin-left: 30px;">
-            <div class="col-md-3">
-              <label class="control-label" for="min-generators">Minimum Number of Generators to Install</label>
-            </div>
-            <div class="col-md-9">
-              <input
-                class="form-control numberbox valid"
-                id="min-generators"
-                type="text"
-                v-model.number="inputMinGenerators">
-              <span class="unit-label">generators</span>
-              <p class="tool-tip tooltip-col">What is the mimimum number of diesel generators to consider installing?</p>
-            </div>
-          </div>
-          <div class="form-group row" style="; margin-left: 30px;">
-            <div class="col-md-3">
-              <label class="control-label" for="max-generators">Maximum Number of Generators to Install</label>
-            </div>
-            <div class="col-md-9">
-              <input
-                class="form-control numberbox valid"
-                id="max-generators"
-                type="text"
-                v-model.number="inputMaxGenerators">
-              <span class="unit-label">generators</span>
-              <p class="tool-tip tooltip-col">What is the maximum number of diesel generators to consider installing?</p>
-            </div>
-          </div>
-        </div>
-
-        <div v-if="!inputShouldSize" class="form-group row" style="; margin-left: 30px;">
-          <div class="col-md-3">
-            <label class="control-label" for="num-generators">Number of Generators to Install</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              class="form-control numberbox valid"
-              id="num-generators"
-              type="text"
-              v-model.number="inputNumGenerators">
-            <span class="unit-label">generators</span>
-            <p class="tool-tip tooltip-col">What is the number of diesel generators to install?</p>
-          </div>
+        <div v-if="shouldSize === true">
+          <text-input
+            v-model="minGenerators"
+            v-bind:field="metadata.minGenerators"
+            :isInvalid="submitted && $v.minGenerators.$error"
+            :errorMessage="getErrorMsg('minGenerators')">
+          </text-input>
+          <text-input
+            v-model="maxGenerators"
+            v-bind:field="metadata.maxGenerators"
+            :isInvalid="submitted && $v.maxGenerators.$error"
+            :errorMessage="getErrorMsg('maxGenerators')">
+          </text-input>
         </div>
 
         <nav-buttons
           back-link="/wizard/technology-specs"
           continue-link="/wizard/technology-specs"
-          :save="this.save"
+          :save="validatedSave"
+          :disabled=$v.$invalid
+          :displayError="submitted && $v.$anyError"
         />
 
       </div>
@@ -269,79 +138,73 @@
 </template>
 
 <script>
-  import { v4 as uuidv4 } from 'uuid';
+  import { requiredIf } from 'vuelidate/lib/validators';
 
-  import model from '@/models/TechnologySpecs/TechnologySpecsDieselGen';
-  import NavButtons from '@/components/Shared/NavButtons';
+  import wizardFormMixin from '@/mixins/wizardFormMixin';
+  import TechnologySpecsDieselGenMetadata from '@/models/Project/TechnologySpecsDieselGen';
 
-  const { defaults, validation } = model;
+  const metadata = TechnologySpecsDieselGenMetadata.getHardcodedMetadata();
+  const validations = metadata.toValidationSchema();
 
   export default {
-    components: { NavButtons },
+    name: 'TechnologySpecsDieselGen',
+    // TODO maybe rename this to just 'id'
+    mixins: [wizardFormMixin],
     props: ['dieselGenId'],
     data() {
-      const data = { validation };
-      if (this.dieselGenId === 'null') {
-        return { ...data, ...this.getDefaultData() };
-      }
-      return { ...data, ...this.getDataFromProject() };
+      const values = this.isnewDieselGen() ?
+        metadata.getDefaultValues() : this.getDieselGenFromStore();
+      return {
+        metadata,
+        ...values,
+      };
+    },
+    validations: {
+      ...validations,
+      numGenerators: {
+        ...validations.numGenerators,
+        required: requiredIf(function isNumGeneratorsRequired() {
+          return this.shouldSize === false;
+        }),
+      },
+      minGenerators: {
+        ...validations.minGenerators,
+        required: requiredIf(function isMinGeneratorsRequired() {
+          return this.shouldSize === true;
+        }),
+      },
+      maxGenerators: {
+        ...validations.maxGenerators,
+        required: requiredIf(function isMaxGeneratorsRequired() {
+          return this.shouldSize === true;
+        }),
+      },
     },
     methods: {
-      getDefaultData() {
-        return {
-          inputActive: defaults.active,
-          inputTag: defaults.tag,
-          inputTechnologyType: defaults.technologyType,
-          inputId: uuidv4(),
-          inputName: defaults.name,
-          inputRatedCapacity: defaults.ratedCapacity,
-          inputMinimumPower: defaults.minimumPower,
-          inputStartupTime: defaults.startupTime,
-          inputEfficiency: defaults.efficiency,
-          inputFuelCost: defaults.fuelCost,
-          inputCapitalCost: defaults.capitalCost,
-          inputVariableOMCost: defaults.variableOMCost,
-          inputFixedOMCostIncludingExercise: defaults.fixedOMCostIncludingExercise,
-          inputConstructionDate: defaults.constructionDate,
-          inputOperationDate: defaults.operationDate,
-          inputMacrsTerm: defaults.macrsTerm,
-          inputShouldSize: defaults.shouldSize,
-          inputNumGenerators: defaults.numGenerators,
-          inputMinGenerators: defaults.minGenerators,
-          inputMaxGenerators: defaults.maxGenerators,
-        };
+      isnewDieselGen() {
+        return this.dieselGenId === 'null';
       },
-      getDataFromProject() {
-        const dieselGenSpecs = this.$store.getters.getDieselGenById(this.dieselGenId);
-        return {
-          inputActive: dieselGenSpecs.active,
-          inputTag: dieselGenSpecs.tag,
-          inputTechnologyType: dieselGenSpecs.technologyType,
-          inputId: dieselGenSpecs.id,
-          inputName: dieselGenSpecs.name,
-          inputRatedCapacity: dieselGenSpecs.ratedCapacity,
-          inputMinimumPower: dieselGenSpecs.minimumPower,
-          inputStartupTime: dieselGenSpecs.startupTime,
-          inputEfficiency: dieselGenSpecs.efficiency,
-          inputFuelCost: dieselGenSpecs.fuelCost,
-          inputCapitalCost: dieselGenSpecs.capitalCost,
-          inputVariableOMCost: dieselGenSpecs.variableOMCost,
-          inputFixedOMCostIncludingExercise: dieselGenSpecs.fixedOMCostIncludingExercise,
-          inputConstructionDate: dieselGenSpecs.constructionDate,
-          inputOperationDate: dieselGenSpecs.operationDate,
-          inputMacrsTerm: dieselGenSpecs.macrsTerm,
-          inputShouldSize: dieselGenSpecs.shouldSize,
-          inputNumGenerators: dieselGenSpecs.numGenerators,
-          inputMinGenerators: dieselGenSpecs.minGenerators,
-          inputMaxGenerators: dieselGenSpecs.maxGenerators,
-        };
+      getDieselGenFromStore() {
+        return this.$store.getters.getDieselGenById(this.dieselGenId);
       },
-      save() {
-        if (this.dieselGenId === 'null') {
-          this.$store.dispatch('addTechnologySpecsDieselGen', this.buildDieselGen());
+      getErrorMsg(fieldName) {
+        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
+      },
+      validatedSave() {
+        this.submitted = true;
+        this.$v.$touch();
+        if (!this.$v.$invalid) {
+          return this.saveAndContinue();
+        }
+        return () => {};
+      },
+      saveAndContinue() {
+        const dieselGenSpec = this.buildDieselGen();
+        if (this.isnewDieselGen()) {
+          this.$store.dispatch('addTechnologySpecsDieselGen', dieselGenSpec);
         } else {
           const payload = {
-            newDieselGen: this.buildDieselGen(),
+            newDieselGen: dieselGenSpec,
             dieselGenId: this.dieselGenId,
           };
           this.$store.dispatch('replaceTechnologySpecsDieselGen', payload);
@@ -350,26 +213,26 @@
       },
       buildDieselGen() {
         return {
-          active: true,
-          tag: this.inputTag,
-          technologyType: this.inputTechnologyType,
-          id: this.inputId,
-          name: this.inputName,
-          ratedCapacity: this.inputRatedCapacity,
-          minimumPower: this.inputMinimumPower,
-          startupTime: this.inputStartupTime,
-          efficiency: this.inputEfficiency,
-          fuelCost: this.inputFuelCost,
-          capitalCost: this.inputCapitalCost,
-          variableOMCost: this.inputVariableOMCost,
-          fixedOMCostIncludingExercise: this.inputFixedOMCostIncludingExercise,
-          constructionDate: this.inputConstructionDate,
-          operationDate: this.inputOperationDate,
-          macrsTerm: this.inputMacrsTerm,
-          shouldSize: this.inputShouldSize,
-          numGenerators: this.inputNumGenerators,
-          minGenerators: this.inputMinGenerators,
-          maxGenerators: this.inputMaxGenerators,
+          active: this.active,
+          capitalCost: this.capitalCost,
+          constructionDate: this.constructionDate,
+          efficiency: this.efficiency,
+          fixedOMCostIncludingExercise: this.fixedOMCostIncludingExercise,
+          fuelCost: this.fuelCost,
+          id: this.id,
+          macrsTerm: this.macrsTerm,
+          maxGenerators: this.maxGenerators,
+          minGenerators: this.minGenerators,
+          minimumPower: this.minimumPower,
+          name: this.name,
+          numGenerators: this.numGenerators,
+          operationDate: this.operationDate,
+          ratedCapacity: this.ratedCapacity,
+          shouldSize: this.shouldSize,
+          startupTime: this.startupTime,
+          tag: this.tag,
+          technologyType: this.technologyType,
+          variableOMCost: this.variableOMCost,
         };
       },
     },
