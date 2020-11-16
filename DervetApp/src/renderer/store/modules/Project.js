@@ -1,14 +1,11 @@
 import { cloneDeep, flatten } from 'lodash';
 
-import getCurrentYear from '@/util/time';
+import { projectMetadata } from '@/models/Project/Project';
+
+const metadataDefaultValues = projectMetadata.getDefaultValues();
 
 const getDefaultState = () => ({
-  id: null,
-  name: null,
-  type: null,
-  resultsData: null,
-  inputsDirectory: null,
-  resultsDirectory: null,
+  ...metadataDefaultValues,
 
   energyPriceSourceWholesale: false,
   objectivesRetailEnergyChargeReduction: false,
@@ -27,15 +24,8 @@ const getDefaultState = () => ({
   routeObjectivesFinancialsLL: null,
 
   // SCENARIO
-  startYear: getCurrentYear(),
-  analysisHorizon: 0,
-  analysisHorizonMode: '1',
-  dataYear: getCurrentYear(),
-  gridLocation: 'Customer',
-  ownership: 'Customer',
   optimizationHorizon: 'year',
   optimizationHorizonNum: 0,
-  timestep: 60,
   noChargingFromGrid: false,
   noDischargingToGrid: false,
   // FINANCES

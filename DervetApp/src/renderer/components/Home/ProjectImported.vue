@@ -36,7 +36,8 @@
         return this.$store.state.Project.type;
       },
       projectResultsExist() {
-        return Boolean(this.$store.state.Project.resultsData);
+        // TODO replace with this.$store.state.Results
+        return false;
       },
     },
   };
