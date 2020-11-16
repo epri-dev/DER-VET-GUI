@@ -79,7 +79,8 @@
 
         <nav-buttons
           :save="this.save"
-          :continue-link="FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH"
+          :continue-link="WIZARD_COMPONENT_PATH"
+          :back-link="WIZARD_COMPONENT_PATH"
         />
 
       </div>
@@ -89,7 +90,7 @@
 
 <script>
   import NavButtons from '@/components/Shared/NavButtons';
-  import { FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
 
   export default {
     components: { NavButtons },
@@ -101,7 +102,7 @@
         inputFederalTaxRate: p.federalTaxRate,
         inputStateTaxRate: p.stateTaxRate,
         inputPropertyTaxRate: p.propertyTaxRate,
-        FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
+        WIZARD_COMPONENT_PATH,
       };
     },
     methods: {

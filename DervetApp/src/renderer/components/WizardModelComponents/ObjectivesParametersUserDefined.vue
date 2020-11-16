@@ -61,6 +61,8 @@
       />
       <hr />
       <nav-buttons
+        :back-link="WIZARD_COMPONENT_PATH"
+        :continue-link="WIZARD_COMPONENT_PATH"
         :save="this.save"
       />
     </div>
@@ -69,6 +71,7 @@
 
 <script>
   import { sharedValidation } from '@/models/Shared.js';
+  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import UserPowerMaxTimeSeries from '@/models/TimeSeries/UserPowerMaxTimeSeries';
   import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
   import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
@@ -89,6 +92,7 @@
         userPowerMin: p.userPowerMin,
         userEnergyMax: p.userEnergyMax,
         userEnergyMin: p.userEnergyMin,
+        WIZARD_COMPONENT_PATH,
       };
     },
     computed: {

@@ -46,6 +46,8 @@
       />
       <hr />
       <nav-buttons
+        :back-link="WIZARD_COMPONENT_PATH"
+        :continue-link="WIZARD_COMPONENT_PATH"
         :save="this.save"
       />
     </div>
@@ -53,6 +55,7 @@
 </template>
 
 <script>
+  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
   import { sharedValidation } from '@/models/Shared';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
@@ -69,6 +72,7 @@
         inputSRGrowth: p.srGrowth,
         inputDuration: p.srDuration,
         srPrice: p.srPrice,
+        WIZARD_COMPONENT_PATH,
       };
     },
     computed: {

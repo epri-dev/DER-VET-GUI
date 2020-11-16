@@ -49,54 +49,55 @@
         </fieldset>
       </div>
       <div class="buffer-top-lg">
-          <fieldset class="section-group">
-              <legend>Wholesale Services</legend>
-                      <div class="form-group">
-                          <div class="col-md-12 checkboxes">
-                            <b-form-checkbox size='lg' v-model="listOfActiveServices" value="SR"><b>Spinning Reserves</b></b-form-checkbox>
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          <div class="col-md-12 checkboxes">
-                            <b-form-checkbox size='lg' v-model="listOfActiveServices" value="NSR"><b>Non-Spinning Reserves</b></b-form-checkbox>
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          <div class="col-md-12 checkboxes">
-                            <b-form-checkbox size='lg' v-model="listOfActiveServices" value="FR"><b>Frequency regulation</b></b-form-checkbox>
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          <div class="col-md-12 checkboxes">
-                            <b-form-checkbox size='lg' v-model="listOfActiveServices" value="LF"><b>Load following</b></b-form-checkbox>
-                          </div>
-                      </div>
-          </fieldset>
+        <fieldset class="section-group">
+          <legend>Wholesale Services</legend>
+          <div class="form-group">
+            <div class="col-md-12 checkboxes">
+              <b-form-checkbox size='lg' v-model="listOfActiveServices" value="SR"><b>Spinning Reserves</b></b-form-checkbox>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12 checkboxes">
+              <b-form-checkbox size='lg' v-model="listOfActiveServices" value="NSR"><b>Non-Spinning Reserves</b></b-form-checkbox>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12 checkboxes">
+              <b-form-checkbox size='lg' v-model="listOfActiveServices" value="FR"><b>Frequency regulation</b></b-form-checkbox>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12 checkboxes">
+              <b-form-checkbox size='lg' v-model="listOfActiveServices" value="LF"><b>Load following</b></b-form-checkbox>
+            </div>
+          </div>
+        </fieldset>
       </div>
       <div class="buffer-top-lg">
-          <fieldset class="section-group">
-              <legend>Grid Support</legend>
-                  <div class="form-group">
-                      <div class="col-md-12 checkboxes">
-                        <b-form-checkbox size='lg' v-model="listOfActiveServices" value="Deferral"><b>Deferral</b></b-form-checkbox>
-                      </div>
-                  </div>
-          </fieldset>
+        <fieldset class="section-group">
+          <legend>Grid Support</legend>
+          <div class="form-group">
+            <div class="col-md-12 checkboxes">
+              <b-form-checkbox size='lg' v-model="listOfActiveServices" value="Deferral"><b>Deferral</b></b-form-checkbox>
+            </div>
+          </div>
+        </fieldset>
       </div>
       <div class="row">
-          <div class="col-md-12">
-              <fieldset class="section-group">
-                  <legend>Other</legend>
-                    <div class="row form-group">
-                      <div class="col-md-4 checkboxes">
-                        <b-form-checkbox size='lg' v-model="listOfActiveServices" value="User Defined"><b>User-Defined Storage Technology Settings</b></b-form-checkbox>
-                      </div>
-                      <div class="col-md-7">
-                        <p class="tool-tip">Impose timestep by timestep constraints on the power from DERs (and SOC for storage) and service participation. Assign a financial value to meeting these constraints.</p>
-                      </div>
-                    </div>
-              </fieldset>
-          </div>
+        <div class="col-md-12">
+          <fieldset class="section-group">
+            <legend>Other</legend>
+            <div class="row form-group">
+              <div class="col-md-4 checkboxes">
+                <b-form-checkbox size='lg' v-model="listOfActiveServices" value="User Defined"><b>User-Defined Storage Technology Settings</b></b-form-checkbox>
+              </div>
+              <div class="col-md-7">
+                ol
+                <p class="tool-tip">asImpose timestep by timestep constraints on the power from DERs (and SOC for storage) and service participation. Assign a financial value to meeting these constraints.</p>
+              </div>
+            </div>
+          </fieldset>
+        </div>
       </div>
       <!-- <p>{{listOfActiveServices}}</p> -->
       <hr />
@@ -106,7 +107,8 @@
           <div class="row">
             <b-form-select class="col-md-4" v-model="optimizationHorizon">
               <b-form-select-option v-for="value in validation.optimizationHorizonOptions.allowedValues" :value="value" :key="value">
-                  {{value}} </b-form-select-option>
+                {{value}}
+              </b-form-select-option>
             </b-form-select>
             <div class="col-md-7">
               <p class="tool-tip">A month-long optimization window is recommended for Customer Services. A specific number of hours is recommended for Wholesale Services.</p>
@@ -124,11 +126,9 @@
         </div>
       </fieldset>
       <hr />
-      <nav-buttons
-        :back-link="START_PROJECT_PATH"
-        :continue-link="TECH_SPECS_PATH"
-        :save="save"
-      />
+      <nav-buttons :back-link="START_PROJECT_PATH"
+                   :continue-link="TECH_SPECS_PATH"
+                   :save="save" />
     </div>
   </div>
 </template>
@@ -165,7 +165,6 @@
         this.$store.dispatch('selectOtherServices', this.listOfActiveServices);
         this.$store.dispatch('setOptimizationHorizon', this.optimizationHorizon);
         this.$store.dispatch('setOptimizationHorizonNum', this.optimizationHorizonNum);
-        this.$store.dispatch('setObjectiveFinancesOrder');
       },
     },
   };

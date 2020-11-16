@@ -5,50 +5,41 @@
     <div class="form-horizontal form-buffer">
 
       <h4>Technologies</h4>
-      <div class="col-md-12">
         <router-link class="btn btn-lg btn-info"
                      v-for="solar in solarPVItems"
                      :to="{ name: 'technologySpecsSolarPV', params: { solarId: solar.id }}"
                      :key="solar.id">
-          PV
+          {{getTechLabel(solar)}}
         </router-link>
-      </div>
-      <div class="col-md-12">
         <router-link class="btn btn-lg btn-info"
                      v-for="battery in batteryItems"
                      :to="{ name: 'technologySpecsBattery', params: { batteryId: battery.id }}"
                      :key="battery.id">
-          Battery
+          {{getTechLabel(battery)}}
         </router-link>
-      </div>
-      <div class="col-md-12">
+      
         <router-link class="btn btn-lg btn-info"
                      v-for="ice in iceItems"
                      :to="{ name: 'technologySpecsICE', params: { iceId: ice.id }}"
                      :key="ice.id">
-          ICE
+          {{getTechLabel(ice)}}
         </router-link>
-      </div>
-      <div class="col-md-12">
+      
         <router-link class="btn btn-lg btn-info"
                      v-for="dieselGen in dieselGenItems"
                      :to="{ name: 'technologySpecsDieselGen', params: { dieselGenId: dieselGen.id }}"
                      :key="dieselGen.id">
-          Diesel Gen
+          {{getTechLabel(dieselGen)}}
         </router-link>
-      </div>
-      <div class="col-md-12">
-        <router-link class="btn btn-lg btn-info"
-                     v-bind:class="{ current: isActive(this.paths.OBJECTIVES_SITE_INFORMATION_PATH) }"
-                     :to="this.paths.OBJECTIVES_SITE_INFORMATION_PATH">
-          Site Information
-        </router-link>
-      </div>
-
     </div>
     <hr>
     <div class="col-md-12">
       <h4>Services</h4>
+      <router-link class="btn btn-lg btn-info"
+                   v-bind:class="{ current: isActive(this.paths.OBJECTIVES_SITE_INFORMATION_PATH) }"
+                   :to="this.paths.OBJECTIVES_SITE_INFORMATION_PATH">
+        Site Information
+      </router-link>
       <router-link class="btn btn-lg btn-info"
                    v-bind:class="{ current: isActive(this.paths.OBJECTIVES_DEFERRAL_PATH) }"
                    :to="this.paths.OBJECTIVES_DEFERRAL_PATH"
@@ -212,6 +203,12 @@
       removeTech(payload) {
         this.$store.dispatch('removeTech', payload);
         this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
+      },
+      getTechLabel(payload) {
+        if (payload.name) {
+          return `${payload.tag}: ${payload.name}`;
+        }
+        return `Undefined ${payload.tag}`;
       },
       save() {
       },

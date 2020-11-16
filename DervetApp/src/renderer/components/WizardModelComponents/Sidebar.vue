@@ -13,9 +13,9 @@
                    :key="solar.id"
                    v-bind:class="{
           current: techSpecsActiveSaved('solar-pv', solar.id),
-          complete: solar.active,
-          incomplete: !solar.active }">
-        PV: {{ solar.name }}
+          complete: solar.complete,
+          incomplete: !solar.complete }">
+        {{ getTechLabel(solar) }}
       </router-link>
 
       <router-link class="nav nav-sidebar sidebar-indent"
@@ -24,9 +24,9 @@
                    :key="battery.id"
                    v-bind:class="{
           current: techSpecsActiveSaved('battery', battery.id),
-          complete: battery.active,
-          incomplete: !battery.active }">
-        Battery: {{ battery.name }}
+          complete: battery.complete,
+          incomplete: !battery.complete }">
+        {{ getTechLabel(battery) }}
       </router-link>
 
       <router-link class="nav nav-sidebar sidebar-indent"
@@ -35,9 +35,9 @@
                    :key="ice.id"
                    v-bind:class="{
           current: techSpecsActiveSaved('ice', ice.id),
-          complete: ice.active,
-          incomplete: !ice.active }">
-        ICE: {{ ice.name }}
+          complete: ice.complete,
+          incomplete: !ice.complete }">
+        {{ getTechLabel(ice) }}
       </router-link>
 
       <router-link class="nav nav-sidebar sidebar-indent"
@@ -46,9 +46,9 @@
                    :key="dieselGen.id"
                    v-bind:class="{
           current: techSpecsActiveSaved('diesel-gen', dieselGen.id),
-          complete: dieselGen.active,
-          incomplete: !dieselGen.active }">
-        DieselGen: {{ dieselGen.name }}
+          complete: dieselGen.complete,
+          incomplete: !dieselGen.complete }">
+        {{ getTechLabel(dieselGen) }}
       </router-link>
 
       <div class="nav nav-sidebar sidebar-indent current"
@@ -168,6 +168,12 @@
       },
       isActive(path) {
         return RegExp(path).test(this.$route.path);
+      },
+      getTechLabel(payload) {
+        if (payload.name) {
+          return `${payload.tag}: ${payload.name}`;
+        }
+        return `Undefined ${payload.tag}`;
       },
     },
     computed: {

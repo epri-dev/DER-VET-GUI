@@ -30,6 +30,8 @@
       />
       <hr />
       <nav-buttons
+        :back-link="WIZARD_COMPONENT_PATH"
+        :continue-link="WIZARD_COMPONENT_PATH"
         :save="this.save"
       />
     </div>
@@ -38,6 +40,7 @@
 
 <script>
   import csvUploadMixin from '@/mixins/csvUploadMixin';
+  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import DAPriceTimeSeries from '@/models/TimeSeries/DAPriceTimeSeries';
   import { sharedValidation } from '@/models/Shared';
   import NavButtons from '@/components/Shared/NavButtons';
@@ -52,6 +55,7 @@
         sharedValidation,
         inputDAGrowth: p.daGrowth,
         daPrice: p.daPrice,
+        WIZARD_COMPONENT_PATH,
       };
     },
     computed: {

@@ -70,6 +70,8 @@
       />
       <hr>
       <nav-buttons
+        :back-link="WIZARD_COMPONENT_PATH"
+        :continue-link="WIZARD_COMPONENT_PATH"
         :save="this.save"
       />
     </form>
@@ -81,6 +83,7 @@
   import DeferralLoadTimeSeries from '@/models/TimeSeries/DeferralLoadTimeSeries';
   import { sharedValidation } from '@/models/Shared';
   import NavButtons from '@/components/Shared/NavButtons';
+  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 
 
@@ -96,6 +99,7 @@
         inputDeferralReversePowerFlowLimit: p.deferralReversePowerFlowLimit,
         inputDeferralGrowth: p.deferralGrowth,
         inputDeferralPrice: p.deferralPrice,
+        WIZARD_COMPONENT_PATH,
       };
     },
     computed: {

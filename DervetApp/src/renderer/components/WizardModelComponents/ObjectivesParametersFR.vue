@@ -137,6 +137,8 @@
 
       <hr />
       <nav-buttons
+        :back-link="WIZARD_COMPONENT_PATH"
+        :continue-link="WIZARD_COMPONENT_PATH"
         :save="this.save"
       />
     </div>
@@ -150,6 +152,7 @@
   import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
   import { sharedValidation } from '@/models/Shared';
   import NavButtons from '@/components/Shared/NavButtons';
+  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 
   export default {
@@ -168,6 +171,7 @@
         frPrice: p.frPrice,
         frUpPrice: p.frUpPrice,
         frDownPrice: p.frDownPrice,
+        WIZARD_COMPONENT_PATH,
       };
     },
     computed: {
