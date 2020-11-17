@@ -81,7 +81,7 @@
           :disabled=$v.$invalid
           :displayError="submitted && $v.$anyError"
           :back-link="WIZARD_COMPONENT_PATH"
-          :continue-link="`${TECH_SPECS_PV_PATH}-upload/${this.inputId}`"
+          :continue-link="`${TECH_SPECS_PV_PATH}-upload/${this.solarId}`"
         />
 
       </div>
@@ -94,7 +94,7 @@
   import { requiredIf } from 'vuelidate/lib/validators';
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecsSolarPV';
+  import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
   import { WIZARD_COMPONENT_PATH, TECH_SPECS_PV_PATH } from '@/router/constants';
   import NavButtons from '@/components/Shared/NavButtons';
 

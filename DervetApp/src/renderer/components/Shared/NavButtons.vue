@@ -1,7 +1,7 @@
 <template>
   <div class="form-group form-buffer row">
     <div class="col-md-3 back-btn">
-      <router-link :to="computedBackLink" class="btn btn-primary">
+      <router-link :to="backLink" class="btn btn-primary">
         {{backText}}
       </router-link>
     </div>
@@ -16,7 +16,7 @@
       <router-link
         v-on:click.native="save"
         :event="disabled ? '' : 'click'"
-        :to="computedContinueLink"
+        :to="continueLink"
         class="btn btn-primary pull-right">
         {{continueText}}
       </router-link>
@@ -30,37 +30,6 @@
       return {
         currPath: this.$route.path,
       };
-    },
-    computed: {
-      routeLL() {
-        return this.$store.state.Project.routeObjectivesFinancialsLL;
-      },
-      computedContinueLink() {
-        if (this.continueLink !== null) {
-          return this.continueLink;
-        }
-        let nextPath = 'wizard/summary';
-        for (let headLL = this.routeLL; headLL !== null; headLL = headLL.next) {
-          if (headLL.path.localeCompare(this.currPath) === 0 && headLL.next !== null) {
-            nextPath = headLL.next.path;
-          }
-        }
-        return nextPath;
-      },
-      computedBackLink() {
-        if (this.backLink !== null) {
-          return this.backLink;
-        }
-        let prevLL = null;
-        let prevPath = 'wizard/objectives';
-        for (let headLL = this.routeLL; headLL !== null; headLL = headLL.next) {
-          if (headLL.path.localeCompare(this.currPath) === 0) {
-            prevPath = prevLL.path;
-          }
-          prevLL = headLL;
-        }
-        return prevPath;
-      },
     },
     methods: {
       goBack() {

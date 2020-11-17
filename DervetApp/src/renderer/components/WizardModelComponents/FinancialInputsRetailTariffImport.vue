@@ -29,9 +29,9 @@
         <hr>
 
         <nav-buttons
-          backLink="/wizard/financial-inputs-retail-tariff"
+          :back-link="FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
           backText="Cancel"
-          continueLink="/wizard/financial-inputs-retail-tariff"
+          :continueLink="FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
           continueText="Import Retail Tariff"
           :save="this.save"
         />
@@ -44,6 +44,7 @@
   import { parsedCsvToBillingPeriods } from '@/models/RetailTariffBillingPeriod';
   import { parseCsvFromFile } from '@/util/file';
   import NavButtons from '@/components/Shared/NavButtons';
+  import { FINANCIAL_INPUTS_RETAIL_TARIFF_PATH } from '@/router/constants';
 
 
   export default {
@@ -51,6 +52,7 @@
     data() {
       return {
         parsedBillingPeriodCsv: null,
+        FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
       };
     },
     methods: {

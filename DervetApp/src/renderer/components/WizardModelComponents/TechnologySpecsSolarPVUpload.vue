@@ -33,7 +33,7 @@
       <hr>
 
       <nav-buttons
-        :back-link="`${TECH_SPECS_PV_PATH}/${this.inputId}`"
+        :back-link="`${TECH_SPECS_PV_PATH}/${this.solarId}`"
         :continue-link="WIZARD_COMPONENT_PATH"
         :save="this.save"
       />
@@ -47,7 +47,7 @@
   import '@/assets/samples/SamplePVgen-8784.csv';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
-  import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecsSolarPV';
+  import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
   import NavButtons from '@/components/Shared/NavButtons';
   import { WIZARD_COMPONENT_PATH, TECH_SPECS_PV_PATH } from '@/router/constants';
   import TimeseriesDataUpload from './TimeseriesDataUpload';

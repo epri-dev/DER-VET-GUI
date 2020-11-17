@@ -174,8 +174,7 @@
       <nav-buttons
         back-link="/"
         :continue-link="this.paths.OBJECTIVES_PATH"
-        :save="wrappedSave"
-        :disabled="!isValid"
+        :save="saveAndContinue"
       />
     </div>
   </div>

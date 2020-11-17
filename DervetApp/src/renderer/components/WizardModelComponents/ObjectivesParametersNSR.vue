@@ -46,6 +46,8 @@
       />
       <hr />
       <nav-buttons
+        :back-link="WIZARD_COMPONENT_PATH"
+        :continue-link="WIZARD_COMPONENT_PATH"
         :save="this.save"
       />
     </div>
@@ -57,6 +59,7 @@
   import NSRPriceTimeSeries from '@/models/TimeSeries/NSRPriceTimeSeries';
   import { sharedValidation } from '@/models/Shared';
   import NavButtons from '@/components/Shared/NavButtons';
+  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 
   export default {
@@ -70,6 +73,7 @@
         inputDuration: p.nsrDuration,
         nsrPrice: p.nsrPrice,
         dataYear: p.dataYear,
+        WIZARD_COMPONENT_PATH,
       };
     },
     computed: {

@@ -97,13 +97,16 @@
       />
     <hr />
     <nav-buttons
-      :save="this.save"
+          :back-link="WIZARD_COMPONENT_PATH"
+          :continue-link="WIZARD_COMPONENT_PATH"
+          :save="this.save"
     />
   </div>
 </template>
 
 <script>
   import csvUploadMixin from '@/mixins/csvUploadMixin';
+  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
   import { sharedValidation } from '@/models/Shared';
   import NavButtons from '@/components/Shared/NavButtons';
@@ -134,6 +137,7 @@
         reliabilityGamma: p.reliabilityGamma,
         reliabilityMaxOutageDuration: p.reliabilityMaxOutageDuration,
         pvTechnologies: p.technologySpecsSolarPV,
+        WIZARD_COMPONENT_PATH,
       };
     },
     methods: {

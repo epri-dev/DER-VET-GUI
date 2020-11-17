@@ -58,10 +58,10 @@
 
     <div class="form-group row">
       <div class="col-md-12">
-        <router-link to="/wizard/financial-inputs-retail-tariff-billing-period/null" class="btn btn-secondary">
+        <router-link :to="`${FINANCIAL_INPUTS_RETAIL_TARIFF_PATH}-year/null`" class="btn btn-secondary">
           Add Billing Period
         </router-link>
-        <router-link to="/wizard/financial-inputs-retail-tariff-import" class="btn btn-secondary">
+        <router-link :to="`${FINANCIAL_INPUTS_RETAIL_TARIFF_PATH}-import`" class="btn btn-secondary">
           <i class="fas fa-upload"/> Import Tariff
         </router-link>
         <a
@@ -86,6 +86,10 @@
   import { RETAIL_TARIFF_HEADERS, billingPeriodsToCsv } from '@/models/RetailTariffBillingPeriod';
   import { formatCsvForHref } from '@/util/file';
   import NavButtons from '@/components/Shared/NavButtons';
+  import {
+    WIZARD_COMPONENT_PATH,
+    FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
+  } from '@/router/constants';
 
   export default {
     components: { NavButtons },
@@ -95,7 +99,11 @@
       },
     },
     data() {
-      return { RETAIL_TARIFF_HEADERS };
+      return {
+        RETAIL_TARIFF_HEADERS,
+        WIZARD_COMPONENT_PATH,
+        FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
+      };
     },
     methods: {
       exportCsv() {

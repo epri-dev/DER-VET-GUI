@@ -56,7 +56,8 @@
       <hr>
 
       <nav-buttons
-        :back-link="OBJECTIVES_PATH"
+        :back-link="WIZARD_COMPONENT_PATH"
+        :continue-link="WIZARD_COMPONENT_PATH"
         :save="this.save"
       />
 
@@ -71,7 +72,7 @@
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
   import { sharedValidation } from '@/models/Shared';
-  import { OBJECTIVES_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 
 
@@ -85,7 +86,7 @@
         inputNoChargingFromGrid: p.noChargingFromGrid,
         inputNoDischargingToGrid: p.noDischargingToGrid,
         siteLoad: p.siteLoad,
-        OBJECTIVES_PATH,
+        WIZARD_COMPONENT_PATH,
       };
     },
     computed: {

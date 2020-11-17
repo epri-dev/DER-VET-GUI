@@ -143,8 +143,8 @@
         <hr>
 
         <nav-buttons
-          back-link="/wizard/financial-inputs-retail-tariff"
-          continue-link="/wizard/financial-inputs-retail-tariff"
+          :back-link="FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
+          :continue-link="FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
           :save="this.save"
         />
       </div>
@@ -155,15 +155,24 @@
 <script>
   import { RetailTariffBillingPeriod, validation } from '@/models/RetailTariffBillingPeriod';
   import NavButtons from '@/components/Shared/NavButtons';
+  import { FINANCIAL_INPUTS_RETAIL_TARIFF_PATH } from '@/router/constants';
 
   export default {
     components: { NavButtons },
     props: ['billingPeriodId'],
     data() {
       if (this.billingPeriodId === 'null') {
-        return { validation, ...this.getDefaultData() };
+        return {
+          FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
+          validation,
+          ...this.getDefaultData(),
+        };
       }
-      return { validation, ...this.getDataFromProject() };
+      return {
+        FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
+        validation,
+        ...this.getDataFromProject(),
+      };
     },
     methods: {
       getDefaultData() {

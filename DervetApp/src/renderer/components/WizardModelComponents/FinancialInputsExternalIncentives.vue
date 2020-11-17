@@ -50,10 +50,10 @@
 
     <div class="form-group row">
       <div class="col-md-12">
-        <router-link to="/wizard/financial-inputs-external-incentives-year/null" class="btn btn-secondary">
+        <router-link :to="`${FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH}-year/null`" class="btn btn-secondary">
           Add External Incentives
         </router-link>
-        <router-link to="/wizard/financial-inputs-external-incentives-import" class="btn btn-secondary">
+        <router-link :to="`${FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH}-import`" class="btn btn-secondary">
           <i class="fas fa-upload"/> Import Incentives
         </router-link>
         <a
@@ -69,7 +69,10 @@
     </div>
 
     <hr>
-    <nav-buttons/>
+    <nav-buttons
+      :continue-link="WIZARD_COMPONENT_PATH"
+      :back-link="WIZARD_COMPONENT_PATH"
+    />
   </div>
 </template>
 
@@ -77,6 +80,11 @@
   import { INCENTIVES_HEADERS, externalIncentivesToCsv } from '@/models/ExternalIncentives';
   import { formatCsvForHref } from '@/util/file';
   import NavButtons from '@/components/Shared/NavButtons';
+  import {
+    WIZARD_COMPONENT_PATH,
+    FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
+  } from '@/router/constants';
+
 
   export default {
     components: { NavButtons },
@@ -86,7 +94,11 @@
       },
     },
     data() {
-      return { INCENTIVES_HEADERS };
+      return {
+        INCENTIVES_HEADERS,
+        WIZARD_COMPONENT_PATH,
+        FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
+      };
     },
     methods: {
       exportCsv() {
