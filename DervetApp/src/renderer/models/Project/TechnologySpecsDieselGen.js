@@ -175,7 +175,7 @@ export default class TechnologySpecsDieselGenMetadata {
         isRequired: true,
         type: Number,
         unit: 'years',
-        description: 'Which MACRS GDS category does solar PV fall into?',
+        description: 'Which MACRS GDS category does the diesel generator fall into?',
         allowedValues: MACRS_TERM_ALLOWED_VALUES,
       }),
       maxGenerators: new ProjectFieldMetadata({
