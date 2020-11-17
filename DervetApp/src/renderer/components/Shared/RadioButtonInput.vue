@@ -1,11 +1,12 @@
 <template>
   <div class="form-group row">
     <div class="col-md-3">
-      <label class="control-label" for="size">{{ field.displayName }}</label>
+      <label class="control-label" for="size"><b>{{ field.displayName }}</b></label>
     </div>
-    <div class="col-md-9 foo">
-      <div v-for="option, idx in field.allowedValues">
+    <div class="col-md-4 form-control-static">
+      <div v-for="option, idx in field.allowedValues" class="form-check">
         <input
+          class="form-check-input"
           type="radio"
           v-model="$attrs.value"
           :class="{'is-invalid': isInvalid}"
@@ -14,10 +15,12 @@
         <label>{{ option.label }}</label>
         <div
           v-if="isInvalid && idx === (field.allowedValues.length - 1)"
-          class="invalid-feedback">
+          class="invalid-feedback form-check-label">
           {{ errorMessage }}
         </div>
       </div>
+    </div>
+    <div class="col-md-5">
       <p class="tool-tip tooltip-col">{{ field.description }}</p>
     </div>
   </div>

@@ -3,137 +3,76 @@
 
     <h3>Project Configuration</h3>
     <div class="form-horizontal form-buffer">
-      <div class="row form-group">
-        <div class="col-md-3 control-label">
-          <b>Project Name</b>
-        </div>
-        <div class="col-md-4 form-control-static">
-          <input v-model="inputName" type="text" class="form-control" id="ProjectName">
-        </div>
-        <div class="col-md-5">
-          <p class="tool-tip">Name of the project.</p>
-        </div>
-      </div>
-      <div class="row form-group">
-        <div class="col-md-3 control-label">
-          <b>Start Year</b>
-        </div>
-        <div class="col-md-4">
-          <input
-            v-model.number="inputStartYear"
-            class="form-control numberbox"
-            id="startYear"
-            type="number"
-            min="1980"
-            step="1">
-        </div>
-        <div class="col-md-5">
-          <p class="tool-tip">Year the project starts.</p>
-        </div>
-      </div>
+
+      <text-input
+        v-model="name"
+        v-bind:field="metadata.name"
+        :isInvalid="submitted && $v.name.$error"
+        :errorMessage="getErrorMsg('name')">
+      </text-input>
+
+      <text-input
+        v-model="startYear"
+        v-bind:field="metadata.startYear"
+        :isInvalid="submitted && $v.startYear.$error"
+        :errorMessage="getErrorMsg('startYear')">
+      </text-input>
+
       <fieldset class="section-group">
         <legend>Analysis Window</legend>
-        <div class="row form-group">
-          <div class="col-md-3 control-label">
-            <b>Analysis Horizon Mode</b>
-          </div>
-          <div class="col-md-4 form-control-static">
-            <b-form-radio-group id="analysisHorizonMode" v-model="inputHorizonMode" >
-              <b-form-radio v-for="value in validation.analysisHorizonMode.allowedValues" v-bind:value="value.value" v-bind:key="value.value">
-                {{value['description']}}
-              </b-form-radio>
-            </b-form-radio-group>
-          </div>
-          <div class="col-md-5">
-            <p class="tool-tip">Defines when/how to end CBA analysis</p>
-          </div>
-        </div>
-        <div class="row form-group" v-if="inputHorizonMode === '1'">
-          <div class="col-md-3 control-label">
-            <b>Analysis Horizon</b>
-          </div>
-          <div class="col-md-4">
-            <input
-              v-model.number="inputAnalysisHorizon"
-              type="number"
-              class="form-control numberbox"
-              id="AnalysisHorizon">
-            <span class="unit-label">years</span>
-          </div>
-          <div class="col-md-5">
-            <p class="tool-tip">The number of years the analysis will go for. The analysis will not consider equipment lifetime or anything else when determining the number of years to run for.</p>
-          </div>
+
+        <radio-button-input
+          v-model="analysisHorizonMode"
+          v-bind:field="metadata.analysisHorizonMode"
+          :isInvalid="submitted && $v.analysisHorizonMode.$error"
+          :errorMessage="getErrorMsg('analysisHorizonMode')">>
+        </radio-button-input>
+
+        <div class="row form-group" v-if="analysisHorizonMode === '1'">
+          <text-input
+            v-model="analysisHorizon"
+            v-bind:field="metadata.analysisHorizon"
+            :isInvalid="submitted && $v.analysisHorizon.$error"
+            :errorMessage="getErrorMsg('analysisHorizon')">
+          </text-input>
         </div>
       </fieldset>
+
       <fieldset class="section-group">
         <legend>Time Series Data</legend>
-        <div class="row form-group">
-          <div class="col-md-3 control-label">
-            <b>Data Year</b>
-          </div>
-          <div class="col-md-4">
-            <input v-model.number="inputDataYear" class="form-control numberbox" id="dataYear" type="number" min="1980" step="1">
-          </div>
-          <div class="col-md-5">
-            <p class="tool-tip">Wizard mode only allows one year of data. If the year this data comes from is different from the year the optimization is run against, it will be escalated from the data year to the optimization year.</p>
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label">Timestep</label>
-          </div>
-          <div class="col-md-4">
-            <select
-              class="form-control numberbox"
-              id="timestep"
-              v-model="inputTimestep">
-              <option
-                v-for="value in validation.timestep.allowedValues"
-                v-bind:value="value">
-                {{value}}
-              </option>
-            </select>
-            <span class="unit-label">minutes</span>
-          </div>
-          <div class="col-md-5">
-            <p class="tool-tip tooltip-col tt-col-0">What is the timestep that the optimization will use?</p>
-          </div>
-        </div>
+          <text-input
+            v-model="dataYear"
+            v-bind:field="metadata.dataYear"
+            :isInvalid="submitted && $v.dataYear.$error"
+            :errorMessage="getErrorMsg('dataYear')">
+          </text-input>
+
+          <drop-down-input
+            v-model="timestep"
+            v-bind:field="metadata.timestep"
+            :isInvalid="submitted && $v.timestep.$error"
+            :errorMessage="getErrorMsg('timestep')">
+          </drop-down-input>
       </fieldset>
-      <div class="row form-group">
-        <div class="col-md-3 control-label">
-          <b>Grid Domain</b>
-        </div>
-        <div class="col-md-4 form-control-static">
-          <b-form-radio-group v-model="inputLocation">
-            <b-form-radio v-for="value in validation.gridLocation.allowedValues" v-bind:value="value" v-bind:key="value">
-                {{value}}
-              </b-form-radio>
-          </b-form-radio-group>
-        </div>
-        <div class="col-md-5">
-          <p class="tool-tip">Which grid domain the project will be connected to. This limits which services are available.</p>
-        </div>
-      </div>
-      <div class="row form-group">
-        <div class="col-md-3 control-label">
-          <b>Ownership</b>
-        </div>
-        <div class="col-md-4 form-control-static">
-          <b-form-radio-group v-model="inputOwnership">
-            <b-form-radio v-for="value in validation.ownership.allowedValues" v-bind:value="value" v-bind:key="value">
-                {{value}}
-              </b-form-radio>
-          </b-form-radio-group>
-        </div>
-        <div class="col-md-5">
-          <p class="tool-tip">Who owns the assets.</p>
-        </div>
-      </div>
+
+      <radio-button-input
+        v-model="gridLocation"
+        v-bind:field="metadata.gridLocation"
+        :isInvalid="submitted && $v.gridLocation.$error"
+        :errorMessage="getErrorMsg('gridLocation')">>
+      </radio-button-input>
+
+      <radio-button-input
+        v-model="ownership"
+        v-bind:field="metadata.ownership"
+        :isInvalid="submitted && $v.ownership.$error"
+        :errorMessage="getErrorMsg('ownership')">>
+      </radio-button-input>
 
       <fieldset class="section-group">
         <legend>Run Configuration</legend>
 
+        <!-- TODO make a file picker component -->
         <div class="row form-group">
           <div class="col-md-5 control-label">
             <b>Inputs Folder</b>
@@ -165,63 +104,54 @@
 
       <hr/>
 
-      <div v-if="showErrors">
-        Please correct the following errors:
-        <div v-for="error in errorsAtLastSubmit">{{error}}</div>
-        <hr/>
-      </div>
-
       <nav-buttons
         back-link="/"
         :continue-link="this.paths.OBJECTIVES_PATH"
-        :save="saveAndContinue"
+        :save="validatedSave"
+        :disabled="$v.$invalid"
+        :displayError="submitted && $v.$anyError"
       />
     </div>
   </div>
 </template>
 
 <script>
-  import * as paths from '@/router/constants';
-  import model from '@/models/StartProject';
-  import NavButtons from '@/components/Shared/NavButtons';
 
-  const { validation } = model;
+  import { requiredIf } from 'vuelidate/lib/validators';
+
+  import * as p from '@/models/Project/Project';
+  import * as c from '@/models/Project/constants';
+  import wizardFormMixin from '@/mixins/wizardFormMixin';
+  import * as paths from '@/router/constants';
+  import operateOnKeysList from '@/util/object';
+
+  const metadata = p.projectMetadata;
+  const validations = metadata.getValidationSchema(c.START_PROJECT_FIELDS);
 
   export default {
-    components: { NavButtons },
-    computed: {
-      projectAnalysisHorizon() {
-        return this.$store.state.Project.analysisHorizon;
-      },
-      projectName() {
-        return this.$store.state.Project.name;
-      },
-    },
+    mixins: [wizardFormMixin],
     data() {
-      const data = { validation };
       return {
-        ...data,
-        ...this.getDataFromProject(),
-        showErrors: false,
-        errorsAtLastSubmit: null,
         paths,
+        ...this.getDataFromProject(),
+        metadata: p.projectMetadata,
       };
     },
+    validations: {
+      ...validations,
+      analysisHorizon: {
+        ...validations.analysisHorizon,
+        required: requiredIf(function isAnalysisHorizonRequired() {
+          return this.analysisHorizonMode === '1';
+        }),
+      },
+    },
     methods: {
+      getErrorMsg(fieldName) {
+        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
+      },
       getDataFromProject() {
-        const projectSpecs = this.$store.state.Project;
-        return {
-          inputName: '',
-          inputTimestep: projectSpecs.timestep,
-          inputStartYear: projectSpecs.startYear,
-          inputOwnership: projectSpecs.ownership,
-          inputLocation: projectSpecs.gridLocation,
-          inputHorizonMode: projectSpecs.analysisHorizonMode,
-          inputAnalysisHorizon: projectSpecs.analysisHorizon,
-          inputDataYear: projectSpecs.dataYear,
-          inputsDirectory: projectSpecs.inputsDirectory,
-          resultsDirectory: projectSpecs.resultsDirectory,
-        };
+        return operateOnKeysList(this.$store.state.Project, c.START_PROJECT_FIELDS, f => f);
       },
       // TODO validate that directory is received using accepted answer here:
       // https://stackoverflow.com/questions/52667995/how-to-check-if-selected-file-is-a-directory-or-regular-file
@@ -231,17 +161,25 @@
       onResultsDirectorySelection(e) {
         this.resultsDirectory = e.target.files[0].path;
       },
+      validatedSave() {
+        this.submitted = true;
+        this.$v.$touch();
+        if (!this.$v.$invalid) {
+          return this.saveAndContinue();
+        }
+        return () => {};
+      },
       saveAndContinue() {
-        this.$store.dispatch('setStartYear', this.inputStartYear);
-        this.$store.dispatch('setAnalysisHorizonMode', this.inputHorizonMode);
-        this.$store.dispatch('setAnalysisHorizon', this.inputAnalysisHorizon);
-        this.$store.dispatch('setDataYear', this.inputDataYear);
-        this.$store.dispatch('setGridLocation', this.inputLocation);
-        this.$store.dispatch('setOwnership', this.inputOwnership);
-        this.$store.dispatch('setTimestep', this.inputTimestep);
+        this.$store.dispatch('setName', this.name);
+        this.$store.dispatch('setStartYear', this.startYear);
+        this.$store.dispatch('setAnalysisHorizonMode', this.analysisHorizonMode);
+        this.$store.dispatch('setAnalysisHorizon', this.analysisHorizon);
+        this.$store.dispatch('setDataYear', this.dataYear);
+        this.$store.dispatch('setGridLocation', this.gridLocation);
+        this.$store.dispatch('setOwnership', this.ownership);
+        this.$store.dispatch('setTimestep', this.timestep);
         this.$store.dispatch('setInputsDirectory', this.inputsDirectory);
         this.$store.dispatch('setResultsDirectory', this.resultsDirectory);
-        this.$store.dispatch('setName', this.inputName);
       },
     },
   };

@@ -47,15 +47,15 @@
 
   export default {
     name: 'index',
-    methods: {
-      resetProjectToDefault() {
-        this.$store.dispatch('resetProjectToDefault');
-      },
-    },
     data() {
       return {
         WIZARD_START_PATH,
       };
+    },
+    methods: {
+      resetProjectToDefault() {
+        this.$store.dispatch('resetProjectToDefault');
+      },
     },
   };
 </script>
