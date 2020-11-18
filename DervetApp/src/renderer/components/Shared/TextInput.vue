@@ -15,7 +15,6 @@
         v-if="field.type === Number"
         class="form-control valid numberbox"
         :class="[{'is-invalid': isInvalid}, isLargeBox ? 'numberbox-lg' : 'numberbox']"
-        type="number"
         v-model.number="$attrs.value"
         @input="onChange">
       </input>

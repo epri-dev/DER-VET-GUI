@@ -17,14 +17,14 @@
                      :key="battery.id">
           {{getTechLabel(battery)}}
         </router-link>
-      
+
         <router-link class="btn btn-lg btn-info"
                      v-for="ice in iceItems"
                      :to="{ name: 'technologySpecsICE', params: { iceId: ice.id }}"
                      :key="ice.id">
           {{getTechLabel(ice)}}
         </router-link>
-      
+
         <router-link class="btn btn-lg btn-info"
                      v-for="dieselGen in dieselGenItems"
                      :to="{ name: 'technologySpecsDieselGen', params: { dieselGenId: dieselGen.id }}"
@@ -95,7 +95,7 @@
       <router-link class="btn btn-lg btn-info"
                    v-bind:class="{ current: isActive(this.paths.FINANCIAL_INPUTS_PATH) }"
                    :to="this.paths.FINANCIAL_INPUTS_PATH">
-        Miscallaneous Inputs
+        Miscellaneous Inputs
       </router-link>
       <router-link class="btn btn-lg btn-info"
                    v-bind:class="{ current: isActive(this.paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH) }"

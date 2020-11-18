@@ -26,7 +26,7 @@
           v-model="shouldSize"
           v-bind:field="metadata.shouldSize"
           :isInvalid="submitted && $v.shouldSize.$error"
-          :errorMessage="getErrorMsg('shouldSize')">>
+          :errorMessage="getErrorMsg('shouldSize')">
         </radio-button-input>
 
         <div v-if="shouldSize === false">
@@ -57,7 +57,6 @@
           v-model="constructionDate"
           v-bind:field="metadata.constructionDate"
           :isInvalid="submitted && $v.constructionDate.$error"
-          :isLargeBox="true"
           :errorMessage="getErrorMsg('constructionDate')">
         </text-input>
 
@@ -65,7 +64,6 @@
           v-model="operationDate"
           v-bind:field="metadata.operationDate"
           :isInvalid="submitted && $v.operationDate.$error"
-          :isLargeBox="true"
           :errorMessage="getErrorMsg('operationDate')">
         </text-input>
 
@@ -77,11 +75,11 @@
         </drop-down-input>
 
         <nav-buttons
-          :save="validatedSave"
-          :disabled=$v.$invalid
-          :displayError="submitted && $v.$anyError"
           :back-link="WIZARD_COMPONENT_PATH"
           :continue-link="`${TECH_SPECS_PV_PATH}-upload/${this.solarId}`"
+          :disabled=$v.$invalid
+          :displayError="submitted && $v.$anyError"
+          :save="validatedSave"
         />
 
       </div>
@@ -96,7 +94,6 @@
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
   import { WIZARD_COMPONENT_PATH, TECH_SPECS_PV_PATH } from '@/router/constants';
-  import NavButtons from '@/components/Shared/NavButtons';
 
   const metadata = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
@@ -104,7 +101,6 @@
   export default {
     name: 'TechnologySpecsSolarPV',
     // TODO maybe rename this to just 'id'
-    components: { NavButtons },
     mixins: [wizardFormMixin],
     props: ['solarId'],
     data() {

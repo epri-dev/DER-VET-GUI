@@ -66,9 +66,9 @@
                         variant="outline-secondary"
                         :pressed="row.item.active"
                         class="btn btn-xs">{{getActivationToggleLabel(row.item)}}</b-button>
-              <b-button pill 
-                        size="sm" 
-                        @click="removeTech(row.item)" 
+              <b-button pill
+                        size="sm"
+                        @click="removeTech(row.item)"
                         class="btn btn-xs btn-danger delete-tech">Remove</b-button>
             </b-col>
           </template>
@@ -123,11 +123,16 @@
     TECH_SPECS_PATH,
   } from '@/router/constants';
   import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
-  import { makeEmptyBattery } from '@/models/Project/TechnologySpecs/TechnologySpecsBattery';
-  import { makeEmptyICE } from '@/models/Project/TechnologySpecs/TechnologySpecsICE';
-  import { makeEmptyDieselGen } from '@/models/Project/TechnologySpecs/TechnologySpecsDieselGen';
+  import TechnologySpecsBatteryMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsBattery';
+  import TechnologySpecsICEMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsICE';
+  import TechnologySpecsDieselGenMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsDieselGen';
   import NavButtons from '@/components/Shared/NavButtons';
-  const metadata = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
+
+  const metadataSolarPV = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
+  const metadataBattery = TechnologySpecsBatteryMetadata.getHardcodedMetadata();
+  const metadataICE = TechnologySpecsICEMetadata.getHardcodedMetadata();
+  const metadataDieselGen = TechnologySpecsDieselGenMetadata.getHardcodedMetadata();
+
   export default {
     components: { NavButtons },
     data() {
@@ -176,22 +181,22 @@
     },
     methods: {
       addPVTech() {
-        const newPV = metadata.getDefaultValues();
+        const newPV = metadataSolarPV.getDefaultValues();
         this.$store.dispatch('addTechnologySpecsSolarPV', newPV);
         this.activateTech(newPV);
       },
       addBatteryTech() {
-        const newBattery = makeEmptyBattery();
+        const newBattery = metadataBattery.getDefaultValues();
         this.$store.dispatch('addTechnologySpecsBattery', newBattery);
         this.activateTech(newBattery);
       },
       addICETech() {
-        const newICE = makeEmptyICE();
+        const newICE = metadataICE.getDefaultValues();
         this.$store.dispatch('addTechnologySpecsICE', newICE);
         this.activateTech(newICE);
       },
       addDieselGenTech() {
-        const newDieselGen = makeEmptyDieselGen();
+        const newDieselGen = metadataDieselGen.getDefaultValues();
         this.$store.dispatch('addTechnologySpecsDieselGen', newDieselGen);
         this.activateTech(newDieselGen);
       },

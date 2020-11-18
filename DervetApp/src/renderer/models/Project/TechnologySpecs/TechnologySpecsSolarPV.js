@@ -125,7 +125,7 @@ export default class TechnologySpecsSolarPVMetadata {
       constructionDate: new ProjectFieldMetadata({
         defaultValue: null,
         displayName: 'Construction Date',
-        isRequired: false,
+        isRequired: true,
         type: Date,
         unit: null,
         description: null,
@@ -147,6 +147,7 @@ export default class TechnologySpecsSolarPVMetadata {
         displayName: 'Solar (+storage) Inverter Rating (kVA)',
         isRequired: true,
         minValue: 0,
+        // greaterThan: 0,
         type: Number,
         unit: 'kW',
         description: null,
@@ -182,7 +183,7 @@ export default class TechnologySpecsSolarPVMetadata {
       operationDate: new ProjectFieldMetadata({
         defaultValue: null,
         displayName: 'Operation Date',
-        isRequired: false,
+        isRequired: true,
         type: Date,
         unit: null,
         description: null,
