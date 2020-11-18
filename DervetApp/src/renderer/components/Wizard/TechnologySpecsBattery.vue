@@ -247,7 +247,7 @@
 
         <nav-buttons
           back-link="/wizard/technology-specs"
-          continue-link="/wizard/technology-specs"
+          :continue-link=this.getContinueLink()
           :save="validatedSave"
           :disabled=$v.$invalid
           :displayError="submitted && $v.$anyError"
@@ -339,6 +339,12 @@
       getBatteryFromStore() {
         return this.$store.getters.getBatteryById(this.batteryId);
       },
+      getContinueLink() {
+        if (this.includeCycleDegradation) {
+          return `/wizard/technology-specs-battery-cycle/${this.id}`;
+        }
+        return '/wizard/technology-specs';
+      },
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
@@ -367,6 +373,7 @@
         return {
           active: this.active,
           auxiliaryLoad: this.auxiliaryLoad,
+          batteryCycles: this.batteryCycles,
           calendarDegradationRate: this.calendarDegradationRate,
           capitalCost: this.capitalCost,
           capitalCostPerkW: this.capitalCostPerkW,
