@@ -1,4 +1,4 @@
-import { required, decimal, maxValue, minValue } from 'vuelidate/lib/validators';
+import { required, decimal, maxValue, minValue, between, integer } from 'vuelidate/lib/validators';
 
 export default class ProjectField {
   constructor(args) {
@@ -16,9 +16,12 @@ export default class ProjectField {
   toValidationSchema() {
     return {
       ...(this.isRequired && { required }),
-      ...(this.type === Number && { decimal }),
+      ...((this.type === Number || this.type === 'float') && { decimal }),
+      ...(this.type === 'int' && { integer }),
       ...(((typeof this.minValue) === 'number') && { minValue: minValue(this.minValue) }),
       ...(((typeof this.maxValue) === 'number') && { maxValue: maxValue(this.maxValue) }),
+      ...(((typeof this.maxValue) === 'number') && ((typeof this.minValue) === 'number')
+        && { between: between(this.minValue, this.maxValue) }),
     };
   }
 

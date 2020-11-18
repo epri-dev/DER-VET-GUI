@@ -12,7 +12,7 @@
         @input="onChange">
       </input>
       <input
-        v-if="field.type === Number"
+        v-if="field.type === Number || field.type === 'float' || field.type === 'int'"
         class="form-control valid numberbox"
         :class="[{'is-invalid': isInvalid}, isLargeBox ? 'numberbox-lg' : 'numberbox']"
         v-model.number="$attrs.value"
@@ -43,9 +43,16 @@
     methods: {
       onChange(e) {
         let val = e.target.value;
-        if (this.field.type === Number) {
+        if (this.field.type === Number || this.field.type === 'float'
+          || this.field.type === 'int') {
           const n = parseFloat(val);
           val = Number.isNaN(n) ? val : n;
+        /* // for type int, this approach was suboptimal
+        // the input became an integer, but the user still sees the decimal
+        } else if (this.field.type === 'int') {
+          const n = parseInt(val, 10);
+          val = Number.isNaN(n) ? val : n;
+        */
         } else if (this.field.type === String) {
           val = val.trim();
         }
