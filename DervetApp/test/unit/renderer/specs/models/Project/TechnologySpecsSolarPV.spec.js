@@ -1,4 +1,4 @@
-import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecsSolarPV';
+import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
 import { required, decimal, minValue } from 'vuelidate/lib/validators';
 
 describe('TechnologySpecsSolarPVMetadata model', () => {

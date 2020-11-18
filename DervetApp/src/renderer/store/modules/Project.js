@@ -1,16 +1,11 @@
 import { cloneDeep, flatten } from 'lodash';
 
-import getCurrentYear from '@/util/time';
-import PageLink from '@/models/PageRouting';
-import * as paths from '@/router/constants';
+import { projectMetadata } from '@/models/Project/Project';
+
+const metadataDefaultValues = projectMetadata.getDefaultValues();
 
 const getDefaultState = () => ({
-  id: null,
-  name: null,
-  type: null,
-  resultsData: null,
-  inputsDirectory: null,
-  resultsDirectory: null,
+  ...metadataDefaultValues,
 
   energyPriceSourceWholesale: false,
   objectivesRetailEnergyChargeReduction: false,
@@ -29,15 +24,8 @@ const getDefaultState = () => ({
   routeObjectivesFinancialsLL: null,
 
   // SCENARIO
-  startYear: getCurrentYear(),
-  analysisHorizon: 0,
-  analysisHorizonMode: '1',
-  dataYear: getCurrentYear(),
-  gridLocation: 'Customer',
-  ownership: 'Customer',
   optimizationHorizon: 'year',
   optimizationHorizonNum: 0,
-  timestep: 60,
   noChargingFromGrid: false,
   noDischargingToGrid: false,
   // FINANCES
@@ -486,49 +474,6 @@ const mutations = {
     state.objectivesDeferral = (listOfServices.indexOf('Deferral') > -1);
     state.objectivesUserDefined = (listOfServices.indexOf('User Defined') > -1);
   },
-  SET_OBJECTIVE_FINANCES_ORDER(state) {
-    let tail = null;
-    // retail energy price link
-    let activateTariff = state.objectivesRetailEnergyChargeReduction;
-    activateTariff = (activateTariff || state.objectivesRetailDemandChargeReduction);
-    if (activateTariff) {
-      tail = new PageLink(paths.FINANCIAL_INPUTS_RETAIL_TARIFF_PATH, tail);
-    }
-    // link rest of financials
-    tail = new PageLink(paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH, tail);
-    tail = new PageLink(paths.FINANCIAL_INPUTS_PATH, tail);
-    // da energy price link
-    if (state.objectivesDA) {
-      tail = new PageLink(paths.OBJECTIVES_DA_PATH, tail);
-    }
-    // link up service pages (aka objectives)
-    if (state.objectivesUserDefined) {
-      tail = new PageLink(paths.OBJECTIVES_USER_DEFINED_PATH, tail);
-    }
-    if (state.objectivesSR) {
-      tail = new PageLink(paths.OBJECTIVES_SR_PATH, tail);
-    }
-    if (state.objectivesResilience) {
-      tail = new PageLink(paths.OBJECTIVES_RESILIENCE_PATH, tail);
-    }
-    if (state.objectivesNSR) {
-      tail = new PageLink(paths.OBJECTIVES_NSR_PATH, tail);
-    }
-    if (state.objectivesFR) {
-      tail = new PageLink(paths.OBJECTIVES_FR_PATH, tail);
-    }
-    if (state.objectivesDeferral) {
-      tail = new PageLink(paths.OBJECTIVES_DEFERRAL_PATH, tail);
-    }
-    // exists yet?
-    if (state.objectivesBackupPower) {
-      tail = new PageLink(paths.OBJECTIVES_BACKUP_POWER_PATH, tail);
-    }
-    // add objectives to head of link list
-    tail = new PageLink(paths.OBJECTIVES_SITE_INFORMATION_PATH, tail);
-    tail = new PageLink(paths.OBJECTIVES_PATH, tail);
-    state.routeObjectivesFinancialsLL = tail;
-  },
 };
 
 const actions = {
@@ -809,9 +754,6 @@ const actions = {
   },
   selectOtherServices({ commit }, listOfServices) {
     commit('SELECT_OTHER_SERVICES', listOfServices);
-  },
-  setObjectiveFinancesOrder({ commit }) {
-    commit('SET_OBJECTIVE_FINANCES_ORDER');
   },
 };
 

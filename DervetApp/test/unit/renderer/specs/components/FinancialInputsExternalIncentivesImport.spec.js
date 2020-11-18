@@ -1,4 +1,4 @@
-import FinancialInputsExternalIncentivesImport from '@/components/Wizard/FinancialInputsExternalIncentivesImport';
+import FinancialInputsExternalIncentivesImport from '@/components/WizardModelComponents/FinancialInputsExternalIncentivesImport';
 import mountVueElement from './helper';
 
 describe('FinancialInputsExternalIncentivesImport', () => {

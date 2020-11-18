@@ -1,4 +1,4 @@
-import FinancialInputsExternalIncentivesYear from '@/components/Wizard/FinancialInputsExternalIncentivesYear';
+import FinancialInputsExternalIncentivesYear from '@/components/WizardModelComponents/FinancialInputsExternalIncentivesYear';
 import mountVueElement from './helper';
 
 describe('FinancialInputsExternalIncentivesYear', () => {

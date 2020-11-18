@@ -1,4 +1,4 @@
-import FinancialInputsRetailTariffImport from '@/components/Wizard/FinancialInputsRetailTariffImport';
+import FinancialInputsRetailTariffImport from '@/components/WizardModelComponents/FinancialInputsRetailTariffImport';
 import mountVueElement from './helper';
 
 describe('FinancialInputsRetailTariffImport', () => {
