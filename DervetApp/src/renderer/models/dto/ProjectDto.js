@@ -121,9 +121,10 @@ export const makeBatteryParameters = (project) => {
     if (!battery.shouldPowerSize) {
       if (battery.shouldDiffChargeDischarge) {
         ({ chargingCapacity, dischargingCapacity } = battery);
+      } else {
+        chargingCapacity = battery.powerCapacity;
+        dischargingCapacity = battery.powerCapacity;
       }
-      chargingCapacity = battery.powerCapacity;
-      dischargingCapacity = battery.powerCapacity;
     }
     // TODO determine ENE_MAX_RATED
     let energyCapacity = ZERO;
@@ -144,7 +145,7 @@ export const makeBatteryParameters = (project) => {
       dis_max_rated: makeBaseKey(dischargingCapacity, FLOAT),
       dis_min_rated: makeBaseKey(ZERO, FLOAT), // hardcoded
       duration_max: makeBaseKey(battery.maxDuration, FLOAT),
-      'ecc%': makeBaseKey(7, FLOAT), // TODO new, verify value
+      'ecc%': makeBaseKey(ZERO, FLOAT), // TODO new, verify value
       ene_max_rated: makeBaseKey(energyCapacity, FLOAT),
       expected_lifetime: makeBaseKey(99, INT), // TODO: new, verify value
       fixedOM: makeBaseKey(battery.fixedOMCosts, FLOAT),
@@ -239,7 +240,7 @@ export const makeDieselGensetParameters = (project) => {
       ccost_kw: makeBaseKey(ZERO, FLOAT), // TODO: new value
       construction_year: makeBaseKey(convertDateToYear(dieselGen.constructionDate), PERIOD),
       decommissioning_cost: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
-      'ecc%': makeBaseKey(7, FLOAT), // TODO new, verify value
+      'ecc%': makeBaseKey(ZERO, FLOAT), // TODO new, verify value
       efficiency: makeBaseKey(dieselGen.efficiency, FLOAT),
       expected_lifetime: makeBaseKey(99, INT), // TODO: new, verify value
       fixed_om_cost: makeBaseKey(dieselGen.fixedOMCostIncludingExercise, FLOAT),
@@ -321,7 +322,7 @@ export const makeICEParameters = (project) => {
       ccost_kw: makeBaseKey(200, FLOAT), // TODO: new value
       construction_year: makeBaseKey(convertDateToYear(iceGen.constructionDate), PERIOD),
       decommissioning_cost: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
-      'ecc%': makeBaseKey(7, FLOAT), // TODO new, verify value
+      'ecc%': makeBaseKey(ZERO, FLOAT), // TODO new, verify value
       efficiency: makeBaseKey(iceGen.efficiency, FLOAT),
       expected_lifetime: makeBaseKey(99, INT), // TODO: new, verify value
       fixed_om_cost: makeBaseKey(iceGen.fixedOMCostIncludingExercise, FLOAT),
@@ -381,7 +382,7 @@ export const makePVParameters = (project) => {
       construction_year: makeBaseKey(convertDateToYear(solarPV.constructionDate), PERIOD),
       curtail: makeBaseKey(ZERO, BOOL), // TODO: new, verify value
       decommissioning_cost: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
-      'ecc%': makeBaseKey(7, FLOAT), // TODO new, verify value
+      'ecc%': makeBaseKey(ZERO, FLOAT), // TODO new, verify value
       expected_lifetime: makeBaseKey(99, INT), // TODO: new, verify value
       fixed_om_cost: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
       gamma: makeBaseKey(project.reliability.gamma, FLOAT),

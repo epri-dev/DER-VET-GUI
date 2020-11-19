@@ -69,7 +69,7 @@
             "type": "Period"
           },
           "cycle_life_filename": {
-            "opt_value": "/path/to/inputs/cycle.csv",
+            "opt_value": "\\path\\to\\inputs\\cycle.csv",
             "sensitivity": {
               "active": "no",
               "coupled": "None",
@@ -126,7 +126,7 @@
             "opt_value": "0",
             "sensitivity": {
               "active": "no",
-              "coupled": "nan",
+              "coupled": "None",
               "value": "nan"
             },
             "type": "float"
@@ -327,7 +327,7 @@
               "coupled": "None",
               "value": "nan"
             },
-            "type": "float"
+            "type": "string/int"
           },
           "sdr": {
             "opt_value": "0",
@@ -378,7 +378,7 @@
             "opt_value": "0",
             "sensitivity": {
               "active": "no",
-              "coupled": "nan",
+              "coupled": "None",
               "value": "nan"
             },
             "type": "float"
@@ -512,7 +512,7 @@
             "type": "int"
           },
           "customer_tariff_filename": {
-            "opt_value": "/path/to/inputs/tariff.csv",
+            "opt_value": "\\path\\to\\inputs\\tariff.csv",
             "sensitivity": {
               "active": "no",
               "coupled": "None",
@@ -584,7 +584,7 @@
             "type": "float"
           },
           "yearly_data_filename": {
-            "opt_value": "./path/to/inputs/yearly.csv",
+            "opt_value": "\\path\\to\\inputs\\yearly.csv",
             "sensitivity": {
               "active": "no",
               "coupled": "None",
@@ -808,7 +808,7 @@
             "type": "float"
           },
           "monthly_data_filename": {
-            "opt_value": "/path/to/inputs/monthly.csv",
+            "opt_value": "\\path\\to\\inputs\\monthly.csv",
             "sensitivity": {
               "active": "no",
               "coupled": "None",
@@ -862,7 +862,7 @@
             "type": "Period"
           },
           "time_series_filename": {
-            "opt_value": "/path/to/inputs/timeseries.csv",
+            "opt_value": "\\path\\to\\inputs\\timeseries.csv",
             "sensitivity": {
               "active": "no",
               "coupled": "None",

@@ -39,8 +39,17 @@ describe('modelParametersDto', () => {
   const tagFixture = modelParametersFixture.tags;
   const actualTags = actualFullMP.tags;
   it('should have translated the battery parameters correctly', () => {
+    // console.log(JSON.stringify(actualTags.Battery, null, 1));
     const expectedLength = Object.keys(tagFixture.Battery[''].keys).length;
     expect(Object.keys(actualTags.Battery[''].keys).length).to.eql(expectedLength);
+    // const batKeys = Object.keys(actualTags.Battery[''].keys);
+    // let i = 0;
+    // while (i < batKeys.length) {
+    //   const currKey = batKeys[i];
+    //   console.log(currKey);
+    //   expect(actualTags.Battery[''].keys[currKey]).to.eql(tagFixture.Battery[''].keys[currKey]);
+    //   i += 1;
+    // }
     expect(actualTags.Battery).to.eql(tagFixture.Battery);
   });
   it('should have translated the DA parameters correctly', () => {

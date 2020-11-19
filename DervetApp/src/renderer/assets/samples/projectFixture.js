@@ -8,7 +8,6 @@ import FRPriceTimeSeries from '@/models/TimeSeries/FRPriceTimeSeries';
 import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
 import NSRPriceTimeSeries from '@/models/TimeSeries/NSRPriceTimeSeries';
 import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
-import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
 import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
 import UserEnergyMinTimeSeries from '@/models/TimeSeries/UserEnergyMinTimeSeries';
 import UserPowerMaxTimeSeries from '@/models/TimeSeries/UserPowerMaxTimeSeries';
@@ -141,7 +140,7 @@ export const projectFixture = {
       name: '',
     },
   ],
-  siteLoad: new SiteLoadTimeSeries(csvs.siteLoad),
+  siteLoad: null,
   srPrice: new SRPriceTimeSeries(csvs.price),
   startYear: '2017',
   stateTaxRate: 3,
@@ -187,7 +186,7 @@ export const projectFixture = {
     powerCapacity: 0,
     roundtripEfficiency: 85,
     selfDischargeRate: 0,
-    shouldDiffChargeDischarge: false,
+    shouldDiffChargeDischarge: true,
     shouldEnergySize: false,
     shouldLimitDailyCycling: false,
     shouldMaxDuration: false,
