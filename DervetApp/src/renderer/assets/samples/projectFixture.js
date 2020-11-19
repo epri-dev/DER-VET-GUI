@@ -16,7 +16,7 @@ import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
 
 import csvs from './csvs';
 
-const INPUTS_DIRECTORY = '/path/to/inputs';
+const INPUTS_DIRECTORY = './path/to/inputs';
 
 export const projectFixture = {
   analysisHorizon: 0,
@@ -188,10 +188,10 @@ export const projectFixture = {
     roundtripEfficiency: 85,
     selfDischargeRate: 0,
     shouldDiffChargeDischarge: false,
-    shouldEnergySize: true,
+    shouldEnergySize: false,
     shouldLimitDailyCycling: false,
     shouldMaxDuration: false,
-    shouldPowerSize: true,
+    shouldPowerSize: false,
     tag: 'Battery',
     targetSOC: 50,
     technologyType: 'Energy Storage System',

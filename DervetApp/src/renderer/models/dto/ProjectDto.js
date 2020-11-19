@@ -122,8 +122,8 @@ export const makeBatteryParameters = (project) => {
       if (battery.shouldDiffChargeDischarge) {
         ({ chargingCapacity, dischargingCapacity } = battery);
       }
-      chargingCapacity = battery.ratedCapacity;
-      dischargingCapacity = battery.ratedCapacity;
+      chargingCapacity = battery.powerCapacity;
+      dischargingCapacity = battery.powerCapacity;
     }
     // TODO determine ENE_MAX_RATED
     let energyCapacity = ZERO;

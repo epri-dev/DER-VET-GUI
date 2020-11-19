@@ -7,6 +7,7 @@ import operateOnKeysList from '@/util/object';
 export class ProjectMetadata {
   constructor(arg) {
     Object.assign(this, arg);
+    this.type = 'Wizard';
   }
 
   getDefaultValues() {

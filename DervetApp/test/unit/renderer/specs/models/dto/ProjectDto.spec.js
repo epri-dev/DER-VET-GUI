@@ -30,60 +30,66 @@ import modelParametersFixture from '../../../../fixtures/case0/000-DA_battery_mo
 
 describe('modelParametersDto', () => {
   const actualFullMP = makeModelParameters(projectFixture);
-  xit('should have translated the name correctly', () => {
+  it('should have translated the name correctly', () => {
     expect(actualFullMP.name).to.eql(modelParametersFixture.name);
   });
-  xit('should have transla.ed the type correctly', () => {
+  it('should have translated the type correctly', () => {
     expect(actualFullMP.type).to.eql(modelParametersFixture.type);
   });
   const tagFixture = modelParametersFixture.tags;
   const actualTags = actualFullMP.tags;
-  xit('should have translated the battery parameters correctly', () => {
+  it('should have translated the battery parameters correctly', () => {
+    const expectedLength = Object.keys(tagFixture.Battery[''].keys).length;
+    expect(Object.keys(actualTags.Battery[''].keys).length).to.eql(expectedLength);
     expect(actualTags.Battery).to.eql(tagFixture.Battery);
   });
-  xit('should have translated the DA parameters correctly', () => {
+  it('should have translated the DA parameters correctly', () => {
     expect(actualTags.DA).to.eql(tagFixture.DA);
   });
-  xit('should have translated the DCM parameters correctly', () => {
+  it('should have translated the DCM parameters correctly', () => {
     expect(actualTags.DCM).to.eql(tagFixture.DCM);
   });
-  xit('should have translated the deferral parameters correctly', () => {
+  it('should have translated the deferral parameters correctly', () => {
     expect(actualTags.Deferral).to.eql(tagFixture.Deferral);
   });
-  xit('should have translated the diesel genset parameters correctly', () => {
+  it('should have translated the diesel genset parameters correctly', () => {
     expect(actualTags.DieselGenset).to.eql(tagFixture.DieselGenset);
   });
-  xit('should have translated the finance parameters correctly', () => {
-    expect(actualTags.Finance).to.eql(tagFixture.Fiance);
+  it('should have translated the finance parameters correctly', () => {
+    const expectedLength = Object.keys(tagFixture.Finance[''].keys).length;
+    expect(Object.keys(actualTags.Finance[''].keys).length).to.eql(expectedLength);
+    expect(actualTags.Finance).to.eql(tagFixture.Finance);
   });
-  xit('should have translated the FR parameters correctly', () => {
+  it('should have translated the FR parameters correctly', () => {
     expect(actualTags.FR).to.eql(tagFixture.FR);
   });
-  xit('should have translated the ICE parameters correctly', () => {
+  it('should have translated the ICE parameters correctly', () => {
     expect(actualTags.ICE).to.eql(tagFixture.ICE);
   });
-  xit('should have translated the NSR parameters correctly', () => {
+  it('should have translated the NSR parameters correctly', () => {
     expect(actualTags.NSR).to.eql(tagFixture.NSR);
   });
-  xit('should have translated the PV parameters correctly', () => {
+  it('should have translated the PV parameters correctly', () => {
     expect(actualTags.PV).to.eql(tagFixture.PV);
   });
-  xit('should have translated the reliability parameters correctly', () => {
+  it('should have translated the reliability parameters correctly', () => {
     expect(actualTags.Reliability).to.eql(tagFixture.Reliability);
   });
-  xit('should have translated the results parameters correctly', () => {
+  it('should have translated the results parameters correctly', () => {
     expect(actualTags.Results).to.eql(tagFixture.Results);
   });
-  xit('should have translated the retail ETS parameters correctly', () => {
+  it('should have translated the retail ETS parameters correctly', () => {
     expect(actualTags.retailTimeShift).to.eql(tagFixture.retailTimeShift);
   });
-  xit('should have translated the scenario parameters correctly', () => {
+  it('should have translated the scenario parameters correctly', () => {
+    const expectedLength = Object.keys(tagFixture.Scenario[''].keys).length;
+    expect(Object.keys(actualTags.Scenario[''].keys).length).to.eql(expectedLength);
     expect(actualTags.Scenario).to.eql(tagFixture.Scenario);
   });
-  xit('should have translated the SR parameters correctly', () => {
+  it('should have translated the SR parameters correctly', () => {
     expect(actualTags.SR).to.eql(tagFixture.SR);
   });
-  xit('should have translated the user defined parameters correctly', () => {
+  it('should have translated the user defined parameters correctly', () => {
     expect(actualTags.User).to.eql(tagFixture.User);
   });
   it('should translate a Project object into a ModelParameters object', () => {
