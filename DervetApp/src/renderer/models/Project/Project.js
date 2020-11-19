@@ -12,6 +12,7 @@ export class ProjectMetadata {
   getDefaultValues() {
     return {
       id: uuidv4(),
+      type: 'Wizard',
       ...this.operateOnFieldList(c.START_PROJECT_FIELDS, f => f.defaultValue),
     };
   }

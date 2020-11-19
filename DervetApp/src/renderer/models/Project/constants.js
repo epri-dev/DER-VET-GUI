@@ -24,7 +24,6 @@ export const ANALYSIS_HORIZON_MODE_ALLOWED_VALUES = [
   { value: '1', label: 'User-defined analysis horizon' },
   { value: '2', label: 'Auto-calculate analysis horizon by shortest DER lifetime' },
   { value: '3', label: 'Auto-calculate analysis horizon by longest DER lifetime' },
-  { value: '4', label: 'Use carrying cost' },
 ];
 export const GRID_LOCATION_ALLOWED_VALUES = makeAllowedValues(['Generation', 'Transmission', 'Distribution', 'Customer']);
 export const OWNERSHIP_ALLOWED_VALUES = makeAllowedValues(['Customer', 'Utility', '3rd Party']);

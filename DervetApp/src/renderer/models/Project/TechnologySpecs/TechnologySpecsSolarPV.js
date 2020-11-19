@@ -88,13 +88,13 @@ const DYNAMIC_FIELDS = [
 export default class TechnologySpecsSolarPVMetadata {
   // TODO: refactor to use typescript interface + Object.assign(this, args);
   constructor(args) {
-    this.constructionDate = args.constructionDate;
+    this.constructionDate = args.constructionDate; // should be constructionYEAR
     this.cost = args.cost;
     this.inverterMax = args.inverterMax;
     this.loc = args.loc;
     this.macrsTerm = args.macrsTerm;
     this.name = args.name;
-    this.operationDate = args.operationDate;
+    this.operationDate = args.operationDate; // should be operationYEAR
     this.ratedCapacity = args.ratedCapacity;
     this.shouldSize = args.shouldSize;
   }

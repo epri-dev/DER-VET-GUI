@@ -7,7 +7,7 @@
         <div class="form-group row">
           <b-card class="col-md-6" :title="String(numTechICE)">
             <b-card-text>
-              {{getCardTechText(numTechICE, "Internal Combustion Engine sets")}}
+              {{getCardTechText(numTechICE, "Internal Combustion Engine (ICE) Generator sets")}}
             </b-card-text>
             <b-button-toolbar>
               <b-button-group class="mx-1">
@@ -29,7 +29,7 @@
         <div class="form-group row">
           <b-card class="col-md-6" :title="String(numTechSolarPV)">
             <b-card-text>
-              {{ getCardTechText(numTechSolarPV, "Solar PV Sytems") }}
+              {{ getCardTechText(numTechSolarPV, "Solar Photovoltaic (PV) Sytems") }}
             </b-card-text>
             <b-button-toolbar>
               <b-button-group class="mx-1">
