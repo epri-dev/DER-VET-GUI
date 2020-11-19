@@ -7,12 +7,12 @@ import operateOnKeysList from '@/util/object';
 export class ProjectMetadata {
   constructor(arg) {
     Object.assign(this, arg);
-    this.type = 'Wizard';
   }
 
   getDefaultValues() {
     return {
       id: uuidv4(),
+      type: 'Wizard',
       ...this.operateOnFieldList(c.START_PROJECT_FIELDS, f => f.defaultValue),
     };
   }
