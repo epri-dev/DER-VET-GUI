@@ -106,9 +106,10 @@ export default class TechnologySpecsDieselGenMetadata {
   getDefaultValues() {
     return {
       active: true,
+      complete: null,
+      id: uuidv4(),
       tag: DieselGen,
       technologyType: 'Generator',
-      id: uuidv4(),
       ...this.operateOnDynamicFields(f => f.defaultValue),
     };
   }

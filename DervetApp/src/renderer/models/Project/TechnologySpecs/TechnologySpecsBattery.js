@@ -222,6 +222,7 @@ export default class TechnologySpecsBatteryMetadata {
         { ulimit: 1, val: 2250 },
         */
       ],
+      complete: null,
       id: uuidv4(),
       tag: Battery,
       technologyType: 'Energy Storage System',

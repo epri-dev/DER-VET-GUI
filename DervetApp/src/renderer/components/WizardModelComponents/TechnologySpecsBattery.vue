@@ -248,7 +248,6 @@
         <nav-buttons
           :back-link="WIZARD_COMPONENT_PATH"
           :continue-link=this.getContinueLink()
-          :disabled=$v.$invalid
           :displayError="submitted && $v.$anyError"
           :save="validatedSave"
         />
@@ -334,6 +333,15 @@
         }),
       },
     },
+    beforeMount() {
+      // submitted is false initially; set it to true after the first save.
+      // initially, complete is null; after saving, it is set to either true or false.
+      // we want to show validation errors at any time after the first save, with submitted.
+      if (this.complete !== null) {
+        this.submitted = true;
+        this.$v.$touch();
+      }
+    },
     methods: {
       isnewBattery() {
         return this.batteryId === 'null';
@@ -351,12 +359,9 @@
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       validatedSave() {
-        this.submitted = true;
-        this.$v.$touch();
-        if (!this.$v.$invalid) {
-          return this.saveAndContinue();
-        }
-        return () => {};
+        // set complete to true or false
+        this.complete = !this.$v.$invalid;
+        return this.saveAndContinue();
       },
       saveAndContinue() {
         const batterySpec = this.buildBattery();
@@ -381,6 +386,7 @@
           capitalCostPerkW: this.capitalCostPerkW,
           capitalCostPerkWh: this.capitalCostPerkWh,
           chargingCapacity: this.chargingCapacity,
+          complete: this.complete,
           constructionDate: this.constructionDate,
           dailyCycleLimit: this.dailyCycleLimit,
           dischargingCapacity: this.dischargingCapacity,

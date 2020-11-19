@@ -106,9 +106,10 @@ export default class TechnologySpecsICEMetadata {
   getDefaultValues() {
     return {
       active: true,
+      complete: null,
+      id: uuidv4(),
       tag: ICE,
       technologyType: 'Generator',
-      id: uuidv4(),
       ...this.operateOnDynamicFields(f => f.defaultValue),
     };
   }

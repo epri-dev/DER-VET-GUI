@@ -106,7 +106,7 @@ export default class TechnologySpecsSolarPVMetadata {
   getDefaultValues() {
     return {
       active: true,
-      complete: false,
+      complete: null,
       tag: PV,
       technologyType: 'Intermittent Resource',
       id: uuidv4(),
