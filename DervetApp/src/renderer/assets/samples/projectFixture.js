@@ -16,7 +16,7 @@ import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
 
 import csvs from './csvs';
 
-const INPUTS_DIRECTORY = './path/to/inputs';
+const INPUTS_DIRECTORY = '/path/to/inputs';
 
 export const projectFixture = {
   analysisHorizon: 0,
