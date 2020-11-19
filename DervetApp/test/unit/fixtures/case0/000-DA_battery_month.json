@@ -14,15 +14,6 @@
             },
             "type": "float"
           },
-          "acr": {
-            "opt_value": "10",
-            "sensitivity": {
-              "active": "no",
-              "coupled": "None",
-              "value": "nan"
-            },
-            "type": "float"
-          },
           "ccost": {
             "opt_value": "0",
             "sensitivity": {
@@ -87,7 +78,7 @@
             "type": "string"
           },
           "daily_cycle_limit": {
-            "opt_value": "1",
+            "opt_value": "0",
             "sensitivity": {
               "active": "no",
               "coupled": "None",
@@ -141,7 +132,7 @@
             "type": "float"
           },
           "expected_lifetime": {
-            "opt_value": "14",
+            "opt_value": "99",
             "sensitivity": {
               "active": "no",
               "coupled": "None",
@@ -302,6 +293,15 @@
             },
             "type": "bool"
           },
+          "replacement_construction_time": {
+            "opt_value": "1",
+            "sensitivity": {
+              "active": "no",
+              "coupled": "None",
+              "value": "nan"
+            },
+            "type": "int"
+          },
           "rte": {
             "opt_value": "85",
             "sensitivity": {
@@ -364,6 +364,15 @@
               "value": "nan"
             },
             "type": "int"
+          },
+          "state_of_health": {
+            "opt_value": "0",
+            "sensitivity": {
+              "active": "no",
+              "coupled": "nan",
+              "value": "nan"
+            },
+            "type": "float"
           },
           "ter": {
             "opt_value": "7",
@@ -465,6 +474,21 @@
         }
       }
     },
+    "DCM": {
+      "": {
+        "active": "no"
+      }
+    },
+    "Deferral": {
+      "": {
+        "active": "no"
+      }
+    },
+    "DieselGenset": {
+      "": {
+        "active": "no"
+      }
+    },
     "Finance": {
       "": {
         "active": "yes",
@@ -486,6 +510,15 @@
               "value": "nan"
             },
             "type": "string"
+          },
+          "ecc_mode": {
+            "opt_value": "0",
+            "sensitivity": {
+              "active": "no",
+              "coupled": "None",
+              "value": "nan"
+            },
+            "type": "bool"
           },
           "external_incentives": {
             "opt_value": "1",
@@ -553,6 +586,31 @@
         }
       }
     },
+    "FR": {
+      "": {
+        "active": "no"
+      }
+    },
+    "ICE": {
+      "": {
+        "active": "no"
+      }
+    },
+    "NSR": {
+      "": {
+        "active": "no"
+      }
+    },
+    "PV": {
+      "": {
+        "active": "no"
+      }
+    },
+    "Reliability": {
+      "": {
+        "active": "no"
+      }
+    },
     "Results": {
       "": {
         "active": "yes",
@@ -585,6 +643,11 @@
             "type": "string"
           }
         }
+      }
+    },
+    "retailTimeShift": {
+      "": {
+        "active": "no"
       }
     },
     "Scenario": {
@@ -818,7 +881,17 @@
           }
         }
       }
+    },
+    "SR": {
+      "": {
+        "active": "no"
+      }
+    },
+    "User": {
+      "": {
+        "active": "no"
+      }
     }
   },
-  "type": "Expert"
+  "type": "Wizard"
 }

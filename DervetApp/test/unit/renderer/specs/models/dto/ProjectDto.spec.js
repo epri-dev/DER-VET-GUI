@@ -4,16 +4,29 @@ import {
   makeBatteryParameters,
   makeCsvs,
   makeDAParameters,
-  makeDatetimeIndex,
+  makeDCMParameters,
+  makeDeferralParameters,
+  makeDieselGensetParameters,
   makeFinanceParameters,
+  makeFRParameters,
+  makeICEParameters,
   makeModelParameters,
+  makeNSRParameters,
+  makePVParameters,
+  makeDatetimeIndex,
+  makeReliabilityParameters,
   makeResultsParameters,
+  makeRetailTimeShiftParameters,
   makeScenarioParameters,
+  makeSRParameters,
+  makeUserParameters,
   makeTimeSeriesCsv,
 } from '@/models/dto/ProjectDto';
 
 import { projectFixture } from '@/assets/samples/projectFixture.js';
+import { projectFixtureAllActive } from '@/assets/samples/projectFixture-everythingActive.js';
 import modelParametersFixture from '../../../../fixtures/case0/000-DA_battery_month.json';
+// import mpEverythingFixture from '../../../../fixtures/000-000-everything_active.json';
 
 describe('modelParametersDto', () => {
   it('should translate a Project object into a ModelParameters object', () => {
@@ -49,29 +62,69 @@ describe('modelParametersDto', () => {
 
   it('should make battery parameters', () => {
     const actual = makeBatteryParameters(projectFixture);
-    expect(Object.keys(actual[''].keys).length).to.eql(49);
+    expect(Object.keys(actual[''].keys).length).to.eql(51);
   });
 
   it('should make DA parameters', () => {
     const actual = makeDAParameters(projectFixture);
     expect(Object.keys(actual[''].keys).length).to.eql(1);
   });
-
+  it('should make DCM parameters', () => {
+    const actual = makeDCMParameters(projectFixtureAllActive);
+    expect(Object.keys(actual[''].keys).length).to.eql(1);
+  });
+  it('should make deferral parameters', () => {
+    const actual = makeDeferralParameters(projectFixtureAllActive);
+    expect(Object.keys(actual[''].keys).length).to.eql(5);
+  });
+  it('should make diesel genset parameters', () => {
+    const actual = makeDieselGensetParameters(projectFixtureAllActive);
+    expect(Object.keys(actual[''].keys).length).to.eql(27);
+  });
   it('should make finance parameters', () => {
     const actual = makeFinanceParameters(projectFixture);
-    expect(Object.keys(actual[''].keys).length).to.eql(9);
+    expect(Object.keys(actual[''].keys).length).to.eql(10);
   });
-
+  it('should make FR parameters', () => {
+    const actual = makeFRParameters(projectFixtureAllActive);
+    expect(Object.keys(actual[''].keys).length).to.eql(8);
+  });
+  it('should make ICE parameters', () => {
+    const actual = makeICEParameters(projectFixtureAllActive);
+    expect(Object.keys(actual[''].keys).length).to.eql(27);
+  });
+  it('should make NSR parameters', () => {
+    const actual = makeNSRParameters(projectFixtureAllActive);
+    expect(Object.keys(actual[''].keys).length).to.eql(3);
+  });
+  it('should make PV parameters', () => {
+    const actual = makePVParameters(projectFixtureAllActive);
+    expect(Object.keys(actual[''].keys).length).to.eql(31);
+  });
+  it('should make reliability parameters', () => {
+    const actual = makeReliabilityParameters(projectFixtureAllActive);
+    expect(Object.keys(actual[''].keys).length).to.eql(5);
+  });
   it('should make results parameters', () => {
     const actual = makeResultsParameters(projectFixture);
     expect(Object.keys(actual[''].keys).length).to.eql(3);
   });
-
+  it('should make retail ETS parameters', () => {
+    const actual = makeRetailTimeShiftParameters(projectFixtureAllActive);
+    expect(Object.keys(actual[''].keys).length).to.eql(1);
+  });
   it('should make scenario parameters', () => {
     const actual = makeScenarioParameters(projectFixture);
     expect(Object.keys(actual[''].keys).length).to.eql(25);
   });
-
+  it('should make SR parameters', () => {
+    const actual = makeSRParameters(projectFixtureAllActive);
+    expect(Object.keys(actual[''].keys).length).to.eql(3);
+  });
+  it('should make user defined parameters', () => {
+    const actual = makeUserParameters(projectFixtureAllActive);
+    expect(Object.keys(actual[''].keys).length).to.eql(1);
+  });
   it('should make a base key value given a value and type', () => {
     const actual = makeBaseKey('1', 'int');
     const expected = {

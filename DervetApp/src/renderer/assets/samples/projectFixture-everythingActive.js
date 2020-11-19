@@ -7,6 +7,7 @@ import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
 import FRPriceTimeSeries from '@/models/TimeSeries/FRPriceTimeSeries';
 import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
 import NSRPriceTimeSeries from '@/models/TimeSeries/NSRPriceTimeSeries';
+import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
 import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
 import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
 import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
@@ -18,19 +19,20 @@ import csvs from './csvs';
 
 const INPUTS_DIRECTORY = '/path/to/inputs';
 
-export const projectFixture = {
+export const projectFixtureAllActive = {
   analysisHorizon: 0,
   analysisHorizonMode: '1',
   criticalLoad: new CriticalLoadTimeSeries(csvs.siteLoad), // note: using hardcoded site load
   daETS: { growth: 0 },
   daPrice: new DAPriceTimeSeries(csvs.daPrice),
   dataYear: 2017,
+  dcm: { growth: 5 },
   discountRate: 7,
   deferral: {
-    plannedLoadLimit: 4000,
-    reversePowerFlowLimit: -1000,
-    growth: 2,
-    price: 0,
+    plannedLoadLimit: 11000,
+    reversePowerFlowLimit: -11000,
+    growth: 0,
+    price: 10000,
   },
   deferralLoad: new DeferralLoadTimeSeries(csvs.deferralLoad),
   externalIncentives: [
@@ -48,18 +50,48 @@ export const projectFixture = {
     },
   ],
   federalTaxRate: 3,
+  fr: {
+    eou: 0.3,
+    eod: 0.3,
+    growth: 2,
+    energyPriceGrowth: 5,
+    combinedMarket: 0,
+    duration: 0,
+  },
   frPrice: new FRPriceTimeSeries(csvs.price),
   frUpPrice: new FRUpPriceTimeSeries(csvs.price),
   frDownPrice: new FRDownPriceTimeSeries(csvs.price),
   gridLocation: 'Customer',
   inflationRate: 3,
   inputsDirectory: INPUTS_DIRECTORY,
+  nsr: {
+    growth: 2,
+    duration: 0,
+  },
   nsrPrice: new NSRPriceTimeSeries(csvs.price),
   objectivesDA: true,
+  objectivesResilience: true,
+  objectivesBackupPower: true,
+  objectivesRetailDemandChargeReduction: true,
+  objectivesRetailEnergyChargeReduction: true,
+  objectivesSR: true,
+  objectivesNSR: true,
+  objectivesFR: true,
+  objectivesDeferral: true,
+  objectivesLoadFollowing: true,
+  objectivesUserDefined: true,
   optimizationHorizon: 'month',
   ownership: 'Customer',
   propertyTaxRate: 3,
+  reliability: {
+    target: 6,
+    postOptimizationOnly: false,
+    nu: 20,
+    gamma: 43,
+    maxOutageDuration: 12,
+  },
   resultsDirectory: './Results/foo',
+  retailETS: { growth: 4 },
   retailTariffBillingPeriods: [
     {
       id: 1,
@@ -141,11 +173,51 @@ export const projectFixture = {
     },
   ],
   siteLoad: new SiteLoadTimeSeries(csvs.siteLoad),
+  sr: {
+    growth: 6.2,
+    duration: 0,
+  },
   srPrice: new SRPriceTimeSeries(csvs.price),
   startYear: '2017',
   stateTaxRate: 3,
-  technologySpecsSolarPV: [],
-  technologySpecsICE: [],
+  technologySpecsSolarPV: [{
+    active: true,
+    tag: 'PV',
+    technologyType: 'Intermittent Resource',
+    id: '',
+    name: 'solar',
+    cost: 200,
+    shouldSize: false,
+    ratedCapacity: 100,
+    loc: 'ac',
+    inverterMax: 3000,
+    constructionDate: '2017',
+    operationDate: '2017',
+    macrsTerm: 3,
+    generationProfile: new PVGenerationTimeSeries(csvs.deferralLoad), // TODO fix this
+  }],
+  technologySpecsICE: [{
+    active: true,
+    tag: 'ICE',
+    technologyType: 'Generator',
+    id: '',
+    name: 'generator',
+    ratedCapacity: 4000,
+    minimumPower: 100,
+    startupTime: 0, // TODO remove
+    efficiency: 0.15,
+    fuelCost: 3.5,
+    capitalCost: 200,
+    variableOMCost: 10,
+    fixedOMCostIncludingExercise: 12,
+    constructionDate: '2017',
+    operationDate: '2017',
+    macrsTerm: 3,
+    shouldSize: false,
+    numGenerators: 2,
+    minGenerators: 0,
+    maxGenerators: 1,
+  }],
   technologySpecsBattery: [{
     active: true,
     auxiliaryLoad: 0,
@@ -197,8 +269,30 @@ export const projectFixture = {
     upperSOCLimit: 100,
     variableOMCosts: 0,
   }],
-  technologySpecsDieselGen: [],
+  technologySpecsDieselGen: [{
+    active: true,
+    tag: 'DieselGen',
+    technologyType: 'Generator',
+    id: '',
+    name: 'Diesel Generator',
+    ratedCapacity: 4000,
+    minimumPower: 100,
+    startupTime: 0, // TODO remove
+    efficiency: 0.15,
+    fuelCost: 3.5,
+    capitalCost: 200,
+    variableOMCost: 10,
+    fixedOMCostIncludingExercise: 12,
+    constructionDate: '2017',
+    operationDate: '2017',
+    macrsTerm: 3,
+    shouldSize: false,
+    numGenerators: 2,
+    minGenerators: 0,
+    maxGenerators: 1,
+  }],
   timestep: 1,
+  userDefined: { price: 347 },
   userEnergyMax: new UserEnergyMaxTimeSeries(_.fill(Array(8760), 9000)),
   userEnergyMin: new UserEnergyMinTimeSeries(_.fill(Array(8760), 0)),
   userPowerMax: new UserPowerMaxTimeSeries(_.fill(Array(8760), 1900)),
@@ -206,7 +300,7 @@ export const projectFixture = {
 };
 
 export const getProjectFixture = (inputsDir, resultsDir) => {
-  const res = _.cloneDeep(projectFixture);
+  const res = _.cloneDeep(projectFixtureAllActive);
   res.inputsDirectory = inputsDir;
   res.resultsDirectory = resultsDir;
   return res;

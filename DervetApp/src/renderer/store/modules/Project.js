@@ -34,34 +34,40 @@ const getDefaultState = () => ({
   federalTaxRate: 0,
   stateTaxRate: 0,
   propertyTaxRate: 0,
-  // DEFERRAL
-  deferralPlannedLoadLimit: 0,
-  deferralReversePowerFlowLimit: 0,
-  deferralGrowth: 0,
-  deferralPrice: 0,
-  // DA
-  daGrowth: 0,
-  // SR
-  srGrowth: 0,
-  srDuration: 0,
-  // NSR
-  nsrGrowth: 0,
-  nsrDuration: 0,
-  // FR
-  frEOU: 0.3,
-  frEOD: 0.3,
-  frGrowth: 0,
-  frEnergyPriceGrowth: 0,
-  frCombinedMarket: false,
-  frDuration: 0,
-  // RELIABILITY
-  reliabilityTarget: 4,
-  postOptimizationOnly: false,
-  reliabilityNu: 20,
-  reliabilityGamma: 43,
-  reliabilityMaxOutageDuration: 168,
-  // USER
-  userPrice: 0,
+  // SERVICES
+  daETS: { growth: 0 },
+  dcm: { growth: 0 }, // TODO collect value
+  deferral: {
+    plannedLoadLimit: 0,
+    reversePowerFlowLimit: 0,
+    growth: 0,
+    price: 0,
+  },
+  fr: {
+    eou: 0,
+    eod: 0,
+    growth: 0,
+    energyPriceGrowth: 0,
+    combinedMarket: 0,
+    duration: 0,
+  },
+  nsr: {
+    growth: 0,
+    duration: 0,
+  },
+  reliability: {
+    target: 0,
+    postOptimizationOnly: false,
+    nu: 0, // TODO move to PV
+    gamma: 0, // TODO move to PV
+    maxOutageDuration: 0,
+  },
+  retailETS: { growth: 0 }, // TODO collect value
+  sr: {
+    growth: 0,
+    duration: 0,
+  },
+  userDefined: { price: 0 },
   // DERS
   technologySpecsSolarPV: [],
   technologySpecsICE: [],
@@ -188,91 +194,91 @@ const mutations = {
     state.siteLoad = newSiteLoad;
   },
   SET_DEFERRAL_PLANNED_LOAD_LIMIT(state, newDeferralPlannedLoadLimit) {
-    state.deferralPlannedLoadLimit = newDeferralPlannedLoadLimit;
+    state.deferral.plannedLoadLimit = newDeferralPlannedLoadLimit;
   },
   SET_DEFERRAL_REVERSE_POWER_FLOW_LIMIT(state, newDeferralReversePowerFlowLimit) {
-    state.deferralReversePowerFlowLimit = newDeferralReversePowerFlowLimit;
+    state.deferral.reversePowerFlowLimit = newDeferralReversePowerFlowLimit;
   },
   SET_DEFERRAL_GROWTH(state, newDeferralGrowth) {
-    state.deferralGrowth = newDeferralGrowth;
+    state.deferral.growth = newDeferralGrowth;
   },
   SET_DEFERRAL_PRICE(state, newDeferralPrice) {
-    state.deferralPrice = newDeferralPrice;
+    state.deferral.price = newDeferralPrice;
   },
   SET_DEFERRAL_LOAD(state, newDeferralLoad) {
     state.deferralLoad = newDeferralLoad;
   },
   SET_RELIABILITY_POST_OPTIMIZATION_ONLY(state, newPostOptimizationOnly) {
-    state.postOptimizationOnly = newPostOptimizationOnly;
+    state.reliability.postOptimizationOnly = newPostOptimizationOnly;
   },
   SET_RELIABILITY_TARGET(state, newReliabilityTarget) {
-    state.reliabilityTarget = newReliabilityTarget;
+    state.reliability.target = newReliabilityTarget;
   },
   SET_RELIABILITY_NU(state, newReliabilityNu) {
-    state.reliabilityNu = newReliabilityNu;
+    state.reliability.nu = newReliabilityNu;
   },
   SET_RELIABILITY_GAMMA(state, newReliabilityGamma) {
-    state.reliabilityGamma = newReliabilityGamma;
+    state.reliability.gamma = newReliabilityGamma;
   },
   SET_RELIABILITY_MAX_OUTAGE_DURATION(state, newReliabilityMaxOutageDuration) {
-    state.reliabilityMaxOutageDuration = newReliabilityMaxOutageDuration;
+    state.reliability.maxOutageDuration = newReliabilityMaxOutageDuration;
   },
   SET_CRITICAL_LOAD(state, newCriticalLoad) {
     state.criticalLoad = newCriticalLoad;
   },
   SET_DA_GROWTH(state, newDAGrowth) {
-    state.daGrowth = newDAGrowth;
+    state.daETS.growth = newDAGrowth;
   },
   SET_DA_PRICE(state, newDAPrice) {
-    state.daPrice = newDAPrice;
+    state.daETS.price = newDAPrice;
   },
   SET_SR_GROWTH(state, newSRGrowth) {
-    state.srGrowth = newSRGrowth;
+    state.sr.growth = newSRGrowth;
   },
   SET_SR_PRICE(state, newSRPrice) {
-    state.srPrice = newSRPrice;
+    state.sr.price = newSRPrice;
   },
   SET_SR_DURATION(state, newSRDuration) {
-    state.srDuration = newSRDuration;
+    state.sr.duration = newSRDuration;
   },
   SET_NSR_GROWTH(state, newNSRGrowth) {
-    state.nsrGrowth = newNSRGrowth;
+    state.nsr.growth = newNSRGrowth;
   },
   SET_NSR_PRICE(state, newNSRPrice) {
-    state.nsrPrice = newNSRPrice;
+    state.nsr.price = newNSRPrice;
   },
   SET_NSR_DURATION(state, newNSRDuration) {
-    state.nsrDuration = newNSRDuration;
+    state.nsr.duration = newNSRDuration;
   },
   SET_FR_EOU(state, newFReou) {
-    state.frEou = newFReou;
+    state.fr.eou = newFReou;
   },
   SET_FR_EOD(state, newFReod) {
-    state.frEod = newFReod;
+    state.fr.eod = newFReod;
   },
   SET_FR_GROWTH(state, newFRGrowth) {
-    state.frGrowth = newFRGrowth;
+    state.fr.growth = newFRGrowth;
   },
   SET_FR_ENERGY_GROWTH(state, newFREnergyGrowth) {
-    state.frEnergyPriceGrowth = newFREnergyGrowth;
+    state.fr.energyPriceGrowth = newFREnergyGrowth;
   },
   SET_FR_COMBINED_MARKET(state, newFRCombinedMarket) {
-    state.frCombinedMarket = newFRCombinedMarket;
+    state.fr.combinedMarket = newFRCombinedMarket;
   },
   SET_FR_DURATION(state, newFRDuration) {
-    state.frDuration = newFRDuration;
+    state.fr.duration = newFRDuration;
   },
   SET_FR_PRICE(state, newFRPrice) {
-    state.frPrice = newFRPrice;
+    state.fr.price = newFRPrice;
   },
   SET_FR_UP_PRICE(state, newFRUpPrice) {
-    state.frUpPrice = newFRUpPrice;
+    state.fr.upPrice = newFRUpPrice;
   },
   SET_FR_DOWN_PRICE(state, newFRDownPrice) {
-    state.frDownPrice = newFRDownPrice;
+    state.fr.downPrice = newFRDownPrice;
   },
   SET_USER_PRICE(state, newUserPrice) {
-    state.userPrice = newUserPrice;
+    state.userDefine.price = newUserPrice;
   },
   SET_USER_POWER_MAX(state, newUserPowerMax) {
     state.userPowerMax = newUserPowerMax;

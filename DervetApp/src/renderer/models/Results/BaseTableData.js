@@ -51,7 +51,6 @@ class BaseTableData {
   }
   loadDataFromFile(arrayData) {
     this.data = arrayData;
-    console.log(this.data);
     if (this.hasHeaderRow) {
       [this.columnHeaders, ...this.data] = this.data;
     }

@@ -105,25 +105,38 @@ export const makeBatteryParameters = (project) => {
   const battery = project.technologySpecsBattery[0];
 
   if (includeBattery) {
+    // determine DAILY_CYCLE_LIMIT
+    let dailyCycleLimit = ZERO;
+    if (battery.shouldLimitDailyCycling) {
+      ({ dailyCycleLimit } = battery);
+    }
+    // determine HP
+    let hp = ZERO;
+    if (battery.includeAuxiliaryLoad) {
+      hp = battery.auxiliaryLoad;
+    }
+    // TODO determine CH_MAX_RATED
+    // TODO determine DIS_MAX_RATED
+    // TODO determine ENE_MAX_RATED
     const keys = {
       OMexpenses: makeBaseKey(battery.variableOMCosts, FLOAT),
-      acr: makeBaseKey(10, FLOAT), // TODO: new, verify value
       ccost: makeBaseKey(battery.capitalCost, FLOAT),
       ccost_kw: makeBaseKey(battery.capitalCostPerkW, FLOAT),
       ccost_kwh: makeBaseKey(battery.capitalCostPerkWh, FLOAT),
       ch_max_rated: makeBaseKey(battery.chargingCapacity, FLOAT),
-      ch_min_rated: makeBaseKey(ZERO, FLOAT), // TODO: hardcoded in old GUI
+      ch_min_rated: makeBaseKey(ZERO, FLOAT), // hardcoded
       construction_year: makeBaseKey(convertDateToYear(battery.constructionDate), PERIOD),
       cycle_life_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, CYCLE), STRING),
-      daily_cycle_limit: makeBaseKey(battery.dailyCycleLimit, FLOAT),
+      daily_cycle_limit: makeBaseKey(dailyCycleLimit, FLOAT),
       decommissioning_cost: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
       dis_max_rated: makeBaseKey(battery.dischargingCapacity, FLOAT),
-      dis_min_rated: makeBaseKey(ZERO, FLOAT), // TODO: hardcoded in old GUI
+      dis_min_rated: makeBaseKey(ZERO, FLOAT), // hardcoded
       duration_max: makeBaseKey(battery.maxDuration, FLOAT),
+      'ecc%': makeBaseKey(7, FLOAT), // TODO new, verify value
       ene_max_rated: makeBaseKey(battery.energyCapacity, FLOAT),
-      expected_lifetime: makeBaseKey(14, INT), // TODO: new, verify value
+      expected_lifetime: makeBaseKey(99, INT), // TODO: new, verify value
       fixedOM: makeBaseKey(battery.fixedOMCosts, FLOAT),
-      hp: makeBaseKey(battery.auxiliaryLoad, FLOAT),
+      hp: makeBaseKey(hp, FLOAT),
       incl_cycle_degrade: makeBaseKey(convertToOneZero(battery.includeCycleDegradation), BOOL),
       incl_ts_charge_limits: makeBaseKey(ZERO, BOOL), // TODO new, verify value
       incl_ts_discharge_limits: makeBaseKey(ZERO, BOOL), // TODO new, verify value
@@ -131,21 +144,23 @@ export const makeBatteryParameters = (project) => {
       llsoc: makeBaseKey(battery.lowerSOCLimit, FLOAT),
       macrs_term: makeBaseKey(battery.macrsTerm, FLOAT),
       name: makeBaseKey(battery.name, STRING),
-      nsr_response_time: makeBaseKey(ZERO, INT), // TODO new, verify value
+      nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
       operation_year: makeBaseKey(convertDateToYear(battery.operationDate), PERIOD),
-      p_start_ch: makeBaseKey(ZERO, FLOAT), // TODO: hardcoded in old GUI
-      p_start_dis: makeBaseKey(ZERO, FLOAT), // TODO: hardcoded in old GUI
+      p_start_ch: makeBaseKey(ZERO, FLOAT), // hardcoded
+      p_start_dis: makeBaseKey(ZERO, FLOAT), // hardcoded
       rcost: makeBaseKey(0, FLOAT), // TODO new, verify value
       rcost_kW: makeBaseKey(100, FLOAT), // TODO new, verify value
       rcost_kWh: makeBaseKey(800, FLOAT), // TODO new, verify value
       replaceable: makeBaseKey(ZERO, BOOL), // TODO new, verify value
+      replacement_construction_time: makeBaseKey(ONE, INT), // TODO new, verify value
       rte: makeBaseKey(battery.roundtripEfficiency, FLOAT),
-      salvage_value: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
+      salvage_value: makeBaseKey(ZERO, STRING_INT), // TODO new, verify value
       sdr: makeBaseKey(battery.selfDischargeRate, FLOAT),
       soc_target: makeBaseKey(battery.targetSOC, FLOAT),
-      sr_response_time: makeBaseKey(ZERO, INT), // TODO new, verify value
-      startup: makeBaseKey(convertToOneZero(battery.includeStartupCost), BOOL),
-      startup_time: makeBaseKey(ZERO, INT), // TODO new, verify value
+      sr_response_time: makeBaseKey(ZERO, INT), // hardcoded
+      startup: makeBaseKey(ZERO, BOOL), // hardcoded
+      startup_time: makeBaseKey(ZERO, INT), // hardcoded
+      state_of_health: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
       ter: makeBaseKey(7, FLOAT), // TODO new, verify value
       ulsoc: makeBaseKey(battery.upperSOCLimit, FLOAT),
       user_ch_rated_max: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
@@ -162,9 +177,78 @@ export const makeBatteryParameters = (project) => {
 };
 
 export const makeDAParameters = (project) => {
-  const isActive = convertToYesNo(project.objectivesDA);
-  const keys = { growth: makeBaseKey(project.daGrowth, FLOAT) };
-  return makeGroup('', isActive, keys);
+  if (project.objectivesDA) {
+    const isActive = convertToYesNo(project.objectivesDA);
+    const keys = { growth: makeBaseKey(project.daETS.growth, FLOAT) };
+    return makeGroup('', isActive, keys);
+  }
+  return makeEmptyGroup();
+};
+
+export const makeDCMParameters = (project) => {
+  if (project.objectivesRetailDemandChargeReduction) {
+    const isActive = convertToYesNo(project.objectivesRetailDemandChargeReduction);
+    const keys = { growth: makeBaseKey(project.dcm.growth, FLOAT) };
+    return makeGroup('', isActive, keys);
+  }
+  return makeEmptyGroup();
+};
+
+export const makeDeferralParameters = (project) => {
+  if (project.objectivesDeferral) {
+    const isActive = convertToYesNo(project.objectivesDeferral);
+    const { deferral } = project;
+    const keys = {
+      growth: makeBaseKey(deferral.price, FLOAT),
+      min_year_objective: makeBaseKey(ZERO, INT), // TODO new, verify value
+      planned_load_limit: makeBaseKey(deferral.plannedLoadLimit, FLOAT),
+      price: makeBaseKey(deferral.price, FLOAT),
+      reverse_power_flow_limit: makeBaseKey(deferral.reversePowerFlowLimit, FLOAT),
+    };
+    return makeGroup('', isActive, keys);
+  }
+  return makeEmptyGroup();
+};
+
+export const makeDieselGensetParameters = (project) => {
+  const includeDieselGen = checkNotNullOrEmpty(project.technologySpecsDieselGen);
+
+  // TODO extend to more than one
+  const dieselGen = project.technologySpecsDieselGen[0];
+
+  if (includeDieselGen) {
+    const keys = {
+      ccost: makeBaseKey(dieselGen.capitalCost, FLOAT),
+      ccost_kw: makeBaseKey(ZERO, FLOAT), // TODO: new value
+      construction_year: makeBaseKey(convertDateToYear(dieselGen.constructionDate), PERIOD),
+      decommissioning_cost: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
+      'ecc%': makeBaseKey(7, FLOAT), // TODO new, verify value
+      efficiency: makeBaseKey(dieselGen.efficiency, FLOAT),
+      expected_lifetime: makeBaseKey(99, INT), // TODO: new, verify value
+      fixed_om_cost: makeBaseKey(dieselGen.fixedOMCostIncludingExercise, FLOAT),
+      fuel_cost: makeBaseKey(dieselGen.fuelCost, FLOAT),
+      macrs_term: makeBaseKey(dieselGen.macrsTerm, FLOAT),
+      max_rated_capacity: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
+      min_power: makeBaseKey(dieselGen.minimumPower, FLOAT),
+      min_rated_capacity: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
+      n: makeBaseKey(dieselGen.numGenerators, INT),
+      name: makeBaseKey(dieselGen.name, STRING),
+      nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
+      operation_year: makeBaseKey(convertDateToYear(dieselGen.operationDate), PERIOD),
+      rated_capacity: makeBaseKey(dieselGen.ratedCapacity, FLOAT), // TODO
+      rcost: makeBaseKey(0, FLOAT), // TODO new, verify value
+      rcost_kW: makeBaseKey(100, FLOAT), // TODO new, verify value
+      replaceable: makeBaseKey(ZERO, BOOL), // TODO new, verify value
+      replacement_construction_time: makeBaseKey(ONE, INT), // TODO new, verify value
+      salvage_value: makeBaseKey(ZERO, STRING_INT), // TODO new, verify value
+      sr_response_time: makeBaseKey(ZERO, INT), // hardcoded
+      startup_time: makeBaseKey(ZERO, INT), // hardcoded
+      ter: makeBaseKey(7, FLOAT), // TODO new, verify value
+      variable_om_cost: makeBaseKey(dieselGen.variableOMCost, FLOAT),
+    };
+    return makeGroup(dieselGen.id, convertToYesNo(dieselGen.active), keys);
+  }
+  return makeEmptyGroup();
 };
 
 export const makeFinanceParameters = (project) => {
@@ -172,6 +256,7 @@ export const makeFinanceParameters = (project) => {
   const keys = {
     analysis_horizon_mode: makeBaseKey(project.analysisHorizonMode, INT),
     customer_tariff_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, TARIFF), STRING),
+    ecc_mode: makeBaseKey(ZERO, BOOL), // TODO new input
     external_incentives: makeBaseKey(externalIncentivesExist, BOOL),
     federal_tax_rate: makeBaseKey(project.federalTaxRate, FLOAT),
     inflation_rate: makeBaseKey(project.inflationRate, FLOAT),
@@ -183,6 +268,143 @@ export const makeFinanceParameters = (project) => {
   return makeGroup('', YES, keys);
 };
 
+export const makeFRParameters = (project) => {
+  if (project.objectivesFR) {
+    const isActive = convertToYesNo(project.objectivesFR);
+    const { fr } = project;
+    const keys = {
+      CombinedMarket: makeBaseKey(fr.combinedMarket, BOOL),
+      d_ts_constraints: makeBaseKey(ZERO, BOOL), // hardcoded
+      duration: makeBaseKey(fr.duration, FLOAT),
+      energyprice_growth: makeBaseKey(fr.energyPriceGrowth, FLOAT),
+      eod: makeBaseKey(fr.eod, FLOAT),
+      eou: makeBaseKey(fr.eou, FLOAT),
+      growth: makeBaseKey(fr.growth, FLOAT),
+      u_ts_constraints: makeBaseKey(ZERO, BOOL), // hardcoded
+    };
+    return makeGroup('', isActive, keys);
+  }
+  return makeEmptyGroup();
+};
+
+export const makeICEParameters = (project) => {
+  const includeICE = checkNotNullOrEmpty(project.technologySpecsICE);
+
+  // TODO extend to more than one
+  const iceGen = project.technologySpecsICE[0];
+
+  if (includeICE) {
+    // TODO: find RATED_CAPACITY set to ZERO if shouldSize is TRUE
+    const keys = {
+      ccost: makeBaseKey(iceGen.capitalCost, FLOAT),
+      ccost_kw: makeBaseKey(200, FLOAT), // TODO: new value
+      construction_year: makeBaseKey(convertDateToYear(iceGen.constructionDate), PERIOD),
+      decommissioning_cost: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
+      'ecc%': makeBaseKey(7, FLOAT), // TODO new, verify value
+      efficiency: makeBaseKey(iceGen.efficiency, FLOAT),
+      expected_lifetime: makeBaseKey(99, INT), // TODO: new, verify value
+      fixed_om_cost: makeBaseKey(iceGen.fixedOMCostIncludingExercise, FLOAT),
+      fuel_cost: makeBaseKey(iceGen.fuelCost, FLOAT),
+      macrs_term: makeBaseKey(iceGen.macrsTerm, FLOAT),
+      max_rated_capacity: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
+      min_power: makeBaseKey(iceGen.minimumPower, FLOAT),
+      min_rated_capacity: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
+      n: makeBaseKey(iceGen.numGenerators, INT),
+      name: makeBaseKey(iceGen.name, STRING),
+      nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
+      operation_year: makeBaseKey(convertDateToYear(iceGen.operationDate), PERIOD),
+      rated_capacity: makeBaseKey(iceGen.ratedCapacity, FLOAT), // TODO
+      rcost: makeBaseKey(0, FLOAT), // TODO new, verify value
+      rcost_kW: makeBaseKey(100, FLOAT), // TODO new, verify value
+      replaceable: makeBaseKey(ZERO, BOOL), // TODO new, verify value
+      replacement_construction_time: makeBaseKey(ONE, INT), // TODO new, verify value
+      salvage_value: makeBaseKey(ZERO, STRING_INT), // TODO new, verify value
+      sr_response_time: makeBaseKey(ZERO, INT), // hardcoded
+      startup_time: makeBaseKey(ZERO, INT), // hardcoded
+      ter: makeBaseKey(7, FLOAT), // TODO new, verify value
+      variable_om_cost: makeBaseKey(iceGen.variableOMCost, FLOAT),
+    };
+    return makeGroup(iceGen.id, convertToYesNo(iceGen.active), keys);
+  }
+  return makeEmptyGroup();
+};
+
+export const makeNSRParameters = (project) => {
+  if (project.objectivesNSR) {
+    const isActive = convertToYesNo(project.objectivesNSR);
+    const { nsr } = project;
+    const keys = {
+      duration: makeBaseKey(nsr.duration, FLOAT),
+      growth: makeBaseKey(nsr.growth, FLOAT),
+      ts_constraints: makeBaseKey(ZERO, BOOL), // hardcoded
+    };
+    return makeGroup('', isActive, keys);
+  }
+  return makeEmptyGroup();
+};
+
+export const makePVParameters = (project) => {
+  const includePV = checkNotNullOrEmpty(project.technologySpecsSolarPV);
+
+  // TODO extend to more than one
+  const solarPV = project.technologySpecsSolarPV[0];
+
+  if (includePV) {
+    const keys = {
+      // TODO find RATED_CAPACITY value
+      ccost_kw: makeBaseKey(solarPV.cost, FLOAT),
+      construction_year: makeBaseKey(convertDateToYear(solarPV.constructionDate), PERIOD),
+      curtail: makeBaseKey(ZERO, BOOL), // TODO: new, verify value
+      decommissioning_cost: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
+      'ecc%': makeBaseKey(7, FLOAT), // TODO new, verify value
+      expected_lifetime: makeBaseKey(99, INT), // TODO: new, verify value
+      fixed_om_cost: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
+      gamma: makeBaseKey(project.reliability.gamma, FLOAT),
+      grid_charge: makeBaseKey(ZERO, BOOL), // TODO collect this
+      grid_charge_penalty: makeBaseKey(ZERO, BOOL), // hardcoded
+      growth: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
+      inv_max: makeBaseKey(solarPV.inverterMax, FLOAT),
+      loc: makeBaseKey(solarPV.loc, FLOAT),
+      macrs_term: makeBaseKey(solarPV.macrsTerm, FLOAT),
+      max_rated_capacity: makeBaseKey(ZERO, BOOL), // TODO: new, verify value
+      min_rated_capacity: makeBaseKey(ZERO, BOOL), // TODO: new, verify value
+      name: makeBaseKey(solarPV.name, STRING),
+      nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
+      nu: makeBaseKey(project.reliability.nu, FLOAT),
+      operation_year: makeBaseKey(convertDateToYear(solarPV.operationDate), PERIOD),
+      PPA: makeBaseKey(ZERO, BOOL), // TODO: new, verify value
+      PPA_cost: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
+      PPA_inflation_rate: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
+      rated_capacity: makeBaseKey(solarPV.ratedCapacity, FLOAT), // TODO
+      rcost_kW: makeBaseKey(100, FLOAT), // TODO new, verify value
+      replaceable: makeBaseKey(ZERO, BOOL), // TODO new, verify value
+      replacement_construction_time: makeBaseKey(1, INT), // TODO new, verify value
+      salvage_value: makeBaseKey(ZERO, STRING_INT), // TODO new, verify value
+      sr_response_time: makeBaseKey(ZERO, INT), // hardcoded
+      startup_time: makeBaseKey(ZERO, INT), // hardcoded
+      ter: makeBaseKey(7, FLOAT), // TODO new, verify value
+    };
+    return makeGroup(solarPV.id, convertToYesNo(solarPV.active), keys);
+  }
+  return makeEmptyGroup();
+};
+
+export const makeReliabilityParameters = (project) => {
+  if (project.objectivesResilience) {
+    const isActive = convertToYesNo(project.objectivesResilience);
+    const { reliability } = project;
+    const keys = {
+      max_outage_duration: makeBaseKey(reliability.maxOutageDuration, INT),
+      'n-2': makeBaseKey(ZERO, BOOL), // hardcoded
+      post_facto_initial_soc: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
+      post_facto_only: makeBaseKey(reliability.postOptimizationOnly, BOOL),
+      target: makeBaseKey(reliability.target, FLOAT),
+    };
+    return makeGroup('', isActive, keys);
+  }
+  return makeEmptyGroup();
+};
+
 export const makeResultsParameters = (project) => {
   const keys = {
     dir_absolute_path: makeBaseKey(project.resultsDirectory, STRING),
@@ -192,43 +414,89 @@ export const makeResultsParameters = (project) => {
   return makeGroup('', YES, keys);
 };
 
-export const valueOfN = (project) => {
-  let dt = project.optimizationHorizon;
-  if (dt === 'hours') {
-    dt = project.optimizationHorizonNum;
+export const makeRetailTimeShiftParameters = (project) => {
+  if (project.objectivesRetailEnergyChargeReduction) {
+    const isActive = convertToYesNo(project.objectivesRetailEnergyChargeReduction);
+    const keys = { growth: makeBaseKey(project.retailETS.growth, FLOAT) };
+    return makeGroup('', isActive, keys);
   }
-  return dt;
+  return makeEmptyGroup();
 };
 
 export const makeScenarioParameters = (project) => {
+  // find BINARY value
+  let binary = ONE;
+  const includeBattery = checkNotNullOrEmpty(project.technologySpecsBattery);
+  if (includeBattery) {
+    let batteryNum = 0;
+    while (batteryNum < project.technologySpecsBattery.length) {
+      if (project.technologySpecsBattery[batteryNum].shouldEnergySize) {
+        binary = ZERO;
+      }
+      batteryNum += 1;
+    }
+  }
+  // find INCL_SITE_LOAD value
+  const inclSiteLoad = convertToOneZero(project.siteLoad !== null);
+  // find N value
+  let n = project.optimizationHorizon;
+  if (n === 'hours') {
+    n = project.optimizationHorizonNum;
+  }
   const keys = {
     apply_interconnection_constraints: makeBaseKey(ZERO, BOOL), // TODO: new, see issue 130
-    binary: makeBaseKey(ONE, BOOL), // TODO LL: depends on technology properties
-    def_growth: makeBaseKey(project.deferralGrowth, FLOAT),
+    binary: makeBaseKey(binary, BOOL),
+    def_growth: makeBaseKey(2, FLOAT), // TODO ask for this value with site load
     dt: makeBaseKey(project.timestep, FLOAT),
     end_year: makeBaseKey(calculateEndYear(project.startYear, project.analysisHorizon), PERIOD),
-    incl_site_load: makeBaseKey(ZERO, BOOL), // TODO LL: calculated based on objectives
+    incl_site_load: makeBaseKey(inclSiteLoad, BOOL),
     incl_thermal_load: makeBaseKey(ZERO, BOOL), // TODO: new, verify value
-    kappa_ch_max: makeBaseKey('100000', FLOAT), // TODO: hardcoded in old GUI
-    kappa_ch_min: makeBaseKey('100000', FLOAT), // TODO: hardcoded in old GUI
-    kappa_dis_max: makeBaseKey('100000', FLOAT), // TODO: hardcoded in old GUI
-    kappa_dis_min: makeBaseKey('100000', FLOAT), // TODO: hardcoded in old GUI
-    kappa_ene_max: makeBaseKey('100000', FLOAT), // TODO: hardcoded in old GUI
-    kappa_ene_min: makeBaseKey('100000', FLOAT), // TODO: hardcoded in old GUI
+    kappa_ch_max: makeBaseKey('100000', FLOAT), // hardcoded
+    kappa_ch_min: makeBaseKey('100000', FLOAT), // hardcoded
+    kappa_dis_max: makeBaseKey('100000', FLOAT), // hardcoded
+    kappa_dis_min: makeBaseKey('100000', FLOAT), // hardcoded
+    kappa_ene_max: makeBaseKey('100000', FLOAT), // hardcoded
+    kappa_ene_min: makeBaseKey('100000', FLOAT), // hardcoded
     location: makeBaseKey(project.gridLocation.toLowerCase(), STRING),
     max_export: makeBaseKey('40000', FLOAT), // TODO: new, see issue 131
     max_import: makeBaseKey('-10000', FLOAT), // TODO: new, see issue 131
     monthly_data_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, MONTHLY), STRING),
-    n: makeBaseKey(valueOfN(project), STRING_INT), // TODO optimizationHorizonNum if hrs
+    n: makeBaseKey(n, STRING_INT),
     opt_years: makeBaseKey(project.dataYear, LIST_INT),
     ownership: makeBaseKey(project.ownership.toLowerCase(), STRING),
-    slack: makeBaseKey(ZERO, BOOL), // TODO: hardcoded in old GUI
+    slack: makeBaseKey(ZERO, BOOL), // hardcoded
     start_year: makeBaseKey(project.startYear, PERIOD),
     time_series_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, TIMESERIES), STRING),
-    verbose: makeBaseKey(ONE, BOOL),
-    verbose_opt: makeBaseKey(ZERO, BOOL),
+    verbose: makeBaseKey(ONE, BOOL), // hardcoded
+    verbose_opt: makeBaseKey(ZERO, BOOL), // hardcoded
   };
   return makeGroup('', YES, keys);
+};
+
+export const makeSRParameters = (project) => {
+  if (project.objectivesSR) {
+    const isActive = convertToYesNo(project.objectivesSR);
+    const { sr } = project;
+    const keys = {
+      duration: makeBaseKey(sr.duration, FLOAT),
+      growth: makeBaseKey(sr.growth, FLOAT),
+      ts_constraints: makeBaseKey(ZERO, BOOL), // hardcoded
+    };
+    return makeGroup('', isActive, keys);
+  }
+  return makeEmptyGroup();
+};
+
+export const makeUserParameters = (project) => {
+  if (project.objectivesUserDefined) {
+    const isActive = convertToYesNo(project.objectivesUserDefined);
+    const { userDefined } = project;
+    const keys = {
+      price: makeBaseKey(userDefined.price, FLOAT),
+    };
+    return makeGroup('', isActive, keys);
+  }
+  return makeEmptyGroup();
 };
 
 export const makeModelParameters = project => ({
@@ -236,9 +504,20 @@ export const makeModelParameters = project => ({
   tags: {
     Battery: makeBatteryParameters(project),
     DA: makeDAParameters(project),
+    DCM: makeDCMParameters(project),
+    Deferral: makeDeferralParameters(project),
+    DieselGenset: makeDieselGensetParameters(project),
     Finance: makeFinanceParameters(project),
+    FR: makeFRParameters(project),
+    ICE: makeICEParameters(project),
+    NSR: makeNSRParameters(project),
+    PV: makePVParameters(project),
+    Reliability: makeReliabilityParameters(project),
     Results: makeResultsParameters(project),
+    retailTimeShift: makeRetailTimeShiftParameters(project),
     Scenario: makeScenarioParameters(project),
+    SR: makeSRParameters(project),
+    User: makeUserParameters(project),
   },
   type: project.type,
 });
@@ -389,7 +668,9 @@ export const makeExpectedResultCsvs = (project) => {
       fileName: 'timeseries_results.csv',
     },
   ];
-  if (('DCM' in project) || ('retailETS' in project)) {
+  const selectedRetailETS = project.objectivesRetailEnergyChargeReduction;
+  const selectedRetailDCM = project.objectivesRetailDemandChargeReduction;
+  if (selectedRetailETS || selectedRetailDCM) {
     expectedResultsCsvs.push({
       fieldName: 'simpleMonthlyBill',
       fileName: 'simple_monthly_bill.csv',
@@ -399,17 +680,19 @@ export const makeExpectedResultCsvs = (project) => {
       fileName: 'peak_day_load.csv',
     });
   }
-  if ('Reliability' in project) {
+  if (project.objectivesResilience) {
     expectedResultsCsvs.push({
       fieldName: 'loadCoverageProbability',
       fileName: 'load_coverage_prob.csv',
     });
-    expectedResultsCsvs.push({
-      fieldName: 'outageContribution',
-      fileName: 'outage_energy_contributions.csv',
-    });
+    if (!project.postOptimizationOnly) {
+      expectedResultsCsvs.push({
+        fieldName: 'outageContribution',
+        fileName: 'outage_energy_contributions.csv',
+      });
+    }
   }
-  if ('Deferral' in project) {
+  if (project.objectivesDeferral) {
     expectedResultsCsvs.push({
       fieldName: 'deferral',
       fileName: 'deferral_results.csv',
