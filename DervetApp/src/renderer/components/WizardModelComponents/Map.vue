@@ -2,107 +2,93 @@
   <div>
     <h3>Define your Components</h3>
     <hr>
-    <div class="form-horizontal form-buffer">
 
-      <h4>Technologies</h4>
-        <router-link class="btn btn-lg btn-info"
-                     v-for="solar in solarPVItems"
-                     :to="{ name: 'technologySpecsSolarPV', params: { solarId: solar.id }}"
-                     :key="solar.id">
-          {{getTechLabel(solar)}}
-        </router-link>
-        <router-link class="btn btn-lg btn-info"
-                     v-for="battery in batteryItems"
-                     :to="{ name: 'technologySpecsBattery', params: { batteryId: battery.id }}"
-                     :key="battery.id">
-          {{getTechLabel(battery)}}
-        </router-link>
-
-        <router-link class="btn btn-lg btn-info"
-                     v-for="ice in iceItems"
-                     :to="{ name: 'technologySpecsICE', params: { iceId: ice.id }}"
-                     :key="ice.id">
-          {{getTechLabel(ice)}}
-        </router-link>
-
-        <router-link class="btn btn-lg btn-info"
-                     v-for="dieselGen in dieselGenItems"
-                     :to="{ name: 'technologySpecsDieselGen', params: { dieselGenId: dieselGen.id }}"
-                     :key="dieselGen.id">
-          {{getTechLabel(dieselGen)}}
-        </router-link>
-    </div>
-    <hr>
-    <div class="col-md-12">
-      <h4>Services</h4>
+    <h4>Technologies</h4>
       <router-link class="btn btn-lg btn-info"
-                   v-bind:class="{ current: isActive(this.paths.OBJECTIVES_SITE_INFORMATION_PATH) }"
-                   :to="this.paths.OBJECTIVES_SITE_INFORMATION_PATH">
+                    v-for="solar in solarPVItems"
+                    :to="{ name: 'technologySpecsSolarPV', params: { solarId: solar.id }}"
+                    :key="solar.id">
+        {{getTechLabel(solar)}}
+      </router-link>
+      <router-link class="btn btn-lg btn-info"
+                    v-for="battery in batteryItems"
+                    :to="{ name: 'technologySpecsBattery', params: { batteryId: battery.id }}"
+                    :key="battery.id">
+        {{getTechLabel(battery)}}
+      </router-link>
+
+      <router-link class="btn btn-lg btn-info"
+                    v-for="ice in iceItems"
+                    :to="{ name: 'technologySpecsICE', params: { iceId: ice.id }}"
+                    :key="ice.id">
+        {{getTechLabel(ice)}}
+      </router-link>
+
+      <router-link class="btn btn-lg btn-info"
+                    v-for="dieselGen in dieselGenItems"
+                    :to="{ name: 'technologySpecsDieselGen', params: { dieselGenId: dieselGen.id }}"
+                    :key="dieselGen.id">
+        {{getTechLabel(dieselGen)}}
+      </router-link>
+    <hr>
+
+    <h4>Services</h4>
+      <router-link class="btn btn-lg btn-info"
+                    :to="this.paths.OBJECTIVES_SITE_INFORMATION_PATH">
         Site Information
       </router-link>
       <router-link class="btn btn-lg btn-info"
-                   v-bind:class="{ current: isActive(this.paths.OBJECTIVES_DEFERRAL_PATH) }"
-                   :to="this.paths.OBJECTIVES_DEFERRAL_PATH"
-                   v-if="objectivesDeferral">
+                    :to="this.paths.OBJECTIVES_DEFERRAL_PATH"
+                    v-if="objectivesDeferral">
         Deferral
       </router-link>
       <router-link class="btn btn-lg btn-info"
-                   v-bind:class="{ current: isActive(this.paths.OBJECTIVES_FR_PATH) }"
-                   :to="this.paths.OBJECTIVES_FR_PATH"
-                   v-if="objectivesFR">
+                    :to="this.paths.OBJECTIVES_FR_PATH"
+                    v-if="objectivesFR">
         Frequency Regulation
       </router-link>
       <router-link class="btn btn-lg btn-info"
-                   v-bind:class="{ current: isActive(this.paths.OBJECTIVES_NSR_PATH) }"
-                   :to="this.paths.OBJECTIVES_NSR_PATH"
-                   v-if="objectivesNSR">
+                    :to="this.paths.OBJECTIVES_NSR_PATH"
+                    v-if="objectivesNSR">
         Non-Spinning Reserves
       </router-link>
       <router-link class="btn btn-lg btn-info"
-                   v-bind:class="{ current: isActive(this.paths.OBJECTIVES_RESILIENCE_PATH) }"
-                   :to="this.paths.OBJECTIVES_RESILIENCE_PATH"
-                   v-if="objectivesResilience">
+                    :to="this.paths.OBJECTIVES_RESILIENCE_PATH"
+                    v-if="objectivesResilience">
         Reliability
       </router-link>
       <router-link class="btn btn-lg btn-info"
-                   v-bind:class="{ current: isActive(this.paths.OBJECTIVES_SR_PATH) }"
-                   :to="this.paths.OBJECTIVES_SR_PATH"
-                   v-if="objectivesSR">
+                    :to="this.paths.OBJECTIVES_SR_PATH"
+                    v-if="objectivesSR">
         Spinning Reserves
       </router-link>
       <router-link class="btn btn-lg btn-info"
-                   v-bind:class="{ current: isActive(this.paths.OBJECTIVES_USER_DEFINED_PATH) }"
-                   :to="this.paths.OBJECTIVES_USER_DEFINED_PATH"
-                   v-if="objectivesUserDefined">
+                    :to="this.paths.OBJECTIVES_USER_DEFINED_PATH"
+                    v-if="objectivesUserDefined">
         Custom Service
       </router-link>
       <router-link class="btn btn-lg btn-info"
-                   v-bind:class="{ current: isActive(this.paths.OBJECTIVES_DA_PATH) }"
-                   :to="this.paths.OBJECTIVES_DA_PATH"
-                   v-if="objectivesDA">
+                    :to="this.paths.OBJECTIVES_DA_PATH"
+                    v-if="objectivesDA">
         Day Ahead Pricing
       </router-link>
       <router-link class="btn btn-lg btn-info"
-                   v-bind:class="{ current: isActive(this.paths.FINANCIAL_INPUTS_RETAIL_TARIFF_PATH) }"
-                   :to="this.paths.FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
-                   v-if="objectivesRetailEnergyChargeReduction||objectivesRetailDemandChargeReduction">
+                    :to="this.paths.FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
+                    v-if="objectivesRetailEnergyChargeReduction||objectivesRetailDemandChargeReduction">
         Retail Tariff
       </router-link>
-    </div>
     <hr>
-    <div class="col-md-12">
-      <h4>Financial</h4>
+
+    <h4>Financial</h4>
       <router-link class="btn btn-lg btn-info"
-                   v-bind:class="{ current: isActive(this.paths.FINANCIAL_INPUTS_PATH) }"
-                   :to="this.paths.FINANCIAL_INPUTS_PATH">
+                    :to="this.paths.FINANCIAL_INPUTS_PATH">
         Miscellaneous Inputs
       </router-link>
       <router-link class="btn btn-lg btn-info"
-                   v-bind:class="{ current: isActive(this.paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH) }"
-                   :to="this.paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH">
+                    :to="this.paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH">
         External Incentives
       </router-link>
-    </div>
+
   </div>
 </template>
 
@@ -184,26 +170,6 @@
       },
     },
     methods: {
-      isActive(path) {
-        return RegExp(path).test(this.$route.path);
-      },
-      techSpecsComplete(active) {
-        return active;
-      },
-      techSpecsActiveSaved(tech, id) {
-        return RegExp(`${this.paths.TECH_SPECS_PATH}-${tech}.*/${id}`).test(this.$route.path);
-      },
-      techSpecsActiveUnsaved(tech) {
-        return RegExp(`${this.paths.TECH_SPECS_PATH}-${tech}/null`).test(this.$route.path);
-      },
-      deactivateTech(payload) {
-        this.$store.dispatch('deactivateTech', payload);
-        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
-      },
-      removeTech(payload) {
-        this.$store.dispatch('removeTech', payload);
-        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
-      },
       getTechLabel(payload) {
         if (payload.name) {
           return `${payload.tag}: ${payload.name}`;

@@ -216,15 +216,10 @@ textarea {
 
 .current {
     font-weight: bolder;
-    color: darkblue;
 }
 
 .incomplete {
-    color: darkred;
-}
-
-.complete {
-    color: darkgreen;
+    color: #dc3545;
 }
 
 .menutext {
