@@ -56,8 +56,9 @@ function registerIpcChannels() {
       .then(() => readDervetResults(resultsPath, dervetInputs.expectedResultCsvs))
       .then(results => sendResults(event, results))
       .catch((err) => {
-        log.error(JSON.stringify(err));
-        event.sender.send('dervet-results', err);
+        const errMessage = JSON.stringify(err);
+        log.error(errMessage);
+        event.sender.send('dervet-error', errMessage);
       });
   });
 }

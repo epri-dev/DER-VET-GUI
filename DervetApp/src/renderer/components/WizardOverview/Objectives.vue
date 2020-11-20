@@ -92,8 +92,7 @@
                 <b-form-checkbox size='lg' v-model="listOfActiveServices" value="User Defined"><b>User-Defined Storage Technology Settings</b></b-form-checkbox>
               </div>
               <div class="col-md-7">
-                ol
-                <p class="tool-tip">asImpose timestep by timestep constraints on the power from DERs (and SOC for storage) and service participation. Assign a financial value to meeting these constraints.</p>
+                <p class="tool-tip">Impose timestep by timestep constraints on the power from DERs (and SOC for storage) and service participation. Assign a financial value to meeting these constraints.</p>
               </div>
             </div>
           </fieldset>

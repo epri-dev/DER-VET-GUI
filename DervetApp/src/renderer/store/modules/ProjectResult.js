@@ -23,7 +23,6 @@ const mutations = {
     state.runInProgress = true;
   },
   SET_RESULT_SUCCESS(state, results) {
-    // state.data.push(results);
     state.data = results;
     state.resultsLoaded = true;
     state.runInProgress = false;
@@ -43,8 +42,11 @@ const actions = {
     commit('SET_RUN_IN_PROGRESS');
     IpcService.sendProject(dervetInputs);
   },
+  receiveError({ commit }, error) {
+    commit('SET_RESULT_ERROR', error);
+  },
   receiveResults({ commit }, results) {
-    // TODO handle error
+    // TODO: handle parsing error
     const resultDataObject = new ResultsData(0, results);
     commit('SET_RESULT_SUCCESS', resultDataObject);
   },

@@ -1,5 +1,6 @@
 // TODO use these constants in the router, sidebar, and router-links
 // Root routes
+export const INDEX_PATH = '/';
 export const WIZARD_START_PATH = '/wizard-overview';
 export const WIZARD_COMPONENT_PATH = '/wizard-model-components';
 export const WIZARD_RUN_CASE_PATH = '/wizard-run-case';

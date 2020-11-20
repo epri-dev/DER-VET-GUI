@@ -151,6 +151,10 @@ export default new Router({
           name: 'financialInputsExternalIncentivesImport',
           component: require('@/components/WizardModelComponents/FinancialInputsExternalIncentivesImport').default,
         },
+        {
+          path: 'sensitivity-analysis',
+          component: require('@/components/WizardModelComponents/SensitivityAnalysis').default,
+        },
       ],
     },
     {
@@ -166,10 +170,6 @@ export default new Router({
           path: 'summary',
           name: 'summary',
           component: require('@/components/WizardRunCase/Summary').default,
-        },
-        {
-          path: 'sensitivity-analysis',
-          component: require('@/components/Wizard/SensitivityAnalysis').default,
         },
         {
           path: 'run-analysis',

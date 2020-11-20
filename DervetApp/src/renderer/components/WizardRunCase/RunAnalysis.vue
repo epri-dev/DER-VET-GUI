@@ -1,26 +1,17 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <h3>Run Analysis</h3>
-      <div class="col-md-12 text-center" v-if="!(resultsExist)">
+      <div class="col-md-12 text-center" v-if="runInProgress">
         <img src="../../assets/copper-loader.gif" />
         <br />
-        <label>Running Analysis for {{projectName}} </label>
-        <br />
-        <p>
-          Please be patient... this can take several minutes to complete...
-        </p>
+        <label>Running analysis for <b>{{projectName}}</b>. Please be patient as this can take several minutes to complete.</label>
       </div>
-      <div class="col-md-12" v-if="resultsExist">
+      <div class="col-md-12" v-else-if="resultsExist">
         <div>{{ `Pro forma: ${results.proForma.data}` }}</div>
-        <br />
-        <div>{{ `Cost benefit: ${results.costBenefit.data}` }}</div>
-        <br />
-        <div>{{ `Size: ${results.size.data}` }}</div>
-        <hr />
-        <router-link to="/results" class="btn btn-lg btn-info">
-          Review Results
-        </router-link>
+      </div>
+      <div class="col-md-12 text-center" v-else-if="errorsExist">
+        <br/>
+        <div>An error occured: {{errorMessage}}</div>
       </div>
     </div>
   </div>
@@ -30,11 +21,20 @@
   export default {
     name: 'runAnalysis',
     computed: {
-      resultsExist() {
-        return this.$store.state.ProjectResult.data !== null;
+      errorsExist() {
+        return this.$store.state.ProjectResult.errorMessage !== null;
+      },
+      errorMessage() {
+        return this.$store.state.ProjectResult.errorMessage;
       },
       results() {
         return this.$store.state.ProjectResult.data;
+      },
+      resultsExist() {
+        return this.$store.state.ProjectResult.data !== null;
+      },
+      runInProgress() {
+        return this.$store.state.ProjectResult.runInProgress;
       },
       projectName() {
         return this.$store.state.Project.name;
