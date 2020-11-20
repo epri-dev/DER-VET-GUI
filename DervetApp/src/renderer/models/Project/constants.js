@@ -6,6 +6,8 @@ export const DATA_YEAR = 'dataYear';
 export const GRID_LOCATION = 'gridLocation';
 export const INPUTS_DIRECTORY = 'inputsDirectory';
 export const NAME = 'name';
+export const OPTIMIZATION_HORIZON = 'optimizationHorizon';
+export const OPTIMIZATION_HORIZON_NUM = 'optimizationHorizonNum';
 export const OWNERSHIP = 'ownership';
 export const START_YEAR = 'startYear';
 export const TIMESTEP = 'timestep';
@@ -28,6 +30,7 @@ export const ANALYSIS_HORIZON_MODE_ALLOWED_VALUES = [
 export const GRID_LOCATION_ALLOWED_VALUES = makeAllowedValues(['Generation', 'Transmission', 'Distribution', 'Customer']);
 export const OWNERSHIP_ALLOWED_VALUES = makeAllowedValues(['Customer', 'Utility', '3rd Party']);
 export const TIMESTEP_ALLOWED_VALUES = makeAllowedValuesWithNull(['1', '5', '15', '30', '60']);
+export const OPTIMIZATION_HORIZON_ALLOWED_VALUES = makeAllowedValues(['Year', 'Month', 'Hours']);
 
 // Field groupings
 export const START_PROJECT_FIELDS = [
@@ -41,4 +44,11 @@ export const START_PROJECT_FIELDS = [
   START_YEAR,
   TIMESTEP,
   RESULTS_DIRECTORY,
+];
+export const OBJECTIVE_FIELDS = [
+  OPTIMIZATION_HORIZON,
+  OPTIMIZATION_HORIZON_NUM,
+];
+export const SITE_LOAD = [
+
 ];

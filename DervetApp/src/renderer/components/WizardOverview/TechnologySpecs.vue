@@ -50,7 +50,24 @@
             </b-button-toolbar>
           </b-card>
         </div>
+        <div class="form-group row ">
+          <b-card class="col-md-6" title="Site Load">     
+            <b-button-toolbar>
+              <b-button-group class="mx-1">
+                <b-button @click="toggleIncludeSiteLoad">Add</b-button>
+              </b-button-group>
+            </b-button-toolbar>
+          </b-card>
+          <b-card class="col-md-6" title="Interconnection Constraints">
+            <b-button-toolbar>
+              <b-button-group class="mx-1">
+                <b-button @click="toggleIncludeInterconnectionConstraints">Add</b-button>
+              </b-button-group>
+            </b-button-toolbar>
+          </b-card>
+        </div>
       </div>
+
       <div class="col-md-6 table-bordered">
         <h4>List of Technologies Added</h4>
         <b-table-lite striped hover borderless small
@@ -137,6 +154,8 @@
     components: { NavButtons },
     data() {
       return {
+        includeSiteLoad: false, // TODO add to project's default state
+        includeInterconnectionConstraints: false, // TODO add to project's default state
         fieldsGen: [
           { key: 'tagname', label: 'Generators' },
           { key: 'buttons', label: '' }, // how do I use this?
@@ -208,23 +227,6 @@
         this.$store.dispatch('deactivateTech', payload);
         this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
-      toggleActivationOfTech(payload) {
-        if (payload.active) {
-          this.deactivateTech(payload);
-        } else {
-          this.activateTech(payload);
-        }
-      },
-      removeTech(payload) {
-        this.$store.dispatch('removeTech', payload);
-        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
-      },
-      getTechLabel(payload) {
-        if (payload.name) {
-          return `${payload.tag}: ${payload.name}`;
-        }
-        return `Undefined ${payload.tag}`;
-      },
       getActivationToggleLabel(payload) {
         return payload.active ? 'Deactivate' : 'Activate';
       },
@@ -233,6 +235,29 @@
           return `Number of ${name}`;
         }
         return name;
+      },
+      getTechLabel(payload) {
+        if (payload.name) {
+          return `${payload.tag}: ${payload.name}`;
+        }
+        return `Undefined ${payload.tag}`;
+      },
+      toggleActivationOfTech(payload) {
+        if (payload.active) {
+          this.deactivateTech(payload);
+        } else {
+          this.activateTech(payload);
+        }
+      },
+      toggleIncludeSiteLoad() {
+        this.includeSiteLoad = (!this.includeSiteLoad);
+      },
+      toggleIncludeInterconnectionConstraints() {
+        this.includeInterconnectionConstraints = (!this.includeInterconnectionConstraints);
+      },
+      removeTech(payload) {
+        this.$store.dispatch('removeTech', payload);
+        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
       save() {
       },

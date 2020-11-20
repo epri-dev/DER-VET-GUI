@@ -6,26 +6,9 @@ const metadataDefaultValues = projectMetadata.getDefaultValues();
 
 const getDefaultState = () => ({
   ...metadataDefaultValues,
-
-  energyPriceSourceWholesale: false,
-  objectivesRetailEnergyChargeReduction: false,
-  objectivesDA: false,
-
-  listOfActiveServices: [],
-  objectivesResilience: false,
-  objectivesBackupPower: false,
-  objectivesRetailDemandChargeReduction: false,
-  objectivesSR: false,
-  objectivesNSR: false,
-  objectivesFR: false,
-  objectivesDeferral: false,
-  objectivesLoadFollowing: false,
-  objectivesUserDefined: false,
   routeObjectivesFinancialsLL: null,
 
   // SCENARIO
-  optimizationHorizon: 'year',
-  optimizationHorizonNum: 0,
   noChargingFromGrid: false,
   noDischargingToGrid: false,
   // FINANCES
@@ -79,7 +62,6 @@ const getDefaultState = () => ({
     'Intermittent Resource': [],
   },
   // TIMESERIES ARRAYS
-  siteLoad: null,
   deferralLoad: null,
   daPrice: null,
   srPrice: null,

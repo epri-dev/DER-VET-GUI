@@ -98,29 +98,22 @@
           </fieldset>
         </div>
       </div>
-      <!-- <p>{{listOfActiveServices}}</p> -->
       <hr />
       <fieldset class="section-group">
         <legend>Optimization Horizon</legend>
         <div class="form-group">
-          <div class="row">
-            <b-form-select class="col-md-4" v-model="optimizationHorizon">
-              <b-form-select-option v-for="value in validation.optimizationHorizonOptions.allowedValues" :value="value" :key="value">
-                {{value}}
-              </b-form-select-option>
-            </b-form-select>
-            <div class="col-md-7">
-              <p class="tool-tip">A month-long optimization window is recommended for Customer Services. A specific number of hours is recommended for Wholesale Services.</p>
-            </div>
-          </div>
-          <div v-if="optimizationHorizon == 'Hours'" class="row">
-            <div class="col-md-4">
-              <input v-model.number="optimizationHorizonNum" class="form-control numberbox" id="optimizationHorizonNum">
-              <span class="unit-label">hours</span>
-            </div>
-            <div class="col-md-7">
-              <p class="tool-tip">What is the number of hours of the optimization window?</p>
-            </div>
+          <drop-down-input v-model="optimizationHorizon"
+                           v-bind:field="metadata.optimizationHorizon"
+                           :isInvalid="submitted && $v.optimizationHorizon.$error"
+                           :errorMessage="getErrorMsg('optimizationHorizon')">
+          </drop-down-input>
+
+          <div v-if="optimizationHorizon == 'Hours'">
+            <text-input v-model="optimizationHorizonNum"
+                        v-bind:field="metadata.optimizationHorizonNum"
+                        :isInvalid="submitted && $v.optimizationHorizonNum.$error"
+                        :errorMessage="getErrorMsg('optimizationHorizonNum')">
+            </text-input>
           </div>
         </div>
       </fieldset>
@@ -133,23 +126,38 @@
 </template>
 
 <script>
-  import model from '@/models/StartProject';
-  import NavButtons from '@/components/Shared/NavButtons';
+  import { requiredIf } from 'vuelidate/lib/validators';
+  import wizardFormMixin from '@/mixins/wizardFormMixin';
+  import * as p from '@/models/Project/Project';
+  import * as c from '@/models/Project/constants';
   import { TECH_SPECS_PATH, START_PROJECT_PATH } from '@/router/constants';
 
-  const { validation } = model;
+  const metadata = p.projectMetadata;
+  const validations = metadata.getValidationSchema(c.OBJECTIVE_FIELDS);
 
   export default {
-    components: { NavButtons },
+    mixins: [wizardFormMixin],
     data() {
       return {
-        validation,
+        metadata,
         ...this.getDataFromProject(),
         START_PROJECT_PATH,
         TECH_SPECS_PATH,
       };
     },
+    validations: {
+      ...validations,
+      optimizationHorizonNum: {
+        ...validations.optimizationHorizonNum,
+        required: requiredIf(function isOptimizationHorizonNumRequired() {
+          return this.optimizationHorizon === 'Hours';
+        }),
+      },
+    },
     methods: {
+      getErrorMsg(fieldName) {
+        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
+      },
       getDataFromProject() {
         const projectSpecs = this.$store.state.Project;
         return {
@@ -158,6 +166,14 @@
           energyPriceSourceWholesale: projectSpecs.energyPriceSourceWholesale,
           listOfActiveServices: projectSpecs.listOfActiveServices,
         };
+      },
+      validatedSave() {
+        this.submitted = true;
+        this.$v.$touch();
+        if (!this.$v.$invalid) {
+          return this.saveAndContinue();
+        }
+        return () => { };
       },
       save() {
         this.$store.dispatch('chooseEnergyStructure', this.energyPriceSourceWholesale);
