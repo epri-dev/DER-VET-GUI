@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h3>Technology Specs: Internal Combustion Engine</h3>
+    <h3>Technology Specs: Internal Combustion Engine Generator</h3>
+    <hr />
     <form>
       <div class="form-horizontal form-buffer container">
 

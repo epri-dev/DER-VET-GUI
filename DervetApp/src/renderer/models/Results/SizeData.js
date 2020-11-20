@@ -106,7 +106,6 @@ export class SizeData extends BaseTableData {
     let powerCost = 0;
     let unitsCost = 0;
     if ('capitalCostKWh' in rowSizeData) {
-      console.log(JSON.stringify(rowSizeData));
       const cCostkWh = rowSizeData.capitalCostKWh;
       const energyRating = rowSizeData.energyRatingKWh;
       energyCost = cCostkWh * energyRating;
@@ -140,7 +139,6 @@ export class SizeData extends BaseTableData {
     }
     if ('capitalCost' in rowSizeData) {
       const cCost = rowSizeData.capitalCost;
-      console.log(typeof cCost);
       unitsCost = rowSizeData.quantity * cCost;
       const costPerUnit = [
         {

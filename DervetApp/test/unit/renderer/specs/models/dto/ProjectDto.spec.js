@@ -4,21 +4,105 @@ import {
   makeBatteryParameters,
   makeCsvs,
   makeDAParameters,
-  makeDatetimeIndex,
+  makeDCMParameters,
+  makeDeferralParameters,
+  makeDieselGensetParameters,
   makeFinanceParameters,
+  makeFRParameters,
+  makeICEParameters,
   makeModelParameters,
+  makeNSRParameters,
+  makePVParameters,
+  makeDatetimeIndex,
+  makeReliabilityParameters,
   makeResultsParameters,
+  makeRetailTimeShiftParameters,
   makeScenarioParameters,
+  makeSRParameters,
+  makeUserParameters,
   makeTimeSeriesCsv,
 } from '@/models/dto/ProjectDto';
 
 import { projectFixture } from '@/assets/samples/projectFixture.js';
+import { projectFixtureAllActive } from '@/assets/samples/projectFixture-everythingActive.js';
 import modelParametersFixture from '../../../../fixtures/case0/000-DA_battery_month.json';
+// import mpEverythingFixture from '../../../../fixtures/000-000-everything_active.json';
 
 describe('modelParametersDto', () => {
+  const actualFullMP = makeModelParameters(projectFixture);
+  it('should have translated the name correctly', () => {
+    expect(actualFullMP.name).to.eql(modelParametersFixture.name);
+  });
+  it('should have translated the type correctly', () => {
+    expect(actualFullMP.type).to.eql(modelParametersFixture.type);
+  });
+  const tagFixture = modelParametersFixture.tags;
+  const actualTags = actualFullMP.tags;
+  it('should have translated the battery parameters correctly', () => {
+    // console.log(JSON.stringify(actualTags.Battery, null, 1));
+    const expectedLength = Object.keys(tagFixture.Battery[''].keys).length;
+    expect(Object.keys(actualTags.Battery[''].keys).length).to.eql(expectedLength);
+    // const batKeys = Object.keys(actualTags.Battery[''].keys);
+    // let i = 0;
+    // while (i < batKeys.length) {
+    //   const currKey = batKeys[i];
+    //   console.log(currKey);
+    //   expect(actualTags.Battery[''].keys[currKey]).to.eql(tagFixture.Battery[''].keys[currKey]);
+    //   i += 1;
+    // }
+    expect(actualTags.Battery).to.eql(tagFixture.Battery);
+  });
+  it('should have translated the DA parameters correctly', () => {
+    expect(actualTags.DA).to.eql(tagFixture.DA);
+  });
+  it('should have translated the DCM parameters correctly', () => {
+    expect(actualTags.DCM).to.eql(tagFixture.DCM);
+  });
+  it('should have translated the deferral parameters correctly', () => {
+    expect(actualTags.Deferral).to.eql(tagFixture.Deferral);
+  });
+  it('should have translated the diesel genset parameters correctly', () => {
+    expect(actualTags.DieselGenset).to.eql(tagFixture.DieselGenset);
+  });
+  it('should have translated the finance parameters correctly', () => {
+    const expectedLength = Object.keys(tagFixture.Finance[''].keys).length;
+    expect(Object.keys(actualTags.Finance[''].keys).length).to.eql(expectedLength);
+    expect(actualTags.Finance).to.eql(tagFixture.Finance);
+  });
+  it('should have translated the FR parameters correctly', () => {
+    expect(actualTags.FR).to.eql(tagFixture.FR);
+  });
+  it('should have translated the ICE parameters correctly', () => {
+    expect(actualTags.ICE).to.eql(tagFixture.ICE);
+  });
+  it('should have translated the NSR parameters correctly', () => {
+    expect(actualTags.NSR).to.eql(tagFixture.NSR);
+  });
+  it('should have translated the PV parameters correctly', () => {
+    expect(actualTags.PV).to.eql(tagFixture.PV);
+  });
+  it('should have translated the reliability parameters correctly', () => {
+    expect(actualTags.Reliability).to.eql(tagFixture.Reliability);
+  });
+  it('should have translated the results parameters correctly', () => {
+    expect(actualTags.Results).to.eql(tagFixture.Results);
+  });
+  it('should have translated the retail ETS parameters correctly', () => {
+    expect(actualTags.retailTimeShift).to.eql(tagFixture.retailTimeShift);
+  });
+  it('should have translated the scenario parameters correctly', () => {
+    const expectedLength = Object.keys(tagFixture.Scenario[''].keys).length;
+    expect(Object.keys(actualTags.Scenario[''].keys).length).to.eql(expectedLength);
+    expect(actualTags.Scenario).to.eql(tagFixture.Scenario);
+  });
+  it('should have translated the SR parameters correctly', () => {
+    expect(actualTags.SR).to.eql(tagFixture.SR);
+  });
+  it('should have translated the user defined parameters correctly', () => {
+    expect(actualTags.User).to.eql(tagFixture.User);
+  });
   it('should translate a Project object into a ModelParameters object', () => {
-    const actual = makeModelParameters(projectFixture);
-    expect(actual).to.eql(modelParametersFixture);
+    expect(actualFullMP).to.eql(modelParametersFixture);
   });
 
   it('should create an object containing CSVs needed to run DERVET', () => {
@@ -49,29 +133,69 @@ describe('modelParametersDto', () => {
 
   it('should make battery parameters', () => {
     const actual = makeBatteryParameters(projectFixture);
-    expect(Object.keys(actual[''].keys).length).to.eql(49);
+    expect(Object.keys(actual[''].keys).length).to.eql(51);
   });
 
   it('should make DA parameters', () => {
     const actual = makeDAParameters(projectFixture);
     expect(Object.keys(actual[''].keys).length).to.eql(1);
   });
-
+  it('should make DCM parameters', () => {
+    const actual = makeDCMParameters(projectFixtureAllActive);
+    expect(Object.keys(actual[''].keys).length).to.eql(1);
+  });
+  it('should make deferral parameters', () => {
+    const actual = makeDeferralParameters(projectFixtureAllActive);
+    expect(Object.keys(actual[''].keys).length).to.eql(5);
+  });
+  it('should make diesel genset parameters', () => {
+    const actual = makeDieselGensetParameters(projectFixtureAllActive);
+    expect(Object.keys(actual[''].keys).length).to.eql(27);
+  });
   it('should make finance parameters', () => {
     const actual = makeFinanceParameters(projectFixture);
-    expect(Object.keys(actual[''].keys).length).to.eql(9);
+    expect(Object.keys(actual[''].keys).length).to.eql(10);
   });
-
+  it('should make FR parameters', () => {
+    const actual = makeFRParameters(projectFixtureAllActive);
+    expect(Object.keys(actual[''].keys).length).to.eql(8);
+  });
+  it('should make ICE parameters', () => {
+    const actual = makeICEParameters(projectFixtureAllActive);
+    expect(Object.keys(actual[''].keys).length).to.eql(27);
+  });
+  it('should make NSR parameters', () => {
+    const actual = makeNSRParameters(projectFixtureAllActive);
+    expect(Object.keys(actual[''].keys).length).to.eql(3);
+  });
+  it('should make PV parameters', () => {
+    const actual = makePVParameters(projectFixtureAllActive);
+    expect(Object.keys(actual[''].keys).length).to.eql(31);
+  });
+  it('should make reliability parameters', () => {
+    const actual = makeReliabilityParameters(projectFixtureAllActive);
+    expect(Object.keys(actual[''].keys).length).to.eql(5);
+  });
   it('should make results parameters', () => {
     const actual = makeResultsParameters(projectFixture);
     expect(Object.keys(actual[''].keys).length).to.eql(3);
   });
-
+  it('should make retail ETS parameters', () => {
+    const actual = makeRetailTimeShiftParameters(projectFixtureAllActive);
+    expect(Object.keys(actual[''].keys).length).to.eql(1);
+  });
   it('should make scenario parameters', () => {
     const actual = makeScenarioParameters(projectFixture);
     expect(Object.keys(actual[''].keys).length).to.eql(25);
   });
-
+  it('should make SR parameters', () => {
+    const actual = makeSRParameters(projectFixtureAllActive);
+    expect(Object.keys(actual[''].keys).length).to.eql(3);
+  });
+  it('should make user defined parameters', () => {
+    const actual = makeUserParameters(projectFixtureAllActive);
+    expect(Object.keys(actual[''].keys).length).to.eql(1);
+  });
   it('should make a base key value given a value and type', () => {
     const actual = makeBaseKey('1', 'int');
     const expected = {
