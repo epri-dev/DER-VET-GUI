@@ -77,7 +77,6 @@
         <nav-buttons
           :back-link="WIZARD_COMPONENT_PATH"
           :continue-link="`${TECH_SPECS_PV_PATH}-upload/${this.solarId}`"
-          :disabled=$v.$invalid
           :displayError="submitted && $v.$anyError"
           :save="validatedSave"
         />
@@ -121,6 +120,15 @@
         }),
       },
     },
+    beforeMount() {
+      // submitted is false initially; set it to true after the first save.
+      // initially, complete is null; after saving, it is set to either true or false.
+      // we want to show validation errors at any time after the first save, with submitted.
+      if (this.complete !== null) {
+        this.submitted = true;
+        this.$v.$touch();
+      }
+    },
     methods: {
       isNewSolar() {
         return this.solarId === 'null';
@@ -132,12 +140,9 @@
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       validatedSave() {
-        this.submitted = true;
-        this.$v.$touch();
-        if (!this.$v.$invalid) {
-          return this.saveAndContinue();
-        }
-        return () => {};
+        // set complete to true or false
+        this.complete = !this.$v.$invalid;
+        return this.saveAndContinue();
       },
       saveAndContinue() {
         const solarSpec = this.buildSolarPV();
@@ -155,19 +160,20 @@
       buildSolarPV() {
         return {
           active: this.active,
+          complete: this.complete,
+          constructionDate: this.constructionDate,
+          cost: this.cost,
+          generationProfile: this.generationProfile,
+          id: this.id,
+          inverterMax: this.inverterMax,
+          loc: this.loc,
+          macrsTerm: this.macrsTerm,
+          name: this.name,
+          operationDate: this.operationDate,
+          ratedCapacity: this.ratedCapacity,
+          shouldSize: this.shouldSize,
           tag: this.tag,
           technologyType: this.technologyType,
-          id: this.id,
-          name: this.name,
-          cost: this.cost,
-          shouldSize: this.shouldSize,
-          ratedCapacity: this.ratedCapacity,
-          loc: this.loc,
-          inverterMax: this.inverterMax,
-          constructionDate: this.constructionDate,
-          operationDate: this.operationDate,
-          macrsTerm: this.macrsTerm,
-          generationProfile: this.generationProfile,
         };
       },
     },

@@ -2,9 +2,9 @@
   <div class="left-sidebar">
     <b-nav vertical>
       <router-link class="nav nav-sidebar sidebar-root-el"
-                   v-bind:class="{ current: isActive(this.paths.WIZARD_COMPONENT_PATH) }"
-                   :to="this.paths.WIZARD_COMPONENT_PATH">
-        Components
+                   v-bind:class="{ current: isCurrent(`${this.paths.WIZARD_COMPONENT_PATH}/technology-specs`) }"
+                   :to="this.paths.TECH_SPECS_PATH">
+        Technologies
       </router-link>
 
       <router-link class="nav nav-sidebar sidebar-indent"
@@ -12,8 +12,7 @@
                    :to="{ name: 'technologySpecsSolarPV', params: { solarId: solar.id }}"
                    :key="solar.id"
                    v-bind:class="{
-          current: techSpecsActiveSaved('solar-pv', solar.id),
-          complete: solar.complete,
+          current: isCurrentTech(solar),
           incomplete: !solar.complete }">
         {{ getTechLabel(solar) }}
       </router-link>
@@ -23,8 +22,7 @@
                    :to="{ name: 'technologySpecsBattery', params: { batteryId: battery.id }}"
                    :key="battery.id"
                    v-bind:class="{
-          current: techSpecsActiveSaved('battery', battery.id),
-          complete: battery.complete,
+          current: isCurrentTech(battery),
           incomplete: !battery.complete }">
         {{ getTechLabel(battery) }}
       </router-link>
@@ -34,8 +32,7 @@
                    :to="{ name: 'technologySpecsICE', params: { iceId: ice.id }}"
                    :key="ice.id"
                    v-bind:class="{
-          current: techSpecsActiveSaved('ice', ice.id),
-          complete: ice.complete,
+          current: isCurrentTech(ice),
           incomplete: !ice.complete }">
         {{ getTechLabel(ice) }}
       </router-link>
@@ -45,96 +42,90 @@
                    :to="{ name: 'technologySpecsDieselGen', params: { dieselGenId: dieselGen.id }}"
                    :key="dieselGen.id"
                    v-bind:class="{
-          current: techSpecsActiveSaved('diesel-gen', dieselGen.id),
-          complete: dieselGen.complete,
+          current: isCurrentTech(dieselGen),
           incomplete: !dieselGen.complete }">
         {{ getTechLabel(dieselGen) }}
       </router-link>
 
-      <div class="nav nav-sidebar sidebar-indent current"
-           v-if="techSpecsActiveUnsaved('solar-pv')">
-        Solar PV
-      </div>
-      <div class="nav nav-sidebar sidebar-indent current"
-           v-if="techSpecsActiveUnsaved('battery')">
-        Battery Storage
-      </div>
-      <div class="nav nav-sidebar sidebar-indent current"
-           v-if="techSpecsActiveUnsaved('ice')">
-        Internal Combustion Engine
-      </div>
-      <div class="nav nav-sidebar sidebar-indent current"
-           v-if="techSpecsActiveUnsaved('diesel-gen')">
-        Diesel Generator
-      </div>
+      <router-link class="nav nav-sidebar sidebar-root-el"
+                   v-bind:class="{ current: isCurrent(`${this.paths.WIZARD_COMPONENT_PATH}/objectives`) }"
+                   :to="this.paths.OBJECTIVES_PATH">
+        Services
+      </router-link>
 
       <router-link class="nav nav-sidebar sidebar-indent"
-                   v-bind:class="{ current: isActive(this.paths.OBJECTIVES_SITE_INFORMATION_PATH) }"
+                   v-bind:class="{ current: isCurrent(this.paths.OBJECTIVES_SITE_INFORMATION_PATH) }"
                    :to="this.paths.OBJECTIVES_SITE_INFORMATION_PATH">
         Site Information
       </router-link>
       <router-link class="nav nav-sidebar sidebar-indent"
-                   v-bind:class="{ current: isActive(this.paths.OBJECTIVES_DEFERRAL_PATH) }"
+                   v-bind:class="{ current: isCurrent(this.paths.OBJECTIVES_DEFERRAL_PATH) }"
                    :to="this.paths.OBJECTIVES_DEFERRAL_PATH"
                    v-if="objectivesDeferral">
         Deferral
       </router-link>
       <router-link class="nav nav-sidebar sidebar-indent"
-                   v-bind:class="{ current: isActive(this.paths.OBJECTIVES_FR_PATH) }"
+                   v-bind:class="{ current: isCurrent(this.paths.OBJECTIVES_FR_PATH) }"
                    :to="this.paths.OBJECTIVES_FR_PATH"
                    v-if="objectivesFR">
         Frequency Regulation
       </router-link>
       <router-link class="nav nav-sidebar sidebar-indent"
-                   v-bind:class="{ current: isActive(this.paths.OBJECTIVES_NSR_PATH) }"
+                   v-bind:class="{ current: isCurrent(this.paths.OBJECTIVES_NSR_PATH) }"
                    :to="this.paths.OBJECTIVES_NSR_PATH"
                    v-if="objectivesNSR">
         Non-Spinning Reserves
       </router-link>
       <router-link class="nav nav-sidebar sidebar-indent"
-                   v-bind:class="{ current: isActive(this.paths.OBJECTIVES_RESILIENCE_PATH) }"
+                   v-bind:class="{ current: isCurrent(this.paths.OBJECTIVES_RESILIENCE_PATH) }"
                    :to="this.paths.OBJECTIVES_RESILIENCE_PATH"
                    v-if="objectivesResilience">
         Reliability
       </router-link>
       <router-link class="nav nav-sidebar sidebar-indent"
-                   v-bind:class="{ current: isActive(this.paths.OBJECTIVES_SR_PATH) }"
+                   v-bind:class="{ current: isCurrent(this.paths.OBJECTIVES_SR_PATH) }"
                    :to="this.paths.OBJECTIVES_SR_PATH"
                    v-if="objectivesSR">
         Spinning Reserves
       </router-link>
       <router-link class="nav nav-sidebar sidebar-indent"
-                   v-bind:class="{ current: isActive(this.paths.OBJECTIVES_USER_DEFINED_PATH) }"
+                   v-bind:class="{ current: isCurrent(this.paths.OBJECTIVES_USER_DEFINED_PATH) }"
                    :to="this.paths.OBJECTIVES_USER_DEFINED_PATH"
                    v-if="objectivesUserDefined">
         Custom Service
       </router-link>
       <router-link class="nav nav-sidebar sidebar-indent"
-                   v-bind:class="{ current: isActive(this.paths.OBJECTIVES_DA_PATH) }"
+                   v-bind:class="{ current: isCurrent(this.paths.OBJECTIVES_DA_PATH) }"
                    :to="this.paths.OBJECTIVES_DA_PATH"
                    v-if="objectivesDA">
         Day Ahead Pricing
       </router-link>
 
-      <router-link class="nav nav-sidebar sidebar-root-el"
-                   v-bind:class="{ current: isActive(this.paths.FINANCIAL_INPUTS_PATH) }"
+      <!-- TODO: make this the ssme color as a router-link ? -->
+      <div class="nav nav-sidebar sidebar-root-el"
+                   v-bind:class="{ current: isCurrent(`${this.paths.WIZARD_COMPONENT_PATH}/financial`) }">
+        Finances
+      </div>
+
+      <router-link class="nav nav-sidebar sidebar-indent"
+                   v-bind:class="{ current: isCurrent(`${this.paths.FINANCIAL_INPUTS_PATH}$`) }"
                    :to="this.paths.FINANCIAL_INPUTS_PATH">
         Financial Inputs
       </router-link>
       <router-link class="nav nav-sidebar sidebar-indent"
-                   v-bind:class="{ current: isActive(this.paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH) }"
+                   v-bind:class="{ current: isCurrent(this.paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH) }"
                    :to="this.paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH">
         External Incentives
       </router-link>
       <router-link class="nav nav-sidebar sidebar-indent"
-                   v-bind:class="{ current: isActive(this.paths.FINANCIAL_INPUTS_RETAIL_TARIFF_PATH) }"
+                   v-bind:class="{ current: isCurrent(this.paths.FINANCIAL_INPUTS_RETAIL_TARIFF_PATH) }"
                    :to="this.paths.FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
                    v-if="objectivesRetailEnergyChargeReduction||objectivesRetailDemandChargeReduction">
         Retail Tariff
       </router-link>
 
       <router-link class="nav nav-sidebar sidebar-root-el"
-                   v-bind:class="{ current: isActive(this.paths.SENSITIVITY_ANALYSIS_PATH) }"
+                   v-bind:class="{ current: isCurrent(this.paths.SENSITIVITY_ANALYSIS_PATH) }"
                    :to="this.paths.SENSITIVITY_ANALYSIS_PATH">
         Scenario Analysis
       </router-link>
@@ -157,20 +148,28 @@
       };
     },
     methods: {
-      techSpecsComplete(active) {
-        return active;
+      isCurrentTech(payload) {
+        const techPath = this.getTechBasePath(payload.tag);
+        return RegExp(`${techPath}.*/${payload.id}`).test(this.$route.path);
       },
-      techSpecsActiveSaved(tech, id) {
-        return RegExp(`${this.paths.TECH_SPECS_PATH}-${tech}.*/${id}`).test(this.$route.path);
-      },
-      techSpecsActiveUnsaved(tech) {
-        return RegExp(`${this.paths.TECH_SPECS_PATH}-${tech}/null`).test(this.$route.path);
-      },
-      isActive(path) {
+      isCurrent(path) {
         return RegExp(path).test(this.$route.path);
       },
+      getTechBasePath(techTag) {
+        let techPath = '';
+        if (techTag === 'PV') {
+          techPath = this.paths.TECH_SPECS_PV_PATH;
+        } else if (techTag === 'Battery') {
+          techPath = this.paths.TECH_SPECS_BATTERY_PATH;
+        } else if (techTag === 'ICE') {
+          techPath = this.paths.TECH_SPECS_ICE_PATH;
+        } else if (techTag === 'Diesel') {
+          techPath = this.paths.TECH_SPECS_DIESEL_PATH;
+        }
+        return techPath;
+      },
       getTechLabel(payload) {
-        if (payload.name) {
+        if (payload.name !== null) {
           return `${payload.tag}: ${payload.name}`;
         }
         return `Undefined ${payload.tag}`;

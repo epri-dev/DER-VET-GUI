@@ -106,9 +106,10 @@ export default class TechnologySpecsICEMetadata {
   getDefaultValues() {
     return {
       active: true,
+      complete: null,
+      id: uuidv4(),
       tag: ICE,
       technologyType: 'Generator',
-      id: uuidv4(),
       ...this.operateOnDynamicFields(f => f.defaultValue),
     };
   }
@@ -182,8 +183,8 @@ export default class TechnologySpecsICEMetadata {
         defaultValue: null,
         displayName: 'Maximum Number of Generators to Install',
         isRequired: true,
-        minValue: 0,
-        type: Number,
+        minValue: 2, // differs from schema; want gt minGenerators
+        type: 'int',
         unit: 'generators',
         description: 'What is the maximum number of internal combustion engines to consider installing?',
         allowedValues: null,
@@ -192,8 +193,8 @@ export default class TechnologySpecsICEMetadata {
         defaultValue: null,
         displayName: 'Minimum Number of Generators to Install',
         isRequired: true,
-        minValue: 0,
-        type: Number,
+        minValue: 1, // differs from schema; want gt 0
+        type: 'int',
         unit: 'generators',
         description: 'What is the minimum number of internal combustion engines to consider installing?',
         allowedValues: null,
@@ -221,8 +222,8 @@ export default class TechnologySpecsICEMetadata {
         defaultValue: null,
         displayName: 'Number of Generators to Install',
         isRequired: true,
-        minValue: 0,
-        type: Number,
+        minValue: 1, // differs from schema; want gt 0
+        type: 'int',
         unit: null,
         description: 'What is the number of internal combustion engines to install?',
         allowedValues: null,
@@ -260,7 +261,7 @@ export default class TechnologySpecsICEMetadata {
         displayName: 'Startup Time',
         isRequired: true,
         minValue: 0,
-        type: Number,
+        type: 'int',
         unit: 'minutes',
         description: 'How many minutes are required for the internal combustion engine to go from an off state to producing its full rated power',
         allowedValues: null,

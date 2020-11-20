@@ -106,7 +106,7 @@ export default class TechnologySpecsSolarPVMetadata {
   getDefaultValues() {
     return {
       active: true,
-      complete: false,
+      complete: null,
       tag: PV,
       technologyType: 'Intermittent Resource',
       id: uuidv4(),
@@ -135,8 +135,8 @@ export default class TechnologySpecsSolarPVMetadata {
         defaultValue: null,
         displayName: 'Cost per kW',
         isRequired: true,
-        type: Number,
         minValue: 0,
+        type: Number,
         unit: '$/kW',
         description: 'Capital cost per kW of rated power capacity (applied in year 0 of the analysis)',
         allowedValues: null,
@@ -147,7 +147,6 @@ export default class TechnologySpecsSolarPVMetadata {
         displayName: 'Solar (+storage) Inverter Rating (kVA)',
         isRequired: true,
         minValue: 0,
-        // greaterThan: 0,
         type: Number,
         unit: 'kW',
         description: null,
@@ -193,6 +192,7 @@ export default class TechnologySpecsSolarPVMetadata {
         defaultValue: null,
         displayName: 'Rated Capacity',
         isRequired: true,
+        minValue: 1, // differs from schema; want gt 0
         type: Number,
         unit: 'kW',
         description: null,
