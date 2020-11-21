@@ -1,7 +1,7 @@
 <template>
   <div class="form-group row">
     <div class="col-md-3">
-      <label class="control-label"><b>{{ field.displayName }}</b></label>
+      <label class="control-label"><b v-html="field.displayName"/></label>
     </div>
     <div class="col-md-9">
       <input

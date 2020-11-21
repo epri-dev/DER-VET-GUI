@@ -20,9 +20,6 @@
       </router-link>
 
     </b-nav>
-    <div class="export-project">
-      <router-link class="btn btn-md btn-primary" to="/">Export Project</router-link>
-    </div>
   </div>
 </template>
 
