@@ -6,7 +6,7 @@ const getDefaultResultState = () => ({
   id: null,
   sensitivityAnalysisCase: null,
   resultsLoaded: false,
-  errorMessage: null,
+  isError: false,
   data: null, // save result models here
   sensitivitySummary: null,
   runInProgress: false,
@@ -27,9 +27,12 @@ const mutations = {
     state.resultsLoaded = true;
     state.runInProgress = false;
   },
-  SET_RESULT_ERROR(state, errorMessage) {
-    state.errorMessage = errorMessage;
+  SET_RESULT_ERROR(state) {
+    state.isError = true;
     state.runInProgress = false;
+  },
+  RESET_RESULT_TO_DEFAULT(state) {
+    Object.assign(state, getDefaultResultState());
   },
 };
 
@@ -38,17 +41,20 @@ const actions = {
     commit('SET_ID', newId);
   },
   runDervet({ commit }, project) {
-    const dervetInputs = makeDervetInputs(project);
     commit('SET_RUN_IN_PROGRESS');
+    const dervetInputs = makeDervetInputs(project);
     IpcService.sendProject(dervetInputs);
   },
-  receiveError({ commit }, error) {
-    commit('SET_RESULT_ERROR', error);
+  receiveError({ commit }) {
+    commit('SET_RESULT_ERROR');
   },
   receiveResults({ commit }, results) {
     // TODO: handle parsing error
     const resultDataObject = new ResultsData(0, results);
     commit('SET_RESULT_SUCCESS', resultDataObject);
+  },
+  resetResultToDefault({ commit }) {
+    commit('RESET_RESULT_TO_DEFAULT');
   },
 };
 

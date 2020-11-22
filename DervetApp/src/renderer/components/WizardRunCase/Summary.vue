@@ -79,7 +79,7 @@
             <router-link
               v-on:click.native="runInProgress() ? () => null : runDervet()"
               :event="runDervetDisabled() ? '' : 'click'"
-              :to="RUN_ANALYSIS_PATH"
+              :to="this.$route.path"
               class="btn btn-lg btn-danger pull-left">
               {{ runInProgress() ? 'Running Analysis...' : 'Run Analysis' }}
             </router-link>
@@ -87,8 +87,6 @@
         </div>
 
       </div>
-
-
     </form>
 
   </div>
@@ -137,12 +135,12 @@
         // incomplete Project object will likely result in an unhandled exception
         const p = this.$store.state.Project;
         const projectFixture = getProjectFixture(p.inputsDirectory, p.resultsDirectory);
-        this.$store.dispatch('runDervet', projectFixture);
+        this.$store.dispatch('runDervet', projectFixture)
+          .then(this.$router.push({ path: RUN_ANALYSIS_PATH }));
       },
     },
     data() {
       return {
-        RUN_ANALYSIS_PATH,
         setup: [
           ['Project Name', (this.$store.state.Project.name || '')],
           ['Start Year', this.$store.state.Project.startYear],

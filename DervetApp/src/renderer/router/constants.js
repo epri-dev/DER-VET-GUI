@@ -38,4 +38,3 @@ export const RESULTS_RELIABILITY_PATH = `${RESULTS_PATH}/reliability`;
 export const RESULTS_DEFERRAL_PATH = `${RESULTS_PATH}/deferral`;
 export const RESULTS_DISPATCH_PATH = `${RESULTS_PATH}/dispatch`;
 export const RESULTS_FINANCIAL_PATH = `${RESULTS_PATH}/financial`;
-
