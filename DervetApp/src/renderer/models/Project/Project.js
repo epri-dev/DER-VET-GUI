@@ -25,9 +25,10 @@ export class ProjectMetadata {
       objectivesResilience: false,
       objectivesSR: false,
       objectivesUserDefined: false,
-      siteLoad: null,
       type: 'Wizard',
       ...this.operateOnFieldList(c.START_PROJECT_FIELDS, f => f.defaultValue),
+      ...this.operateOnFieldList(c.OBJECTIVE_FIELDS, f => f.defaultValue),
+      ...this.operateOnFieldList(c.SITE_LOAD_FIELDS, f => f.defaultValue),
     };
   }
 

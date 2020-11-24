@@ -3,91 +3,103 @@
     <h3>Services: Site Information</h3>
     <hr>
     <form class="form-horizontal form-buffer">
-      <div class="form-group row">
-        <div class="col-md-12 checkboxes">
-          <input
-            id="no-charging-from-grid"
-            type="checkbox"
-            v-model="inputNoChargingFromGrid">
-          <label for="no-charging-from-grid">Prevent power import from the grid (self-generation only)</label>
-          <p class="tool-tip tt-col-0">
-            Will the project be required to island and ride through an outage of a specified duration?
-          </p>
-        </div>
+      <radio-button-input v-model="includeInterconnectionConstraints"
+                          v-bind:field="metadata.includeInterconnectionConstraints"
+                          :isInvalid="submitted && $v.includeInterconnectionConstraints.$error"
+                          :errorMessage="getErrorMsg('includeInterconnectionConstraints')">
+      </radio-button-input>
+      <div class="form-group" v-if="includeInterconnectionConstraints">
+        <text-input v-model="maxExport"
+                    v-bind:field="metadata.maxExport"
+                    :isInvalid="submitted && $v.maxExport.$error"
+                    :errorMessage="getErrorMsg('maxExport')">
+        </text-input>
+
+        <text-input v-model="maxImport"
+                    v-bind:field="metadata.maxImport"
+                    :isInvalid="submitted && $v.maxImport.$error"
+                    :errorMessage="getErrorMsg('maxImport')">
+        </text-input>
+
       </div>
-      <div class="form-group row">
-        <div class="col-md-12 checkboxes">
-          <input
-            id="no-discharging-to-grid"
-            type="checkbox"
-            v-model="inputNoDischargingToGrid">
-          <label for="no-discharging-to-grid">Prevent power export to the grid (self-consumption only)</label>
-          <p class="tool-tip tt-col-0">
-            Will the project be required to island and ride through an outage of a specified duration?
-          </p>
+      <div class="form-group" v-if="includeSiteLoad">
+        <timeseries-data-upload chart-name="chartUploadedTimeSeries"
+                                data-name="site load"
+                                units="kW"
+                                @uploaded="receiveTimeseriesData"
+                                :data-exists="(tsData !== null)"
+                                :data-time-series="tsData"
+                                :key="childKey" />
+        <div v-if="(siteLoad === null)">
+          <hr>
+          <div class="form-group row">
+            <div class="col-md-12">
+              <i>
+                <a href="files/SampleSiteLoad-8760.csv" download class="important-link">Click here to download a sample <code>.csv</code> file</a> with a 60-minute timestep for a year with 365 days (8,760 readings)
+              </i>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-12">
+              <i>
+                <a href="files/SampleSiteLoad-8784.csv" download class="important-link">Click here to download a sample <code>.csv</code> file</a> with a 60-minute timestep <b>for a leap year with 366 days</b> (8,784 readings)
+              </i>
+            </div>
+          </div>
         </div>
-      </div>
-      <timeseries-data-upload
-        chart-name="chartUploadedTimeSeries"
-        data-name="site load"
-        units="kW"
-        @uploaded="receiveTimeseriesData"
-        :data-exists="(tsData !== null)"
-        :data-time-series="tsData"
-        :key="childKey"
-      />
-      <div v-if="(siteLoad === null)">
         <hr>
-        <div class="form-group row">
-          <div class="col-md-12">
-            <i>
-            <a href="files/SampleSiteLoad-8760.csv" download class="important-link">Click here to download a sample <code>.csv</code> file</a> with a 60-minute timestep for a year with 365 days (8,760 readings)
-            </i>
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-md-12">
-            <i>
-            <a href="files/SampleSiteLoad-8784.csv" download class="important-link">Click here to download a sample <code>.csv</code> file</a> with a 60-minute timestep <b>for a leap year with 366 days</b> (8,784 readings)
-            </i>
-          </div>
-        </div>
+
+        <nav-buttons :back-link="WIZARD_COMPONENT_PATH"
+                     :continue-link="WIZARD_COMPONENT_PATH"
+                     :displayError="submitted && $v.$anyError"
+                     :save="this.validatedSave" />
       </div>
-      <hr>
-
-      <nav-buttons
-        :back-link="WIZARD_COMPONENT_PATH"
-        :continue-link="WIZARD_COMPONENT_PATH"
-        :save="this.save"
-      />
-
     </form>
   </div>
 </template>
 
 <script>
+  import { requiredIf } from 'vuelidate/lib/validators';
+  import wizardFormMixin from '@/mixins/wizardFormMixin';
+  import ObjectivesSiteInformationMetadata from '@/models/Project/Objectives/ObjectivesSiteInformation';
+
   import '@/assets/samples/SampleSiteLoad-8760.csv';
   import '@/assets/samples/SampleSiteLoad-8784.csv';
-  import NavButtons from '@/components/Shared/NavButtons';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
   import { sharedValidation } from '@/models/Shared';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 
+  const metadata = ObjectivesSiteInformationMetadata.getHardcodedMetadata();
+  const validations = metadata.getValidationSchema();
 
   export default {
-    components: { NavButtons, TimeseriesDataUpload },
-    mixins: [csvUploadMixin],
+    components: { TimeseriesDataUpload },
+    mixins: [csvUploadMixin, wizardFormMixin],
     data() {
       const p = this.$store.state.Project;
       return {
+        metadata,
         sharedValidation,
-        inputNoChargingFromGrid: p.noChargingFromGrid,
-        inputNoDischargingToGrid: p.noDischargingToGrid,
-        siteLoad: p.siteLoad,
+        ...p.objectivesSiteInformation,
         WIZARD_COMPONENT_PATH,
       };
+    },
+    validations: {
+      ...validations,
+      maxExport: {
+        ...validations.maxExport,
+        required: requiredIf(function isMaxExportRequired() {
+          return this.includeInterconnectionConstraints;
+        }),
+      },
+      maxImport: {
+        ...validations.maxImport,
+        required: requiredIf(function isMaxImportRequired() {
+          return this.includeInterconnectionConstraints;
+        }),
+      },
     },
     computed: {
       tsData() {
@@ -97,13 +109,37 @@
         return new SiteLoadTimeSeries(this.inputTimeseries);
       },
     },
+    beforeMount() {
+      // submitted is false initially; set it to true after the first save.
+      // initially, complete is null; after saving, it is set to either true or false.
+      // we want to show validation errors at any time after the first save, with submitted.
+      if (this.complete !== null) {
+        this.submitted = true;
+        this.$v.$touch();
+      }
+    },
     methods: {
+      getErrorMsg(fieldName) {
+        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
+      },
+      validatedSave() {
+        // set complete to true or false
+        this.complete = !this.$v.$invalid;
+        return this.save();
+      },
       save() {
         if (this.inputTimeseries !== null) {
           this.$store.dispatch('setSiteLoad', this.tsData);
         }
-        this.$store.dispatch('setNoChargingFromGrid', this.inputNoChargingFromGrid);
-        this.$store.dispatch('setNoDischargingToGrid', this.inputNoDischargingToGrid);
+        this.$store.dispatch('setIncludePOIConstraints', this.includeInterconnectionConstraints);
+        if (this.includeInterconnectionConstraints) {
+          this.$store.dispatch('setMaxImportFromGrid', this.maxImport);
+          this.$store.dispatch('setMaxExportToGrid', this.maxExport);
+        } else {
+          this.$store.dispatch('setMaxImportFromGrid', 0);
+          this.$store.dispatch('setMaxExportToGrid', 0);
+        }
+        this.$store.dispatch('setCompletenessSiteInformation', this.complete);
       },
     },
   };

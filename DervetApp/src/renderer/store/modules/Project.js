@@ -1,8 +1,10 @@
 import { cloneDeep, flatten } from 'lodash';
 
 import { projectMetadata } from '@/models/Project/Project';
+import ObjectivesSiteInformationMetadata from '@/models/Project/Objectives/ObjectivesSiteInformation';
 
 const metadataDefaultValues = projectMetadata.getDefaultValues();
+const siteInformationMetaData = ObjectivesSiteInformationMetadata.getHardcodedMetadata();
 
 const getDefaultState = () => ({
   ...metadataDefaultValues,
@@ -46,6 +48,7 @@ const getDefaultState = () => ({
     maxOutageDuration: 0,
   },
   retailETS: { growth: 0 }, // TODO collect value
+  objectivesSiteInformation: { ...siteInformationMetaData.getDefaultValues() },
   sr: {
     growth: 0,
     duration: 0,
@@ -145,6 +148,15 @@ const mutations = {
   SET_TYPE(state, type) {
     state.type = type;
   },
+  SET_INCLUDE_POI_CONTRAINTS(state, newIncludePOIConstraints) {
+    state.objectivesSiteInformation.includeInterconnectionConstraints = newIncludePOIConstraints;
+  },
+  SET_INCLUDE_SITE_LOAD(state) {
+    let customerSited = state.objectivesRetailEnergyChargeReduction;
+    customerSited = customerSited || state.objectivesRetailEnergyChargeReduction;
+    customerSited = customerSited || (state.ownership === 'Customer');
+    state.objectivesSiteInformation.includeSiteLoad = customerSited;
+  },
   SET_INPUTS_DIRECTORY(state, newInputsDirectory) {
     state.inputsDirectory = newInputsDirectory;
   },
@@ -166,11 +178,14 @@ const mutations = {
   SET_PROPERTY_TAX_RATE(state, newPropertyTaxRate) {
     state.propertyTaxRate = newPropertyTaxRate;
   },
-  SET_NO_CHARGING_FROM_GRID(state, newNoChargingFromGrid) {
-    state.noChargingFromGrid = newNoChargingFromGrid;
+  SET_MAX_IMPORT_FROM_GRID(state, newChargingFromGridLimit) {
+    state.objectivesSiteInformation.maxImport = newChargingFromGridLimit;
   },
-  SET_NO_DISCHARGING_TO_GRID(state, newNoDischargingToGrid) {
-    state.noDischargingToGrid = newNoDischargingToGrid;
+  SET_MAX_EXPORT_TO_GRID(state, newDischargingToGridLimit) {
+    state.objectivesSiteInformation.maxExport = newDischargingToGridLimit;
+  },
+  SET_COMPLETENESS_SITE_INFORMATION(state, newCompleteness) {
+    state.objectivesSiteInformation.complete = newCompleteness;
   },
   SET_SITE_LOAD(state, newSiteLoad) {
     state.siteLoad = newSiteLoad;
@@ -474,6 +489,12 @@ const actions = {
   setType({ commit }, type) {
     commit('SET_TYPE', type);
   },
+  setIncludePOIConstraints({ commit }, newIncludePOIConstraints) {
+    commit('SET_INCLUDE_POI_CONTRAINTS', newIncludePOIConstraints);
+  },
+  setIncludeSiteLoad({ commit }) {
+    commit('SET_INCLUDE_SITE_LOAD');
+  },
   setInputsDirectory({ commit }, newInputsDirectory) {
     commit('SET_INPUTS_DIRECTORY', newInputsDirectory);
   },
@@ -495,11 +516,14 @@ const actions = {
   setPropertyTaxRate({ commit }, newPropertyTaxRate) {
     commit('SET_PROPERTY_TAX_RATE', newPropertyTaxRate);
   },
-  setNoChargingFromGrid({ commit }, newNoChargingFromGrid) {
-    commit('SET_NO_CHARGING_FROM_GRID', newNoChargingFromGrid);
+  setMaxImportFromGrid({ commit }, newChargingFromGridLimit) {
+    commit('SET_MAX_IMPORT_FROM_GRID', newChargingFromGridLimit);
   },
-  setNoDischargingToGrid({ commit }, newNoDischargingToGrid) {
-    commit('SET_NO_DISCHARGING_TO_GRID', newNoDischargingToGrid);
+  setMaxExportToGrid({ commit }, newDischargingToGridLimit) {
+    commit('SET_MAX_EXPORT_TO_GRID', newDischargingToGridLimit);
+  },
+  setCompletenessSiteInformation({ commit }, newCompleteness) {
+    commit('SET_COMPLETENESS_SITE_INFORMATION', newCompleteness);
   },
   setSiteLoad({ commit }, newSiteLoad) {
     commit('SET_SITE_LOAD', newSiteLoad);

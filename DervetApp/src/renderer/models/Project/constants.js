@@ -32,6 +32,7 @@ export const OWNERSHIP_ALLOWED_VALUES = makeAllowedValues(['Customer', 'Utility'
 export const TIMESTEP_ALLOWED_VALUES = makeAllowedValuesWithNull(['1', '5', '15', '30', '60']);
 export const OPTIMIZATION_HORIZON_ALLOWED_VALUES = makeAllowedValues(['Year', 'Month', 'Hours']);
 
+
 // Field groupings
 export const START_PROJECT_FIELDS = [
   ANALYSIS_HORIZON,
@@ -48,7 +49,4 @@ export const START_PROJECT_FIELDS = [
 export const OBJECTIVE_FIELDS = [
   OPTIMIZATION_HORIZON,
   OPTIMIZATION_HORIZON_NUM,
-];
-export const SITE_LOAD = [
-
 ];
