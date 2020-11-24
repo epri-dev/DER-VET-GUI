@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="col-md-5">
-      <p class="tool-tip tooltip-col">{{ field.description }}</p>
+      <p class="tool-tip tool-tip-col">{{ field.description }}</p>
     </div>
   </div>
 </template>

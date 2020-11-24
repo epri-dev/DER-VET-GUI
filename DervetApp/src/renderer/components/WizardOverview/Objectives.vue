@@ -99,30 +99,49 @@
         </div>
       </div>
       <hr />
-      <fieldset class="section-group">
-        <legend>Optimization Horizon</legend>
-        <div class="form-group">
-          <drop-down-input v-model="optimizationHorizon"
-                           v-bind:field="metadata.optimizationHorizon"
-                           :isInvalid="submitted && $v.optimizationHorizon.$error"
-                           :errorMessage="getErrorMsg('optimizationHorizon')">
-          </drop-down-input>
-
-          <div v-if="optimizationHorizon == 'Hours'">
-            <text-input v-model="optimizationHorizonNum"
-                        v-bind:field="metadata.optimizationHorizonNum"
-                        :isInvalid="submitted && $v.optimizationHorizonNum.$error"
-                        :errorMessage="getErrorMsg('optimizationHorizonNum')">
-            </text-input>
-          </div>
+      <div class="row">
+        <div class="col-md-3">
+          <label class="control-label" for="size"><b>Size equipement in microgrid</b></label>
         </div>
-      </fieldset>
-      <hr />
-      <nav-buttons :back-link="START_PROJECT_PATH"
-                   :continue-link="TECH_SPECS_PATH"
-                   :save="save" />
+
+        <div class="col-md-4 form-control-static">
+          <b-form-radio-group id="is-sizing" v-model="sizeEquipement">
+            <b-form-radio value="true">Yes</b-form-radio>
+            <b-form-radio value="false">No</b-form-radio>
+          </b-form-radio-group>
+        </div>
+        <div class="col-md-5">
+          <p class="tool-tip tool-tip-col">Are there any pieces of equipement that you want DER-VET to optimilly size for?</p>
+        </div>
+      </div>
+      <div v-if="sizeEquipement == false">
+        <fieldset class="section-group">
+          <legend>Optimization Horizon</legend>
+          <div class="form-group">
+            <drop-down-input v-model="optimizationHorizon"
+                             v-bind:field="metadata.optimizationHorizon"
+                             :isInvalid="submitted && $v.optimizationHorizon.$error"
+                             :errorMessage="getErrorMsg('optimizationHorizon')">
+            </drop-down-input>
+
+            <div v-if="optimizationHorizon == 'Hours'">
+              <text-input v-model="optimizationHorizonNum"
+                          v-bind:field="metadata.optimizationHorizonNum"
+                          :isInvalid="submitted && $v.optimizationHorizonNum.$error"
+                          :errorMessage="getErrorMsg('optimizationHorizonNum')">
+              </text-input>
+            </div>
+          </div>
+        </fieldset>
+      </div>
     </div>
+    <hr />
+    <nav-buttons :back-link="START_PROJECT_PATH"
+                 :continue-link="TECH_SPECS_PATH"
+                 :save="save" />
+
   </div>
+
 </template>
 
 <script>
@@ -139,6 +158,7 @@
     mixins: [wizardFormMixin],
     data() {
       return {
+        sizeEquipement: false,
         metadata,
         ...this.getDataFromProject(),
         START_PROJECT_PATH,
