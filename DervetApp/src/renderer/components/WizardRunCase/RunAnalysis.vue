@@ -7,30 +7,38 @@
         <label>Running analysis for <b>{{projectName}}</b>. Please be patient as this can take several minutes to complete.</label>
       </div>
       <div class="col-md-12" v-else-if="resultsExist">
-        <div>{{ `Pro forma: ${results.proForma.data}` }}</div>
+        <div>Redirecting...</div>
       </div>
-      <div class="col-md-12 text-center" v-else-if="errorsExist">
+      <div class="col-md-12 text-center" v-else-if="isError">
         <br/>
-        <div>An error occured: {{errorMessage}}</div>
+        <div>An error occured while running DERVET: please check {{logPath}} for more details.</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import path from 'path';
+
+  import { LOG_FILE } from '@/models/dto/ProjectDto';
+  import { RESULTS_PATH } from '@/router/constants';
+
   export default {
     name: 'runAnalysis',
     computed: {
-      errorsExist() {
-        return this.$store.state.ProjectResult.errorMessage !== null;
-      },
-      errorMessage() {
-        return this.$store.state.ProjectResult.errorMessage;
+      isError() {
+        return this.$store.state.ProjectResult.isError !== null;
       },
       results() {
         return this.$store.state.ProjectResult.data;
       },
+      logPath() {
+        return path.join(this.$store.state.Project.resultsDirectory, LOG_FILE);
+      },
       resultsExist() {
+        if (this.$store.state.ProjectResult.data !== null) {
+          this.$router.push({ path: RESULTS_PATH }).catch(() => {});
+        }
         return this.$store.state.ProjectResult.data !== null;
       },
       runInProgress() {

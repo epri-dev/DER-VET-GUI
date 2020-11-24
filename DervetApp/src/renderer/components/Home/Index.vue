@@ -7,7 +7,7 @@
 
     <div class="row buffer-bottom">
       <div class="col-md-6 text-center">
-        <router-link v-on:click.native="resetProjectToDefault()" :to="WIZARD_START_PATH" class="btn btn-lg btn-warning text-white">
+        <router-link v-on:click.native="resetProjectToDefault()" :to="$route.path" class="btn btn-lg btn-warning text-white">
           Start a New Analysis
         </router-link>
       </div>
@@ -48,13 +48,13 @@
   export default {
     name: 'index',
     data() {
-      return {
-        WIZARD_START_PATH,
-      };
+      return { WIZARD_START_PATH };
     },
     methods: {
       resetProjectToDefault() {
-        this.$store.dispatch('resetProjectToDefault');
+        this.$store.dispatch('resetProjectToDefault')
+          .then(this.$store.dispatch('resetResultToDefault'))
+          .then(this.$router.push({ path: WIZARD_START_PATH }));
       },
     },
   };

@@ -35,6 +35,7 @@ const TIMESERIES = 'timeseries';
 const YEARLY = 'yearly';
 
 const MODEL_PARAMETERS = 'model_parameters.json';
+export const LOG_FILE = 'dervet_log.log';
 
 // TODO add PV gen profile(s)
 const TIMESERIES_FIELDS = [
