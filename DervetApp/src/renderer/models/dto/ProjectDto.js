@@ -462,20 +462,20 @@ export const makeScenarioParameters = (project) => {
       batteryNum += 1;
     }
   }
-  // find INCL_SITE_LOAD value
-  const inclSiteLoad = convertToOneZero(project.siteLoad !== null);
   // find N value
   let n = project.optimizationHorizon;
   if (n === 'hours') {
     n = project.optimizationHorizonNum;
   }
+  const projSiteInfo = project.objectivesSiteInformation;
+  const includePoiConstraints = projSiteInfo.includeInterconnectionConstraints;
   const keys = {
-    apply_interconnection_constraints: makeBaseKey(ZERO, BOOL), // TODO: new, see issue 130
+    apply_interconnection_constraints: makeBaseKey(convertToOneZero(includePoiConstraints), BOOL),
     binary: makeBaseKey(binary, BOOL),
     def_growth: makeBaseKey(2, FLOAT), // TODO ask for this value with site load
     dt: makeBaseKey(project.timestep, FLOAT),
     end_year: makeBaseKey(calculateEndYear(project.startYear, project.analysisHorizon), PERIOD),
-    incl_site_load: makeBaseKey(inclSiteLoad, BOOL),
+    incl_site_load: makeBaseKey(convertToOneZero(projSiteInfo.includeSiteLoad), BOOL),
     incl_thermal_load: makeBaseKey(ZERO, BOOL), // TODO: new, verify value
     kappa_ch_max: makeBaseKey('100000', FLOAT), // hardcoded
     kappa_ch_min: makeBaseKey('100000', FLOAT), // hardcoded
@@ -484,8 +484,8 @@ export const makeScenarioParameters = (project) => {
     kappa_ene_max: makeBaseKey('100000', FLOAT), // hardcoded
     kappa_ene_min: makeBaseKey('100000', FLOAT), // hardcoded
     location: makeBaseKey(project.gridLocation.toLowerCase(), STRING),
-    max_export: makeBaseKey('40000', FLOAT), // TODO: new, see issue 131
-    max_import: makeBaseKey('-10000', FLOAT), // TODO: new, see issue 131
+    max_export: makeBaseKey(projSiteInfo.maxExport, FLOAT),
+    max_import: makeBaseKey(projSiteInfo.maxImport, FLOAT),
     monthly_data_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, MONTHLY), STRING),
     n: makeBaseKey(n, STRING_INT),
     opt_years: makeBaseKey(project.dataYear, LIST_INT),

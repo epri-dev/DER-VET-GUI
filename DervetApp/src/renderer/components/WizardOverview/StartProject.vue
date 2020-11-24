@@ -108,7 +108,6 @@
         back-link="/"
         :continue-link="this.paths.OBJECTIVES_PATH"
         :save="validatedSave"
-        :disabled="$v.$invalid"
         :displayError="submitted && $v.$anyError"
       />
     </div>
@@ -162,12 +161,9 @@
         this.resultsDirectory = e.target.files[0].path;
       },
       validatedSave() {
-        this.submitted = true;
-        this.$v.$touch();
-        if (!this.$v.$invalid) {
-          return this.saveAndContinue();
-        }
-        return () => {};
+        // set complete to true or false
+        // this.complete = !this.$v.$invalid;
+        return this.saveAndContinue();
       },
       saveAndContinue() {
         this.$store.dispatch('setName', this.name);

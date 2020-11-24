@@ -9,21 +9,19 @@
             <b-card-text>
               {{getCardTechText(numTechICE, "Internal Combustion Engine (ICE) Generator sets")}}
             </b-card-text>
-            <b-button-toolbar>
-              <b-button-group class="mx-1">
+            <template #footer>
                 <b-button @click="addICETech">Add</b-button>
-              </b-button-group>
-            </b-button-toolbar>
+              
+            </template>
           </b-card>
           <b-card class="col-md-6" :title="String(numTechDieselGen)">
             <b-card-text>
               {{getCardTechText(numTechDieselGen, "Diesel Generator sets")}}
             </b-card-text>
-            <b-button-toolbar>
-              <b-button-group class="mx-1">
+            <template #footer>
                 <b-button @click="addDieselGenTech">Add</b-button>
-              </b-button-group>
-            </b-button-toolbar>
+              
+            </template>
           </b-card>
         </div>
         <div class="form-group row">
@@ -31,11 +29,9 @@
             <b-card-text>
               {{ getCardTechText(numTechSolarPV, "Solar Photovoltaic (PV) Sytems") }}
             </b-card-text>
-            <b-button-toolbar>
-              <b-button-group class="mx-1">
+            <template #footer>
                 <b-button @click="addPVTech">Add</b-button>
-              </b-button-group>
-            </b-button-toolbar>
+            </template>
           </b-card>
         </div>
         <div class="form-group row ">
@@ -43,11 +39,10 @@
             <b-card-text>
               {{ getCardTechText(numTechBattery, "Battery Energy Storage Sytems") }}
             </b-card-text>
-            <b-button-toolbar>
-              <b-button-group class="mx-1">
+            <template #footer>
                 <b-button @click="addBatteryTech">Add</b-button>
-              </b-button-group>
-            </b-button-toolbar>
+              
+            </template>
           </b-card>
         </div>
       </div>
@@ -57,7 +52,7 @@
                       :fields="fieldsGen"
                       :items="techGen">
           <template v-slot:cell(tagname)="row">
-            <b-col class="text-left">{{getTechLabel(row.item)}}</b-col>
+            <b-col class="text-left">{{getTechLabel(row.item) }}</b-col>
           </template>
           <template v-slot:cell(buttons)="row">
             <b-col class="text-right">
@@ -122,11 +117,13 @@
     OBJECTIVES_PATH,
     TECH_SPECS_PATH,
   } from '@/router/constants';
+  import * as c from '@/models/Project/constants';
   import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
   import TechnologySpecsBatteryMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsBattery';
   import TechnologySpecsICEMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsICE';
   import TechnologySpecsDieselGenMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsDieselGen';
   import NavButtons from '@/components/Shared/NavButtons';
+  import operateOnKeysList from '@/util/object';
 
   const metadataSolarPV = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
   const metadataBattery = TechnologySpecsBatteryMetadata.getHardcodedMetadata();
@@ -137,6 +134,9 @@
     components: { NavButtons },
     data() {
       return {
+        // ...this.getDataFromProject(),
+        includeSiteLoad: false,
+        includeInterconnectionConstraints: false,
         fieldsGen: [
           { key: 'tagname', label: 'Generators' },
           { key: 'buttons', label: '' }, // how do I use this?
@@ -180,6 +180,9 @@
       },
     },
     methods: {
+      getDataFromProject() {
+        return operateOnKeysList(this.$store.state.Project, c.SITE_LOAD_FIELDS, f => f);
+      },
       addPVTech() {
         const newPV = metadataSolarPV.getDefaultValues();
         this.$store.dispatch('addTechnologySpecsSolarPV', newPV);
@@ -208,23 +211,6 @@
         this.$store.dispatch('deactivateTech', payload);
         this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
-      toggleActivationOfTech(payload) {
-        if (payload.active) {
-          this.deactivateTech(payload);
-        } else {
-          this.activateTech(payload);
-        }
-      },
-      removeTech(payload) {
-        this.$store.dispatch('removeTech', payload);
-        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
-      },
-      getTechLabel(payload) {
-        if (payload.name) {
-          return `${payload.tag}: ${payload.name}`;
-        }
-        return `Undefined ${payload.tag}`;
-      },
       getActivationToggleLabel(payload) {
         return payload.active ? 'Deactivate' : 'Activate';
       },
@@ -233,6 +219,29 @@
           return `Number of ${name}`;
         }
         return name;
+      },
+      getTechLabel(payload) {
+        if (payload.name) {
+          return `${payload.tag}: ${payload.name}`;
+        }
+        return `Undefined ${payload.tag}`;
+      },
+      toggleActivationOfTech(payload) {
+        if (payload.active) {
+          this.deactivateTech(payload);
+        } else {
+          this.activateTech(payload);
+        }
+      },
+      toggleIncludeSiteLoad() {
+        this.includeSiteLoad = (!this.includeSiteLoad);
+      },
+      toggleIncludeInterconnectionConstraints() {
+        this.includeInterconnectionConstraints = (!this.includeInterconnectionConstraints);
+      },
+      removeTech(payload) {
+        this.$store.dispatch('removeTech', payload);
+        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
       save() {
       },

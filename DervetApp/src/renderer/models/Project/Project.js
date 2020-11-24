@@ -11,9 +11,24 @@ export class ProjectMetadata {
 
   getDefaultValues() {
     return {
+      energyPriceSourceWholesale: false,
       id: uuidv4(),
+      listOfActiveServices: [],
+      objectivesBackupPower: false,
+      objectivesDA: false,
+      objectivesDeferral: false,
+      objectivesFR: false,
+      objectivesLoadFollowing: false,
+      objectivesNSR: false,
+      objectivesRetailEnergyChargeReduction: false,
+      objectivesRetailDemandChargeReduction: false,
+      objectivesResilience: false,
+      objectivesSR: false,
+      objectivesUserDefined: false,
       type: 'Wizard',
       ...this.operateOnFieldList(c.START_PROJECT_FIELDS, f => f.defaultValue),
+      ...this.operateOnFieldList(c.OBJECTIVE_FIELDS, f => f.defaultValue),
+      ...this.operateOnFieldList(c.SITE_LOAD_FIELDS, f => f.defaultValue),
     };
   }
 
@@ -65,6 +80,19 @@ export class ProjectMetadata {
         isRequired: true,
         type: String,
       }),
+      [c.OPTIMIZATION_HORIZON]: new ProjectFieldMetadata({
+        isRequired: true,
+        type: String,
+        description: 'A month-long optimization window is recommended for Customer Services. A specific number of hours is recommended for Wholesale Services.',
+        allowedValues: c.OPTIMIZATION_HORIZON_ALLOWED_VALUES,
+      }),
+      [c.OPTIMIZATION_HORIZON_NUM]: new ProjectFieldMetadata({
+        isRequired: true,
+        minValue: 2,
+        type: Number,
+        unit: 'hours',
+        description: 'What is the number of hours of the optimization window?',
+      }),
       [c.OWNERSHIP]: new ProjectFieldMetadata({
         displayName: 'Ownership',
         isRequired: true,
@@ -92,6 +120,9 @@ export class ProjectMetadata {
         allowedValues: c.TIMESTEP_ALLOWED_VALUES,
       }),
     });
+  }
+  validation() {
+    // TODO add to list of errors on Summary
   }
 }
 
