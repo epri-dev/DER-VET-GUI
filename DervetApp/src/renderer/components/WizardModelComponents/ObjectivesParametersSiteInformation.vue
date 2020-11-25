@@ -78,7 +78,10 @@
     components: { TimeseriesDataUpload },
     mixins: [csvUploadMixin, wizardFormMixin],
     data() {
+      const p = this.$store.state.Project;
       return {
+        includeSiteLoad: p.includeSiteLoad,
+        siteLoad: p.siteLoad,
         metadata,
         sharedValidation,
         ...this.getDataFromProject(),

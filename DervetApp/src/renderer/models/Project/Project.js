@@ -71,6 +71,29 @@ export class ProjectMetadata {
         description: 'Which grid domain the project will be connected to. This limits which services are available.',
         allowedValues: c.GRID_LOCATION_ALLOWED_VALUES,
       }),
+      [c.MAX_EXPORT]: new ProjectFieldMetadata({
+        displayName: 'Maximum Power Exported',
+        isRequired: true,
+        minValue: 0,
+        type: Number,
+        unit: 'kW',
+        description: 'Maximum magnitude that can flow from grid to microgrid through the point of interconnection',
+      }),
+      [c.MAX_IMPORT]: new ProjectFieldMetadata({
+        displayName: 'Maximum Power Imported',
+        isRequired: true,
+        maxValue: 0,
+        type: Number,
+        unit: 'kW',
+        description: 'Maximum magnitude that can flow from microgrid to grid through the point of interconnection',
+      }),
+      [c.INCLUDE_INTERCONNECTION_CONSTRAINTS]: new ProjectFieldMetadata({
+        displayName: 'Apply interconnection constraints',
+        defaultValue: false,
+        isRequired: true,
+        type: Boolean,
+        allowedValues: c.INCLUDE_INTERCONNECTION_CONSTRAINTS_ALLOWED_VALUES,
+      }),
       [c.INPUTS_DIRECTORY]: new ProjectFieldMetadata({
         displayName: 'Inputs Directory',
         isRequired: false, // TODO change to true

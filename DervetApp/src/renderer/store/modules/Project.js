@@ -59,6 +59,7 @@ const getDefaultState = () => ({
     'Intermittent Resource': [],
   },
   // TIMESERIES ARRAYS
+  criticalLoad: null,
   deferralLoad: null,
   daPrice: null,
   srPrice: null,
@@ -66,7 +67,7 @@ const getDefaultState = () => ({
   frPrice: null,
   frUpPrice: null,
   frDownPrice: null,
-  criticalLoad: null,
+  siteLoad: null,
   userPowerMin: null,
   userPowerMax: null,
   userEnergyMin: null,
@@ -277,6 +278,9 @@ const mutations = {
   },
   SET_OPTIMIZATION_HORIZON_NUM(state, newOptimizataionHorizonNum) {
     state.optimizationHorizonNum = newOptimizataionHorizonNum;
+  },
+  SET_SIZING_EQUIPEMENT(state, newSizingEquipement) {
+    state.sizingEquipement = newSizingEquipement;
   },
   SELECT_OTHER_SERVICES(state, listOfServices) {
     state.listOfActiveServices = listOfServices;
@@ -616,6 +620,9 @@ const actions = {
   },
   setOptimizationHorizonNum({ commit }, newOptimizataionHorizonNum) {
     commit('SET_OPTIMIZATION_HORIZON_NUM', newOptimizataionHorizonNum);
+  },
+  setSizingEquipement({ commit }, newSizingEquipement) {
+    commit('SET_SIZING_EQUIPEMENT', newSizingEquipement);
   },
   // reliability
   setCriticalLoad({ commit }, newCriticalLoad) {

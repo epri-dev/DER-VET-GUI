@@ -222,6 +222,7 @@
         this.$store.dispatch('selectOtherServices', this.listOfActiveServices);
         this.$store.dispatch('setOptimizationHorizon', this.optimizationHorizon);
         this.$store.dispatch('setOptimizationHorizonNum', this.optimizationHorizonNum);
+        this.$store.dispatch('setSizingEquipement', this.sizingEquipement);
         this.$store.dispatch('setIncludeSiteLoad');
       },
     },
