@@ -146,9 +146,6 @@
           this.resetNonRequired(['maxExport', 'maxImport']);
         }
         // set complete to true or false
-        this.complete = !this.$v.$invalid;
-        this.submitted = true;
-        this.$v.$touch();
         this.$store.dispatch('setCompleteness', this.getCompletenessPayload());
         return this.save();
       },
