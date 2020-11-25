@@ -11,8 +11,9 @@ export class ProjectMetadata {
 
   getDefaultValues() {
     return {
-      energyPriceSourceWholesale: false,
+      energyPriceSourceWholesale: null,
       id: uuidv4(),
+      includeSiteLoad: null,
       listOfActiveServices: [],
       objectivesBackupPower: false,
       objectivesDA: false,
@@ -28,7 +29,7 @@ export class ProjectMetadata {
       type: 'Wizard',
       ...this.operateOnFieldList(c.START_PROJECT_FIELDS, f => f.defaultValue),
       ...this.operateOnFieldList(c.OBJECTIVE_FIELDS, f => f.defaultValue),
-      ...this.operateOnFieldList(c.SITE_LOAD_FIELDS, f => f.defaultValue),
+      ...this.operateOnFieldList(c.SITE_INFORMATION_FIELDS, f => f.defaultValue),
     };
   }
 
@@ -70,6 +71,28 @@ export class ProjectMetadata {
         description: 'Which grid domain the project will be connected to. This limits which services are available.',
         allowedValues: c.GRID_LOCATION_ALLOWED_VALUES,
       }),
+      [c.MAX_EXPORT]: new ProjectFieldMetadata({
+        displayName: 'Maximum Power Exported',
+        isRequired: true,
+        minValue: 0,
+        type: Number,
+        unit: 'kW',
+        description: 'Maximum magnitude that can flow from grid to microgrid through the point of interconnection',
+      }),
+      [c.MAX_IMPORT]: new ProjectFieldMetadata({
+        displayName: 'Maximum Power Imported',
+        isRequired: true,
+        maxValue: 0,
+        type: Number,
+        unit: 'kW',
+        description: 'Maximum magnitude that can flow from microgrid to grid through the point of interconnection',
+      }),
+      [c.INCLUDE_INTERCONNECTION_CONSTRAINTS]: new ProjectFieldMetadata({
+        displayName: 'Apply interconnection constraints',
+        isRequired: true,
+        type: Boolean,
+        allowedValues: c.INCLUDE_INTERCONNECTION_CONSTRAINTS_ALLOWED_VALUES,
+      }),
       [c.INPUTS_DIRECTORY]: new ProjectFieldMetadata({
         displayName: 'Inputs Directory',
         isRequired: false, // TODO change to true
@@ -104,6 +127,13 @@ export class ProjectMetadata {
         displayName: 'Results Directory',
         isRequired: false, // TODO change to true
         type: String,
+      }),
+      [c.SIZING_EQUIPEMENT]: new ProjectFieldMetadata({
+        displayName: 'Size eqipement in microgrid',
+        description: 'Are there any pieces of equipement that you want DER-VET to optimilly size for?',
+        isRequired: true,
+        type: Boolean,
+        allowedValues: c.SIZING_EQUIPEMENT_ALLOWED_VALUES,
       }),
       [c.START_YEAR]: new ProjectFieldMetadata({
         displayName: 'Start Year',

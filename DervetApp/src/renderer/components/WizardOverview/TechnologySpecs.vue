@@ -117,13 +117,11 @@
     OBJECTIVES_PATH,
     TECH_SPECS_PATH,
   } from '@/router/constants';
-  import * as c from '@/models/Project/constants';
   import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
   import TechnologySpecsBatteryMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsBattery';
   import TechnologySpecsICEMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsICE';
   import TechnologySpecsDieselGenMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsDieselGen';
   import NavButtons from '@/components/Shared/NavButtons';
-  import operateOnKeysList from '@/util/object';
 
   const metadataSolarPV = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
   const metadataBattery = TechnologySpecsBatteryMetadata.getHardcodedMetadata();
@@ -134,9 +132,6 @@
     components: { NavButtons },
     data() {
       return {
-        // ...this.getDataFromProject(),
-        includeSiteLoad: false,
-        includeInterconnectionConstraints: false,
         fieldsGen: [
           { key: 'tagname', label: 'Generators' },
           { key: 'buttons', label: '' }, // how do I use this?
@@ -180,9 +175,6 @@
       },
     },
     methods: {
-      getDataFromProject() {
-        return operateOnKeysList(this.$store.state.Project, c.SITE_LOAD_FIELDS, f => f);
-      },
       addPVTech() {
         const newPV = metadataSolarPV.getDefaultValues();
         this.$store.dispatch('addTechnologySpecsSolarPV', newPV);
@@ -232,12 +224,6 @@
         } else {
           this.activateTech(payload);
         }
-      },
-      toggleIncludeSiteLoad() {
-        this.includeSiteLoad = (!this.includeSiteLoad);
-      },
-      toggleIncludeInterconnectionConstraints() {
-        this.includeInterconnectionConstraints = (!this.includeInterconnectionConstraints);
       },
       removeTech(payload) {
         this.$store.dispatch('removeTech', payload);

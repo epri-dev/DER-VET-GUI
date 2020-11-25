@@ -99,37 +99,48 @@
         </div>
       </div>
       <hr />
-      <fieldset class="section-group">
-        <legend>Optimization Horizon</legend>
-        <div class="form-group">
-          <drop-down-input v-model="optimizationHorizon"
-                           v-bind:field="metadata.optimizationHorizon"
-                           :isInvalid="submitted && $v.optimizationHorizon.$error"
-                           :errorMessage="getErrorMsg('optimizationHorizon')">
-          </drop-down-input>
+      <radio-button-input v-model="sizingEquipement"
+                          v-bind:field="metadata.sizingEquipement"
+                          :isInvalid="submitted && $v.sizingEquipement.$error"
+                          :errorMessage="getErrorMsg('sizingEquipement')">
+      </radio-button-input>
+      <div v-if="(!sizingEquipement) && (sizingEquipement !== undefined)">
+        <fieldset class="section-group">
+          <legend>Optimization Horizon</legend>
+          <div class="form-group">
+            <drop-down-input v-model="optimizationHorizon"
+                             v-bind:field="metadata.optimizationHorizon"
+                             :isInvalid="submitted && $v.optimizationHorizon.$error"
+                             :errorMessage="getErrorMsg('optimizationHorizon')">
+            </drop-down-input>
 
-          <div v-if="optimizationHorizon == 'Hours'">
-            <text-input v-model="optimizationHorizonNum"
-                        v-bind:field="metadata.optimizationHorizonNum"
-                        :isInvalid="submitted && $v.optimizationHorizonNum.$error"
-                        :errorMessage="getErrorMsg('optimizationHorizonNum')">
-            </text-input>
+            <div v-if="optimizationHorizon === 'Hours'">
+              <text-input v-model="optimizationHorizonNum"
+                          v-bind:field="metadata.optimizationHorizonNum"
+                          :isInvalid="submitted && $v.optimizationHorizonNum.$error"
+                          :errorMessage="getErrorMsg('optimizationHorizonNum')">
+              </text-input>
+            </div>
           </div>
-        </div>
-      </fieldset>
-      <hr />
-      <nav-buttons :back-link="START_PROJECT_PATH"
-                   :continue-link="TECH_SPECS_PATH"
-                   :save="save" />
+        </fieldset>
+      </div>
     </div>
+    <hr />
+    <nav-buttons :back-link="START_PROJECT_PATH"
+                 :continue-link="TECH_SPECS_PATH"
+                 :displayError="submitted && $v.$anyError"
+                 :save="this.validatedSave" />
+
   </div>
+
 </template>
 
 <script>
   import { requiredIf } from 'vuelidate/lib/validators';
-  import wizardFormMixin from '@/mixins/wizardFormMixin';
   import * as p from '@/models/Project/Project';
   import * as c from '@/models/Project/constants';
+  import wizardFormMixin from '@/mixins/wizardFormMixin';
+  import operateOnKeysList from '@/util/object';
   import { TECH_SPECS_PATH, START_PROJECT_PATH } from '@/router/constants';
 
   const metadata = p.projectMetadata;
@@ -138,8 +149,11 @@
   export default {
     mixins: [wizardFormMixin],
     data() {
+      const p = this.$store.state.Project;
       return {
         metadata,
+        listOfActiveServices: p.listOfActiveServices,
+        energyPriceSourceWholesale: p.energyPriceSourceWholesale,
         ...this.getDataFromProject(),
         START_PROJECT_PATH,
         TECH_SPECS_PATH,
@@ -150,36 +164,55 @@
       optimizationHorizonNum: {
         ...validations.optimizationHorizonNum,
         required: requiredIf(function isOptimizationHorizonNumRequired() {
-          return this.optimizationHorizon === 'Hours';
+          return !(this.sizingEquipement) && this.optimizationHorizon === 'Hours';
         }),
       },
+      optimizationHorizon: {
+        ...validations.optimizationHorizon,
+        required: requiredIf(function isOptimizationHorizonRequired() {
+          return !(this.sizingEquipement);
+        }),
+      },
+    },
+    computed: {
+      complete() {
+        return this.$store.state.Application.pageCompleteness.overview.objectives;
+      },
+    },
+    beforeMount() {
+      // submitted is false initially; set it to true after the first save.
+      // initially, complete is null; after saving, it is set to either true or false.
+      // we want to show validation errors at any time after the first save, with submitted.
+      if (this.complete !== null && this.complete !== undefined) {
+        this.submitted = true;
+        this.$v.$touch();
+      }
     },
     methods: {
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       getDataFromProject() {
-        const projectSpecs = this.$store.state.Project;
+        return operateOnKeysList(this.$store.state.Project, c.OBJECTIVE_FIELDS, f => f);
+      },
+      getCompletenessPayload() {
         return {
-          optimizationHorizon: projectSpecs.optimizationHorizon,
-          optimizationHorizonNum: projectSpecs.optimizationHorizonNum,
-          energyPriceSourceWholesale: projectSpecs.energyPriceSourceWholesale,
-          listOfActiveServices: projectSpecs.listOfActiveServices,
+          pageGroup: 'overview',
+          page: 'objectives',
+          completeness: !this.$v.$invalid,
         };
       },
       validatedSave() {
-        this.submitted = true;
-        this.$v.$touch();
-        if (!this.$v.$invalid) {
-          return this.saveAndContinue();
-        }
-        return () => { };
+        // set complete to true or false
+        this.$store.dispatch('setCompleteness', this.getCompletenessPayload());
+        return this.save();
       },
       save() {
         this.$store.dispatch('chooseEnergyStructure', this.energyPriceSourceWholesale);
         this.$store.dispatch('selectOtherServices', this.listOfActiveServices);
         this.$store.dispatch('setOptimizationHorizon', this.optimizationHorizon);
         this.$store.dispatch('setOptimizationHorizonNum', this.optimizationHorizonNum);
+        this.$store.dispatch('setSizingEquipement', this.sizingEquipement);
         this.$store.dispatch('setIncludeSiteLoad');
       },
     },

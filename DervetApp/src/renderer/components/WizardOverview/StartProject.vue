@@ -133,7 +133,7 @@
       return {
         paths,
         ...this.getDataFromProject(),
-        metadata: p.projectMetadata,
+        metadata,
       };
     },
     validations: {
@@ -145,12 +145,33 @@
         }),
       },
     },
+    beforeMount() {
+      // submitted is false initially; set it to true after the first save.
+      // initially, complete is null; after saving, it is set to either true or false.
+      // we want to show validation errors at any time after the first save, with submitted.
+      if (this.complete !== null && this.complete !== undefined) {
+        this.submitted = true;
+        this.$v.$touch();
+      }
+    },
+    computed: {
+      complete() {
+        return this.$store.state.Application.pageCompleteness.overview.start;
+      },
+    },
     methods: {
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       getDataFromProject() {
         return operateOnKeysList(this.$store.state.Project, c.START_PROJECT_FIELDS, f => f);
+      },
+      getCompletenessPayload() {
+        return {
+          pageGroup: 'overview',
+          page: 'start',
+          completeness: !this.$v.$invalid,
+        };
       },
       // TODO validate that directory is received using accepted answer here:
       // https://stackoverflow.com/questions/52667995/how-to-check-if-selected-file-is-a-directory-or-regular-file
@@ -162,7 +183,7 @@
       },
       validatedSave() {
         // set complete to true or false
-        // this.complete = !this.$v.$invalid;
+        this.$store.dispatch('setCompleteness', this.getCompletenessPayload());
         return this.saveAndContinue();
       },
       saveAndContinue() {

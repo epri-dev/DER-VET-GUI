@@ -468,6 +468,9 @@ export const makeScenarioParameters = (project) => {
   if (n === 'hours') {
     n = project.optimizationHorizonNum;
   }
+  // TODO if any DERs are being sized, N should be 'Year'
+  // TODO if customer services, N should be 'month'
+  // TODO if wholesale services, N should be a number of hours
   const projSiteInfo = project.objectivesSiteInformation;
   const includePoiConstraints = projSiteInfo.includeInterconnectionConstraints;
   const keys = {

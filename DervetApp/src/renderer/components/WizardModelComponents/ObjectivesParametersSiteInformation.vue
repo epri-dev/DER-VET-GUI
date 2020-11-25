@@ -22,7 +22,7 @@
         </text-input>
 
       </div>
-      <div class="form-group" v-if="includeSiteLoad">
+      <div class="form-group" v-if="includeSiteLoad && (includeSiteLoad !== null)">
         <timeseries-data-upload chart-name="chartUploadedTimeSeries"
                                 data-name="site load"
                                 units="kW"
@@ -60,8 +60,9 @@
 <script>
   import { requiredIf } from 'vuelidate/lib/validators';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import ObjectivesSiteInformationMetadata from '@/models/Project/Objectives/ObjectivesSiteInformation';
-
+  import * as p from '@/models/Project/Project';
+  import * as c from '@/models/Project/constants';
+  import operateOnKeysList from '@/util/object';
   import '@/assets/samples/SampleSiteLoad-8760.csv';
   import '@/assets/samples/SampleSiteLoad-8784.csv';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
@@ -70,8 +71,8 @@
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 
-  const metadata = ObjectivesSiteInformationMetadata.getHardcodedMetadata();
-  const validations = metadata.getValidationSchema();
+  const metadata = p.projectMetadata;
+  const validations = metadata.getValidationSchema(c.SITE_INFORMATION_FIELDS);
 
   export default {
     components: { TimeseriesDataUpload },
@@ -79,9 +80,11 @@
     data() {
       const p = this.$store.state.Project;
       return {
+        includeSiteLoad: p.includeSiteLoad,
+        siteLoad: p.siteLoad,
         metadata,
         sharedValidation,
-        ...p.objectivesSiteInformation,
+        ...this.getDataFromProject(),
         WIZARD_COMPONENT_PATH,
       };
     },
@@ -107,12 +110,15 @@
         }
         return new SiteLoadTimeSeries(this.inputTimeseries);
       },
+      complete() {
+        return this.$store.state.Application.pageCompleteness.components.objectivesSiteInformation;
+      },
     },
     beforeMount() {
       // submitted is false initially; set it to true after the first save.
       // initially, complete is null; after saving, it is set to either true or false.
       // we want to show validation errors at any time after the first save, with submitted.
-      if (this.complete !== null) {
+      if (this.complete !== null && this.complete !== undefined) {
         this.submitted = true;
         this.$v.$touch();
       }
@@ -127,15 +133,23 @@
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
+      getDataFromProject() {
+        return operateOnKeysList(this.$store.state.Project, c.SITE_INFORMATION_FIELDS, f => f);
+      },
+      getCompletenessPayload() {
+        return {
+          pageGroup: 'components',
+          page: 'objectivesSiteInformation',
+          completeness: !this.$v.$invalid,
+        };
+      },
       validatedSave() {
         // reset all non-required inputs to their defaults prior to saving
         if (this.includeInterconnectionConstraints === false) {
           this.resetNonRequired(['maxExport', 'maxImport']);
         }
         // set complete to true or false
-        this.complete = !this.$v.$invalid;
-        this.submitted = true;
-        this.$v.$touch();
+        this.$store.dispatch('setCompleteness', this.getCompletenessPayload());
         return this.save();
       },
       save() {
@@ -145,7 +159,6 @@
         this.$store.dispatch('setIncludePOIConstraints', this.includeInterconnectionConstraints);
         this.$store.dispatch('setMaxImportFromGrid', this.maxImport);
         this.$store.dispatch('setMaxExportToGrid', this.maxExport);
-        this.$store.dispatch('setCompletenessSiteInformation', this.complete);
       },
     },
   };
