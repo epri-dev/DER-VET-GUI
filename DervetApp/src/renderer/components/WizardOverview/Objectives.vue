@@ -99,22 +99,12 @@
         </div>
       </div>
       <hr />
-      <div class="row">
-        <div class="col-md-3">
-          <label class="control-label" for="size"><b>Size equipement in microgrid</b></label>
-        </div>
-
-        <div class="col-md-4 form-control-static">
-          <b-form-radio-group id="is-sizing" v-model="sizingEquipement">
-            <b-form-radio value="true">Yes</b-form-radio>
-            <b-form-radio value="false">No</b-form-radio>
-          </b-form-radio-group>
-        </div>
-        <div class="col-md-5">
-          <p class="tool-tip tool-tip-col">Are there any pieces of equipement that you want DER-VET to optimilly size for?</p>
-        </div>
-      </div>
-      <div v-if="sizingEquipement == 'false'">
+      <radio-button-input v-model="sizingEquipement"
+                          v-bind:field="metadata.sizingEquipement"
+                          :isInvalid="submitted && $v.sizingEquipement.$error"
+                          :errorMessage="getErrorMsg('sizingEquipement')">
+      </radio-button-input>
+      <div v-if="(!sizingEquipement) && (sizingEquipement !== undefined)">
         <fieldset class="section-group">
           <legend>Optimization Horizon</legend>
           <div class="form-group">
@@ -124,7 +114,7 @@
                              :errorMessage="getErrorMsg('optimizationHorizon')">
             </drop-down-input>
 
-            <div v-if="optimizationHorizon == 'Hours'">
+            <div v-if="optimizationHorizon === 'Hours'">
               <text-input v-model="optimizationHorizonNum"
                           v-bind:field="metadata.optimizationHorizonNum"
                           :isInvalid="submitted && $v.optimizationHorizonNum.$error"
