@@ -5,15 +5,19 @@ export const ANALYSIS_HORIZON_MODE = 'analysisHorizonMode';
 export const DATA_YEAR = 'dataYear';
 export const GRID_LOCATION = 'gridLocation';
 export const INPUTS_DIRECTORY = 'inputsDirectory';
+export const INCLUDE_INTERCONNECTION_CONSTRAINTS = 'includeInterconnectionConstraints';
+export const MAX_EXPORT = 'maxExport';
+export const MAX_IMPORT = 'maxImport';
 export const NAME = 'name';
 export const OPTIMIZATION_HORIZON = 'optimizationHorizon';
 export const OPTIMIZATION_HORIZON_NUM = 'optimizationHorizonNum';
 export const OWNERSHIP = 'ownership';
+export const SIZING_EQUIPEMENT = 'sizingEquipement';
 export const START_YEAR = 'startYear';
 export const TIMESTEP = 'timestep';
 export const RESULTS_DIRECTORY = 'resultsDirectory';
 
-const makeAllowedValues = lst => _.map(lst, x => ({ value: x, label: x }));
+export const makeAllowedValues = lst => _.map(lst, x => ({ value: x, label: x }));
 
 const makeAllowedValuesWithNull = (lst) => {
   const mapped = makeAllowedValues(lst);
@@ -31,8 +35,26 @@ export const GRID_LOCATION_ALLOWED_VALUES = makeAllowedValues(['Generation', 'Tr
 export const OWNERSHIP_ALLOWED_VALUES = makeAllowedValues(['Customer', 'Utility', '3rd Party']);
 export const TIMESTEP_ALLOWED_VALUES = makeAllowedValuesWithNull(['1', '5', '15', '30', '60']);
 export const OPTIMIZATION_HORIZON_ALLOWED_VALUES = makeAllowedValues(['Year', 'Month', 'Hours']);
-
-
+export const INCLUDE_INTERCONNECTION_CONSTRAINTS_ALLOWED_VALUES = [
+  {
+    value: true,
+    label: 'Yes',
+  },
+  {
+    value: false,
+    label: 'No',
+  },
+];
+export const SIZING_EQUIPEMENT_ALLOWED_VALUES = [
+  {
+    value: true,
+    label: 'Yes',
+  },
+  {
+    value: false,
+    label: 'No',
+  },
+];
 // Field groupings
 export const START_PROJECT_FIELDS = [
   ANALYSIS_HORIZON,
@@ -47,6 +69,12 @@ export const START_PROJECT_FIELDS = [
   RESULTS_DIRECTORY,
 ];
 export const OBJECTIVE_FIELDS = [
+  SIZING_EQUIPEMENT,
   OPTIMIZATION_HORIZON,
   OPTIMIZATION_HORIZON_NUM,
+];
+export const SITE_INFOMARTION_FIELDS = [
+  INCLUDE_INTERCONNECTION_CONSTRAINTS,
+  MAX_EXPORT,
+  MAX_IMPORT,
 ];

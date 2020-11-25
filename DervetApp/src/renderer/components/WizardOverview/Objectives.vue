@@ -105,7 +105,7 @@
         </div>
 
         <div class="col-md-4 form-control-static">
-          <b-form-radio-group id="is-sizing" v-model="sizeEquipement">
+          <b-form-radio-group id="is-sizing" v-model="sizingEquipement">
             <b-form-radio value="true">Yes</b-form-radio>
             <b-form-radio value="false">No</b-form-radio>
           </b-form-radio-group>
@@ -114,7 +114,7 @@
           <p class="tool-tip tool-tip-col">Are there any pieces of equipement that you want DER-VET to optimilly size for?</p>
         </div>
       </div>
-      <div v-if="sizeEquipement == false">
+      <div v-if="sizingEquipement == false">
         <fieldset class="section-group">
           <legend>Optimization Horizon</legend>
           <div class="form-group">
@@ -138,7 +138,8 @@
     <hr />
     <nav-buttons :back-link="START_PROJECT_PATH"
                  :continue-link="TECH_SPECS_PATH"
-                 :save="save" />
+                 :displayError="submitted && $v.$anyError"
+                 :save="this.validatedSave" />
 
   </div>
 
@@ -146,9 +147,10 @@
 
 <script>
   import { requiredIf } from 'vuelidate/lib/validators';
-  import wizardFormMixin from '@/mixins/wizardFormMixin';
   import * as p from '@/models/Project/Project';
   import * as c from '@/models/Project/constants';
+  import wizardFormMixin from '@/mixins/wizardFormMixin';
+  import operateOnKeysList from '@/util/object';
   import { TECH_SPECS_PATH, START_PROJECT_PATH } from '@/router/constants';
 
   const metadata = p.projectMetadata;
@@ -157,9 +159,11 @@
   export default {
     mixins: [wizardFormMixin],
     data() {
+      const p = this.$store.state.Project;
       return {
-        sizeEquipement: false,
         metadata,
+        listOfActiveServices: p.listOfActiveServices,
+        energyPriceSourceWholesale: p.energyPriceSourceWholesale,
         ...this.getDataFromProject(),
         START_PROJECT_PATH,
         TECH_SPECS_PATH,
@@ -170,30 +174,37 @@
       optimizationHorizonNum: {
         ...validations.optimizationHorizonNum,
         required: requiredIf(function isOptimizationHorizonNumRequired() {
-          return this.optimizationHorizon === 'Hours';
+          return !(this.sizingEquipement) && this.optimizationHorizon === 'Hours';
         }),
       },
+      optimizationHorizon: {
+        ...validations.optimizationHorizon,
+        required: requiredIf(function isOptimizationHorizonRequired() {
+          return !(this.sizingEquipement);
+        }),
+      },
+    },
+    beforeMount() {
+      // submitted is false initially; set it to true after the first save.
+      // initially, complete is null; after saving, it is set to either true or false.
+      // we want to show validation errors at any time after the first save, with submitted.
+      const { pageCompleteness } = this.$store.state.Application;
+      if (pageCompleteness.overview.objectives !== null) {
+        this.submitted = true;
+        this.$v.$touch();
+      }
     },
     methods: {
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       getDataFromProject() {
-        const projectSpecs = this.$store.state.Project;
-        return {
-          optimizationHorizon: projectSpecs.optimizationHorizon,
-          optimizationHorizonNum: projectSpecs.optimizationHorizonNum,
-          energyPriceSourceWholesale: projectSpecs.energyPriceSourceWholesale,
-          listOfActiveServices: projectSpecs.listOfActiveServices,
-        };
+        return operateOnKeysList(this.$store.state.Project, c.OBJECTIVE_FIELDS, f => f);
       },
       validatedSave() {
-        this.submitted = true;
-        this.$v.$touch();
-        if (!this.$v.$invalid) {
-          return this.saveAndContinue();
-        }
-        return () => { };
+        // set complete to true or false
+        this.$store.dispatch('setCompleteness', 'overview', 'objectives', !this.$v.$invalid);
+        return this.save();
       },
       save() {
         this.$store.dispatch('chooseEnergyStructure', this.energyPriceSourceWholesale);

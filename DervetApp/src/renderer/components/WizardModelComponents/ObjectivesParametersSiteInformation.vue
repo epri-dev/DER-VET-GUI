@@ -60,8 +60,9 @@
 <script>
   import { requiredIf } from 'vuelidate/lib/validators';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import ObjectivesSiteInformationMetadata from '@/models/Project/Objectives/ObjectivesSiteInformation';
-
+  import * as p from '@/models/Project/Project';
+  import * as c from '@/models/Project/constants';
+  import operateOnKeysList from '@/util/object';
   import '@/assets/samples/SampleSiteLoad-8760.csv';
   import '@/assets/samples/SampleSiteLoad-8784.csv';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
@@ -70,18 +71,17 @@
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 
-  const metadata = ObjectivesSiteInformationMetadata.getHardcodedMetadata();
-  const validations = metadata.getValidationSchema();
+  const metadata = p.projectMetadata;
+  const validations = metadata.getValidationSchema(c.SITE_INFOMARTION_FIELDS);
 
   export default {
     components: { TimeseriesDataUpload },
     mixins: [csvUploadMixin, wizardFormMixin],
     data() {
-      const p = this.$store.state.Project;
       return {
         metadata,
         sharedValidation,
-        ...p.objectivesSiteInformation,
+        ...this.getDataFromProject(),
         WIZARD_COMPONENT_PATH,
       };
     },
@@ -112,7 +112,8 @@
       // submitted is false initially; set it to true after the first save.
       // initially, complete is null; after saving, it is set to either true or false.
       // we want to show validation errors at any time after the first save, with submitted.
-      if (this.complete !== null) {
+      const { pageCompleteness } = this.$store.state.Application;
+      if (pageCompleteness.components.objectivesSiteInformation !== null) {
         this.submitted = true;
         this.$v.$touch();
       }
@@ -127,6 +128,9 @@
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
+      getDataFromProject() {
+        return operateOnKeysList(this.$store.state.Project, c.SITE_INFOMARTION_FIELDS, f => f);
+      },
       validatedSave() {
         // reset all non-required inputs to their defaults prior to saving
         if (this.includeInterconnectionConstraints === false) {
@@ -136,6 +140,7 @@
         this.complete = !this.$v.$invalid;
         this.submitted = true;
         this.$v.$touch();
+        this.$store.dispatch('setCompleteness', 'components', 'objectivesSiteInformation', !this.$v.$invalid);
         return this.save();
       },
       save() {
@@ -145,7 +150,6 @@
         this.$store.dispatch('setIncludePOIConstraints', this.includeInterconnectionConstraints);
         this.$store.dispatch('setMaxImportFromGrid', this.maxImport);
         this.$store.dispatch('setMaxExportToGrid', this.maxExport);
-        this.$store.dispatch('setCompletenessSiteInformation', this.complete);
       },
     },
   };

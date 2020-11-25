@@ -13,6 +13,7 @@ export class ProjectMetadata {
     return {
       energyPriceSourceWholesale: false,
       id: uuidv4(),
+      includeSiteLoad: false,
       listOfActiveServices: [],
       objectivesBackupPower: false,
       objectivesDA: false,
@@ -28,7 +29,7 @@ export class ProjectMetadata {
       type: 'Wizard',
       ...this.operateOnFieldList(c.START_PROJECT_FIELDS, f => f.defaultValue),
       ...this.operateOnFieldList(c.OBJECTIVE_FIELDS, f => f.defaultValue),
-      ...this.operateOnFieldList(c.SITE_LOAD_FIELDS, f => f.defaultValue),
+      ...this.operateOnFieldList(c.SITE_INFOMARTION_FIELDS, f => f.defaultValue),
     };
   }
 
@@ -104,6 +105,14 @@ export class ProjectMetadata {
         displayName: 'Results Directory',
         isRequired: false, // TODO change to true
         type: String,
+      }),
+      [c.SIZING_EQUIPEMENT]: new ProjectFieldMetadata({
+        displayName: 'Size eqipement in microgrid',
+        defaultValue: false,
+        description: 'Are there any pieces of equipement that you want DER-VET to optimilly size for?',
+        isRequired: true,
+        type: Boolean,
+        allowedValues: c.SIZING_EQUIPEMENT_ALLOWED_VALUES,
       }),
       [c.START_YEAR]: new ProjectFieldMetadata({
         displayName: 'Start Year',

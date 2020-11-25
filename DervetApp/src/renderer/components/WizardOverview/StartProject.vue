@@ -133,7 +133,7 @@
       return {
         paths,
         ...this.getDataFromProject(),
-        metadata: p.projectMetadata,
+        metadata,
       };
     },
     validations: {
@@ -144,6 +144,16 @@
           return this.analysisHorizonMode === '1';
         }),
       },
+    },
+    beforeMount() {
+      // submitted is false initially; set it to true after the first save.
+      // initially, complete is null; after saving, it is set to either true or false.
+      // we want to show validation errors at any time after the first save, with submitted.
+      const { pageCompleteness } = this.$store.state.Application;
+      if (pageCompleteness.overview.start !== null) {
+        this.submitted = true;
+        this.$v.$touch();
+      }
     },
     methods: {
       getErrorMsg(fieldName) {
@@ -162,7 +172,7 @@
       },
       validatedSave() {
         // set complete to true or false
-        // this.complete = !this.$v.$invalid;
+        this.$store.dispatch('setCompleteness', 'overview', 'start', !this.$v.$invalid);
         return this.saveAndContinue();
       },
       saveAndContinue() {
