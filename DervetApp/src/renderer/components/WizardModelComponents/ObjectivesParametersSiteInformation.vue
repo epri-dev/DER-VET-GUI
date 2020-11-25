@@ -22,7 +22,7 @@
         </text-input>
 
       </div>
-      <div class="form-group" v-if="includeSiteLoad">
+      <div class="form-group" v-if="includeSiteLoad && (includeSiteLoad !== null)">
         <timeseries-data-upload chart-name="chartUploadedTimeSeries"
                                 data-name="site load"
                                 units="kW"

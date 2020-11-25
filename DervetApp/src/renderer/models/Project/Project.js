@@ -11,9 +11,9 @@ export class ProjectMetadata {
 
   getDefaultValues() {
     return {
-      energyPriceSourceWholesale: false,
+      energyPriceSourceWholesale: null,
       id: uuidv4(),
-      includeSiteLoad: false,
+      includeSiteLoad: null,
       listOfActiveServices: [],
       objectivesBackupPower: false,
       objectivesDA: false,
@@ -89,7 +89,6 @@ export class ProjectMetadata {
       }),
       [c.INCLUDE_INTERCONNECTION_CONSTRAINTS]: new ProjectFieldMetadata({
         displayName: 'Apply interconnection constraints',
-        defaultValue: false,
         isRequired: true,
         type: Boolean,
         allowedValues: c.INCLUDE_INTERCONNECTION_CONSTRAINTS_ALLOWED_VALUES,
