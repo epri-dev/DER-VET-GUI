@@ -1,25 +1,27 @@
+const NULL = null;
+
 const getDefaultApplicationState = () => ({
-  errorMessage: null,
-  id: null,
+  errorMessage: NULL,
+  id: NULL,
   pageCompleteness: {
     overview: {
-      objectives: null,
-      start: null,
-      technologySpecs: null,
+      objectives: NULL,
+      start: NULL,
+      technologySpecs: NULL,
     },
     components: {
       // TODO mutably build based on selected technology & objectives upon naviation AWAY from page
-      financialInputs: null,
-      financialInputsExternalIncentives: null,
-      financialInputsRetailTariff: null,
-      objectivesDA: null,
-      objectivesDeferral: null,
-      objectivesFR: null,
-      objectivesNSR: null,
-      objectivesReliability: null,
-      objectivesSiteInformation: null,
-      objectivesSR: null,
-      objectivesUserDefiined: null,
+      financialInputs: NULL,
+      financialInputsExternalIncentives: NULL,
+      financialInputsRetailTariff: NULL,
+      objectivesDA: NULL,
+      objectivesDeferral: NULL,
+      objectivesFR: NULL,
+      objectivesNSR: NULL,
+      objectivesReliability: NULL,
+      objectivesSiteInformation: NULL,
+      objectivesSR: NULL,
+      objectivesUserDefiined: NULL,
       // note: technologies are ignored bc they have a complete attribute (TODO: record them here?)
     },
   },

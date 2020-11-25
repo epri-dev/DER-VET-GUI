@@ -114,7 +114,7 @@
           <p class="tool-tip tool-tip-col">Are there any pieces of equipement that you want DER-VET to optimilly size for?</p>
         </div>
       </div>
-      <div v-if="sizingEquipement == false">
+      <div v-if="sizingEquipement == 'false'">
         <fieldset class="section-group">
           <legend>Optimization Horizon</legend>
           <div class="form-group">

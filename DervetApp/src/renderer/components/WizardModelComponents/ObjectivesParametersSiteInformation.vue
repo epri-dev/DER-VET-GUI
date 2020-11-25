@@ -107,6 +107,9 @@
         }
         return new SiteLoadTimeSeries(this.inputTimeseries);
       },
+      completeness() {
+        return this.$store.state.Application.pageCompleteness.components.objectivesSiteInformation;
+      },
     },
     beforeMount() {
       // submitted is false initially; set it to true after the first save.

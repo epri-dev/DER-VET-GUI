@@ -130,7 +130,9 @@
   export default {
     mixins: [wizardFormMixin],
     data() {
+      const { pageCompleteness } = this.$store.state.Application;
       return {
+        complete: pageCompleteness.overview.start,
         paths,
         ...this.getDataFromProject(),
         metadata,
@@ -149,11 +151,21 @@
       // submitted is false initially; set it to true after the first save.
       // initially, complete is null; after saving, it is set to either true or false.
       // we want to show validation errors at any time after the first save, with submitted.
-      const { pageCompleteness } = this.$store.state.Application;
-      if (pageCompleteness.overview.start !== null) {
+      if (this.complete !== null) {
         this.submitted = true;
         this.$v.$touch();
       }
+    },
+    computed: {
+      completeness() {
+        return this.$store.state.Application.pageCompleteness.overview.start;
+      },
+      pageCompleteness() {
+        return this.$store.state.Application.pageCompleteness;
+      },
+      app() {
+        return this.$store.state.Application;
+      },
     },
     methods: {
       getErrorMsg(fieldName) {

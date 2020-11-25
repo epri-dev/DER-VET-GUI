@@ -108,7 +108,6 @@ export class ProjectMetadata {
       }),
       [c.SIZING_EQUIPEMENT]: new ProjectFieldMetadata({
         displayName: 'Size eqipement in microgrid',
-        defaultValue: false,
         description: 'Are there any pieces of equipement that you want DER-VET to optimilly size for?',
         isRequired: true,
         type: Boolean,
