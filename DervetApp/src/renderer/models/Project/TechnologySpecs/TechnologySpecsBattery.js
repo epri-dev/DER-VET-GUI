@@ -349,7 +349,7 @@ export default class TechnologySpecsBatteryMetadata {
       }),
       fixedOMCosts: new ProjectFieldMetadata({
         defaultValue: null,
-        displayName: 'Fixed O&amp;M Costs',
+        displayName: 'Fixed O&M Costs',
         isRequired: true,
         minValue: 0,
         type: Number,
@@ -533,7 +533,7 @@ export default class TechnologySpecsBatteryMetadata {
       }),
       variableOMCosts: new ProjectFieldMetadata({
         defaultValue: null,
-        displayName: 'Variable O&amp;M Costs',
+        displayName: 'Variable O&M Costs',
         isRequired: true,
         minValue: 0,
         type: Number,

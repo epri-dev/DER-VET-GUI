@@ -123,8 +123,7 @@
           </text-input>
         </div>
 
-        <nav-buttons
-          :back-link="WIZARD_COMPONENT_PATH"
+        <save-buttons
           :continue-link="WIZARD_COMPONENT_PATH"
           :displayError="submitted && $v.$anyError"
           :save="validatedSave"
@@ -203,9 +202,8 @@
       validatedSave() {
         // set complete to true or false
         this.complete = !this.$v.$invalid;
-        return this.saveAndContinue();
-      },
-      saveAndContinue() {
+        this.submitted = true;
+        this.$v.$touch();
         const dieselGenSpec = this.buildDieselGen();
         if (this.isnewDieselGen()) {
           this.$store.dispatch('addTechnologySpecsDieselGen', dieselGenSpec);

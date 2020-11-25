@@ -47,13 +47,12 @@
             </div>
           </div>
         </div>
-        <hr>
-
-        <nav-buttons :back-link="WIZARD_COMPONENT_PATH"
-                     :continue-link="WIZARD_COMPONENT_PATH"
-                     :displayError="submitted && $v.$anyError"
-                     :save="this.validatedSave" />
       </div>
+      <hr>
+
+      <save-buttons :continue-link="WIZARD_COMPONENT_PATH"
+                    :displayError="submitted && $v.$anyError"
+                    :save="validatedSave" />
     </form>
   </div>
 </template>
@@ -119,12 +118,24 @@
       }
     },
     methods: {
+      resetNonRequired(list) {
+        list.forEach((item) => {
+          this[item] = this.metadata.getDefaultValues()[item];
+        });
+        return true;
+      },
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       validatedSave() {
+        // reset all non-required inputs to their defaults prior to saving
+        if (this.includeInterconnectionConstraints === false) {
+          this.resetNonRequired(['maxExport', 'maxImport']);
+        }
         // set complete to true or false
         this.complete = !this.$v.$invalid;
+        this.submitted = true;
+        this.$v.$touch();
         return this.save();
       },
       save() {
@@ -132,13 +143,8 @@
           this.$store.dispatch('setSiteLoad', this.tsData);
         }
         this.$store.dispatch('setIncludePOIConstraints', this.includeInterconnectionConstraints);
-        if (this.includeInterconnectionConstraints) {
-          this.$store.dispatch('setMaxImportFromGrid', this.maxImport);
-          this.$store.dispatch('setMaxExportToGrid', this.maxExport);
-        } else {
-          this.$store.dispatch('setMaxImportFromGrid', 0);
-          this.$store.dispatch('setMaxExportToGrid', 0);
-        }
+        this.$store.dispatch('setMaxImportFromGrid', this.maxImport);
+        this.$store.dispatch('setMaxExportToGrid', this.maxExport);
         this.$store.dispatch('setCompletenessSiteInformation', this.complete);
       },
     },

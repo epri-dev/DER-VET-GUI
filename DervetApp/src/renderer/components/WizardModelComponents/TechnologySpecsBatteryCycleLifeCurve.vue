@@ -28,7 +28,7 @@
 
     <hr/>
 
-    <nav-buttons
+    <save-buttons
       :back-link="`${TECH_SPECS_BATTERY_PATH}/${this.batteryId}`"
       :continue-link="WIZARD_COMPONENT_PATH"
       continue-text="Done Adding Cycles"

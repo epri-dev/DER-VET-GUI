@@ -152,7 +152,7 @@ export default class TechnologySpecsICEMetadata {
       }),
       fixedOMCostIncludingExercise: new ProjectFieldMetadata({
         defaultValue: null,
-        displayName: 'Fixed O&amp;M Cost, including exercise',
+        displayName: 'Fixed O&M Cost, including exercise',
         isRequired: true,
         minValue: 0,
         type: Number,
@@ -268,7 +268,7 @@ export default class TechnologySpecsICEMetadata {
       }),
       variableOMCost: new ProjectFieldMetadata({
         defaultValue: null,
-        displayName: 'Variable O&amp;M cost',
+        displayName: 'Variable O&M cost',
         isRequired: true,
         minValue: 0,
         type: Number,

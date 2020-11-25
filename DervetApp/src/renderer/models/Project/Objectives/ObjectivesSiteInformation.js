@@ -49,13 +49,14 @@ export default class ObjectivesSiteInformationMetadata {
   static getHardcodedMetadata() {
     return new ObjectivesSiteInformationMetadata({
       [INCLUDE_INTERCONNECTION_CONSTRAINTS]: new ProjectFieldMetadata({
+        defaultValue: null,
         displayName: 'Apply interconnection constraints',
-        defaultValue: false,
         isRequired: true,
         type: Boolean,
         allowedValues: INCLUDE_INTERCONNECTION_CONSTRAINTS_ALLOWED_VALUES,
       }),
       [MAX_EXPORT]: new ProjectFieldMetadata({
+        defaultValue: null,
         displayName: 'Maximum Power Exported',
         isRequired: true,
         minValue: 0,
@@ -64,6 +65,7 @@ export default class ObjectivesSiteInformationMetadata {
         description: 'Maximum magnitude that can flow from grid to microgrid through the point of interconnection',
       }),
       [MAX_IMPORT]: new ProjectFieldMetadata({
+        defaultValue: null,
         displayName: 'Maximum Power Imported',
         isRequired: true,
         maxValue: 0,

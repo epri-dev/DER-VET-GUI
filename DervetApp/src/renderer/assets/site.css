@@ -222,6 +222,16 @@ textarea {
     color: #dc3545;
 }
 
+.incomplete-btn {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.inactive {
+    background-color: #D3D3D3;
+    color: #fff;
+}
+
 .menutext {
     font-weight: normal;
 }

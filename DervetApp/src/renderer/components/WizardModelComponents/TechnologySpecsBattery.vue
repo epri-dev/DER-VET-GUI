@@ -245,8 +245,7 @@
           :errorMessage="getErrorMsg('macrsTerm')">
         </drop-down-input>
 
-        <nav-buttons
-          :back-link="WIZARD_COMPONENT_PATH"
+        <save-buttons
           :continue-link=this.getContinueLink()
           :displayError="submitted && $v.$anyError"
           :save="validatedSave"
@@ -359,12 +358,11 @@
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       validatedSave() {
+        const batterySpec = this.buildBattery();
         // set complete to true or false
         this.complete = !this.$v.$invalid;
-        return this.saveAndContinue();
-      },
-      saveAndContinue() {
-        const batterySpec = this.buildBattery();
+        this.submitted = true;
+        this.$v.$touch();
         if (this.isnewBattery()) {
           this.$store.dispatch('addTechnologySpecsBattery', batterySpec);
         } else {
