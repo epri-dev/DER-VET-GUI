@@ -124,8 +124,7 @@
           </text-input>
         </div>
 
-        <nav-buttons
-          :back-link="WIZARD_COMPONENT_PATH"
+        <save-buttons
           :continue-link="WIZARD_COMPONENT_PATH"
           :displayError="submitted && $v.$anyError"
           :save="validatedSave"
@@ -191,6 +190,12 @@
       }
     },
     methods: {
+      resetNonRequired(list) {
+        list.forEach((item) => {
+          this[item] = this.metadata.getDefaultValues()[item];
+        });
+        return true;
+      },
       isnewICE() {
         return this.iceId === 'null';
       },
@@ -201,11 +206,19 @@
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       validatedSave() {
+        // reset all non-required inputs to their defaults prior to saving
+        if (this.shouldSize === true) {
+          this.resetNonRequired(['numGenerators']);
+        } else if (this.shouldSize === false) {
+          this.resetNonRequired(['minGenerators', 'maxGenerators']);
+        }
         // set complete to true or false
         this.complete = !this.$v.$invalid;
-        return this.saveAndContinue();
+        this.submitted = true;
+        this.$v.$touch();
+        return this.save();
       },
-      saveAndContinue() {
+      save() {
         const iceSpec = this.buildICE();
         if (this.isnewICE()) {
           this.$store.dispatch('addTechnologySpecsICE', iceSpec);

@@ -6,27 +6,39 @@
     <h4>Technologies</h4>
       <router-link class="btn btn-lg btn-info"
                     v-for="solar in solarPVItems"
+                    v-if="solar.active"
                     :to="{ name: 'technologySpecsSolarPV', params: { solarId: solar.id }}"
+                    v-bind:class="{
+            'incomplete-btn': !solar.complete }"
                     :key="solar.id">
         {{getTechLabel(solar)}}
       </router-link>
       <router-link class="btn btn-lg btn-info"
                     v-for="battery in batteryItems"
+                    v-if="battery.active"
                     :to="{ name: 'technologySpecsBattery', params: { batteryId: battery.id }}"
+                    v-bind:class="{
+            'incomplete-btn': !battery.complete }"
                     :key="battery.id">
         {{getTechLabel(battery)}}
       </router-link>
 
       <router-link class="btn btn-lg btn-info"
                     v-for="ice in iceItems"
+                    v-if="ice.active"
                     :to="{ name: 'technologySpecsICE', params: { iceId: ice.id }}"
+                    v-bind:class="{
+            'incomplete-btn': !ice.complete }"
                     :key="ice.id">
         {{getTechLabel(ice)}}
       </router-link>
 
       <router-link class="btn btn-lg btn-info"
                     v-for="dieselGen in dieselGenItems"
+                    v-if="dieselGen.active"
                     :to="{ name: 'technologySpecsDieselGen', params: { dieselGenId: dieselGen.id }}"
+                    v-bind:class="{
+            'incomplete-btn': !dieselGen.complete }"
                     :key="dieselGen.id">
         {{getTechLabel(dieselGen)}}
       </router-link>
@@ -123,6 +135,7 @@
       techESS() {
         return this.$store.state.Project.listOfActiveTechnologies['Energy Storage System'];
       },
+
       solarPVItems() {
         return this.$store.state.Project.technologySpecsSolarPV;
       },
@@ -135,6 +148,7 @@
       batteryItems() {
         return this.$store.state.Project.technologySpecsBattery;
       },
+
       objectivesRetailEnergyChargeReduction() {
         return this.$store.state.Project.objectivesRetailEnergyChargeReduction;
       },

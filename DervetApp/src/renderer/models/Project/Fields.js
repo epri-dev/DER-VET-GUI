@@ -16,7 +16,7 @@ export default class ProjectField {
   toValidationSchema() {
     return {
       ...(this.isRequired && { required }),
-      ...((this.type === Number || this.type === 'float') && { decimal }),
+      ...((this.type === Number || this.type === 'float' || this.type === 'int') && { decimal }),
       ...(this.type === 'int' && { integer }),
       ...(((typeof this.minValue) === 'number') && { minValue: minValue(this.minValue) }),
       ...(((typeof this.maxValue) === 'number') && { maxValue: maxValue(this.maxValue) }),

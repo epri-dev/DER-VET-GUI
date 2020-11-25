@@ -9,6 +9,7 @@
 
       <router-link class="nav nav-sidebar sidebar-indent"
                    v-for="solar in solarPVItems"
+                   v-if="solar.active"
                    :to="{ name: 'technologySpecsSolarPV', params: { solarId: solar.id }}"
                    :key="solar.id"
                    v-bind:class="{
@@ -19,6 +20,7 @@
 
       <router-link class="nav nav-sidebar sidebar-indent"
                    v-for="battery in batteryItems"
+                   v-if="battery.active"
                    :to="{ name: 'technologySpecsBattery', params: { batteryId: battery.id }}"
                    :key="battery.id"
                    v-bind:class="{
@@ -29,6 +31,7 @@
 
       <router-link class="nav nav-sidebar sidebar-indent"
                    v-for="ice in iceItems"
+                   v-if="ice.active"
                    :to="{ name: 'technologySpecsICE', params: { iceId: ice.id }}"
                    :key="ice.id"
                    v-bind:class="{
@@ -39,6 +42,7 @@
 
       <router-link class="nav nav-sidebar sidebar-indent"
                    v-for="dieselGen in dieselGenItems"
+                   v-if="dieselGen.active"
                    :to="{ name: 'technologySpecsDieselGen', params: { dieselGenId: dieselGen.id }}"
                    :key="dieselGen.id"
                    v-bind:class="{

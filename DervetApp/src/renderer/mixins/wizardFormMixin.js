@@ -1,5 +1,6 @@
 import DropDownInput from '@/components/Shared/DropDownInput';
 import NavButtons from '@/components/Shared/NavButtons';
+import SaveButtons from '@/components/Shared/SaveButtons';
 import RadioButtonInput from '@/components/Shared/RadioButtonInput';
 import TextInput from '@/components/Shared/TextInput';
 
@@ -7,6 +8,7 @@ export default {
   components: {
     DropDownInput,
     NavButtons,
+    SaveButtons,
     RadioButtonInput,
     TextInput,
   },
@@ -32,6 +34,10 @@ export default {
         displayMsg += ' must be a number';
         return displayMsg;
       }
+      if (validation[fieldName].integer && !$v[fieldName].integer) {
+        displayMsg += ' must be an integer';
+        return displayMsg;
+      }
       if (validation[fieldName].between && !$v[fieldName].between) {
         displayMsg += ` must be between ${metadata[fieldName].minValue}
           and ${metadata[fieldName].maxValue} (inclusive)`;
@@ -43,10 +49,6 @@ export default {
       }
       if (validation[fieldName].maxValue && !$v[fieldName].maxValue) {
         displayMsg += ` must be <= ${metadata[fieldName].maxValue}`;
-        return displayMsg;
-      }
-      if (validation[fieldName].integer && !$v[fieldName].integer) {
-        displayMsg += ' must be an integer';
         return displayMsg;
       }
       return '';
