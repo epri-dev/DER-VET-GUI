@@ -54,6 +54,7 @@
       resetProjectToDefault() {
         this.$store.dispatch('resetProjectToDefault')
           .then(this.$store.dispatch('resetResultToDefault'))
+          .then(this.$store.dispatch('resetApplicationToDefault'))
           .then(this.$router.push({ path: WIZARD_START_PATH }));
       },
     },

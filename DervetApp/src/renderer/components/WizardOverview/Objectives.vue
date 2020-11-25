@@ -184,12 +184,16 @@
         }),
       },
     },
+    computed: {
+      complete() {
+        return this.$store.state.Application.pageCompleteness.overview.objectives;
+      },
+    },
     beforeMount() {
       // submitted is false initially; set it to true after the first save.
       // initially, complete is null; after saving, it is set to either true or false.
       // we want to show validation errors at any time after the first save, with submitted.
-      const { pageCompleteness } = this.$store.state.Application;
-      if (pageCompleteness.overview.objectives !== null) {
+      if (this.complete !== null && this.complete !== undefined) {
         this.submitted = true;
         this.$v.$touch();
       }

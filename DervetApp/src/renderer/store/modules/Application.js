@@ -5,25 +5,11 @@ const getDefaultApplicationState = () => ({
   id: NULL,
   pageCompleteness: {
     overview: {
-      objectives: NULL,
-      start: NULL,
-      technologySpecs: NULL,
+      start: null,
+      objectives: null,
+      technologySpecs: null,
     },
-    components: {
-      // TODO mutably build based on selected technology & objectives upon naviation AWAY from page
-      financialInputs: NULL,
-      financialInputsExternalIncentives: NULL,
-      financialInputsRetailTariff: NULL,
-      objectivesDA: NULL,
-      objectivesDeferral: NULL,
-      objectivesFR: NULL,
-      objectivesNSR: NULL,
-      objectivesReliability: NULL,
-      objectivesSiteInformation: NULL,
-      objectivesSR: NULL,
-      objectivesUserDefiined: NULL,
-      // note: technologies are ignored bc they have a complete attribute (TODO: record them here?)
-    },
+    components: {},
   },
   resultsLoaded: false,
   runInProgress: false,
@@ -50,6 +36,9 @@ const mutations = {
     const { pageGroup, page, completeness } = payload;
     state.pageCompleteness[pageGroup][page] = completeness;
   },
+  RESET_APPLICATION_TO_DEFAULT(state) {
+    Object.assign(state, getDefaultApplicationState());
+  },
 };
 
 const actions = {
@@ -64,6 +53,9 @@ const actions = {
   },
   resultRecieved({ commit }) {
     commit('SET_RESULT_SUCCESS');
+  },
+  resetApplicationToDefault({ commit }) {
+    commit('RESET_APPLICATION_TO_DEFAULT');
   },
 };
 
