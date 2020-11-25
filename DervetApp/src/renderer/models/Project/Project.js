@@ -29,7 +29,7 @@ export class ProjectMetadata {
       type: 'Wizard',
       ...this.operateOnFieldList(c.START_PROJECT_FIELDS, f => f.defaultValue),
       ...this.operateOnFieldList(c.OBJECTIVE_FIELDS, f => f.defaultValue),
-      ...this.operateOnFieldList(c.SITE_INFOMARTION_FIELDS, f => f.defaultValue),
+      ...this.operateOnFieldList(c.SITE_INFORMATION_FIELDS, f => f.defaultValue),
     };
   }
 

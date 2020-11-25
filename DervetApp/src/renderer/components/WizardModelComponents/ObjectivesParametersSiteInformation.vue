@@ -72,7 +72,7 @@
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 
   const metadata = p.projectMetadata;
-  const validations = metadata.getValidationSchema(c.SITE_INFOMARTION_FIELDS);
+  const validations = metadata.getValidationSchema(c.SITE_INFORMATION_FIELDS);
 
   export default {
     components: { TimeseriesDataUpload },
@@ -132,7 +132,14 @@
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       getDataFromProject() {
-        return operateOnKeysList(this.$store.state.Project, c.SITE_INFOMARTION_FIELDS, f => f);
+        return operateOnKeysList(this.$store.state.Project, c.SITE_INFORMATION_FIELDS, f => f);
+      },
+      getCompletenessPayload() {
+        return {
+          pageGroup: 'components',
+          page: 'objectivesSiteInformation',
+          completeness: !this.$v.$invalid,
+        };
       },
       validatedSave() {
         // reset all non-required inputs to their defaults prior to saving
@@ -143,7 +150,7 @@
         this.complete = !this.$v.$invalid;
         this.submitted = true;
         this.$v.$touch();
-        this.$store.dispatch('setCompleteness', 'components', 'objectivesSiteInformation', !this.$v.$invalid);
+        this.$store.dispatch('setCompleteness', this.getCompletenessPayload());
         return this.save();
       },
       save() {

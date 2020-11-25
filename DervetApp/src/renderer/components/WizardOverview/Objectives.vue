@@ -201,9 +201,16 @@
       getDataFromProject() {
         return operateOnKeysList(this.$store.state.Project, c.OBJECTIVE_FIELDS, f => f);
       },
+      getCompletenessPayload() {
+        return {
+          pageGroup: 'overview',
+          page: 'objectives',
+          completeness: !this.$v.$invalid,
+        };
+      },
       validatedSave() {
         // set complete to true or false
-        this.$store.dispatch('setCompleteness', 'overview', 'objectives', !this.$v.$invalid);
+        this.$store.dispatch('setCompleteness', this.getCompletenessPayload());
         return this.save();
       },
       save() {

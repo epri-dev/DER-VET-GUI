@@ -46,7 +46,8 @@ const mutations = {
     state.errorMessage = errorMessage;
     state.runInProgress = false;
   },
-  SET_COMPLETENESS(state, pageGroup, page, completeness) {
+  SET_COMPLETENESS(state, payload) {
+    const { pageGroup, page, completeness } = payload;
     state.pageCompleteness[pageGroup][page] = completeness;
   },
 };
@@ -55,8 +56,8 @@ const actions = {
   setId({ commit }, newId) {
     commit('SET_ID', newId);
   },
-  setCompleteness({ commit }, pageGroup, page, completeness) {
-    commit('SET_COMPLETENESS', pageGroup, page, completeness);
+  setCompleteness({ commit }, payload) {
+    commit('SET_COMPLETENESS', payload);
   },
   receiveError({ commit }, error) {
     commit('SET_RESULT_ERROR', error);
