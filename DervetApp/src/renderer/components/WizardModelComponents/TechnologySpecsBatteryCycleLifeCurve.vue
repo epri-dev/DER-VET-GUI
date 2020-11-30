@@ -29,9 +29,7 @@
     <hr/>
 
     <save-buttons
-      :back-link="`${TECH_SPECS_BATTERY_PATH}/${this.batteryId}`"
       :continue-link="WIZARD_COMPONENT_PATH"
-      continue-text="Done Adding Cycles"
       :save="this.save"
     />
 
@@ -41,10 +39,10 @@
 <script>
   import { cloneDeep } from 'lodash';
   import { WIZARD_COMPONENT_PATH, TECH_SPECS_BATTERY_PATH } from '@/router/constants';
-  import NavButtons from '@/components/Shared/NavButtons';
+  import SaveButtons from '@/components/Shared/SaveButtons';
 
   export default {
-    components: { NavButtons },
+    components: { SaveButtons },
     props: {
       batteryId: String,
       batteryCycles: Array,

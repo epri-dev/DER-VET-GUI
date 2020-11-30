@@ -129,6 +129,12 @@
       }
     },
     methods: {
+      resetNonRequired(list) {
+        list.forEach((item) => {
+          this[item] = this.metadata.getDefaultValues()[item];
+        });
+        return true;
+      },
       isNewSolar() {
         return this.solarId === 'null';
       },
@@ -139,6 +145,10 @@
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       validatedSave() {
+        // reset all non-required inputs to their defaults prior to saving
+        if (this.shouldSize === true) {
+          this.resetNonRequired(['ratedCapacity']);
+        }
         const solarSpec = this.buildSolarPV();
         // set complete to true or false
         this.complete = !this.$v.$invalid;

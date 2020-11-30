@@ -11,7 +11,7 @@
             </b-card-text>
             <template #footer>
                 <b-button @click="addICETech">Add</b-button>
-              
+
             </template>
           </b-card>
           <b-card class="col-md-6" :title="String(numTechDieselGen)">
@@ -20,7 +20,7 @@
             </b-card-text>
             <template #footer>
                 <b-button @click="addDieselGenTech">Add</b-button>
-              
+
             </template>
           </b-card>
         </div>
@@ -41,7 +41,7 @@
             </b-card-text>
             <template #footer>
                 <b-button @click="addBatteryTech">Add</b-button>
-              
+
             </template>
           </b-card>
         </div>
@@ -105,7 +105,7 @@
       </div>
     </div>
     <hr>
-    <nav-buttons :back-link="OBJECTIVES_PATH"
+    <nav-buttons
                  :continue-link="WIZARD_COMPONENT_PATH"
                  continue-text="Done Adding Technologies"
                  :save="this.save" />
@@ -207,6 +207,7 @@
         return payload.active ? 'Deactivate' : 'Activate';
       },
       getCardTechText(number, name) {
+        // TODO: drop the 'Number of ' text?
         if (number) {
           return `Number of ${name}`;
         }

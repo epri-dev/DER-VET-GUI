@@ -104,12 +104,14 @@ export class ProjectMetadata {
         type: String,
       }),
       [c.OPTIMIZATION_HORIZON]: new ProjectFieldMetadata({
+        displayName: 'Optimization Window',
         isRequired: true,
         type: String,
         description: 'A month-long optimization window is recommended for Customer Services. A specific number of hours is recommended for Wholesale Services.',
         allowedValues: c.OPTIMIZATION_HORIZON_ALLOWED_VALUES,
       }),
       [c.OPTIMIZATION_HORIZON_NUM]: new ProjectFieldMetadata({
+        displayName: 'Optimization Hours',
         isRequired: true,
         minValue: 2,
         type: Number,
@@ -128,12 +130,12 @@ export class ProjectMetadata {
         isRequired: false, // TODO change to true
         type: String,
       }),
-      [c.SIZING_EQUIPEMENT]: new ProjectFieldMetadata({
-        displayName: 'Size eqipement in microgrid',
-        description: 'Are there any pieces of equipement that you want DER-VET to optimilly size for?',
+      [c.SIZING_EQUIPMENT]: new ProjectFieldMetadata({
+        displayName: 'Size equipment in microgrid',
+        description: 'Are there any pieces of equipment that you want DER-VET to optimally size for?',
         isRequired: true,
         type: Boolean,
-        allowedValues: c.SIZING_EQUIPEMENT_ALLOWED_VALUES,
+        allowedValues: c.SIZING_EQUIPMENT_ALLOWED_VALUES,
       }),
       [c.START_YEAR]: new ProjectFieldMetadata({
         displayName: 'Start Year',

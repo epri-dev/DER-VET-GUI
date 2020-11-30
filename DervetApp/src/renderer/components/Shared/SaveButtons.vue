@@ -1,6 +1,6 @@
 <template>
   <div class="form-group form-buffer row">
-    <div class="col-md-3 continue-btn">
+    <div class="col-md-3 back-btn">
       <button @click="save" class="btn btn-primary">Save</button>
     </div>
 

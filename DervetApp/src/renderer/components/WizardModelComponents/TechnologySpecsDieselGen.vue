@@ -190,6 +190,12 @@
       }
     },
     methods: {
+      resetNonRequired(list) {
+        list.forEach((item) => {
+          this[item] = this.metadata.getDefaultValues()[item];
+        });
+        return true;
+      },
       isnewDieselGen() {
         return this.dieselGenId === 'null';
       },
@@ -200,6 +206,12 @@
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       validatedSave() {
+        // reset all non-required inputs to their defaults prior to saving
+        if (this.shouldSize === true) {
+          this.resetNonRequired(['numGenerators']);
+        } else if (this.shouldSize === false) {
+          this.resetNonRequired(['minGenerators', 'maxGenerators']);
+        }
         // set complete to true or false
         this.complete = !this.$v.$invalid;
         this.submitted = true;

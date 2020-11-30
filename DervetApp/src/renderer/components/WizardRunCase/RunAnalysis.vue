@@ -11,7 +11,7 @@
       </div>
       <div class="col-md-12 text-center" v-else-if="isError">
         <br/>
-        <div>An error occured while running DERVET: please check {{logPath}} for more details.</div>
+        <div>An error occured while running DER-VET: please check {{logPath}} for more details.</div>
       </div>
     </div>
   </div>

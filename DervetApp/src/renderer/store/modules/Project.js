@@ -279,8 +279,8 @@ const mutations = {
   SET_OPTIMIZATION_HORIZON_NUM(state, newOptimizataionHorizonNum) {
     state.optimizationHorizonNum = newOptimizataionHorizonNum;
   },
-  SET_SIZING_EQUIPEMENT(state, newSizingEquipement) {
-    state.sizingEquipement = newSizingEquipement;
+  SET_SIZING_EQUIPMENT(state, newSizingEquipment) {
+    state.sizingEquipment = newSizingEquipment;
   },
   SELECT_OTHER_SERVICES(state, listOfServices) {
     state.listOfActiveServices = listOfServices;
@@ -621,8 +621,8 @@ const actions = {
   setOptimizationHorizonNum({ commit }, newOptimizataionHorizonNum) {
     commit('SET_OPTIMIZATION_HORIZON_NUM', newOptimizataionHorizonNum);
   },
-  setSizingEquipement({ commit }, newSizingEquipement) {
-    commit('SET_SIZING_EQUIPEMENT', newSizingEquipement);
+  setSizingEquipment({ commit }, newSizingEquipment) {
+    commit('SET_SIZING_EQUIPMENT', newSizingEquipment);
   },
   // reliability
   setCriticalLoad({ commit }, newCriticalLoad) {

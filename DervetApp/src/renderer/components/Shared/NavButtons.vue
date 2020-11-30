@@ -1,9 +1,13 @@
 <template>
   <div class="form-group form-buffer row">
+<!-- back-button removed
     <div class="col-md-3 back-btn">
       <router-link :to="backLink" class="btn btn-primary">
         {{backText}}
       </router-link>
+    </div>
+-->
+    <div class="col-md-3">
     </div>
 
     <div v-if="displayError" class="col-md-6 error-text-color">
