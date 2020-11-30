@@ -32,8 +32,7 @@
       <br>
       <hr>
 
-      <nav-buttons
-        :back-link="`${TECH_SPECS_PV_PATH}/${this.solarId}`"
+      <save-buttons
         :continue-link="WIZARD_COMPONENT_PATH"
         :save="this.save"
       />
@@ -48,12 +47,12 @@
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
   import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
-  import NavButtons from '@/components/Shared/NavButtons';
+  import SaveButtons from '@/components/Shared/SaveButtons';
   import { WIZARD_COMPONENT_PATH, TECH_SPECS_PV_PATH } from '@/router/constants';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 
   export default {
-    components: { NavButtons, TimeseriesDataUpload },
+    components: { SaveButtons, TimeseriesDataUpload },
     mixins: [csvUploadMixin],
     props: ['solarId'],
     data() {

@@ -12,7 +12,7 @@ export const NAME = 'name';
 export const OPTIMIZATION_HORIZON = 'optimizationHorizon';
 export const OPTIMIZATION_HORIZON_NUM = 'optimizationHorizonNum';
 export const OWNERSHIP = 'ownership';
-export const SIZING_EQUIPEMENT = 'sizingEquipement';
+export const SIZING_EQUIPMENT = 'sizingEquipment';
 export const START_YEAR = 'startYear';
 export const TIMESTEP = 'timestep';
 export const RESULTS_DIRECTORY = 'resultsDirectory';
@@ -45,7 +45,7 @@ export const INCLUDE_INTERCONNECTION_CONSTRAINTS_ALLOWED_VALUES = [
     label: 'No',
   },
 ];
-export const SIZING_EQUIPEMENT_ALLOWED_VALUES = [
+export const SIZING_EQUIPMENT_ALLOWED_VALUES = [
   {
     value: true,
     label: 'Yes',
@@ -69,7 +69,7 @@ export const START_PROJECT_FIELDS = [
   RESULTS_DIRECTORY,
 ];
 export const OBJECTIVE_FIELDS = [
-  SIZING_EQUIPEMENT,
+  SIZING_EQUIPMENT,
   OPTIMIZATION_HORIZON,
   OPTIMIZATION_HORIZON_NUM,
 ];

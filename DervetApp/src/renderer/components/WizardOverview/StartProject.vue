@@ -25,7 +25,7 @@
           v-model="analysisHorizonMode"
           v-bind:field="metadata.analysisHorizonMode"
           :isInvalid="submitted && $v.analysisHorizonMode.$error"
-          :errorMessage="getErrorMsg('analysisHorizonMode')">>
+          :errorMessage="getErrorMsg('analysisHorizonMode')">
         </radio-button-input>
 
         <div class="row form-group" v-if="analysisHorizonMode === '1'">
@@ -59,14 +59,14 @@
         v-model="gridLocation"
         v-bind:field="metadata.gridLocation"
         :isInvalid="submitted && $v.gridLocation.$error"
-        :errorMessage="getErrorMsg('gridLocation')">>
+        :errorMessage="getErrorMsg('gridLocation')">
       </radio-button-input>
 
       <radio-button-input
         v-model="ownership"
         v-bind:field="metadata.ownership"
         :isInvalid="submitted && $v.ownership.$error"
-        :errorMessage="getErrorMsg('ownership')">>
+        :errorMessage="getErrorMsg('ownership')">
       </radio-button-input>
 
       <fieldset class="section-group">
@@ -104,11 +104,10 @@
 
       <hr/>
 
-      <nav-buttons
-        back-link="/"
+      <save-buttons
         :continue-link="this.paths.OBJECTIVES_PATH"
-        :save="validatedSave"
         :displayError="submitted && $v.$anyError"
+        :save="validatedSave"
       />
     </div>
   </div>
@@ -160,6 +159,12 @@
       },
     },
     methods: {
+      resetNonRequired(list) {
+        list.forEach((item) => {
+          this[item] = this.metadata.getDefaultValues()[item];
+        });
+        return true;
+      },
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
@@ -182,11 +187,17 @@
         this.resultsDirectory = e.target.files[0].path;
       },
       validatedSave() {
+        // reset all non-required inputs to their defaults prior to saving
+        if (this.analysisHorizonMode !== '1') {
+          this.resetNonRequired(['analysisHorizon']);
+        }
         // set complete to true or false
         this.$store.dispatch('setCompleteness', this.getCompletenessPayload());
-        return this.saveAndContinue();
+        this.submitted = true;
+        this.$v.$touch();
+        return this.save();
       },
-      saveAndContinue() {
+      save() {
         this.$store.dispatch('setName', this.name);
         this.$store.dispatch('setStartYear', this.startYear);
         this.$store.dispatch('setAnalysisHorizonMode', this.analysisHorizonMode);

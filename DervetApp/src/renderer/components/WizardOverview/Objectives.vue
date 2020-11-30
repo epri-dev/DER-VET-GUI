@@ -99,12 +99,12 @@
         </div>
       </div>
       <hr />
-      <radio-button-input v-model="sizingEquipement"
-                          v-bind:field="metadata.sizingEquipement"
-                          :isInvalid="submitted && $v.sizingEquipement.$error"
-                          :errorMessage="getErrorMsg('sizingEquipement')">
+      <radio-button-input v-model="sizingEquipment"
+                          v-bind:field="metadata.sizingEquipment"
+                          :isInvalid="submitted && $v.sizingEquipment.$error"
+                          :errorMessage="getErrorMsg('sizingEquipment')">
       </radio-button-input>
-      <div v-if="(!sizingEquipement) && (sizingEquipement !== undefined)">
+      <div v-if="(sizingEquipment === false)">
         <fieldset class="section-group">
           <legend>Optimization Horizon</legend>
           <div class="form-group">
@@ -126,10 +126,10 @@
       </div>
     </div>
     <hr />
-    <nav-buttons :back-link="START_PROJECT_PATH"
+    <save-buttons
                  :continue-link="TECH_SPECS_PATH"
                  :displayError="submitted && $v.$anyError"
-                 :save="this.validatedSave" />
+                 :save="validatedSave" />
 
   </div>
 
@@ -164,13 +164,13 @@
       optimizationHorizonNum: {
         ...validations.optimizationHorizonNum,
         required: requiredIf(function isOptimizationHorizonNumRequired() {
-          return !(this.sizingEquipement) && this.optimizationHorizon === 'Hours';
+          return (this.sizingEquipment === false) && this.optimizationHorizon === 'Hours';
         }),
       },
       optimizationHorizon: {
         ...validations.optimizationHorizon,
         required: requiredIf(function isOptimizationHorizonRequired() {
-          return !(this.sizingEquipement);
+          return (this.sizingEquipment === false);
         }),
       },
     },
@@ -189,6 +189,12 @@
       }
     },
     methods: {
+      resetNonRequired(list) {
+        list.forEach((item) => {
+          this[item] = this.metadata.getDefaultValues()[item];
+        });
+        return true;
+      },
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
@@ -203,8 +209,16 @@
         };
       },
       validatedSave() {
+        // reset all non-required inputs to their defaults prior to saving
+        if (this.sizingEquipment === true) {
+          this.resetNonRequired(['optimizationHorizonNum', 'optimizationHorizon']);
+        } else if (this.sizingEquipment === false && this.optimizationHorizon !== 'Hours') {
+          this.resetNonRequired(['optimizationHorizonNum']);
+        }
         // set complete to true or false
         this.$store.dispatch('setCompleteness', this.getCompletenessPayload());
+        this.submitted = true;
+        this.$v.$touch();
         return this.save();
       },
       save() {
@@ -212,7 +226,7 @@
         this.$store.dispatch('selectOtherServices', this.listOfActiveServices);
         this.$store.dispatch('setOptimizationHorizon', this.optimizationHorizon);
         this.$store.dispatch('setOptimizationHorizonNum', this.optimizationHorizonNum);
-        this.$store.dispatch('setSizingEquipement', this.sizingEquipement);
+        this.$store.dispatch('setSizingEquipment', this.sizingEquipment);
         this.$store.dispatch('setIncludeSiteLoad');
       },
     },

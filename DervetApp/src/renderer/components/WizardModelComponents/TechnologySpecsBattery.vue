@@ -342,6 +342,12 @@
       }
     },
     methods: {
+      resetNonRequired(list) {
+        list.forEach((item) => {
+          this[item] = this.metadata.getDefaultValues()[item];
+        });
+        return true;
+      },
       isnewBattery() {
         return this.batteryId === 'null';
       },
@@ -358,6 +364,33 @@
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       validatedSave() {
+        // reset all non-required inputs to their defaults prior to saving
+        if (this.shouldEnergySize === true) {
+          this.resetNonRequired(['energyCapacity']);
+        }
+        if (this.shouldPowerSize === true) {
+          this.resetNonRequired(['powerCapacity', 'shouldDiffChargeDischarge',
+            'chargingCapacity', 'dischargingCapacity']);
+        }
+        if (this.shouldPowerSize === false) {
+          if (this.shouldDiffChargeDischarge === true) {
+            this.resetNonRequired(['powerCapacity']);
+          } else if (this.shouldDiffChargeDischarge === false) {
+            this.resetNonRequired(['chargingCapacity', 'dischargingCapacity']);
+          } else {
+            this.resetNonRequired(['powerCapacity',
+              'chargingCapacity', 'dischargingCapacity']);
+          }
+        }
+        if (this.shouldMaxDuration === false) {
+          this.resetNonRequired(['maxDuration']);
+        }
+        if (this.shouldLimitDailyCycling === false) {
+          this.resetNonRequired(['dailyCycleLimit']);
+        }
+        if (this.includeAuxiliaryLoad === false) {
+          this.resetNonRequired(['auxiliaryLoad']);
+        }
         const batterySpec = this.buildBattery();
         // set complete to true or false
         this.complete = !this.$v.$invalid;
