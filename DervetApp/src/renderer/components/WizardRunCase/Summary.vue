@@ -83,6 +83,12 @@
         </template>
         </br>
 
+        <div class="form-group form-buffer row" v-if="!inputAndResultsSelected">
+          <div class="col-md-12 error-text-color text-center">
+            Please select your input and results folders in the Project Configuration page in Project Overview.
+          </div>
+        </div>
+
         <div class="form-group form-buffer row">
           <div class="col-md-5">
             <router-link
@@ -97,7 +103,7 @@
 
           <div class="col-md-5">
             <router-link
-              v-on:click.native="runInProgress() ? () => null : runDervet()"
+              v-on:click.native="(runInProgress() || runDervetDisabled()) ? () => null : runDervet()"
               :event="runDervetDisabled() ? '' : 'click'"
               :to="this.$route.path"
               class="btn btn-lg btn-danger pull-left">
@@ -115,13 +121,18 @@
 <script>
   import { flatten } from 'lodash';
   import * as paths from '@/router/constants';
-  // import { RUN_ANALYSIS_PATH } from '@/router/constants';
+  import { RUN_ANALYSIS_PATH } from '@/router/constants';
   import model from '@/models/StartProject';
-  import { getProjectFixture } from '@/assets/samples/projectFixture.js';
 
   const { validation } = model;
 
   export default {
+    computed: {
+      inputAndResultsSelected() {
+        const p = this.$store.state.Project;
+        return p.inputsDirectory && p.resultsDirectory;
+      },
+    },
     methods: {
       modeDescription() {
         if (this.$store.state.Project.analysisHorizonMode === undefined) {
@@ -142,7 +153,7 @@
       },
       runDervetDisabled() {
         // TODO: Use vuelidate to check if there are any errors in the project config
-        return false;
+        return !this.inputAndResultsSelected;
       },
       runInProgress() {
         return this.$store.state.Application.runInProgress;
@@ -153,10 +164,10 @@
       runDervet() {
         // TODO: note that there is currently no validation, so calling this with an
         // incomplete Project object will likely result in an unhandled exception
-        const p = this.$store.state.Project;
-        const projectFixture = getProjectFixture(p.inputsDirectory, p.resultsDirectory);
-        this.$store.dispatch('runDervet', projectFixture)
-          .then(this.$router.push({ path: paths.RUN_ANALYSIS_PATH }));
+        console.log('Running DER-VET');
+        console.log(this.$store.state.Project);
+        this.$store.dispatch('Application/runDervet', this.$store.state.Project)
+          .then(this.$router.push({ path: RUN_ANALYSIS_PATH }));
       },
       techAll() {
         const techList = [this.techGen, this.techIR, this.techESS];

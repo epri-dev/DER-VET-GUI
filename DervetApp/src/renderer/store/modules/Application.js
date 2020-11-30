@@ -1,6 +1,8 @@
 import IpcService from '@/IpcService';
 import { makeDervetInputs } from '@/models/dto/ProjectDto';
 
+import { billReductionCompleteness } from '@/assets/cases/billReduction/project';
+
 const NULL = null;
 
 const getDefaultApplicationState = () => ({
@@ -42,6 +44,9 @@ const mutations = {
     const { pageGroup, page, completeness } = payload;
     state.pageCompleteness[pageGroup][page] = completeness;
   },
+  SET_FULL_COMPLETENESS(state, completeness) {
+    state.pageCompleteness = completeness;
+  },
   RESET_APPLICATION_TO_DEFAULT(state) {
     Object.assign(state, getDefaultApplicationState());
   },
@@ -50,6 +55,9 @@ const mutations = {
 const actions = {
   setCompleteness({ commit }, payload) {
     commit('SET_COMPLETENESS', payload);
+  },
+  setQuickStartCompleteness({ commit }) {
+    commit('SET_FULL_COMPLETENESS', billReductionCompleteness);
   },
   receiveError({ commit }) {
     // TODO: handle parsing error

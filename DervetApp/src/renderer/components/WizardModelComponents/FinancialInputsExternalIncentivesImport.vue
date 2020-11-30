@@ -42,7 +42,7 @@
 
 <script>
   import { parsedCsvToExternalIncentives } from '@/models/ExternalIncentives';
-  import { parseCsvFromFile } from '@/util/file';
+  import { parseCsvFromEvent } from '@/util/file';
   import NavButtons from '@/components/Shared/NavButtons';
   import { FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH } from '@/router/constants';
 
@@ -57,7 +57,7 @@
     methods: {
       onFileUpload(e) {
         const onSuccess = (results) => { this.parsedExternalIncentiveCsv = results; };
-        parseCsvFromFile(e, onSuccess);
+        parseCsvFromEvent(e, onSuccess);
       },
       save() {
         const eis = parsedCsvToExternalIncentives(this.parsedExternalIncentiveCsv);

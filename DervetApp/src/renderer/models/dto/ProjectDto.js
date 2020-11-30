@@ -380,7 +380,7 @@ export const makePVParameters = (project) => {
     }
     const keys = {
       acr: makeBaseKey(0, FLOAT), // hardcoded
-      ccost_kw: makeBaseKey(solarPV.cost, FLOAT),
+      ccost_kW: makeBaseKey(solarPV.cost, FLOAT),
       construction_year: makeBaseKey(convertDateToYear(solarPV.constructionDate), PERIOD),
       curtail: makeBaseKey(ZERO, BOOL), // TODO: new, verify value
       decommissioning_cost: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
@@ -424,7 +424,7 @@ export const makeReliabilityParameters = (project) => {
       max_outage_duration: makeBaseKey(project.reliabilityMaxOutageDuration, INT),
       'n-2': makeBaseKey(ZERO, BOOL), // hardcoded
       post_facto_initial_soc: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
-      post_facto_only: makeBaseKey(project.reliabilityPostOptimizationOnly, BOOL),
+      post_facto_only: makeBaseKey(convertToOneZero(project.reliabilityPostOptimizationOnly), BOOL),
       target: makeBaseKey(project.reliabilityTarget, FLOAT),
     };
     return makeGroup('', isActive, keys);
@@ -468,6 +468,7 @@ export const makeScenarioParameters = (project) => {
   if (n === 'hours') {
     n = project.optimizationHorizonNum;
   }
+
   // TODO if any DERs are being sized, N should be 'Year'
   // TODO if customer services, N should be 'month'
   // TODO if wholesale services, N should be a number of hours
@@ -476,7 +477,7 @@ export const makeScenarioParameters = (project) => {
     apply_interconnection_constraints: makeBaseKey(convertToOneZero(includePoiConstraints), BOOL),
     binary: makeBaseKey(binary, BOOL),
     def_growth: makeBaseKey(2, FLOAT), // TODO ask for this value with site load
-    dt: makeBaseKey(project.timestep, FLOAT),
+    dt: makeBaseKey(project.timestep / 60, FLOAT),
     end_year: makeBaseKey(calculateEndYear(project.startYear, project.analysisHorizon), PERIOD),
     incl_site_load: makeBaseKey(convertToOneZero(project.includeSiteLoad), BOOL),
     incl_thermal_load: makeBaseKey(ZERO, BOOL), // TODO: new, verify value
@@ -590,6 +591,16 @@ export const makeEmptyCsvDataWithDatetimeIndex = (project) => {
   return datetimeIndex.map(d => ({ [TIMESERIES_DATETIME_INDEX]: d }));
 };
 
+export const addPvTimeSeries = (project) => {
+  // TODO allow for more than one PV
+  const solarPV = project.technologySpecsSolarPV[0];
+  const tsClass = solarPV.generationProfile;
+  const pvData = mapListToObjectList(tsClass.data, 'pv');
+  const pvField = 'pv';
+  const pvHeader = `${tsClass.columnHeaderName}/${solarPV.id}`;
+  return { pvData, pvField, pvHeader };
+};
+
 /* TODO: new timeseries fields
   - RA Active (y/n)
   - POI: max export (kW)
@@ -619,24 +630,42 @@ export const makeEmptyCsvDataWithDatetimeIndex = (project) => {
   - SR Min (kW)
   - NSR Max (kW)
   - NSR Min (kW)
+
+  Also turn this whole function into its own class/module
 */
 export const makeTimeSeriesCsv = (project) => {
-  // Make datetime index
-  let data = [makeEmptyCsvDataWithDatetimeIndex(project)];
-  let fields = [TIMESERIES_DATETIME_INDEX];
-  let headers = [TIMESERIES_DATETIME_HEADER];
+  const data = []; // List of lists of objects with format { 'field key': value }
+  const fields = []; // List of field keys
+  const headers = []; // List of field headers
+
+  function addSingleSeries(d, f, h) {
+    data.push(d);
+    fields.push(f);
+    headers.push(h);
+  }
+
+  // Add datetime index
+  const dtIndex = makeEmptyCsvDataWithDatetimeIndex(project);
+  addSingleSeries(dtIndex, TIMESERIES_DATETIME_INDEX, TIMESERIES_DATETIME_HEADER);
 
   // Add all available timeseries to CSV
   TIMESERIES_FIELDS.forEach((ts) => {
     const tsClass = project[ts];
     if (tsClass) {
-      // TODO Move this to standalone function
-      data = data.concat([mapListToObjectList(tsClass.data, ts)]);
-      fields = fields.concat(ts);
-      headers = headers.concat(tsClass.columnHeaderName);
+      const dataObjectList = mapListToObjectList(tsClass.data, ts);
+      addSingleSeries(dataObjectList, ts, tsClass.columnHeaderName);
     }
   });
 
+  // Add PV timeseries
+  const includePV = checkNotNullOrEmpty(project.technologySpecsSolarPV);
+
+  if (includePV) {
+    const { pvData, pvField, pvHeader } = addPvTimeSeries(project);
+    addSingleSeries(pvData, pvField, pvHeader);
+  }
+
+  // Convert to CSV
   const unzippedData = _.unzipWith(data, Object.assign);
   return objectToCsv(unzippedData, fields, headers);
 };
@@ -712,12 +741,13 @@ export const makeExpectedResultCsvs = (project) => {
       fieldName: 'loadCoverageProbability',
       fileName: 'load_coverage_prob.csv',
     });
-    if (!project.postOptimizationOnly) {
-      expectedResultsCsvs.push({
-        fieldName: 'outageContribution',
-        fileName: 'outage_energy_contributions.csv',
-      });
-    }
+    // TODO: uncomment when postOptimizationOnly field added to Project
+    // if (!project.postOptimizationOnly) {
+    //   expectedResultsCsvs.push({
+    //     fieldName: 'outageContribution',
+    //     fileName: 'outage_energy_contributions.csv',
+    //   });
+    // }
   }
   if (project.objectivesDeferral) {
     expectedResultsCsvs.push({

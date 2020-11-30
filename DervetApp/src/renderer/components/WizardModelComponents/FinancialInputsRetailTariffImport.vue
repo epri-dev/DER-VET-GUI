@@ -42,7 +42,7 @@
 
 <script>
   import { parsedCsvToBillingPeriods } from '@/models/RetailTariffBillingPeriod';
-  import { parseCsvFromFile } from '@/util/file';
+  import { parseCsvFromEvent } from '@/util/file';
   import NavButtons from '@/components/Shared/NavButtons';
   import { FINANCIAL_INPUTS_RETAIL_TARIFF_PATH } from '@/router/constants';
 
@@ -58,7 +58,7 @@
     methods: {
       onFileUpload(e) {
         const onSuccess = (results) => { this.parsedBillingPeriodCsv = results; };
-        parseCsvFromFile(e, onSuccess);
+        parseCsvFromEvent(e, onSuccess);
       },
       save() {
         const pds = parsedCsvToBillingPeriods(this.parsedBillingPeriodCsv);

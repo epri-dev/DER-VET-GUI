@@ -232,7 +232,7 @@ export class ProjectMetadata {
       }),
       [c.INPUTS_DIRECTORY]: new ProjectFieldMetadata({
         displayName: 'Inputs Directory',
-        isRequired: false, // TODO change to true
+        isRequired: true,
         type: String,
       }),
       [c.MAX_EXPORT]: new ProjectFieldMetadata({
@@ -321,7 +321,7 @@ export class ProjectMetadata {
       }),
       [c.RESULTS_DIRECTORY]: new ProjectFieldMetadata({
         displayName: 'Results Directory',
-        isRequired: false, // TODO change to true
+        isRequired: true,
         type: String,
       }),
       [c.SIZING_EQUIPMENT]: new ProjectFieldMetadata({
