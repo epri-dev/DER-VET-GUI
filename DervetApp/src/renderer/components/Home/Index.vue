@@ -38,7 +38,7 @@
       </div>
     </div>
   </div>
-</div>
+
 
 </template>
 
@@ -53,8 +53,8 @@
     methods: {
       resetProjectToDefault() {
         this.$store.dispatch('resetProjectToDefault')
-          .then(this.$store.dispatch('resetResultToDefault'))
-          .then(this.$store.dispatch('resetApplicationToDefault'))
+          .then(this.$store.dispatch('resetResultToDefault', this.$store.state.Project.id))
+          .then(this.$store.dispatch('resetApplicationToDefault', this.$store.state.Project.id))
           .then(this.$router.push({ path: WIZARD_START_PATH }));
       },
     },

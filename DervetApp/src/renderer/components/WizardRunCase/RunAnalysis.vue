@@ -27,7 +27,7 @@
     name: 'runAnalysis',
     computed: {
       isError() {
-        return this.$store.state.ProjectResult.isError !== null;
+        return this.$store.state.Application.isError !== null;
       },
       results() {
         return this.$store.state.ProjectResult.data;
@@ -42,7 +42,7 @@
         return this.$store.state.ProjectResult.data !== null;
       },
       runInProgress() {
-        return this.$store.state.ProjectResult.runInProgress;
+        return this.$store.state.Application.runInProgress;
       },
       projectName() {
         return this.$store.state.Project.name;
