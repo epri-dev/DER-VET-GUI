@@ -1,106 +1,138 @@
 <template>
-  <div>
+  <div class="container-fluid">
     <h3>Define your Components</h3>
     <hr>
 
     <h4>Technologies</h4>
-      <router-link class="btn btn-lg btn-info"
-                    v-for="solar in solarPVItems"
-                    v-if="solar.active"
-                    :to="{ name: 'technologySpecsSolarPV', params: { solarId: solar.id }}"
-                    v-bind:class="{
-            'incomplete-btn': !solar.complete }"
-                    :key="solar.id">
-        {{getTechLabel(solar)}}
-      </router-link>
-      <router-link class="btn btn-lg btn-info"
-                    v-for="battery in batteryItems"
-                    v-if="battery.active"
-                    :to="{ name: 'technologySpecsBattery', params: { batteryId: battery.id }}"
-                    v-bind:class="{
-            'incomplete-btn': !battery.complete }"
-                    :key="battery.id">
-        {{getTechLabel(battery)}}
-      </router-link>
-
-      <router-link class="btn btn-lg btn-info"
-                    v-for="ice in iceItems"
-                    v-if="ice.active"
-                    :to="{ name: 'technologySpecsICE', params: { iceId: ice.id }}"
-                    v-bind:class="{
-            'incomplete-btn': !ice.complete }"
-                    :key="ice.id">
-        {{getTechLabel(ice)}}
-      </router-link>
-
-      <router-link class="btn btn-lg btn-info"
-                    v-for="dieselGen in dieselGenItems"
-                    v-if="dieselGen.active"
-                    :to="{ name: 'technologySpecsDieselGen', params: { dieselGenId: dieselGen.id }}"
-                    v-bind:class="{
-            'incomplete-btn': !dieselGen.complete }"
-                    :key="dieselGen.id">
-        {{getTechLabel(dieselGen)}}
-      </router-link>
+    <div class="row align-items-center">
+      <div class="col-md-4 buffer-bottom" v-for="solar in solarPVItems">
+        <b-button block size="lg"
+                  v-if="solar.active"
+                  :to="{ name: 'technologySpecsSolarPV', params: { solarId: solar.id }}"
+                  v-bind:class="{ 'incomplete-btn': !solar.complete }"
+                  :key="solar.id">
+          {{getTechLabel(solar)}}
+        </b-button>
+      </div>
+    </div>
+    <div class="row align-items-center">
+      <div class="col-md-4 buffer-bottom" v-for="battery in batteryItems">
+        <b-button block size="lg"
+                  v-if="battery.active"
+                  :to="{ name: 'technologySpecsBattery', params: { batteryId: battery.id }}"
+                  v-bind:class="{ 'incomplete-btn': !battery.complete }"
+                  :key="battery.id">
+          {{getTechLabel(battery)}}
+        </b-button>
+      </div>
+    </div>
+    <div class="row align-items-center">
+      <div class="col-md-4 buffer-bottom" v-for="ice in iceItems">
+        <b-button block size="lg"
+                  v-if="ice.active"
+                  :to="{ name: 'technologySpecsICE', params: { iceId: ice.id }}"
+                  v-bind:class="{ 'incomplete-btn': !ice.complete }"
+                  :key="ice.id">
+          {{getTechLabel(ice)}}
+        </b-button>
+      </div>
+    </div>
+    <div class="row align-items-center">
+      <div class="col-md-4 buffer-bottom" v-for="dieselGen in dieselGenItems">
+        <b-button block size="lg"
+                  v-if="dieselGen.active"
+                  :to="{ name: 'technologySpecsDieselGen', params: { dieselGenId: dieselGen.id }}"
+                  v-bind:class="{ 'incomplete-btn': !dieselGen.complete }"
+                  :key="dieselGen.id">
+          {{getTechLabel(dieselGen)}}
+        </b-button>
+      </div>
+    </div>
     <hr>
 
     <h4>Services</h4>
-      <router-link class="btn btn-lg btn-info"
-                    :to="this.paths.OBJECTIVES_SITE_INFORMATION_PATH">
-        Site Information
-      </router-link>
-      <router-link class="btn btn-lg btn-info"
-                    :to="this.paths.OBJECTIVES_DEFERRAL_PATH"
-                    v-if="objectivesDeferral">
-        Deferral
-      </router-link>
-      <router-link class="btn btn-lg btn-info"
-                    :to="this.paths.OBJECTIVES_FR_PATH"
-                    v-if="objectivesFR">
-        Frequency Regulation
-      </router-link>
-      <router-link class="btn btn-lg btn-info"
-                    :to="this.paths.OBJECTIVES_NSR_PATH"
-                    v-if="objectivesNSR">
-        Non-Spinning Reserves
-      </router-link>
-      <router-link class="btn btn-lg btn-info"
-                    :to="this.paths.OBJECTIVES_RESILIENCE_PATH"
-                    v-if="objectivesResilience">
-        Reliability
-      </router-link>
-      <router-link class="btn btn-lg btn-info"
-                    :to="this.paths.OBJECTIVES_SR_PATH"
-                    v-if="objectivesSR">
-        Spinning Reserves
-      </router-link>
-      <router-link class="btn btn-lg btn-info"
-                    :to="this.paths.OBJECTIVES_USER_DEFINED_PATH"
-                    v-if="objectivesUserDefined">
-        Custom Service
-      </router-link>
-      <router-link class="btn btn-lg btn-info"
-                    :to="this.paths.OBJECTIVES_DA_PATH"
-                    v-if="objectivesDA">
-        Day Ahead Pricing
-      </router-link>
-      <router-link class="btn btn-lg btn-info"
-                    :to="this.paths.FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
-                    v-if="objectivesRetailEnergyChargeReduction||objectivesRetailDemandChargeReduction">
-        Retail Tariff
-      </router-link>
+    <div class="row align-items-center">
+      <div class="col-md-4 buffer-bottom">
+        <b-button block size="lg"
+                  :to="this.paths.OBJECTIVES_SITE_INFORMATION_PATH">
+          Site Information
+        </b-button>
+      </div>
+
+      <div class="col-md-4 buffer-bottom" v-if="objectivesDeferral">
+        <b-button block size="lg"
+                  :to="this.paths.OBJECTIVES_DEFERRAL_PATH">
+          Deferral
+        </b-button>
+      </div>
+
+      <div class="col-md-4 buffer-bottom" v-if="objectivesFR">
+        <b-button block size="lg"
+                  :to="this.paths.OBJECTIVES_FR_PATH">
+          Frequency Regulation
+        </b-button>
+      </div>
+
+      <div class="col-md-4 buffer-bottom" v-if="objectivesNSR">
+        <b-button block size="lg"
+                  :to="this.paths.OBJECTIVES_NSR_PATH">
+          Non-Spinning Reserves
+        </b-button>
+      </div>
+
+      <div class="col-md-4 buffer-bottom" v-if="objectivesResilience">
+        <b-button block size="lg"
+                  :to="this.paths.OBJECTIVES_RESILIENCE_PATH">
+          Reliability
+        </b-button>
+      </div>
+    
+      <div class="col-md-4 buffer-bottom" v-if="objectivesSR">
+        <b-button block size="lg"
+                  :to="this.paths.OBJECTIVES_SR_PATH">
+          Spinning Reserves
+        </b-button>
+      </div>
+
+      <div class="col-md-4 buffer-bottom" v-if="objectivesUserDefined">
+        <b-button block size="lg"
+                  :to="this.paths.OBJECTIVES_USER_DEFINED_PATH">
+          Custom Service
+        </b-button>
+      </div>
+
+      <div class="col-md-4 buffer-bottom" v-if="objectivesDA">
+        <b-button block size="lg"
+                  :to="this.paths.OBJECTIVES_DA_PATH">
+          Day Ahead Pricing
+        </b-button>
+      </div>
+
+    </div>
     <hr>
 
     <h4>Financial</h4>
-      <router-link class="btn btn-lg btn-info"
-                    :to="this.paths.FINANCIAL_INPUTS_PATH">
-        Miscellaneous Inputs
-      </router-link>
-      <router-link class="btn btn-lg btn-info"
-                    :to="this.paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH">
-        External Incentives
-      </router-link>
-
+    <div class="row align-items-center">
+      <div class="col-md-4">
+        <b-button block size="lg"
+                  :to="this.paths.FINANCIAL_INPUTS_PATH">
+          Miscellaneous Inputs
+        </b-button>
+      </div>
+      <div class="col-md-4">
+        <b-button block size="lg"
+                  :to="this.paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH">
+          External Incentives
+        </b-button>
+      </div>
+      <div class="col-md-4" 
+           v-if="objectivesRetailEnergyChargeReduction||objectivesRetailDemandChargeReduction">
+        <b-button block size="lg"
+                  :to="this.paths.FINANCIAL_INPUTS_RETAIL_TARIFF_PATH">
+          Retail Tariff
+        </b-button>
+      </div>
+    </div>
   </div>
 </template>
 

@@ -2,6 +2,12 @@
   <div class="left-sidebar">
     <b-nav vertical>
       <router-link class="nav nav-sidebar sidebar-root-el"
+                   v-bind:class="{ current: isCurrent(this.paths.WIZARD_COMPONENT_PATH) }"
+                   :to="this.paths.WIZARD_COMPONENT_PATH">
+        Overview
+      </router-link>
+
+      <router-link class="nav nav-sidebar sidebar-root-el"
                    v-bind:class="{ current: isCurrent(`${this.paths.WIZARD_COMPONENT_PATH}/technology-specs`) }"
                    :to="this.paths.TECH_SPECS_PATH">
         Technologies
@@ -107,7 +113,7 @@
 
       <!-- TODO: make this the ssme color as a router-link ? -->
       <div class="nav nav-sidebar sidebar-root-el"
-                   v-bind:class="{ current: isCurrent(`${this.paths.WIZARD_COMPONENT_PATH}/financial`) }">
+           v-bind:class="{ current: isCurrent(`${this.paths.WIZARD_COMPONENT_PATH}/financial`) }">
         Finances
       </div>
 

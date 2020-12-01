@@ -50,6 +50,11 @@
     data() {
       return { WIZARD_START_PATH };
     },
+    computed: {
+      projID() {
+        return this.$store.state.Project.id;
+      },
+    },
     methods: {
       resetProjectToDefault() {
         this.$store.dispatch('resetProjectToDefault')
