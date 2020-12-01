@@ -1,19 +1,19 @@
 <template>
   <div class="left-sidebar">
     <b-nav vertical>
-      <router-link class="nav nav-sidebar sidebar-root-el"
+      <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
                    v-bind:class="{ current: isActive(this.paths.START_PROJECT_PATH) }"
                    :to="this.paths.START_PROJECT_PATH">
         Project Configuration
       </router-link>
 
-      <router-link class="nav nav-sidebar sidebar-root-el"
+      <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
                    v-bind:class="{ current: isActive(this.paths.OBJECTIVES_PATH) }"
                    :to="this.paths.OBJECTIVES_PATH">
         Services
       </router-link>
 
-      <router-link class="nav nav-sidebar sidebar-root-el"
+      <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
                    v-bind:class="{ current: isActive(this.paths.TECH_SPECS_PATH) }"
                    :to="this.paths.TECH_SPECS_PATH">
         Technology Specifications
