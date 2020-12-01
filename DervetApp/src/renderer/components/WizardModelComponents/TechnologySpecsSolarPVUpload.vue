@@ -17,14 +17,14 @@
         <div class="form-group row">
           <div class="col-md-12">
             <i>
-              <a href="files/SamplePVgen-8760.csv" download class="important-link">Click here to download a sample <code>.csv</code> file</a> with a 60-minute timestep for a year with 365 days (8,760 readings)
+              <a href="files/SamplePVgen-8760.csv" download class="important-link text-decoration-none">Click here to download a sample <code>.csv</code> file</a> with a 60-minute timestep for a year with 365 days (8,760 readings)
             </i>
           </div>
         </div>
         <div class="form-group row">
           <div class="col-md-12">
             <i>
-              <a href="files/SamplePVgen-8784.csv" download class="important-link">Click here to download a sample <code>.csv</code> file</a> with a 60-minute timestep <b>for a leap year with 366 days</b> (8,784 readings)
+              <a href="files/SamplePVgen-8784.csv" download class="important-link text-decoration-none">Click here to download a sample <code>.csv</code> file</a> with a 60-minute timestep <b>for a leap year with 366 days</b> (8,784 readings)
             </i>
           </div>
         </div>
