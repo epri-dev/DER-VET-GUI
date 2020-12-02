@@ -5,7 +5,7 @@
       <timeseries-data-upload
         chart-name="chartUploadedTimeSeries"
         data-name="solar generation profile"
-        units="kW / rated kW"
+        units='(kW<sub>AC</sub> / rated kW)'
         @uploaded="receiveTimeseriesData"
         :data-exists="(tsData !== null)"
         :data-time-series="tsData"
