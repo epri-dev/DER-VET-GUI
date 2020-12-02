@@ -58,7 +58,7 @@
 
     <div class="form-group row">
       <div class="col-md-12">
-        <router-link :to="`${FINANCIAL_INPUTS_RETAIL_TARIFF_PATH}-year/null`" class="btn btn-secondary">
+        <router-link :to="`${FINANCIAL_INPUTS_RETAIL_TARIFF_PATH}-billing-period/null`" class="btn btn-secondary">
           Add Billing Period
         </router-link>
         <router-link :to="`${FINANCIAL_INPUTS_RETAIL_TARIFF_PATH}-import`" class="btn btn-secondary">
@@ -78,7 +78,8 @@
 
     <hr>
 
-    <nav-buttons />
+    <nav-buttons :continue-link="WIZARD_COMPONENT_PATH"
+                 :back-link="WIZARD_COMPONENT_PATH" />
   </div>
 </template>
 
