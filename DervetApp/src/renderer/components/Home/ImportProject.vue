@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container body-content form-buffer">
     <h2>Import Existing Project</h2>
     <hr />
     <p>
