@@ -24,7 +24,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="table-align-center"v-for="incentive in externalIncentives">
+              <tr class="table-align-center" v-for="incentive in externalIncentives">
                 <td >{{incentive.year}}</td>
                 <td>{{incentive.taxCredit}}</td>
                 <td>{{incentive.otherIncentive}}</td>

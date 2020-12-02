@@ -1,12 +1,11 @@
 <template>
   <div>
-    <h3>Technology Specs: Solar PV Generation Profile Upload</h3>
-    <hr>
     <form class="form-horizontal form-buffer">
+      <h3>Technology Specs: Solar PV Generation Profile Upload</h3>
       <timeseries-data-upload
         chart-name="chartUploadedTimeSeries"
         data-name="solar generation profile"
-        units="kW / rated kW"
+        units='(kW<sub>AC</sub> / rated kW)'
         @uploaded="receiveTimeseriesData"
         :data-exists="(tsData !== null)"
         :data-time-series="tsData"
@@ -29,7 +28,7 @@
           </div>
         </div>
       </div>
-      <br>
+
       <hr>
 
       <save-buttons

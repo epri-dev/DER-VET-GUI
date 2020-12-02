@@ -1,7 +1,9 @@
 <template>
   <div class="form-group row">
     <div class="col-md-3" v-if="field.displayName !== undefined">
-      <label class="control-label"><b>{{ field.displayName }}</b></label>
+      <label class="control-label">
+        <b v-html="field.displayName"></b>
+      </label>
     </div>
     <div class="col-md-4">
       <input v-if="field.type === String"
@@ -24,14 +26,14 @@
              v-model="$attrs.value"
              @input="onChange">
       </input>
-      <span class="unit-label">{{ field.unit }}</span>
+      <span class="unit-label" v-html="field.unit"></span>
       <div v-if="isInvalid"
            class="invalid-feedback">
         {{ errorMessage }}
       </div>
     </div>
     <div class="col-md-5">
-      <p class="tool-tip tool-tip-col">{{ field.description }}</p>
+      <p class="tool-tip tool-tip-col" v-html="field.description"></p>
     </div>
   </div>
 </template>

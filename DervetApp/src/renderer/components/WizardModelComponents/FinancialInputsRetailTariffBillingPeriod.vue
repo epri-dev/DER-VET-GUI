@@ -156,6 +156,7 @@
   import { RetailTariffBillingPeriod, validation } from '@/models/RetailTariffBillingPeriod';
   import NavButtons from '@/components/Shared/NavButtons';
   import { FINANCIAL_INPUTS_RETAIL_TARIFF_PATH } from '@/router/constants';
+  import { v4 as uuidv4 } from 'uuid';
 
   export default {
     components: { NavButtons },
@@ -209,6 +210,7 @@
       },
       save() {
         if (this.billingPeriodId === 'null') {
+          this.changeId();
           this.$store.dispatch('addRetailTariffBillingPeriod', this.buildBillingPeriod());
         } else {
           const payload = {
@@ -220,6 +222,10 @@
         }
       },
       buildBillingPeriod() {
+        let id = this.billingPeriodId;
+        if (id === 'null') {
+          id = uuidv4();
+        }
         return new RetailTariffBillingPeriod({
           retailTariffBillingPeriodId: this.inputRetailTariffBillingPeriodId,
           startMonth: this.inputStartMonth,
@@ -232,6 +238,7 @@
           value: this.inputValue,
           chargeType: this.inputChargeType,
           name: this.inputName,
+          id,
         });
       },
     },

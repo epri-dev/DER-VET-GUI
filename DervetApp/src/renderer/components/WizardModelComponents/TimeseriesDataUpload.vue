@@ -48,7 +48,7 @@
           <label class="control-label capitalize">
             {{this.dataName}} data
           </label>
-          <span class="unit-label">({{this.units}})</span>
+          <span class="unit-label" v-html="this.units"></span>
         </div>
         <div class="col-md-7">
           <input
