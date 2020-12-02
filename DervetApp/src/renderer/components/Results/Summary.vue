@@ -302,7 +302,7 @@
           y: y1,
           z: zz,
           colorscale: 'Viridis', // ''YlGnBu',
-          reversescale: true,
+          // reversescale: true,
           colorbar: {
             thickness: 10,
             ticksuffix: ' kWh',
