@@ -1,27 +1,26 @@
 <template>
   <div>
-    <div class="row">
-      <div class="col-md-6">
-        <h3>Dispatch</h3>
-      </div>
-    </div>
-    <hr>
     <form>
-      <div class="form-group">
-        <div class="col-md-12">
-          <p>Hard Coded Data</p>
-          <div
-            id="chartDispatchTimeSeriesPlots">
+      <div class="form-horizontal form-buffer">
+        <div class="row">
+          <div class="col-md-6">
+            <h3>Dispatch</h3>
           </div>
         </div>
-      </div>
-    </form>
-    <hr>
-    <form>
-      <div class="form-group">
-        <div class="col-md-12">
-          <p>Hard Coded Data</p>
-          <div id="chartEnergyPriceHeatMap">
+        <hr>
+        <div class="form-group">
+          <div class="col-md-12">
+            <p>Hard Coded Data</p>
+            <div id="chartDispatchTimeSeriesPlots">
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="form-group">
+          <div class="col-md-12">
+            <p>Hard Coded Data</p>
+            <div id="chartEnergyPriceHeatMap">
+            </div>
           </div>
         </div>
       </div>
@@ -35,11 +34,14 @@
 
   export default {
     mounted() {
+      this.$store.dispatch('createDispatchPlots');
       this.createChartDispatchTimeSeriesPlots('chartDispatchTimeSeriesPlots');
       this.createChartEnergyPriceHeatMap('chartEnergyPriceHeatMap');
     },
     data() {
+      const chartData = this.$store.state.ProjectResult.financialVueObjects;
       return {
+        chartData,
         resultsPath: RESULTS_PATH,
       };
     },
@@ -290,7 +292,6 @@
           y: y1,
           z: zz,
           colorscale: 'Viridis', // ''YlGnBu',
-          reversescale: true,
           colorbar: {
             thickness: 10,
             tickprefix: '$ ',

@@ -22,26 +22,27 @@
 
   export default {
     mounted() {
+      this.$store.dispatch('createDeferralPlots');
       this.createChartCapacityVsTime('chartCapacityVsTime', this.chart);
     },
     data() {
-      const chartData = this.$store.state.ProjectResult.data.getDeferralVueObjects();
+      const chartData = this.$store.state.ProjectResult.deferralVueObjects;
       return {
         RESULTS_PATH,
         chart: {
-          years: chartData.year,
+          years: chartData.yearValues,
           essName: chartData.essName,
           data: [{
             type: 'Power',
             units: '(kW)',
             essValue: chartData.essPower,
-            requirementValues: chartData.powerCapacityRequirementKW,
+            requirementValues: chartData.powerValues,
           },
           {
             type: 'Energy',
             units: '(kWh)',
             essValue: chartData.essEnergy,
-            requirementValues: chartData.energyCapacityRequirementKWh,
+            requirementValues: chartData.energyValues,
           }],
         },
       };
@@ -59,7 +60,7 @@
               name: `${subChart.type[0]} Required`,
               x: chartData.years,
               y: subChart.requirementValues,
-              mode: 'lines',
+              type: 'bar',
               connectgaps: true,
               yaxis: `y${i + 1}`,
             },
@@ -67,7 +68,7 @@
               name: `${subChart.type} Cap`,
               x: chartData.years,
               y: capArr,
-              mode: 'lines',
+              type: 'lines',
               connectgaps: true,
               cliponaxis: true,
               yaxis: `y${i + 1}`,

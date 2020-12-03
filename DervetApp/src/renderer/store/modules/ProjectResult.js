@@ -5,11 +5,68 @@ const getDefaultResultState = () => ({
   sensitivityAnalysisCase: null,
   data: null, // save result models here
   sensitivitySummary: null,
+
+  // PLOTS - null if the charts dont exist
+  deferralVueObjects: null,
+  designVueObjects: null,
+  dispatchVueObjects: null,
+  financialVueObjects: null,
+  reliabilityVueObjects: null,
+  summaryVueObjects: null,
 });
 
 const state = getDefaultResultState();
 
 const mutations = {
+  CREATE_DEFERRAL_PLOTS(state) {
+    const runData = state.data;
+    state.deferralVueObjects = {
+      ...runData.deferralStackedBarChart,
+    };
+  },
+  CREATE_DESIGN_PLOTS(state) {
+    const runData = state.data;
+    state.designVueObjects = {
+      sizeTable: runData.designSizeResultsTable,
+      costsTable: runData.designCostsTable,
+    };
+  },
+  CREATE_DISPATCH_PLOTS(state) {
+    const runData = state.data;
+    state.dispatchVueObjects = {
+      stackedLineChart: runData.dispatchStackedLineChart,
+      energyPriceMap: runData.dispatchEnergyPriceMap,
+    };
+  },
+  CREATE_FINANCIAL_PLOTS(state) {
+    const runData = state.data;
+    state.financialVueObjects = {
+      costBenefit: runData.financialCostBenefitBarChart,
+      proForma: runData.financialProformaTable,
+      monthlyData: runData.financialBeforeAfterBarChart,
+      showMonthlyData: runData.showBeforeAfterMonthlyEnergyBill,
+    };
+  },
+  CREATE_RELIABILITY_PLOTS(state) {
+    const runData = state.data;
+    state.reliabilityVueObjects = {
+      loadCoverageProbability: runData.reliabilityLoadCoverageLineChart,
+      outageContribution: runData.reliabilityOutageContributionBarChart,
+      showLoadCoverageProbability: runData.showLoadCoverageProbability,
+      showOutageContribution: runData.showOutageContribution,
+    };
+  },
+  CREATE_SUMMARY_PLOTS(state) {
+    const runData = state.data;
+    state.summaryVueObjects = {
+      financial: runData.financialSummaryBarChart,
+      dispatch: runData.dispatchSummaryMap,
+      design: runData.designSummaryBarChart,
+      showReliability: runData.showLoadCoverageProbability,
+      showDeferral: runData.showDeferral,
+      showDesign: runData.showPeakLoadDay,
+    };
+  },
   SET_ID(state, newId) {
     state.id = newId;
   },
@@ -26,6 +83,24 @@ const mutations = {
 };
 
 const actions = {
+  createDeferralPlots({ commit }) {
+    commit('CREATE_DEFERRAL_PLOTS');
+  },
+  createDesignPlots({ commit }) {
+    commit('CREATE_DESIGN_PLOTS');
+  },
+  createDispatchPlots({ commit }) {
+    commit('CREATE_DISPATCH_PLOTS');
+  },
+  createFinancialPlots({ commit }) {
+    commit('CREATE_FINANCIAL_PLOTS');
+  },
+  createReliabilityPlots({ commit }) {
+    commit('CREATE_RELIABILITY_PLOTS');
+  },
+  createSummaryPlots({ commit }) {
+    commit('CREATE_SUMMARY_PLOTS');
+  },
   receiveResults({ commit }, results) {
     // TODO: handle parsing error
     const resultDataObject = new ResultsData(0, results);

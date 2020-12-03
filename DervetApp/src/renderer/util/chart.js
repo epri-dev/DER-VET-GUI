@@ -10,7 +10,7 @@ export const formatYAxisCurrency = (tick, index, ticks) => {
   return numeral(tick).format('$0,0');
 };
 
-export const formatYAxis = tick => numeral(tick).format('0,0.[000]');
+export const formatYAxis = tick => numeral(tick).format('0,0');
 
 export const arrayMax = (arr) => {
   let max = arr[0];

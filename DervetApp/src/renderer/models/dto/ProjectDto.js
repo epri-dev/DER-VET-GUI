@@ -701,6 +701,26 @@ export const makeExpectedResultCsvs = (project) => {
       fieldName: 'timeSeries',
       fileName: 'timeseries_results.csv',
     },
+    {
+      fieldName: 'simpleMonthlyBill',
+      fileName: 'simple_monthly_bill.csv',
+    },
+    {
+      fieldName: 'peakLoadDay',
+      fileName: 'peak_day_load.csv',
+    },
+    {
+      fieldName: 'loadCoverageProbability',
+      fileName: 'load_coverage_prob.csv',
+    },
+    {
+      fieldName: 'outageContribution',
+      fileName: 'outage_energy_contributions.csv',
+    },
+    {
+      fieldName: 'deferral',
+      fileName: 'deferral_results.csv',
+    },
   ];
   const selectedRetailETS = project.objectivesRetailEnergyChargeReduction;
   const selectedRetailDCM = project.objectivesRetailDemandChargeReduction;
@@ -714,24 +734,24 @@ export const makeExpectedResultCsvs = (project) => {
       fileName: 'peak_day_load.csv',
     });
   }
-  if (project.objectivesResilience) {
-    expectedResultsCsvs.push({
-      fieldName: 'loadCoverageProbability',
-      fileName: 'load_coverage_prob.csv',
-    });
-    if (!project.postOptimizationOnly) {
-      expectedResultsCsvs.push({
-        fieldName: 'outageContribution',
-        fileName: 'outage_energy_contributions.csv',
-      });
-    }
-  }
-  if (project.objectivesDeferral) {
-    expectedResultsCsvs.push({
-      fieldName: 'deferral',
-      fileName: 'deferral_results.csv',
-    });
-  }
+  // if (project.objectivesResilience) {
+  //  expectedResultsCsvs.push({
+  //    fieldName: 'loadCoverageProbability',
+  //    fileName: 'load_coverage_prob.csv',
+  //  });
+  //  if (!project.postOptimizationOnly) {
+  //    expectedResultsCsvs.push({
+  //      fieldName: 'outageContribution',
+  //      fileName: 'outage_energy_contributions.csv',
+  //    });
+  //  }
+  // }
+  // if (project.objectivesDeferral) {
+  //  expectedResultsCsvs.push({
+  //    fieldName: 'deferral',
+  //    fileName: 'deferral_results.csv',
+  //  });
+  // }
   return expectedResultsCsvs;
 };
 

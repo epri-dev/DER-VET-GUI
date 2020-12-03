@@ -1,39 +1,43 @@
 <template>
   <div>
-    <div class="row">
-      <div class="col-md-6">
-        <h3>Financial</h3>
-      </div>
-    </div>
-    <hr>
-    <div class="form-group">
-      <div class="col-md-12">
-        <div
-          id="chartStackedCostBenefit">
+    <form>
+      <div class="form-horizontal form-buffer">
+        <div class="row">
+          <div class="col-md-6">
+            <h3>Financial</h3>
+          </div>
+        </div>
+        <hr>
+        <div class="form-group">
+          <div class="col-md-12">
+            <div
+              id="chartStackedCostBenefit">
+            </div>
+          </div>
+          <div class="col-md-12">
+            <h4>Proforma (Nominal Cash Flow)</h4>
+            <b-table
+              :striped="true"
+              :hover="true"
+              :bordered="false"
+              :items="chartData.proForma.data"
+              :fields="chartData.proForma.fields"
+            >
+            </b-table>
+          </div>
+          <div class="col-md-12" v-if="chartData.showMonthlyData">
+            <canvas
+              id="chartjsMonthlyBill">
+            </canvas>
+          </div>
+          <!-- <div class="col-md-12">
+            <div
+              id="plotlyMonthlyBill">
+            </div>
+          </div> -->
         </div>
       </div>
-      <div class="col-md-12">
-        <h4>Proforma (Nominal Cash Flow)</h4>
-        <b-table
-          :striped="true"
-          :hover="true"
-          :bordered="false"
-          :items="chartData.proForma.data"
-          :fields="chartData.proForma.fields"
-        >
-        </b-table>
-      </div>
-      <div class="col-md-12" v-if="chartData.showMonthlyData">
-        <canvas
-          id="chartjsMonthlyBill">
-        </canvas>
-      </div>
-      <!-- <div class="col-md-12">
-        <div
-          id="plotlyMonthlyBill">
-        </div>
-      </div> -->
-    </div>
+    </form>
   </div>
 </template>
 
@@ -45,13 +49,14 @@
 
   export default {
     mounted() {
+      this.$store.dispatch('createFinancialPlots');
       this.createStackedCostBenefit('chartStackedCostBenefit', this.chartData.costBenefit);
       if (this.chartData.showMonthlyData) {
         this.createMonthlyBillBeforeAndAfter('chartjsMonthlyBill', this.chartData.monthlyData);
       }
     },
     data() {
-      const chartData = this.$store.state.ProjectResult.data.getFinancialVueObjects();
+      const chartData = this.$store.state.ProjectResult.financialVueObjects;
       return {
         resultsPath: RESULTS_PATH,
         chartData,

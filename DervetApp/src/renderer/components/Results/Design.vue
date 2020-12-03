@@ -54,8 +54,11 @@
   import { RESULTS_PATH } from '@/router/constants';
 
   export default {
+    mounted() {
+      this.$store.dispatch('createDesignPlots');
+    },
     data() {
-      const chartData = this.$store.state.ProjectResult.data.getDesignVueObjects();
+      const chartData = this.$store.state.ProjectResult.designVueObjects;
       return {
         RESULTS_PATH,
         chartData,
