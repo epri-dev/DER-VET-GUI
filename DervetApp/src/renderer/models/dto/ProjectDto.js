@@ -134,6 +134,7 @@ export const makeBatteryParameters = (project) => {
     }
     const keys = {
       OMexpenses: makeBaseKey(battery.variableOMCosts, FLOAT),
+      acr: makeBaseKey(0, FLOAT), // hardcoded
       ccost: makeBaseKey(battery.capitalCost, FLOAT),
       ccost_kw: makeBaseKey(battery.capitalCostPerkW, FLOAT),
       ccost_kwh: makeBaseKey(battery.capitalCostPerkWh, FLOAT),
@@ -237,6 +238,7 @@ export const makeDieselGensetParameters = (project) => {
       ({ ratedCapacity } = dieselGen);
     }
     const keys = {
+      acr: makeBaseKey(0, FLOAT), // hardcoded
       ccost: makeBaseKey(dieselGen.capitalCost, FLOAT),
       ccost_kw: makeBaseKey(ZERO, FLOAT), // TODO: new value
       construction_year: makeBaseKey(convertDateToYear(dieselGen.constructionDate), PERIOD),
@@ -319,6 +321,7 @@ export const makeICEParameters = (project) => {
       ({ ratedCapacity } = iceGen);
     }
     const keys = {
+      acr: makeBaseKey(0, FLOAT), // hardcoded
       ccost: makeBaseKey(iceGen.capitalCost, FLOAT),
       ccost_kw: makeBaseKey(200, FLOAT), // TODO: new value
       construction_year: makeBaseKey(convertDateToYear(iceGen.constructionDate), PERIOD),
@@ -379,6 +382,7 @@ export const makePVParameters = (project) => {
       ({ ratedCapacity } = solarPV);
     }
     const keys = {
+      acr: makeBaseKey(0, FLOAT), // hardcoded
       ccost_kw: makeBaseKey(solarPV.cost, FLOAT),
       construction_year: makeBaseKey(convertDateToYear(solarPV.constructionDate), PERIOD),
       curtail: makeBaseKey(ZERO, BOOL), // TODO: new, verify value

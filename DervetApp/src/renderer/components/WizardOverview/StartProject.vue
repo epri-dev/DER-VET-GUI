@@ -157,6 +157,15 @@
       complete() {
         return this.$store.state.Application.pageCompleteness.overview.start;
       },
+      projID() {
+        return this.$store.state.Project.id;
+      },
+      projResultsID() {
+        return this.$store.state.ProjectResult.id;
+      },
+      applicationID() {
+        return this.$store.state.Application.id;
+      },
     },
     methods: {
       resetNonRequired(list) {

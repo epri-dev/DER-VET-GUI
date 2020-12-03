@@ -1,18 +1,22 @@
+import IpcService from '@/IpcService';
+import { makeDervetInputs } from '@/models/dto/ProjectDto';
+
 const NULL = null;
 
 const getDefaultApplicationState = () => ({
   errorMessage: NULL,
   id: NULL,
+  isError: NULL,
   pageCompleteness: {
     overview: {
-      start: null,
-      objectives: null,
-      technologySpecs: null,
+      start: NULL,
+      objectives: NULL,
+      technologySpecs: NULL,
     },
     components: {},
   },
-  resultsLoaded: false,
-  runInProgress: false,
+  resultsLoaded: NULL,
+  runInProgress: NULL,
 });
 
 const state = getDefaultApplicationState();
@@ -28,8 +32,8 @@ const mutations = {
     state.resultsLoaded = true;
     state.runInProgress = false;
   },
-  SET_RESULT_ERROR(state, errorMessage) {
-    state.errorMessage = errorMessage;
+  SET_RESULT_ERROR(state) {
+    state.isError = true;
     state.runInProgress = false;
   },
   SET_COMPLETENESS(state, payload) {
@@ -42,20 +46,24 @@ const mutations = {
 };
 
 const actions = {
-  setId({ commit }, newId) {
-    commit('SET_ID', newId);
-  },
   setCompleteness({ commit }, payload) {
     commit('SET_COMPLETENESS', payload);
   },
-  receiveError({ commit }, error) {
-    commit('SET_RESULT_ERROR', error);
+  receiveError({ commit }) {
+    // TODO: handle parsing error
+    commit('SET_RESULT_ERROR');
   },
   resultRecieved({ commit }) {
     commit('SET_RESULT_SUCCESS');
   },
-  resetApplicationToDefault({ commit }) {
+  resetApplicationToDefault({ commit }, newId) {
     commit('RESET_APPLICATION_TO_DEFAULT');
+    commit('SET_ID', newId);
+  },
+  runDervet({ commit }, project) {
+    commit('SET_RUN_IN_PROGRESS');
+    const dervetInputs = makeDervetInputs(project);
+    IpcService.sendProject(dervetInputs);
   },
 };
 

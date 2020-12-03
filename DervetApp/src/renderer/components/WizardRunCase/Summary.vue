@@ -125,7 +125,7 @@
         return false;
       },
       runInProgress() {
-        return this.$store.state.ProjectResult.runInProgress;
+        return this.$store.state.Application.runInProgress;
       },
       exportProject() {
         return 'TODO: this will export the project';
