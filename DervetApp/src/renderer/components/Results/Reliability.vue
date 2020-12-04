@@ -31,8 +31,10 @@
   import { RESULTS_PATH } from '@/router/constants';
 
   export default {
-    mounted() {
+    beforeMount() {
       this.$store.dispatch('createReliabilityPlots');
+    },
+    mounted() {
       this.createChartLoadCoverageProbability('chartLoadCoverageProbability');
       if (this.chartData.showOutageContribution) {
         this.createChartOutageContribution('chartOutageContribution');
@@ -40,12 +42,15 @@
     },
     data() {
       const p = this.$store.state.Project;
-      const chartData = this.$store.state.ProjectResult.reliabilityVueObjects;
       return {
         resultsPath: RESULTS_PATH,
         reliabilityTarget: p.reliabilityTarget,
-        chartData,
       };
+    },
+    computed: {
+      chartData() {
+        return this.$store.state.ProjectResult.reliabilityVueObjects;
+      },
     },
     methods: {
 

@@ -33,17 +33,22 @@
   import { RESULTS_PATH } from '@/router/constants';
 
   export default {
-    mounted() {
+    beforeMount() {
       this.$store.dispatch('createDispatchPlots');
+    },
+    mounted() {
       this.createChartDispatchTimeSeriesPlots('chartDispatchTimeSeriesPlots');
       this.createChartEnergyPriceHeatMap('chartEnergyPriceHeatMap');
     },
     data() {
-      const chartData = this.$store.state.ProjectResult.financialVueObjects;
       return {
-        chartData,
         resultsPath: RESULTS_PATH,
       };
+    },
+    computed: {
+      chartData() {
+        return this.$store.state.ProjectResult.financialVueObjects;
+      },
     },
     methods: {
       save() {

@@ -135,7 +135,7 @@
         // incomplete Project object will likely result in an unhandled exception
         const p = this.$store.state.Project;
         const projectFixture = getProjectFixture(p.inputsDirectory, p.resultsDirectory);
-        this.$store.dispatch('runDervet', projectFixture)
+        this.$store.dispatch('Application/runDervet', projectFixture)
           .then(this.$router.push({ path: RUN_ANALYSIS_PATH }));
       },
     },

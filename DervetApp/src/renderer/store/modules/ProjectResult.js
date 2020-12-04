@@ -29,6 +29,8 @@ const mutations = {
     state.designVueObjects = {
       sizeTable: runData.designSizeResultsTable,
       costsTable: runData.designCostsTable,
+      numPowerCol: runData.size.numPowerCols,
+      numEnergyCol: runData.size.numEnergyCols,
     };
   },
   CREATE_DISPATCH_PLOTS(state) {
@@ -105,6 +107,7 @@ const actions = {
     // TODO: handle parsing error
     const resultDataObject = new ResultsData(0, results);
     commit('SET_RESULT', resultDataObject);
+    commit('Application/SET_RESULT_SUCCESS');
   },
   // TODO add action that transforms the data into plots here, call before mounting a page
   resetResultToDefault({ commit }, newId) {

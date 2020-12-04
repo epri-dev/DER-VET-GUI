@@ -21,15 +21,28 @@
   import { RESULTS_PATH } from '@/router/constants';
 
   export default {
-    mounted() {
+    beforeMount() {
       this.$store.dispatch('createDeferralPlots');
-      this.createChartCapacityVsTime('chartCapacityVsTime', this.chart);
+    },
+    mounted() {
+      this.createChartCapacityVsTime('chartCapacityVsTime', this.chartData);
     },
     data() {
-      const chartData = this.$store.state.ProjectResult.deferralVueObjects;
       return {
         RESULTS_PATH,
-        chart: {
+      };
+    },
+    computed: {
+      chartData() {
+        return this.$store.state.ProjectResult.deferralVueObjects;
+      },
+    },
+    methods: {
+      createChartCapacityVsTime(chartId, chartData) {
+        const ctx = document.getElementById(chartId);
+        let data = [];
+        let i = 0;
+        const chart = {
           years: chartData.yearValues,
           essName: chartData.essName,
           data: [{
@@ -44,21 +57,14 @@
             essValue: chartData.essEnergy,
             requirementValues: chartData.energyValues,
           }],
-        },
-      };
-    },
-    methods: {
-      createChartCapacityVsTime(chartId, chartData) {
-        const ctx = document.getElementById(chartId);
-        let data = [];
-        let i = 0;
+        };
         while (i !== 2) {
-          const subChart = chartData.data[i];
-          const capArr = new Array(chartData.years.length).fill(subChart.essValue);
+          const subChart = chart.data[i];
+          const capArr = new Array(chart.years.length).fill(subChart.essValue);
           const traces = [
             {
               name: `${subChart.type[0]} Required`,
-              x: chartData.years,
+              x: chart.years,
               y: subChart.requirementValues,
               type: 'bar',
               connectgaps: true,
@@ -66,7 +72,7 @@
             },
             {
               name: `${subChart.type} Cap`,
-              x: chartData.years,
+              x: chart.years,
               y: capArr,
               type: 'lines',
               connectgaps: true,
@@ -87,20 +93,20 @@
               text: 'Year',
             },
             showgrid: true,
-            tick0: chartData.years[0],
+            tick0: chart.years[0],
             dtick: 1,
-            range: [chartData.years[0], chartData.years[-1]],
+            range: [chart.years[0], chart.years[-1]],
           },
           yaxis1: {
             title: {
-              text: `${chartData.data[0].type} ${chartData.data[0].units}`,
+              text: `${chart.data[0].type} ${chart.data[0].units}`,
             },
             showgrid: true,
             // standoff: 25,
           },
           yaxis2: {
             title: {
-              text: `${chartData.data[1].type} ${chartData.data[1].units}`,
+              text: `${chart.data[1].type} ${chart.data[1].units}`,
             },
             showgrid: true,
             // standoff: 25,

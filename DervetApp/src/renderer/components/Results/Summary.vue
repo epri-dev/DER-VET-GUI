@@ -103,14 +103,14 @@
 
   export default {
     data() {
-      const summaryData = this.$store.state.ProjectResult.summaryVueObjects;
       return {
         paths,
-        summaryData,
       };
     },
-    mounted() {
+    beforeMount() {
       this.$store.dispatch('createSummaryPlots');
+    },
+    mounted() {
       this.createPlotlyCostBenefit('chartPlotlyCostBenefit', this.summaryData.financial);
       if (this.summaryData.showDesign) {
         this.createChartPeakLoadDay('chartPeakLoadDay', this.summaryData.design);
@@ -123,6 +123,9 @@
       },
       runInProgress() {
         return this.$store.state.Application.runInProgress;
+      },
+      summaryData() {
+        return this.$store.state.ProjectResult.summaryVueObjects;
       },
     },
     methods: {

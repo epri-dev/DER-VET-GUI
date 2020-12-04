@@ -48,19 +48,24 @@
   import { RESULTS_PATH } from '@/router/constants';
 
   export default {
-    mounted() {
+    beforeMount() {
       this.$store.dispatch('createFinancialPlots');
+    },
+    mounted() {
       this.createStackedCostBenefit('chartStackedCostBenefit', this.chartData.costBenefit);
       if (this.chartData.showMonthlyData) {
         this.createMonthlyBillBeforeAndAfter('chartjsMonthlyBill', this.chartData.monthlyData);
       }
     },
     data() {
-      const chartData = this.$store.state.ProjectResult.financialVueObjects;
       return {
         resultsPath: RESULTS_PATH,
-        chartData,
       };
+    },
+    computed: {
+      chartData() {
+        return this.$store.state.ProjectResult.financialVueObjects;
+      },
     },
     methods: {
       createStackedCostBenefit(chartId, chartData) {
@@ -183,7 +188,6 @@
       },
       createMonthlyBillBeforeAndAfter(chartId, chartData) {
         const ctx = document.getElementById(chartId);
-        const dataYear = chartData.year;
         const chart = new Chart(ctx, {
           type: 'bar',
           data: {
@@ -235,7 +239,7 @@
             },
             title: {
               display: true,
-              text: `Before and After Monthly Energy Bill in ${{ dataYear }}`,
+              text: `Before and After Monthly Energy Bill in ${chartData.year}`,
             },
             scales: {
               xAxes: [{
