@@ -23,7 +23,7 @@
           </b-nav-item>
           <b-nav-item :active="isActive(RESULTS_PATH)"
                       :to="RESULTS_PATH"
-                      :disabled="!resultsExist">
+                      v-if="resultsExist">
             Results
           </b-nav-item>
         </b-navbar-nav>

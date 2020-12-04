@@ -1,25 +1,24 @@
 <template>
   <div>
-    <div class="row">
-      <div class="col-md-6">
-        <h3>Reliability</h3>
-      </div>
-    </div>
-    <hr>
-    <form v-if="chartData.showOutageContribution">
-      <div class="form-group">
-        <div class="col-md-12">
-          <p>Hard Coded Data</p>
-          <div id="chartOutageContribution">
+    <form>
+      <div class="form-horizontal form-buffer">
+        <div class="row">
+          <div class="col-md-6">
+            <h3>Reliability</h3>
           </div>
         </div>
-      </div>
-    </form>
-    <form>
-      <div class="form-group">
-        <div class="col-md-12">
-          <div
-            id="chartLoadCoverageProbability">
+        <hr>
+        <div v-if="chartData.showOutageContribution" class="form-group">
+          <div class="col-md-12">
+            <p>Hard Coded Data</p>
+            <div id="chartOutageContribution">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-md-12">
+            <div id="chartLoadCoverageProbability">
+            </div>
           </div>
         </div>
       </div>
@@ -32,6 +31,9 @@
   import { RESULTS_PATH } from '@/router/constants';
 
   export default {
+    beforeMount() {
+      this.$store.dispatch('createReliabilityPlots');
+    },
     mounted() {
       this.createChartLoadCoverageProbability('chartLoadCoverageProbability');
       if (this.chartData.showOutageContribution) {
@@ -40,12 +42,15 @@
     },
     data() {
       const p = this.$store.state.Project;
-      const chartData = this.$store.state.ProjectResult.data.getReliabilityVueObjects();
       return {
         resultsPath: RESULTS_PATH,
         reliabilityTarget: p.reliabilityTarget,
-        chartData,
       };
+    },
+    computed: {
+      chartData() {
+        return this.$store.state.ProjectResult.reliabilityVueObjects;
+      },
     },
     methods: {
 
@@ -82,7 +87,7 @@
           y: yyPV,
           type: 'bar',
           name: 'PV Outage Contribution',
-          hovertemplate: '%{y:.0f} kWh',
+          hovertemplate: '%{y:,.0f} kWh',
           marker: {
             color: this.getColorFromTechnology('pv'),
           },
@@ -100,7 +105,7 @@
           y: yyESS,
           type: 'bar',
           name: 'ESS Outage Contribution',
-          hovertemplate: '%{y:.0f} kWh',
+          hovertemplate: '%{y:,.0f} kWh',
           marker: {
             color: this.getColorFromTechnology('ess'),
           },
@@ -166,6 +171,7 @@
               },
               standoff: 5, // create gap between axis and title
             },
+            tickformat: ',.0',
           },
         };
         const config = {

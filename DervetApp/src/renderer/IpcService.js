@@ -12,7 +12,7 @@ export default class IpcService {
     });
 
     ipcRenderer.on(DERVET_ERROR, (event, error) => {
-      store.dispatch('receiveError', error);
+      store.dispatch('Application/receiveError', error);
     });
   }
 

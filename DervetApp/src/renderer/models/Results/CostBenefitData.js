@@ -38,6 +38,7 @@ export class CostBenefitData extends BaseTableData {
           const traceTemplate = {
             x: traceX,
             y: [rowData[1], rowData[2]],
+            hovertext: `${traceX}`,
             name: valueStream,
             type: 'bar',
           };
