@@ -1,7 +1,9 @@
 <template>
   <div class="form-group row">
     <div class="col-md-3">
-      <label class="control-label" for="size"><b>{{ field.displayName }}</b></label>
+      <label class="control-label" for="size">
+        <b v-html="field.displayName"></b>
+      </label>
     </div>
     <div class="col-md-4 form-control-static">
       <div v-for="option, idx in field.allowedValues" class="form-check">
@@ -12,7 +14,7 @@
           :class="{'is-invalid': isInvalid}"
           :value="option.value"
           @change="onChange">
-        <label>{{ option.label }}</label>
+        <span v-html="option.label"></span>
         <div
           v-if="isInvalid && idx === (field.allowedValues.length - 1)"
           class="invalid-feedback form-check-label">
@@ -21,7 +23,7 @@
       </div>
     </div>
     <div class="col-md-5">
-      <p class="tool-tip tool-tip-col">{{ field.description }}</p>
+      <p class="tool-tip tool-tip-col" v-html="field.description"></p>
     </div>
   </div>
 </template>

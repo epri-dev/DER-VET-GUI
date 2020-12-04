@@ -2,23 +2,14 @@
   <div>
     <h3>Services: Day Ahead Energy Price</h3>
     <hr>
-    <div class="form-horizontal form-buffer">
-      <div class="row form-group">
-          <div class="col-md-4">
-            <label class="control-label" for="Growth">Growth Rate of Day Ahead Energy Prices</label>
-          </div>
-          <div class="col-md-3">
-            <input
-              class="form-control numberbox"
-              id="growth"
-              type="text"
-              v-model.number="inputDAGrowth">
-            <span class="unit-label">%/year</span>
-          </div>
-          <div class="col-md-5">
-            <p class="tool-tip tooltip-col">What is the growth rate of Day Ahead Energy Price?</p>
-          </div>
-      </div>
+    <form class="form-horizontal form-buffer">
+
+      <text-input v-model="daGrowth"
+                  v-bind:field="metadata.daGrowth"
+                  :isInvalid="submitted && $v.daGrowth.$error"
+                  :errorMessage="getErrorMsg('daGrowth')">
+      </text-input>
+
       <timeseries-data-upload
         chart-name="chartUploadedTimeSeries"
         data-name="day ahead price"
@@ -28,35 +19,44 @@
         :data-time-series="tsData"
         :key="childKey"
       />
-      <hr />
-      <nav-buttons
-        :back-link="WIZARD_COMPONENT_PATH"
+      <hr>
+
+      <save-buttons
         :continue-link="WIZARD_COMPONENT_PATH"
-        :save="this.save"
-      />
-    </div>
+        :displayError="submitted && $v.$anyError"
+        :save="validatedSave" />
+
+    </form>
   </div>
 </template>
 
 <script>
+  import wizardFormMixin from '@/mixins/wizardFormMixin';
+  import * as p from '@/models/Project/Project';
+  import * as c from '@/models/Project/constants';
+  import operateOnKeysList from '@/util/object';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import DAPriceTimeSeries from '@/models/TimeSeries/DAPriceTimeSeries';
-  import { sharedValidation } from '@/models/Shared';
-  import NavButtons from '@/components/Shared/NavButtons';
+  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 
+  const metadata = p.projectMetadata;
+  const validations = metadata.getValidationSchema(c.DA_FIELDS);
+
   export default {
-    components: { NavButtons, TimeseriesDataUpload },
-    mixins: [csvUploadMixin],
+    components: { TimeseriesDataUpload },
+    mixins: [csvUploadMixin, wizardFormMixin],
     data() {
       const p = this.$store.state.Project;
       return {
-        sharedValidation,
-        inputDAGrowth: p.daGrowth,
         daPrice: p.daPrice,
+        metadata,
+        ...this.getDataFromProject(),
         WIZARD_COMPONENT_PATH,
       };
+    },
+    validations: {
+      ...validations,
     },
     computed: {
       tsData() {
@@ -65,13 +65,45 @@
         }
         return new DAPriceTimeSeries(this.inputTimeseries);
       },
+      complete() {
+        return this.$store.state.Application.pageCompleteness.components.objectivesDA;
+      },
+    },
+    beforeMount() {
+      // submitted is false initially; set it to true after the first save.
+      // initially, complete is null; after saving, it is set to either true or false.
+      // we want to show validation errors at any time after the first save, with submitted.
+      if (this.complete !== null && this.complete !== undefined) {
+        this.submitted = true;
+        this.$v.$touch();
+      }
     },
     methods: {
+      getErrorMsg(fieldName) {
+        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
+      },
+      getDataFromProject() {
+        return operateOnKeysList(this.$store.state.Project, c.DA_FIELDS, f => f);
+      },
+      getCompletenessPayload() {
+        return {
+          pageGroup: 'components',
+          page: 'objectivesDA',
+          completeness: !this.$v.$invalid,
+        };
+      },
+      validatedSave() {
+        // set complete to true or false
+        this.$store.dispatch('setCompleteness', this.getCompletenessPayload());
+        this.submitted = true;
+        this.$v.$touch();
+        return this.save();
+      },
       save() {
         if (this.inputTimeseries !== null) {
           this.$store.dispatch('setDAPrice', this.tsData);
         }
-        this.$store.dispatch('setDAGrowth', this.inputDAGrowth);
+        this.$store.dispatch('setDAGrowth', this.daGrowth);
       },
     },
   };

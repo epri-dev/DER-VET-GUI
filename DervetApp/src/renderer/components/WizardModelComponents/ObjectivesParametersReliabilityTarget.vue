@@ -2,91 +2,28 @@
   <div>
     <h3>Services: Reliability Targets</h3>
     <hr>
-    <div class="form-horizontal form-buffer">
-      <div class="row form-group">
-        <div class="col-md-6">
-          Do not optimize DER size/operation for reliability -- only calculate the reliability benefit of the DERs
-        </div>
-        <div class="col-md-6">
-          <b-form-group>
-            <b-form-radio-group
-              v-model="postOptimizationOnly"
-              :options="sharedValidation.optionsYN.allowedValues"
-            ></b-form-radio-group>
-          </b-form-group>
-        </div>
-      </div>
-      <div v-if="!(postOptimizationOnly)" class="row form-group">
-        <div class="col-md-4">
-          <label class="control-label">How many hours of guaranteed outage coverage does the project need to supply based on the load</label>
-        </div>
-        <div class="col-md-3">
-          <input
-            class="form-control numberbox"
-            id="growth"
-            type="text"
-            v-model.number="reliabilityTarget">
-          <span class="unit-label">hours</span>
-        </div>
-        <div class="col-md-5">
-          <p class="tool-tip tooltip-col">How many hours of guaranteed outage coverage does the project need to supply based on the load?</p>
-        </div>
-      </div>
-      <div class="form-group" id="PV-Form">
-        <div class="row form-group">
-          <div class="col-md-4">
-            <label class="control-label">Minimum Percentage of PV Generation</label>
-          </div>
-          <div class="col-md-3">
-            <input
-              class="form-control numberbox"
-              id="nu"
-              type="text"
-              v-model.number="reliabilityNu">
-            <span class="unit-label">%</span>
-          </div>
-          <div class="col-md-5">
-            <p class="tool-tip tooltip-col">Minimum percent of PV generation that one can expect within a timestep</p>
-          </div>
-        </div>
-        <div class="row form-group">
-          <div class="col-md-4">
-            <label class="control-label">Timestep Percentage of PV Minimum Generation</label>
-          </div>
-          <div class="col-md-3">
-            <input
-              class="form-control numberbox"
-              id="gamma"
-              type="text"
-              v-model.number="reliabilityGamma">
-            <span class="unit-label">%</span>
-          </div>
-          <div class="col-md-5">
-            <p class="tool-tip tooltip-col">Percent of the timestep for which PV can be expected to be at its minimum expected generation</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <br>
-    <div class="row form-group">
-      <div class="col-md-4">
-        <label class="control-label">Maximum Outage Duration to Plot</label>
-      </div>
-      <div class="col-md-3">
-        <input
-          class="form-control numberbox"
-          id="growth"
-          type="text"
-          v-model.number="reliabilityMaxOutageDuration">
-        <span class="unit-label">hours</span>
-      </div>
-      <div class="col-md-5">
-        <p class="tool-tip tooltip-col">Calculate the post-facto reliability for an outage that can last up t this many hours</p>
-      </div>
-    </div>
-    <br>
-    <hr />
-    <timeseries-data-upload
+    <form class="form-horizontal form-buffer">
+
+      <radio-button-input v-model="reliabilityPostOptimizationOnly"
+                          v-bind:field="metadata.reliabilityPostOptimizationOnly"
+                          :isInvalid="submitted && $v.reliabilityPostOptimizationOnly.$error"
+                          :errorMessage="getErrorMsg('reliabilityPostOptimizationOnly')">
+      </radio-button-input>
+
+      <text-input v-model="reliabilityTarget"
+                  v-if="reliabilityPostOptimizationOnly === false"
+                  v-bind:field="metadata.reliabilityTarget"
+                  :isInvalid="submitted && $v.reliabilityTarget.$error"
+                  :errorMessage="getErrorMsg('reliabilityTarget')">
+      </text-input>
+
+      <text-input v-model="reliabilityMaxOutageDuration"
+                  v-bind:field="metadata.reliabilityMaxOutageDuration"
+                  :isInvalid="submitted && $v.reliabilityMaxOutageDuration.$error"
+                  :errorMessage="getErrorMsg('reliabilityMaxOutageDuration')">
+      </text-input>
+
+      <timeseries-data-upload
         chart-name="chartUploadedTimeSeries"
         data-name="critical load"
         units="kW"
@@ -95,60 +32,109 @@
         :data-time-series="tsData"
         :key="childKey"
       />
-    <hr />
-    <nav-buttons
-          :back-link="WIZARD_COMPONENT_PATH"
-          :continue-link="WIZARD_COMPONENT_PATH"
-          :save="this.save"
-    />
+      <hr>
+
+      <save-buttons
+        :continue-link="WIZARD_COMPONENT_PATH"
+        :displayError="submitted && $v.$anyError"
+        :save="validatedSave" />
+
+    </form>
   </div>
 </template>
 
 <script>
+  import { requiredIf } from 'vuelidate/lib/validators';
+  import wizardFormMixin from '@/mixins/wizardFormMixin';
+  import * as p from '@/models/Project/Project';
+  import * as c from '@/models/Project/constants';
+  import operateOnKeysList from '@/util/object';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
-  import { sharedValidation } from '@/models/Shared';
-  import NavButtons from '@/components/Shared/NavButtons';
+  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 
+  const metadata = p.projectMetadata;
+  const validations = metadata.getValidationSchema(c.RESILIENCE_FIELDS);
+
   export default {
-    components: { NavButtons, TimeseriesDataUpload },
-    mixins: [csvUploadMixin],
-    computed: {
-      solarSpecified() {
-        return this.pvTechnologies.length > 0;
+    components: { TimeseriesDataUpload },
+    mixins: [csvUploadMixin, wizardFormMixin],
+    data() {
+      const p = this.$store.state.Project;
+      return {
+        criticalLoad: p.criticalLoad,
+        metadata,
+        ...this.getDataFromProject(),
+        WIZARD_COMPONENT_PATH,
+      };
+    },
+    validations: {
+      ...validations,
+      reliabilityTarget: {
+        ...validations.reliabilityTarget,
+        required: requiredIf(function isReliabilityTargetRequired() {
+          return (this.reliabilityPostOptimizationOnly === false);
+        }),
       },
+    },
+    computed: {
       tsData() {
         if (this.inputTimeseries === null) {
           return this.criticalLoad;
         }
         return new CriticalLoadTimeSeries(this.inputTimeseries);
       },
+      complete() {
+        return this.$store.state.Application.pageCompleteness.components.objectivesResilience;
+      },
     },
-    data() {
-      const p = this.$store.state.Project;
-      return {
-        sharedValidation,
-        criticalLoad: p.criticalLoad,
-        reliabilityTarget: p.reliabilityTarget,
-        postOptimizationOnly: p.postOptimizationOnly,
-        reliabilityNu: p.reliabilityNu,
-        reliabilityGamma: p.reliabilityGamma,
-        reliabilityMaxOutageDuration: p.reliabilityMaxOutageDuration,
-        pvTechnologies: p.technologySpecsSolarPV,
-        WIZARD_COMPONENT_PATH,
-      };
+    beforeMount() {
+      // submitted is false initially; set it to true after the first save.
+      // initially, complete is null; after saving, it is set to either true or false.
+      // we want to show validation errors at any time after the first save, with submitted.
+      if (this.complete !== null && this.complete !== undefined) {
+        this.submitted = true;
+        this.$v.$touch();
+      }
     },
     methods: {
+      resetNonRequired(list) {
+        list.forEach((item) => {
+          this[item] = this.metadata.getDefaultValues()[item];
+        });
+        return true;
+      },
+      getErrorMsg(fieldName) {
+        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
+      },
+      getDataFromProject() {
+        return operateOnKeysList(this.$store.state.Project, c.RESILIENCE_FIELDS, f => f);
+      },
+      getCompletenessPayload() {
+        return {
+          pageGroup: 'components',
+          page: 'objectivesResilience',
+          completeness: !this.$v.$invalid,
+        };
+      },
+      validatedSave() {
+        // reset all non-required inputs to their defaults prior to saving
+        if (this.reliabilityPostOptimizationOnly === true) {
+          this.resetNonRequired(['reliabilityTarget']);
+        }
+        // set complete to true or false
+        this.$store.dispatch('setCompleteness', this.getCompletenessPayload());
+        this.submitted = true;
+        this.$v.$touch();
+        return this.save();
+      },
       save() {
         if (this.inputTimeseries !== null) {
           this.$store.dispatch('setCriticalLoad', this.tsData);
         }
-        this.$store.dispatch('setReliabilityPostOptimizationOnly', this.postOptimizationOnly);
+        this.$store.dispatch('setReliabilityPostOptimizationOnly', this.reliabilityPostOptimizationOnly);
         this.$store.dispatch('setReliabilityTarget', this.reliabilityTarget);
-        this.$store.dispatch('setReliabilityNu', this.reliabilityNu);
-        this.$store.dispatch('setReliabilityGamma', this.reliabilityGamma);
         this.$store.dispatch('setReliabilityMaxOutageDuration', this.reliabilityMaxOutageDuration);
       },
     },

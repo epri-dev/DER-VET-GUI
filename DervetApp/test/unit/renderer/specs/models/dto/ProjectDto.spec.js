@@ -95,7 +95,7 @@ describe('modelParametersDto', () => {
     expect(actualTags.Results).to.eql(tagFixture.Results);
   });
   it('should have translated the retail ETS parameters correctly', () => {
-    expect(actualTags.retailTimeShift).to.eql(tagFixture.retailTimeShift);
+    expect(actualTags.RetailTimeShift).to.eql(tagFixture.RetailTimeShift);
   });
   it('should have translated the scenario parameters correctly', () => {
     const expectedKeyList = Object.keys(tagFixture.Scenario[''].keys);

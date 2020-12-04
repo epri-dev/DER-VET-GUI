@@ -3,62 +3,31 @@
     <h3>Services: Deferral</h3>
     <hr>
     <form class="form-horizontal form-buffer">
-      <div class="form-group row">
-        <div class="col-md-3">
-          <label class="control-label" for="planned-load-limit">Planned Load Limit</label>
-        </div>
-        <div class="col-md-9">
-          <input
-            class="form-control numberbox"
-            id="planned-load-limit"
-            type="text"
-            v-model.number="inputDeferralPlannedLoadLimit">
-          <span class="unit-label">kW</span>
-          <p class="tool-tip tooltip-col">Max net import power flow to grid</p>
-        </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-md-3">
-          <label class="control-label" for="reverse-power-flow-limit">Reverse Power Flow Limit</label>
-        </div>
-        <div class="col-md-9">
-          <input
-            class="form-control numberbox"
-            id="reverse-power-flow-limit"
-            type="text"
-            v-model.number="inputDeferralReversePowerFlowLimit">
-          <span class="unit-label">kW</span>
-          <p class="tool-tip tooltip-col">Max net export power flow to grid</p>
-        </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-md-3">
-          <label class="control-label" for="growth">Growth Rate of Deferral Load</label>
-        </div>
-        <div class="col-md-9">
-          <input
-            class="form-control numberbox"
-            id="growth"
-            type="text"
-            v-model.number="inputDeferralGrowth">
-          <span class="unit-label">%/year</span>
-          <p class="tool-tip tooltip-col">What is the growth rate of the deferral load?</p>
-        </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-md-3">
-          <label class="control-label" for="price">Yearly Cost Avoided</label>
-        </div>
-        <div class="col-md-9">
-          <input
-            class="form-control numberbox"
-            id="price"
-            type="text"
-            v-model.number="inputDeferralPrice">
-          <span class="unit-label">$/year</span>
-          <p class="tool-tip tooltip-col">Yearly Cost Avoided for deferring a T and D asset upgrade</p>
-        </div>
-      </div>
+
+      <text-input v-model="deferralPlannedLoadLimit"
+                  v-bind:field="metadata.deferralPlannedLoadLimit"
+                  :isInvalid="submitted && $v.deferralPlannedLoadLimit.$error"
+                  :errorMessage="getErrorMsg('deferralPlannedLoadLimit')">
+      </text-input>
+
+      <text-input v-model="deferralReversePowerFlowLimit"
+                  v-bind:field="metadata.deferralReversePowerFlowLimit"
+                  :isInvalid="submitted && $v.deferralReversePowerFlowLimit.$error"
+                  :errorMessage="getErrorMsg('deferralReversePowerFlowLimit')">
+      </text-input>
+
+      <text-input v-model="deferralGrowth"
+                  v-bind:field="metadata.deferralGrowth"
+                  :isInvalid="submitted && $v.deferralGrowth.$error"
+                  :errorMessage="getErrorMsg('deferralGrowth')">
+      </text-input>
+
+      <text-input v-model="deferralPrice"
+                  v-bind:field="metadata.deferralPrice"
+                  :isInvalid="submitted && $v.deferralPrice.$error"
+                  :errorMessage="getErrorMsg('deferralPrice')">
+      </text-input>
+
       <timeseries-data-upload
         chart-name="chartUploadedTimeSeries"
         data-name="deferral load"
@@ -69,38 +38,43 @@
         :key="childKey"
       />
       <hr>
-      <nav-buttons
-        :back-link="WIZARD_COMPONENT_PATH"
+
+      <save-buttons
         :continue-link="WIZARD_COMPONENT_PATH"
-        :save="this.save"
-      />
+        :displayError="submitted && $v.$anyError"
+        :save="validatedSave" />
+
     </form>
   </div>
 </template>
 
 <script>
+  import wizardFormMixin from '@/mixins/wizardFormMixin';
+  import * as p from '@/models/Project/Project';
+  import * as c from '@/models/Project/constants';
+  import operateOnKeysList from '@/util/object';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import DeferralLoadTimeSeries from '@/models/TimeSeries/DeferralLoadTimeSeries';
-  import { sharedValidation } from '@/models/Shared';
-  import NavButtons from '@/components/Shared/NavButtons';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 
+  const metadata = p.projectMetadata;
+  const validations = metadata.getValidationSchema(c.DEFERRAL_FIELDS);
 
   export default {
-    components: { NavButtons, TimeseriesDataUpload },
-    mixins: [csvUploadMixin],
+    components: { TimeseriesDataUpload },
+    mixins: [csvUploadMixin, wizardFormMixin],
     data() {
       const p = this.$store.state.Project;
       return {
-        sharedValidation,
         deferralLoad: p.deferralLoad,
-        inputDeferralPlannedLoadLimit: p.deferralPlannedLoadLimit,
-        inputDeferralReversePowerFlowLimit: p.deferralReversePowerFlowLimit,
-        inputDeferralGrowth: p.deferralGrowth,
-        inputDeferralPrice: p.deferralPrice,
+        metadata,
+        ...this.getDataFromProject(),
         WIZARD_COMPONENT_PATH,
       };
+    },
+    validations: {
+      ...validations,
     },
     computed: {
       tsData() {
@@ -109,16 +83,48 @@
         }
         return new DeferralLoadTimeSeries(this.inputTimeseries);
       },
+      complete() {
+        return this.$store.state.Application.pageCompleteness.components.objectivesDeferral;
+      },
+    },
+    beforeMount() {
+      // submitted is false initially; set it to true after the first save.
+      // initially, complete is null; after saving, it is set to either true or false.
+      // we want to show validation errors at any time after the first save, with submitted.
+      if (this.complete !== null && this.complete !== undefined) {
+        this.submitted = true;
+        this.$v.$touch();
+      }
     },
     methods: {
+      getErrorMsg(fieldName) {
+        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
+      },
+      getDataFromProject() {
+        return operateOnKeysList(this.$store.state.Project, c.DEFERRAL_FIELDS, f => f);
+      },
+      getCompletenessPayload() {
+        return {
+          pageGroup: 'components',
+          page: 'objectivesDeferral',
+          completeness: !this.$v.$invalid,
+        };
+      },
+      validatedSave() {
+        // set complete to true or false
+        this.$store.dispatch('setCompleteness', this.getCompletenessPayload());
+        this.submitted = true;
+        this.$v.$touch();
+        return this.save();
+      },
       save() {
         if (this.inputTimeseries !== null) {
           this.$store.dispatch('setDeferralLoad', this.tsData);
         }
-        this.$store.dispatch('setDeferralPlannedLoadLimit', this.inputDeferralPlannedLoadLimit);
-        this.$store.dispatch('setDeferralReversePowerFlowLimit', this.inputDeferralReversePowerFlowLimit);
-        this.$store.dispatch('setDeferralGrowth', this.inputDeferralGrowth);
-        this.$store.dispatch('setDeferralPrice', this.inputDeferralPrice);
+        this.$store.dispatch('setDeferralPlannedLoadLimit', this.deferralPlannedLoadLimit);
+        this.$store.dispatch('setDeferralReversePowerFlowLimit', this.deferralReversePowerFlowLimit);
+        this.$store.dispatch('setDeferralGrowth', this.deferralGrowth);
+        this.$store.dispatch('setDeferralPrice', this.deferralPrice);
       },
     },
   };

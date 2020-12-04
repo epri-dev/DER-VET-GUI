@@ -4,27 +4,18 @@
     <h3>Services</h3>
     <hr />
     <div class="form-horizontal form-buffer">
+
       <fieldset class="section-group">
         <legend>Where do energy prices come from?</legend>
-        <b-form-group>
-          <div class="row form-group">
-            <div class="col-md-4">
-              <b-form-radio type="radio" v-bind:value="false" v-model="energyPriceSourceWholesale"><b>Retail tariff, PPA, or other fixed contract (define energy price structure)</b></b-form-radio>
-            </div>
-            <div class="col-md-7">
-              <p class="tool-tip">Will the project be reducing energy charges on a retail electricity bill?</p>
-            </div>
+          <div class="form-group">
+            <radio-button-input v-model="energyPriceSourceWholesale"
+                                v-bind:field="metadata.energyPriceSourceWholesale"
+                                :isInvalid="submitted && $v.energyPriceSourceWholesale.$error"
+                                :errorMessage="getErrorMsg('energyPriceSourceWholesale')">
+            </radio-button-input>
           </div>
-          <div class="row form-group">
-            <div class="col-md-4">
-              <b-form-radio type="radio" v-bind:value="true" v-model="energyPriceSourceWholesale"><b>Wholesale energy market, production cost model, or other time-varying source (upload time series data)</b></b-form-radio>
-            </div>
-            <div class="col-md-7">
-              <p class="tool-tip">Day ahead energy time shift</p>
-            </div>
-          </div>
-        </b-form-group>
       </fieldset>
+
       <div class="buffer-top-lg">
         <fieldset class="section-group">
           <legend>Customer Services</legend>
@@ -153,7 +144,6 @@
       return {
         metadata,
         listOfActiveServices: p.listOfActiveServices,
-        energyPriceSourceWholesale: p.energyPriceSourceWholesale,
         ...this.getDataFromProject(),
         START_PROJECT_PATH,
         TECH_SPECS_PATH,

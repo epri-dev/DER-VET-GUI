@@ -54,56 +54,64 @@
     <div class="row align-items-center">
       <div class="col-md-4 buffer-bottom">
         <b-button block size="lg"
-                  :to="this.paths.OBJECTIVES_SITE_INFORMATION_PATH">
+                  :to="this.paths.OBJECTIVES_SITE_INFORMATION_PATH"
+                  v-bind:class="{ 'incomplete-btn': isComplete('objectivesSiteInformation') }">
           Site Information
         </b-button>
       </div>
 
       <div class="col-md-4 buffer-bottom" v-if="objectivesDeferral">
         <b-button block size="lg"
-                  :to="this.paths.OBJECTIVES_DEFERRAL_PATH">
+                  :to="this.paths.OBJECTIVES_DEFERRAL_PATH"
+                  v-bind:class="{ 'incomplete-btn': isComplete('objectivesDeferral') }">
           Deferral
         </b-button>
       </div>
 
       <div class="col-md-4 buffer-bottom" v-if="objectivesFR">
         <b-button block size="lg"
-                  :to="this.paths.OBJECTIVES_FR_PATH">
+                  :to="this.paths.OBJECTIVES_FR_PATH"
+                  v-bind:class="{ 'incomplete-btn': isComplete('objectivesFR') }">
           Frequency Regulation
         </b-button>
       </div>
 
       <div class="col-md-4 buffer-bottom" v-if="objectivesNSR">
         <b-button block size="lg"
-                  :to="this.paths.OBJECTIVES_NSR_PATH">
+                  :to="this.paths.OBJECTIVES_NSR_PATH"
+                  v-bind:class="{ 'incomplete-btn': isComplete('objectivesNSR') }">
           Non-Spinning Reserves
         </b-button>
       </div>
 
       <div class="col-md-4 buffer-bottom" v-if="objectivesResilience">
         <b-button block size="lg"
-                  :to="this.paths.OBJECTIVES_RESILIENCE_PATH">
+                  :to="this.paths.OBJECTIVES_RESILIENCE_PATH"
+                  v-bind:class="{ 'incomplete-btn': isComplete('objectivesResilience') }">
           Reliability
         </b-button>
       </div>
-    
+
       <div class="col-md-4 buffer-bottom" v-if="objectivesSR">
         <b-button block size="lg"
-                  :to="this.paths.OBJECTIVES_SR_PATH">
+                  :to="this.paths.OBJECTIVES_SR_PATH"
+                  v-bind:class="{ 'incomplete-btn': isComplete('objectivesSR') }">
           Spinning Reserves
         </b-button>
       </div>
 
       <div class="col-md-4 buffer-bottom" v-if="objectivesUserDefined">
         <b-button block size="lg"
-                  :to="this.paths.OBJECTIVES_USER_DEFINED_PATH">
+                  :to="this.paths.OBJECTIVES_USER_DEFINED_PATH"
+                  v-bind:class="{ 'incomplete-btn': isComplete('objectivesUserDefined') }">
           Custom Service
         </b-button>
       </div>
 
       <div class="col-md-4 buffer-bottom" v-if="objectivesDA">
         <b-button block size="lg"
-                  :to="this.paths.OBJECTIVES_DA_PATH">
+                  :to="this.paths.OBJECTIVES_DA_PATH"
+                  v-bind:class="{ 'incomplete-btn': isComplete('objectivesDA') }">
           Day Ahead Pricing
         </b-button>
       </div>
@@ -115,7 +123,8 @@
     <div class="row align-items-center">
       <div class="col-md-4">
         <b-button block size="lg"
-                  :to="this.paths.FINANCIAL_INPUTS_PATH">
+                  :to="this.paths.FINANCIAL_INPUTS_PATH"
+                  v-bind:class="{ 'incomplete-btn': isComplete('financialInputs') }">
           Miscellaneous Inputs
         </b-button>
       </div>
@@ -125,7 +134,7 @@
           External Incentives
         </b-button>
       </div>
-      <div class="col-md-4" 
+      <div class="col-md-4"
            v-if="objectivesRetailEnergyChargeReduction||objectivesRetailDemandChargeReduction">
         <b-button block size="lg"
                   :to="this.paths.FINANCIAL_INPUTS_RETAIL_TARIFF_PATH">
@@ -133,6 +142,7 @@
         </b-button>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -216,6 +226,9 @@
       },
     },
     methods: {
+      isComplete(page) {
+        return !this.$store.state.Application.pageCompleteness.components[page];
+      },
       getTechLabel(payload) {
         if (payload.name) {
           return `${payload.tag}: ${payload.name}`;

@@ -8,6 +8,7 @@
                           :isInvalid="submitted && $v.includeInterconnectionConstraints.$error"
                           :errorMessage="getErrorMsg('includeInterconnectionConstraints')">
       </radio-button-input>
+
       <div class="form-group" v-if="includeInterconnectionConstraints">
         <text-input v-model="maxExport"
                     v-bind:field="metadata.maxExport"
@@ -22,7 +23,8 @@
         </text-input>
 
       </div>
-      <div class="form-group" v-if="includeSiteLoad && (includeSiteLoad !== null)">
+
+      <div class="form-group" v-if="includeSiteLoad === true">
         <timeseries-data-upload chart-name="chartUploadedTimeSeries"
                                 data-name="site load"
                                 units="kW"
@@ -47,12 +49,14 @@
             </div>
           </div>
         </div>
+
       </div>
       <hr>
 
       <save-buttons :continue-link="WIZARD_COMPONENT_PATH"
                     :displayError="submitted && $v.$anyError"
                     :save="validatedSave" />
+
     </form>
   </div>
 </template>
@@ -67,7 +71,6 @@
   import '@/assets/samples/SampleSiteLoad-8784.csv';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
-  import { sharedValidation } from '@/models/Shared';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 
@@ -83,7 +86,6 @@
         includeSiteLoad: p.includeSiteLoad,
         siteLoad: p.siteLoad,
         metadata,
-        sharedValidation,
         ...this.getDataFromProject(),
         WIZARD_COMPONENT_PATH,
       };
@@ -150,6 +152,8 @@
         }
         // set complete to true or false
         this.$store.dispatch('setCompleteness', this.getCompletenessPayload());
+        this.submitted = true;
+        this.$v.$touch();
         return this.save();
       },
       save() {

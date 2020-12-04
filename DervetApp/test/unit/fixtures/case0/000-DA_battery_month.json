@@ -663,7 +663,7 @@
         }
       }
     },
-    "retailTimeShift": {
+    "RetailTimeShift": {
       "": {
         "active": "no"
       }
