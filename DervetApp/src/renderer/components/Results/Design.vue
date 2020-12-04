@@ -21,8 +21,8 @@
               <b-tr>
                 <!-- TODO: assign columns based on column in rows -->
                 <b-th><span class="sr-only">Name</span></b-th>
-                <b-th colspan="3">Power Specifications</b-th>
-                <b-th colspan="2">Energy Specifications</b-th>
+                <b-th :colspan="chartData.numPowerCol">Power Specifications</b-th>
+                <b-th :colspan="chartData.numEnergyCol">Energy Specifications</b-th>
                 <b-th><span class="sr-only">Quantity</span></b-th>
               </b-tr>
             </template>
@@ -54,11 +54,12 @@
   import { RESULTS_PATH } from '@/router/constants';
 
   export default {
+    beforeMount() {
+      this.$store.dispatch('createDesignPlots');
+    },
     data() {
-      const chartData = this.$store.state.ProjectResult.data.getDesignVueObjects();
       return {
         RESULTS_PATH,
-        chartData,
         costTableFields: [
           {
             key: 'total',
@@ -72,6 +73,11 @@
           'label',
         ],
       };
+    },
+    computed: {
+      chartData() {
+        return this.$store.state.ProjectResult.designVueObjects;
+      },
     },
   };
 </script>

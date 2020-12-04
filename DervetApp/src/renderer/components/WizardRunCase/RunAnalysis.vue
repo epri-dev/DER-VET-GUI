@@ -6,11 +6,11 @@
         <br />
         <label>Running analysis for <b>{{projectName}}</b>. Please be patient as this can take several minutes to complete.</label>
       </div>
-      <div class="col-md-12" v-else-if="resultsExist">
-        <div>Redirecting...</div>
+      <div class="col-md-12 text-center" v-else>
+        <h1>Redirecting...</h1>
       </div>
-      <div class="col-md-12 text-center" v-else-if="isError">
-        <br/>
+      <div class="col-md-12 text-center" v-if="isError">
+        <br />
         <div>An error occured while running DER-VET: please check {{logPath}} for more details.</div>
       </div>
     </div>
@@ -36,10 +36,10 @@
         return path.join(this.$store.state.Project.resultsDirectory, LOG_FILE);
       },
       resultsExist() {
-        if (this.$store.state.ProjectResult.data !== null) {
+        if (this.results !== null) {
           this.$router.push({ path: RESULTS_PATH }).catch(() => {});
         }
-        return this.$store.state.ProjectResult.data !== null;
+        return this.results !== null;
       },
       runInProgress() {
         return this.$store.state.Application.runInProgress;

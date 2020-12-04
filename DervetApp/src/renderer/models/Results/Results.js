@@ -10,20 +10,6 @@ import { PeakLoadDayData } from './PeakLoadDayData';
 export class ResultsData {
   constructor(id, data) {
     this.id = id;
-
-    // RAW DATA - these will NEVER be NULL
-    this.size = this.initializeSize(data.size);
-    this.dispatch = data.timeSeries; // TODO
-    this.proForma = this.initializeProForma(data.proForma);
-    this.costBenefit = this.initializeCostBenefit(data.costBenefit);
-
-    // RAW DATA - these MIGHT not be NULL
-    this.beforeAfterMonthlyEnergyBill = this.initializeBeforeAfterMonthly(data.simpleMonthlyBill);
-    this.peakLoadDay = this.initializePeakLoadDay(data.peakLoadDay);
-    this.deferral = this.initializeDeferral(data.deferral);
-    this.loadCoverageProbability = this.initializeLoadCoverageProb(data.loadCoverageProbability);
-    this.outageContribution = data.outageContribution; // TODO
-
     // booleans that tell if the raw data are NULL or not
     this.showBeforeAfterMonthlyEnergyBill = false;
     this.showPeakLoadDay = false;
@@ -45,6 +31,19 @@ export class ResultsData {
     this.reliabilityOutageContributionBarChart = null;
     this.reliabilityLoadCoverageLineChart = null;
     this.deferralStackedBarChart = null;
+
+    // RAW DATA - these will NEVER be NULL
+    this.size = this.initializeSize(data.size);
+    this.dispatch = this.initializeDistpatch(data.timeSeries);
+    this.proForma = this.initializeProForma(data.proForma);
+    this.costBenefit = this.initializeCostBenefit(data.costBenefit);
+
+    // RAW DATA - these MIGHT not be NULL
+    this.beforeAfterMonthlyEnergyBill = this.initializeBeforeAfterMonthly(data.simpleMonthlyBill);
+    this.peakLoadDay = this.initializePeakLoadDay(data.peakLoadDay);
+    this.deferral = this.initializeDeferral(data.deferral);
+    this.loadCoverageProbability = this.initializeLoadCoverageProb(data.loadCoverageProbability);
+    this.outageContribution = this.initializeOutageContribution(data.outageContribution);
 
     this.createCharts();
   }
@@ -87,6 +86,7 @@ export class ResultsData {
     if (!this.showDeferral) {
       return null;
     }
+    console.log('Deferral is not null');
     const data = new DeferralData(papaParseObject.data);
     return data;
   }
@@ -98,6 +98,27 @@ export class ResultsData {
     }
     const data = new LoadCoverageProbabilityData(papaParseObject.data);
     return data;
+  }
+  initializeOutageContribution(csvString) {
+    const papaParseObject = papaParseCsvString(csvString, true);
+    this.showOutageContribution = papaParseObject !== null;
+    if (!this.showOutageContribution) {
+      console.log('outage contribution is null');
+      return null;
+    }
+    console.log('outage contribution is not null');
+    console.log(papaParseObject);
+    // TODO const data = new PeakLoadDayData(papaParseObject.data);
+    // return data;
+    return papaParseObject.data;
+  }
+  initializeDistpatch(csvString) {
+    const papaParseObject = papaParseCsvString(csvString);
+    // TODO const data = new PeakLoadDayData(papaParseObject.data);
+    // return data;
+    console.log('dispatch data');
+    console.log(JSON.stringify(papaParseCsvString, null, 1));
+    return papaParseObject.data;
   }
   createCharts() {
     // summary page charts
@@ -132,52 +153,11 @@ export class ResultsData {
 
     // deferral chart
     if (this.showDeferral) {
-      this.deferralStackedBarChart = this.deferral.createBarChart();
+      this.deferralStackedBarChart = {
+        ...this.size.findEssSize(),
+        ...this.deferral.createBarChart(),
+      };
     }
-  }
-  getDeferralVueObjects() {
-    return {
-      ...this.size.findEssSize(),
-      ...this.deferralStackedBarChart,
-    };
-  }
-  getDesignVueObjects() {
-    return {
-      sizeTable: this.designSizeResultsTable,
-      costsTable: this.designCostsTable,
-    };
-  }
-  getDispatchVueObjects() {
-    return {
-      stackedLineChart: this.dispatchStackedLineChart,
-      energyPriceMap: this.dispatchEnergyPriceMap,
-    };
-  }
-  getFinancialVueObjects() {
-    return {
-      costBenefit: this.financialCostBenefitBarChart,
-      proForma: this.financialProformaTable,
-      monthlyData: this.financialBeforeAfterBarChart,
-      showMonthlyData: this.showBeforeAfterMonthlyEnergyBill,
-    };
-  }
-  getReliabilityVueObjects() {
-    return {
-      loadCoverageProbability: this.reliabilityLoadCoverageLineChart,
-      outageContribution: this.reliabilityOutageContributionBarChart,
-      showLoadCoverageProbability: this.showLoadCoverageProbability,
-      showOutageContribution: this.showOutageContribution,
-    };
-  }
-  getSummaryVueObjects() {
-    return {
-      financial: this.financialSummaryBarChart,
-      dispatch: this.dispatchSummaryMap,
-      design: this.designSummaryBarChart,
-      showReliability: this.showLoadCoverageProbability,
-      showDeferral: this.showDeferral,
-      showDesign: this.showPeakLoadDay,
-    };
   }
 }
 

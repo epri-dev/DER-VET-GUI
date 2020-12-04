@@ -151,7 +151,7 @@
           this.resetNonRequired(['maxExport', 'maxImport']);
         }
         // set complete to true or false
-        this.$store.dispatch('setCompleteness', this.getCompletenessPayload());
+        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
         this.submitted = true;
         this.$v.$touch();
         return this.save();

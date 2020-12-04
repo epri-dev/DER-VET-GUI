@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div class="row">
-      <div class="col-md-6">
-        <h3>Results</h3>
-      </div>
-    </div>
-    <hr>
     <form>
       <div class="form-horizontal form-buffer">
+        <div class="row">
+          <div class="col-md-6">
+            <h3>Results</h3>
+          </div>
+        </div>
+        <hr>
         <div class="form-group">
           <div class="row">
             <div class="col-md-6">
@@ -75,7 +75,7 @@
             <div class="col-md-6">
               <div class="buffer-top text-center" v-if="summaryData.showReliability">
                 <a class="btn btn-sm btn-default">
-                  <router-link :to="pagePaths.resultsReliability">
+                  <router-link :to="paths.RESULTS_RELIABILITY_PATH">
                     View Detailed Reliability Results...
                   </router-link>
                 </a>
@@ -103,11 +103,12 @@
 
   export default {
     data() {
-      const summaryData = this.$store.state.ProjectResult.data.getSummaryVueObjects();
       return {
         paths,
-        summaryData,
       };
+    },
+    beforeMount() {
+      this.$store.dispatch('createSummaryPlots');
     },
     mounted() {
       this.createPlotlyCostBenefit('chartPlotlyCostBenefit', this.summaryData.financial);
@@ -115,6 +116,17 @@
         this.createChartPeakLoadDay('chartPeakLoadDay', this.summaryData.design);
       }
       this.createChartBatteryDispatchHeatMap('chartBatteryDispatchHeatMap');
+    },
+    computed: {
+      results() {
+        return this.$store.state.ProjectResult.data;
+      },
+      runInProgress() {
+        return this.$store.state.Application.runInProgress;
+      },
+      summaryData() {
+        return this.$store.state.ProjectResult.summaryVueObjects;
+      },
     },
     methods: {
       createPlotlyCostBenefit(chartId, chartData) {
@@ -302,7 +314,6 @@
           y: y1,
           z: zz,
           colorscale: 'Viridis', // ''YlGnBu',
-          reversescale: true,
           colorbar: {
             thickness: 10,
             ticksuffix: ' kWh',

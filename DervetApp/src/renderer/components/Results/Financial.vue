@@ -1,39 +1,43 @@
 <template>
   <div>
-    <div class="row">
-      <div class="col-md-6">
-        <h3>Financial</h3>
-      </div>
-    </div>
-    <hr>
-    <div class="form-group">
-      <div class="col-md-12">
-        <div
-          id="chartStackedCostBenefit">
+    <form>
+      <div class="form-horizontal form-buffer">
+        <div class="row">
+          <div class="col-md-6">
+            <h3>Financial</h3>
+          </div>
+        </div>
+        <hr>
+        <div class="form-group">
+          <div class="col-md-12">
+            <div
+              id="chartStackedCostBenefit">
+            </div>
+          </div>
+          <div class="col-md-12">
+            <h4>Proforma (Nominal Cash Flow)</h4>
+            <b-table
+              :striped="true"
+              :hover="true"
+              :bordered="false"
+              :items="chartData.proForma.data"
+              :fields="chartData.proForma.fields"
+            >
+            </b-table>
+          </div>
+          <div class="col-md-12" v-if="chartData.showMonthlyData">
+            <canvas
+              id="chartjsMonthlyBill">
+            </canvas>
+          </div>
+          <!-- <div class="col-md-12">
+            <div
+              id="plotlyMonthlyBill">
+            </div>
+          </div> -->
         </div>
       </div>
-      <div class="col-md-12">
-        <h4>Proforma (Nominal Cash Flow)</h4>
-        <b-table
-          :striped="true"
-          :hover="true"
-          :bordered="false"
-          :items="chartData.proForma.data"
-          :fields="chartData.proForma.fields"
-        >
-        </b-table>
-      </div>
-      <div class="col-md-12" v-if="chartData.showMonthlyData">
-        <canvas
-          id="chartjsMonthlyBill">
-        </canvas>
-      </div>
-      <!-- <div class="col-md-12">
-        <div
-          id="plotlyMonthlyBill">
-        </div>
-      </div> -->
-    </div>
+    </form>
   </div>
 </template>
 
@@ -44,6 +48,9 @@
   import { RESULTS_PATH } from '@/router/constants';
 
   export default {
+    beforeMount() {
+      this.$store.dispatch('createFinancialPlots');
+    },
     mounted() {
       this.createStackedCostBenefit('chartStackedCostBenefit', this.chartData.costBenefit);
       if (this.chartData.showMonthlyData) {
@@ -51,11 +58,14 @@
       }
     },
     data() {
-      const chartData = this.$store.state.ProjectResult.data.getFinancialVueObjects();
       return {
         resultsPath: RESULTS_PATH,
-        chartData,
       };
+    },
+    computed: {
+      chartData() {
+        return this.$store.state.ProjectResult.financialVueObjects;
+      },
     },
     methods: {
       createStackedCostBenefit(chartId, chartData) {
@@ -178,7 +188,6 @@
       },
       createMonthlyBillBeforeAndAfter(chartId, chartData) {
         const ctx = document.getElementById(chartId);
-        const dataYear = chartData.year;
         const chart = new Chart(ctx, {
           type: 'bar',
           data: {
@@ -230,7 +239,7 @@
             },
             title: {
               display: true,
-              text: `Before and After Monthly Energy Bill in ${{ dataYear }}`,
+              text: `Before and After Monthly Energy Bill in ${chartData.year}`,
             },
             scales: {
               xAxes: [{

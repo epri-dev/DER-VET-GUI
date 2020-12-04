@@ -12,15 +12,17 @@ export class ProFormaData extends BaseTableData {
     let i = 0;
     while (i < this.columnHeaders.length) {
       const colString = this.columnHeaders[i];
-      const camelCol = BaseTableData.toCamelCaseString(colString);
-      keys.push(camelCol);
-      const fieldTemplate = {
-        key: camelCol,
-        sortable: true,
-        label: colString,
-        formatter: (camelCol === 'year') ? null : formatYAxisCurrency,
-      };
-      dataColumns.push(fieldTemplate);
+      if (colString !== null) {
+        const camelCol = BaseTableData.toCamelCaseString(colString);
+        keys.push(camelCol);
+        const fieldTemplate = {
+          key: camelCol,
+          sortable: true,
+          label: colString,
+          formatter: (camelCol === 'year') ? null : formatYAxisCurrency,
+        };
+        dataColumns.push(fieldTemplate);
+      }
       i += 1;
     }
     // create data

@@ -19,6 +19,8 @@ const getDefaultApplicationState = () => ({
   runInProgress: NULL,
 });
 
+const namespaced = true;
+
 const state = getDefaultApplicationState();
 
 const mutations = {
@@ -53,8 +55,11 @@ const actions = {
     // TODO: handle parsing error
     commit('SET_RESULT_ERROR');
   },
-  resultRecieved({ commit }) {
-    commit('SET_RESULT_SUCCESS');
+  resultRecieved: {
+    root: true,
+    handler({ commit }) {
+      commit('SET_RESULT_SUCCESS');
+    },
   },
   resetApplicationToDefault({ commit }, newId) {
     commit('RESET_APPLICATION_TO_DEFAULT');
@@ -68,6 +73,7 @@ const actions = {
 };
 
 export default {
+  namespaced,
   state,
   mutations,
   actions,
