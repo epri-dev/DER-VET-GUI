@@ -107,6 +107,7 @@ export default class TechnologySpecsDieselGenMetadata {
     return {
       active: true,
       complete: null,
+      errorList: [],
       id: uuidv4(),
       tag: DieselGen,
       technologyType: 'Generator',

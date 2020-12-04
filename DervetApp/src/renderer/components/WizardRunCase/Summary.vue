@@ -4,6 +4,26 @@
     <form>
       <div class="form-horizontal form-buffer container">
 
+        <div v-if="techErrorExists()" class="incomplete">
+          <h4>Summary of Technology Errors</h4>
+          <div v-for="tech in techAll()">
+            <div v-if="tech.complete !== true">
+              <li>
+                <router-link class="text-decoration-none"
+                             :to="getTechPath(tech)">
+                  {{ tech.technologyType + ': ' + tech.tag + ': ' + getTechDisplayName(tech) }}
+                </router-link>
+                <ul>
+                  <li v-for="error in tech.errorList">
+                    {{ error }}
+                  </li>
+                </ul>
+              </li>
+            </div>
+          </div>
+        </div>
+        </br>
+
         <h4>Project Configuration</h4>
         <template>
           <b-table-lite thead-tr-class="d-none" fixed hover bordered striped
@@ -93,15 +113,15 @@
 </template>
 
 <script>
-  import { RUN_ANALYSIS_PATH } from '@/router/constants';
+  import { flatten } from 'lodash';
+  import * as paths from '@/router/constants';
+  // import { RUN_ANALYSIS_PATH } from '@/router/constants';
   import model from '@/models/StartProject';
-  import NavButtons from '@/components/Shared/NavButtons';
   import { getProjectFixture } from '@/assets/samples/projectFixture.js';
 
   const { validation } = model;
 
   export default {
-    components: { NavButtons },
     methods: {
       modeDescription() {
         if (this.$store.state.Project.analysisHorizonMode === undefined) {
@@ -136,11 +156,46 @@
         const p = this.$store.state.Project;
         const projectFixture = getProjectFixture(p.inputsDirectory, p.resultsDirectory);
         this.$store.dispatch('runDervet', projectFixture)
-          .then(this.$router.push({ path: RUN_ANALYSIS_PATH }));
+          .then(this.$router.push({ path: paths.RUN_ANALYSIS_PATH }));
+      },
+      techAll() {
+        const techList = [this.techGen, this.techIR];
+        return flatten(techList);
+      },
+      techErrorExists() {
+        let errorsTF = false;
+        Object.values(this.techAll()).forEach((tech) => {
+          if (tech.complete !== true) {
+            errorsTF = true;
+          }
+        });
+        return errorsTF;
+      },
+      getTechPath(tech) {
+        const techTag = tech.tag;
+        const techID = tech.id;
+        let techPath = '';
+        if (techTag === 'PV') {
+          techPath = paths.TECH_SPECS_PV_PATH;
+        } else if (techTag === 'Battery') {
+          techPath = paths.TECH_SPECS_BATTERY_PATH;
+        } else if (techTag === 'ICE') {
+          techPath = paths.TECH_SPECS_ICE_PATH;
+        } else if (techTag === 'Diesel') {
+          techPath = paths.TECH_SPECS_DIESEL_PATH;
+        }
+        return `${techPath}/${techID}`;
+      },
+      getTechDisplayName(tech) {
+        if (tech.complete === null) {
+          return 'not-started';
+        }
+        return tech.name;
       },
     },
     data() {
       return {
+        paths,
         setup: [
           ['Project Name', (this.$store.state.Project.name || '')],
           ['Start Year', this.$store.state.Project.startYear],
@@ -157,11 +212,11 @@
         techESS: this.$store.state.Project.listOfActiveTechnologies['Energy Storage System'],
         services: this.$store.state.Project.listOfActiveServices,
         finances: [
-          ['Discount rate', this.getRateDisplay(this.$store.state.Project.discountRate)],
-          ['Inflation rate', this.getRateDisplay(this.$store.state.Project.inflationRate)],
-          ['Federal tax rate', this.getRateDisplay(this.$store.state.Project.federalTaxRate)],
-          ['State tax rate', this.getRateDisplay(this.$store.state.Project.stateTaxRate)],
-          ['Property tax rate', this.getRateDisplay(this.$store.state.Project.propertyTaxRate)],
+          ['Discount rate', this.getRateDisplay(this.$store.state.Project.financeDiscountRate)],
+          ['Inflation rate', this.getRateDisplay(this.$store.state.Project.financeInflationRate)],
+          ['Federal tax rate', this.getRateDisplay(this.$store.state.Project.financeFederalTaxRate)],
+          ['State tax rate', this.getRateDisplay(this.$store.state.Project.financeStateTaxRate)],
+          ['Property tax rate', this.getRateDisplay(this.$store.state.Project.financePropertyTaxRate)],
         ],
         scenario: [
           ['FIXME Number of Scenario Analysis Cases', 'Baseline'],
