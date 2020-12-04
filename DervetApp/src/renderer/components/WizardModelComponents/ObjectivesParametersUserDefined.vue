@@ -2,23 +2,13 @@
   <div>
     <h3>Services: User-Defined Settings</h3>
     <hr>
-    <div class="form-horizontal form-buffer">
-      <div class="row form-group">
-        <div class="col-md-4">
-          <label class="control-label" for="Growth">Yearly Cost Avoided for meeting the user-defined constraints</label>
-        </div>
-        <div class="col-md-3">
-          <input
-            class="form-control numberbox"
-            id="growth"
-            type="text"
-            v-model.number="inputPrice">
-          <span class="unit-label">$/yr</span>
-        </div>
-        <div class="col-md-5">
-          <p class="tool-tip">Yearly Cost Avoided for meeting the user-defined constraints</p>
-        </div>
-      </div>
+    <form class="form-horizontal form-buffer">
+
+      <text-input v-model="userPrice"
+                  v-bind:field="metadata.userPrice"
+                  :isInvalid="submitted && $v.userPrice.$error"
+                  :errorMessage="getErrorMsg('userPrice')">
+      </text-input>
 
       <timeseries-data-upload
         chart-name="chartUploadedTimeSeries"
@@ -59,41 +49,50 @@
         :data-time-series="tsData4"
         :key="childKey4"
       />
-      <hr />
-      <nav-buttons
-        :back-link="WIZARD_COMPONENT_PATH"
+      <hr>
+
+      <save-buttons
         :continue-link="WIZARD_COMPONENT_PATH"
-        :save="this.save"
-      />
-    </div>
+        :displayError="submitted && $v.$anyError"
+        :save="validatedSave" />
+
+    </form>
   </div>
 </template>
 
 <script>
-  import { sharedValidation } from '@/models/Shared.js';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
+  import wizardFormMixin from '@/mixins/wizardFormMixin';
+  import * as p from '@/models/Project/Project';
+  import * as c from '@/models/Project/constants';
+  import operateOnKeysList from '@/util/object';
+  import csvUploadMixin from '@/mixins/csvUploadMixin';
   import UserPowerMaxTimeSeries from '@/models/TimeSeries/UserPowerMaxTimeSeries';
   import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
   import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
   import UserEnergyMinTimeSeries from '@/models/TimeSeries/UserEnergyMinTimeSeries';
-  import csvUploadMixin from '@/mixins/csvUploadMixin';
-  import NavButtons from '@/components/Shared/NavButtons';
+  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 
+  const metadata = p.projectMetadata;
+  const validations = metadata.getValidationSchema(c.USER_DEFINED_FIELDS);
+
   export default {
-    components: { NavButtons, TimeseriesDataUpload },
-    mixins: [csvUploadMixin],
+    components: { TimeseriesDataUpload },
+    mixins: [csvUploadMixin, wizardFormMixin],
     data() {
       const p = this.$store.state.Project;
       return {
-        sharedValidation,
-        inputPrice: p.userPrice,
         userPowerMax: p.userPowerMax,
         userPowerMin: p.userPowerMin,
         userEnergyMax: p.userEnergyMax,
         userEnergyMin: p.userEnergyMin,
+        metadata,
+        ...this.getDataFromProject(),
         WIZARD_COMPONENT_PATH,
       };
+    },
+    validations: {
+      ...validations,
     },
     computed: {
       tsData() {
@@ -120,9 +119,40 @@
         }
         return new UserEnergyMinTimeSeries(this.inputTimeseries4);
       },
+      complete() {
+        return this.$store.state.Application.pageCompleteness.components.objectivesUserDefined;
+      },
     },
-
+    beforeMount() {
+      // submitted is false initially; set it to true after the first save.
+      // initially, complete is null; after saving, it is set to either true or false.
+      // we want to show validation errors at any time after the first save, with submitted.
+      if (this.complete !== null && this.complete !== undefined) {
+        this.submitted = true;
+        this.$v.$touch();
+      }
+    },
     methods: {
+      getErrorMsg(fieldName) {
+        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
+      },
+      getDataFromProject() {
+        return operateOnKeysList(this.$store.state.Project, c.USER_DEFINED_FIELDS, f => f);
+      },
+      getCompletenessPayload() {
+        return {
+          pageGroup: 'components',
+          page: 'objectivesUserDefined',
+          completeness: !this.$v.$invalid,
+        };
+      },
+      validatedSave() {
+        // set complete to true or false
+        this.$store.dispatch('setCompleteness', this.getCompletenessPayload());
+        this.submitted = true;
+        this.$v.$touch();
+        return this.save();
+      },
       save() {
         if (this.inputTimeseries !== null) {
           this.$store.dispatch('setUserPowerMax', this.tsData);
@@ -136,7 +166,7 @@
         if (this.inputTimeseries4 !== null) {
           this.$store.dispatch('setUserEnergyMin', this.tsData4);
         }
-        this.$store.dispatch('setUserPrice', this.inputPrice);
+        this.$store.dispatch('setUserPrice', this.userPrice);
       },
     },
   };

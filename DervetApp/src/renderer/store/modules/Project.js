@@ -7,12 +7,16 @@ const getDefaultState = () => ({
   ...metadataDefaultValues,
   type: 'Wizard',
 
+  // TODO: these defaults should all be null or undefined
+  // TODO: remove this? is it being used?
+
   // FINANCES
   discountRate: 0,
   inflationRate: 0,
   federalTaxRate: 0,
   stateTaxRate: 0,
   propertyTaxRate: 0,
+
   // SERVICES
   daETS: { growth: 0 },
   dcm: { growth: 0 }, // TODO collect value
@@ -48,6 +52,7 @@ const getDefaultState = () => ({
     duration: 0,
   },
   userDefined: { price: 0 },
+
   // DERS
   technologySpecsSolarPV: [],
   technologySpecsICE: [],
@@ -58,6 +63,7 @@ const getDefaultState = () => ({
     'Energy Storage System': [],
     'Intermittent Resource': [],
   },
+
   // TIMESERIES ARRAYS
   criticalLoad: null,
   deferralLoad: null,
@@ -153,26 +159,26 @@ const mutations = {
   },
   // da page
   SET_DA_GROWTH(state, newDAGrowth) {
-    state.daETS.growth = newDAGrowth;
+    state.daGrowth = newDAGrowth;
   },
   SET_DA_PRICE(state, newDAPrice) {
-    state.daETS.price = newDAPrice;
+    state.daPrice = newDAPrice;
   },
   // deferral page
   SET_DEFERRAL_GROWTH(state, newDeferralGrowth) {
-    state.deferral.growth = newDeferralGrowth;
+    state.deferralGrowth = newDeferralGrowth;
   },
   SET_DEFERRAL_PRICE(state, newDeferralPrice) {
-    state.deferral.price = newDeferralPrice;
+    state.deferralPrice = newDeferralPrice;
   },
   SET_DEFERRAL_PLANNED_LOAD_LIMIT(state, newDeferralPlannedLoadLimit) {
-    state.deferral.plannedLoadLimit = newDeferralPlannedLoadLimit;
+    state.deferralPlannedLoadLimit = newDeferralPlannedLoadLimit;
   },
   SET_DEFERRAL_LOAD(state, newDeferralLoad) {
     state.deferralLoad = newDeferralLoad;
   },
   SET_DEFERRAL_REVERSE_POWER_FLOW_LIMIT(state, newDeferralReversePowerFlowLimit) {
-    state.deferral.reversePowerFlowLimit = newDeferralReversePowerFlowLimit;
+    state.deferralReversePowerFlowLimit = newDeferralReversePowerFlowLimit;
   },
   // Diesel
   REPLACE_TECHNOLOGY_SPECS_DIESEL_GEN(state, payload) {
@@ -197,47 +203,47 @@ const mutations = {
   },
   // finances page
   SET_DISCOUNT_RATE(state, newDiscountRate) {
-    state.discountRate = newDiscountRate;
+    state.financeDiscountRate = newDiscountRate;
   },
   SET_INFLATION_RATE(state, newInflationRate) {
-    state.inflationRate = newInflationRate;
+    state.financeInflationRate = newInflationRate;
   },
   SET_FEDERAL_TAX_RATE(state, newFederalTaxRate) {
-    state.federalTaxRate = newFederalTaxRate;
+    state.financeFederalTaxRate = newFederalTaxRate;
   },
   SET_PROPERTY_TAX_RATE(state, newPropertyTaxRate) {
-    state.propertyTaxRate = newPropertyTaxRate;
+    state.financePropertyTaxRate = newPropertyTaxRate;
   },
   SET_STATE_TAX_RATE(state, newStateTaxRate) {
-    state.stateTaxRate = newStateTaxRate;
+    state.financeStateTaxRate = newStateTaxRate;
   },
   // frequency response
   SET_FR_COMBINED_MARKET(state, newFRCombinedMarket) {
-    state.fr.combinedMarket = newFRCombinedMarket;
+    state.frCombinedMarket = newFRCombinedMarket;
   },
   SET_FR_DOWN_PRICE(state, newFRDownPrice) {
-    state.fr.downPrice = newFRDownPrice;
+    state.frDownPrice = newFRDownPrice;
   },
   SET_FR_DURATION(state, newFRDuration) {
-    state.fr.duration = newFRDuration;
+    state.frDuration = newFRDuration;
   },
   SET_FR_ENERGY_GROWTH(state, newFREnergyGrowth) {
-    state.fr.energyPriceGrowth = newFREnergyGrowth;
+    state.frEnergyPriceGrowth = newFREnergyGrowth;
   },
   SET_FR_EOU(state, newFReou) {
-    state.fr.eou = newFReou;
+    state.frEOU = newFReou;
   },
   SET_FR_EOD(state, newFReod) {
-    state.fr.eod = newFReod;
+    state.frEOD = newFReod;
   },
   SET_FR_GROWTH(state, newFRGrowth) {
-    state.fr.growth = newFRGrowth;
+    state.frGrowth = newFRGrowth;
   },
   SET_FR_PRICE(state, newFRPrice) {
-    state.fr.price = newFRPrice;
+    state.frPrice = newFRPrice;
   },
   SET_FR_UP_PRICE(state, newFRUpPrice) {
-    state.fr.upPrice = newFRUpPrice;
+    state.frUpPrice = newFRUpPrice;
   },
   // ICE
   REPLACE_TECHNOLOGY_SPECS_ICE(state, payload) {
@@ -248,13 +254,13 @@ const mutations = {
   },
   // non-spinning reserve
   SET_NSR_DURATION(state, newNSRDuration) {
-    state.nsr.duration = newNSRDuration;
+    state.nsrDuration = newNSRDuration;
   },
   SET_NSR_GROWTH(state, newNSRGrowth) {
-    state.nsr.growth = newNSRGrowth;
+    state.nsrGrowth = newNSRGrowth;
   },
   SET_NSR_PRICE(state, newNSRPrice) {
-    state.nsr.price = newNSRPrice;
+    state.nsrPrice = newNSRPrice;
   },
   // objectives
   CHOOSE_ENERGY_STRUCTURE(state, wholesaleEnergyPrices) {
@@ -299,19 +305,19 @@ const mutations = {
     state.criticalLoad = newCriticalLoad;
   },
   SET_RELIABILITY_GAMMA(state, newReliabilityGamma) {
-    state.reliability.gamma = newReliabilityGamma;
+    state.reliabilityGamma = newReliabilityGamma;
   },
   SET_RELIABILITY_MAX_OUTAGE_DURATION(state, newReliabilityMaxOutageDuration) {
-    state.reliability.maxOutageDuration = newReliabilityMaxOutageDuration;
+    state.reliabilityMaxOutageDuration = newReliabilityMaxOutageDuration;
   },
   SET_RELIABILITY_NU(state, newReliabilityNu) {
-    state.reliability.nu = newReliabilityNu;
+    state.reliabilityNu = newReliabilityNu;
   },
   SET_RELIABILITY_POST_OPTIMIZATION_ONLY(state, newPostOptimizationOnly) {
-    state.reliability.postOptimizationOnly = newPostOptimizationOnly;
+    state.reliabilityPostOptimizationOnly = newPostOptimizationOnly;
   },
   SET_RELIABILITY_TARGET(state, newReliabilityTarget) {
-    state.reliability.target = newReliabilityTarget;
+    state.reliabilityTarget = newReliabilityTarget;
   },
   // retail tariff file
   ADD_RETAIL_TARIFF_BILLING_PERIOD(state, newBillingPeriod) {
@@ -356,13 +362,13 @@ const mutations = {
   },
   // spinning reserve
   SET_SR_DURATION(state, newSRDuration) {
-    state.sr.duration = newSRDuration;
+    state.srDuration = newSRDuration;
   },
   SET_SR_GROWTH(state, newSRGrowth) {
-    state.sr.growth = newSRGrowth;
+    state.srGrowth = newSRGrowth;
   },
   SET_SR_PRICE(state, newSRPrice) {
-    state.sr.price = newSRPrice;
+    state.srPrice = newSRPrice;
   },
   // start page
   SET_ANALYSIS_HORIZON_MODE(state, newAnalysisHorizonMode) {
@@ -389,17 +395,17 @@ const mutations = {
   SET_OWNERSHIP(state, newOwnership) {
     state.ownership = newOwnership;
   },
-  SET_TIMESTEP(state, newTimestep) {
-    state.timestep = newTimestep;
-  },
-  SET_TYPE(state, type) {
-    state.type = type;
-  },
   SET_RESULTS_DIRECTORY(state, newResultsDirectory) {
     state.resultsDirectory = newResultsDirectory;
   },
   SET_START_YEAR(state, newStartYear) {
     state.startYear = newStartYear;
+  },
+  SET_TIMESTEP(state, newTimestep) {
+    state.timestep = newTimestep;
+  },
+  SET_TYPE(state, type) {
+    state.type = type;
   },
   // technology specs
   ACTIVATE_TECH_BATTERY(state, payload) {
@@ -488,7 +494,7 @@ const mutations = {
     state.userPowerMin = newUserPowerMin;
   },
   SET_USER_PRICE(state, newUserPrice) {
-    state.userDefine.price = newUserPrice;
+    state.userPrice = newUserPrice;
   },
 };
 
@@ -665,9 +671,6 @@ const actions = {
   },
   setMaxExportToGrid({ commit }, newDischargingToGridLimit) {
     commit('SET_MAX_EXPORT_TO_GRID', newDischargingToGridLimit);
-  },
-  setCompletenessSiteInformation({ commit }, newCompleteness) {
-    commit('SET_COMPLETENESS_SITE_INFORMATION', newCompleteness);
   },
   setSiteLoad({ commit }, newSiteLoad) {
     commit('SET_SITE_LOAD', newSiteLoad);

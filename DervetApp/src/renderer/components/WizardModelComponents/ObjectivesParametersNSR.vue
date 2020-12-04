@@ -2,39 +2,20 @@
   <div>
     <h3>Services: Non-Spinning Reserve Price</h3>
     <hr>
-    <div class="form-horizontal form-buffer">
-      <div class="row form-group">
-          <div class="col-md-4">
-            <label class="control-label" for="Growth">Growth Rate of Non-Spinning Reserve Prices</label>
-          </div>
-          <div class="col-md-3">
-            <input
-              class="form-control numberbox"
-              id="growth"
-              type="text"
-              v-model.number="inputNSRGrowth">
-            <span class="unit-label">%/year</span>
-          </div>
-          <div class="col-md-5">
-            <p class="tool-tip tooltip-col">What is the growth rate of Non-Spinning Reserve Price?</p>
-          </div>
-      </div>
-      <div class="row form-group">
-        <div class="col-md-4">
-          <label class="control-label" for="Growth">Duration for Energy Reservation Requirements</label>
-        </div>
-        <div class="col-md-3">
-          <input
-            class="form-control numberbox"
-            id="growth"
-            type="text"
-            v-model.number="inputDuration">
-          <span class="unit-label">hours</span>
-        </div>
-        <div class="col-md-5">
-          <p class="tool-tip">How much energy capability (kWh) should the DERs reserve for each kW of participation in Non-Spinning Reserve? The DERs will not use this energy capability for other services to be ready for the worst-case scenario.</p>
-        </div>
-      </div>
+    <form class="form-horizontal form-buffer">
+
+      <text-input v-model="nsrGrowth"
+                  v-bind:field="metadata.nsrGrowth"
+                  :isInvalid="submitted && $v.nsrGrowth.$error"
+                  :errorMessage="getErrorMsg('nsrGrowth')">
+      </text-input>
+
+      <text-input v-model="nsrDuration"
+                  v-bind:field="metadata.nsrDuration"
+                  :isInvalid="submitted && $v.nsrDuration.$error"
+                  :errorMessage="getErrorMsg('nsrDuration')">
+      </text-input>
+
       <timeseries-data-upload
         chart-name="chartUploadedTimeSeries"
         data-name="non-spinning reserve price"
@@ -44,37 +25,45 @@
         :data-time-series="tsData"
         :key="childKey"
       />
-      <hr />
-      <nav-buttons
-        :back-link="WIZARD_COMPONENT_PATH"
+      <hr>
+
+      <save-buttons
         :continue-link="WIZARD_COMPONENT_PATH"
-        :save="this.save"
-      />
-    </div>
+        :displayError="submitted && $v.$anyError"
+        :save="validatedSave" />
+
+    </form>
   </div>
 </template>
 
 <script>
+  import wizardFormMixin from '@/mixins/wizardFormMixin';
+  import * as p from '@/models/Project/Project';
+  import * as c from '@/models/Project/constants';
+  import operateOnKeysList from '@/util/object';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import NSRPriceTimeSeries from '@/models/TimeSeries/NSRPriceTimeSeries';
-  import { sharedValidation } from '@/models/Shared';
-  import NavButtons from '@/components/Shared/NavButtons';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 
+  const metadata = p.projectMetadata;
+  const validations = metadata.getValidationSchema(c.NSR_FIELDS);
+
   export default {
-    components: { NavButtons, TimeseriesDataUpload },
-    mixins: [csvUploadMixin],
+    components: { TimeseriesDataUpload },
+    mixins: [csvUploadMixin, wizardFormMixin],
     data() {
       const p = this.$store.state.Project;
       return {
-        sharedValidation,
-        inputNSRGrowth: p.nsrGrowth,
-        inputDuration: p.nsrDuration,
         nsrPrice: p.nsrPrice,
         dataYear: p.dataYear,
+        metadata,
+        ...this.getDataFromProject(),
         WIZARD_COMPONENT_PATH,
       };
+    },
+    validations: {
+      ...validations,
     },
     computed: {
       tsData() {
@@ -83,14 +72,46 @@
         }
         return new NSRPriceTimeSeries(this.inputTimeseries);
       },
+      complete() {
+        return this.$store.state.Application.pageCompleteness.components.objectivesNSR;
+      },
+    },
+    beforeMount() {
+      // submitted is false initially; set it to true after the first save.
+      // initially, complete is null; after saving, it is set to either true or false.
+      // we want to show validation errors at any time after the first save, with submitted.
+      if (this.complete !== null && this.complete !== undefined) {
+        this.submitted = true;
+        this.$v.$touch();
+      }
     },
     methods: {
+      getErrorMsg(fieldName) {
+        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
+      },
+      getDataFromProject() {
+        return operateOnKeysList(this.$store.state.Project, c.NSR_FIELDS, f => f);
+      },
+      getCompletenessPayload() {
+        return {
+          pageGroup: 'components',
+          page: 'objectivesNSR',
+          completeness: !this.$v.$invalid,
+        };
+      },
+      validatedSave() {
+        // set complete to true or false
+        this.$store.dispatch('setCompleteness', this.getCompletenessPayload());
+        this.submitted = true;
+        this.$v.$touch();
+        return this.save();
+      },
       save() {
         if (this.inputTimeseries !== null) {
           this.$store.dispatch('setNSRPrice', this.tsData);
         }
-        this.$store.dispatch('setNSRGrowth', this.inputNSRGrowth);
-        this.$store.dispatch('setNSRDuration', this.inputDuration);
+        this.$store.dispatch('setNSRGrowth', this.nsrGrowth);
+        this.$store.dispatch('setNSRDuration', this.nsrDuration);
       },
     },
   };

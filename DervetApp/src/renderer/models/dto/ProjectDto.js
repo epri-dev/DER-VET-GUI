@@ -194,7 +194,7 @@ export const makeBatteryParameters = (project) => {
 export const makeDAParameters = (project) => {
   if (project.objectivesDA) {
     const isActive = convertToYesNo(project.objectivesDA);
-    const keys = { growth: makeBaseKey(project.daETS.growth, FLOAT) };
+    const keys = { growth: makeBaseKey(project.daGrowth, FLOAT) };
     return makeGroup('', isActive, keys);
   }
   return makeEmptyGroup();
@@ -203,7 +203,7 @@ export const makeDAParameters = (project) => {
 export const makeDCMParameters = (project) => {
   if (project.objectivesRetailDemandChargeReduction) {
     const isActive = convertToYesNo(project.objectivesRetailDemandChargeReduction);
-    const keys = { growth: makeBaseKey(project.dcm.growth, FLOAT) };
+    const keys = { growth: makeBaseKey(project.dcmGrowth, FLOAT) };
     return makeGroup('', isActive, keys);
   }
   return makeEmptyGroup();
@@ -212,13 +212,12 @@ export const makeDCMParameters = (project) => {
 export const makeDeferralParameters = (project) => {
   if (project.objectivesDeferral) {
     const isActive = convertToYesNo(project.objectivesDeferral);
-    const { deferral } = project;
     const keys = {
-      growth: makeBaseKey(deferral.price, FLOAT),
+      growth: makeBaseKey(project.deferralGrowth, FLOAT),
       min_year_objective: makeBaseKey(ZERO, INT), // TODO new, verify value
-      planned_load_limit: makeBaseKey(deferral.plannedLoadLimit, FLOAT),
-      price: makeBaseKey(deferral.price, FLOAT),
-      reverse_power_flow_limit: makeBaseKey(deferral.reversePowerFlowLimit, FLOAT),
+      planned_load_limit: makeBaseKey(project.deferralPlannedLoadLimit, FLOAT),
+      price: makeBaseKey(project.deferralPrice, FLOAT),
+      reverse_power_flow_limit: makeBaseKey(project.deferralReversePowerFlowLimit, FLOAT),
     };
     return makeGroup('', isActive, keys);
   }
@@ -279,11 +278,11 @@ export const makeFinanceParameters = (project) => {
     customer_tariff_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, TARIFF), STRING),
     ecc_mode: makeBaseKey(ZERO, BOOL), // TODO new input
     external_incentives: makeBaseKey(externalIncentivesExist, BOOL),
-    federal_tax_rate: makeBaseKey(project.federalTaxRate, FLOAT),
-    inflation_rate: makeBaseKey(project.inflationRate, FLOAT),
-    npv_discount_rate: makeBaseKey(project.discountRate, FLOAT),
-    property_tax_rate: makeBaseKey(project.propertyTaxRate, FLOAT),
-    state_tax_rate: makeBaseKey(project.stateTaxRate, FLOAT),
+    federal_tax_rate: makeBaseKey(project.financeFederalTaxRate, FLOAT),
+    inflation_rate: makeBaseKey(project.financeInflationRate, FLOAT),
+    npv_discount_rate: makeBaseKey(project.financeDiscountRate, FLOAT),
+    property_tax_rate: makeBaseKey(project.financePropertyTaxRate, FLOAT),
+    state_tax_rate: makeBaseKey(project.financeStateTaxRate, FLOAT),
     yearly_data_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, YEARLY), STRING),
   };
   return makeGroup('', YES, keys);
@@ -292,15 +291,14 @@ export const makeFinanceParameters = (project) => {
 export const makeFRParameters = (project) => {
   if (project.objectivesFR) {
     const isActive = convertToYesNo(project.objectivesFR);
-    const { fr } = project;
     const keys = {
-      CombinedMarket: makeBaseKey(fr.combinedMarket, BOOL),
+      CombinedMarket: makeBaseKey(project.frCombinedMarket, BOOL),
       d_ts_constraints: makeBaseKey(ZERO, BOOL), // hardcoded
-      duration: makeBaseKey(fr.duration, FLOAT),
-      energyprice_growth: makeBaseKey(fr.energyPriceGrowth, FLOAT),
-      eod: makeBaseKey(fr.eod, FLOAT),
-      eou: makeBaseKey(fr.eou, FLOAT),
-      growth: makeBaseKey(fr.growth, FLOAT),
+      duration: makeBaseKey(project.frDuration, FLOAT),
+      energyprice_growth: makeBaseKey(project.frEnergyPriceGrowth, FLOAT),
+      eod: makeBaseKey(project.frEOD, FLOAT),
+      eou: makeBaseKey(project.frEOU, FLOAT),
+      growth: makeBaseKey(project.frGrowth, FLOAT),
       u_ts_constraints: makeBaseKey(ZERO, BOOL), // hardcoded
     };
     return makeGroup('', isActive, keys);
@@ -358,10 +356,9 @@ export const makeICEParameters = (project) => {
 export const makeNSRParameters = (project) => {
   if (project.objectivesNSR) {
     const isActive = convertToYesNo(project.objectivesNSR);
-    const { nsr } = project;
     const keys = {
-      duration: makeBaseKey(nsr.duration, FLOAT),
-      growth: makeBaseKey(nsr.growth, FLOAT),
+      duration: makeBaseKey(project.nsrDuration, FLOAT),
+      growth: makeBaseKey(project.nsrGrowth, FLOAT),
       ts_constraints: makeBaseKey(ZERO, BOOL), // hardcoded
     };
     return makeGroup('', isActive, keys);
@@ -390,7 +387,7 @@ export const makePVParameters = (project) => {
       'ecc%': makeBaseKey(ZERO, FLOAT), // TODO new, verify value
       expected_lifetime: makeBaseKey(99, INT), // TODO: new, verify value
       fixed_om_cost: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
-      gamma: makeBaseKey(project.reliability.gamma, FLOAT),
+      gamma: makeBaseKey(ZERO, FLOAT), // TODO: collect this in PV; it's removed from reliability
       grid_charge: makeBaseKey(ZERO, BOOL), // TODO collect this
       grid_charge_penalty: makeBaseKey(ZERO, BOOL), // hardcoded
       growth: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
@@ -401,7 +398,7 @@ export const makePVParameters = (project) => {
       min_rated_capacity: makeBaseKey(ZERO, BOOL), // TODO: new, verify value
       name: makeBaseKey(solarPV.name, STRING),
       nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
-      nu: makeBaseKey(project.reliability.nu, FLOAT),
+      nu: makeBaseKey(ZERO, FLOAT), // TODO: collect this in PV; it's removed from reliability
       operation_year: makeBaseKey(convertDateToYear(solarPV.operationDate), PERIOD),
       PPA: makeBaseKey(ZERO, BOOL), // TODO: new, verify value
       PPA_cost: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
@@ -423,13 +420,12 @@ export const makePVParameters = (project) => {
 export const makeReliabilityParameters = (project) => {
   if (project.objectivesResilience) {
     const isActive = convertToYesNo(project.objectivesResilience);
-    const { reliability } = project;
     const keys = {
-      max_outage_duration: makeBaseKey(reliability.maxOutageDuration, INT),
+      max_outage_duration: makeBaseKey(project.reliabilityMaxOutageDuration, INT),
       'n-2': makeBaseKey(ZERO, BOOL), // hardcoded
       post_facto_initial_soc: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
-      post_facto_only: makeBaseKey(reliability.postOptimizationOnly, BOOL),
-      target: makeBaseKey(reliability.target, FLOAT),
+      post_facto_only: makeBaseKey(project.reliabilityPostOptimizationOnly, BOOL),
+      target: makeBaseKey(project.reliabilityTarget, FLOAT),
     };
     return makeGroup('', isActive, keys);
   }
@@ -448,7 +444,7 @@ export const makeResultsParameters = (project) => {
 export const makeRetailTimeShiftParameters = (project) => {
   if (project.objectivesRetailEnergyChargeReduction) {
     const isActive = convertToYesNo(project.objectivesRetailEnergyChargeReduction);
-    const keys = { growth: makeBaseKey(project.retailETS.growth, FLOAT) };
+    const keys = { growth: makeBaseKey(project.retailTimeShiftGrowth, FLOAT) };
     return makeGroup('', isActive, keys);
   }
   return makeEmptyGroup();
@@ -475,15 +471,14 @@ export const makeScenarioParameters = (project) => {
   // TODO if any DERs are being sized, N should be 'Year'
   // TODO if customer services, N should be 'month'
   // TODO if wholesale services, N should be a number of hours
-  const projSiteInfo = project.objectivesSiteInformation;
-  const includePoiConstraints = projSiteInfo.includeInterconnectionConstraints;
+  const includePoiConstraints = project.includeInterconnectionConstraints;
   const keys = {
     apply_interconnection_constraints: makeBaseKey(convertToOneZero(includePoiConstraints), BOOL),
     binary: makeBaseKey(binary, BOOL),
     def_growth: makeBaseKey(2, FLOAT), // TODO ask for this value with site load
     dt: makeBaseKey(project.timestep, FLOAT),
     end_year: makeBaseKey(calculateEndYear(project.startYear, project.analysisHorizon), PERIOD),
-    incl_site_load: makeBaseKey(convertToOneZero(projSiteInfo.includeSiteLoad), BOOL),
+    incl_site_load: makeBaseKey(convertToOneZero(project.includeSiteLoad), BOOL),
     incl_thermal_load: makeBaseKey(ZERO, BOOL), // TODO: new, verify value
     kappa_ch_max: makeBaseKey('100000', FLOAT), // hardcoded
     kappa_ch_min: makeBaseKey('100000', FLOAT), // hardcoded
@@ -492,8 +487,8 @@ export const makeScenarioParameters = (project) => {
     kappa_ene_max: makeBaseKey('100000', FLOAT), // hardcoded
     kappa_ene_min: makeBaseKey('100000', FLOAT), // hardcoded
     location: makeBaseKey(project.gridLocation.toLowerCase(), STRING),
-    max_export: makeBaseKey(projSiteInfo.maxExport, FLOAT),
-    max_import: makeBaseKey(projSiteInfo.maxImport, FLOAT),
+    max_export: makeBaseKey(project.maxExport, FLOAT),
+    max_import: makeBaseKey(project.maxImport, FLOAT),
     monthly_data_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, MONTHLY), STRING),
     n: makeBaseKey(n, STRING_INT),
     opt_years: makeBaseKey(project.dataYear, LIST_INT),
@@ -510,10 +505,9 @@ export const makeScenarioParameters = (project) => {
 export const makeSRParameters = (project) => {
   if (project.objectivesSR) {
     const isActive = convertToYesNo(project.objectivesSR);
-    const { sr } = project;
     const keys = {
-      duration: makeBaseKey(sr.duration, FLOAT),
-      growth: makeBaseKey(sr.growth, FLOAT),
+      duration: makeBaseKey(project.srDuration, FLOAT),
+      growth: makeBaseKey(project.srGrowth, FLOAT),
       ts_constraints: makeBaseKey(ZERO, BOOL), // hardcoded
     };
     return makeGroup('', isActive, keys);
@@ -524,9 +518,8 @@ export const makeSRParameters = (project) => {
 export const makeUserParameters = (project) => {
   if (project.objectivesUserDefined) {
     const isActive = convertToYesNo(project.objectivesUserDefined);
-    const { userDefined } = project;
     const keys = {
-      price: makeBaseKey(userDefined.price, FLOAT),
+      price: makeBaseKey(project.userPrice, FLOAT),
     };
     return makeGroup('', isActive, keys);
   }
@@ -548,7 +541,7 @@ export const makeModelParameters = project => ({
     PV: makePVParameters(project),
     Reliability: makeReliabilityParameters(project),
     Results: makeResultsParameters(project),
-    retailTimeShift: makeRetailTimeShiftParameters(project),
+    RetailTimeShift: makeRetailTimeShiftParameters(project),
     Scenario: makeScenarioParameters(project),
     SR: makeSRParameters(project),
     User: makeUserParameters(project),

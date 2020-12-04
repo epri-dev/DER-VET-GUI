@@ -2,105 +2,44 @@
   <div>
     <h3>Services: Frequency Regulation</h3>
     <hr>
-    <div class="form-horizontal form-buffer">
-      <div class="row form-group">
-        <div class="col-md-4">
-          <label class="control-label" for="Growth">Energy Option Up</label>
-        </div>
-        <div class="col-md-3">
-          <input
-            class="form-control numberbox"
-            id="growth"
-            type="text"
-            v-model.number="inputEOU">
-          <span class="unit-label">kWh/kW-hr</span>
-        </div>
-        <div class="col-md-5">
-          <p class="tool-tip">Energy content of the AGC signal in the up direction</p>
-        </div>
-      </div>
-      <div class="row form-group">
-        <div class="col-md-4">
-          <label class="control-label" for="Growth">Energy Option Down</label>
-        </div>
-        <div class="col-md-3">
-          <input
-            class="form-control numberbox"
-            id="growth"
-            type="text"
-            v-model.number="inputEOD">
-          <span class="unit-label">kWh/kW-hr</span>
-        </div>
-        <div class="col-md-5">
-          <p class="tool-tip">Energy content of the AGC signal in the down direction</p>
-        </div>
-      </div>
-      <div class="row form-group">
-        <div class="col-md-4">
-          <label class="control-label" for="Growth">Growth Rate of Frequency Regulation Price</label>
-        </div>
-        <div class="col-md-3">
-          <input
-            class="form-control numberbox"
-            id="growth"
-            type="text"
-            v-model.number="inputGrowth">
-          <span class="unit-label">%/yr</span>
-        </div>
-        <div class="col-md-5">
-          <p class="tool-tip">Yearly growth rate to apply to regulation prices</p>
-        </div>
-      </div>
-      <div class="row form-group">
-        <div class="col-md-4">
-          <label class="control-label" for="Growth">Growth Rate of Frequency Regulation Energy Price</label>
-        </div>
-        <div class="col-md-3">
-          <input
-            class="form-control numberbox"
-            id="growth"
-            type="text"
-            v-model.number="inputEnergyPriceGrowth">
-          <span class="unit-label">%/yr</span>
-        </div>
-        <div class="col-md-5">
-          <p class="tool-tip">Yearly growth rate to apply to the value of energy</p>
-        </div>
-      </div>
-      <div class="row form-group">
-        <div class="col-md-4">
-          <label class="control-label" for="Growth">Duration for Energy Reservation Requirements</label>
-        </div>
-        <div class="col-md-3">
-          <input
-            class="form-control numberbox"
-            id="growth"
-            type="text"
-            v-model.number="inputDuration">
-          <span class="unit-label">hours</span>
-        </div>
-        <div class="col-md-5">
-          <p class="tool-tip">How much energy capability (kWh) should the DERs reserve for each kW of participation in Frequency Regulation? The DERs will not use this energy capability for other services to be ready for the worst-case scenario.</p>
-        </div>
-      </div>
-      <div class="row form-group">
-        <div class="col-md-4">
-          <label class="control-label" for="Growth">Is there a requirement to bid as much regulation up as regulation down?</label>
-        </div>
-        <div class="col-md-3">
-          <b-form-group>
-            <b-form-radio-group
-              v-model="inputCombinedMarket"
-              :options="sharedValidation.optionsYN.allowedValues"
-            ></b-form-radio-group>
-          </b-form-group>
-        </div>
-        <div class="col-md-5">
-          <p class="tool-tip">Is this a combined regulation market? If it is combined, regulation up will be provided in the same quantity as regulation down always.</p>
-        </div>
-      </div>
-    </div>
-    <div class="form-horizontal form-buffer">
+    <form class="form-horizontal form-buffer">
+
+      <text-input v-model="frEOU"
+                  v-bind:field="metadata.frEOU"
+                  :isInvalid="submitted && $v.frEOU.$error"
+                  :errorMessage="getErrorMsg('frEOU')">
+      </text-input>
+
+      <text-input v-model="frEOD"
+                  v-bind:field="metadata.frEOD"
+                  :isInvalid="submitted && $v.frEOD.$error"
+                  :errorMessage="getErrorMsg('frEOD')">
+      </text-input>
+
+      <text-input v-model="frGrowth"
+                  v-bind:field="metadata.frGrowth"
+                  :isInvalid="submitted && $v.frGrowth.$error"
+                  :errorMessage="getErrorMsg('frGrowth')">
+      </text-input>
+
+      <text-input v-model="frEnergyPriceGrowth"
+                  v-bind:field="metadata.frEnergyPriceGrowth"
+                  :isInvalid="submitted && $v.frEnergyPriceGrowth.$error"
+                  :errorMessage="getErrorMsg('frEnergyPriceGrowth')">
+      </text-input>
+
+      <text-input v-model="frDuration"
+                  v-bind:field="metadata.frDuration"
+                  :isInvalid="submitted && $v.frDuration.$error"
+                  :errorMessage="getErrorMsg('frDuration')">
+      </text-input>
+
+      <radio-button-input
+        v-model="frCombinedMarket"
+        v-bind:field="metadata.frCombinedMarket"
+        :isInvalid="submitted && $v.frCombinedMarket.$error"
+        :errorMessage="getErrorMsg('frCombinedMarket')">
+      </radio-button-input>
 
       <timeseries-data-upload
         chart-name="chartUploadedTimeSeries"
@@ -110,7 +49,7 @@
         :data-exists="(tsData !== null)"
         :data-time-series="tsData"
         :key="childKey"
-        v-if="inputCombinedMarket"
+        v-if="frCombinedMarket === true"
       />
 
       <timeseries-data-upload
@@ -121,7 +60,7 @@
         :data-exists="(tsData2 !== null)"
         :data-time-series="tsData2"
         :key="childKey2"
-        v-if="!(inputCombinedMarket)"
+        v-if="frCombinedMarket === false"
       />
 
       <timeseries-data-upload
@@ -132,47 +71,50 @@
         :data-exists="(tsData3 !== null)"
         :data-time-series="tsData3"
         :key="childKey3"
-        v-if="!(inputCombinedMarket)"
+        v-if="frCombinedMarket === false"
       />
+      <hr>
 
-      <hr />
-      <nav-buttons
-        :back-link="WIZARD_COMPONENT_PATH"
+      <save-buttons
         :continue-link="WIZARD_COMPONENT_PATH"
-        :save="this.save"
-      />
-    </div>
+        :displayError="submitted && $v.$anyError"
+        :save="validatedSave" />
+
+    </form>
   </div>
 </template>
 
 <script>
+  import wizardFormMixin from '@/mixins/wizardFormMixin';
+  import * as p from '@/models/Project/Project';
+  import * as c from '@/models/Project/constants';
+  import operateOnKeysList from '@/util/object';
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import FRPriceTimeSeries from '@/models/TimeSeries/FRPriceTimeSeries';
   import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
   import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
-  import { sharedValidation } from '@/models/Shared';
-  import NavButtons from '@/components/Shared/NavButtons';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import TimeseriesDataUpload from './TimeseriesDataUpload';
 
+  const metadata = p.projectMetadata;
+  const validations = metadata.getValidationSchema(c.FR_FIELDS);
+
   export default {
-    components: { NavButtons, TimeseriesDataUpload },
-    mixins: [csvUploadMixin],
+    components: { TimeseriesDataUpload },
+    mixins: [csvUploadMixin, wizardFormMixin],
     data() {
       const p = this.$store.state.Project;
       return {
-        sharedValidation,
-        inputEOU: p.frEOU,
-        inputEOD: p.frEOD,
-        inputGrowth: p.frGrowth,
-        inputEnergyPriceGrowth: p.frEnergyPriceGrowth,
-        inputCombinedMarket: p.frCombinedMarket,
-        inputDuration: p.frDuration,
         frPrice: p.frPrice,
         frUpPrice: p.frUpPrice,
         frDownPrice: p.frDownPrice,
+        metadata,
+        ...this.getDataFromProject(),
         WIZARD_COMPONENT_PATH,
       };
+    },
+    validations: {
+      ...validations,
     },
     computed: {
       tsData() {
@@ -193,8 +135,40 @@
         }
         return new FRDownPriceTimeSeries(this.inputTimeseries3);
       },
+      complete() {
+        return this.$store.state.Application.pageCompleteness.components.objectivesFR;
+      },
+    },
+    beforeMount() {
+      // submitted is false initially; set it to true after the first save.
+      // initially, complete is null; after saving, it is set to either true or false.
+      // we want to show validation errors at any time after the first save, with submitted.
+      if (this.complete !== null && this.complete !== undefined) {
+        this.submitted = true;
+        this.$v.$touch();
+      }
     },
     methods: {
+      getErrorMsg(fieldName) {
+        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
+      },
+      getDataFromProject() {
+        return operateOnKeysList(this.$store.state.Project, c.FR_FIELDS, f => f);
+      },
+      getCompletenessPayload() {
+        return {
+          pageGroup: 'components',
+          page: 'objectivesFR',
+          completeness: !this.$v.$invalid,
+        };
+      },
+      validatedSave() {
+        // set complete to true or false
+        this.$store.dispatch('setCompleteness', this.getCompletenessPayload());
+        this.submitted = true;
+        this.$v.$touch();
+        return this.save();
+      },
       save() {
         if (this.inputTimeseries !== null) {
           this.$store.dispatch('setFRPrice', this.tsData);
@@ -205,12 +179,12 @@
         if (this.inputTimeseries3 !== null) {
           this.$store.dispatch('setFRDownPrice', this.tsData3);
         }
-        this.$store.dispatch('setFReou', this.inputEOU);
-        this.$store.dispatch('setFReod', this.inputEOD);
-        this.$store.dispatch('setFRGrowth', this.inputGrowth);
-        this.$store.dispatch('setFREnergyGrowth', this.inputEnergyPriceGrowth);
-        this.$store.dispatch('setFRCombinedMarket', this.inputCombinedMarket);
-        this.$store.dispatch('setFRDuration', this.inputDuration);
+        this.$store.dispatch('setFReou', this.frEOU);
+        this.$store.dispatch('setFReod', this.frEOD);
+        this.$store.dispatch('setFRGrowth', this.frGrowth);
+        this.$store.dispatch('setFREnergyGrowth', this.frEnergyPriceGrowth);
+        this.$store.dispatch('setFRCombinedMarket', this.frCombinedMarket);
+        this.$store.dispatch('setFRDuration', this.frDuration);
       },
     },
   };

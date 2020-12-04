@@ -2,116 +2,112 @@
   <div>
     <h3>CBA Inputs</h3>
     <hr>
-    <form>
-      <div class="form-horizontal form-buffer">
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="discount-rate">Discount Rate (for discounted cash flow analysis)</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              class="form-control numberbox"
-              id="discount-rate"
-              type="text"
-              v-model.number="inputDiscountRate">
-            <span class="unit-label">%</span>
-            <p class="tool-tip tooltip-col">
-              What is the discount rate to be used in the financial analysis? (Note: in the future, we will build calculators for this based on loan terms, return on equity, etc.)
-            </p>
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="inflation-rate">Inflation Rate</label>
-          </div>
-          <div class="col-md-9">
-            <input 
-              class="form-control numberbox"
-              id="inflation-rate"
-              type="text"
-              v-model.number="inputInflationRate">
-            <span class="unit-label">%</span>
-            <p class="tool-tip tooltip-col">
-              What is the inflation rate to be used in the financial analysis?
-            </p>
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="federal-tax-rate">Federal Tax Rate</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              class="form-control numberbox"
-              id="federal-tax-rate"
-              type="text"
-              v-model.number="inputFederalTaxRate">
-            <span class="unit-label">%</span>
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="state-tax-rate">State Tax Rate</label>
-          </div>
-          <div class="col-md-9">
-            <input 
-              class="form-control numberbox"
-              id="state-tax-rate" 
-              type="text"
-              v-model.number="inputStateTaxRate">
-            <span class="unit-label">%</span>
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="property-tax-rate">Property Tax Rate</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              class="form-control numberbox"
-              id="property-tax-rate"
-              type="text"
-              v-model.number="inputPropertyTaxRate">
-            <span class="unit-label">%</span>
-          </div>
-        </div>
-        <hr>
+    <form class="form-horizontal form-buffer">
 
-        <nav-buttons
-          :save="this.save"
-          :continue-link="WIZARD_COMPONENT_PATH"
-          :back-link="WIZARD_COMPONENT_PATH"
-        />
+      <text-input v-model="financeDiscountRate"
+                  v-bind:field="metadata.financeDiscountRate"
+                  :isInvalid="submitted && $v.financeDiscountRate.$error"
+                  :errorMessage="getErrorMsg('financeDiscountRate')">
+      </text-input>
 
-      </div>
+      <text-input v-model="financeInflationRate"
+                  v-bind:field="metadata.financeInflationRate"
+                  :isInvalid="submitted && $v.financeInflationRate.$error"
+                  :errorMessage="getErrorMsg('financeInflationRate')">
+      </text-input>
+
+      <text-input v-model="financeFederalTaxRate"
+                  v-bind:field="metadata.financeFederalTaxRate"
+                  :isInvalid="submitted && $v.financeFederalTaxRate.$error"
+                  :errorMessage="getErrorMsg('financeFederalTaxRate')">
+      </text-input>
+
+      <text-input v-model="financeStateTaxRate"
+                  v-bind:field="metadata.financeStateTaxRate"
+                  :isInvalid="submitted && $v.financeStateTaxRate.$error"
+                  :errorMessage="getErrorMsg('financeStateTaxRate')">
+      </text-input>
+
+      <text-input v-model="financePropertyTaxRate"
+                  v-bind:field="metadata.financePropertyTaxRate"
+                  :isInvalid="submitted && $v.financePropertyTaxRate.$error"
+                  :errorMessage="getErrorMsg('financePropertyTaxRate')">
+      </text-input>
+
+      <hr>
+
+      <save-buttons
+        :continue-link="WIZARD_COMPONENT_PATH"
+        :displayError="submitted && $v.$anyError"
+        :save="validatedSave" />
+
     </form>
   </div>
 </template>
 
 <script>
-  import NavButtons from '@/components/Shared/NavButtons';
+  import wizardFormMixin from '@/mixins/wizardFormMixin';
+  import * as p from '@/models/Project/Project';
+  import * as c from '@/models/Project/constants';
+  import operateOnKeysList from '@/util/object';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
 
+  const metadata = p.projectMetadata;
+  const validations = metadata.getValidationSchema(c.FINANCE_FIELDS);
+
   export default {
-    components: { NavButtons },
+    mixins: [wizardFormMixin],
     data() {
-      const p = this.$store.state.Project;
       return {
-        inputDiscountRate: p.discountRate,
-        inputInflationRate: p.inflationRate,
-        inputFederalTaxRate: p.federalTaxRate,
-        inputStateTaxRate: p.stateTaxRate,
-        inputPropertyTaxRate: p.propertyTaxRate,
+        metadata,
+        ...this.getDataFromProject(),
         WIZARD_COMPONENT_PATH,
       };
     },
+    validations: {
+      ...validations,
+    },
+    computed: {
+      complete() {
+        return this.$store.state.Application.pageCompleteness.components.financialInputs;
+      },
+    },
+    beforeMount() {
+      // submitted is false initially; set it to true after the first save.
+      // initially, complete is null; after saving, it is set to either true or false.
+      // we want to show validation errors at any time after the first save, with submitted.
+      if (this.complete !== null && this.complete !== undefined) {
+        this.submitted = true;
+        this.$v.$touch();
+      }
+    },
     methods: {
+      getErrorMsg(fieldName) {
+        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
+      },
+      getDataFromProject() {
+        return operateOnKeysList(this.$store.state.Project, c.FINANCE_FIELDS, f => f);
+      },
+      getCompletenessPayload() {
+        return {
+          pageGroup: 'components',
+          page: 'financialInputs',
+          completeness: !this.$v.$invalid,
+        };
+      },
+      validatedSave() {
+        // set complete to true or false
+        this.$store.dispatch('setCompleteness', this.getCompletenessPayload());
+        this.submitted = true;
+        this.$v.$touch();
+        return this.save();
+      },
       save() {
-        this.$store.dispatch('setDiscountRate', this.inputDiscountRate);
-        this.$store.dispatch('setInflationRate', this.inputInflationRate);
-        this.$store.dispatch('setFederalTaxRate', this.inputFederalTaxRate);
-        this.$store.dispatch('setStateTaxRate', this.inputStateTaxRate);
-        this.$store.dispatch('setPropertyTaxRate', this.inputPropertyTaxRate);
+        this.$store.dispatch('setDiscountRate', this.financeDiscountRate);
+        this.$store.dispatch('setInflationRate', this.financeInflationRate);
+        this.$store.dispatch('setFederalTaxRate', this.financeFederalTaxRate);
+        this.$store.dispatch('setStateTaxRate', this.financeStateTaxRate);
+        this.$store.dispatch('setPropertyTaxRate', this.financePropertyTaxRate);
       },
     },
   };
