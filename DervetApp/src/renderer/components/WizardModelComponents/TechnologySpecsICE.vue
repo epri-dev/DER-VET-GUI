@@ -205,6 +205,15 @@
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
+      makeErrorList() {
+        const errors = [];
+        Object.keys(this.metadata).forEach((key) => {
+          if (this.$v[key].$invalid) {
+            errors.push(this.getErrorMsg(key));
+          }
+        });
+        return errors;
+      },
       validatedSave() {
         // reset all non-required inputs to their defaults prior to saving
         if (this.shouldSize === true) {
@@ -216,9 +225,10 @@
         this.complete = !this.$v.$invalid;
         this.submitted = true;
         this.$v.$touch();
-        return this.save();
-      },
-      save() {
+        // populate errorList for this technology
+        if (this.complete !== true) {
+          this.errorList = this.makeErrorList();
+        }
         const iceSpec = this.buildICE();
         if (this.isnewICE()) {
           this.$store.dispatch('addTechnologySpecsICE', iceSpec);
@@ -238,6 +248,7 @@
           complete: this.complete,
           constructionDate: this.constructionDate,
           efficiency: this.efficiency,
+          errorList: this.errorList,
           fixedOMCostIncludingExercise: this.fixedOMCostIncludingExercise,
           fuelCost: this.fuelCost,
           id: this.id,

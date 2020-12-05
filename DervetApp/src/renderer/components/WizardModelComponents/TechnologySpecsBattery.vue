@@ -363,6 +363,15 @@
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
+      makeErrorList() {
+        const errors = [];
+        Object.keys(this.metadata).forEach((key) => {
+          if (this.$v[key].$invalid) {
+            errors.push(this.getErrorMsg(key));
+          }
+        });
+        return errors;
+      },
       validatedSave() {
         // reset all non-required inputs to their defaults prior to saving
         if (this.shouldEnergySize === true) {
@@ -391,11 +400,15 @@
         if (this.includeAuxiliaryLoad === false) {
           this.resetNonRequired(['auxiliaryLoad']);
         }
-        const batterySpec = this.buildBattery();
         // set complete to true or false
         this.complete = !this.$v.$invalid;
         this.submitted = true;
         this.$v.$touch();
+        // populate errorList for this technology
+        if (this.complete !== true) {
+          this.errorList = this.makeErrorList();
+        }
+        const batterySpec = this.buildBattery();
         if (this.isnewBattery()) {
           this.$store.dispatch('addTechnologySpecsBattery', batterySpec);
         } else {
@@ -423,6 +436,7 @@
           dischargingCapacity: this.dischargingCapacity,
           endOfLifeExpenses: this.endOfLifeExpenses,
           energyCapacity: this.energyCapacity,
+          errorList: this.errorList,
           fixedOMCosts: this.fixedOMCosts,
           id: this.id,
           includeAuxiliaryLoad: this.includeAuxiliaryLoad,

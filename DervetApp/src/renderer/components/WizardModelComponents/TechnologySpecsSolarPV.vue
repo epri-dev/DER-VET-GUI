@@ -144,16 +144,29 @@
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
+      makeErrorList() {
+        const errors = [];
+        Object.keys(this.metadata).forEach((key) => {
+          if (this.$v[key].$invalid) {
+            errors.push(this.getErrorMsg(key));
+          }
+        });
+        return errors;
+      },
       validatedSave() {
         // reset all non-required inputs to their defaults prior to saving
         if (this.shouldSize === true) {
           this.resetNonRequired(['ratedCapacity']);
         }
-        const solarSpec = this.buildSolarPV();
         // set complete to true or false
         this.complete = !this.$v.$invalid;
         this.submitted = true;
         this.$v.$touch();
+        // populate errorList for this technology
+        if (this.complete !== true) {
+          this.errorList = this.makeErrorList();
+        }
+        const solarSpec = this.buildSolarPV();
         if (this.isNewSolar()) {
           this.$store.dispatch('addTechnologySpecsSolarPV', solarSpec);
         } else {
@@ -171,6 +184,7 @@
           complete: this.complete,
           constructionDate: this.constructionDate,
           cost: this.cost,
+          errorList: this.errorList,
           generationProfile: this.generationProfile,
           id: this.id,
           inverterMax: this.inverterMax,

@@ -18,7 +18,7 @@
       <span class="unit-label" v-html="field.unit"></span>
       <div v-if="isInvalid"
            class="invalid-feedback">
-        {{ errorMessage }}
+        <span v-html="errorMessage"></span>
       </div>
     </div>
     <div class="col-md-5">

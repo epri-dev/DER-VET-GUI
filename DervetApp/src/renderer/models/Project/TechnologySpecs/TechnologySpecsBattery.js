@@ -223,6 +223,7 @@ export default class TechnologySpecsBatteryMetadata {
         */
       ],
       complete: null,
+      errorList: [],
       id: uuidv4(),
       tag: Battery,
       technologyType: 'Energy Storage System',

@@ -107,6 +107,7 @@ export default class TechnologySpecsICEMetadata {
     return {
       active: true,
       complete: null,
+      errorList: [],
       id: uuidv4(),
       tag: ICE,
       technologyType: 'Generator',

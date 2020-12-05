@@ -18,7 +18,7 @@
         <div
           v-if="isInvalid && idx === (field.allowedValues.length - 1)"
           class="invalid-feedback form-check-label">
-          {{ errorMessage }}
+          <span v-html="errorMessage"></span>
         </div>
       </div>
     </div>
