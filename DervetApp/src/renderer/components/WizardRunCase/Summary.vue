@@ -15,7 +15,7 @@
                 </router-link>
                 <ul>
                   <li v-for="error in tech.errorList">
-                    {{ error }}
+                    <span v-html="error"></span>
                   </li>
                 </ul>
               </li>
