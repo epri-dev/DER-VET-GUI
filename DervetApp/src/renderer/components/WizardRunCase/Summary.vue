@@ -159,7 +159,7 @@
           .then(this.$router.push({ path: paths.RUN_ANALYSIS_PATH }));
       },
       techAll() {
-        const techList = [this.techGen, this.techIR];
+        const techList = [this.techGen, this.techIR, this.techESS];
         return flatten(techList);
       },
       techErrorExists() {
