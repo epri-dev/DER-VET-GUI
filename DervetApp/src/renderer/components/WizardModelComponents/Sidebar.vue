@@ -192,7 +192,7 @@
           techPath = this.paths.TECH_SPECS_BATTERY_PATH;
         } else if (techTag === 'ICE') {
           techPath = this.paths.TECH_SPECS_ICE_PATH;
-        } else if (techTag === 'Diesel') {
+        } else if (techTag === 'DieselGen') {
           techPath = this.paths.TECH_SPECS_DIESEL_PATH;
         }
         return techPath;

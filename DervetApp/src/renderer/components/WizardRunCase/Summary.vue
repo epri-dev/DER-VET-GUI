@@ -181,7 +181,7 @@
           techPath = paths.TECH_SPECS_BATTERY_PATH;
         } else if (techTag === 'ICE') {
           techPath = paths.TECH_SPECS_ICE_PATH;
-        } else if (techTag === 'Diesel') {
+        } else if (techTag === 'DieselGen') {
           techPath = paths.TECH_SPECS_DIESEL_PATH;
         }
         return `${techPath}/${techID}`;
