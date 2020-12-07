@@ -463,15 +463,21 @@ export const makeScenarioParameters = (project) => {
       batteryNum += 1;
     }
   }
+
   // find N value
-  let n = project.optimizationHorizon;
+  // TODO move to standalone function
+  // TODO if customer services, N should be 'month'
+  // TODO if wholesale services, N should be a number of hours
+  let n;
+  if (project.sizingEquipment) {
+    n = 'Year';
+  } else {
+    n = project.optimizationHorizon;
+  }
   if (n === 'hours') {
     n = project.optimizationHorizonNum;
   }
 
-  // TODO if any DERs are being sized, N should be 'Year'
-  // TODO if customer services, N should be 'month'
-  // TODO if wholesale services, N should be a number of hours
   const includePoiConstraints = project.includeInterconnectionConstraints;
   const keys = {
     apply_interconnection_constraints: makeBaseKey(convertToOneZero(includePoiConstraints), BOOL),
