@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 import ProjectFieldMetadata from '@/models/Project/Fields';
+import { SHARED_DYNAMIC_FIELDS, createSharedHardcodedMetadata } from '@/models/Project/TechnologySpecs/sharedConstants';
 
 const DieselGen = 'DieselGen';
 
@@ -16,62 +17,17 @@ const SIZING_ALLOWED_VALUES = [
     label: 'Known number of Diesel Generators',
   },
 ];
-const MACRS_TERM_ALLOWED_VALUES = [
-  {
-    value: null,
-    label: '-',
-  },
-  {
-    value: 3,
-    label: '3',
-  },
-  {
-    value: 5,
-    label: '5',
-  },
-  {
-    value: 7,
-    label: '7',
-  },
-  {
-    value: 10,
-    label: '10',
-  },
-  {
-    value: 15,
-    label: '15',
-  },
-  {
-    value: 20,
-    label: '20',
-  },
-  {
-    value: 25,
-    label: '25',
-  },
-  {
-    value: 27.5,
-    label: '27.5',
-  },
-  {
-    value: 39,
-    label: '39',
-  },
-];
 
 const DYNAMIC_FIELDS = [
+  ...SHARED_DYNAMIC_FIELDS,
   'capitalCost',
-  'constructionDate',
   'efficiency',
   'fixedOMCostIncludingExercise',
   'fuelCost',
-  'macrsTerm',
   'maxGenerators',
   'minGenerators',
   'minimumPower',
-  'name',
   'numGenerators',
-  'operationDate',
   'ratedCapacity',
   'shouldSize',
   'startupTime',
@@ -80,23 +36,8 @@ const DYNAMIC_FIELDS = [
 
 export default class TechnologySpecsDieselGenMetadata {
   // TODO: refactor to use typescript interface + Object.assign(this, args);
-  constructor(args) {
-    this.capitalCost = args.capitalCost;
-    this.constructionDate = args.constructionDate;
-    this.efficiency = args.efficiency;
-    this.fixedOMCostIncludingExercise = args.fixedOMCostIncludingExercise;
-    this.fuelCost = args.fuelCost;
-    this.macrsTerm = args.macrsTerm;
-    this.maxGenerators = args.maxGenerators;
-    this.minGenerators = args.minGenerators;
-    this.minimumPower = args.minimumPower;
-    this.name = args.name;
-    this.numGenerators = args.numGenerators;
-    this.operationDate = args.operationDate;
-    this.ratedCapacity = args.ratedCapacity;
-    this.shouldSize = args.shouldSize;
-    this.startupTime = args.startupTime;
-    this.variableOMCost = args.variableOMCost;
+  constructor(arg) {
+    Object.assign(this, arg);
   }
 
   operateOnDynamicFields(callback) {
@@ -132,15 +73,6 @@ export default class TechnologySpecsDieselGenMetadata {
         description: 'What is the capital cost of each diesel generator?',
         allowedValues: null,
       }),
-      constructionDate: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Construction Date',
-        isRequired: true,
-        type: Date,
-        unit: null,
-        description: null,
-        allowedValues: null,
-      }),
       efficiency: new ProjectFieldMetadata({
         defaultValue: null,
         displayName: 'Efficiency',
@@ -170,15 +102,6 @@ export default class TechnologySpecsDieselGenMetadata {
         unit: '$ / gallon',
         description: 'What is the price of fuel (constant over analysis horizon)?',
         allowedValues: null,
-      }),
-      macrsTerm: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'MACRS Term',
-        isRequired: true,
-        type: Number,
-        unit: 'years',
-        description: 'Which MACRS GDS category does the diesel generator fall into?',
-        allowedValues: MACRS_TERM_ALLOWED_VALUES,
       }),
       maxGenerators: new ProjectFieldMetadata({
         defaultValue: null,
@@ -210,15 +133,6 @@ export default class TechnologySpecsDieselGenMetadata {
         description: 'What is the mimimum power the diesel generator is capable of safely producing?',
         allowedValues: null,
       }),
-      name: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Name',
-        isRequired: true,
-        type: String,
-        unit: null,
-        description: null,
-        allowedValues: null,
-      }),
       numGenerators: new ProjectFieldMetadata({
         defaultValue: null,
         displayName: 'Number of Generators to Install',
@@ -227,15 +141,6 @@ export default class TechnologySpecsDieselGenMetadata {
         type: 'int',
         unit: null,
         description: 'What is the number of diesel generators to install?',
-        allowedValues: null,
-      }),
-      operationDate: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Operation Date',
-        isRequired: true,
-        type: Date,
-        unit: null,
-        description: null,
         allowedValues: null,
       }),
       ratedCapacity: new ProjectFieldMetadata({
@@ -277,6 +182,7 @@ export default class TechnologySpecsDieselGenMetadata {
         description: 'What is the cost of variable operations and maintenance for each MWh of AC energy delivered?',
         allowedValues: null,
       }),
+      ...createSharedHardcodedMetadata(this.tag),
     });
   }
 }
