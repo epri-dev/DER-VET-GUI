@@ -6,12 +6,13 @@
         <br />
         <label>Running analysis for <b>{{projectName}}</b>. Please be patient as this can take several minutes to complete.</label>
       </div>
-      <div class="col-md-12 text-center" v-else>
-        <h1>Redirecting...</h1>
-      </div>
-      <div class="col-md-12 text-center" v-if="isError">
+      <div class="col-md-12 text-center" v-else-if="isError">
         <br />
-        <div>An error occured while running DER-VET: please check {{logPath}} for more details.</div>
+        <div>An error occured while running DER-VET: please check <b>{{logPath}}</b> for more details.</div>
+      </div>
+      <div class="col-md-12 text-center" v-else-if="resultsExist">
+        <br/>
+        <h1>Redirecting...</h1>
       </div>
     </div>
   </div>

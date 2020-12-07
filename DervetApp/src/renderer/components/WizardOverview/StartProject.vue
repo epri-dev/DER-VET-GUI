@@ -28,7 +28,7 @@
           :errorMessage="getErrorMsg('analysisHorizonMode')">
         </radio-button-input>
 
-        <div class="row form-group" v-if="analysisHorizonMode === '1'">
+        <div v-if="analysisHorizonMode === '1'">
           <text-input
             v-model="analysisHorizon"
             v-bind:field="metadata.analysisHorizon"
@@ -80,12 +80,16 @@
           </div>
           <div class="col-md-3">
             <label for="inputsFilePicker" class="btn btn-secondary btn-md">Select folder</label>
-            <input id="inputsFilePicker" style="visibility:hidden;" type="file" @change="onInputsDirectorySelection" webkitdirectory directory>
+            <input id="inputsFilePicker" class="file-picker" style="visibility:hidden;" type="file" @change="onInputsDirectorySelection" webkitdirectory directory>
           </div>
           <div class="col-md-4">
             <p class="tool-tip">Folder where input files will be saved</p>
           </div>
+          <div v-if="submitted && $v.inputsDirectory.$error">
+            <span class="col-md-12 error-text-color error-align text-center">Inputs folder is required</span>
+          </div>
         </div>
+
 
         <div class="row form-group">
           <div class="col-md-5 control-label">
@@ -98,6 +102,9 @@
           </div>
           <div class="col-md-4">
             <p class="tool-tip">Folder where results files will be saved</p>
+          </div>
+          <div v-if="submitted && $v.resultsDirectory.$error">
+            <span class="col-md-12 error-text-color error-align text-center">Results folder is required</span>
           </div>
         </div>
       </fieldset>

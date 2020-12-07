@@ -87,7 +87,7 @@
   import Plotly from 'plotly.js';
   import { flatten } from 'lodash';
 
-  import { parseCsvFromFile } from '@/util/file';
+  import { parseCsvFromEvent } from '@/util/file';
   import { sharedDefaults, sharedValidation } from '@/models/Shared.js';
 
   export default {
@@ -134,7 +134,7 @@
     methods: {
       onFileUpload(e) {
         const onSuccess = (results) => { this.$emit('uploaded', flatten(results)); };
-        parseCsvFromFile(e, onSuccess);
+        parseCsvFromEvent(e, onSuccess);
       },
       createChartUploadedTimeSeriesPlot(chartId) {
         const ctx = document.getElementById(chartId);

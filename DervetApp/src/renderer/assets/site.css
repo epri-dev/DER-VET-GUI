@@ -19,8 +19,21 @@ body {
     text-align: center;
 }
 
+.error-align {
+    margin-left: 10px;
+}
+
 .text-white {
     color: white;
+}
+
+.btn-index-page {
+    width: 240px !important;
+}
+
+.btn-quick-start {
+    background-color: #ff9999 !important;
+    color: white !important;
 }
 
 .error-text-color {

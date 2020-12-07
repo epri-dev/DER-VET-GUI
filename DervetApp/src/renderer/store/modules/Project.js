@@ -1,56 +1,25 @@
-import { cloneDeep, flatten } from 'lodash';
+import { cloneDeep, flatten, merge } from 'lodash';
+
+import { billReductionProject } from '@/assets/cases/billReduction/project';
 import { projectMetadata } from '@/models/Project/Project';
 
 const metadataDefaultValues = projectMetadata.getDefaultValues();
 
-const getDefaultState = () => ({
+export const getDefaultState = () => ({
   ...metadataDefaultValues,
   type: 'Wizard',
 
   // TODO: these defaults should all be null or undefined
   // TODO: remove this? is it being used?
 
-  // FINANCES
-  discountRate: 0,
-  inflationRate: 0,
-  federalTaxRate: 0,
-  stateTaxRate: 0,
-  propertyTaxRate: 0,
+  dcmGrowth: 0,
+  daETSGrowth: 0,
 
-  // SERVICES
-  daETS: { growth: 0 },
-  dcm: { growth: 0 }, // TODO collect value
-  deferral: {
-    plannedLoadLimit: 0,
-    reversePowerFlowLimit: 0,
-    growth: 0,
-    price: 0,
-  },
-  fr: {
-    eou: 0,
-    eod: 0,
-    growth: 0,
-    energyPriceGrowth: 0,
-    combinedMarket: 0,
-    duration: 0,
-  },
-  nsr: {
-    growth: 0,
-    duration: 0,
-  },
-  reliability: {
-    target: 0,
-    postOptimizationOnly: false,
-    nu: 0, // TODO move to PV
-    gamma: 0, // TODO move to PV
-    maxOutageDuration: 0,
-  },
-  retailETS: { growth: 0 }, // TODO collect value
+  reliabilityNu: 0, // TODO move to PV
+  reliabilityGamma: 0, // TODO move to PV
+  retailETSGrowth: 0, // TODO collect value
+  retailTimeShiftGrowth: 0, // TODO possibly the same as above?
 
-  sr: {
-    growth: 0,
-    duration: 0,
-  },
   userDefined: { price: 0 },
 
   // DERS
@@ -142,6 +111,9 @@ const getters = {
 const mutations = {
   RESET_PROJECT_TO_DEFAULT(state) {
     Object.assign(state, getDefaultState());
+  },
+  LOAD_QUICK_START_PROJECT(state, quickStartBillReduction) {
+    Object.assign(state, quickStartBillReduction);
   },
   // Battery
   REPLACE_TECHNOLOGY_SPECS_BATTERY(state, payload) {
@@ -289,6 +261,7 @@ const mutations = {
     state.sizingEquipment = newSizingEquipment;
   },
   SELECT_OTHER_SERVICES(state, listOfServices) {
+    // TODO maybe refactor into one mutation per service
     state.listOfActiveServices = listOfServices;
     state.objectivesResilience = (listOfServices.indexOf('Reliability') > -1);
     state.objectivesBackupPower = (listOfServices.indexOf('Backup Power') > -1);
@@ -501,6 +474,14 @@ const mutations = {
 const actions = {
   resetProjectToDefault({ commit }) {
     commit('RESET_PROJECT_TO_DEFAULT');
+  },
+  loadQuickStartProject({ commit }) {
+    // TODO load actual quickStartProject;
+    const defaultProject = getDefaultState();
+    return new Promise((resolve) => {
+      commit('LOAD_QUICK_START_PROJECT', merge(defaultProject, billReductionProject));
+      resolve();
+    });
   },
   setType({ commit }, type) {
     commit('SET_TYPE', type);
