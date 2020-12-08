@@ -11,7 +11,7 @@
     </div>
 
     <div v-if="displayError" class="col-md-6 error-text-color">
-      Please correct errors before continuing
+      {{ errorText }}
     </div>
     <div v-else class="col-md-6">
     </div>
@@ -22,7 +22,7 @@
         :event="disabled ? '' : 'click'"
         :to="continueLink"
         class="btn btn-primary pull-right">
-        {{continueText}}
+        {{ continueText }}
       </router-link>
     </div>
   </div>
@@ -56,6 +56,10 @@
       continueText: {
         type: String,
         default: 'Save and Continue >>',
+      },
+      errorText: {
+        type: String,
+        default: 'There are errors on the page.',
       },
       save: {
         type: Function,

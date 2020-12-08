@@ -5,7 +5,6 @@
       <div class="form-horizontal form-buffer container">
 
         <div v-if="overviewErrorExists()" class="incomplete">
-        {{ overviewAll() }}
           <h4>Errors in Project Overview</h4>
             <div v-for="overviewItem in overviewAll()">
               <div v-if="!overviewItem.complete">

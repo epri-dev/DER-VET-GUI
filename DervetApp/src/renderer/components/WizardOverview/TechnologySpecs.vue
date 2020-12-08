@@ -108,6 +108,8 @@
     <nav-buttons
                  :continue-link="WIZARD_COMPONENT_PATH"
                  continue-text="Done Adding Technologies"
+                 :displayError="!complete"
+                 :error-text="this.getSingleErrorMsg()"
                  :save="this.save" />
   </div>
 </template>
@@ -173,6 +175,9 @@
       numTechDieselGen() {
         return this.$store.state.Project.technologySpecsDieselGen.length;
       },
+      complete() {
+        return this.$store.state.Application.pageCompleteness.overview.technologySpecs;
+      },
     },
     methods: {
       addPVTech() {
@@ -219,6 +224,12 @@
           page: 'technologySpecs',
           completeness: (this.getNumberOfActiveTechnologies() > 0),
         };
+      },
+      getSingleErrorMsg() {
+        if (!this.$store.state.Application.pageCompleteness.overview.technologySpecs) {
+          return this.$store.state.Application.errorList.overview.technologySpecs[0];
+        }
+        return '';
       },
       getErrorListPayload() {
         const errors = [];
