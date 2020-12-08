@@ -45,8 +45,6 @@ export const billReductionProject = {
   includeInterconnectionConstraints: false,
   maxImport: -10000000000, // TODO figure this out
   maxExport: 10000000000, // TODO figure this out
-  optimizationHorizon: 'Year',
-  optimizationHorizonNum: 0,
   ownership: 'Customer',
   financePropertyTaxRate: 0,
   reliabilityTarget: 1,

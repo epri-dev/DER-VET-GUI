@@ -127,6 +127,13 @@ export const makeBatteryParameters = (project) => {
         dischargingCapacity = battery.powerCapacity;
       }
     }
+
+    // TODO revisit this
+    let { maxDuration } = battery;
+    if (battery.maxDuration === undefined || battery.maxDuration === null) {
+      maxDuration = 0;
+    }
+
     // TODO determine ENE_MAX_RATED
     let energyCapacity = ZERO;
     if (!battery.shouldEnergySize) {
@@ -146,7 +153,7 @@ export const makeBatteryParameters = (project) => {
       decommissioning_cost: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
       dis_max_rated: makeBaseKey(dischargingCapacity, FLOAT),
       dis_min_rated: makeBaseKey(ZERO, FLOAT), // hardcoded
-      duration_max: makeBaseKey(battery.maxDuration, FLOAT),
+      duration_max: makeBaseKey(maxDuration, FLOAT),
       'ecc%': makeBaseKey(ZERO, FLOAT), // TODO new, verify value
       ene_max_rated: makeBaseKey(energyCapacity, FLOAT),
       expected_lifetime: makeBaseKey(99, INT), // TODO: new, verify value
@@ -463,15 +470,21 @@ export const makeScenarioParameters = (project) => {
       batteryNum += 1;
     }
   }
+
   // find N value
-  let n = project.optimizationHorizon;
+  // TODO move to standalone function
+  // TODO if customer services, N should be 'month'
+  // TODO if wholesale services, N should be a number of hours
+  let n;
+  if (project.sizingEquipment) {
+    n = 'Year';
+  } else {
+    n = project.optimizationHorizon;
+  }
   if (n === 'hours') {
     n = project.optimizationHorizonNum;
   }
 
-  // TODO if any DERs are being sized, N should be 'Year'
-  // TODO if customer services, N should be 'month'
-  // TODO if wholesale services, N should be a number of hours
   const includePoiConstraints = project.includeInterconnectionConstraints;
   const keys = {
     apply_interconnection_constraints: makeBaseKey(convertToOneZero(includePoiConstraints), BOOL),
