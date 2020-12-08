@@ -7,6 +7,14 @@ const NULL = null;
 
 const getDefaultApplicationState = () => ({
   errorMessage: NULL,
+  errorList: {
+    overview: {
+      start: NULL,
+      objectives: NULL,
+      technologySpecs: NULL,
+    },
+    components: {},
+  },
   id: NULL,
   isError: NULL,
   pageCompleteness: {
@@ -44,6 +52,10 @@ const mutations = {
     const { pageGroup, page, completeness } = payload;
     state.pageCompleteness[pageGroup][page] = completeness;
   },
+  SET_ERROR_LIST(state, payload) {
+    const { pageGroup, page, errorList } = payload;
+    state.errorList[pageGroup][page] = errorList;
+  },
   SET_FULL_COMPLETENESS(state, completeness) {
     state.pageCompleteness = completeness;
   },
@@ -55,6 +67,9 @@ const mutations = {
 const actions = {
   setCompleteness({ commit }, payload) {
     commit('SET_COMPLETENESS', payload);
+  },
+  setErrorList({ commit }, payload) {
+    commit('SET_ERROR_LIST', payload);
   },
   setQuickStartCompleteness({ commit }) {
     commit('SET_FULL_COMPLETENESS', billReductionCompleteness);
