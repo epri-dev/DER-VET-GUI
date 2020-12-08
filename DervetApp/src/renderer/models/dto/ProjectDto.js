@@ -127,6 +127,13 @@ export const makeBatteryParameters = (project) => {
         dischargingCapacity = battery.powerCapacity;
       }
     }
+
+    // TODO revisit this
+    let { maxDuration } = battery;
+    if (battery.maxDuration === undefined || battery.maxDuration === null) {
+      maxDuration = 0;
+    }
+
     // TODO determine ENE_MAX_RATED
     let energyCapacity = ZERO;
     if (!battery.shouldEnergySize) {
@@ -146,7 +153,7 @@ export const makeBatteryParameters = (project) => {
       decommissioning_cost: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
       dis_max_rated: makeBaseKey(dischargingCapacity, FLOAT),
       dis_min_rated: makeBaseKey(ZERO, FLOAT), // hardcoded
-      duration_max: makeBaseKey(battery.maxDuration, FLOAT),
+      duration_max: makeBaseKey(maxDuration, FLOAT),
       'ecc%': makeBaseKey(ZERO, FLOAT), // TODO new, verify value
       ene_max_rated: makeBaseKey(energyCapacity, FLOAT),
       expected_lifetime: makeBaseKey(99, INT), // TODO: new, verify value
