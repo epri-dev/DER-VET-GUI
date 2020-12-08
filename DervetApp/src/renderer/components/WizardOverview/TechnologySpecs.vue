@@ -226,7 +226,8 @@
         };
       },
       getSingleErrorMsg() {
-        if (!this.$store.state.Application.pageCompleteness.overview.technologySpecs) {
+        if (!this.complete &&
+            this.$store.state.Application.errorList.overview.technologySpecs !== null) {
           return this.$store.state.Application.errorList.overview.technologySpecs[0];
         }
         return '';

@@ -280,6 +280,7 @@
       },
       getOverviewDisplayName(page) {
         let overviewName = '';
+        const notStarted = this.$store.state.Application.pageCompleteness.overview[page];
         if (page === 'start') {
           overviewName = 'Project Configuration';
         } else if (page === 'objectives') {
@@ -287,7 +288,7 @@
         } else if (page === 'technologySpecs') {
           overviewName = 'Technology Specifications';
         }
-        return overviewName;
+        return `${overviewName}${notStarted === null ? ': not-started' : ''}`;
       },
     },
     data() {
