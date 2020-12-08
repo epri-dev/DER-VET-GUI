@@ -4,8 +4,27 @@
     <form>
       <div class="form-horizontal form-buffer container">
 
-        <div v-if="techErrorExists()" class="incomplete">
-          <h4>Summary of Technology Errors</h4>
+        <div v-if="overviewErrorExists()" class="incomplete">
+          <h4>Errors in Project Overview</h4>
+            <div v-for="overviewItem in overviewAll()">
+              <div v-if="!overviewItem.complete">
+                <li>
+                  <router-link class="text-decoration-none"
+                              :to=overviewItem.path>
+                    {{ overviewItem.name }}
+                  </router-link>
+                  <ul>
+                    <li v-for="error in overviewItem.errors">
+                      <span v-html="error"></span>
+                    </li>
+                  </ul>
+                </li>
+              </div>
+            </div>
+        </div>
+
+        <div v-if="componentTechErrorExists()" class="incomplete">
+          <h4>Errors in Technology Components</h4>
           <div v-for="tech in techAll()">
             <div v-if="tech.complete !== true">
               <li>
@@ -22,8 +41,13 @@
             </div>
           </div>
         </div>
-        </br>
 
+        <div v-if="componentObjectiveErrorExists()" class="incomplete">
+        </div>
+        <div v-if="componentFinanceErrorExists()" class="incomplete">
+        </div>
+
+        </br>
         <h4>Project Configuration</h4>
         <template>
           <b-table-lite thead-tr-class="d-none" fixed hover bordered striped
@@ -175,7 +199,35 @@
         const techList = [this.techGen, this.techIR, this.techESS];
         return flatten(techList);
       },
-      techErrorExists() {
+      overviewAll() {
+        const overviewObject = {};
+        const overviewList = ['start', 'objectives', 'technologySpecs'];
+        overviewList.forEach((item) => {
+          overviewObject[item] = {
+            name: this.getNameOverview(item),
+            complete: this.$store.state.Application.pageCompleteness.overview[item],
+            errors: this.$store.state.Application.errorList.overview[item],
+            path: this.getOverviewPath(item),
+          };
+        });
+        return overviewObject;
+      },
+      overviewErrorExists() {
+        let errorsTF = false;
+        Object.values(this.overviewAll()).forEach((item) => {
+          if (item.complete !== true) {
+            errorsTF = true;
+          }
+        });
+        return errorsTF;
+      },
+      componentFinanceErrorExists() {
+        return false;
+      },
+      componentObjectiveErrorExists() {
+        return false;
+      },
+      componentTechErrorExists() {
         let errorsTF = false;
         Object.values(this.techAll()).forEach((tech) => {
           if (tech.complete !== true) {
@@ -199,11 +251,33 @@
         }
         return `${techPath}/${techID}`;
       },
+      getOverviewPath(page) {
+        let overviewPath = '';
+        if (page === 'start') {
+          overviewPath = paths.START_PROJECT_PATH;
+        } else if (page === 'objectives') {
+          overviewPath = paths.OBJECTIVES_PATH;
+        } else if (page === 'technologySpecs') {
+          overviewPath = paths.TECH_SPECS_PATH;
+        }
+        return overviewPath;
+      },
       getTechDisplayName(tech) {
         if (tech.complete === null) {
           return 'not-started';
         }
         return tech.name;
+      },
+      getNameOverview(page) {
+        let overviewName = '';
+        if (page === 'start') {
+          overviewName = 'Project Configuration';
+        } else if (page === 'objectives') {
+          overviewName = 'Services';
+        } else if (page === 'technologySpecs') {
+          overviewName = 'Technology Specifications';
+        }
+        return overviewName;
       },
     },
     data() {

@@ -202,15 +202,32 @@
       onResultsDirectorySelection(e) {
         this.resultsDirectory = e.target.files[0].path;
       },
+      getErrorListPayload() {
+        const errors = [];
+        Object.keys(this.$v).forEach((key) => {
+          if (key.charAt(0) !== '$' && this.$v[key].$invalid) {
+            errors.push(this.getErrorMsg(key));
+          }
+        });
+        return {
+          pageGroup: 'overview',
+          page: 'start',
+          errorList: errors,
+        };
+      },
       validatedSave() {
         // reset all non-required inputs to their defaults prior to saving
         if (this.analysisHorizonMode !== '1') {
           this.resetNonRequired(['analysisHorizon']);
         }
-        // set complete to true or false
+        // set completeness
         this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
         this.submitted = true;
         this.$v.$touch();
+        // set errorList
+        if (this.complete !== true) {
+          this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
+        }
         return this.save();
       },
       save() {
