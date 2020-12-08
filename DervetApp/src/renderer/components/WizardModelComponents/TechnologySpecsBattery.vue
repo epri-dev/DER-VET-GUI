@@ -333,6 +333,10 @@
       },
     },
     beforeMount() {
+      // in quick start mode, do a save initially to reset non-required inputs
+      if (this.complete === true && this.submitted === false) {
+        this.validatedSave();
+      }
       // submitted is false initially; set it to true after the first save.
       // initially, complete is null; after saving, it is set to either true or false.
       // we want to show validation errors at any time after the first save, with submitted.

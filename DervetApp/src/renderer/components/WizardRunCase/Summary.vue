@@ -75,6 +75,7 @@
         </template>
         </br>
 
+<!-- Under Construction
         <h4>Scenario Analysis</h4>
         <template>
           <b-table-lite thead-tr-class="d-none" fixed hover bordered striped
@@ -82,6 +83,7 @@
           </b-table-lite>
         </template>
         </br>
+-->
 
         <div class="form-group form-buffer row" v-if="!inputAndResultsSelected">
           <div class="col-md-12 error-text-color text-center">
