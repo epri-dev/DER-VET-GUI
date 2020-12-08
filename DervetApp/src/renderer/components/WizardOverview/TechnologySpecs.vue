@@ -197,11 +197,11 @@
       },
       activateTech(payload) {
         this.$store.dispatch('activateTech', payload);
-        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
+        this.setTech();
       },
       deactivateTech(payload) {
         this.$store.dispatch('deactivateTech', payload);
-        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
+        this.setTech();
       },
       getActivationToggleLabel(payload) {
         return payload.active ? 'Deactivate' : 'Activate';
@@ -212,6 +212,32 @@
           return `Number of ${name}`;
         }
         return name;
+      },
+      getCompletenessPayload() {
+        return {
+          pageGroup: 'overview',
+          page: 'technologySpecs',
+          completeness: (this.getNumberOfActiveTechnologies() > 0),
+        };
+      },
+      getErrorListPayload() {
+        const errors = [];
+        if (!this.$store.state.Application.pageCompleteness.overview.technologySpecs) {
+          errors.push('At least one Technology is required');
+        }
+        return {
+          pageGroup: 'overview',
+          page: 'technologySpecs',
+          errorList: errors,
+        };
+      },
+      getNumberOfActiveTechnologies() {
+        let numberOfActiveTechnologies = 0;
+        const activeTechObj = this.$store.state.Project.listOfActiveTechnologies;
+        Object.values(activeTechObj).forEach((tech) => {
+          numberOfActiveTechnologies += tech.length;
+        });
+        return numberOfActiveTechnologies;
       },
       getTechLabel(payload) {
         if (payload.name) {
@@ -228,9 +254,14 @@
       },
       removeTech(payload) {
         this.$store.dispatch('removeTech', payload);
-        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
+        this.setTech();
       },
       save() {
+      },
+      setTech() {
+        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
+        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
+        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
       },
     },
   };

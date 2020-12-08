@@ -123,10 +123,10 @@
         if (this.reliabilityPostOptimizationOnly === true) {
           this.resetNonRequired(['reliabilityTarget']);
         }
-        // set complete to true or false
-        this.$store.dispatch('setCompleteness', this.getCompletenessPayload());
         this.submitted = true;
         this.$v.$touch();
+        // set complete to true or false
+        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
         return this.save();
       },
       save() {

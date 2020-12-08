@@ -158,10 +158,10 @@
         if (this.shouldSize === true) {
           this.resetNonRequired(['ratedCapacity']);
         }
-        // set complete to true or false
-        this.complete = !this.$v.$invalid;
         this.submitted = true;
         this.$v.$touch();
+        // set complete to true or false
+        this.complete = !this.$v.$invalid;
         // populate errorList for this technology
         if (this.complete !== true) {
           this.errorList = this.makeErrorList();

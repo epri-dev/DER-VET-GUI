@@ -20,7 +20,7 @@
       <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
                    v-bind:class="{
           current: isActive(this.paths.TECH_SPECS_PATH),
-          incomplete: false }"
+          incomplete: !isComplete('technologySpecs') }"
                    :to="this.paths.TECH_SPECS_PATH">
         Technology Specifications
       </router-link>

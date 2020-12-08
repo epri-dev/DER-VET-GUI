@@ -5,6 +5,7 @@
       <div class="form-horizontal form-buffer container">
 
         <div v-if="overviewErrorExists()" class="incomplete">
+        {{ overviewAll() }}
           <h4>Errors in Project Overview</h4>
             <div v-for="overviewItem in overviewAll()">
               <div v-if="!overviewItem.complete">
@@ -61,7 +62,7 @@
           <h5>Generators</h5>
           <ul>
             <li v-for="tech in techGen">
-              {{ tech.tag + ': ' + tech.name }}
+              {{ tech.tag + ': ' + getTechDisplayName(tech) }}
             </li>
           </ul>
         </ul>
@@ -69,7 +70,7 @@
           <h5>Intermittent Resources</h5>
           <ul>
             <li v-for="tech in techIR">
-              {{ tech.tag + ': ' + tech.name }}
+              {{ tech.tag + ': ' + getTechDisplayName(tech) }}
             </li>
           </ul>
         </ul>
@@ -77,7 +78,7 @@
           <h5>Energy Storage Systems</h5>
           <ul>
             <li v-for="tech in techESS">
-              {{ tech.tag + ': ' + tech.name }}
+              {{ tech.tag + ': ' + getTechDisplayName(tech) }}
             </li>
           </ul>
         </ul>
@@ -195,37 +196,29 @@
         this.$store.dispatch('Application/runDervet', this.$store.state.Project)
           .then(this.$router.push({ path: RUN_ANALYSIS_PATH }));
       },
+
+      // objectives components
+      componentObjectiveErrorExists() {
+        return false;
+      },
+
+      // finance components
+      componentFinanceErrorExists() {
+        return false;
+      },
+
+      // technology components
       techAll() {
         const techList = [this.techGen, this.techIR, this.techESS];
         return flatten(techList);
       },
-      overviewAll() {
-        const overviewObject = {};
-        const overviewList = ['start', 'objectives', 'technologySpecs'];
-        overviewList.forEach((item) => {
-          overviewObject[item] = {
-            name: this.getNameOverview(item),
-            complete: this.$store.state.Application.pageCompleteness.overview[item],
-            errors: this.$store.state.Application.errorList.overview[item],
-            path: this.getOverviewPath(item),
-          };
-        });
-        return overviewObject;
-      },
-      overviewErrorExists() {
-        let errorsTF = false;
-        Object.values(this.overviewAll()).forEach((item) => {
-          if (item.complete !== true) {
-            errorsTF = true;
-          }
-        });
-        return errorsTF;
-      },
-      componentFinanceErrorExists() {
-        return false;
-      },
-      componentObjectiveErrorExists() {
-        return false;
+      getTechDisplayName(tech) {
+        if (tech.complete === null) {
+          return 'not-started';
+        } else if (!tech.name) {
+          return 'Undefined';
+        }
+        return tech.name;
       },
       componentTechErrorExists() {
         let errorsTF = false;
@@ -251,6 +244,30 @@
         }
         return `${techPath}/${techID}`;
       },
+
+      // wizard overview
+      overviewAll() {
+        const overviewObject = {};
+        const overviewList = ['start', 'objectives', 'technologySpecs'];
+        overviewList.forEach((item) => {
+          overviewObject[item] = {
+            name: this.getOverviewDisplayName(item),
+            complete: this.$store.state.Application.pageCompleteness.overview[item],
+            errors: this.$store.state.Application.errorList.overview[item],
+            path: this.getOverviewPath(item),
+          };
+        });
+        return overviewObject;
+      },
+      overviewErrorExists() {
+        let errorsTF = false;
+        Object.values(this.overviewAll()).forEach((item) => {
+          if (item.complete !== true) {
+            errorsTF = true;
+          }
+        });
+        return errorsTF;
+      },
       getOverviewPath(page) {
         let overviewPath = '';
         if (page === 'start') {
@@ -262,13 +279,7 @@
         }
         return overviewPath;
       },
-      getTechDisplayName(tech) {
-        if (tech.complete === null) {
-          return 'not-started';
-        }
-        return tech.name;
-      },
-      getNameOverview(page) {
+      getOverviewDisplayName(page) {
         let overviewName = '';
         if (page === 'start') {
           overviewName = 'Project Configuration';
