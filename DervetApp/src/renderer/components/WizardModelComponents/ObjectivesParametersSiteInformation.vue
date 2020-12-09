@@ -150,10 +150,10 @@
         if (this.includeInterconnectionConstraints === false) {
           this.resetNonRequired(['maxExport', 'maxImport']);
         }
-        // set complete to true or false
-        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
         this.submitted = true;
         this.$v.$touch();
+        // set complete to true or false
+        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
         return this.save();
       },
       save() {

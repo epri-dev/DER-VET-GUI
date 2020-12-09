@@ -108,6 +108,8 @@
     <nav-buttons
                  :continue-link="WIZARD_COMPONENT_PATH"
                  continue-text="Done Adding Technologies"
+                 :displayError="!complete"
+                 :error-text="this.getSingleErrorMsg()"
                  :save="this.save" />
   </div>
 </template>
@@ -173,6 +175,9 @@
       numTechDieselGen() {
         return this.$store.state.Project.technologySpecsDieselGen.length;
       },
+      complete() {
+        return this.$store.state.Application.pageCompleteness.overview.technologySpecs;
+      },
     },
     methods: {
       addPVTech() {
@@ -197,11 +202,11 @@
       },
       activateTech(payload) {
         this.$store.dispatch('activateTech', payload);
-        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
+        this.setTech();
       },
       deactivateTech(payload) {
         this.$store.dispatch('deactivateTech', payload);
-        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
+        this.setTech();
       },
       getActivationToggleLabel(payload) {
         return payload.active ? 'Deactivate' : 'Activate';
@@ -212,6 +217,39 @@
           return `Number of ${name}`;
         }
         return name;
+      },
+      getCompletenessPayload() {
+        return {
+          pageGroup: 'overview',
+          page: 'technologySpecs',
+          completeness: (this.getNumberOfActiveTechnologies() > 0),
+        };
+      },
+      getSingleErrorMsg() {
+        if (!this.complete &&
+            this.$store.state.Application.errorList.overview.technologySpecs !== null) {
+          return this.$store.state.Application.errorList.overview.technologySpecs[0];
+        }
+        return '';
+      },
+      getErrorListPayload() {
+        const errors = [];
+        if (!this.$store.state.Application.pageCompleteness.overview.technologySpecs) {
+          errors.push('At least one Technology is required');
+        }
+        return {
+          pageGroup: 'overview',
+          page: 'technologySpecs',
+          errorList: errors,
+        };
+      },
+      getNumberOfActiveTechnologies() {
+        let numberOfActiveTechnologies = 0;
+        const activeTechObj = this.$store.state.Project.listOfActiveTechnologies;
+        Object.values(activeTechObj).forEach((tech) => {
+          numberOfActiveTechnologies += tech.length;
+        });
+        return numberOfActiveTechnologies;
       },
       getTechLabel(payload) {
         if (payload.name) {
@@ -228,9 +266,14 @@
       },
       removeTech(payload) {
         this.$store.dispatch('removeTech', payload);
-        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
+        this.setTech();
       },
       save() {
+      },
+      setTech() {
+        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
+        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
+        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
       },
     },
   };

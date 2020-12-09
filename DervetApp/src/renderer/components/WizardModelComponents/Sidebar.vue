@@ -2,13 +2,15 @@
   <div class="left-sidebar">
     <b-nav vertical>
       <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
-                   v-bind:class="{ current: isCurrent(this.paths.WIZARD_COMPONENT_PATH) }"
+                   v-bind:class="{ current: isActual(this.paths.WIZARD_COMPONENT_PATH) }"
                    :to="this.paths.WIZARD_COMPONENT_PATH">
         Overview
       </router-link>
 
       <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
-                   v-bind:class="{ current: isCurrent(`${this.paths.WIZARD_COMPONENT_PATH}/technology-specs`) }"
+                   v-bind:class="{
+          current: isCurrent(`${this.paths.WIZARD_COMPONENT_PATH}/technology-specs`),
+          incomplete: isCompleteOverview('technologySpecs') }"
                    :to="this.paths.TECH_SPECS_PATH">
         Technologies
       </router-link>
@@ -58,7 +60,9 @@
       </router-link>
 
       <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
-                   v-bind:class="{ current: isCurrent(`${this.paths.WIZARD_COMPONENT_PATH}/objectives`) }"
+                   v-bind:class="{
+          current: isCurrent(`${this.paths.WIZARD_COMPONENT_PATH}/objectives`),
+          incomplete: isCompleteOverview('objectives') }"
                    :to="this.paths.OBJECTIVES_PATH">
         Services
       </router-link>
@@ -174,6 +178,9 @@
       };
     },
     methods: {
+      isCompleteOverview(page) {
+        return !this.$store.state.Application.pageCompleteness.overview[page];
+      },
       isComplete(page) {
         return !this.$store.state.Application.pageCompleteness.components[page];
       },
@@ -183,6 +190,9 @@
       },
       isCurrent(path) {
         return RegExp(path).test(this.$route.path);
+      },
+      isActual(path) {
+        return path === this.$route.path;
       },
       getTechBasePath(techTag) {
         let techPath = '';

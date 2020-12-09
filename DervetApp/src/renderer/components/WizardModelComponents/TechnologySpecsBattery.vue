@@ -404,10 +404,10 @@
         if (this.includeAuxiliaryLoad === false) {
           this.resetNonRequired(['auxiliaryLoad']);
         }
-        // set complete to true or false
-        this.complete = !this.$v.$invalid;
         this.submitted = true;
         this.$v.$touch();
+        // set complete to true or false
+        this.complete = !this.$v.$invalid;
         // populate errorList for this technology
         if (this.complete !== true) {
           this.errorList = this.makeErrorList();
