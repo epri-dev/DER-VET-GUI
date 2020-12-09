@@ -213,7 +213,7 @@
       },
       getTechDisplayName(tech) {
         if (tech.complete === null) {
-          return 'not-started';
+          return 'Not Started';
         } else if (!tech.name) {
           return 'Undefined';
         }
@@ -288,7 +288,7 @@
         } else if (page === 'technologySpecs') {
           overviewName = 'Technology Specifications';
         }
-        return `${overviewName}${notStarted === null ? ': not-started' : ''}`;
+        return `${overviewName}${notStarted === null ? ': Not Started' : ''}`;
       },
     },
     data() {
