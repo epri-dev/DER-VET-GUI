@@ -2,7 +2,10 @@ import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 import ProjectFieldMetadata from '@/models/Project/Fields';
-import { SHARED_DYNAMIC_FIELDS, createSharedHardcodedMetadata } from '@/models/Project/TechnologySpecs/sharedConstants';
+// import {
+//   SHARED_DYNAMIC_FIELDS,
+//   createSharedHardcodedMetadata
+// } from '@/models/Project/TechnologySpecs/sharedConstants';
 
 
 const ICE = 'ICE';
@@ -32,7 +35,7 @@ const DYNAMIC_FIELDS = [
 ];
 
 export default class TechnologySpecsICEMetadata {
-  constructor(args) {
+  constructor(arg) {
     Object.assign(this, arg);
   }
 

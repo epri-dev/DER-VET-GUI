@@ -43,7 +43,7 @@ const DYNAMIC_FIELDS = [
 ];
 
 export default class TechnologySpecsSolarPVMetadata {
-  constructor(args) {
+  constructor(arg) {
     Object.assign(this, arg);
   }
 

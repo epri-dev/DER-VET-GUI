@@ -2,7 +2,8 @@
   <div class="container body-content">
 
     <div class="jumbotron dervet-title">
-      <h1>DER-VET Alpha Test</h1>
+      <h1>DER-VET</h1>
+      
     </div>
 
     <div class="row buffer-bottom">
@@ -47,6 +48,17 @@
       <div class="col-md-4">
         <p>
           Load a quick-start general DER bill reduction case.
+        </p>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-12">
+        <p>
+          DER-VET<sup>TM</sup> is a modeling tool that provides a platform for the calculation and understanding of the value of energy storage, other distributed energy resources (DER), and microgrids based on their technical merits and constraints. It uses load and other data to determine the optimal size, duration, and technical characteristics for energy storage and/or solar systems, demand response application, etc. to maximize benefits based on the building's electric tariff and the value that can be extracted from the use cases.
+        </p>
+        <p>
+          Made possible through funding support from the California Energy Commission.
         </p>
       </div>
     </div>

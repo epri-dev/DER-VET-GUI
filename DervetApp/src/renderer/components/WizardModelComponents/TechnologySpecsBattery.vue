@@ -211,13 +211,7 @@
         </text-input>
 
         <fieldset class="section-group">          
-          <text-input
-            v-model="decomissioningCost"
-            v-bind:field="metadata.decomissioningCost"
-            :isInvalid="submitted && $v.decomissioningCost.$error"
-            :errorMessage="getErrorMsg('decomissioningCost')">
-          </text-input>
-
+          
           <text-input
             v-model="constructionYear"
             v-bind:field="metadata.constructionYear"
@@ -239,6 +233,44 @@
             :errorMessage="getErrorMsg('expectedLifetime')">
           </text-input>
 
+          <radio-button-input
+            v-model="isReplaceable"
+            v-bind:field="metadata.isReplaceable"
+            :isInvalid="submitted && $v.isReplaceable.$error"
+            :errorMessage="getErrorMsg('isReplaceable')">
+          </radio-button-input>
+
+          <div v-if="isReplaceable === true">
+            <text-input
+              v-model="replacementConstructionTime"
+              v-bind:field="metadata.replacementConstructionTime"
+              :isInvalid="submitted && $v.replacementConstructionTime.$error"
+              :errorMessage="getErrorMsg('replacementConstructionTime')">
+            </text-input>
+          </div>
+
+          <text-input
+            v-model="decomissioningCost"
+            v-bind:field="metadata.decomissioningCost"
+            :isInvalid="submitted && $v.decomissioningCost.$error"
+            :errorMessage="getErrorMsg('decomissioningCost')">
+          </text-input>
+
+          <drop-down-input
+            v-model="salvageValueOption"
+            v-bind:field="metadata.salvageValueOption"
+            :isInvalid="submitted && $v.salvageValueOption.$error"
+            :errorMessage="getErrorMsg('salvageValueOption')">
+          </drop-down-input>
+
+          <div v-if="salvageValueOption === 'User defined'">
+            <text-input
+              v-model="salvageValue"
+              v-bind:field="metadata.salvageValue"
+              :isInvalid="submitted && $v.salvageValue.$error"
+              :errorMessage="getErrorMsg('salvageValue')">
+            </text-input>
+          </div>
 
           <drop-down-input
             v-model="macrsTerm"
@@ -336,6 +368,19 @@
           return (this.includeAuxiliaryLoad === true);
         }),
       },
+      // shared validation extention
+      replacementConstructionTime: {
+        ...validations.replacementConstructionTime,
+        required: requiredIf(function isReplacementConstructionTimeRequired() {
+          return (this.isReplaceable === true);
+        }),
+      },
+      salvageValue: {
+        ...validations.salvageValue,
+        required: requiredIf(function isSalvageValueRequired() {
+          return (this.salvageValueOption === 'User defined');
+        }),
+      },
     },
     beforeMount() {
       // in quick start mode, do a save initially to reset non-required inputs
@@ -409,6 +454,13 @@
         if (this.includeAuxiliaryLoad === false) {
           this.resetNonRequired(['auxiliaryLoad']);
         }
+        // shared inputs: reset all non-requred inputs to default
+        if (this.isReplaceable === false) {
+          this.resetNonRequired(['replacementConstructionTime']);
+        }
+        if (this.salvageValueOption !== 'User defined') {
+          this.resetNonRequired(['salvageValue']);
+        }
         this.submitted = true;
         this.$v.$touch();
         // set complete to true or false
@@ -445,19 +497,24 @@
           dischargingCapacity: this.dischargingCapacity,
           decomissioningCost: this.decomissioningCost,
           energyCapacity: this.energyCapacity,
+          expectedLifetime: this.expectedLifetime,
           errorList: this.errorList,
           fixedOMCosts: this.fixedOMCosts,
           id: this.id,
           includeAuxiliaryLoad: this.includeAuxiliaryLoad,
           includeCycleDegradation: this.includeCycleDegradation,
           includeStartupCost: this.includeStartupCost,
+          isReplaceable: this.isReplaceable,
           lowerSOCLimit: this.lowerSOCLimit,
           macrsTerm: this.macrsTerm,
           maxDuration: this.maxDuration,
           name: this.name,
           operationYear: this.operationYear,
           powerCapacity: this.powerCapacity,
+          replacementConstructionTime: this.replacementConstructionTime,
           roundtripEfficiency: this.roundtripEfficiency,
+          salvageValue: this.salvageValue,
+          salvageValueOption: this.salvageValueOption,
           selfDischargeRate: this.selfDischargeRate,
           shouldDiffChargeDischarge: this.shouldDiffChargeDischarge,
           shouldEnergySize: this.shouldEnergySize,
@@ -467,6 +524,7 @@
           tag: this.tag,
           targetSOC: this.targetSOC,
           technologyType: this.technologyType,
+          ter: this.ter,
           upperSOCLimit: this.upperSOCLimit,
           variableOMCosts: this.variableOMCosts,
         };

@@ -33,8 +33,7 @@ const MAX_DURATION_SIZING_ALLOWED_VALUES = optionsYN;
 const DIFF_CHARGE_DISCHARGE_ALLOWED_VALUES = optionsYN;
 const LIMIT_DAILY_CYCLING_ALLOWED_VALUES = optionsYN;
 const AUXILIARY_LOAD_ALLOWED_VALUES = optionsYN;
-const STARTUP_COST_ALLOWED_VALUES = optionsYN;
-const CYCLE_DEGRADATION_ALLOWED_VALUES = optionsYN
+const CYCLE_DEGRADATION_ALLOWED_VALUES = optionsYN;
 
 const DYNAMIC_FIELDS = [
   ...SHARED_DYNAMIC_FIELDS,
@@ -67,7 +66,7 @@ const DYNAMIC_FIELDS = [
 ];
 
 export default class TechnologySpecsBatteryMetadata {
-  constructor(args) {
+  constructor(arg) {
     Object.assign(this, arg);
   }
 
