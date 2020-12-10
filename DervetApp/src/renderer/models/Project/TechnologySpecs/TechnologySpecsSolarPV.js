@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 import ProjectFieldMetadata from '@/models/Project/Fields';
+import { SHARED_DYNAMIC_FIELDS, createSharedHardcodedMetadata } from '@/models/Project/TechnologySpecs/sharedConstants';
 
 const PV = 'PV';
 
@@ -30,73 +31,20 @@ const LOC_ALLOWED_VALUES = [
     label: 'DC',
   },
 ];
-const MACRS_TERM_ALLOWED_VALUES = [
-  {
-    value: null,
-    label: '-',
-  },
-  {
-    value: 3,
-    label: '3',
-  },
-  {
-    value: 5,
-    label: '5',
-  },
-  {
-    value: 7,
-    label: '7',
-  },
-  {
-    value: 10,
-    label: '10',
-  },
-  {
-    value: 15,
-    label: '15',
-  },
-  {
-    value: 20,
-    label: '20',
-  },
-  {
-    value: 25,
-    label: '25',
-  },
-  {
-    value: 27.5,
-    label: '27.5',
-  },
-  {
-    value: 39,
-    label: '39',
-  },
-];
 
 const DYNAMIC_FIELDS = [
-  'constructionDate',
+  ...SHARED_DYNAMIC_FIELDS,
   'cost',
+  'fixedOMCosts',
   'inverterMax',
   'loc',
-  'macrsTerm',
-  'name',
-  'operationDate',
   'ratedCapacity',
   'shouldSize',
 ];
 
 export default class TechnologySpecsSolarPVMetadata {
-  // TODO: refactor to use typescript interface + Object.assign(this, args);
   constructor(args) {
-    this.constructionDate = args.constructionDate; // should be constructionYEAR
-    this.cost = args.cost;
-    this.inverterMax = args.inverterMax;
-    this.loc = args.loc;
-    this.macrsTerm = args.macrsTerm;
-    this.name = args.name;
-    this.operationDate = args.operationDate; // should be operationYEAR
-    this.ratedCapacity = args.ratedCapacity;
-    this.shouldSize = args.shouldSize;
+    Object.assign(this, arg);
   }
 
   operateOnDynamicFields(callback) {
@@ -123,15 +71,6 @@ export default class TechnologySpecsSolarPVMetadata {
   // to be removed in favor of getMetadataFromSchema
   static getHardcodedMetadata() {
     return new TechnologySpecsSolarPVMetadata({
-      constructionDate: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Construction Date',
-        isRequired: true,
-        type: Date,
-        unit: null,
-        description: null,
-        allowedValues: null,
-      }),
       cost: new ProjectFieldMetadata({
         defaultValue: null,
         displayName: 'Cost per kW<sub>AC</sub>',
@@ -140,6 +79,16 @@ export default class TechnologySpecsSolarPVMetadata {
         type: Number,
         unit: '$/kW<sub>AC</sub>',
         description: 'Capital cost per kW<sub>AC</sub> of rated power capacity (applied in year 0 of the analysis)',
+        allowedValues: null,
+      }),
+      fixedOMCosts: new ProjectFieldMetadata({
+        defaultValue: null,
+        displayName: 'Fixed O&M Costs',
+        isRequired: true,
+        minValue: 0,
+        type: Number,
+        unit: '$ / kW-year',
+        description: 'What is the cost of fixed operations and maintenance for the PV system?',
         allowedValues: null,
       }),
       generationProfile: null,
@@ -162,33 +111,6 @@ export default class TechnologySpecsSolarPVMetadata {
         description: 'Solar plus storage AC or DC coupled system',
         allowedValues: LOC_ALLOWED_VALUES,
       }),
-      macrsTerm: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'MACRS Term',
-        isRequired: true,
-        type: Number,
-        unit: 'years',
-        description: 'Which MACRS GDS category does solar PV fall into?',
-        allowedValues: MACRS_TERM_ALLOWED_VALUES,
-      }),
-      name: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Name',
-        isRequired: true,
-        type: String,
-        unit: null,
-        description: null,
-        allowedValues: null,
-      }),
-      operationDate: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Operation Date',
-        isRequired: true,
-        type: Date,
-        unit: null,
-        description: null,
-        allowedValues: null,
-      }),
       ratedCapacity: new ProjectFieldMetadata({
         defaultValue: null,
         displayName: 'Rated Capacity',
@@ -208,6 +130,7 @@ export default class TechnologySpecsSolarPVMetadata {
         description: null,
         allowedValues: SIZING_ALLOWED_VALUES,
       }),
+      ...createSharedHardcodedMetadata(this.tag),
     });
   }
 

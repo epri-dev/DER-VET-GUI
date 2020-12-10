@@ -170,13 +170,6 @@
           </text-input>
         </div>
 
-        <radio-button-input
-          v-model="includeStartupCost"
-          v-bind:field="metadata.includeStartupCost"
-          :isInvalid="submitted && $v.includeStartupCost.$error"
-          :errorMessage="getErrorMsg('includeStartupCost')">
-        </radio-button-input>
-
         <fieldset class="section-group">
           <legend>Cost Function</legend>
 
@@ -217,33 +210,45 @@
           :errorMessage="getErrorMsg('variableOMCosts')">
         </text-input>
 
-        <text-input
-          v-model="endOfLifeExpenses"
-          v-bind:field="metadata.endOfLifeExpenses"
-          :isInvalid="submitted && $v.endOfLifeExpenses.$error"
-          :errorMessage="getErrorMsg('endOfLifeExpenses')">
-        </text-input>
+        <fieldset class="section-group">          
+          <text-input
+            v-model="decomissioningCost"
+            v-bind:field="metadata.decomissioningCost"
+            :isInvalid="submitted && $v.decomissioningCost.$error"
+            :errorMessage="getErrorMsg('decomissioningCost')">
+          </text-input>
 
-        <text-input
-          v-model="constructionDate"
-          v-bind:field="metadata.constructionDate"
-          :isInvalid="submitted && $v.constructionDate.$error"
-          :errorMessage="getErrorMsg('constructionDate')">
-        </text-input>
+          <text-input
+            v-model="constructionYear"
+            v-bind:field="metadata.constructionYear"
+            :isInvalid="submitted && $v.constructionYear.$error"
+            :errorMessage="getErrorMsg('constructionYear')">
+          </text-input>
 
-        <text-input
-          v-model="operationDate"
-          v-bind:field="metadata.operationDate"
-          :isInvalid="submitted && $v.operationDate.$error"
-          :errorMessage="getErrorMsg('operationDate')">
-        </text-input>
+          <text-input
+            v-model="operationYear"
+            v-bind:field="metadata.operationYear"
+            :isInvalid="submitted && $v.operationYear.$error"
+            :errorMessage="getErrorMsg('operationYear')">
+          </text-input>
 
-        <drop-down-input
-          v-model="macrsTerm"
-          v-bind:field="metadata.macrsTerm"
-          :isInvalid="submitted && $v.macrsTerm.$error"
-          :errorMessage="getErrorMsg('macrsTerm')">
-        </drop-down-input>
+          <text-input
+            v-model="expectedLifetime"
+            v-bind:field="metadata.expectedLifetime"
+            :isInvalid="submitted && $v.expectedLifetime.$error"
+            :errorMessage="getErrorMsg('expectedLifetime')">
+          </text-input>
+
+
+          <drop-down-input
+            v-model="macrsTerm"
+            v-bind:field="metadata.macrsTerm"
+            :isInvalid="submitted && $v.macrsTerm.$error"
+            :errorMessage="getErrorMsg('macrsTerm')">
+          </drop-down-input>
+
+        </fieldset>
+
 
         <save-buttons
           :continue-link=this.getContinueLink()
@@ -435,10 +440,10 @@
           capitalCostPerkWh: this.capitalCostPerkWh,
           chargingCapacity: this.chargingCapacity,
           complete: this.complete,
-          constructionDate: this.constructionDate,
+          constructionYear: this.constructionYear,
           dailyCycleLimit: this.dailyCycleLimit,
           dischargingCapacity: this.dischargingCapacity,
-          endOfLifeExpenses: this.endOfLifeExpenses,
+          decomissioningCost: this.decomissioningCost,
           energyCapacity: this.energyCapacity,
           errorList: this.errorList,
           fixedOMCosts: this.fixedOMCosts,
@@ -450,7 +455,7 @@
           macrsTerm: this.macrsTerm,
           maxDuration: this.maxDuration,
           name: this.name,
-          operationDate: this.operationDate,
+          operationYear: this.operationYear,
           powerCapacity: this.powerCapacity,
           roundtripEfficiency: this.roundtripEfficiency,
           selfDischargeRate: this.selfDischargeRate,

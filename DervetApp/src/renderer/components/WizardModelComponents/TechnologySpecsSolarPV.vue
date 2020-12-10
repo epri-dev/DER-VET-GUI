@@ -54,17 +54,17 @@
         </text-input>
 
         <text-input
-          v-model="constructionDate"
-          v-bind:field="metadata.constructionDate"
-          :isInvalid="submitted && $v.constructionDate.$error"
-          :errorMessage="getErrorMsg('constructionDate')">
+          v-model="constructionYear"
+          v-bind:field="metadata.constructionYear"
+          :isInvalid="submitted && $v.constructionYear.$error"
+          :errorMessage="getErrorMsg('constructionYear')">
         </text-input>
 
         <text-input
-          v-model="operationDate"
-          v-bind:field="metadata.operationDate"
-          :isInvalid="submitted && $v.operationDate.$error"
-          :errorMessage="getErrorMsg('operationDate')">
+          v-model="operationYear"
+          v-bind:field="metadata.operationYear"
+          :isInvalid="submitted && $v.operationYear.$error"
+          :errorMessage="getErrorMsg('operationYear')">
         </text-input>
 
         <drop-down-input
@@ -182,7 +182,7 @@
         return {
           active: this.active,
           complete: this.complete,
-          constructionDate: this.constructionDate,
+          constructionYear: this.constructionYear,
           cost: this.cost,
           errorList: this.errorList,
           generationProfile: this.generationProfile,
@@ -191,7 +191,7 @@
           loc: this.loc,
           macrsTerm: this.macrsTerm,
           name: this.name,
-          operationDate: this.operationDate,
+          operationYear: this.operationYear,
           ratedCapacity: this.ratedCapacity,
           shouldSize: this.shouldSize,
           tag: this.tag,

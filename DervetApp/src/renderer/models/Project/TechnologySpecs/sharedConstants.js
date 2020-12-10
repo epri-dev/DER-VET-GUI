@@ -15,6 +15,7 @@ const TER = 'ter';
 
 // Allowed values
 const MACRS_TERM_ALLOWED_VALUES = makeAllowedValuesWithNull(['3', '5', '7', '10', '15', '20', '25', '27.5', '39']);
+const SALVAGE_OPTION = makeAllowedValuesWithNull()
 
 // Shared dynamic fields
 export const SHARED_DYNAMIC_FIELDS = [
@@ -34,23 +35,17 @@ export const SHARED_DYNAMIC_FIELDS = [
 // HardcodedMetadata
 export const createSharedHardcodedMetadata = derType => ({
   [CONSTRUCTION_YEAR]: new ProjectFieldMetadata({
-    defaultValue: null,
     displayName: 'Construction Year',
     isRequired: true,
     type: Date,
-    unit: null,
-    description: null,
-    allowedValues: null,
   }),
   [DECOMISSIONING_COST]: new ProjectFieldMetadata({
-    defaultValue: null,
     displayName: 'Decomissing Cost',
     isRequired: true,
     minValue: 0,
     type: Number,
     unit: '$',
     description: 'The cost to decommission this DER when it has reached its expected lifetime end',
-    allowedValues: null,
   }),
   [EXPECTED_LIFETIME]: new ProjectFieldMetadata({
     displayName: 'Expected Lifetime',
@@ -60,7 +55,6 @@ export const createSharedHardcodedMetadata = derType => ({
     unit: 'years',
   }),
   [MACRS_TERM]: new ProjectFieldMetadata({
-    defaultValue: null,
     displayName: 'MACRS Term',
     isRequired: true,
     type: Number,
@@ -69,21 +63,12 @@ export const createSharedHardcodedMetadata = derType => ({
     allowedValues: MACRS_TERM_ALLOWED_VALUES,
   }),
   [NAME]: new ProjectFieldMetadata({
-    defaultValue: null,
     displayName: 'Name',
-    isRequired: true,
     type: String,
-    unit: null,
-    description: null,
-    allowedValues: null,
   }),
   [OPERATION_YEAR]: new ProjectFieldMetadata({
-    defaultValue: null,
     displayName: 'Operation Year',
     isRequired: true,
     type: Date,
-    unit: null,
-    description: null,
-    allowedValues: null,
   }),
 });

@@ -2,6 +2,8 @@ import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 import ProjectFieldMetadata from '@/models/Project/Fields';
+import { SHARED_DYNAMIC_FIELDS, createSharedHardcodedMetadata } from '@/models/Project/TechnologySpecs/sharedConstants';
+
 
 const ICE = 'ICE';
 
@@ -16,87 +18,22 @@ const SIZING_ALLOWED_VALUES = [
     label: 'Known number of Internal Combustion Engines',
   },
 ];
-const MACRS_TERM_ALLOWED_VALUES = [
-  {
-    value: null,
-    label: '-',
-  },
-  {
-    value: 3,
-    label: '3',
-  },
-  {
-    value: 5,
-    label: '5',
-  },
-  {
-    value: 7,
-    label: '7',
-  },
-  {
-    value: 10,
-    label: '10',
-  },
-  {
-    value: 15,
-    label: '15',
-  },
-  {
-    value: 20,
-    label: '20',
-  },
-  {
-    value: 25,
-    label: '25',
-  },
-  {
-    value: 27.5,
-    label: '27.5',
-  },
-  {
-    value: 39,
-    label: '39',
-  },
-];
 
 const DYNAMIC_FIELDS = [
   'capitalCost',
-  'constructionDate',
   'efficiency',
   'fixedOMCostIncludingExercise',
   'fuelCost',
-  'macrsTerm',
-  'maxGenerators',
-  'minGenerators',
   'minimumPower',
-  'name',
   'numGenerators',
-  'operationDate',
   'ratedCapacity',
   'shouldSize',
-  'startupTime',
   'variableOMCost',
 ];
 
 export default class TechnologySpecsICEMetadata {
-  // TODO: refactor to use typescript interface + Object.assign(this, args);
   constructor(args) {
-    this.capitalCost = args.capitalCost;
-    this.constructionDate = args.constructionDate;
-    this.efficiency = args.efficiency;
-    this.fixedOMCostIncludingExercise = args.fixedOMCostIncludingExercise;
-    this.fuelCost = args.fuelCost;
-    this.macrsTerm = args.macrsTerm;
-    this.maxGenerators = args.maxGenerators;
-    this.minGenerators = args.minGenerators;
-    this.minimumPower = args.minimumPower;
-    this.name = args.name;
-    this.numGenerators = args.numGenerators;
-    this.operationDate = args.operationDate;
-    this.ratedCapacity = args.ratedCapacity;
-    this.shouldSize = args.shouldSize;
-    this.startupTime = args.startupTime;
-    this.variableOMCost = args.variableOMCost;
+    Object.assign(this, arg);
   }
 
   operateOnDynamicFields(callback) {
@@ -132,15 +69,6 @@ export default class TechnologySpecsICEMetadata {
         description: 'What is the capital cost of each internal combustion engine?',
         allowedValues: null,
       }),
-      constructionDate: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Construction Date',
-        isRequired: true,
-        type: Date,
-        unit: null,
-        description: null,
-        allowedValues: null,
-      }),
       efficiency: new ProjectFieldMetadata({
         defaultValue: null,
         displayName: 'Efficiency',
@@ -171,35 +99,6 @@ export default class TechnologySpecsICEMetadata {
         description: 'What is the price of fuel (constant over analysis horizon)?',
         allowedValues: null,
       }),
-      macrsTerm: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'MACRS Term',
-        isRequired: true,
-        type: Number,
-        unit: 'years',
-        description: 'Which MACRS GDS category does the internal combustion engine fall into?',
-        allowedValues: MACRS_TERM_ALLOWED_VALUES,
-      }),
-      maxGenerators: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Maximum Number of Generators to Install',
-        isRequired: true,
-        minValue: 2, // differs from schema; want gt minGenerators
-        type: 'int',
-        unit: 'generators',
-        description: 'What is the maximum number of internal combustion engines to consider installing?',
-        allowedValues: null,
-      }),
-      minGenerators: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Minimum Number of Generators to Install',
-        isRequired: true,
-        minValue: 1, // differs from schema; want gt 0
-        type: 'int',
-        unit: 'generators',
-        description: 'What is the minimum number of internal combustion engines to consider installing?',
-        allowedValues: null,
-      }),
       minimumPower: new ProjectFieldMetadata({
         defaultValue: null,
         displayName: 'Minimum Power',
@@ -208,15 +107,6 @@ export default class TechnologySpecsICEMetadata {
         type: Number,
         unit: 'kW',
         description: 'What is the mimimum power the internal combustion engine is capable of safely producing?',
-        allowedValues: null,
-      }),
-      name: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Name',
-        isRequired: true,
-        type: String,
-        unit: null,
-        description: null,
         allowedValues: null,
       }),
       numGenerators: new ProjectFieldMetadata({
@@ -256,16 +146,6 @@ export default class TechnologySpecsICEMetadata {
         unit: null,
         description: null,
         allowedValues: SIZING_ALLOWED_VALUES,
-      }),
-      startupTime: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Startup Time',
-        isRequired: true,
-        minValue: 0,
-        type: 'int',
-        unit: 'minutes',
-        description: 'How many minutes are required for the internal combustion engine to go from an off state to producing its full rated power',
-        allowedValues: null,
       }),
       variableOMCost: new ProjectFieldMetadata({
         defaultValue: null,

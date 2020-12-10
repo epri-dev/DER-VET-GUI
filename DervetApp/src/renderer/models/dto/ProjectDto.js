@@ -147,7 +147,7 @@ export const makeBatteryParameters = (project) => {
       ccost_kwh: makeBaseKey(battery.capitalCostPerkWh, FLOAT),
       ch_max_rated: makeBaseKey(chargingCapacity, FLOAT),
       ch_min_rated: makeBaseKey(ZERO, FLOAT), // hardcoded
-      construction_year: makeBaseKey(convertDateToYear(battery.constructionDate), PERIOD),
+      construction_year: makeBaseKey(convertDateToYear(battery.constructionYear), PERIOD),
       cycle_life_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, CYCLE), STRING),
       daily_cycle_limit: makeBaseKey(dailyCycleLimit, FLOAT),
       decommissioning_cost: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
@@ -247,7 +247,7 @@ export const makeDieselGensetParameters = (project) => {
       acr: makeBaseKey(0, FLOAT), // hardcoded
       ccost: makeBaseKey(dieselGen.capitalCost, FLOAT),
       ccost_kw: makeBaseKey(ZERO, FLOAT), // TODO: new value
-      construction_year: makeBaseKey(convertDateToYear(dieselGen.constructionDate), PERIOD),
+      construction_year: makeBaseKey(convertDateToYear(dieselGen.constructionYear), PERIOD),
       decommissioning_cost: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
       'ecc%': makeBaseKey(ZERO, FLOAT), // TODO new, verify value
       efficiency: makeBaseKey(dieselGen.efficiency, FLOAT),
@@ -329,7 +329,7 @@ export const makeICEParameters = (project) => {
       acr: makeBaseKey(0, FLOAT), // hardcoded
       ccost: makeBaseKey(iceGen.capitalCost, FLOAT),
       ccost_kw: makeBaseKey(200, FLOAT), // TODO: new value
-      construction_year: makeBaseKey(convertDateToYear(iceGen.constructionDate), PERIOD),
+      construction_year: makeBaseKey(convertDateToYear(iceGen.constructionYear), PERIOD),
       decommissioning_cost: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
       'ecc%': makeBaseKey(ZERO, FLOAT), // TODO new, verify value
       efficiency: makeBaseKey(iceGen.efficiency, FLOAT),
@@ -388,7 +388,7 @@ export const makePVParameters = (project) => {
     const keys = {
       acr: makeBaseKey(0, FLOAT), // hardcoded
       ccost_kW: makeBaseKey(solarPV.cost, FLOAT),
-      construction_year: makeBaseKey(convertDateToYear(solarPV.constructionDate), PERIOD),
+      construction_year: makeBaseKey(convertDateToYear(solarPV.constructionYear), PERIOD),
       curtail: makeBaseKey(ZERO, BOOL), // TODO: new, verify value
       decommissioning_cost: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
       'ecc%': makeBaseKey(ZERO, FLOAT), // TODO new, verify value

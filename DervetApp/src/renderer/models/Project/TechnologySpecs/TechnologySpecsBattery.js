@@ -2,6 +2,9 @@ import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 import ProjectFieldMetadata from '@/models/Project/Fields';
+import { SHARED_DYNAMIC_FIELDS, createSharedHardcodedMetadata } from '@/models/Project/TechnologySpecs/sharedConstants';
+import { optionsYN } from '@/models/Project/constants';
+
 
 const Battery = 'Battery';
 
@@ -26,130 +29,30 @@ const POWER_SIZING_ALLOWED_VALUES = [
     label: 'Known size',
   },
 ];
-const MAX_DURATION_SIZING_ALLOWED_VALUES = [
-  {
-    value: true,
-    label: 'Yes',
-  },
-  {
-    value: false,
-    label: 'No',
-  },
-];
-const DIFF_CHARGE_DISCHARGE_ALLOWED_VALUES = [
-  {
-    value: true,
-    label: 'Yes',
-  },
-  {
-    value: false,
-    label: 'No',
-  },
-];
-const LIMIT_DAILY_CYCLING_ALLOWED_VALUES = [
-  {
-    value: true,
-    label: 'Yes',
-  },
-  {
-    value: false,
-    label: 'No',
-  },
-];
-const AUXILIARY_LOAD_ALLOWED_VALUES = [
-  {
-    value: true,
-    label: 'Yes',
-  },
-  {
-    value: false,
-    label: 'No',
-  },
-];
-const STARTUP_COST_ALLOWED_VALUES = [
-  {
-    value: true,
-    label: 'Yes',
-  },
-  {
-    value: false,
-    label: 'No',
-  },
-];
-const CYCLE_DEGRADATION_ALLOWED_VALUES = [
-  {
-    value: true,
-    label: 'Yes',
-  },
-  {
-    value: false,
-    label: 'No',
-  },
-];
-const MACRS_TERM_ALLOWED_VALUES = [
-  {
-    value: null,
-    label: '-',
-  },
-  {
-    value: 3,
-    label: '3',
-  },
-  {
-    value: 5,
-    label: '5',
-  },
-  {
-    value: 7,
-    label: '7',
-  },
-  {
-    value: 10,
-    label: '10',
-  },
-  {
-    value: 15,
-    label: '15',
-  },
-  {
-    value: 20,
-    label: '20',
-  },
-  {
-    value: 25,
-    label: '25',
-  },
-  {
-    value: 27.5,
-    label: '27.5',
-  },
-  {
-    value: 39,
-    label: '39',
-  },
-];
+const MAX_DURATION_SIZING_ALLOWED_VALUES = optionsYN;
+const DIFF_CHARGE_DISCHARGE_ALLOWED_VALUES = optionsYN;
+const LIMIT_DAILY_CYCLING_ALLOWED_VALUES = optionsYN;
+const AUXILIARY_LOAD_ALLOWED_VALUES = optionsYN;
+const STARTUP_COST_ALLOWED_VALUES = optionsYN;
+const CYCLE_DEGRADATION_ALLOWED_VALUES = optionsYN
 
 const DYNAMIC_FIELDS = [
+  ...SHARED_DYNAMIC_FIELDS,
   'auxiliaryLoad',
   'calendarDegradationRate',
   'capitalCost',
   'capitalCostPerkW',
   'capitalCostPerkWh',
   'chargingCapacity',
-  'constructionDate',
   'dailyCycleLimit',
   'dischargingCapacity',
   'endOfLifeExpenses',
   'energyCapacity',
   'fixedOMCosts',
-  'name',
   'includeAuxiliaryLoad',
   'includeCycleDegradation',
-  'includeStartupCost',
   'lowerSOCLimit',
-  'macrsTerm',
   'maxDuration',
-  'operationDate',
   'powerCapacity',
   'roundtripEfficiency',
   'selfDischargeRate',
@@ -164,39 +67,8 @@ const DYNAMIC_FIELDS = [
 ];
 
 export default class TechnologySpecsBatteryMetadata {
-  // TODO: refactor to use typescript interface + Object.assign(this, args);
   constructor(args) {
-    this.auxiliaryLoad = args.auxiliaryLoad;
-    this.calendarDegradationRate = args.calendarDegradationRate;
-    this.capitalCost = args.capitalCost;
-    this.capitalCostPerkW = args.capitalCostPerkW;
-    this.capitalCostPerkWh = args.capitalCostPerkWh;
-    this.chargingCapacity = args.chargingCapacity;
-    this.constructionDate = args.constructionDate;
-    this.dailyCycleLimit = args.dailyCycleLimit;
-    this.dischargingCapacity = args.dischargingCapacity;
-    this.endOfLifeExpenses = args.endOfLifeExpenses;
-    this.energyCapacity = args.energyCapacity;
-    this.fixedOMCosts = args.fixedOMCosts;
-    this.name = args.name;
-    this.includeAuxiliaryLoad = args.includeAuxiliaryLoad;
-    this.includeCycleDegradation = args.includeCycleDegradation;
-    this.includeStartupCost = args.includeStartupCost;
-    this.lowerSOCLimit = args.lowerSOCLimit;
-    this.macrsTerm = args.macrsTerm;
-    this.maxDuration = args.maxDuration;
-    this.operationDate = args.operationDate;
-    this.powerCapacity = args.powerCapacity;
-    this.roundtripEfficiency = args.roundtripEfficiency;
-    this.selfDischargeRate = args.selfDischargeRate;
-    this.shouldDiffChargeDischarge = args.shouldDiffChargeDischarge;
-    this.shouldEnergySize = args.shouldEnergySize;
-    this.shouldLimitDailyCycling = args.shouldLimitDailyCycling;
-    this.shouldMaxDuration = args.shouldMaxDuration;
-    this.shouldPowerSize = args.shouldPowerSize;
-    this.targetSOC = args.targetSOC;
-    this.upperSOCLimit = args.upperSOCLimit;
-    this.variableOMCosts = args.variableOMCosts;
+    Object.assign(this, arg);
   }
 
   operateOnDynamicFields(callback) {
@@ -299,15 +171,6 @@ export default class TechnologySpecsBatteryMetadata {
         description: 'What is the charging capacity (kW)?',
         allowedValues: null,
       }),
-      constructionDate: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Construction Date',
-        isRequired: true,
-        type: Date,
-        unit: null,
-        description: null,
-        allowedValues: null,
-      }),
       dailyCycleLimit: new ProjectFieldMetadata({
         defaultValue: null,
         displayName: 'Daily Cycle Limit',
@@ -326,16 +189,6 @@ export default class TechnologySpecsBatteryMetadata {
         type: Number,
         unit: 'kW',
         description: 'What is the discharging capacity (kW)?',
-        allowedValues: null,
-      }),
-      endOfLifeExpenses: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'End of Life Expenses',
-        isRequired: true,
-        minValue: 0,
-        type: Number,
-        unit: '$',
-        description: 'How much will it cost to decommission the battery at its end of life? This cost is applied at the end of life of the battery system in nominal dollars.',
         allowedValues: null,
       }),
       energyCapacity: new ProjectFieldMetadata({
@@ -385,15 +238,6 @@ export default class TechnologySpecsBatteryMetadata {
         description: 'When selected, this will calculate degradation due to cycling based on the cycle life curve and combine this degradation with the calculated calendar degradation. * Note: Not compatible with deferral service.',
         allowedValues: CYCLE_DEGRADATION_ALLOWED_VALUES,
       }),
-      includeStartupCost: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Include startup cost in the dispatch optimization?',
-        isRequired: true,
-        type: Boolean,
-        unit: null,
-        description: null,
-        allowedValues: STARTUP_COST_ALLOWED_VALUES,
-      }),
       lowerSOCLimit: new ProjectFieldMetadata({
         defaultValue: null,
         displayName: 'Lower SOC Limit',
@@ -405,15 +249,6 @@ export default class TechnologySpecsBatteryMetadata {
         description: 'Energy Storage SOC lower bound',
         allowedValues: null,
       }),
-      macrsTerm: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'MACRS Term',
-        isRequired: true,
-        type: Number,
-        unit: 'years',
-        description: 'Which MACRS GDS category does the battery storage system fall into?',
-        allowedValues: MACRS_TERM_ALLOWED_VALUES,
-      }),
       maxDuration: new ProjectFieldMetadata({
         defaultValue: null,
         displayName: 'Maximum Duration',
@@ -422,15 +257,6 @@ export default class TechnologySpecsBatteryMetadata {
         type: Number,
         unit: 'hours',
         description: 'Constrain the duration of the battery to this number of hours',
-        allowedValues: null,
-      }),
-      operationDate: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Operation Date',
-        isRequired: true,
-        type: Date,
-        unit: null,
-        description: null,
         allowedValues: null,
       }),
       powerCapacity: new ProjectFieldMetadata({
@@ -542,6 +368,7 @@ export default class TechnologySpecsBatteryMetadata {
         description: 'What is the variable cost of operations and maintenance for the battery storage system?',
         allowedValues: null,
       }),
+      ...createSharedHardcodedMetadata(this.tag),
     });
   }
 }
