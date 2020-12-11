@@ -31,6 +31,8 @@ const DYNAMIC_FIELDS = [
   'variableOMCost',
 ];
 
+const sharedHardcodedMetadata = createSharedHardcodedMetadata(DieselGen);
+
 export default class TechnologySpecsDieselGenMetadata {
   constructor(arg) {
     Object.assign(this, arg);
@@ -148,7 +150,7 @@ export default class TechnologySpecsDieselGenMetadata {
         description: 'What is the cost of variable operations and maintenance for each MWh of AC energy delivered?',
         allowedValues: null,
       }),
-      ...createSharedHardcodedMetadata(this.tag),
+      ...sharedHardcodedMetadata,
     });
   }
 }

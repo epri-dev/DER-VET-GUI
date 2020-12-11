@@ -65,6 +65,8 @@ const DYNAMIC_FIELDS = [
   'variableOMCosts',
 ];
 
+const sharedHardcodedMetadata = createSharedHardcodedMetadata(Battery);
+
 export default class TechnologySpecsBatteryMetadata {
   constructor(arg) {
     Object.assign(this, arg);
@@ -367,7 +369,7 @@ export default class TechnologySpecsBatteryMetadata {
         description: 'What is the variable cost of operations and maintenance for the battery storage system?',
         allowedValues: null,
       }),
-      ...createSharedHardcodedMetadata(this.tag),
+      ...sharedHardcodedMetadata,
     });
   }
 }

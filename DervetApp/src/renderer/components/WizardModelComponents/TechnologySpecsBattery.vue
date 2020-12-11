@@ -210,77 +210,79 @@
           :errorMessage="getErrorMsg('variableOMCosts')">
         </text-input>
 
-        <fieldset class="section-group">          
-          
+        <text-input
+          v-model="constructionYear"
+          v-bind:field="metadata.constructionYear"
+          :isInvalid="submitted && $v.constructionYear.$error"
+          :errorMessage="getErrorMsg('constructionYear')">
+        </text-input>
+
+        <text-input
+          v-model="operationYear"
+          v-bind:field="metadata.operationYear"
+          :isInvalid="submitted && $v.operationYear.$error"
+          :errorMessage="getErrorMsg('operationYear')">
+        </text-input>
+
+        <text-input
+          v-model="expectedLifetime"
+          v-bind:field="metadata.expectedLifetime"
+          :isInvalid="submitted && $v.expectedLifetime.$error"
+          :errorMessage="getErrorMsg('expectedLifetime')">
+        </text-input>
+
+        <radio-button-input
+          v-model="isReplaceable"
+          v-bind:field="metadata.isReplaceable"
+          :isInvalid="submitted && $v.isReplaceable.$error"
+          :errorMessage="getErrorMsg('isReplaceable')">
+        </radio-button-input>
+
+        <div v-if="isReplaceable === true">
           <text-input
-            v-model="constructionYear"
-            v-bind:field="metadata.constructionYear"
-            :isInvalid="submitted && $v.constructionYear.$error"
-            :errorMessage="getErrorMsg('constructionYear')">
+            v-model="replacementConstructionTime"
+            v-bind:field="metadata.replacementConstructionTime"
+            :isInvalid="submitted && $v.replacementConstructionTime.$error"
+            :errorMessage="getErrorMsg('replacementConstructionTime')">
           </text-input>
+        </div>
 
+        <text-input
+          v-model="decomissioningCost"
+          v-bind:field="metadata.decomissioningCost"
+          :isInvalid="submitted && $v.decomissioningCost.$error"
+          :errorMessage="getErrorMsg('decomissioningCost')">
+        </text-input>
+
+        <drop-down-input
+          v-model="salvageValueOption"
+          v-bind:field="metadata.salvageValueOption"
+          :isInvalid="submitted && $v.salvageValueOption.$error"
+          :errorMessage="getErrorMsg('salvageValueOption')">
+        </drop-down-input>
+
+        <div v-if="salvageValueOption === 'User defined'">
           <text-input
-            v-model="operationYear"
-            v-bind:field="metadata.operationYear"
-            :isInvalid="submitted && $v.operationYear.$error"
-            :errorMessage="getErrorMsg('operationYear')">
+            v-model="salvageValue"
+            v-bind:field="metadata.salvageValue"
+            :isInvalid="submitted && $v.salvageValue.$error"
+            :errorMessage="getErrorMsg('salvageValue')">
           </text-input>
+        </div>
 
-          <text-input
-            v-model="expectedLifetime"
-            v-bind:field="metadata.expectedLifetime"
-            :isInvalid="submitted && $v.expectedLifetime.$error"
-            :errorMessage="getErrorMsg('expectedLifetime')">
-          </text-input>
+        <text-input
+          v-model="ter"
+          v-bind:field="metadata.ter"
+          :isInvalid="submitted && $v.ter.$error"
+          :errorMessage="getErrorMsg('ter')">
+        </text-input>
 
-          <radio-button-input
-            v-model="isReplaceable"
-            v-bind:field="metadata.isReplaceable"
-            :isInvalid="submitted && $v.isReplaceable.$error"
-            :errorMessage="getErrorMsg('isReplaceable')">
-          </radio-button-input>
-
-          <div v-if="isReplaceable === true">
-            <text-input
-              v-model="replacementConstructionTime"
-              v-bind:field="metadata.replacementConstructionTime"
-              :isInvalid="submitted && $v.replacementConstructionTime.$error"
-              :errorMessage="getErrorMsg('replacementConstructionTime')">
-            </text-input>
-          </div>
-
-          <text-input
-            v-model="decomissioningCost"
-            v-bind:field="metadata.decomissioningCost"
-            :isInvalid="submitted && $v.decomissioningCost.$error"
-            :errorMessage="getErrorMsg('decomissioningCost')">
-          </text-input>
-
-          <drop-down-input
-            v-model="salvageValueOption"
-            v-bind:field="metadata.salvageValueOption"
-            :isInvalid="submitted && $v.salvageValueOption.$error"
-            :errorMessage="getErrorMsg('salvageValueOption')">
-          </drop-down-input>
-
-          <div v-if="salvageValueOption === 'User defined'">
-            <text-input
-              v-model="salvageValue"
-              v-bind:field="metadata.salvageValue"
-              :isInvalid="submitted && $v.salvageValue.$error"
-              :errorMessage="getErrorMsg('salvageValue')">
-            </text-input>
-          </div>
-
-          <drop-down-input
-            v-model="macrsTerm"
-            v-bind:field="metadata.macrsTerm"
-            :isInvalid="submitted && $v.macrsTerm.$error"
-            :errorMessage="getErrorMsg('macrsTerm')">
-          </drop-down-input>
-
-        </fieldset>
-
+        <drop-down-input
+          v-model="macrsTerm"
+          v-bind:field="metadata.macrsTerm"
+          :isInvalid="submitted && $v.macrsTerm.$error"
+          :errorMessage="getErrorMsg('macrsTerm')">
+        </drop-down-input>
 
         <save-buttons
           :continue-link=this.getContinueLink()
@@ -503,7 +505,6 @@
           id: this.id,
           includeAuxiliaryLoad: this.includeAuxiliaryLoad,
           includeCycleDegradation: this.includeCycleDegradation,
-          includeStartupCost: this.includeStartupCost,
           isReplaceable: this.isReplaceable,
           lowerSOCLimit: this.lowerSOCLimit,
           macrsTerm: this.macrsTerm,

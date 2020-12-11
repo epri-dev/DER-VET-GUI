@@ -42,6 +42,9 @@ const DYNAMIC_FIELDS = [
   'shouldSize',
 ];
 
+const sharedHardcodedMetadata = createSharedHardcodedMetadata(PV);
+
+
 export default class TechnologySpecsSolarPVMetadata {
   constructor(arg) {
     Object.assign(this, arg);
@@ -130,7 +133,7 @@ export default class TechnologySpecsSolarPVMetadata {
         description: null,
         allowedValues: SIZING_ALLOWED_VALUES,
       }),
-      ...createSharedHardcodedMetadata(this.tag),
+      ...sharedHardcodedMetadata,
     });
   }
 

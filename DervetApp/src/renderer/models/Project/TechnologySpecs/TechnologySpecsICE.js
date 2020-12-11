@@ -2,10 +2,10 @@ import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 import ProjectFieldMetadata from '@/models/Project/Fields';
-// import {
-//   SHARED_DYNAMIC_FIELDS,
-//   createSharedHardcodedMetadata
-// } from '@/models/Project/TechnologySpecs/sharedConstants';
+import {
+  SHARED_DYNAMIC_FIELDS,
+  createSharedHardcodedMetadata,
+} from '@/models/Project/TechnologySpecs/sharedConstants';
 
 
 const ICE = 'ICE';
@@ -23,6 +23,7 @@ const SIZING_ALLOWED_VALUES = [
 ];
 
 const DYNAMIC_FIELDS = [
+  ...SHARED_DYNAMIC_FIELDS,
   'capitalCost',
   'efficiency',
   'fixedOMCostIncludingExercise',
@@ -33,6 +34,9 @@ const DYNAMIC_FIELDS = [
   'shouldSize',
   'variableOMCost',
 ];
+
+const sharedHardcodedMetadata = createSharedHardcodedMetadata(ICE);
+
 
 export default class TechnologySpecsICEMetadata {
   constructor(arg) {
@@ -122,15 +126,6 @@ export default class TechnologySpecsICEMetadata {
         description: 'What is the number of internal combustion engines to install?',
         allowedValues: null,
       }),
-      operationDate: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Operation Date',
-        isRequired: true,
-        type: Date,
-        unit: null,
-        description: null,
-        allowedValues: null,
-      }),
       ratedCapacity: new ProjectFieldMetadata({
         defaultValue: null,
         displayName: 'Rated Capacity',
@@ -160,6 +155,7 @@ export default class TechnologySpecsICEMetadata {
         description: 'What is the cost of variable operations and maintenance for each MWh of AC energy delivered?',
         allowedValues: null,
       }),
+      ...sharedHardcodedMetadata,
     });
   }
 }

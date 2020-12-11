@@ -67,6 +67,59 @@
           :errorMessage="getErrorMsg('operationYear')">
         </text-input>
 
+        <text-input
+          v-model="expectedLifetime"
+          v-bind:field="metadata.expectedLifetime"
+          :isInvalid="submitted && $v.expectedLifetime.$error"
+          :errorMessage="getErrorMsg('expectedLifetime')">
+        </text-input>
+
+        <radio-button-input
+          v-model="isReplaceable"
+          v-bind:field="metadata.isReplaceable"
+          :isInvalid="submitted && $v.isReplaceable.$error"
+          :errorMessage="getErrorMsg('isReplaceable')">
+        </radio-button-input>
+
+        <div v-if="isReplaceable === true">
+          <text-input
+            v-model="replacementConstructionTime"
+            v-bind:field="metadata.replacementConstructionTime"
+            :isInvalid="submitted && $v.replacementConstructionTime.$error"
+            :errorMessage="getErrorMsg('replacementConstructionTime')">
+          </text-input>
+        </div>
+
+        <text-input
+          v-model="decomissioningCost"
+          v-bind:field="metadata.decomissioningCost"
+          :isInvalid="submitted && $v.decomissioningCost.$error"
+          :errorMessage="getErrorMsg('decomissioningCost')">
+        </text-input>
+
+        <drop-down-input
+          v-model="salvageValueOption"
+          v-bind:field="metadata.salvageValueOption"
+          :isInvalid="submitted && $v.salvageValueOption.$error"
+          :errorMessage="getErrorMsg('salvageValueOption')">
+        </drop-down-input>
+
+        <div v-if="salvageValueOption === 'User defined'">
+          <text-input
+            v-model="salvageValue"
+            v-bind:field="metadata.salvageValue"
+            :isInvalid="submitted && $v.salvageValue.$error"
+            :errorMessage="getErrorMsg('salvageValue')">
+          </text-input>
+        </div>
+
+        <text-input
+          v-model="ter"
+          v-bind:field="metadata.ter"
+          :isInvalid="submitted && $v.ter.$error"
+          :errorMessage="getErrorMsg('ter')">
+        </text-input>
+
         <drop-down-input
           v-model="macrsTerm"
           v-bind:field="metadata.macrsTerm"
@@ -118,6 +171,19 @@
           return this.shouldSize === false;
         }),
       },
+      // shared validation extention
+      replacementConstructionTime: {
+        ...validations.replacementConstructionTime,
+        required: requiredIf(function isReplacementConstructionTimeRequired() {
+          return (this.isReplaceable === true);
+        }),
+      },
+      salvageValue: {
+        ...validations.salvageValue,
+        required: requiredIf(function isSalvageValueRequired() {
+          return (this.salvageValueOption === 'User defined');
+        }),
+      },
     },
     beforeMount() {
       // submitted is false initially; set it to true after the first save.
@@ -158,6 +224,13 @@
         if (this.shouldSize === true) {
           this.resetNonRequired(['ratedCapacity']);
         }
+        // shared inputs: reset all non-requred inputs to default
+        if (this.isReplaceable === false) {
+          this.resetNonRequired(['replacementConstructionTime']);
+        }
+        if (this.salvageValueOption !== 'User defined') {
+          this.resetNonRequired(['salvageValue']);
+        }
         this.submitted = true;
         this.$v.$touch();
         // set complete to true or false
@@ -184,18 +257,25 @@
           complete: this.complete,
           constructionYear: this.constructionYear,
           cost: this.cost,
+          decomissioningCost: this.decomissioningCost,
           errorList: this.errorList,
+          expectedLifetime: this.expectedLifetime,
           generationProfile: this.generationProfile,
           id: this.id,
           inverterMax: this.inverterMax,
+          isReplaceable: this.isReplaceable,
           loc: this.loc,
           macrsTerm: this.macrsTerm,
           name: this.name,
           operationYear: this.operationYear,
           ratedCapacity: this.ratedCapacity,
+          replacementConstructionTime: this.replacementConstructionTime,
+          salvageValue: this.salvageValue,
+          salvageValueOption: this.salvageValueOption,
           shouldSize: this.shouldSize,
           tag: this.tag,
           technologyType: this.technologyType,
+          ter: this.ter,
         };
       },
     },
