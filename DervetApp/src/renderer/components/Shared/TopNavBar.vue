@@ -53,7 +53,7 @@
     },
     computed: {
       resultsExist() {
-        return this.$store.state.ProjectResult.data !== null;
+        return this.$store.state.Results.data !== null;
       },
     },
     methods: {

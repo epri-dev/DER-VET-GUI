@@ -49,10 +49,18 @@ module.exports = config => {
     },
     frameworks: ['mocha', 'chai'],
     files: ['./index.js'],
+    mochaReporter: {
+      colors: {
+        success: 'green',
+        warning: 'yellow',
+        error: 'bigRed'
+      },
+      showDiff: true,
+    },
     preprocessors: {
       './index.js': ['webpack', 'sourcemap']
     },
-    reporters: ['spec', 'coverage'],
+    reporters: ['mocha'],
     singleRun: true,
     webpack: webpackConfig,
     webpackMiddleware: {

@@ -119,13 +119,13 @@
     },
     computed: {
       results() {
-        return this.$store.state.ProjectResult.data;
+        return this.$store.state.Results.data;
       },
       runInProgress() {
         return this.$store.state.Application.runInProgress;
       },
       summaryData() {
-        return this.$store.state.ProjectResult.summaryVueObjects;
+        return this.$store.state.Results.summaryVueObjects;
       },
     },
     methods: {
