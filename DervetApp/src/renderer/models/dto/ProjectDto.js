@@ -37,7 +37,6 @@ const YEARLY = 'yearly';
 const MODEL_PARAMETERS = 'model_parameters.json';
 export const LOG_FILE = 'dervet_log.log';
 
-// TODO add PV gen profile(s)
 const TIMESERIES_FIELDS = [
   'criticalLoad',
   'deferralLoad',
@@ -58,7 +57,7 @@ export const convertToYesNo = condition => (condition ? YES : NO);
 
 export const convertToOneZero = condition => (condition ? ONE : ZERO);
 
-export const convertDateToYear = dateString => (new Date(dateString)).getFullYear();
+export const convertDateToYear = dateString => (new Date(dateString)).getUTCFullYear();
 
 export const calculateEndYear = (startYear, analysisHorizon) => (
   (Number(startYear) + Number(analysisHorizon)).toString()
@@ -99,101 +98,111 @@ export const mapListToObjectList = (lst, fieldName) => (
   lst.map(d => ({ [fieldName]: d }))
 );
 
+export const makeBatteryCsvFilePath = (inputsDirectory, battery) => (
+  makeCsvFilePath(inputsDirectory, `${CYCLE}_${battery.id}`)
+);
+
+export const makeSingleBatteryParameter = (battery, inputsDirectory) => {
+  // determine DAILY_CYCLE_LIMIT
+  let dailyCycleLimit = ZERO;
+  if (battery.shouldLimitDailyCycling) {
+    ({ dailyCycleLimit } = battery);
+  }
+  // determine HP
+  let hp = ZERO;
+  if (battery.includeAuxiliaryLoad) {
+    hp = battery.auxiliaryLoad;
+  }
+  // TODO determine DIS_MAX_RATED & CH_MAX_RATED
+  let chargingCapacity = ZERO;
+  let dischargingCapacity = ZERO;
+  if (!battery.shouldPowerSize) {
+    if (battery.shouldDiffChargeDischarge) {
+      ({ chargingCapacity, dischargingCapacity } = battery);
+    } else {
+      chargingCapacity = battery.powerCapacity;
+      dischargingCapacity = battery.powerCapacity;
+    }
+  }
+
+  // TODO revisit this
+  let { maxDuration } = battery;
+  if (battery.maxDuration === undefined || battery.maxDuration === null) {
+    maxDuration = 0;
+  }
+
+  // TODO determine ENE_MAX_RATED
+  let energyCapacity = ZERO;
+  if (!battery.shouldEnergySize) {
+    ({ energyCapacity } = battery);
+  }
+  const keys = {
+    OMexpenses: makeBaseKey(battery.variableOMCosts, FLOAT),
+    acr: makeBaseKey(0, FLOAT), // hardcoded
+    ccost: makeBaseKey(battery.capitalCost, FLOAT),
+    ccost_kw: makeBaseKey(battery.capitalCostPerkW, FLOAT),
+    ccost_kwh: makeBaseKey(battery.capitalCostPerkWh, FLOAT),
+    ch_max_rated: makeBaseKey(chargingCapacity, FLOAT),
+    ch_min_rated: makeBaseKey(ZERO, FLOAT), // hardcoded
+    construction_year: makeBaseKey(convertDateToYear(battery.constructionDate), PERIOD),
+    cycle_life_filename: makeBaseKey(makeBatteryCsvFilePath(inputsDirectory, battery), STRING),
+    daily_cycle_limit: makeBaseKey(dailyCycleLimit, FLOAT),
+    decommissioning_cost: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
+    dis_max_rated: makeBaseKey(dischargingCapacity, FLOAT),
+    dis_min_rated: makeBaseKey(ZERO, FLOAT), // hardcoded
+    duration_max: makeBaseKey(maxDuration, FLOAT),
+    'ecc%': makeBaseKey(ZERO, FLOAT), // TODO new, verify value
+    ene_max_rated: makeBaseKey(energyCapacity, FLOAT),
+    expected_lifetime: makeBaseKey(99, INT), // TODO: new, verify value
+    fixedOM: makeBaseKey(battery.fixedOMCosts, FLOAT),
+    hp: makeBaseKey(hp, FLOAT),
+    incl_cycle_degrade: makeBaseKey(convertToOneZero(battery.includeCycleDegradation), BOOL),
+    incl_ts_charge_limits: makeBaseKey(ZERO, BOOL), // TODO new, verify value
+    incl_ts_discharge_limits: makeBaseKey(ZERO, BOOL), // TODO new, verify value
+    incl_ts_energy_limits: makeBaseKey(ZERO, BOOL), // TODO new, verify value
+    llsoc: makeBaseKey(battery.lowerSOCLimit, FLOAT),
+    macrs_term: makeBaseKey(battery.macrsTerm, FLOAT),
+    name: makeBaseKey(battery.name, STRING),
+    nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
+    operation_year: makeBaseKey(convertDateToYear(battery.operationDate), PERIOD),
+    p_start_ch: makeBaseKey(ZERO, FLOAT), // hardcoded
+    p_start_dis: makeBaseKey(ZERO, FLOAT), // hardcoded
+    rcost: makeBaseKey(0, FLOAT), // TODO new, verify value
+    rcost_kW: makeBaseKey(100, FLOAT), // TODO new, verify value
+    rcost_kWh: makeBaseKey(800, FLOAT), // TODO new, verify value
+    replaceable: makeBaseKey(ZERO, BOOL), // TODO new, verify value
+    replacement_construction_time: makeBaseKey(ONE, INT), // TODO new, verify value
+    rte: makeBaseKey(battery.roundtripEfficiency, FLOAT),
+    salvage_value: makeBaseKey(ZERO, STRING_INT), // TODO new, verify value
+    sdr: makeBaseKey(battery.selfDischargeRate, FLOAT),
+    soc_target: makeBaseKey(battery.targetSOC, FLOAT),
+    sr_response_time: makeBaseKey(ZERO, INT), // hardcoded
+    startup: makeBaseKey(ZERO, BOOL), // hardcoded
+    startup_time: makeBaseKey(ZERO, INT), // hardcoded
+    state_of_health: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
+    ter: makeBaseKey(7, FLOAT), // TODO new, verify value
+    ulsoc: makeBaseKey(battery.upperSOCLimit, FLOAT),
+    user_ch_rated_max: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
+    user_ch_rated_min: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
+    user_dis_rated_max: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
+    user_dis_rated_min: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
+    user_ene_rated_max: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
+    user_ene_rated_min: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
+    yearly_degrade: makeBaseKey(battery.calendarDegradationRate, INT),
+  };
+  return makeGroup(battery.id, convertToYesNo(battery.active), keys);
+};
+
+// TODO refactor so non-null check and iteration can be shared across technology types
 export const makeBatteryParameters = (project) => {
-  const includeBattery = checkNotNullOrEmpty(project.technologySpecsBattery);
+  const batteries = project.technologySpecsBattery;
+  const includeBatteryParameters = checkNotNullOrEmpty(batteries);
 
-  // TODO extend to more than one
-  const battery = project.technologySpecsBattery[0];
-
-  if (includeBattery) {
-    // determine DAILY_CYCLE_LIMIT
-    let dailyCycleLimit = ZERO;
-    if (battery.shouldLimitDailyCycling) {
-      ({ dailyCycleLimit } = battery);
-    }
-    // determine HP
-    let hp = ZERO;
-    if (battery.includeAuxiliaryLoad) {
-      hp = battery.auxiliaryLoad;
-    }
-    // TODO determine DIS_MAX_RATED & CH_MAX_RATED
-    let chargingCapacity = ZERO;
-    let dischargingCapacity = ZERO;
-    if (!battery.shouldPowerSize) {
-      if (battery.shouldDiffChargeDischarge) {
-        ({ chargingCapacity, dischargingCapacity } = battery);
-      } else {
-        chargingCapacity = battery.powerCapacity;
-        dischargingCapacity = battery.powerCapacity;
-      }
-    }
-
-    // TODO revisit this
-    let { maxDuration } = battery;
-    if (battery.maxDuration === undefined || battery.maxDuration === null) {
-      maxDuration = 0;
-    }
-
-    // TODO determine ENE_MAX_RATED
-    let energyCapacity = ZERO;
-    if (!battery.shouldEnergySize) {
-      ({ energyCapacity } = battery);
-    }
-    const keys = {
-      OMexpenses: makeBaseKey(battery.variableOMCosts, FLOAT),
-      acr: makeBaseKey(0, FLOAT), // hardcoded
-      ccost: makeBaseKey(battery.capitalCost, FLOAT),
-      ccost_kw: makeBaseKey(battery.capitalCostPerkW, FLOAT),
-      ccost_kwh: makeBaseKey(battery.capitalCostPerkWh, FLOAT),
-      ch_max_rated: makeBaseKey(chargingCapacity, FLOAT),
-      ch_min_rated: makeBaseKey(ZERO, FLOAT), // hardcoded
-      construction_year: makeBaseKey(convertDateToYear(battery.constructionDate), PERIOD),
-      cycle_life_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, CYCLE), STRING),
-      daily_cycle_limit: makeBaseKey(dailyCycleLimit, FLOAT),
-      decommissioning_cost: makeBaseKey(ZERO, FLOAT), // TODO: new, verify value
-      dis_max_rated: makeBaseKey(dischargingCapacity, FLOAT),
-      dis_min_rated: makeBaseKey(ZERO, FLOAT), // hardcoded
-      duration_max: makeBaseKey(maxDuration, FLOAT),
-      'ecc%': makeBaseKey(ZERO, FLOAT), // TODO new, verify value
-      ene_max_rated: makeBaseKey(energyCapacity, FLOAT),
-      expected_lifetime: makeBaseKey(99, INT), // TODO: new, verify value
-      fixedOM: makeBaseKey(battery.fixedOMCosts, FLOAT),
-      hp: makeBaseKey(hp, FLOAT),
-      incl_cycle_degrade: makeBaseKey(convertToOneZero(battery.includeCycleDegradation), BOOL),
-      incl_ts_charge_limits: makeBaseKey(ZERO, BOOL), // TODO new, verify value
-      incl_ts_discharge_limits: makeBaseKey(ZERO, BOOL), // TODO new, verify value
-      incl_ts_energy_limits: makeBaseKey(ZERO, BOOL), // TODO new, verify value
-      llsoc: makeBaseKey(battery.lowerSOCLimit, FLOAT),
-      macrs_term: makeBaseKey(battery.macrsTerm, FLOAT),
-      name: makeBaseKey(battery.name, STRING),
-      nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
-      operation_year: makeBaseKey(convertDateToYear(battery.operationDate), PERIOD),
-      p_start_ch: makeBaseKey(ZERO, FLOAT), // hardcoded
-      p_start_dis: makeBaseKey(ZERO, FLOAT), // hardcoded
-      rcost: makeBaseKey(0, FLOAT), // TODO new, verify value
-      rcost_kW: makeBaseKey(100, FLOAT), // TODO new, verify value
-      rcost_kWh: makeBaseKey(800, FLOAT), // TODO new, verify value
-      replaceable: makeBaseKey(ZERO, BOOL), // TODO new, verify value
-      replacement_construction_time: makeBaseKey(ONE, INT), // TODO new, verify value
-      rte: makeBaseKey(battery.roundtripEfficiency, FLOAT),
-      salvage_value: makeBaseKey(ZERO, STRING_INT), // TODO new, verify value
-      sdr: makeBaseKey(battery.selfDischargeRate, FLOAT),
-      soc_target: makeBaseKey(battery.targetSOC, FLOAT),
-      sr_response_time: makeBaseKey(ZERO, INT), // hardcoded
-      startup: makeBaseKey(ZERO, BOOL), // hardcoded
-      startup_time: makeBaseKey(ZERO, INT), // hardcoded
-      state_of_health: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
-      ter: makeBaseKey(7, FLOAT), // TODO new, verify value
-      ulsoc: makeBaseKey(battery.upperSOCLimit, FLOAT),
-      user_ch_rated_max: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
-      user_ch_rated_min: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
-      user_dis_rated_max: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
-      user_dis_rated_min: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
-      user_ene_rated_max: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
-      user_ene_rated_min: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
-      yearly_degrade: makeBaseKey(battery.calendarDegradationRate, INT),
-    };
-    return makeGroup(battery.id, convertToYesNo(battery.active), keys);
+  if (includeBatteryParameters) {
+    const { inputsDirectory } = project;
+    return _.reduce(batteries, (result, battery) => (
+      _.extend(result, makeSingleBatteryParameter(battery, inputsDirectory))
+    ), {});
   }
   return makeEmptyGroup();
 };
@@ -563,13 +572,13 @@ export const makeModelParameters = project => ({
   type: project.type,
 });
 
-export const makeBatteryCycleLifeCsv = (project) => {
+export const makeBatteryCycleLifeCsv = (battery) => {
   /* TODO:
     - see if batteryCycleLife could be part of model parameters (i.e. not written to CSV)
     - check if batteryCycles exist
     - extend to support multiple battery case
   */
-  const data = project.technologySpecsBattery[0].batteryCycles;
+  const data = battery.batteryCycles;
   const fields = ['ulimit', 'val'];
   const headers = ['Cycle Depth Upper Limit', 'Cycle Life Value'];
   return objectToCsv(data, fields, headers);
@@ -684,9 +693,9 @@ export const makeTimeSeriesCsv = (project) => {
 };
 
 class CycleDto {
-  constructor(project) {
-    this.csv = makeBatteryCycleLifeCsv(project);
-    this.filePath = makeCsvFilePath(project.inputsDirectory, CYCLE);
+  constructor(battery, inputsDirectory) {
+    this.csv = makeBatteryCycleLifeCsv(battery);
+    this.filePath = makeBatteryCsvFilePath(inputsDirectory, battery);
   }
 }
 
@@ -771,14 +780,26 @@ export const makeExpectedResultCsvs = (project) => {
   return expectedResultsCsvs;
 };
 
-export const makeCsvs = project => ([
-  // TODO add monthly data
-  (new MonthlyDto(project)),
-  (new TariffDto(project)),
-  (new YearlyDto(project)),
-  (new TimeSeriesDto(project)),
-  (new CycleDto(project)),
-]);
+export const makeBatteryCsvs = (project) => {
+  const batteries = project.technologySpecsBattery;
+  const includeBatteryParameters = checkNotNullOrEmpty(batteries);
+
+  if (includeBatteryParameters) {
+    return _.map(batteries, battery => new CycleDto(battery, project.inputsDirectory));
+  }
+  return [];
+};
+
+export const makeCsvs = (project) => {
+  const result = [
+    // TODO add monthly data
+    (new MonthlyDto(project)),
+    (new TariffDto(project)),
+    (new YearlyDto(project)),
+    (new TimeSeriesDto(project)),
+  ];
+  return _.concat(result, makeBatteryCsvs(project));
+};
 
 
 export const makeMeta = project => ({

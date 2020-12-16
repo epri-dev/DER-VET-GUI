@@ -1,7 +1,12 @@
+// import fs from 'fs';
+import path from 'path';
+
 import {
   makeBaseKey,
+  makeBatteryCsvFilePath,
   makeBatteryCycleLifeCsv,
   makeBatteryParameters,
+  makeBatteryCsvs,
   makeCsvs,
   makeDAParameters,
   makeDCMParameters,
@@ -26,16 +31,23 @@ import {
 import { projectFixture } from '@/assets/samples/projectFixture.js';
 import { projectFixtureAllActive } from '@/assets/samples/projectFixture-everythingActive.js';
 import modelParametersFixture from '../../../../fixtures/case0/000-DA_battery_month.json';
-// import mpEverythingFixture from '../../../../fixtures/000-000-everything_active.json';
+import {
+  makeProjectBattery,
+  makeModelParamsBattery,
+  testInputsDirectory,
+} from '../../fixtures/models/dto/ProjectDto';
 
 describe('modelParametersDto', () => {
   const actualFullMP = makeModelParameters(projectFixture);
+
   it('should have translated the name correctly', () => {
     expect(actualFullMP.name).to.eql(modelParametersFixture.name);
   });
+
   it('should have translated the type correctly', () => {
     expect(actualFullMP.type).to.eql(modelParametersFixture.type);
   });
+
   const tagFixture = modelParametersFixture.tags;
   const actualTags = actualFullMP.tags;
   it('should have translated the battery parameters correctly', () => {
@@ -51,12 +63,15 @@ describe('modelParametersDto', () => {
       i += 1;
     }
   });
+
   it('should have translated the DA parameters correctly', () => {
     expect(actualTags.DA).to.eql(tagFixture.DA);
   });
+
   it('should have translated the DCM parameters correctly', () => {
     expect(actualTags.DCM).to.eql(tagFixture.DCM);
   });
+
   it('should have translated the deferral parameters correctly', () => {
     expect(actualTags.Deferral).to.eql(tagFixture.Deferral);
   });
@@ -125,10 +140,32 @@ describe('modelParametersDto', () => {
     expect(actual.length).to.eql(5);
   });
 
+  it('should create a battery CSV file path', () => {
+    const inputsDirectory = testInputsDirectory;
+    const id = '3d5e9040-5433-4545-b100-bc271c600377';
+    const battery = { id };
+    const actual = makeBatteryCsvFilePath(inputsDirectory, battery);
+    expect(actual).to.equal(path.join(inputsDirectory, `cycle_${id}.csv`));
+  });
+
   it('should create a CSV containing battery cycle life data', () => {
-    const actual = makeBatteryCycleLifeCsv(projectFixture);
+    const battery = makeProjectBattery('3d5e9040-5433-4545-b100-bc271c600377');
+    const actual = makeBatteryCycleLifeCsv(battery);
     expect(actual).to.have.string('0.05,75000');
     expect(actual).to.have.string('Cycle Depth Upper Limit');
+  });
+
+
+  it('should create battery cycle life csv for each battery', () => {
+    const project = {
+      inputsDirectory: testInputsDirectory,
+      technologySpecsBattery: [
+        makeProjectBattery('3d5e9040-5433-4545-b100-bc271c600377'),
+        makeProjectBattery('ae4b895e-5c59-4a42-86c8-ae7388cb6ad8'),
+      ],
+    };
+    const actual = makeBatteryCsvs(project);
+    expect(actual.length).to.equal(2);
   });
 
   it('should create a CSV containing timeseries data', () => {
@@ -147,8 +184,21 @@ describe('modelParametersDto', () => {
   });
 
   it('should make battery parameters', () => {
-    const actual = makeBatteryParameters(projectFixture);
-    expect(Object.keys(actual[''].keys).length).to.eql(52);
+    const uuid1 = '14b1348c-29f2-402a-a167-2d30aae86680';
+    const uuid2 = 'dbdd6d5d-e5e2-4948-bc3e-5d7ae3040ba0';
+    const testProject = {
+      technologySpecsBattery: [
+        makeProjectBattery(uuid1),
+        makeProjectBattery(uuid2),
+      ],
+      inputsDirectory: testInputsDirectory,
+    };
+
+    const actual = makeBatteryParameters(testProject);
+    const expected = makeModelParamsBattery(uuid1);
+
+    expect(actual[uuid1]).to.eql(expected);
+    expect(Object.keys(actual)).to.eql([uuid1, uuid2]);
   });
 
   it('should make DA parameters', () => {
