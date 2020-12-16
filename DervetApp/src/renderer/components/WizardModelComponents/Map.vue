@@ -55,7 +55,7 @@
       <div class="col-md-4 buffer-bottom">
         <b-button block size="lg"
                   :to="this.paths.OBJECTIVES_SITE_INFORMATION_PATH"
-                  v-bind:class="{ 'incomplete-btn': isComplete('objectivesSiteInformation') }">
+                  v-bind:class="{ 'incomplete-btn': isComplete('objectives', 'siteInformation') }">
           Site Information
         </b-button>
       </div>
@@ -63,7 +63,7 @@
       <div class="col-md-4 buffer-bottom" v-if="objectivesDeferral">
         <b-button block size="lg"
                   :to="this.paths.OBJECTIVES_DEFERRAL_PATH"
-                  v-bind:class="{ 'incomplete-btn': isComplete('objectivesDeferral') }">
+                  v-bind:class="{ 'incomplete-btn': isComplete('objectives', 'deferral') }">
           Deferral
         </b-button>
       </div>
@@ -71,7 +71,7 @@
       <div class="col-md-4 buffer-bottom" v-if="objectivesFR">
         <b-button block size="lg"
                   :to="this.paths.OBJECTIVES_FR_PATH"
-                  v-bind:class="{ 'incomplete-btn': isComplete('objectivesFR') }">
+                  v-bind:class="{ 'incomplete-btn': isComplete('objectives', 'FR') }">
           Frequency Regulation
         </b-button>
       </div>
@@ -79,7 +79,7 @@
       <div class="col-md-4 buffer-bottom" v-if="objectivesNSR">
         <b-button block size="lg"
                   :to="this.paths.OBJECTIVES_NSR_PATH"
-                  v-bind:class="{ 'incomplete-btn': isComplete('objectivesNSR') }">
+                  v-bind:class="{ 'incomplete-btn': isComplete('objectives', 'NSR') }">
           Non-Spinning Reserves
         </b-button>
       </div>
@@ -87,7 +87,7 @@
       <div class="col-md-4 buffer-bottom" v-if="objectivesResilience">
         <b-button block size="lg"
                   :to="this.paths.OBJECTIVES_RESILIENCE_PATH"
-                  v-bind:class="{ 'incomplete-btn': isComplete('objectivesResilience') }">
+                  v-bind:class="{ 'incomplete-btn': isComplete('objectives', 'resilience') }">
           Reliability
         </b-button>
       </div>
@@ -95,7 +95,7 @@
       <div class="col-md-4 buffer-bottom" v-if="objectivesSR">
         <b-button block size="lg"
                   :to="this.paths.OBJECTIVES_SR_PATH"
-                  v-bind:class="{ 'incomplete-btn': isComplete('objectivesSR') }">
+                  v-bind:class="{ 'incomplete-btn': isComplete('objectives', 'SR') }">
           Spinning Reserves
         </b-button>
       </div>
@@ -103,7 +103,7 @@
       <div class="col-md-4 buffer-bottom" v-if="objectivesUserDefined">
         <b-button block size="lg"
                   :to="this.paths.OBJECTIVES_USER_DEFINED_PATH"
-                  v-bind:class="{ 'incomplete-btn': isComplete('objectivesUserDefined') }">
+                  v-bind:class="{ 'incomplete-btn': isComplete('objectives', 'userDefined') }">
           Custom Service
         </b-button>
       </div>
@@ -111,7 +111,7 @@
       <div class="col-md-4 buffer-bottom" v-if="objectivesDA">
         <b-button block size="lg"
                   :to="this.paths.OBJECTIVES_DA_PATH"
-                  v-bind:class="{ 'incomplete-btn': isComplete('objectivesDA') }">
+                  v-bind:class="{ 'incomplete-btn': isComplete('objectives', 'DA') }">
           Day Ahead Pricing
         </b-button>
       </div>
@@ -124,20 +124,22 @@
       <div class="col-md-4">
         <b-button block size="lg"
                   :to="this.paths.FINANCIAL_INPUTS_PATH"
-                  v-bind:class="{ 'incomplete-btn': isComplete('financialInputs') }">
+                  v-bind:class="{ 'incomplete-btn': isComplete('financial', 'inputs') }">
           Miscellaneous Inputs
         </b-button>
       </div>
       <div class="col-md-4">
         <b-button block size="lg"
-                  :to="this.paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH">
+                  :to="this.paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH"
+                  v-bind:class="{ 'incomplete-btn': isComplete('financial', 'externalIncentives') }">
           External Incentives
         </b-button>
       </div>
       <div class="col-md-4"
            v-if="objectivesRetailEnergyChargeReduction||objectivesRetailDemandChargeReduction">
         <b-button block size="lg"
-                  :to="this.paths.FINANCIAL_INPUTS_RETAIL_TARIFF_PATH">
+                  :to="this.paths.FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
+                  v-bind:class="{ 'incomplete-btn': isComplete('financial', 'retailTariff') }">
           Retail Tariff
         </b-button>
       </div>
@@ -226,8 +228,8 @@
       },
     },
     methods: {
-      isComplete(page) {
-        return !this.$store.state.Application.pageCompleteness.components[page];
+      isComplete(pageKey, page) {
+        return !this.$store.state.Application.pageCompleteness.components[pageKey][page];
       },
       getTechLabel(payload) {
         if (payload.name) {

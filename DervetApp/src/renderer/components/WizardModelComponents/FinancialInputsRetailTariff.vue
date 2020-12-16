@@ -24,7 +24,9 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="table-align-center" v-for="pd in billingPeriods">
+              <tr class="table-align-center"
+                  v-for="pd in billingPeriods"
+                  v-bind:class="{ incomplete: !pd.complete }">
                 <td>{{pd.id}}</td>
                 <td>{{pd.startMonth}}</td>
                 <td>{{pd.endMonth}}</td>
@@ -38,7 +40,8 @@
                 <td>{{pd.name}}</td>
                 <td class="table-ensure-width">
                   <router-link
-                    :to="{ name: 'financialInputsRetailTariffBillingPeriod', params: { billingPeriodId: pd.id }}">
+                    :to="{ name: 'financialInputsRetailTariffBillingPeriod', params: { billingPeriodId: pd.id }}"
+                    v-bind:class="{ incomplete: !pd.complete }">
                     Edit
                   </router-link>
                   <span> | </span>
@@ -79,7 +82,10 @@
     <hr>
 
     <nav-buttons :continue-link="WIZARD_COMPONENT_PATH"
-                 :back-link="WIZARD_COMPONENT_PATH" />
+                 :displayError="!complete"
+                 :error-text="getSingleErrorMsg()"
+                 continue-text="Done Adding Billing Periods" />
+
   </div>
 </template>
 
@@ -93,10 +99,16 @@
   } from '@/router/constants';
 
   export default {
+    mounted() {
+      this.setRetailTariffData();
+    },
     components: { NavButtons },
     computed: {
       billingPeriods() {
         return this.$store.state.Project.retailTariffBillingPeriods;
+      },
+      complete() {
+        return this.billingPeriodsExist() && this.getNumberOfInvalidRows() === 0;
       },
     },
     data() {
@@ -114,11 +126,55 @@
       billingPeriodsExist() {
         return this.billingPeriods.length > 0;
       },
+      getCompletenessPayload() {
+        return {
+          pageGroup: 'components',
+          pageKey: 'financial',
+          page: 'retailTariff',
+          completeness: this.complete,
+        };
+      },
+      getErrorListPayload() {
+        const errors = [];
+        if (!this.complete) {
+          errors.push(this.getSingleErrorMsg());
+        }
+        return {
+          pageGroup: 'components',
+          pageKey: 'financial',
+          page: 'retailTariff',
+          errorList: errors,
+        };
+      },
+      getNumberOfInvalidRows() {
+        let invalidRowsCount = 0;
+        Object.values(this.billingPeriods).forEach((row) => {
+          if (!row.complete) {
+            invalidRowsCount += 1;
+          }
+        });
+        return invalidRowsCount;
+      },
+      getSingleErrorMsg() {
+        if (!this.billingPeriodsExist()) {
+          return 'There are no billing periods specified.';
+        } else if (!this.complete) {
+          const pluralizeRow = (this.getNumberOfInvalidRows() === 1) ? '' : 's';
+          return `There are errors with ${this.getNumberOfInvalidRows()} row${pluralizeRow} in the table.`;
+        }
+        return '';
+      },
       removeAll() {
         this.$store.dispatch('removeAllRetailTariffBillingPeriods');
+        this.setRetailTariffData();
       },
       removeOne(id) {
         this.$store.dispatch('removeRetailTariffBillingPeriod', id);
+        this.setRetailTariffData();
+      },
+      setRetailTariffData() {
+        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
+        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
       },
     },
   };
