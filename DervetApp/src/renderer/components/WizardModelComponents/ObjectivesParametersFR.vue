@@ -136,7 +136,7 @@
         return new FRDownPriceTimeSeries(this.inputTimeseries3);
       },
       complete() {
-        return this.$store.state.Application.pageCompleteness.components.objectivesFR;
+        return this.$store.state.Application.pageCompleteness.components.objectives.FR;
       },
     },
     beforeMount() {
@@ -158,15 +158,34 @@
       getCompletenessPayload() {
         return {
           pageGroup: 'components',
-          page: 'objectivesFR',
+          pageKey: 'objectives',
+          page: 'FR',
           completeness: !this.$v.$invalid,
         };
       },
+      getErrorListPayload() {
+        const errors = [];
+        Object.keys(this.$v).forEach((key) => {
+          if (key.charAt(0) !== '$' && this.$v[key].$invalid) {
+            errors.push(this.getErrorMsg(key));
+          }
+        });
+        return {
+          pageGroup: 'components',
+          pageKey: 'objectives',
+          page: 'FR',
+          errorList: errors,
+        };
+      },
       validatedSave() {
+        // set completeness
+        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
         this.submitted = true;
         this.$v.$touch();
-        // set complete to true or false
-        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
+        // set errorList
+        if (this.complete !== true) {
+          this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
+        }
         return this.save();
       },
       save() {

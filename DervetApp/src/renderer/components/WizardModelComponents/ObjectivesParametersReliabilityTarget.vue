@@ -86,7 +86,7 @@
         return new CriticalLoadTimeSeries(this.inputTimeseries);
       },
       complete() {
-        return this.$store.state.Application.pageCompleteness.components.objectivesResilience;
+        return this.$store.state.Application.pageCompleteness.components.objectives.resilience;
       },
     },
     beforeMount() {
@@ -114,8 +114,23 @@
       getCompletenessPayload() {
         return {
           pageGroup: 'components',
-          page: 'objectivesResilience',
+          pageKey: 'objectives',
+          page: 'resilience',
           completeness: !this.$v.$invalid,
+        };
+      },
+      getErrorListPayload() {
+        const errors = [];
+        Object.keys(this.$v).forEach((key) => {
+          if (key.charAt(0) !== '$' && this.$v[key].$invalid) {
+            errors.push(this.getErrorMsg(key));
+          }
+        });
+        return {
+          pageGroup: 'components',
+          pageKey: 'objectives',
+          page: 'resilience',
+          errorList: errors,
         };
       },
       validatedSave() {
@@ -123,10 +138,14 @@
         if (this.reliabilityPostOptimizationOnly === true) {
           this.resetNonRequired(['reliabilityTarget']);
         }
+        // set completeness
+        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
         this.submitted = true;
         this.$v.$touch();
-        // set complete to true or false
-        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
+        // set errorList
+        if (this.complete !== true) {
+          this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
+        }
         return this.save();
       },
       save() {

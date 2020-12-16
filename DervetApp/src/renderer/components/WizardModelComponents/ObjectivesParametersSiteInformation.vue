@@ -113,7 +113,7 @@
         return new SiteLoadTimeSeries(this.inputTimeseries);
       },
       complete() {
-        return this.$store.state.Application.pageCompleteness.components.objectivesSiteInformation;
+        return this.$store.state.Application.pageCompleteness.components.objectives.siteInformation;
       },
     },
     beforeMount() {
@@ -141,8 +141,23 @@
       getCompletenessPayload() {
         return {
           pageGroup: 'components',
-          page: 'objectivesSiteInformation',
+          pageKey: 'objectives',
+          page: 'siteInformation',
           completeness: !this.$v.$invalid,
+        };
+      },
+      getErrorListPayload() {
+        const errors = [];
+        Object.keys(this.$v).forEach((key) => {
+          if (key.charAt(0) !== '$' && this.$v[key].$invalid) {
+            errors.push(this.getErrorMsg(key));
+          }
+        });
+        return {
+          pageGroup: 'components',
+          pageKey: 'objectives',
+          page: 'siteInformation',
+          errorList: errors,
         };
       },
       validatedSave() {
@@ -150,10 +165,14 @@
         if (this.includeInterconnectionConstraints === false) {
           this.resetNonRequired(['maxExport', 'maxImport']);
         }
+        // set completeness
+        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
         this.submitted = true;
         this.$v.$touch();
-        // set complete to true or false
-        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
+        // set errorList
+        if (this.complete !== true) {
+          this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
+        }
         return this.save();
       },
       save() {

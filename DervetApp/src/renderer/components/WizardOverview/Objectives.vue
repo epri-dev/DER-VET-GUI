@@ -218,7 +218,7 @@
         } else if (this.sizingEquipment === false && this.optimizationHorizon !== 'Hours') {
           this.resetNonRequired(['optimizationHorizonNum']);
         }
-        // set complete to true or false
+        // set completeness
         this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
         this.submitted = true;
         this.$v.$touch();

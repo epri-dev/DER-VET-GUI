@@ -43,8 +43,41 @@
         </div>
 
         <div v-if="componentObjectiveErrorExists()" class="incomplete">
+          <h4>Errors in Services Components</h4>
+          <div v-for="service in activeServicesObject()">
+            <div v-if="!service.complete">
+              <li>
+                <router-link class="text-decoration-none"
+                             :to="service.path">
+                  {{ service.name + notStartedText(service.complete) }}
+                </router-link>
+                <ul>
+                  <li v-for="error in service.errors">
+                    <span v-html="error"></span>
+                  </li>
+                </ul>
+              </li>
+            </div>
+          </div>
         </div>
-        <div v-if="componentFinanceErrorExists()" class="incomplete">
+
+        <div v-if="componentFinancialErrorExists()" class="incomplete">
+          <h4>Errors in Finances Components</h4>
+          <div v-for="finance in activeFinancesObject()">
+            <div v-if="!finance.complete">
+              <li>
+                <router-link class="text-decoration-none"
+                             :to="finance.path">
+                  {{ finance.name + notStartedText(finance.complete) }}
+                </router-link>
+                <ul>
+                  <li v-for="error in finance.errors">
+                    <span v-html="error"></span>
+                  </li>
+                </ul>
+              </li>
+            </div>
+          </div>
         </div>
 
         </br>
@@ -85,7 +118,7 @@
 
         <h4>Services</h4>
         <ul>
-          <li v-for="service in services">
+          <li v-for="service in activeServices">
             {{ service }}
           </li>
         </ul>
@@ -152,6 +185,68 @@
 
   const { validation } = model;
 
+  const NOT_STARTED = ': Not Started';
+
+  const SERVICE_COMPONENTS_MAPPING = {
+    siteInformation: {
+      name: 'Site Information',
+      path: paths.OBJECTIVES_SITE_INFORMATION_PATH,
+      activeVar: [],
+    },
+    deferral: {
+      name: 'Deferral',
+      path: paths.OBJECTIVES_DEFERRAL_PATH,
+      activeVar: ['objectivesDeferral'],
+    },
+    FR: {
+      name: 'Frequency Regulation',
+      path: paths.OBJECTIVES_FR_PATH,
+      activeVar: ['objectivesFR'],
+    },
+    NSR: {
+      name: 'Non-Spinning Reserves',
+      path: paths.OBJECTIVES_NSR_PATH,
+      activeVar: ['objectivesNSR'],
+    },
+    resilience: {
+      name: 'Reliability',
+      path: paths.OBJECTIVES_RESILIENCE_PATH,
+      activeVar: ['objectivesResilience'],
+    },
+    SR: {
+      name: 'Spinning Reserves',
+      path: paths.OBJECTIVES_SR_PATH,
+      activeVar: ['objectivesSR'],
+    },
+    userDefined: {
+      name: 'Custom Service',
+      path: paths.OBJECTIVES_USER_DEFINED_PATH,
+      activeVar: ['objectivesUserDefined'],
+    },
+    DA: {
+      name: 'Day Ahead Pricing',
+      path: paths.OBJECTIVES_DA_PATH,
+      activeVar: ['objectivesDA'],
+    },
+  };
+  const FINANCE_COMPONENTS_MAPPING = {
+    inputs: {
+      name: 'Miscellaneous Inputs',
+      path: paths.FINANCIAL_INPUTS_PATH,
+      activeVar: [],
+    },
+    externalIncentives: {
+      name: 'External Incentives',
+      path: paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
+      activeVar: [],
+    },
+    retailTariff: {
+      name: 'Retail Tariff',
+      path: paths.FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
+      activeVar: ['objectivesRetailEnergyChargeReduction', 'objectivesRetailDemandChargeReduction'],
+    },
+  };
+
   export default {
     computed: {
       inputAndResultsSelected() {
@@ -196,14 +291,74 @@
           .then(this.$router.push({ path: RUN_ANALYSIS_PATH }));
       },
 
-      // objectives components
+      // objectives (Services) components
+      activeServicesObject() {
+        const servicesObject = {};
+        Object.entries(SERVICE_COMPONENTS_MAPPING).forEach(([key, value]) => {
+          if (this.isActive(value.activeVar)) {
+            servicesObject[key] = {
+              name: value.name,
+              complete: this.$store.state.Application.pageCompleteness.components.objectives[key],
+              errors: this.$store.state.Application.errorList.components.objectives[key],
+              path: value.path,
+            };
+          }
+        });
+        return servicesObject;
+      },
       componentObjectiveErrorExists() {
-        return false;
+        let errorsTF = false;
+        Object.values(this.activeServicesObject()).forEach((item) => {
+          if (item.complete !== true) {
+            errorsTF = true;
+          }
+        });
+        return errorsTF;
       },
 
-      // finance components
-      componentFinanceErrorExists() {
-        return false;
+      // components
+      isActive(list) {
+        if (list.length === 0) {
+          return true;
+        }
+        let activeTF = false;
+        list.forEach((item) => {
+          if (this.$store.state.Project[item]) {
+            activeTF = true;
+          }
+        });
+        return activeTF;
+      },
+      notStartedText(item) {
+        if (item === null) {
+          return NOT_STARTED;
+        }
+        return '';
+      },
+
+      // financial components
+      activeFinancesObject() {
+        const financesObject = {};
+        Object.entries(FINANCE_COMPONENTS_MAPPING).forEach(([key, value]) => {
+          if (this.isActive(value.activeVar)) {
+            financesObject[key] = {
+              name: value.name,
+              complete: this.$store.state.Application.pageCompleteness.components.financial[key],
+              errors: this.$store.state.Application.errorList.components.financial[key],
+              path: value.path,
+            };
+          }
+        });
+        return financesObject;
+      },
+      componentFinancialErrorExists() {
+        let errorsTF = false;
+        Object.values(this.activeFinancesObject()).forEach((item) => {
+          if (item.complete !== true) {
+            errorsTF = true;
+          }
+        });
+        return errorsTF;
       },
 
       // technology components
@@ -213,7 +368,7 @@
       },
       getTechDisplayName(tech) {
         if (tech.complete === null) {
-          return 'Not Started';
+          return NOT_STARTED;
         } else if (!tech.name) {
           return 'Undefined';
         }
@@ -280,7 +435,6 @@
       },
       getOverviewDisplayName(page) {
         let overviewName = '';
-        const notStarted = this.$store.state.Application.pageCompleteness.overview[page];
         if (page === 'start') {
           overviewName = 'Project Configuration';
         } else if (page === 'objectives') {
@@ -288,7 +442,10 @@
         } else if (page === 'technologySpecs') {
           overviewName = 'Technology Specifications';
         }
-        return `${overviewName}${notStarted === null ? ': Not Started' : ''}`;
+        if (this.notStartedText(this.$store.state.Application.pageCompleteness.overview[page])) {
+          return `${overviewName}${NOT_STARTED}`;
+        }
+        return overviewName;
       },
     },
     data() {
@@ -308,7 +465,8 @@
         techGen: this.$store.state.Project.listOfActiveTechnologies.Generator,
         techIR: this.$store.state.Project.listOfActiveTechnologies['Intermittent Resource'],
         techESS: this.$store.state.Project.listOfActiveTechnologies['Energy Storage System'],
-        services: this.$store.state.Project.listOfActiveServices,
+        activeServices: this.$store.state.Project.listOfActiveServices,
+        // pageC: this.$store.state.Application.pageCompleteness,
         finances: [
           ['Discount rate', this.getRateDisplay(this.$store.state.Project.financeDiscountRate)],
           ['Inflation rate', this.getRateDisplay(this.$store.state.Project.financeInflationRate)],
