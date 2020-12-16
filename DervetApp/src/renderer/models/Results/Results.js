@@ -1,5 +1,5 @@
 import { papaParseCsvString } from '@/util/file';
-import { SizeData } from './SizeData';
+import SizeData from './SizeData';
 import { ProFormaData } from './ProFormaData';
 import { CostBenefitData } from './CostBenefitData';
 import { BeforeAndAfterMonthlyBillData } from './BeforeAndAfterMonthlyBillData';
@@ -49,18 +49,15 @@ export class ResultsData {
   }
   initializeSize(csvString) {
     const papaParseObject = papaParseCsvString(csvString);
-    const data = new SizeData(papaParseObject.data);
-    return data;
+    return new SizeData(papaParseObject.data);
   }
   initializeProForma(csvString) {
     const papaParseObject = papaParseCsvString(csvString);
-    const data = new ProFormaData(papaParseObject.data);
-    return data;
+    return new ProFormaData(papaParseObject.data);
   }
   initializeCostBenefit(csvString) {
     const papaParseObject = papaParseCsvString(csvString);
-    const data = new CostBenefitData(papaParseObject.data);
-    return data;
+    return new CostBenefitData(papaParseObject.data);
   }
   initializeBeforeAfterMonthly(csvString) {
     const papaParseObject = papaParseCsvString(csvString);
@@ -68,8 +65,7 @@ export class ResultsData {
     if (!this.showBeforeAfterMonthlyEnergyBill) {
       return null;
     }
-    const data = new BeforeAndAfterMonthlyBillData(papaParseObject.data);
-    return data;
+    return new BeforeAndAfterMonthlyBillData(papaParseObject.data);
   }
   initializePeakLoadDay(csvString) {
     const papaParseObject = papaParseCsvString(csvString);
@@ -77,8 +73,7 @@ export class ResultsData {
     if (!this.showPeakLoadDay) {
       return null;
     }
-    const data = new PeakLoadDayData(papaParseObject.data);
-    return data;
+    return new PeakLoadDayData(papaParseObject.data);
   }
   initializeDeferral(csvString) {
     const papaParseObject = papaParseCsvString(csvString);
@@ -86,9 +81,7 @@ export class ResultsData {
     if (!this.showDeferral) {
       return null;
     }
-    console.log('Deferral is not null');
-    const data = new DeferralData(papaParseObject.data);
-    return data;
+    return new DeferralData(papaParseObject.data);
   }
   initializeLoadCoverageProb(csvString) {
     const papaParseObject = papaParseCsvString(csvString);
@@ -96,8 +89,7 @@ export class ResultsData {
     if (!this.showLoadCoverageProbability) {
       return null;
     }
-    const data = new LoadCoverageProbabilityData(papaParseObject.data);
-    return data;
+    return new LoadCoverageProbabilityData(papaParseObject.data);
   }
   initializeOutageContribution(csvString) {
     const papaParseObject = papaParseCsvString(csvString, true);

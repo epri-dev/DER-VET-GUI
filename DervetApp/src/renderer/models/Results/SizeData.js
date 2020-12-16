@@ -1,6 +1,6 @@
 import BaseTableData from './BaseTableData';
 
-export class SizeData extends BaseTableData {
+export default class SizeData extends BaseTableData {
   constructor(data) {
     super('size.csv', data, true);
     this.powerCols = ['discharge', 'power', 'charge'];
@@ -10,6 +10,7 @@ export class SizeData extends BaseTableData {
     // organize data into objects -- makes it easier to convert into other structures
     this.sizeTableDataRows = this.createDataObject();
   }
+
   createDataObject() {
     let rowNum = 0;
     const rowDataObjects = [];
@@ -25,7 +26,7 @@ export class SizeData extends BaseTableData {
           const camelCol = BaseTableData.toCamelCaseString(colString);
 
           const value = rawData[nameIndex];
-          if (value !== 0 && value !== null) {
+          if (value !== null) {
             rowTemplate[camelCol] = value;
           }
           nameIndex += 1;
@@ -39,6 +40,7 @@ export class SizeData extends BaseTableData {
     }
     return rowDataObjects;
   }
+
   static createSortableField(label) {
     return {
       key: BaseTableData.toCamelCaseString(label),
@@ -46,6 +48,7 @@ export class SizeData extends BaseTableData {
       label,
     };
   }
+
   createSizeTableFields() {
     // intialize fields with Name
     const dataColumnsFeilds = [{
@@ -94,12 +97,14 @@ export class SizeData extends BaseTableData {
 
     return dataColumnsFeilds;
   }
+
   createSizeTable() {
     return {
       data: this.sizeTableDataRows,
       fields: this.createSizeTableFields(),
     };
   }
+
   static createCostTableData(rowSizeData) {
     let costStructure = [];
     let energyCost = 0;
@@ -123,7 +128,7 @@ export class SizeData extends BaseTableData {
     }
     if ('capitalCostKW' in rowSizeData) {
       const cCostkW = rowSizeData.capitalCostKW;
-      const powerCapacityKW = rowSizeData.dischargeRatingKW || rowSizeData.powerCapacityKW;
+      const powerCapacityKW = this.getPowerCapacityKW(rowSizeData);
       powerCost = powerCapacityKW * cCostkW;
       const costPerkW = [
         {
@@ -165,6 +170,16 @@ export class SizeData extends BaseTableData {
       items: costStructure,
     };
   }
+
+  static getPowerCapacityKW(rowSizeData) {
+    if (rowSizeData.dischargeRatingKW !== undefined) {
+      return rowSizeData.dischargeRatingKW;
+    } if (rowSizeData.powerCapacityKW !== undefined) {
+      return rowSizeData.powerCapacityKW;
+    }
+    return 0;
+  }
+
   createCostTables() {
     let i = 0;
     const tableData = [];
@@ -175,6 +190,7 @@ export class SizeData extends BaseTableData {
     }
     return tableData;
   }
+
   findEssSize() {
     // todo write test for this
     // assumes that there is only 1 ESS -- chooses the largest
@@ -194,174 +210,3 @@ export class SizeData extends BaseTableData {
     return { essEnergy, essPower, essName };
   }
 }
-
-export const sizeArrayData = [
-  ['DER', 'Energy Rating (kWh)', 'Charge Rating (kW)', 'Discharge Rating (kW)', 'Round Trip Efficiency (%)', 'Lower Limit on SOC (%)', 'Upper Limit on SOC (%)', 'Duration (hours)', 'Capital Cost ($)', 'Capital Cost ($/kW)', 'Capital Cost ($/kWh)', 'Power Capacity (kW)', 'Quantity'],
-  ['Storage', 19477, 2303, 2303, 0.85, 0.05, 1.0, 8.457, 1000, 800, 250, null, null],
-  ['Solar PV', null, null, null, null, null, null, null, null, 1660, null, 3000, null],
-  ['Generators', null, null, null, null, null, null, null, 750, 245, null, 1000, 3],
-  [null],
-];
-
-export const sizeTableExpectedData = [
-  {
-    systemName: 'Storage',
-    dischargeRatingKW: 2303,
-    chargeRatingKW: 2303,
-    energyRatingKWh: 19477,
-    durationHours: 8.457,
-    quantity: 1,
-    capitalCost: 1000,
-    capitalCostKW: 800,
-    capitalCostkWh: 250,
-    roundTripEfficiency: 0.85,
-    lowerLimitOnSOC: 0.05,
-    upperLimitOnSOC: 1.0,
-  },
-  {
-    systemName: 'Solar PV',
-    powerCapacityKW: 3000,
-    quantity: 1,
-    capitalCostKW: 1660,
-  },
-  {
-    systemName: 'Generators',
-    powerCapacityKW: 1000,
-    quantity: 3,
-    capitalCost: 750,
-    capitalCostKW: 245,
-  },
-];
-
-export const sizeTableExpectedFeilds = [
-  {
-    key: 'systemName',
-    sortable: true,
-    label: 'System Name',
-  },
-  {
-    key: 'dischargeRatingKW',
-    sortable: true,
-    label: 'Discharge Rating (kW)',
-  },
-  {
-    key: 'powerCapacityKW',
-    sortable: true,
-    label: 'Power Capacity (kW)',
-  },
-  {
-    key: 'chargeRatingKW',
-    sortable: true,
-    label: 'Charge Rating (kW)',
-  },
-  {
-    key: 'energyRatingKWh',
-    sortable: true,
-    label: 'Energy Rating (kWh)',
-  },
-  {
-    key: 'durationHours',
-    sortable: true,
-    label: 'Duartion (hours)',
-  },
-  {
-    key: 'quantity',
-    sortable: true,
-    label: 'Quantity',
-  },
-];
-
-export const sizeArrayData1 = [
-  ['DER', 'Energy Rating (kWh)', 'Charge Rating (kW)', 'Discharge Rating (kW)', 'Round Trip Efficiency (%)', 'Lower Limit on SOC (%)', 'Upper Limit on SOC (%)', 'Duration (hours)', 'Capital Cost ($)', 'Capital Cost ($/kW)', 'Capital Cost ($/kWh)'],
-  ['Storage', 19477, 2303, 2303, 0.85, 0.05, 1.0, 8.457, 1000, 800, 250],
-];
-
-export const sizeTableExpectedData1 = [
-  {
-    systemName: 'Storage',
-    dischargeRatingKW: 2303,
-    chargeRatingKW: 2303,
-    energyRatingKWh: 19477,
-    durationHours: 8.457,
-    quantity: 1,
-    capitalCost: 1000,
-    capitalCostKW: 800,
-    capitalCostKWh: 250,
-    roundTripEfficiency: 0.85,
-    lowerLimitOnSOC: 0.05,
-    upperLimitOnSOC: 1.0,
-  },
-];
-
-export const sizeTableExpectedFeilds1 = [
-  {
-    key: 'systemName',
-    sortable: true,
-    label: 'System Name',
-  },
-  {
-    key: 'dischargeRatingKW',
-    sortable: true,
-    label: 'Discharge Rating (kW)',
-  },
-  {
-    key: 'chargeRatingKW',
-    sortable: true,
-    label: 'Charge Rating (kW)',
-  },
-  {
-    key: 'energyRatingKWh',
-    sortable: true,
-    label: 'Energy Rating (kWh)',
-  },
-  {
-    key: 'durationHours',
-    sortable: true,
-    label: 'Duartion (hours)',
-  },
-  {
-    key: 'quantity',
-    sortable: true,
-    label: 'Quantity',
-  },
-];
-
-export const sizeArrayData2 = [
-  ['DER', 'Capital Cost ($)', 'Capital Cost ($/kW)', 'Capital Cost ($/kWh)', 'Power Capacity (kW)', 'Quantity'],
-  ['Solar PV', null, 1660, null, 3000, null],
-  ['Generators', 750, 245, null, 1000, 3],
-];
-
-export const sizeTableExpectedData2 = [
-  {
-    systemName: 'Solar PV',
-    powerCapacityKW: 3000,
-    quantity: 1,
-    capitalCostKW: 1660,
-  },
-  {
-    systemName: 'Generators',
-    powerCapacityKW: 1000,
-    quantity: 3,
-    capitalCost: 750,
-    capitalCostKW: 245,
-  },
-];
-
-export const sizeTableExpectedFeilds2 = [
-  {
-    key: 'systemName',
-    sortable: true,
-    label: 'System Name',
-  },
-  {
-    key: 'powerCapacityKW',
-    sortable: true,
-    label: 'Power Capacity (kW)',
-  },
-  {
-    key: 'quantity',
-    sortable: true,
-    label: 'Quantity',
-  },
-];

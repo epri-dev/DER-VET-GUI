@@ -49,7 +49,7 @@
     },
     computed: {
       chartData() {
-        return this.$store.state.ProjectResult.reliabilityVueObjects;
+        return this.$store.state.Results.reliabilityVueObjects;
       },
     },
     methods: {

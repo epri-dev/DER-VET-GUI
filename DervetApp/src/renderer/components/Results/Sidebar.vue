@@ -44,13 +44,13 @@
   export default {
     computed: {
       results() {
-        return this.$store.state.ProjectResult.data;
+        return this.$store.state.Results.data;
       },
       showReliabilityResults() {
-        return this.$store.state.ProjectResult.data.showLoadCoverageProbability;
+        return this.$store.state.Results.data.showLoadCoverageProbability;
       },
       showDeferralResults() {
-        return this.$store.state.ProjectResult.data.showDeferral;
+        return this.$store.state.Results.data.showDeferral;
       },
     },
     methods: {
