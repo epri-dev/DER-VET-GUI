@@ -37,13 +37,17 @@ import {
   makeProjectPV,
   makeModelParamsBattery,
   makeModelParamsPV,
+  makeModelParamsResults,
   testInputsDirectory,
+  testResultsDirectory,
   testUuid1,
   testUuid2,
 } from '../../fixtures/models/dto/ProjectDtoFixtures';
 
 describe('modelParametersDto', () => {
-  const actualFullMP = makeModelParameters(projectFixture);
+  const actualFullMP = makeModelParameters(
+    projectFixture, testInputsDirectory, testResultsDirectory
+  );
 
   it('should have translated the name correctly', () => {
     expect(actualFullMP.name).to.eql(modelParametersFixture.name);
@@ -80,9 +84,11 @@ describe('modelParametersDto', () => {
   it('should have translated the deferral parameters correctly', () => {
     expect(actualTags.Deferral).to.eql(tagFixture.Deferral);
   });
+
   it('should have translated the diesel genset parameters correctly', () => {
     expect(actualTags.DieselGenset).to.eql(tagFixture.DieselGenset);
   });
+
   it('should have translated the finance parameters correctly', () => {
     const expectedKeyList = Object.keys(tagFixture.Finance[''].keys);
     const expectedLength = expectedKeyList.length;
@@ -96,27 +102,37 @@ describe('modelParametersDto', () => {
       i += 1;
     }
   });
+
   it('should have translated the FR parameters correctly', () => {
     expect(actualTags.FR).to.eql(tagFixture.FR);
   });
+
   it('should have translated the ICE parameters correctly', () => {
     expect(actualTags.ICE).to.eql(tagFixture.ICE);
   });
+
   it('should have translated the NSR parameters correctly', () => {
     expect(actualTags.NSR).to.eql(tagFixture.NSR);
   });
+
   it('should have translated the PV parameters correctly', () => {
     expect(actualTags.PV).to.eql(tagFixture.PV);
   });
+
   it('should have translated the reliability parameters correctly', () => {
     expect(actualTags.Reliability).to.eql(tagFixture.Reliability);
   });
+
   it('should have translated the results parameters correctly', () => {
-    expect(actualTags.Results).to.eql(tagFixture.Results);
+    const actual = makeResultsParameters(projectFixture, testResultsDirectory);
+    const expected = makeModelParamsResults(testResultsDirectory);
+    expect(actual).to.eql(expected);
   });
+
   it('should have translated the retail ETS parameters correctly', () => {
     expect(actualTags.RetailTimeShift).to.eql(tagFixture.RetailTimeShift);
   });
+
   it('should have translated the scenario parameters correctly', () => {
     const expectedKeyList = Object.keys(tagFixture.Scenario[''].keys);
     const expectedLength = expectedKeyList.length;
@@ -130,27 +146,29 @@ describe('modelParametersDto', () => {
       i += 1;
     }
   });
+
   it('should have translated the SR parameters correctly', () => {
     expect(actualTags.SR).to.eql(tagFixture.SR);
   });
+
   it('should have translated the user defined parameters correctly', () => {
     expect(actualTags.User).to.eql(tagFixture.User);
   });
+
   xit('should translate a Project object into a ModelParameters object', () => {
     expect(actualFullMP).to.eql(modelParametersFixture);
   });
 
   it('should create an object containing CSVs needed to run DERVET', () => {
-    const actual = makeCsvs(projectFixture);
+    const actual = makeCsvs(projectFixture, testInputsDirectory);
     expect(actual.length).to.eql(5);
   });
 
   it('should create a battery CSV file path', () => {
-    const inputsDirectory = testInputsDirectory;
     const id = '3d5e9040-5433-4545-b100-bc271c600377';
     const battery = { id };
-    const actual = makeBatteryCsvFilePath(inputsDirectory, battery);
-    expect(actual).to.equal(path.join(inputsDirectory, `cycle_${id}.csv`));
+    const actual = makeBatteryCsvFilePath(testInputsDirectory, battery);
+    expect(actual).to.equal(path.join(testInputsDirectory, `cycle_${id}.csv`));
   });
 
   it('should create a CSV containing battery cycle life data', () => {
@@ -169,7 +187,7 @@ describe('modelParametersDto', () => {
         makeProjectBattery('ae4b895e-5c59-4a42-86c8-ae7388cb6ad8'),
       ],
     };
-    const actual = makeBatteryCsvs(project);
+    const actual = makeBatteryCsvs(project, testInputsDirectory);
     expect(actual.length).to.equal(2);
   });
 
@@ -197,7 +215,7 @@ describe('modelParametersDto', () => {
       inputsDirectory: testInputsDirectory,
     };
 
-    const actual = makeBatteryParameters(testProject);
+    const actual = makeBatteryParameters(testProject, testInputsDirectory);
     const expected = makeModelParamsBattery(testUuid1);
 
     expect(actual[testUuid1]).to.eql(expected);
@@ -221,7 +239,7 @@ describe('modelParametersDto', () => {
     expect(Object.keys(actual[''].keys).length).to.eql(28);
   });
   it('should make finance parameters', () => {
-    const actual = makeFinanceParameters(projectFixture);
+    const actual = makeFinanceParameters(projectFixture, testInputsDirectory);
     expect(Object.keys(actual[''].keys).length).to.eql(10);
   });
   it('should make FR parameters', () => {
@@ -260,18 +278,13 @@ describe('modelParametersDto', () => {
     expect(Object.keys(actual[''].keys).length).to.eql(5);
   });
 
-  it('should make results parameters', () => {
-    const actual = makeResultsParameters(projectFixture);
-    expect(Object.keys(actual[''].keys).length).to.eql(3);
-  });
-
   it('should make retail ETS parameters', () => {
     const actual = makeRetailTimeShiftParameters(projectFixtureAllActive);
     expect(Object.keys(actual[''].keys).length).to.eql(1);
   });
 
   it('should make scenario parameters', () => {
-    const actual = makeScenarioParameters(projectFixture);
+    const actual = makeScenarioParameters(projectFixture, testInputsDirectory);
     expect(Object.keys(actual[''].keys).length).to.eql(25);
   });
 

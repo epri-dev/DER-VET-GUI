@@ -4,6 +4,7 @@ import path from 'path';
 import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
 
 export const testInputsDirectory = path.join('path', 'to', 'inputs');
+export const testResultsDirectory = path.join('path', 'to', 'outputs');
 export const testUuid1 = '14b1348c-29f2-402a-a167-2d30aae86680';
 export const testUuid2 = 'dbdd6d5d-e5e2-4948-bc3e-5d7ae3040ba0';
 
@@ -843,6 +844,41 @@ export const makeModelParamsPV = id => ({
           value: 'nan',
         },
         type: 'float',
+      },
+    },
+  },
+});
+
+export const makeModelParamsResults = resultsDir => ({
+  '': {
+    active: 'yes',
+    keys: {
+      dir_absolute_path: {
+        opt_value: resultsDir,
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'string',
+      },
+      errors_log_path: {
+        opt_value: resultsDir,
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'string',
+      },
+      label: {
+        opt_value: '',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'string',
       },
     },
   },
