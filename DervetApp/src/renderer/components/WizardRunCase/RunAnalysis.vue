@@ -8,7 +8,7 @@
       </div>
       <div class="col-md-12 text-center" v-else-if="isError">
         <br />
-        <div>An error occured while running DER-VET: please check <b>{{logPath}}</b> for more details.</div>
+        <div>An error occured while running DER-VET</div>
       </div>
       <div class="col-md-12 text-center" v-else-if="resultsExist">
         <br/>
@@ -34,7 +34,8 @@
         return this.$store.state.Results.data;
       },
       logPath() {
-        return path.join(this.$store.state.Project.resultsDirectory, LOG_FILE);
+        // TODO Optionally show where log file is if user selected an output folder?
+        return path.join(this.$store.state.Project.outputDirectory, LOG_FILE);
       },
       resultsExist() {
         if (this.results !== null) {

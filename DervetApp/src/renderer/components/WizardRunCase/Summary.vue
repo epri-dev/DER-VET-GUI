@@ -109,12 +109,6 @@
         </br>
 -->
 
-        <div class="form-group form-buffer row" v-if="!inputAndResultsSelected">
-          <div class="col-md-12 error-text-color text-center">
-            Please select your input and results folders in the Project Configuration page in Project Overview.
-          </div>
-        </div>
-
         <div class="form-group form-buffer row">
           <div class="col-md-5">
             <router-link
@@ -153,12 +147,6 @@
   const { validation } = model;
 
   export default {
-    computed: {
-      inputAndResultsSelected() {
-        const p = this.$store.state.Project;
-        return p.inputsDirectory && p.resultsDirectory;
-      },
-    },
     methods: {
       modeDescription() {
         if (this.$store.state.Project.analysisHorizonMode === undefined) {
@@ -179,7 +167,7 @@
       },
       runDervetDisabled() {
         // TODO: Use vuelidate to check if there are any errors in the project config
-        return !this.inputAndResultsSelected;
+        return false;
       },
       runInProgress() {
         return this.$store.state.Application.runInProgress;

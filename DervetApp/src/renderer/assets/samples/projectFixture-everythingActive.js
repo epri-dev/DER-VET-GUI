@@ -17,7 +17,7 @@ import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
 
 import csvs from './csvs';
 
-const INPUTS_DIRECTORY = '/path/to/inputs';
+const OUTPUT_DIRECTORY = '/path/to/output';
 
 export const projectFixtureAllActive = {
   analysisHorizon: 0,
@@ -59,7 +59,7 @@ export const projectFixtureAllActive = {
   frDownPrice: new FRDownPriceTimeSeries(csvs.price),
   gridLocation: 'Customer',
   inflationRate: 3,
-  inputsDirectory: INPUTS_DIRECTORY,
+  outputDirectory: OUTPUT_DIRECTORY,
   nsrGrowth: 2,
   nsrDuration: 0,
   nsrPrice: new NSRPriceTimeSeries(csvs.price),
@@ -84,7 +84,6 @@ export const projectFixtureAllActive = {
   reliabilityTarget: 6,
   reliabilityPostOptimizationOnly: false,
   reliabilityMaxOutageDuration: 12,
-  resultsDirectory: './Results/foo',
   retailTimeShiftGrowth: 4,
   retailTariffBillingPeriods: [
     {
