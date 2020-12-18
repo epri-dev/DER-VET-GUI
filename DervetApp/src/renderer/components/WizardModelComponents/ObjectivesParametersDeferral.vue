@@ -131,9 +131,7 @@
         this.submitted = true;
         this.$v.$touch();
         // set errorList
-        if (this.complete !== true) {
-          this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
-        }
+        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
         return this.save();
       },
       save() {

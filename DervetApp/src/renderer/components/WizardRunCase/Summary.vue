@@ -191,11 +191,13 @@
     siteInformation: {
       name: 'Site Information',
       path: paths.OBJECTIVES_SITE_INFORMATION_PATH,
+      // empty list means that the component is always active
       activeVar: [],
     },
     deferral: {
       name: 'Deferral',
       path: paths.OBJECTIVES_DEFERRAL_PATH,
+      // component is active if any item in the list is true
       activeVar: ['objectivesDeferral'],
     },
     FR: {
