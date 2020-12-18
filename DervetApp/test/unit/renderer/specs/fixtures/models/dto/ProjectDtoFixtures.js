@@ -1,6 +1,11 @@
+import _ from 'lodash';
 import path from 'path';
 
+import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
+
 export const testInputsDirectory = path.join('path', 'to', 'inputs');
+export const testUuid1 = '14b1348c-29f2-402a-a167-2d30aae86680';
+export const testUuid2 = 'dbdd6d5d-e5e2-4948-bc3e-5d7ae3040ba0';
 
 export const makeProjectBattery = id => ({
   active: true,
@@ -53,6 +58,24 @@ export const makeProjectBattery = id => ({
   technologyType: 'Energy Storage System',
   upperSOCLimit: 100,
   variableOMCosts: 0,
+});
+
+export const makeProjectPV = id => ({
+  active: true,
+  complete: true,
+  tag: 'PV',
+  technologyType: 'Intermittent Resource',
+  id,
+  name: 'Installation 1',
+  cost: 1660,
+  shouldSize: false,
+  ratedCapacity: 1000,
+  loc: 'AC',
+  inverterMax: 1000000000,
+  constructionDate: '2017-01-01',
+  operationDate: '2017-01-01',
+  macrsTerm: 3,
+  generationProfile: new PVGenerationTimeSeries((_.fill(Array(5), 1))),
 });
 
 export const makeModelParamsBattery = id => ({
@@ -525,6 +548,302 @@ export const makeModelParamsBattery = id => ({
         value: 'nan',
       },
       type: 'int',
+    },
+  },
+});
+
+export const makeModelParamsPV = id => ({
+  [id]: {
+    active: 'yes',
+    keys: {
+      PPA: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'bool',
+      },
+      PPA_cost: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      PPA_inflation_rate: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      acr: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      ccost_kW: {
+        opt_value: '1660',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      construction_year: {
+        opt_value: '2017',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'Period',
+      },
+      curtail: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'bool',
+      },
+      decommissioning_cost: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      'ecc%': {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      expected_lifetime: {
+        opt_value: '99',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      fixed_om_cost: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      gamma: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      grid_charge: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'bool',
+      },
+      grid_charge_penalty: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'bool',
+      },
+      growth: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      inv_max: {
+        opt_value: '1000000000',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      loc: {
+        opt_value: 'AC',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      macrs_term: {
+        opt_value: '3',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      max_rated_capacity: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'bool',
+      },
+      min_rated_capacity: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'bool',
+      },
+      name: {
+        opt_value: 'Installation 1',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'string',
+      },
+      nsr_response_time: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      nu: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      operation_year: {
+        opt_value: '2017',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'Period',
+      },
+      rated_capacity: {
+        opt_value: '1000',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      rcost_kW: {
+        opt_value: '100',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      replaceable: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'bool',
+      },
+      replacement_construction_time: {
+        opt_value: '1',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      salvage_value: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'string/int',
+      },
+      sr_response_time: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      startup_time: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      ter: {
+        opt_value: '7',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
     },
   },
 });

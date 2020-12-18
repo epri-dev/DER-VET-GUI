@@ -23,6 +23,7 @@ import {
   makeResultsParameters,
   makeRetailTimeShiftParameters,
   makeScenarioParameters,
+  makeSinglePVParameter,
   makeSRParameters,
   makeUserParameters,
   makeTimeSeriesCsv,
@@ -33,9 +34,13 @@ import { projectFixtureAllActive } from '@/assets/samples/projectFixture-everyth
 import modelParametersFixture from '../../../../fixtures/case0/000-DA_battery_month.json';
 import {
   makeProjectBattery,
+  makeProjectPV,
   makeModelParamsBattery,
+  makeModelParamsPV,
   testInputsDirectory,
-} from '../../fixtures/models/dto/ProjectDto';
+  testUuid1,
+  testUuid2,
+} from '../../fixtures/models/dto/ProjectDtoFixtures';
 
 describe('modelParametersDto', () => {
   const actualFullMP = makeModelParameters(projectFixture);
@@ -184,21 +189,19 @@ describe('modelParametersDto', () => {
   });
 
   it('should make battery parameters', () => {
-    const uuid1 = '14b1348c-29f2-402a-a167-2d30aae86680';
-    const uuid2 = 'dbdd6d5d-e5e2-4948-bc3e-5d7ae3040ba0';
     const testProject = {
       technologySpecsBattery: [
-        makeProjectBattery(uuid1),
-        makeProjectBattery(uuid2),
+        makeProjectBattery(testUuid1),
+        makeProjectBattery(testUuid2),
       ],
       inputsDirectory: testInputsDirectory,
     };
 
     const actual = makeBatteryParameters(testProject);
-    const expected = makeModelParamsBattery(uuid1);
+    const expected = makeModelParamsBattery(testUuid1);
 
-    expect(actual[uuid1]).to.eql(expected);
-    expect(Object.keys(actual)).to.eql([uuid1, uuid2]);
+    expect(actual[testUuid1]).to.eql(expected);
+    expect(Object.keys(actual)).to.eql([testUuid1, testUuid2]);
   });
 
   it('should make DA parameters', () => {
@@ -229,34 +232,54 @@ describe('modelParametersDto', () => {
     const actual = makeICEParameters(projectFixtureAllActive);
     expect(Object.keys(actual[''].keys).length).to.eql(28);
   });
+
   it('should make NSR parameters', () => {
     const actual = makeNSRParameters(projectFixtureAllActive);
     expect(Object.keys(actual[''].keys).length).to.eql(3);
   });
-  it('should make PV parameters', () => {
-    const actual = makePVParameters(projectFixtureAllActive);
-    expect(Object.keys(actual[''].keys).length).to.eql(32);
+
+  it('should make single PV parameter', () => {
+    const actual = makeSinglePVParameter(makeProjectPV(testUuid1));
+    const expected = makeModelParamsPV(testUuid1);
+    expect(actual).to.eql(expected);
   });
+
+  it('should make PV parameters', () => {
+    const testProject = {
+      technologySpecsSolarPV: [
+        makeProjectPV(testUuid1),
+        makeProjectPV(testUuid2),
+      ],
+    };
+    const actual = makePVParameters(testProject);
+    expect(Object.keys(actual)).to.eql([testUuid1, testUuid2]);
+  });
+
   it('should make reliability parameters', () => {
     const actual = makeReliabilityParameters(projectFixtureAllActive);
     expect(Object.keys(actual[''].keys).length).to.eql(5);
   });
+
   it('should make results parameters', () => {
     const actual = makeResultsParameters(projectFixture);
     expect(Object.keys(actual[''].keys).length).to.eql(3);
   });
+
   it('should make retail ETS parameters', () => {
     const actual = makeRetailTimeShiftParameters(projectFixtureAllActive);
     expect(Object.keys(actual[''].keys).length).to.eql(1);
   });
+
   it('should make scenario parameters', () => {
     const actual = makeScenarioParameters(projectFixture);
     expect(Object.keys(actual[''].keys).length).to.eql(25);
   });
+
   it('should make SR parameters', () => {
     const actual = makeSRParameters(projectFixtureAllActive);
     expect(Object.keys(actual[''].keys).length).to.eql(3);
   });
+
   it('should make user defined parameters', () => {
     const actual = makeUserParameters(projectFixtureAllActive);
     expect(Object.keys(actual[''].keys).length).to.eql(1);

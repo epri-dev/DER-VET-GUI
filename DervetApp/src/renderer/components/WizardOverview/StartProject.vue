@@ -168,7 +168,7 @@
         return this.$store.state.Project.id;
       },
       projResultsID() {
-        return this.$store.state.ProjectResult.id;
+        return this.$store.state.Results.id;
       },
       applicationID() {
         return this.$store.state.Application.id;

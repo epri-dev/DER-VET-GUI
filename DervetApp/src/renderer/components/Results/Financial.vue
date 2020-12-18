@@ -64,7 +64,7 @@
     },
     computed: {
       chartData() {
-        return this.$store.state.ProjectResult.financialVueObjects;
+        return this.$store.state.Results.financialVueObjects;
       },
     },
     methods: {

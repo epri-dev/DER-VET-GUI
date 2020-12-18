@@ -76,7 +76,7 @@
     },
     computed: {
       chartData() {
-        return this.$store.state.ProjectResult.designVueObjects;
+        return this.$store.state.Results.designVueObjects;
       },
     },
   };

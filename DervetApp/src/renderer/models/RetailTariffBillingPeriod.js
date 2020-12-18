@@ -203,11 +203,13 @@ export default class RetailTariffBillingPeriodMetadata {
 
 export const parsedCsvToBillingPeriods = (csv) => {
   // TODO validate headers to ensure order of fields is correct
+  // and billing period is complete
   let csvValues = csv.slice(1);
   csvValues = csvValues.filter(row => row.length === 11);
 
   return csvValues.map(row => (
     new RetailTariffBillingPeriodMetadata({
+      complete: true,
       id: row[0],
       startMonth: row[1],
       endMonth: row[2],

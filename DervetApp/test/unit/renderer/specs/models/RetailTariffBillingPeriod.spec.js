@@ -1,4 +1,4 @@
-import { RetailTariffBillingPeriodMetadata, parsedCsvToBillingPeriods } from '@/models/RetailTariffBillingPeriod';
+import RetailTariffBillingPeriodMetadata, { parsedCsvToBillingPeriods } from '@/models/RetailTariffBillingPeriod';
 
 describe('RetailTariffBillingPeriodMetadata model', () => {
   it('should construct a class instance from parsed CSV', () => {
