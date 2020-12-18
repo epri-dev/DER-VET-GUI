@@ -105,9 +105,14 @@ const actions = {
   },
   receiveResults({ commit }, results) {
     // TODO: handle parsing error
-    const resultDataObject = new ResultsData(0, results);
-    commit('SET_RESULT', resultDataObject);
-    commit('Application/SET_RESULT_SUCCESS');
+    try {
+      const resultDataObject = new ResultsData(0, results);
+      commit('SET_RESULT', resultDataObject);
+      commit('Application/SET_RESULT_SUCCESS');
+    } catch (error) {
+      commit('Application/SET_RESULT_ERROR');
+      throw error;
+    }
   },
   // TODO add action that transforms the data into plots here, call before mounting a page
   resetResultToDefault({ commit }, newId) {

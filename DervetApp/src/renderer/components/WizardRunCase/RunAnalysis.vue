@@ -31,7 +31,7 @@
         return this.$store.state.Application.isError !== null;
       },
       results() {
-        return this.$store.state.ProjectResult.data;
+        return this.$store.state.Results.data;
       },
       logPath() {
         return path.join(this.$store.state.Project.resultsDirectory, LOG_FILE);

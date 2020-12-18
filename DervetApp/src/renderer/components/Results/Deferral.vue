@@ -34,7 +34,7 @@
     },
     computed: {
       chartData() {
-        return this.$store.state.ProjectResult.deferralVueObjects;
+        return this.$store.state.Results.deferralVueObjects;
       },
     },
     methods: {
