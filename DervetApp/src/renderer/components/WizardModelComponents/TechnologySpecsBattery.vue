@@ -71,6 +71,47 @@
           </div>
         </div>
 
+        <div v-if="(shouldPowerSize === true) || (shouldEnergySize === true)">
+          <radio-button-input
+            v-model="includeSizeLimits"
+            v-bind:field="metadata.includeSizeLimits"
+            :isInvalid="submitted && $v.includeSizeLimits.$error"
+            :errorMessage="getErrorMsg('includeSizeLimits')">
+          </radio-button-input>
+
+          <div v-if="(includeSizeLimits === true) && (shouldPowerSize === true)">
+            <text-input
+              v-model="powerCapacityMaximum"
+              v-bind:field="metadata.powerCapacityMaximum"
+              :isInvalid="submitted && $v.powerCapacityMaximum.$error"
+              :errorMessage="getErrorMsg('powerCapacityMaximum')">
+            </text-input>
+
+            <text-input
+              v-model="powerCapacityMinimum"
+              v-bind:field="metadata.powerCapacityMinimum"
+              :isInvalid="submitted && $v.powerCapacityMinimum.$error"
+              :errorMessage="getErrorMsg('powerCapacityMinimum')">
+            </text-input>
+          </div>
+
+          <div v-if="(includeSizeLimits === true) && (shouldEnergySize === true)">
+            <text-input
+              v-model="energyCapacityMaximum"
+              v-bind:field="metadata.energyCapacityMaximum"
+              :isInvalid="submitted && $v.energyCapacityMaximum.$error"
+              :errorMessage="getErrorMsg('energyCapacityMaximum')">
+            </text-input>
+
+            <text-input
+              v-model="energyCapacityMinimum"
+              v-bind:field="metadata.energyCapacityMinimum"
+              :isInvalid="submitted && $v.energyCapacityMinimum.$error"
+              :errorMessage="getErrorMsg('energyCapacityMinimum')">
+            </text-input>
+          </div>
+        </div>
+
         <radio-button-input
           v-model="shouldMaxDuration"
           v-bind:field="metadata.shouldMaxDuration"
@@ -140,19 +181,28 @@
           </text-input>
         </div>
 
-        <text-input
-          v-model="calendarDegradationRate"
-          v-bind:field="metadata.calendarDegradationRate"
-          :isInvalid="submitted && $v.calendarDegradationRate.$error"
-          :errorMessage="getErrorMsg('calendarDegradationRate')">
-        </text-input>
-
         <radio-button-input
           v-model="includeCycleDegradation"
           v-bind:field="metadata.includeCycleDegradation"
           :isInvalid="submitted && $v.includeCycleDegradation.$error"
           :errorMessage="getErrorMsg('includeCycleDegradation')">
         </radio-button-input>
+
+        <div v-if="includeCycleDegradation === true">
+          <text-input
+            v-model="calendarDegradationRate"
+            v-bind:field="metadata.calendarDegradationRate"
+            :isInvalid="submitted && $v.calendarDegradationRate.$error"
+            :errorMessage="getErrorMsg('calendarDegradationRate')">
+          </text-input>
+
+          <text-input
+            v-model="stateOfHealth"
+            v-bind:field="metadata.stateOfHealth"
+            :isInvalid="submitted && $v.stateOfHealth.$error"
+            :errorMessage="getErrorMsg('stateOfHealth')">
+          </text-input>
+        </div>
 
         <radio-button-input
           v-model="includeAuxiliaryLoad"
@@ -245,6 +295,29 @@
             :isInvalid="submitted && $v.replacementConstructionTime.$error"
             :errorMessage="getErrorMsg('replacementConstructionTime')">
           </text-input>
+
+          <fieldset class="section-group">
+            <legend>Replacement Cost Function</legend>
+            <text-input
+              v-model="replacementCost"
+              v-bind:field="metadata.replacementCost"
+              :isInvalid="submitted && $v.replacementCost.$error"
+              :errorMessage="getErrorMsg('replacementCost')">
+            </text-input>
+
+            <text-input
+              v-model="replacementCostPerkW"
+              v-bind:field="metadata.replacementCostPerkW"
+              :isInvalid="submitted && $v.replacementCostPerkW.$error"
+              :errorMessage="getErrorMsg('replacementCostPerkW')">
+            </text-input>
+            <text-input
+              v-model="replacementCostPerkWh"
+              v-bind:field="metadata.replacementCostPerkWh"
+              :isInvalid="submitted && $v.replacementCostPerkWh.$error"
+              :errorMessage="getErrorMsg('replacementCostPerkWh')">
+            </text-input>
+          </fieldset>
         </div>
 
         <text-input
@@ -322,16 +395,16 @@
     },
     validations: {
       ...validations,
-      energyCapacity: {
-        ...validations.energyCapacity,
-        required: requiredIf(function isEnergyCapacityRequired() {
-          return this.shouldEnergySize === false;
+      auxiliaryLoad: {
+        ...validations.auxiliaryLoad,
+        required: requiredIf(function isAuxiliaryLoadRequired() {
+          return (this.includeAuxiliaryLoad === true);
         }),
       },
-      shouldDiffChargeDischarge: {
-        ...validations.shouldDiffChargeDischarge,
-        required: requiredIf(function isShouldDiffChargeDischargeRequired() {
-          return this.shouldPowerSize === false;
+      calendarDegradationRate: {
+        ...validations.calendarDegradationRate,
+        required: requiredIf(function isCalendarDegradationRateRequired() {
+          return (this.includeCycleDegradation === true);
         }),
       },
       chargingCapacity: {
@@ -340,16 +413,34 @@
           return (this.shouldPowerSize === false) && (this.shouldDiffChargeDischarge === true);
         }),
       },
+      dailyCycleLimit: {
+        ...validations.dailyCycleLimit,
+        required: requiredIf(function isDailyCycleLimitRequired() {
+          return (this.shouldLimitDailyCycling === true);
+        }),
+      },
       dischargingCapacity: {
         ...validations.dischargingCapacity,
         required: requiredIf(function isDischargingCapacityRequired() {
           return (this.shouldPowerSize === false) && (this.shouldDiffChargeDischarge === true);
         }),
       },
-      powerCapacity: {
-        ...validations.powerCapacity,
-        required: requiredIf(function isPowerCapacityRequired() {
-          return (this.shouldPowerSize === false) && (this.shouldDiffChargeDischarge === false);
+      energyCapacity: {
+        ...validations.energyCapacity,
+        required: requiredIf(function isEnergyCapacityRequired() {
+          return this.shouldEnergySize === false;
+        }),
+      },
+      energyCapacityMaximum: {
+        ...validations.energyCapacityMaximum,
+        required: requiredIf(function isEnergyCapacityMaximumRequired() {
+          return (this.includeSizeLimits === true) && (this.shouldEnergySize === true);
+        }),
+      },
+      energyCapacityMinimum: {
+        ...validations.energyCapacityMinimum,
+        required: requiredIf(function isEnergyCapacityMinimumRequired() {
+          return (this.includeSizeLimits === true) && (this.shouldEnergySize === true);
         }),
       },
       maxDuration: {
@@ -358,29 +449,64 @@
           return (this.shouldMaxDuration === true);
         }),
       },
-      dailyCycleLimit: {
-        ...validations.dailyCycleLimit,
-        required: requiredIf(function isDailyCycleLimitRequired() {
-          return (this.shouldLimitDailyCycling === true);
+      powerCapacity: {
+        ...validations.powerCapacity,
+        required: requiredIf(function isPowerCapacityRequired() {
+          return (this.shouldPowerSize === false) && (this.shouldDiffChargeDischarge === false);
         }),
       },
-      auxiliaryLoad: {
-        ...validations.auxiliaryLoad,
-        required: requiredIf(function isAuxiliaryLoadRequired() {
-          return (this.includeAuxiliaryLoad === true);
+      powerCapacityMaximum: {
+        ...validations.powerCapacityMaximum,
+        required: requiredIf(function isPowerCapacityMaximumRequired() {
+          return (this.includeSizeLimits === true) && (this.shouldPowerSize === true);
         }),
       },
-      // shared validation extention
+      powerCapacityMinimum: {
+        ...validations.powerCapacityMinimum,
+        required: requiredIf(function isPowerCapacityMinimumRequired() {
+          return (this.includeSizeLimits === true) && (this.shouldPowerSize === true);
+        }),
+      },
+      replacementCost: {
+        ...validations.replacementCost,
+        required: requiredIf(function isReplacementCostRequired() {
+          return (this.isReplaceable === true);
+        }),
+      },
+      replacementCostPerkW: {
+        ...validations.replacementCostPerkW,
+        required: requiredIf(function isReplacementCostPerkWRequired() {
+          return (this.isReplaceable === true);
+        }),
+      },
+      replacementCostPerkWh: {
+        ...validations.replacementCostPerkWh,
+        required: requiredIf(function isReplacementCostPerkWhRequired() {
+          return (this.isReplaceable === true);
+        }),
+      },
       replacementConstructionTime: {
         ...validations.replacementConstructionTime,
         required: requiredIf(function isReplacementConstructionTimeRequired() {
           return (this.isReplaceable === true);
         }),
       },
+      stateOfHealth: {
+        ...validations.stateOfHealth,
+        required: requiredIf(function isStateOfHealthRequired() {
+          return (this.includeCycleDegradation === true);
+        }),
+      },
       salvageValue: {
         ...validations.salvageValue,
         required: requiredIf(function isSalvageValueRequired() {
           return (this.salvageValueOption === 'User defined');
+        }),
+      },
+      shouldDiffChargeDischarge: {
+        ...validations.shouldDiffChargeDischarge,
+        required: requiredIf(function isShouldDiffChargeDischargeRequired() {
+          return this.shouldPowerSize === false;
         }),
       },
     },
@@ -447,6 +573,19 @@
               'chargingCapacity', 'dischargingCapacity']);
           }
         }
+        if (this.includeSizeLimits === false) {
+          this.resetNonRequired(['powerCapacityMaximum', 'powerCapacityMinimum', 'energyCapacityMaximum', 'energyCapacityMinimum', 'chargingCapacityMaximum', 'chargingCapacityMinimum', 'dischargingCapacityMaximum', 'dischargingCapacityMinimum']);
+        } else {
+          if (this.shouldPowerSize === false) {
+            this.resetNonRequired(['powerCapacityMaximum', 'powerCapacityMinimum']);
+          }
+          if (this.shouldEnergySize === false) {
+            this.resetNonRequired(['energyCapacityMaximum', 'energyCapacityMinimum']);
+          }
+        }
+        if ((this.shouldEnergySize === false) && (this.shouldPowerSize === false)) {
+          this.resetNonRequired(['includeSizeLimits']);
+        }
         if (this.shouldMaxDuration === false) {
           this.resetNonRequired(['maxDuration']);
         }
@@ -458,7 +597,7 @@
         }
         // shared inputs: reset all non-requred inputs to default
         if (this.isReplaceable === false) {
-          this.resetNonRequired(['replacementConstructionTime']);
+          this.resetNonRequired(['replacementCost', 'replacementCostPerkW', 'replacementCostPerkWh', 'replacementConstructionTime']);
         }
         if (this.salvageValueOption !== 'User defined') {
           this.resetNonRequired(['salvageValue']);
@@ -493,18 +632,25 @@
           capitalCostPerkW: this.capitalCostPerkW,
           capitalCostPerkWh: this.capitalCostPerkWh,
           chargingCapacity: this.chargingCapacity,
+          chargingCapacityMaximum: this.chargingCapacityMaximum,
+          chargingCapacityMinimum: this.chargingCapacityMinimum,
           complete: this.complete,
           constructionYear: this.constructionYear,
           dailyCycleLimit: this.dailyCycleLimit,
           dischargingCapacity: this.dischargingCapacity,
+          dischargingCapacityMaximum: this.dischargingCapacityMaximum,
+          dischargingCapacityMinimum: this.dischargingCapacityMinimum,
           decomissioningCost: this.decomissioningCost,
           energyCapacity: this.energyCapacity,
+          energyCapacityMaximum: this.energyCapacityMaximum,
+          energyCapacityMinimum: this.energyCapacityMinimum,
           expectedLifetime: this.expectedLifetime,
           errorList: this.errorList,
           fixedOMCosts: this.fixedOMCosts,
           id: this.id,
           includeAuxiliaryLoad: this.includeAuxiliaryLoad,
           includeCycleDegradation: this.includeCycleDegradation,
+          includeSizeLimits: this.includeSizeLimits,
           isReplaceable: this.isReplaceable,
           lowerSOCLimit: this.lowerSOCLimit,
           macrsTerm: this.macrsTerm,
@@ -512,7 +658,12 @@
           name: this.name,
           operationYear: this.operationYear,
           powerCapacity: this.powerCapacity,
+          powerCapacityMaximum: this.powerCapacityMaximum,
+          powerCapacityMinimum: this.powerCapacityMinimum,
           replacementConstructionTime: this.replacementConstructionTime,
+          replacementCost: this.replacementCost,
+          replacementCostPerkW: this.replacementCostPerkW,
+          replacementCostPerkWh: this.replacementCostPerkWh,
           roundtripEfficiency: this.roundtripEfficiency,
           salvageValue: this.salvageValue,
           salvageValueOption: this.salvageValueOption,
@@ -522,6 +673,7 @@
           shouldLimitDailyCycling: this.shouldLimitDailyCycling,
           shouldMaxDuration: this.shouldMaxDuration,
           shouldPowerSize: this.shouldPowerSize,
+          stateOfHealth: this.stateOfHealth,
           tag: this.tag,
           targetSOC: this.targetSOC,
           technologyType: this.technologyType,

@@ -18,7 +18,7 @@ const TER = 'ter';
 
 // Allowed values
 const MACRS_TERM_ALLOWED_VALUES = makeAllowedValuesWithNull(['3', '5', '7', '10', '15', '20', '25', '27.5', '39']);
-const SALVAGE_OPTION_ALLOWED_VALUES = makeAllowedValuesWithNull(['Sunk Cost', 'Linear', 'User defined']);
+const SALVAGE_OPTION_ALLOWED_VALUES = makeAllowedValuesWithNull(['Sunk Cost', 'Linear Salvage Value', 'User defined']);
 
 // Shared dynamic fields
 export const SHARED_DYNAMIC_FIELDS = [
@@ -56,7 +56,7 @@ export const createSharedHardcodedMetadata = derType => ({
     isRequired: true,
     minValue: 1,
     type: Number,
-    description: 'The number of years the analysis will go for. The analysis will not consider equipment lifetime or anything else when determining the number of years to run for.',
+    description: `The number of years the ${derType} will operate before new equipment is required to continue operation.`,
     unit: 'years',
   }),
   [MACRS_TERM]: new ProjectFieldMetadata({
@@ -72,7 +72,7 @@ export const createSharedHardcodedMetadata = derType => ({
     type: String,
   }),
   [OPERATION_YEAR]: new ProjectFieldMetadata({
-    description: 'In what year will operation start?',
+    description: 'In what year will operation start (COD)?',
     displayName: 'Operation Year',
     isRequired: true,
     type: Number,
@@ -81,7 +81,7 @@ export const createSharedHardcodedMetadata = derType => ({
     displayName: 'Replaceable?',
     isRequired: true,
     type: Boolean,
-    description: `Is this ${derType} replaceable or not at its end of lifetime?`,
+    description: `Will the ${derType} be replaced at its end of lifetime or not?`,
     allowedValues: optionsYN,
   }),
   [REPLACEMENT_CONSTRUCTION_TIME]: new ProjectFieldMetadata({
@@ -89,20 +89,19 @@ export const createSharedHardcodedMetadata = derType => ({
     isRequired: false, // based on REPLACEABLE
     minValue: 1,
     type: Number,
-    description: 'The time it takes finish equipement replacement construction',
+    description: 'The time it takes to finish equipment replacement construction',
     unit: 'years',
   }),
   [SALVAGE_OPTION]: new ProjectFieldMetadata({
     defaultValue: null,
-    displayName: 'Salage Value',
+    displayName: 'Salvage Value',
     isRequired: true,
     type: String,
     unit: null,
-    description: 'Applies a financial benefit in the last year of the analysis window if the resourse is not beyond its end of life. <b>Sunk Cost</b> means that there is no end of analysis value (salvage value = 0), <b>linear salvage value</b> which will calculate salvage value by multiplying the technology\'s capital cost by (remaining life/total life), or specify the exact salvage value of the technology.',
+    description: 'Applies a financial benefit in the last year of the analysis window if the resourse is not beyond its end of life. <b>Sunk Cost</b> means that there is no end of analysis value (salvage value = 0), <b>Linear Salvage Value</b> which will calculate salvage value by multiplying the technology\'s capital cost by (remaining life/total life), or <b>User Defined</b> to specify the exact salvage value of the technology.',
     allowedValues: SALVAGE_OPTION_ALLOWED_VALUES,
   }),
   [SALVAGE_VALUE]: new ProjectFieldMetadata({
-    displayName: '',
     isRequired: false, // based on SALVAGE_OPTION
     minValue: 0,
     type: Number,
@@ -116,6 +115,6 @@ export const createSharedHardcodedMetadata = derType => ({
     maxValue: 100,
     type: Number,
     unit: '%',
-    description: `The rate at which the ${derType}'s cost increases or decreases in cost each year`,
+    description: `The rate at which the ${derType}'s cost increases or decreases in cost each year. A negative value indicates the technology is decreasing in cost over time. A value equal to the inflation rate indicates that the real cost of the technology is constant.`,
   }),
 });

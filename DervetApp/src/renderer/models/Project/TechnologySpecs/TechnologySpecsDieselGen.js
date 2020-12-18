@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 import ProjectFieldMetadata from '@/models/Project/Fields';
+import { optionsYN } from '@/models/Project/constants';
 import { SHARED_DYNAMIC_FIELDS, createSharedHardcodedMetadata } from '@/models/Project/TechnologySpecs/sharedConstants';
 
 const DieselGen = 'DieselGen';
@@ -21,12 +22,18 @@ const SIZING_ALLOWED_VALUES = [
 const DYNAMIC_FIELDS = [
   ...SHARED_DYNAMIC_FIELDS,
   'capitalCost',
+  'capitalCostPerkW',
   'efficiency',
   'fixedOMCostIncludingExercise',
   'fuelCost',
+  'includeSizeLimits',
   'minimumPower',
   'numGenerators',
   'ratedCapacity',
+  'ratedCapacityMaximum',
+  'ratedCapacityMinimum',
+  'replacementCost',
+  'replacementCostPerkW',
   'shouldSize',
   'variableOMCost',
 ];
@@ -62,74 +69,106 @@ export default class TechnologySpecsDieselGenMetadata {
   static getHardcodedMetadata() {
     return new TechnologySpecsDieselGenMetadata({
       capitalCost: new ProjectFieldMetadata({
-        defaultValue: null,
         displayName: 'Capital Cost',
         isRequired: true,
         minValue: 0,
         type: Number,
         unit: '$ / generator',
         description: 'What is the capital cost of each diesel generator?',
-        allowedValues: null,
+      }),
+      capitalCostPerkW: new ProjectFieldMetadata({
+        displayName: 'Capital Cost per kW',
+        isRequired: true,
+        minValue: 0,
+        type: Number,
+        unit: '$ / kW-generator',
+        description: 'What is the capital cost per kW for each internal combustion engine?',
       }),
       efficiency: new ProjectFieldMetadata({
-        defaultValue: null,
         displayName: 'Efficiency',
         isRequired: true,
         minValue: 0,
         type: Number,
         unit: 'gallons / kWh',
         description: 'How many gallons of fuel does it take to generate 1 kWh of electricity? No variable efficiency is considered at this stage.',
-        allowedValues: null,
       }),
       fixedOMCostIncludingExercise: new ProjectFieldMetadata({
-        defaultValue: null,
         displayName: 'Fixed O&M Cost, including exercise',
         isRequired: true,
         minValue: 0,
         type: Number,
         unit: '$ / kW-year',
         description: 'What is the cost of fixed operations and maintenance, including the non-fuel expenses from exercising the diesel generator?',
-        allowedValues: null,
       }),
       fuelCost: new ProjectFieldMetadata({
-        defaultValue: null,
         displayName: 'Fuel Cost',
         isRequired: true,
         minValue: 0,
         type: Number,
         unit: '$ / gallon',
         description: 'What is the price of fuel (constant over analysis horizon)?',
-        allowedValues: null,
+      }),
+      includeSizeLimits: new ProjectFieldMetadata({
+        displayName: 'Include limits on capacity sizing?',
+        isRequired: true,
+        type: Boolean,
+        allowedValues: optionsYN,
+        description: 'Advanced sizing settings.',
       }),
       minimumPower: new ProjectFieldMetadata({
-        defaultValue: null,
         displayName: 'Minimum Power',
         isRequired: true,
         minValue: 0,
         type: Number,
         unit: 'kW',
         description: 'What is the mimimum power the diesel generator is capable of safely producing?',
-        allowedValues: null,
       }),
       numGenerators: new ProjectFieldMetadata({
-        defaultValue: null,
         displayName: 'Number of Generators to Install',
         isRequired: true,
         minValue: 1, // differs from schema; want gt 0
         type: 'int',
-        unit: null,
         description: 'What is the number of diesel generators to install?',
-        allowedValues: null,
       }),
       ratedCapacity: new ProjectFieldMetadata({
-        defaultValue: null,
         displayName: 'Rated Capacity',
         isRequired: true,
         minValue: 0,
         type: Number,
         unit: 'kW / generator',
         description: 'What is the rated capacity of the diesel generator?',
-        allowedValues: null,
+      }),
+      ratedCapacityMaximum: new ProjectFieldMetadata({
+        displayName: 'Rated Capacity Maximum',
+        description: 'Upper limit on power capacity when optimally sizing',
+        isRequired: false, // based on if sizing
+        minValue: 0,
+        type: Number,
+        unit: 'kW / generator',
+      }),
+      ratedCapacityMinimum: new ProjectFieldMetadata({
+        displayName: 'Rated Capacity Minimum',
+        description: 'Lower limit on power capacity when optimally sizing (this does not set a minimum generating power during operation)',
+        isRequired: false, // based on if sizing
+        minValue: 0,
+        type: Number,
+        unit: 'kW / generator',
+      }),
+      replacementCost: new ProjectFieldMetadata({
+        displayName: 'Replacement Cost',
+        isRequired: true,
+        minValue: 0,
+        type: Number,
+        unit: '$ / generator',
+        description: 'Total cost of replacing the old internal combustion engine at its end of life (recurring cost based on replacement year)',
+      }),
+      replacementCostPerkW: new ProjectFieldMetadata({
+        displayName: 'Replacement Cost per kW',
+        isRequired: true,
+        minValue: 0,
+        type: Number,
+        unit: '$ / kW-generator',
+        description: 'Replacement Cost per kW of rated capacity',
       }),
       shouldSize: new ProjectFieldMetadata({
         defaultValue: null,
