@@ -1,4 +1,3 @@
-// import fs from 'fs';
 import path from 'path';
 
 import {
@@ -45,20 +44,18 @@ import {
 } from '../../fixtures/models/dto/ProjectDtoFixtures';
 
 describe('modelParametersDto', () => {
-  const actualFullMP = makeModelParameters(
-    projectFixture, testInputsDirectory, testResultsDirectory
-  );
+  const fullMp = makeModelParameters(projectFixture, testInputsDirectory, testResultsDirectory);
 
   it('should have translated the name correctly', () => {
-    expect(actualFullMP.name).to.eql(modelParametersFixture.name);
+    expect(fullMp.name).to.eql(modelParametersFixture.name);
   });
 
   it('should have translated the type correctly', () => {
-    expect(actualFullMP.type).to.eql(modelParametersFixture.type);
+    expect(fullMp.type).to.eql(modelParametersFixture.type);
   });
 
   const tagFixture = modelParametersFixture.tags;
-  const actualTags = actualFullMP.tags;
+  const actualTags = fullMp.tags;
   it('should have translated the battery parameters correctly', () => {
     const expectedKeyList = Object.keys(tagFixture.Battery[''].keys);
     const expectedLength = expectedKeyList.length;
@@ -156,7 +153,7 @@ describe('modelParametersDto', () => {
   });
 
   xit('should translate a Project object into a ModelParameters object', () => {
-    expect(actualFullMP).to.eql(modelParametersFixture);
+    expect(fullMp).to.eql(modelParametersFixture);
   });
 
   it('should create an object containing CSVs needed to run DERVET', () => {

@@ -11,6 +11,9 @@ export const getAppDataPath = () => {
     case 'win32': {
       return path.join(process.env.APPDATA, appName);
     }
+    case 'linux': {
+      return path.join(process.env.HOME, '.myApp');
+    }
     default: {
       throw new Error('Unsupported platform!');
     }

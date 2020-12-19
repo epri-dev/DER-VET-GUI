@@ -796,9 +796,13 @@ export const makeMeta = (project, inputsDirectory, resultsDirectory) => ({
 });
 
 export const makeOutputDirectoryName = (outputDirectory) => {
-  const root = outputDirectory === undefined ? getAppDataPath() : outputDirectory;
+  // When user does not select an output directory, use their app data as default
+  if (outputDirectory === undefined) {
+    return path.join(getAppDataPath(), 'DER-VET');
+  }
+  // If user selects a directory, create a timestamped output folder
   const timestamp = dateFormat(new Date(), 'yyyymmdd"T"HHMMss');
-  return path.join(root, `DER-VET_${timestamp}`);
+  return path.join(outputDirectory, `DER-VET_${timestamp}`);
 };
 
 export const createOutputDirectory = (outputDirectory) => {
