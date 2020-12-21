@@ -28,6 +28,7 @@ const getDefaultApplicationState = () => ({
       financial: {
         inputs: NULL,
         retailTariff: NULL,
+        // externalIncentives: NULL,
       },
     },
   },
@@ -54,6 +55,8 @@ const getDefaultApplicationState = () => ({
       financial: {
         inputs: NULL,
         retailTariff: NULL,
+        // this finance component is optional
+        externalIncentives: true,
       },
     },
   },

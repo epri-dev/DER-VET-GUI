@@ -18,6 +18,7 @@ export const billReductionCompleteness = {
     financial: {
       inputs: true,
       retailTariff: true,
+      externalIncentives: true,
     },
   },
 };
@@ -241,7 +242,7 @@ export const billReductionProject = {
   ],
   siteLoad: new SiteLoadTimeSeries(siteLoad),
   sizingEquipment: true,
-  startYear: '2017',
+  startYear: 2017,
   financeStateTaxRate: 0,
   technologySpecsSolarPV: [{
     active: true,

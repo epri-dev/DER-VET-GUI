@@ -2,122 +2,141 @@
   <div>
     <h3>External Incentives: Add Data for Year</h3>
     <hr>
-    <form>
-      <div class="form-horizontal form-buffer">
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="year">Year</label>
-          </div>
-          <div class="col-md-9">
-            <select
-              class="form-control form-control-width-auto valid"
-              id="year"
-              v-model.number="inputYear">
-              <option v-for="year in validation.year.allowedValues" v-bind:value="year">
-                {{year}}
-              </option>
-            </select>
-          </div>
-        </div>
+    <form class="form-horizontal form-buffer">
 
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="tax-credit">Tax Credit</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              class="form-control numberbox"
-              id="tax-credit"
-              type="text"
-              v-model.number="inputTaxCredit">
-            <span class="unit-label">nominal $</span>
-          </div>
-        </div>
+      <text-input v-model="year"
+                  v-bind:field="metadata.year"
+                  :isInvalid="submitted && $v.year.$error"
+                  :errorMessage="getErrorMsg('year')">
+      </text-input>
 
-        <div class="form-group row">
-          <div class="col-md-3">
-            <label class="control-label" for="other-incentive">Other Incentive</label>
-          </div>
-          <div class="col-md-9">
-            <input
-              class="form-control numberbox"
-              id="other-incentive"
-              type="text"
-              v-model.number="inputOtherIncentive">
-            <span class="unit-label">nominal $</span>
-          </div>
-        </div>
+      <text-input v-model="taxCredit"
+                  v-bind:field="metadata.taxCredit"
+                  :isInvalid="submitted && $v.taxCredit.$error"
+                  :errorMessage="getErrorMsg('taxCredit')">
+      </text-input>
 
-        <hr>
+      <text-input v-model="otherIncentive"
+                  v-bind:field="metadata.otherIncentive"
+                  :isInvalid="submitted && $v.otherIncentive.$error"
+                  :errorMessage="getErrorMsg('otherIncentive')">
+      </text-input>
+      <hr>
 
-        <nav-buttons
-          :back-link="FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH"
-          :continue-link="FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH"
-          :save="this.save"
-        />
-      </div>
+      <save-only-button
+        :displayError="submitted && $v.$anyError"
+        :save="validatedSave" />
+
+      <nav-buttons
+        :continue-link="FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH"
+        continue-text="Back To External Incentives" />
+
     </form>
   </div>
 </template>
 
 <script>
-  import { ExternalIncentives, validation } from '@/models/ExternalIncentives';
-  import NavButtons from '@/components/Shared/NavButtons';
+  import { minValue } from 'vuelidate/lib/validators';
+  import wizardFormMixin from '@/mixins/wizardFormMixin';
+  import ExternalIncentivesMetadata from '@/models/ExternalIncentives';
   import { FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH } from '@/router/constants';
+  import SaveOnlyButton from '@/components/Shared/SaveOnlyButton';
 
+  const metadata = ExternalIncentivesMetadata.getHardcodedMetadata();
+  const validations = metadata.toValidationSchema();
 
   export default {
-    components: { NavButtons },
+    components: { SaveOnlyButton },
     props: ['incentiveId'],
+    mixins: [wizardFormMixin],
     data() {
-      if (this.incentiveId === 'null') {
+      if (this.isNewExternalIncentive()) {
         return {
-          validation,
+          metadata,
           ...this.getDefaultData(),
           FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
         };
       }
       return {
-        validation,
+        metadata,
         ...this.getDataFromProject(),
         FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
       };
     },
+    validations() {
+      return {
+        ...validations,
+        year: {
+          ...validations.year,
+          minValue: minValue(this.getMinimumYear()),
+        },
+      };
+    },
+    beforeMount() {
+      // submitted is false initially; set it to true after the first save.
+      // initially, complete is null; after saving, it is set to either true or false.
+      // we want to show validation errors at any time after the first save, with submitted.
+      if (this.complete !== null) {
+        this.submitted = true;
+        this.$v.$touch();
+      }
+    },
     methods: {
       getDefaultData() {
-        const defaults = ExternalIncentives.getDefaults();
-        return this.unpackData(defaults);
+        return metadata.getDefaultValues();
       },
       getDataFromProject() {
         const incentive = this.$store.getters.getListFieldById('externalIncentives', this.incentiveId);
         return this.unpackData(incentive);
       },
+      getErrorMsg(fieldName) {
+        // this.metadata.year.minValue = `the project start year (${this.getMinimumYear()})`;
+        this.metadata.year.minValue = this.getMinimumYear();
+        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
+      },
+      getMinimumYear() {
+        return this.$store.state.Project.startYear + 1;
+      },
+      isNewExternalIncentive() {
+        return this.incentiveId === 'null';
+      },
       unpackData(source) {
         return {
-          inputId: source.id,
-          inputYear: source.year,
-          inputTaxCredit: source.taxCredit,
-          inputOtherIncentive: source.otherIncentive,
+          id: source.id,
+          year: source.year,
+          taxCredit: source.taxCredit,
+          otherIncentive: source.otherIncentive,
+          complete: source.complete,
         };
       },
-      save() {
-        if (this.incentiveId === 'null') {
+      validatedSave() {
+        this.$v.$touch();
+        // set complete to true or false
+        this.complete = !this.$v.$invalid;
+        if (this.isNewExternalIncentive() && this.submitted !== true) {
+          // add new row
           this.$store.dispatch('addExternalIncentive', this.buildExternalIncentives());
         } else {
+          // replace a row
           const payload = {
-            id: this.incentiveId,
+            id: this.id,
             field: 'externalIncentives',
             newListItem: this.buildExternalIncentives(),
           };
           this.$store.dispatch('replaceListField', payload);
         }
+        this.submitted = true;
       },
+      // saveAndAdd() {
+      // reload page ? (reset form)
+      // },
       buildExternalIncentives() {
-        return new ExternalIncentives({
-          id: this.inputId,
-          year: this.inputYear,
-          taxCredit: this.inputTaxCredit,
-          otherIncentive: this.inputOtherIncentive,
+        return new ExternalIncentivesMetadata({
+          year: this.year,
+          taxCredit: this.taxCredit,
+          otherIncentive: this.otherIncentive,
+          id: this.id,
+          complete: this.complete,
         });
       },
     },

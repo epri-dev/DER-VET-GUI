@@ -1,25 +1,74 @@
-import { range } from 'lodash';
+import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
-
 import { objectToCsv } from '@/util/file';
-import getCurrentYear from '@/util/time';
+
+import ProjectFieldMetadata from '@/models/Project/Fields';
 
 export const INCENTIVES_HEADERS = ['Year', 'Tax Credit (nominal $)', 'Other Incentive (nominal $)'];
 
-export class ExternalIncentives {
+const DYNAMIC_FIELDS = [
+  'year',
+  'taxCredit',
+  'otherIncentive',
+];
+
+export default class ExternalIncentivesMetadata {
   constructor(arg) {
     this.id = arg.id;
     this.year = arg.year;
     this.taxCredit = arg.taxCredit;
     this.otherIncentive = arg.otherIncentive;
+    this.complete = arg.complete;
   }
 
-  static getDefaults() {
-    return new ExternalIncentives({
+  operateOnDynamicFields(callback) {
+    return _.mapValues(_.pick(this, DYNAMIC_FIELDS), callback);
+  }
+
+  getDefaultValues() {
+    return {
       id: uuidv4(),
-      year: getCurrentYear(),
-      taxCredit: 0,
-      otherIncentive: 0,
+      complete: null,
+      ...this.operateOnDynamicFields(f => f.defaultValue),
+    };
+  }
+
+  toValidationSchema() {
+    return this.operateOnDynamicFields(f => f.toValidationSchema());
+  }
+
+  static getHardcodedMetadata() {
+    return new ExternalIncentivesMetadata({
+      year: new ProjectFieldMetadata({
+        defaultValue: null,
+        displayName: 'Year',
+        isRequired: true,
+        minValue: 0,
+        type: 'int',
+        unit: '',
+        description: '',
+        allowedValues: null,
+      }),
+      taxCredit: new ProjectFieldMetadata({
+        defaultValue: 0,
+        displayName: 'Tax Credit',
+        isRequired: true,
+        minValue: 0,
+        type: 'float',
+        unit: 'nominal $',
+        description: '',
+        allowedValues: null,
+      }),
+      otherIncentive: new ProjectFieldMetadata({
+        defaultValue: 0,
+        displayName: 'Other Incentive',
+        isRequired: true,
+        minValue: 0,
+        type: 'float',
+        unit: 'nominal $',
+        description: '',
+        allowedValues: null,
+      }),
     });
   }
 }
@@ -31,7 +80,8 @@ export const parsedCsvToExternalIncentives = (csv) => {
   csvValues = csvValues.filter(row => row.length === 3);
 
   return csvValues.map(row => (
-    new ExternalIncentives({
+    new ExternalIncentivesMetadata({
+      complete: true,
       id: uuidv4(),
       year: row[0],
       taxCredit: row[1],
@@ -43,11 +93,4 @@ export const parsedCsvToExternalIncentives = (csv) => {
 export const externalIncentivesToCsv = (incentives) => {
   const fields = ['year', 'taxCredit', 'otherIncentive'];
   return objectToCsv(incentives, fields, INCENTIVES_HEADERS);
-};
-
-export const validation = {
-  year: {
-    type: Number,
-    allowedValues: range(getCurrentYear(), getCurrentYear() + 21),
-  },
 };

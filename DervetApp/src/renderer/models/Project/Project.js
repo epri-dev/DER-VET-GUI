@@ -352,7 +352,7 @@ export class ProjectMetadata {
       [c.START_YEAR]: new ProjectFieldMetadata({
         displayName: 'Start Year',
         isRequired: true,
-        type: Number,
+        type: 'int',
         description: 'Year the project starts.',
       }),
       [c.TIMESTEP]: new ProjectFieldMetadata({
