@@ -70,14 +70,14 @@
       <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
                    v-bind:class="{
           current: isCurrent(this.paths.OBJECTIVES_SITE_INFORMATION_PATH),
-          incomplete: isComplete('objectivesSiteInformation') }"
+          incomplete: isComplete('objectives', 'siteInformation') }"
                    :to="this.paths.OBJECTIVES_SITE_INFORMATION_PATH">
         Site Information
       </router-link>
       <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
                    v-bind:class="{
           current: isCurrent(this.paths.OBJECTIVES_DEFERRAL_PATH),
-          incomplete: isComplete('objectivesDeferral') }"
+          incomplete: isComplete('objectives', 'deferral') }"
                    :to="this.paths.OBJECTIVES_DEFERRAL_PATH"
                    v-if="objectivesDeferral">
         Deferral
@@ -85,7 +85,7 @@
       <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
                    v-bind:class="{
           current: isCurrent(this.paths.OBJECTIVES_FR_PATH),
-          incomplete: isComplete('objectivesFR') }"
+          incomplete: isComplete('objectives', 'FR') }"
                    :to="this.paths.OBJECTIVES_FR_PATH"
                    v-if="objectivesFR">
         Frequency Regulation
@@ -93,7 +93,7 @@
       <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
                    v-bind:class="{
           current: isCurrent(this.paths.OBJECTIVES_NSR_PATH),
-          incomplete: isComplete('objectivesNSR') }"
+          incomplete: isComplete('objectives', 'NSR') }"
                    :to="this.paths.OBJECTIVES_NSR_PATH"
                    v-if="objectivesNSR">
         Non-Spinning Reserves
@@ -101,7 +101,7 @@
       <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
                    v-bind:class="{
           current: isCurrent(this.paths.OBJECTIVES_RESILIENCE_PATH),
-          incomplete: isComplete('objectivesResilience') }"
+          incomplete: isComplete('objectives', 'resilience') }"
                    :to="this.paths.OBJECTIVES_RESILIENCE_PATH"
                    v-if="objectivesResilience">
         Reliability
@@ -109,7 +109,7 @@
       <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
                    v-bind:class="{
           current: isCurrent(this.paths.OBJECTIVES_SR_PATH),
-          incomplete: isComplete('objectivesSR') }"
+          incomplete: isComplete('objectives', 'SR') }"
                    :to="this.paths.OBJECTIVES_SR_PATH"
                    v-if="objectivesSR">
         Spinning Reserves
@@ -117,7 +117,7 @@
       <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
                    v-bind:class="{
           current: isCurrent(this.paths.OBJECTIVES_USER_DEFINED_PATH),
-          incomplete: isComplete('objectivesUserDefined') }"
+          incomplete: isComplete('objectives', 'userDefined') }"
                    :to="this.paths.OBJECTIVES_USER_DEFINED_PATH"
                    v-if="objectivesUserDefined">
         Custom Service
@@ -125,7 +125,7 @@
       <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
                    v-bind:class="{
           current: isCurrent(this.paths.OBJECTIVES_DA_PATH),
-          incomplete: isComplete('objectivesDA') }"
+          incomplete: isComplete('objectives', 'DA') }"
                    :to="this.paths.OBJECTIVES_DA_PATH"
                    v-if="objectivesDA">
         Day Ahead Pricing
@@ -141,17 +141,21 @@
       <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
                    v-bind:class="{
           current: isCurrent(`${this.paths.FINANCIAL_INPUTS_PATH}$`),
-          incomplete: isComplete('financialInputs') }"
+          incomplete: isComplete('financial', 'inputs') }"
                    :to="this.paths.FINANCIAL_INPUTS_PATH">
         Miscellaneous Inputs
       </router-link>
       <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
-                   v-bind:class="{ current: isCurrent(this.paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH) }"
+                   v-bind:class="{
+          current: isCurrent(this.paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH),
+          incomplete: isComplete('financial', 'externalIncentives') }"
                    :to="this.paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH">
         External Incentives
       </router-link>
       <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
-                   v-bind:class="{ current: isCurrent(this.paths.FINANCIAL_INPUTS_RETAIL_TARIFF_PATH) }"
+                   v-bind:class="{
+          current: isCurrent(this.paths.FINANCIAL_INPUTS_RETAIL_TARIFF_PATH),
+          incomplete: isComplete('financial', 'retailTariff') }"
                    :to="this.paths.FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
                    v-if="objectivesRetailEnergyChargeReduction||objectivesRetailDemandChargeReduction">
         Retail Tariff
@@ -181,8 +185,8 @@
       isCompleteOverview(page) {
         return !this.$store.state.Application.pageCompleteness.overview[page];
       },
-      isComplete(page) {
-        return !this.$store.state.Application.pageCompleteness.components[page];
+      isComplete(pageKey, page) {
+        return !this.$store.state.Application.pageCompleteness.components[pageKey][page];
       },
       isCurrentTech(payload) {
         const techPath = this.getTechBasePath(payload.tag);

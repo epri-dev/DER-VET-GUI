@@ -106,6 +106,17 @@ const getters = {
   getIndexOfBatteryId(state) {
     return id => state.technologySpecsBattery.findIndex(x => x.id === id);
   },
+  getNewRetailTariffBillingPeriodId(state) {
+    // Billing Period IDs are integers that begin with 1, and increment by 1
+    // When adding a new billing period to retail tariffs,
+    //   find the ID of the bottom row, and increment it by 1
+    const numberOfRetailTariffRows = state.retailTariffBillingPeriods.length;
+    if (numberOfRetailTariffRows === 0) {
+      return 1;
+    }
+    const lastId = state.retailTariffBillingPeriods[numberOfRetailTariffRows - 1].id;
+    return lastId + 1;
+  },
 };
 
 const mutations = {

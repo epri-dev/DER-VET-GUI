@@ -13,7 +13,24 @@ const getDefaultApplicationState = () => ({
       objectives: NULL,
       technologySpecs: NULL,
     },
-    components: {},
+    components: {
+      // technology: {},
+      objectives: {
+        siteInformation: NULL,
+        deferral: NULL,
+        FR: NULL,
+        NSR: NULL,
+        resilience: NULL,
+        SR: NULL,
+        userDefined: NULL,
+        DA: NULL,
+      },
+      financial: {
+        inputs: NULL,
+        retailTariff: NULL,
+        // externalIncentives: NULL,
+      },
+    },
   },
   id: NULL,
   isError: NULL,
@@ -23,7 +40,25 @@ const getDefaultApplicationState = () => ({
       objectives: NULL,
       technologySpecs: NULL,
     },
-    components: {},
+    components: {
+      // technology: {},
+      objectives: {
+        siteInformation: NULL,
+        deferral: NULL,
+        FR: NULL,
+        NSR: NULL,
+        resilience: NULL,
+        SR: NULL,
+        userDefined: NULL,
+        DA: NULL,
+      },
+      financial: {
+        inputs: NULL,
+        retailTariff: NULL,
+        // this finance component is optional
+        externalIncentives: true,
+      },
+    },
   },
   resultsLoaded: NULL,
   runInProgress: NULL,
@@ -49,12 +84,34 @@ const mutations = {
     state.runInProgress = false;
   },
   SET_COMPLETENESS(state, payload) {
-    const { pageGroup, page, completeness } = payload;
-    state.pageCompleteness[pageGroup][page] = completeness;
+    const {
+      pageGroup,
+      pageKey,
+      page,
+      completeness,
+    } = payload;
+    if (pageKey !== undefined) {
+      // component pages
+      state.pageCompleteness[pageGroup][pageKey][page] = completeness;
+    } else {
+      // overview pages
+      state.pageCompleteness[pageGroup][page] = completeness;
+    }
   },
   SET_ERROR_LIST(state, payload) {
-    const { pageGroup, page, errorList } = payload;
-    state.errorList[pageGroup][page] = errorList;
+    const {
+      pageGroup,
+      pageKey,
+      page,
+      errorList,
+    } = payload;
+    if (pageKey !== undefined) {
+      // component pages
+      state.errorList[pageGroup][pageKey][page] = errorList;
+    } else {
+      // overview pages
+      state.errorList[pageGroup][page] = errorList;
+    }
   },
   SET_FULL_COMPLETENESS(state, completeness) {
     state.pageCompleteness = completeness;

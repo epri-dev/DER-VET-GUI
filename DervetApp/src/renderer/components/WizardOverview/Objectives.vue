@@ -136,6 +136,8 @@
 
   const metadata = p.projectMetadata;
   const validations = metadata.getValidationSchema(c.OBJECTIVE_FIELDS);
+  const PAGEGROUP = 'overview';
+  const PAGE = 'objectives';
 
   export default {
     mixins: [wizardFormMixin],
@@ -166,7 +168,7 @@
     },
     computed: {
       complete() {
-        return this.$store.state.Application.pageCompleteness.overview.objectives;
+        return this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGE];
       },
     },
     beforeMount() {
@@ -193,8 +195,8 @@
       },
       getCompletenessPayload() {
         return {
-          pageGroup: 'overview',
-          page: 'objectives',
+          pageGroup: PAGEGROUP,
+          page: PAGE,
           completeness: !this.$v.$invalid,
         };
       },
@@ -206,8 +208,8 @@
           }
         });
         return {
-          pageGroup: 'overview',
-          page: 'objectives',
+          pageGroup: PAGEGROUP,
+          page: PAGE,
           errorList: errors,
         };
       },
@@ -218,14 +220,12 @@
         } else if (this.sizingEquipment === false && this.optimizationHorizon !== 'Hours') {
           this.resetNonRequired(['optimizationHorizonNum']);
         }
-        // set complete to true or false
+        // set completeness
         this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
         this.submitted = true;
         this.$v.$touch();
         // set errorList
-        if (this.complete !== true) {
-          this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
-        }
+        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
         return this.save();
       },
       save() {

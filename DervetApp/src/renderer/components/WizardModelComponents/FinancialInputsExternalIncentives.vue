@@ -24,13 +24,16 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="table-align-center" v-for="incentive in externalIncentives">
-                <td >{{incentive.year}}</td>
+              <tr class="table-align-center"
+                  v-for="incentive in externalIncentives"
+                  v-bind:class="{ incomplete: !incentive.complete }">
+                <td>{{incentive.year}}</td>
                 <td>{{incentive.taxCredit}}</td>
                 <td>{{incentive.otherIncentive}}</td>
                 <td>
                   <router-link
-                    :to="{ name: 'financialInputsExternalIncentivesYear', params: { incentiveId: incentive.id }}">
+                    :to="{ name: 'financialInputsExternalIncentivesYear', params: { incentiveId: incentive.id }}"
+                    v-bind:class="{ incomplete: !incentive.complete }">
                     Edit
                   </router-link>
                   <span> | </span>
@@ -71,8 +74,10 @@
     <hr>
     <nav-buttons
       :continue-link="WIZARD_COMPONENT_PATH"
-      :back-link="WIZARD_COMPONENT_PATH"
-    />
+      :displayError="!complete"
+      :error-text="getSingleErrorMsg()"
+      continue-text="Done Adding External Incentives" />
+
   </div>
 </template>
 
@@ -85,12 +90,25 @@
     FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
   } from '@/router/constants';
 
+  const PAGEGROUP = 'components';
+  const PAGEKEY = 'financial';
+  const PAGE = 'externalIncentives';
 
   export default {
+    mounted() {
+      this.setExternalIncentiveData();
+    },
     components: { NavButtons },
     computed: {
       externalIncentives() {
         return this.$store.state.Project.externalIncentives;
+      },
+      complete() {
+        // an empty table is complete
+        if (!this.externalIncentivesExist()) {
+          return true;
+        }
+        return this.externalIncentivesExist() && this.getNumberOfInvalidRows() === 0;
       },
     },
     data() {
@@ -108,11 +126,53 @@
       externalIncentivesExist() {
         return this.externalIncentives.length > 0;
       },
+      getCompletenessPayload() {
+        return {
+          pageGroup: PAGEGROUP,
+          pageKey: PAGEKEY,
+          page: PAGE,
+          completeness: this.complete,
+        };
+      },
+      getErrorListPayload() {
+        const errors = [];
+        if (!this.complete) {
+          errors.push(this.getSingleErrorMsg());
+        }
+        return {
+          pageGroup: PAGEGROUP,
+          pageKey: PAGEKEY,
+          page: PAGE,
+          errorList: errors,
+        };
+      },
+      getNumberOfInvalidRows() {
+        let invalidRowsCount = 0;
+        Object.values(this.externalIncentives).forEach((row) => {
+          if (!row.complete) {
+            invalidRowsCount += 1;
+          }
+        });
+        return invalidRowsCount;
+      },
+      getSingleErrorMsg() {
+        if (!this.complete) {
+          const pluralizeRow = (this.getNumberOfInvalidRows() === 1) ? '' : 's';
+          return `There are errors with ${this.getNumberOfInvalidRows()} row${pluralizeRow} in the table.`;
+        }
+        return '';
+      },
       removeAll() {
         this.$store.dispatch('removeAllExternalIncentives');
+        this.setExternalIncentiveData();
       },
       removeOne(id) {
         this.$store.dispatch('removeExternalIncentive', id);
+        this.setExternalIncentiveData();
+      },
+      setExternalIncentiveData() {
+        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
+        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
       },
     },
   };

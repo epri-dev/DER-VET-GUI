@@ -1,12 +1,12 @@
-import { RetailTariffBillingPeriod, parsedCsvToBillingPeriods } from '@/models/RetailTariffBillingPeriod';
+import RetailTariffBillingPeriodMetadata, { parsedCsvToBillingPeriods } from '@/models/RetailTariffBillingPeriod';
 
-describe('RetailTariffBillingPeriod model', () => {
+describe('RetailTariffBillingPeriodMetadata model', () => {
   it('should construct a class instance from parsed CSV', () => {
     const testCsv = [
       ['Billing Period', 'Start Month', 'End Month', 'Start Time', 'End Time', 'Excluding Start Time', 'Excluding End Time', 'Weekday?', 'Value', 'Charge', 'Name_optional'],
       [1, 1, 10, 9, 10, 2, 2, 0, 10, 'Demand', 'bp1'],
     ];
-    const expected = new RetailTariffBillingPeriod({
+    const expected = new RetailTariffBillingPeriodMetadata({
       id: 1,
       startMonth: 1,
       endMonth: 10,
@@ -18,6 +18,7 @@ describe('RetailTariffBillingPeriod model', () => {
       value: 10,
       chargeType: 'Demand',
       name: 'bp1',
+      complete: true,
     });
 
     const actual = parsedCsvToBillingPeriods(testCsv).shift();

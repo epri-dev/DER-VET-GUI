@@ -11,6 +11,8 @@ export default class ProjectField {
     this.unit = args.unit;
     this.description = args.description;
     this.allowedValues = args.allowedValues;
+    this.initDisplayName = args.initDisplayName;
+    this.initUnit = args.initUnit;
   }
 
   toValidationSchema() {
@@ -49,6 +51,8 @@ export default class ProjectField {
       allowedValues: d.allowedValues,
       unit: d.unit,
       type: d.type,
+      initDisplayName: args.initDisplayName,
+      initUnit: d.initUnit,
     });
   }
 }

@@ -56,6 +56,9 @@
 
   const metadata = p.projectMetadata;
   const validations = metadata.getValidationSchema(c.RESILIENCE_FIELDS);
+  const PAGEGROUP = 'components';
+  const PAGEKEY = 'objectives';
+  const PAGE = 'resilience';
 
   export default {
     components: { TimeseriesDataUpload },
@@ -86,7 +89,7 @@
         return new CriticalLoadTimeSeries(this.inputTimeseries);
       },
       complete() {
-        return this.$store.state.Application.pageCompleteness.components.objectivesResilience;
+        return this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGEKEY][PAGE];
       },
     },
     beforeMount() {
@@ -113,9 +116,24 @@
       },
       getCompletenessPayload() {
         return {
-          pageGroup: 'components',
-          page: 'objectivesResilience',
+          pageGroup: PAGEGROUP,
+          pageKey: PAGEKEY,
+          page: PAGE,
           completeness: !this.$v.$invalid,
+        };
+      },
+      getErrorListPayload() {
+        const errors = [];
+        Object.keys(this.$v).forEach((key) => {
+          if (key.charAt(0) !== '$' && this.$v[key].$invalid) {
+            errors.push(this.getErrorMsg(key));
+          }
+        });
+        return {
+          pageGroup: PAGEGROUP,
+          pageKey: PAGEKEY,
+          page: PAGE,
+          errorList: errors,
         };
       },
       validatedSave() {
@@ -123,10 +141,12 @@
         if (this.reliabilityPostOptimizationOnly === true) {
           this.resetNonRequired(['reliabilityTarget']);
         }
+        // set completeness
+        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
         this.submitted = true;
         this.$v.$touch();
-        // set complete to true or false
-        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
+        // set errorList
+        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
         return this.save();
       },
       save() {
