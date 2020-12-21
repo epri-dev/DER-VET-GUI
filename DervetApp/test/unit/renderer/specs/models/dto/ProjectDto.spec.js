@@ -35,12 +35,17 @@ import modelParametersFixture from '../../../../fixtures/case0/000-DA_battery_mo
 import {
   makeProjectBattery,
   makeProjectPV,
-  makeModelParamsBattery,
-  makeModelParamsPV,
+  makeProjectICE,
+  makeProjectDieselGen,
   testInputsDirectory,
   testUuid1,
   testUuid2,
-} from '../../fixtures/models/dto/ProjectDtoFixtures';
+} from '../../fixtures/models/dto/ProjectDtoProjectFixtures';
+import {
+  makeModelParamsBattery,
+  makeModelParamsPV,
+  makeModelParamsIceDiesel,
+} from '../../fixtures/models/dto/ProjectDtoModelParamsFixtures';
 
 describe('modelParametersDto', () => {
   const actualFullMP = makeModelParameters(projectFixture);
@@ -55,19 +60,6 @@ describe('modelParametersDto', () => {
 
   const tagFixture = modelParametersFixture.tags;
   const actualTags = actualFullMP.tags;
-  it('should have translated the battery parameters correctly', () => {
-    const expectedKeyList = Object.keys(tagFixture.Battery[''].keys);
-    const expectedLength = expectedKeyList.length;
-    expect(Object.keys(actualTags.Battery[''].keys).length).to.eql(expectedLength);
-    let i = 0;
-    while (i > expectedLength) {
-      const keyName = expectedKeyList[i];
-      if (!keyName.includes('filename')) {
-        expect(actualTags.Battery[keyName]).to.eql(tagFixture.Battery[keyName]);
-      }
-      i += 1;
-    }
-  });
 
   it('should have translated the DA parameters correctly', () => {
     expect(actualTags.DA).to.eql(tagFixture.DA);
@@ -80,9 +72,7 @@ describe('modelParametersDto', () => {
   it('should have translated the deferral parameters correctly', () => {
     expect(actualTags.Deferral).to.eql(tagFixture.Deferral);
   });
-  it('should have translated the diesel genset parameters correctly', () => {
-    expect(actualTags.DieselGenset).to.eql(tagFixture.DieselGenset);
-  });
+
   it('should have translated the finance parameters correctly', () => {
     const expectedKeyList = Object.keys(tagFixture.Finance[''].keys);
     const expectedLength = expectedKeyList.length;
@@ -99,15 +89,11 @@ describe('modelParametersDto', () => {
   it('should have translated the FR parameters correctly', () => {
     expect(actualTags.FR).to.eql(tagFixture.FR);
   });
-  it('should have translated the ICE parameters correctly', () => {
-    expect(actualTags.ICE).to.eql(tagFixture.ICE);
-  });
+
   it('should have translated the NSR parameters correctly', () => {
     expect(actualTags.NSR).to.eql(tagFixture.NSR);
   });
-  it('should have translated the PV parameters correctly', () => {
-    expect(actualTags.PV).to.eql(tagFixture.PV);
-  });
+
   it('should have translated the reliability parameters correctly', () => {
     expect(actualTags.Reliability).to.eql(tagFixture.Reliability);
   });
@@ -199,7 +185,6 @@ describe('modelParametersDto', () => {
 
     const actual = makeBatteryParameters(testProject);
     const expected = makeModelParamsBattery(testUuid1);
-
     expect(actual[testUuid1]).to.eql(expected);
     expect(Object.keys(actual)).to.eql([testUuid1, testUuid2]);
   });
@@ -217,8 +202,21 @@ describe('modelParametersDto', () => {
     expect(Object.keys(actual[''].keys).length).to.eql(5);
   });
   it('should make diesel genset parameters', () => {
-    const actual = makeDieselGensetParameters(projectFixtureAllActive);
-    expect(Object.keys(actual[''].keys).length).to.eql(28);
+    const testProject = {
+      technologySpecsDieselGen: [
+        makeProjectDieselGen(testUuid1),
+        makeProjectDieselGen(testUuid2),
+      ],
+      inputsDirectory: testInputsDirectory,
+    };
+
+    const actual = makeDieselGensetParameters(testProject);
+    const expected = {
+      ...makeModelParamsIceDiesel(testUuid1),
+      ...makeModelParamsIceDiesel(testUuid2),
+    };
+
+    expect(actual).to.eql(expected);
   });
   it('should make finance parameters', () => {
     const actual = makeFinanceParameters(projectFixture);
@@ -229,8 +227,21 @@ describe('modelParametersDto', () => {
     expect(Object.keys(actual[''].keys).length).to.eql(8);
   });
   it('should make ICE parameters', () => {
-    const actual = makeICEParameters(projectFixtureAllActive);
-    expect(Object.keys(actual[''].keys).length).to.eql(28);
+    const testProject = {
+      technologySpecsICE: [
+        makeProjectICE(testUuid1),
+        makeProjectICE(testUuid2),
+      ],
+      inputsDirectory: testInputsDirectory,
+    };
+
+    const actual = makeICEParameters(testProject);
+    const expected = {
+      ...makeModelParamsIceDiesel(testUuid1),
+      ...makeModelParamsIceDiesel(testUuid2),
+    };
+
+    expect(actual).to.eql(expected);
   });
 
   it('should make NSR parameters', () => {

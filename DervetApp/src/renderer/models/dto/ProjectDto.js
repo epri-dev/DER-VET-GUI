@@ -158,7 +158,7 @@ export const makeSingleBatteryParameter = (battery, inputsDirectory) => {
     ch_max_rated: makeBaseKey(chargingCapacity, FLOAT),
     ch_min_rated: makeBaseKey(ZERO, FLOAT), // hardcoded
     construction_year: makeBaseKey(battery.constructionYear, PERIOD),
-    cycle_life_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, CYCLE), STRING),
+    cycle_life_filename: makeBaseKey(makeBatteryCsvFilePath(inputsDirectory, battery), STRING),
     daily_cycle_limit: makeBaseKey(dailyCycleLimit, FLOAT),
     decommissioning_cost: makeBaseKey(battery.decomissioningCost, FLOAT),
     dis_max_rated: makeBaseKey(dischargingCapacity, FLOAT),
@@ -254,7 +254,7 @@ export const makeSingleDieselGensetParameter = (dieselGen) => {
   const keys = {
     acr: makeBaseKey(0, FLOAT), // hardcoded
     ccost: makeBaseKey(dieselGen.capitalCost, FLOAT),
-    ccost_kw: makeBaseKey(dieselGen.capitalCostPerkW, FLOAT),
+    ccost_kW: makeBaseKey(dieselGen.capitalCostPerkW, FLOAT),
     construction_year: makeBaseKey(dieselGen.constructionYear, PERIOD),
     decommissioning_cost: makeBaseKey(dieselGen.decomissioningCost, FLOAT),
     'ecc%': makeBaseKey(ZERO, FLOAT), // hardcoded
@@ -333,7 +333,7 @@ export const makeSingleICEParameter = (iceGen) => {
   const keys = {
     acr: makeBaseKey(0, FLOAT), // hardcoded
     ccost: makeBaseKey(iceGen.capitalCost, FLOAT),
-    ccost_kw: makeBaseKey(iceGen.capitalCostPerkW, FLOAT),
+    ccost_kW: makeBaseKey(iceGen.capitalCostPerkW, FLOAT),
     construction_year: makeBaseKey(iceGen.constructionYear, PERIOD),
     decommissioning_cost: makeBaseKey(iceGen.decomissioningCost, FLOAT),
     'ecc%': makeBaseKey(ZERO, FLOAT), // hardcoded
@@ -386,40 +386,40 @@ export const makeSinglePVParameter = (pv) => {
   if (!pv.shouldSize) {
     ({ ratedCapacity } = pv);
   }
-  const replacementConstructionTime = filterUndefinedNull(solarPV.replacementConstructionTime);
+  const replacementConstructionTime = filterUndefinedNull(pv.replacementConstructionTime);
   const keys = {
     acr: makeBaseKey(0, FLOAT), // hardcoded
-    ccost_kW: makeBaseKey(solarPV.cost, FLOAT),
-    construction_year: makeBaseKey(solarPV.constructionYear, PERIOD),
-    curtail: makeBaseKey(convertToOneZero(solarPV.includeCurtailment), BOOL),
-    decommissioning_cost: makeBaseKey(solarPV.decomissioningCost, FLOAT),
+    ccost_kW: makeBaseKey(pv.cost, FLOAT),
+    construction_year: makeBaseKey(pv.constructionYear, PERIOD),
+    curtail: makeBaseKey(convertToOneZero(pv.includeCurtailment), BOOL),
+    decommissioning_cost: makeBaseKey(pv.decomissioningCost, FLOAT),
     'ecc%': makeBaseKey(ZERO, FLOAT), // hardcoded
-    expected_lifetime: makeBaseKey(solarPV.expectedLifetime, INT),
-    fixed_om_cost: makeBaseKey(solarPV.fixedOMCosts, FLOAT),
-    gamma: makeBaseKey(filterUndefinedNull(solarPV.gamma), FLOAT),
-    grid_charge: makeBaseKey(solarPV.allowGridCharge, BOOL),
+    expected_lifetime: makeBaseKey(pv.expectedLifetime, INT),
+    fixed_om_cost: makeBaseKey(pv.fixedOMCosts, FLOAT),
+    gamma: makeBaseKey(filterUndefinedNull(pv.gamma), FLOAT),
+    grid_charge: makeBaseKey(convertToOneZero(pv.allowGridCharge), BOOL),
     grid_charge_penalty: makeBaseKey(ZERO, BOOL), // hardcoded
     growth: makeBaseKey(ZERO, FLOAT), // hardcoded
-    inv_max: makeBaseKey(solarPV.inverterMax, FLOAT),
-    loc: makeBaseKey(solarPV.loc, FLOAT),
-    macrs_term: makeBaseKey(solarPV.macrsTerm, FLOAT),
-    max_rated_capacity: makeBaseKey(filterUndefinedNull(solarPV.ratedCapacityMaximum), BOOL),
-    min_rated_capacity: makeBaseKey(filterUndefinedNull(solarPV.ratedCapacityMinimum), BOOL),
-    name: makeBaseKey(solarPV.name, STRING),
+    inv_max: makeBaseKey(pv.inverterMax, FLOAT),
+    loc: makeBaseKey(pv.loc, FLOAT),
+    macrs_term: makeBaseKey(pv.macrsTerm, FLOAT),
+    max_rated_capacity: makeBaseKey(filterUndefinedNull(pv.ratedCapacityMaximum), BOOL),
+    min_rated_capacity: makeBaseKey(filterUndefinedNull(pv.ratedCapacityMinimum), BOOL),
+    name: makeBaseKey(pv.name, STRING),
     nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
-    nu: makeBaseKey(filterUndefinedNull(solarPV.nu), FLOAT),
-    operation_year: makeBaseKey(solarPV.operationYear, PERIOD),
-    PPA: makeBaseKey(convertToOneZero(solarPV.includePV), BOOL),
-    PPA_cost: makeBaseKey(filterUndefinedNull(solarPV.ppaCost), FLOAT),
-    PPA_inflation_rate: makeBaseKey(filterUndefinedNull(solarPV.ppaInflationRate), FLOAT),
+    nu: makeBaseKey(filterUndefinedNull(pv.nu), FLOAT),
+    operation_year: makeBaseKey(pv.operationYear, PERIOD),
+    PPA: makeBaseKey(convertToOneZero(pv.includePV), BOOL),
+    PPA_cost: makeBaseKey(filterUndefinedNull(pv.ppaCost), FLOAT),
+    PPA_inflation_rate: makeBaseKey(filterUndefinedNull(pv.ppaInflationRate), FLOAT),
     rated_capacity: makeBaseKey(ratedCapacity, FLOAT),
-    rcost_kW: makeBaseKey(filterUndefinedNull(solarPV.replacementCost), FLOAT),
-    replaceable: makeBaseKey(convertToOneZero(solarPV.isReplaceable), BOOL),
+    rcost_kW: makeBaseKey(filterUndefinedNull(pv.replacementCost), FLOAT),
+    replaceable: makeBaseKey(convertToOneZero(pv.isReplaceable), BOOL),
     replacement_construction_time: makeBaseKey(replacementConstructionTime, INT),
-    salvage_value: makeBaseKey(calculateSalvageValue(solarPV), STRING_INT),
+    salvage_value: makeBaseKey(calculateSalvageValue(pv), STRING_INT),
     sr_response_time: makeBaseKey(ZERO, INT), // hardcoded
     startup_time: makeBaseKey(ZERO, INT), // hardcoded
-    ter: makeBaseKey(solarPV.ter, FLOAT),
+    ter: makeBaseKey(pv.ter, FLOAT),
   };
   return makeGroup(pv.id, convertToYesNo(pv.active), keys);
 };

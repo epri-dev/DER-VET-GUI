@@ -377,7 +377,6 @@
           isReplaceable: this.isReplaceable,
           macrsTerm: this.macrsTerm,
           minimumPower: this.minimumPower,
-          maxGenerators: this.maxGenerators,
           name: this.name,
           numGenerators: this.numGenerators,
           operationYear: this.operationYear,
