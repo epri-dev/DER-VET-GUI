@@ -21,7 +21,6 @@ export const FR_ENERGY_PRICE_GROWTH = 'frEnergyPriceGrowth';
 export const FR_DURATION = 'frDuration';
 export const FR_COMBINED_MARKET = 'frCombinedMarket';
 export const GRID_LOCATION = 'gridLocation';
-export const INPUTS_DIRECTORY = 'inputsDirectory';
 export const INCLUDE_INTERCONNECTION_CONSTRAINTS = 'includeInterconnectionConstraints';
 export const MAX_EXPORT = 'maxExport';
 export const MAX_IMPORT = 'maxImport';
@@ -30,11 +29,11 @@ export const NSR_GROWTH = 'nsrGrowth';
 export const NSR_DURATION = 'nsrDuration';
 export const OPTIMIZATION_HORIZON = 'optimizationHorizon';
 export const OPTIMIZATION_HORIZON_NUM = 'optimizationHorizonNum';
+export const OUTPUT_DIRECTORY = 'outputDirectory';
 export const OWNERSHIP = 'ownership';
 export const RELIABILITY_MAX_OUTAGE_DURATION = 'reliabilityMaxOutageDuration';
 export const RELIABILITY_POST_OPTIMIZATION_ONLY = 'reliabilityPostOptimizationOnly';
 export const RELIABILITY_TARGET = 'reliabilityTarget';
-export const RESULTS_DIRECTORY = 'resultsDirectory';
 export const SIZING_EQUIPMENT = 'sizingEquipment';
 export const SR_GROWTH = 'srGrowth';
 export const SR_DURATION = 'srDuration';
@@ -95,10 +94,9 @@ export const START_PROJECT_FIELDS = [
   ANALYSIS_HORIZON_MODE,
   DATA_YEAR,
   GRID_LOCATION,
-  INPUTS_DIRECTORY,
   NAME,
+  OUTPUT_DIRECTORY,
   OWNERSHIP,
-  RESULTS_DIRECTORY,
   START_YEAR,
   TIMESTEP,
 ];

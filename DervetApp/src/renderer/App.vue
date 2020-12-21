@@ -14,6 +14,6 @@
 
   export default {
     components: { TopNavBar },
-    name: 'dervetapp',
+    name: 'DER-VET',
   };
 </script>

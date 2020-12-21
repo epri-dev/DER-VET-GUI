@@ -15,7 +15,7 @@ import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
 
 import csvs from './csvs';
 
-const INPUTS_DIRECTORY = '/path/to/inputs';
+const OUTPUT_DIRECTORY = '/path/to/output';
 
 export const projectFixture = {
   analysisHorizon: 0,
@@ -52,7 +52,7 @@ export const projectFixture = {
   frUpPrice: new FRUpPriceTimeSeries(csvs.price),
   frDownPrice: new FRDownPriceTimeSeries(csvs.price),
   gridLocation: 'Customer',
-  inputsDirectory: INPUTS_DIRECTORY,
+  outputDirectory: OUTPUT_DIRECTORY,
   name: 'None',
   nsrPrice: new NSRPriceTimeSeries(csvs.price),
   objectivesDA: true,
@@ -63,7 +63,6 @@ export const projectFixture = {
   maxExport: 40000,
   optimizationHorizon: 'month',
   ownership: 'Customer',
-  resultsDirectory: './Results/foo',
   retailTariffBillingPeriods: [
     {
       id: 1,

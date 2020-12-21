@@ -1,4 +1,36 @@
+import fs from 'fs';
+import path from 'path';
 import Papa from 'papaparse';
+
+export const getAppDataPath = () => {
+  const appName = 'dervetapp'; // TODO get from a common place
+  switch (process.platform) {
+    case 'darwin': {
+      return path.join(process.env.HOME, 'Library', 'Application Support', appName);
+    }
+    case 'win32': {
+      return path.join(process.env.APPDATA, appName);
+    }
+    case 'linux': {
+      return path.join(process.env.HOME, '.myApp');
+    }
+    default: {
+      throw new Error('Unsupported platform!');
+    }
+  }
+};
+
+export const createDirectory = (dirName) => {
+  try {
+    if (!fs.existsSync(dirName)) {
+      fs.mkdirSync(dirName);
+    }
+    return dirName;
+  } catch (err) {
+    // TODO handle error properly
+    throw err;
+  }
+};
 
 export const papaParsePromise = file => new Promise((complete, error) => {
   // TODO move type conversion on CSV values to validation function
