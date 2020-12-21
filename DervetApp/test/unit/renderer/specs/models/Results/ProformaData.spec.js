@@ -1,4 +1,5 @@
-import { ProFormaData, proFormaTableData, proFormaTableFields, proFormaArrayData } from '@/models/Results/ProFormaData';
+import ProFormaData from '@/models/Results/ProFormaData';
+import { proFormaTableData, proFormaTableFields, proFormaArrayData } from '../../fixtures/models/Results/ProFormaData';
 
 
 describe('ProFormaData model', () => {

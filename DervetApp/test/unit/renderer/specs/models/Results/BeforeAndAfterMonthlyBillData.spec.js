@@ -1,8 +1,8 @@
+import BeforeAndAfterMonthlyBillData from '@/models/Results/BeforeAndAfterMonthlyBillData';
 import {
-  BeforeAndAfterMonthlyBillData,
   monthlyBillArrayData,
   monthlyBillData,
-} from '@/models/Results/BeforeAndAfterMonthlyBillData';
+} from '../../fixtures/models/Results/BeforeAndAfterMonthlyBillData';
 
 describe('BeforeAndAfterMonthlyBillData model', () => {
   const actualData = new BeforeAndAfterMonthlyBillData(monthlyBillArrayData);

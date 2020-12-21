@@ -1,11 +1,11 @@
 import { papaParseCsvString } from '@/util/file';
 import SizeData from './SizeData';
-import { ProFormaData } from './ProFormaData';
-import { CostBenefitData } from './CostBenefitData';
-import { BeforeAndAfterMonthlyBillData } from './BeforeAndAfterMonthlyBillData';
-import { DeferralData } from './DeferralData';
-import { LoadCoverageProbabilityData } from './LoadCoverageProbabilityData';
-import { PeakLoadDayData } from './PeakLoadDayData';
+import ProFormaData from './ProFormaData';
+import CostBenefitData from './CostBenefitData';
+import BeforeAndAfterMonthlyBillData from './BeforeAndAfterMonthlyBillData';
+import DeferralData from './DeferralData';
+import LoadCoverageProbabilityData from './LoadCoverageProbabilityData';
+import PeakLoadDayData from './PeakLoadDayData';
 
 export class ResultsData {
   constructor(id, data) {

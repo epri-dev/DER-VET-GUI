@@ -1,8 +1,8 @@
+import LoadCoverageProbabilityData from '@/models/Results/LoadCoverageProbabilityData';
 import {
-  LoadCoverageProbabilityData,
   loadCoverageArrayData,
   loadCoverageProbDefaultData,
-} from '@/models/Results/LoadCoverageProbabilityData';
+} from '../../fixtures/models/Results/LoadCoverageProbabilityData';
 
 describe('LoadCoverageProbabilityData model', () => {
   const actualData = new LoadCoverageProbabilityData(loadCoverageArrayData);
