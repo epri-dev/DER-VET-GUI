@@ -1,6 +1,6 @@
 class BaseTableData {
   constructor(
-    fileName, rawArrayData, hasHeaderRow, columnifyData = false, dateTimeColName = null,
+    fileName, rawArrayData, hasHeaderRow = false, columnifyData = false, dateTimeColName = null,
     nonNumericalCols = null,
   ) {
     this.fileName = fileName;

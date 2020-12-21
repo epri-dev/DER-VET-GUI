@@ -1,11 +1,13 @@
 import { papaParseCsvString } from '@/util/file';
-import SizeData from './SizeData';
-import ProFormaData from './ProFormaData';
-import CostBenefitData from './CostBenefitData';
 import BeforeAndAfterMonthlyBillData from './BeforeAndAfterMonthlyBillData';
+import CostBenefitData from './CostBenefitData';
 import DeferralData from './DeferralData';
 import LoadCoverageProbabilityData from './LoadCoverageProbabilityData';
+import OutageEnergyContributionData from './OutageEnergyContributionData';
 import PeakLoadDayData from './PeakLoadDayData';
+import ProFormaData from './ProFormaData';
+import SizeData from './SizeData';
+import TimeseriesData from './TimeseriesData';
 
 export class ResultsData {
   constructor(id, data) {
@@ -98,19 +100,17 @@ export class ResultsData {
       console.log('outage contribution is null');
       return null;
     }
-    console.log('outage contribution is not null');
-    console.log(papaParseObject);
-    // TODO const data = new PeakLoadDayData(papaParseObject.data);
-    // return data;
-    return papaParseObject.data;
+    const data = new OutageEnergyContributionData(papaParseObject.data);
+    console.log('outage contribution:');
+    console.log(JSON.stringify(data.data, null, 1));
+    return data;
   }
   initializeDistpatch(csvString) {
     const papaParseObject = papaParseCsvString(csvString);
-    // TODO const data = new PeakLoadDayData(papaParseObject.data);
-    // return data;
-    console.log('dispatch data');
-    console.log(JSON.stringify(papaParseCsvString, null, 1));
-    return papaParseObject.data;
+    const data = new TimeseriesData(papaParseObject.data);
+    console.log('dispatch data:');
+    console.log(JSON.stringify(data.data, null, 1));
+    return data;
   }
   createCharts() {
     // summary page charts
@@ -137,7 +137,7 @@ export class ResultsData {
 
     // reliability charts
     if (this.showOutageContribution) {
-      // TODO this.reliabilityOutageContributionBarChart = null;
+      this.reliabilityOutageContributionBarChart = this.outageContribution.getFirstYearChartData();
     }
     if (this.showLoadCoverageProbability) {
       this.reliabilityLoadCoverageLineChart = this.loadCoverageProbability.getFirstYearChartData();
