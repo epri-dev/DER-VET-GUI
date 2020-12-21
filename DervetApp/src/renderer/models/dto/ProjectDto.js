@@ -70,7 +70,9 @@ export const calculateSalvageValue = (techSpecs) => {
   return salvageValueOption === 'User defined' ? salvageValue : salvageValueOption;
 };
 
-export const filterUndefinedNull = value => ((value === undefined || value === null) ? 0 : value);
+export const setUndefinedNullToZero = value => (
+  (value === undefined || value === null) ? 0 : value
+);
 
 export const makeCsvFilePath = (directory, fileName) => (
   path.join(directory, `${fileName}.csv`)
@@ -151,7 +153,7 @@ export const makeSingleBatteryParameter = (battery, inputsDirectory) => {
   if (!battery.shouldEnergySize) {
     ({ energyCapacity } = battery);
   }
-  const replacementConstructionTime = filterUndefinedNull(battery.replacementConstructionTime);
+  const replacementConstructionTime = setUndefinedNullToZero(battery.replacementConstructionTime);
 
   const keys = {
     OMexpenses: makeBaseKey(battery.variableOMCosts, FLOAT),
@@ -167,7 +169,7 @@ export const makeSingleBatteryParameter = (battery, inputsDirectory) => {
     decommissioning_cost: makeBaseKey(battery.decomissioningCost, FLOAT),
     dis_max_rated: makeBaseKey(dischargingCapacity, FLOAT),
     dis_min_rated: makeBaseKey(ZERO, FLOAT), // hardcoded
-    duration_max: makeBaseKey(filterUndefinedNull(battery.maxDuration), FLOAT),
+    duration_max: makeBaseKey(setUndefinedNullToZero(battery.maxDuration), FLOAT),
     'ecc%': makeBaseKey(ZERO, FLOAT), // hardcoded (will eventually remove)
     ene_max_rated: makeBaseKey(energyCapacity, FLOAT),
     expected_lifetime: makeBaseKey(battery.expectedLifetime, INT),
@@ -184,9 +186,9 @@ export const makeSingleBatteryParameter = (battery, inputsDirectory) => {
     operation_year: makeBaseKey(battery.operationYear, PERIOD),
     p_start_ch: makeBaseKey(ZERO, FLOAT), // hardcoded
     p_start_dis: makeBaseKey(ZERO, FLOAT), // hardcoded
-    rcost: makeBaseKey(filterUndefinedNull(battery.replacementCost), FLOAT),
-    rcost_kW: makeBaseKey(filterUndefinedNull(battery.replacementCostPerkW), FLOAT),
-    rcost_kWh: makeBaseKey(filterUndefinedNull(battery.replacementCostPerkWh), FLOAT),
+    rcost: makeBaseKey(setUndefinedNullToZero(battery.replacementCost), FLOAT),
+    rcost_kW: makeBaseKey(setUndefinedNullToZero(battery.replacementCostPerkW), FLOAT),
+    rcost_kWh: makeBaseKey(setUndefinedNullToZero(battery.replacementCostPerkWh), FLOAT),
     replaceable: makeBaseKey(convertToOneZero(battery.isReplaceable), BOOL),
     replacement_construction_time: makeBaseKey(replacementConstructionTime, INT),
     rte: makeBaseKey(battery.roundtripEfficiency, FLOAT),
@@ -196,16 +198,16 @@ export const makeSingleBatteryParameter = (battery, inputsDirectory) => {
     sr_response_time: makeBaseKey(ZERO, INT), // hardcoded
     startup: makeBaseKey(ZERO, BOOL), // hardcoded
     startup_time: makeBaseKey(ZERO, INT), // hardcoded
-    state_of_health: makeBaseKey(filterUndefinedNull(battery.state_of_health), FLOAT),
+    state_of_health: makeBaseKey(setUndefinedNullToZero(battery.state_of_health), FLOAT),
     ter: makeBaseKey(battery.ter, FLOAT),
     ulsoc: makeBaseKey(battery.upperSOCLimit, FLOAT),
-    user_ch_rated_max: makeBaseKey(filterUndefinedNull(battery.powerCapacityMaximum), FLOAT),
-    user_ch_rated_min: makeBaseKey(filterUndefinedNull(battery.powerCapacityMinimum), FLOAT),
-    user_dis_rated_max: makeBaseKey(filterUndefinedNull(battery.powerCapacityMaximum), FLOAT),
-    user_dis_rated_min: makeBaseKey(filterUndefinedNull(battery.powerCapacityMinimum), FLOAT),
-    user_ene_rated_max: makeBaseKey(filterUndefinedNull(battery.energyCapacityMaximum), FLOAT),
-    user_ene_rated_min: makeBaseKey(filterUndefinedNull(battery.energyCapacityMinimum), FLOAT),
-    yearly_degrade: makeBaseKey(filterUndefinedNull(battery.calendarDegradationRate), INT),
+    user_ch_rated_max: makeBaseKey(setUndefinedNullToZero(battery.powerCapacityMaximum), FLOAT),
+    user_ch_rated_min: makeBaseKey(setUndefinedNullToZero(battery.powerCapacityMinimum), FLOAT),
+    user_dis_rated_max: makeBaseKey(setUndefinedNullToZero(battery.powerCapacityMaximum), FLOAT),
+    user_dis_rated_min: makeBaseKey(setUndefinedNullToZero(battery.powerCapacityMinimum), FLOAT),
+    user_ene_rated_max: makeBaseKey(setUndefinedNullToZero(battery.energyCapacityMaximum), FLOAT),
+    user_ene_rated_min: makeBaseKey(setUndefinedNullToZero(battery.energyCapacityMinimum), FLOAT),
+    yearly_degrade: makeBaseKey(setUndefinedNullToZero(battery.calendarDegradationRate), INT),
   };
   return makeGroup(battery.id, convertToYesNo(battery.active), keys);
 };
@@ -254,7 +256,7 @@ export const makeSingleDieselGensetParameter = (dieselGen) => {
   if (!dieselGen.shouldSize) {
     ({ ratedCapacity } = dieselGen);
   }
-  const replacementConstructionTime = filterUndefinedNull(dieselGen.replacementConstructionTime);
+  const replacementConstructionTime = setUndefinedNullToZero(dieselGen.replacementConstructionTime);
   const keys = {
     acr: makeBaseKey(0, FLOAT), // hardcoded
     ccost: makeBaseKey(dieselGen.capitalCost, FLOAT),
@@ -267,16 +269,16 @@ export const makeSingleDieselGensetParameter = (dieselGen) => {
     fixed_om_cost: makeBaseKey(dieselGen.fixedOMCostIncludingExercise, FLOAT),
     fuel_cost: makeBaseKey(dieselGen.fuelCost, FLOAT),
     macrs_term: makeBaseKey(dieselGen.macrsTerm, FLOAT),
-    max_rated_capacity: makeBaseKey(filterUndefinedNull(dieselGen.ratedCapacityMaximum), FLOAT),
+    max_rated_capacity: makeBaseKey(setUndefinedNullToZero(dieselGen.ratedCapacityMaximum), FLOAT),
     min_power: makeBaseKey(dieselGen.minimumPower, FLOAT),
-    min_rated_capacity: makeBaseKey(filterUndefinedNull(dieselGen.ratedCapacityMinimum), FLOAT),
+    min_rated_capacity: makeBaseKey(setUndefinedNullToZero(dieselGen.ratedCapacityMinimum), FLOAT),
     n: makeBaseKey(dieselGen.numGenerators, INT),
     name: makeBaseKey(dieselGen.name, STRING),
     nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
     operation_year: makeBaseKey(dieselGen.operationYear, PERIOD),
     rated_capacity: makeBaseKey(ratedCapacity, FLOAT),
-    rcost: makeBaseKey(filterUndefinedNull(dieselGen.replacementCost), FLOAT),
-    rcost_kW: makeBaseKey(filterUndefinedNull(dieselGen.replacementCostPerkW), FLOAT),
+    rcost: makeBaseKey(setUndefinedNullToZero(dieselGen.replacementCost), FLOAT),
+    rcost_kW: makeBaseKey(setUndefinedNullToZero(dieselGen.replacementCostPerkW), FLOAT),
     replaceable: makeBaseKey(convertToOneZero(dieselGen.isReplaceable), BOOL),
     replacement_construction_time: makeBaseKey(replacementConstructionTime, INT),
     salvage_value: makeBaseKey(calculateSalvageValue(dieselGen), STRING_INT),
@@ -333,7 +335,7 @@ export const makeSingleICEParameter = (iceGen) => {
   if (!iceGen.shouldSize) {
     ({ ratedCapacity } = iceGen);
   }
-  const replacementConstructionTime = filterUndefinedNull(iceGen.replacementConstructionTime);
+  const replacementConstructionTime = setUndefinedNullToZero(iceGen.replacementConstructionTime);
   const keys = {
     acr: makeBaseKey(0, FLOAT), // hardcoded
     ccost: makeBaseKey(iceGen.capitalCost, FLOAT),
@@ -346,16 +348,16 @@ export const makeSingleICEParameter = (iceGen) => {
     fixed_om_cost: makeBaseKey(iceGen.fixedOMCostIncludingExercise, FLOAT),
     fuel_cost: makeBaseKey(iceGen.fuelCost, FLOAT),
     macrs_term: makeBaseKey(iceGen.macrsTerm, FLOAT),
-    max_rated_capacity: makeBaseKey(filterUndefinedNull(iceGen.ratedCapacityMaximum), FLOAT),
+    max_rated_capacity: makeBaseKey(setUndefinedNullToZero(iceGen.ratedCapacityMaximum), FLOAT),
     min_power: makeBaseKey(iceGen.minimumPower, FLOAT),
-    min_rated_capacity: makeBaseKey(filterUndefinedNull(iceGen.ratedCapacityMinimum), FLOAT),
+    min_rated_capacity: makeBaseKey(setUndefinedNullToZero(iceGen.ratedCapacityMinimum), FLOAT),
     n: makeBaseKey(iceGen.numGenerators, INT),
     name: makeBaseKey(iceGen.name, STRING),
     nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
     operation_year: makeBaseKey(iceGen.operationYear, PERIOD),
     rated_capacity: makeBaseKey(ratedCapacity, FLOAT),
-    rcost: makeBaseKey(filterUndefinedNull(iceGen.replacementCost), FLOAT),
-    rcost_kW: makeBaseKey(filterUndefinedNull(iceGen.replacementCostPerkW), FLOAT),
+    rcost: makeBaseKey(setUndefinedNullToZero(iceGen.replacementCost), FLOAT),
+    rcost_kW: makeBaseKey(setUndefinedNullToZero(iceGen.replacementCostPerkW), FLOAT),
     replaceable: makeBaseKey(convertToOneZero(iceGen.isReplaceable), BOOL),
     replacement_construction_time: makeBaseKey(replacementConstructionTime, INT),
     salvage_value: makeBaseKey(calculateSalvageValue(iceGen), STRING_INT),
@@ -390,7 +392,7 @@ export const makeSinglePVParameter = (pv) => {
   if (!pv.shouldSize) {
     ({ ratedCapacity } = pv);
   }
-  const replacementConstructionTime = filterUndefinedNull(pv.replacementConstructionTime);
+  const replacementConstructionTime = setUndefinedNullToZero(pv.replacementConstructionTime);
   const keys = {
     acr: makeBaseKey(0, FLOAT), // hardcoded
     ccost_kW: makeBaseKey(pv.cost, FLOAT),
@@ -400,24 +402,24 @@ export const makeSinglePVParameter = (pv) => {
     'ecc%': makeBaseKey(ZERO, FLOAT), // hardcoded
     expected_lifetime: makeBaseKey(pv.expectedLifetime, INT),
     fixed_om_cost: makeBaseKey(pv.fixedOMCosts, FLOAT),
-    gamma: makeBaseKey(filterUndefinedNull(pv.gamma), FLOAT),
+    gamma: makeBaseKey(setUndefinedNullToZero(pv.gamma), FLOAT),
     grid_charge: makeBaseKey(convertToOneZero(pv.allowGridCharge), BOOL),
     grid_charge_penalty: makeBaseKey(ZERO, BOOL), // hardcoded
     growth: makeBaseKey(ZERO, FLOAT), // hardcoded
     inv_max: makeBaseKey(pv.inverterMax, FLOAT),
     loc: makeBaseKey(pv.loc, FLOAT),
     macrs_term: makeBaseKey(pv.macrsTerm, FLOAT),
-    max_rated_capacity: makeBaseKey(filterUndefinedNull(pv.ratedCapacityMaximum), BOOL),
-    min_rated_capacity: makeBaseKey(filterUndefinedNull(pv.ratedCapacityMinimum), BOOL),
+    max_rated_capacity: makeBaseKey(setUndefinedNullToZero(pv.ratedCapacityMaximum), BOOL),
+    min_rated_capacity: makeBaseKey(setUndefinedNullToZero(pv.ratedCapacityMinimum), BOOL),
     name: makeBaseKey(pv.name, STRING),
     nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
-    nu: makeBaseKey(filterUndefinedNull(pv.nu), FLOAT),
+    nu: makeBaseKey(setUndefinedNullToZero(pv.nu), FLOAT),
     operation_year: makeBaseKey(pv.operationYear, PERIOD),
     PPA: makeBaseKey(convertToOneZero(pv.includePV), BOOL),
-    PPA_cost: makeBaseKey(filterUndefinedNull(pv.ppaCost), FLOAT),
-    PPA_inflation_rate: makeBaseKey(filterUndefinedNull(pv.ppaInflationRate), FLOAT),
+    PPA_cost: makeBaseKey(setUndefinedNullToZero(pv.ppaCost), FLOAT),
+    PPA_inflation_rate: makeBaseKey(setUndefinedNullToZero(pv.ppaInflationRate), FLOAT),
     rated_capacity: makeBaseKey(ratedCapacity, FLOAT),
-    rcost_kW: makeBaseKey(filterUndefinedNull(pv.replacementCost), FLOAT),
+    rcost_kW: makeBaseKey(setUndefinedNullToZero(pv.replacementCost), FLOAT),
     replaceable: makeBaseKey(convertToOneZero(pv.isReplaceable), BOOL),
     replacement_construction_time: makeBaseKey(replacementConstructionTime, INT),
     salvage_value: makeBaseKey(calculateSalvageValue(pv), STRING_INT),
