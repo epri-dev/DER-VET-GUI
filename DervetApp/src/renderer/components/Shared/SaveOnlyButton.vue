@@ -1,13 +1,7 @@
 <template>
   <div class="form-group form-buffer row">
     <div class="col-md-3 back-btn">
-      <router-link
-        v-on:click.native="save"
-        :event="disabled ? '' : 'click'"
-        :to="saveLink"
-        class="btn btn-primary pull-left">
-        {{ saveText }}
-      </router-link>
+      <button @click="save" class="btn btn-primary">Save</button>
     </div>
 
     <div v-if="displayError" class="col-md-5 error-text-color">
@@ -16,15 +10,6 @@
     <div v-else class="col-md-5">
     </div>
 
-    <div class="col-md-4 continue-btn">
-      <router-link
-        v-on:click.native="save"
-        :event="disabled ? '' : 'click'"
-        :to="continueLink"
-        class="btn btn-primary pull-right">
-        {{ continueText }}
-      </router-link>
-    </div>
   </div>
 </template>
 
@@ -41,13 +26,13 @@
       },
     },
     props: {
-      continueLink: {
+      backLink: {
         type: String,
         default: null,
       },
-      continueText: {
+      backText: {
         type: String,
-        default: 'Save and Continue >>',
+        default: '<< Back',
       },
       save: {
         type: Function,
@@ -60,14 +45,6 @@
       displayError: {
         type: Boolean,
         default: false,
-      },
-      saveLink: {
-        type: String,
-        default: null,
-      },
-      saveText: {
-        type: String,
-        default: 'Save',
       },
     },
   };

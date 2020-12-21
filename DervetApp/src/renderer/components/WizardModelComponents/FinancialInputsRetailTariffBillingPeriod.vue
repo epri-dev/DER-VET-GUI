@@ -66,9 +66,7 @@
 
       <hr>
 
-      <save-buttons
-        :continue-link="`${FINANCIAL_INPUTS_RETAIL_TARIFF_PATH}-billing-period/null`"
-        continue-text="Save and Add Another Billing Period"
+      <save-only-button
         :displayError="submitted && $v.$anyError"
         :save="validatedSave" />
 
@@ -81,17 +79,17 @@
 </template>
 
 <script>
-  import { requiredIf } from 'vuelidate/lib/validators';
+  import { requiredIf, minValue, maxValue } from 'vuelidate/lib/validators';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import RetailTariffBillingPeriodMetadata from '@/models/RetailTariffBillingPeriod';
   import { FINANCIAL_INPUTS_RETAIL_TARIFF_PATH } from '@/router/constants';
-  import RetailTariffButtons from '@/components/Shared/RetailTariffButtons';
+  import SaveOnlyButton from '@/components/Shared/SaveOnlyButton';
 
   const metadata = RetailTariffBillingPeriodMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
 
   export default {
-    components: { RetailTariffButtons },
+    components: { SaveOnlyButton },
     props: ['billingPeriodId'],
     mixins: [wizardFormMixin],
     data() {
@@ -108,21 +106,36 @@
         FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
       };
     },
-    validations: {
-      ...validations,
-      // the 2 excluding Time inputs must BOTH be valid, or BOTH be null/empty
-      excludingStartTime: {
-        ...validations.excludingStartTime,
-        required: requiredIf(function isExcludingStartTimeRequired() {
-          return !(this.excludingEndTime === null || this.excludingEndTime === '' || this.excludingEndTime === undefined);
-        }),
-      },
-      excludingEndTime: {
-        ...validations.excludingEndTime,
-        required: requiredIf(function isExcludingEndTimeRequired() {
-          return !(this.excludingStartTime === null || this.excludingStartTime === '' || this.excludingStartTime === undefined);
-        }),
-      },
+    validations() {
+      return {
+        ...validations,
+        // the 2 excluding Time inputs must BOTH be valid, or BOTH be null/empty
+        excludingStartTime: {
+          ...validations.excludingStartTime,
+          required: requiredIf(function isExcludingStartTimeRequired() {
+            return !(this.excludingEndTime === null || this.excludingEndTime === '' || this.excludingEndTime === undefined);
+          }),
+          minValue: minValue(this.startTime),
+          maxValue: maxValue(this.endTime),
+        },
+        excludingEndTime: {
+          ...validations.excludingEndTime,
+          required: requiredIf(function isExcludingEndTimeRequired() {
+            return !(this.excludingStartTime === null || this.excludingStartTime === '' || this.excludingStartTime === undefined);
+          }),
+          // minValue: minValue(this.startTime),
+          maxValue: maxValue(this.endTime),
+          minValue: minValue(this.excludingStartTime),
+        },
+        endMonth: {
+          ...validations.endMonth,
+          minValue: minValue(this.startMonth),
+        },
+        endTime: {
+          ...validations.endTime,
+          minValue: minValue(this.startTime),
+        },
+      };
     },
     beforeMount() {
       // submitted is false initially; set it to true after the first save.
@@ -144,6 +157,12 @@
         return this.unpackData(pd);
       },
       getErrorMsg(fieldName) {
+        this.metadata.endMonth.minValue = this.startMonth;
+        this.metadata.endTime.minValue = this.startTime;
+        this.metadata.excludingStartTime.minValue = this.startTime;
+        this.metadata.excludingStartTime.maxValue = this.endTime;
+        this.metadata.excludingEndTime.minValue = this.excludingStartTime;
+        this.metadata.excludingEndTime.maxValue = this.endTime;
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       getChargeTypeFromValue() {
