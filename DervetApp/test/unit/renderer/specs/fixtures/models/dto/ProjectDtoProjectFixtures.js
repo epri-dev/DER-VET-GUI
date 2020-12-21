@@ -4,6 +4,7 @@ import path from 'path';
 import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
 
 export const testInputsDirectory = path.join('path', 'to', 'inputs');
+export const testResultsDirectory = path.join('path', 'to', 'outputs');
 export const testUuid1 = '14b1348c-29f2-402a-a167-2d30aae86680';
 export const testUuid2 = 'dbdd6d5d-e5e2-4948-bc3e-5d7ae3040ba0';
 
@@ -82,7 +83,7 @@ export const makeProjectBattery = id => ({
 
 export const makeProjectPV = id => ({
   active: true,
-  allowGridCharge: true,
+  allowGridCharge: false,
   complete: true,
   constructionYear: 2017,
   cost: 1660,

@@ -1,5 +1,7 @@
 import path from 'path';
 import { testInputsDirectory } from './ProjectDtoProjectFixtures';
+
+
 export const makeModelParamsBattery = id => ({
   active: 'yes',
   keys: {
@@ -1025,6 +1027,41 @@ export const makeModelParamsIceDiesel = id => ({
           value: 'nan',
         },
         type: 'float',
+      },
+    },
+  },
+});
+
+export const makeModelParamsResults = resultsDir => ({
+  '': {
+    active: 'yes',
+    keys: {
+      dir_absolute_path: {
+        opt_value: resultsDir,
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'string',
+      },
+      errors_log_path: {
+        opt_value: resultsDir,
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'string',
+      },
+      label: {
+        opt_value: '',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'string',
       },
     },
   },

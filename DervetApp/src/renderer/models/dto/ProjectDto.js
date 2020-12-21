@@ -1,11 +1,12 @@
 import * as d3 from 'd3';
 import _ from 'lodash';
+import dateFormat from 'dateformat';
 import moment from 'moment';
 import path from 'path';
 
 import { billingPeriodsToCsv } from '@/models/RetailTariffBillingPeriod';
 import { externalIncentivesToCsv } from '@/models/ExternalIncentives';
-import { objectToCsv } from '@/util/file';
+import { getAppDataPath, createDirectory, objectToCsv } from '@/util/file';
 
 const NO = 'no';
 const YES = 'yes';
@@ -35,7 +36,9 @@ const TIMESERIES = 'timeseries';
 const YEARLY = 'yearly';
 const LOAD_SHEAD = 'load_shed_percentage';
 
+const INPUTS = 'inputs';
 const MODEL_PARAMETERS = 'model_parameters.json';
+const RESULTS = 'results';
 export const LOG_FILE = 'dervet_log.log';
 
 const TIMESERIES_FIELDS = [
@@ -207,8 +210,8 @@ export const makeSingleBatteryParameter = (battery, inputsDirectory) => {
   return makeGroup(battery.id, convertToYesNo(battery.active), keys);
 };
 
-export const makeBatteryParameters = (project) => {
-  const wrapped = tech => makeSingleBatteryParameter(tech, project.inputsDirectory);
+export const makeBatteryParameters = (project, inputsDirectory) => {
+  const wrapped = tech => makeSingleBatteryParameter(tech, inputsDirectory);
   return makeTechnologyParameters(project.technologySpecsBattery, wrapped);
 };
 
@@ -289,11 +292,11 @@ export const makeDieselGensetParameters = project => (
   makeTechnologyParameters(project.technologySpecsDieselGen, makeSingleDieselGensetParameter)
 );
 
-export const makeFinanceParameters = (project) => {
+export const makeFinanceParameters = (project, inputsDirectory) => {
   const externalIncentivesExist = convertToOneZero(checkNotNullOrEmpty(project.externalIncentives));
   const keys = {
     analysis_horizon_mode: makeBaseKey(project.analysisHorizonMode, INT),
-    customer_tariff_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, TARIFF), STRING),
+    customer_tariff_filename: makeBaseKey(makeCsvFilePath(inputsDirectory, TARIFF), STRING),
     ecc_mode: makeBaseKey(ZERO, BOOL), // TODO new input
     external_incentives: makeBaseKey(externalIncentivesExist, BOOL),
     federal_tax_rate: makeBaseKey(project.financeFederalTaxRate, FLOAT),
@@ -301,7 +304,7 @@ export const makeFinanceParameters = (project) => {
     npv_discount_rate: makeBaseKey(project.financeDiscountRate, FLOAT),
     property_tax_rate: makeBaseKey(project.financePropertyTaxRate, FLOAT),
     state_tax_rate: makeBaseKey(project.financeStateTaxRate, FLOAT),
-    yearly_data_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, YEARLY), STRING),
+    yearly_data_filename: makeBaseKey(makeCsvFilePath(inputsDirectory, YEARLY), STRING),
   };
   return makeGroup('', YES, keys);
 };
@@ -429,7 +432,7 @@ export const makePVParameters = project => (
   makeTechnologyParameters(project.technologySpecsSolarPV, makeSinglePVParameter)
 );
 
-export const makeReliabilityParameters = (project) => {
+export const makeReliabilityParameters = (project, inputsDirectory) => {
   if (project.objectivesResilience) {
     const isActive = convertToYesNo(project.objectivesResilience);
     const keys = {
@@ -439,17 +442,17 @@ export const makeReliabilityParameters = (project) => {
       post_facto_only: makeBaseKey(convertToOneZero(project.reliabilityPostOptimizationOnly), BOOL),
       target: makeBaseKey(project.reliabilityTarget, FLOAT),
       load_shed_percentage: makeBaseKey(convertToOneZero(false), BOOL), // hardcoded
-      load_shed_perc_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, LOAD_SHEAD), STRING),
+      load_shed_perc_filename: makeBaseKey(makeCsvFilePath(inputsDirectory, LOAD_SHEAD), STRING),
     };
     return makeGroup('', isActive, keys);
   }
   return makeEmptyGroup();
 };
 
-export const makeResultsParameters = (project) => {
+export const makeResultsParameters = (project, resultsDirectory) => {
   const keys = {
-    dir_absolute_path: makeBaseKey(project.resultsDirectory, STRING),
-    errors_log_path: makeBaseKey(project.resultsDirectory, STRING),
+    dir_absolute_path: makeBaseKey(resultsDirectory, STRING),
+    errors_log_path: makeBaseKey(resultsDirectory, STRING),
     label: makeBaseKey('', STRING),
   };
   return makeGroup('', YES, keys);
@@ -464,7 +467,7 @@ export const makeRetailTimeShiftParameters = (project) => {
   return makeEmptyGroup();
 };
 
-export const makeScenarioParameters = (project) => {
+export const makeScenarioParameters = (project, inputsDirectory) => {
   // find BINARY value
   let binary = ONE;
   const includeBattery = checkNotNullOrEmpty(project.technologySpecsBattery);
@@ -510,13 +513,13 @@ export const makeScenarioParameters = (project) => {
     location: makeBaseKey(project.gridLocation.toLowerCase(), STRING),
     max_export: makeBaseKey(project.maxExport, FLOAT),
     max_import: makeBaseKey(project.maxImport, FLOAT),
-    monthly_data_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, MONTHLY), STRING),
+    monthly_data_filename: makeBaseKey(makeCsvFilePath(inputsDirectory, MONTHLY), STRING),
     n: makeBaseKey(n, STRING_INT),
     opt_years: makeBaseKey(project.dataYear, LIST_INT),
     ownership: makeBaseKey(project.ownership.toLowerCase(), STRING),
     slack: makeBaseKey(ZERO, BOOL), // hardcoded
     start_year: makeBaseKey(project.startYear, PERIOD),
-    time_series_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, TIMESERIES), STRING),
+    time_series_filename: makeBaseKey(makeCsvFilePath(inputsDirectory, TIMESERIES), STRING),
     verbose: makeBaseKey(ONE, BOOL), // hardcoded
     verbose_opt: makeBaseKey(ZERO, BOOL), // hardcoded
   };
@@ -547,23 +550,23 @@ export const makeUserParameters = (project) => {
   return makeEmptyGroup();
 };
 
-export const makeModelParameters = project => ({
+export const makeModelParameters = (project, inputsDirectory, resultsDirectory) => ({
   name: project.name,
   tags: {
-    Battery: makeBatteryParameters(project),
+    Battery: makeBatteryParameters(project, inputsDirectory),
     DA: makeDAParameters(project),
     DCM: makeDCMParameters(project),
     Deferral: makeDeferralParameters(project),
     DieselGenset: makeDieselGensetParameters(project),
-    Finance: makeFinanceParameters(project),
+    Finance: makeFinanceParameters(project, inputsDirectory),
     FR: makeFRParameters(project),
     ICE: makeICEParameters(project),
     NSR: makeNSRParameters(project),
     PV: makePVParameters(project),
-    Reliability: makeReliabilityParameters(project),
-    Results: makeResultsParameters(project),
+    Reliability: makeReliabilityParameters(project, inputsDirectory),
+    Results: makeResultsParameters(project, resultsDirectory),
     RetailTimeShift: makeRetailTimeShiftParameters(project),
-    Scenario: makeScenarioParameters(project),
+    Scenario: makeScenarioParameters(project, inputsDirectory),
     SR: makeSRParameters(project),
     User: makeUserParameters(project),
   },
@@ -705,37 +708,37 @@ class CycleDto {
 }
 
 class MonthlyDto {
-  constructor(project) {
+  constructor(project, inputsDirectory) {
     this.csv = makeMonthlyCsv(project);
-    this.filePath = makeCsvFilePath(project.inputsDirectory, MONTHLY);
+    this.filePath = makeCsvFilePath(inputsDirectory, MONTHLY);
   }
 }
 
 class LoadShedDto {
-  constructor(project) {
-    this.csv = makeLoadShedCsv(project);
-    this.filePath = makeCsvFilePath(project.inputsDirectory, LOAD_SHEAD);
+  constructor(project, inputsDirectory) {
+    this.csv = makeLoadShedCsv();
+    this.filePath = makeCsvFilePath(inputsDirectory, LOAD_SHEAD);
   }
 }
 
 class TariffDto {
-  constructor(project) {
+  constructor(project, inputsDirectory) {
     this.csv = makeTariffCsv(project);
-    this.filePath = makeCsvFilePath(project.inputsDirectory, TARIFF);
+    this.filePath = makeCsvFilePath(inputsDirectory, TARIFF);
   }
 }
 
 class YearlyDto {
-  constructor(project) {
+  constructor(project, inputsDirectory) {
     this.csv = makeYearlyCsv(project);
-    this.filePath = makeCsvFilePath(project.inputsDirectory, YEARLY);
+    this.filePath = makeCsvFilePath(inputsDirectory, YEARLY);
   }
 }
 
 class TimeSeriesDto {
-  constructor(project) {
+  constructor(project, inputsDirectory) {
     this.csv = makeTimeSeriesCsv(project);
-    this.filePath = makeCsvFilePath(project.inputsDirectory, TIMESERIES);
+    this.filePath = makeCsvFilePath(inputsDirectory, TIMESERIES);
   }
 }
 
@@ -792,37 +795,66 @@ export const makeExpectedResultCsvs = (project) => {
   return expectedResultsCsvs;
 };
 
-export const makeBatteryCsvs = (project) => {
+export const makeBatteryCsvs = (project, inputsDirectory) => {
   const batteries = project.technologySpecsBattery;
   const includeBatteryParameters = checkNotNullOrEmpty(batteries);
 
   if (includeBatteryParameters) {
-    return _.map(batteries, battery => new CycleDto(battery, project.inputsDirectory));
+    return _.map(batteries, battery => new CycleDto(battery, inputsDirectory));
   }
   return [];
 };
 
-export const makeCsvs = (project) => {
+export const makeCsvs = (project, inputsDirectory) => {
   const result = [
     // TODO add monthly data
-    (new MonthlyDto(project)),
-    (new LoadShedDto(project)),
-    (new TariffDto(project)),
-    (new YearlyDto(project)),
-    (new TimeSeriesDto(project)),
+    (new MonthlyDto(project, inputsDirectory)),
+    (new LoadShedDto(project, inputsDirectory)),
+    (new TariffDto(project, inputsDirectory)),
+    (new YearlyDto(project, inputsDirectory)),
+    (new TimeSeriesDto(project, inputsDirectory)),
   ];
-  return _.concat(result, makeBatteryCsvs(project));
+  return _.concat(result, makeBatteryCsvs(project, inputsDirectory));
 };
 
-
-export const makeMeta = project => ({
-  modelParametersPath: path.join(project.inputsDirectory, MODEL_PARAMETERS),
-  resultsPath: project.resultsDirectory,
+export const makeMeta = (project, inputsDirectory, resultsDirectory) => ({
+  modelParametersPath: path.join(inputsDirectory, MODEL_PARAMETERS),
+  resultsPath: resultsDirectory,
 });
 
-export const makeDervetInputs = project => ({
-  expectedResultCsvs: makeExpectedResultCsvs(project),
-  inputCsvs: makeCsvs(project),
-  meta: makeMeta(project),
-  modelParameters: makeModelParameters(project),
-});
+export const makeOutputDirectoryName = (outputDirectory) => {
+  // When user does not select an output directory, use their app data as default
+  if (outputDirectory === undefined) {
+    return path.join(getAppDataPath(), 'DER-VET');
+  }
+  // If user selects a directory, create a timestamped output folder
+  const timestamp = dateFormat(new Date(), 'yyyymmdd"T"HHMMss');
+  return path.join(outputDirectory, `DER-VET_${timestamp}`);
+};
+
+export const createOutputDirectory = (outputDirectory) => {
+  const timestampedOutputDir = makeOutputDirectoryName(outputDirectory);
+  return createDirectory(timestampedOutputDir);
+};
+
+export const createInputsDirectory = timestampedOutputDir => (
+  createDirectory(path.join(timestampedOutputDir, INPUTS))
+);
+
+export const createResultsDirectory = timestampedOutputDir => (
+  createDirectory(path.join(timestampedOutputDir, RESULTS))
+);
+
+export const makeDervetInputs = (project) => {
+  // TODO if outputDirectory is undefined, add flag for main process to delete
+  // timestamped directory once results are read and sent back to renderer process
+  const timestampedOutputDir = createOutputDirectory(project.outputDirectory);
+  const inputsDirectory = createInputsDirectory(timestampedOutputDir);
+  const resultsDirectory = createResultsDirectory(timestampedOutputDir);
+  return {
+    expectedResultCsvs: makeExpectedResultCsvs(project),
+    inputCsvs: makeCsvs(project, inputsDirectory),
+    meta: makeMeta(project, inputsDirectory, resultsDirectory),
+    modelParameters: makeModelParameters(project, inputsDirectory, resultsDirectory),
+  };
+};

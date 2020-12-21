@@ -345,17 +345,14 @@ const mutations = {
   SET_ID(state, newId) {
     state.id = newId;
   },
-  SET_INPUTS_DIRECTORY(state, newInputsDirectory) {
-    state.inputsDirectory = newInputsDirectory;
+  SET_OUTPUT_DIRECTORY(state, newOutputDirectory) {
+    state.outputDirectory = newOutputDirectory;
   },
   SET_NAME(state, newName) {
     state.name = newName;
   },
   SET_OWNERSHIP(state, newOwnership) {
     state.ownership = newOwnership;
-  },
-  SET_RESULTS_DIRECTORY(state, newResultsDirectory) {
-    state.resultsDirectory = newResultsDirectory;
   },
   SET_START_YEAR(state, newStartYear) {
     state.startYear = newStartYear;
@@ -676,17 +673,14 @@ const actions = {
   setId({ commit }, newId) {
     commit('SET_ID', newId);
   },
-  setInputsDirectory({ commit }, newInputsDirectory) {
-    commit('SET_INPUTS_DIRECTORY', newInputsDirectory);
+  setOutputDirectory({ commit }, newOutputDirectory) {
+    commit('SET_OUTPUT_DIRECTORY', newOutputDirectory);
   },
   setName({ commit }, newName) {
     commit('SET_NAME', newName);
   },
   setOwnership({ commit }, newOwnership) {
     commit('SET_OWNERSHIP', newOwnership);
-  },
-  setResultsDirectory({ commit }, newResultsDirectory) {
-    commit('SET_RESULTS_DIRECTORY', newResultsDirectory);
   },
   setStartYear({ commit }, newStartYear) {
     commit('SET_START_YEAR', newStartYear);
