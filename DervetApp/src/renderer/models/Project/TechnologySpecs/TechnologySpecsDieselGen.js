@@ -2,6 +2,8 @@ import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 import ProjectFieldMetadata from '@/models/Project/Fields';
+import { optionsYN } from '@/models/Project/constants';
+import { SHARED_DYNAMIC_FIELDS, createSharedHardcodedMetadata } from '@/models/Project/TechnologySpecs/sharedConstants';
 
 const DieselGen = 'DieselGen';
 
@@ -16,87 +18,31 @@ const SIZING_ALLOWED_VALUES = [
     label: 'Known number of Diesel Generators',
   },
 ];
-const MACRS_TERM_ALLOWED_VALUES = [
-  {
-    value: null,
-    label: '-',
-  },
-  {
-    value: 3,
-    label: '3',
-  },
-  {
-    value: 5,
-    label: '5',
-  },
-  {
-    value: 7,
-    label: '7',
-  },
-  {
-    value: 10,
-    label: '10',
-  },
-  {
-    value: 15,
-    label: '15',
-  },
-  {
-    value: 20,
-    label: '20',
-  },
-  {
-    value: 25,
-    label: '25',
-  },
-  {
-    value: 27.5,
-    label: '27.5',
-  },
-  {
-    value: 39,
-    label: '39',
-  },
-];
 
 const DYNAMIC_FIELDS = [
+  ...SHARED_DYNAMIC_FIELDS,
   'capitalCost',
-  'constructionDate',
+  'capitalCostPerkW',
   'efficiency',
   'fixedOMCostIncludingExercise',
   'fuelCost',
-  'macrsTerm',
-  'maxGenerators',
-  'minGenerators',
+  'includeSizeLimits',
   'minimumPower',
-  'name',
   'numGenerators',
-  'operationDate',
   'ratedCapacity',
+  'ratedCapacityMaximum',
+  'ratedCapacityMinimum',
+  'replacementCost',
+  'replacementCostPerkW',
   'shouldSize',
-  'startupTime',
   'variableOMCost',
 ];
 
+const sharedHardcodedMetadata = createSharedHardcodedMetadata(DieselGen);
+
 export default class TechnologySpecsDieselGenMetadata {
-  // TODO: refactor to use typescript interface + Object.assign(this, args);
-  constructor(args) {
-    this.capitalCost = args.capitalCost;
-    this.constructionDate = args.constructionDate;
-    this.efficiency = args.efficiency;
-    this.fixedOMCostIncludingExercise = args.fixedOMCostIncludingExercise;
-    this.fuelCost = args.fuelCost;
-    this.macrsTerm = args.macrsTerm;
-    this.maxGenerators = args.maxGenerators;
-    this.minGenerators = args.minGenerators;
-    this.minimumPower = args.minimumPower;
-    this.name = args.name;
-    this.numGenerators = args.numGenerators;
-    this.operationDate = args.operationDate;
-    this.ratedCapacity = args.ratedCapacity;
-    this.shouldSize = args.shouldSize;
-    this.startupTime = args.startupTime;
-    this.variableOMCost = args.variableOMCost;
+  constructor(arg) {
+    Object.assign(this, arg);
   }
 
   operateOnDynamicFields(callback) {
@@ -123,130 +69,106 @@ export default class TechnologySpecsDieselGenMetadata {
   static getHardcodedMetadata() {
     return new TechnologySpecsDieselGenMetadata({
       capitalCost: new ProjectFieldMetadata({
-        defaultValue: null,
         displayName: 'Capital Cost',
         isRequired: true,
         minValue: 0,
         type: Number,
         unit: '$ / generator',
         description: 'What is the capital cost of each diesel generator?',
-        allowedValues: null,
       }),
-      constructionDate: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Construction Date',
+      capitalCostPerkW: new ProjectFieldMetadata({
+        displayName: 'Capital Cost per kW',
         isRequired: true,
-        type: Date,
-        unit: null,
-        description: null,
-        allowedValues: null,
+        minValue: 0,
+        type: Number,
+        unit: '$ / kW-generator',
+        description: 'What is the capital cost per kW for each internal combustion engine?',
       }),
       efficiency: new ProjectFieldMetadata({
-        defaultValue: null,
         displayName: 'Efficiency',
         isRequired: true,
         minValue: 0,
         type: Number,
         unit: 'gallons / kWh',
         description: 'How many gallons of fuel does it take to generate 1 kWh of electricity? No variable efficiency is considered at this stage.',
-        allowedValues: null,
       }),
       fixedOMCostIncludingExercise: new ProjectFieldMetadata({
-        defaultValue: null,
         displayName: 'Fixed O&M Cost, including exercise',
         isRequired: true,
         minValue: 0,
         type: Number,
         unit: '$ / kW-year',
         description: 'What is the cost of fixed operations and maintenance, including the non-fuel expenses from exercising the diesel generator?',
-        allowedValues: null,
       }),
       fuelCost: new ProjectFieldMetadata({
-        defaultValue: null,
         displayName: 'Fuel Cost',
         isRequired: true,
         minValue: 0,
         type: Number,
         unit: '$ / gallon',
         description: 'What is the price of fuel (constant over analysis horizon)?',
-        allowedValues: null,
       }),
-      macrsTerm: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'MACRS Term',
+      includeSizeLimits: new ProjectFieldMetadata({
+        displayName: 'Include limits on capacity sizing?',
         isRequired: true,
-        type: Number,
-        unit: 'years',
-        description: 'Which MACRS GDS category does the diesel generator fall into?',
-        allowedValues: MACRS_TERM_ALLOWED_VALUES,
-      }),
-      maxGenerators: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Maximum Number of Generators to Install',
-        isRequired: true,
-        minValue: 2, // differs from schema; want gt minGenerators
-        type: 'int',
-        unit: 'generators',
-        description: 'What is the maximum number of diesel generators to consider installing?',
-        allowedValues: null,
-      }),
-      minGenerators: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Minimum Number of Generators to Install',
-        isRequired: true,
-        minValue: 1, // differs from schema; want gt 0
-        type: 'int',
-        unit: 'generators',
-        description: 'What is the minimum number of diesel generators to consider installing?',
-        allowedValues: null,
+        type: Boolean,
+        allowedValues: optionsYN,
+        description: 'Advanced sizing settings.',
       }),
       minimumPower: new ProjectFieldMetadata({
-        defaultValue: null,
         displayName: 'Minimum Power',
         isRequired: true,
         minValue: 0,
         type: Number,
         unit: 'kW',
         description: 'What is the mimimum power the diesel generator is capable of safely producing?',
-        allowedValues: null,
-      }),
-      name: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Name',
-        isRequired: true,
-        type: String,
-        unit: null,
-        description: null,
-        allowedValues: null,
       }),
       numGenerators: new ProjectFieldMetadata({
-        defaultValue: null,
         displayName: 'Number of Generators to Install',
         isRequired: true,
         minValue: 1, // differs from schema; want gt 0
         type: 'int',
-        unit: null,
         description: 'What is the number of diesel generators to install?',
-        allowedValues: null,
-      }),
-      operationDate: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Operation Date',
-        isRequired: true,
-        type: Date,
-        unit: null,
-        description: null,
-        allowedValues: null,
       }),
       ratedCapacity: new ProjectFieldMetadata({
-        defaultValue: null,
         displayName: 'Rated Capacity',
         isRequired: true,
         minValue: 0,
         type: Number,
         unit: 'kW / generator',
         description: 'What is the rated capacity of the diesel generator?',
-        allowedValues: null,
+      }),
+      ratedCapacityMaximum: new ProjectFieldMetadata({
+        displayName: 'Rated Capacity Maximum',
+        description: 'Upper limit on power capacity when optimally sizing',
+        isRequired: false, // based on if sizing
+        minValue: 0,
+        type: Number,
+        unit: 'kW / generator',
+      }),
+      ratedCapacityMinimum: new ProjectFieldMetadata({
+        displayName: 'Rated Capacity Minimum',
+        description: 'Lower limit on power capacity when optimally sizing (this does not set a minimum generating power during operation)',
+        isRequired: false, // based on if sizing
+        minValue: 0,
+        type: Number,
+        unit: 'kW / generator',
+      }),
+      replacementCost: new ProjectFieldMetadata({
+        displayName: 'Replacement Cost',
+        isRequired: true,
+        minValue: 0,
+        type: Number,
+        unit: '$ / generator',
+        description: 'Total cost of replacing the old internal combustion engine at its end of life (recurring cost based on replacement year)',
+      }),
+      replacementCostPerkW: new ProjectFieldMetadata({
+        displayName: 'Replacement Cost per kW',
+        isRequired: true,
+        minValue: 0,
+        type: Number,
+        unit: '$ / kW-generator',
+        description: 'Replacement Cost per kW of rated capacity',
       }),
       shouldSize: new ProjectFieldMetadata({
         defaultValue: null,
@@ -256,16 +178,6 @@ export default class TechnologySpecsDieselGenMetadata {
         unit: null,
         description: null,
         allowedValues: SIZING_ALLOWED_VALUES,
-      }),
-      startupTime: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Startup Time',
-        isRequired: true,
-        minValue: 0,
-        type: 'int',
-        unit: 'minutes',
-        description: 'How many minutes are required for the diesel generator to go from an off state to producing its full rated power',
-        allowedValues: null,
       }),
       variableOMCost: new ProjectFieldMetadata({
         defaultValue: null,
@@ -277,6 +189,7 @@ export default class TechnologySpecsDieselGenMetadata {
         description: 'What is the cost of variable operations and maintenance for each MWh of AC energy delivered?',
         allowedValues: null,
       }),
+      ...sharedHardcodedMetadata,
     });
   }
 }

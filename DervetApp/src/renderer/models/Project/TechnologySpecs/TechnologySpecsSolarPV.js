@@ -2,6 +2,8 @@ import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 import ProjectFieldMetadata from '@/models/Project/Fields';
+import { SHARED_DYNAMIC_FIELDS, createSharedHardcodedMetadata } from '@/models/Project/TechnologySpecs/sharedConstants';
+import { optionsYN, makeAllowedValuesWithNull } from '@/models/Project/constants';
 
 const PV = 'PV';
 
@@ -16,87 +18,35 @@ const SIZING_ALLOWED_VALUES = [
     label: 'Known size',
   },
 ];
-const LOC_ALLOWED_VALUES = [
-  {
-    value: null,
-    label: '-',
-  },
-  {
-    value: 'AC',
-    label: 'AC',
-  },
-  {
-    value: 'DC',
-    label: 'DC',
-  },
-];
-const MACRS_TERM_ALLOWED_VALUES = [
-  {
-    value: null,
-    label: '-',
-  },
-  {
-    value: 3,
-    label: '3',
-  },
-  {
-    value: 5,
-    label: '5',
-  },
-  {
-    value: 7,
-    label: '7',
-  },
-  {
-    value: 10,
-    label: '10',
-  },
-  {
-    value: 15,
-    label: '15',
-  },
-  {
-    value: 20,
-    label: '20',
-  },
-  {
-    value: 25,
-    label: '25',
-  },
-  {
-    value: 27.5,
-    label: '27.5',
-  },
-  {
-    value: 39,
-    label: '39',
-  },
-];
+const LOC_ALLOWED_VALUES = makeAllowedValuesWithNull(['AC', 'DC']);
 
 const DYNAMIC_FIELDS = [
-  'constructionDate',
+  ...SHARED_DYNAMIC_FIELDS,
+  'allowGridCharge',
   'cost',
+  'fixedOMCosts',
+  'gamma',
+  'includeCurtailment',
+  'includeSizeLimits',
+  'includePPA',
   'inverterMax',
   'loc',
-  'macrsTerm',
-  'name',
-  'operationDate',
+  'nu',
+  'ppaCost',
+  'ppaInflationRate',
   'ratedCapacity',
+  'ratedCapacityMaximum',
+  'ratedCapacityMinimum',
+  'replacementCost',
   'shouldSize',
 ];
 
+const sharedHardcodedMetadata = createSharedHardcodedMetadata(PV);
+
+
 export default class TechnologySpecsSolarPVMetadata {
-  // TODO: refactor to use typescript interface + Object.assign(this, args);
-  constructor(args) {
-    this.constructionDate = args.constructionDate; // should be constructionYEAR
-    this.cost = args.cost;
-    this.inverterMax = args.inverterMax;
-    this.loc = args.loc;
-    this.macrsTerm = args.macrsTerm;
-    this.name = args.name;
-    this.operationDate = args.operationDate; // should be operationYEAR
-    this.ratedCapacity = args.ratedCapacity;
-    this.shouldSize = args.shouldSize;
+  constructor(arg) {
+    Object.assign(this, arg);
   }
 
   operateOnDynamicFields(callback) {
@@ -123,14 +73,12 @@ export default class TechnologySpecsSolarPVMetadata {
   // to be removed in favor of getMetadataFromSchema
   static getHardcodedMetadata() {
     return new TechnologySpecsSolarPVMetadata({
-      constructionDate: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Construction Date',
+      allowGridCharge: new ProjectFieldMetadata({
+        displayName: 'Allow Grid Charging',
         isRequired: true,
-        type: Date,
-        unit: null,
-        description: null,
-        allowedValues: null,
+        type: Boolean,
+        allowedValues: optionsYN,
+        description: 'Allow the PV+ESS AC-coupled system to charge from the grid',
       }),
       cost: new ProjectFieldMetadata({
         defaultValue: null,
@@ -142,7 +90,47 @@ export default class TechnologySpecsSolarPVMetadata {
         description: 'Capital cost per kW<sub>AC</sub> of rated power capacity (applied in year 0 of the analysis)',
         allowedValues: null,
       }),
+      fixedOMCosts: new ProjectFieldMetadata({
+        defaultValue: null,
+        displayName: 'Fixed O&M Costs',
+        isRequired: true,
+        minValue: 0,
+        type: Number,
+        unit: '$ / kW-year',
+        description: 'What is the cost of fixed operations and maintenance for the PV system?',
+        allowedValues: null,
+      }),
+      gamma: new ProjectFieldMetadata({
+        displayName: 'Timestep Percentage of PV Minimum Generation',
+        isRequired: false, // based off IF reliability is included as a service
+        minValue: 0,
+        maxValue: 100,
+        type: Number,
+        unit: '%',
+        description: 'Worst-case percent of the timestep for which PV is at it\'s minimum generation (default=43)',
+      }),
       generationProfile: null,
+      includeCurtailment: new ProjectFieldMetadata({
+        displayName: 'Allow curtailment?',
+        isRequired: true,
+        type: Boolean,
+        allowedValues: optionsYN,
+        description: 'Select \'yes\' to allow the PV to curtail its generation below its maximum generating level (which is set by the system size and the weather). This adds PV curtailment as an optimization variable (longer runtime) but can avoid constraint conflicts associated with overgeneration',
+      }),
+      includePPA: new ProjectFieldMetadata({
+        displayName: 'Power Purchasing Agreement?',
+        isRequired: true,
+        type: Boolean,
+        allowedValues: optionsYN,
+        description: 'Do you want to calculate the annual PV energy cost as a Power Purchase Agreement (PPA)?',
+      }),
+      includeSizeLimits: new ProjectFieldMetadata({
+        displayName: 'Include limits on capacity sizing?',
+        isRequired: true,
+        type: Boolean,
+        allowedValues: optionsYN,
+        description: 'Advanced sizing settings.',
+      }),
       inverterMax: new ProjectFieldMetadata({
         defaultValue: null,
         displayName: 'Solar (+storage) Inverter Rating (kVA)',
@@ -162,32 +150,33 @@ export default class TechnologySpecsSolarPVMetadata {
         description: 'Solar plus storage AC or DC coupled system',
         allowedValues: LOC_ALLOWED_VALUES,
       }),
-      macrsTerm: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'MACRS Term',
-        isRequired: true,
+      nu: new ProjectFieldMetadata({
+        displayName: 'Minimum Percentage of PV Generation',
+        isRequired: false, // based off IF reliability is included as a service
+        minValue: 0,
+        maxValue: 100,
         type: Number,
-        unit: 'years',
-        description: 'Which MACRS GDS category does solar PV fall into?',
-        allowedValues: MACRS_TERM_ALLOWED_VALUES,
+        unit: '%',
+        description: 'Percent of the timestep for which PV is at its minimum generation',
       }),
-      name: new ProjectFieldMetadata({
+      ppaCost: new ProjectFieldMetadata({
         defaultValue: null,
-        displayName: 'Name',
-        isRequired: true,
-        type: String,
-        unit: null,
-        description: null,
+        displayName: 'PPA Cost',
+        isRequired: false, // based on includePPA
+        minValue: 0,
+        type: Number,
+        unit: '$/kW<sub>AC</sub>h',
+        description: 'What is the cost of the power purchase agreement?',
         allowedValues: null,
       }),
-      operationDate: new ProjectFieldMetadata({
-        defaultValue: null,
-        displayName: 'Operation Date',
-        isRequired: true,
-        type: Date,
-        unit: null,
-        description: null,
-        allowedValues: null,
+      ppaInflationRate: new ProjectFieldMetadata({
+        displayName: 'Inflation Rate',
+        isRequired: false, // based on includePPA
+        minValue: -100,
+        maxValue: 100,
+        type: Number,
+        unit: '%',
+        description: 'An escalation rate exclusively for the Solar PPA Cost (For operation year 2 onwards)',
       }),
       ratedCapacity: new ProjectFieldMetadata({
         defaultValue: null,
@@ -199,6 +188,32 @@ export default class TechnologySpecsSolarPVMetadata {
         description: null,
         allowedValues: null,
       }),
+      ratedCapacityMaximum: new ProjectFieldMetadata({
+        displayName: 'Rated Capacity Maximum',
+        description: 'Upper limit on PV AC power capacity when optimally sizing',
+        isRequired: false, // based on if sizing
+        minValue: 0,
+        type: Number,
+        unit: 'kW<sub>AC</sub>',
+      }),
+      ratedCapacityMinimum: new ProjectFieldMetadata({
+        displayName: 'Rated Capacity Minimum',
+        description: 'Lower limit on PV AC power capacity when optimally sizing (this does not set a minimum power during operation)',
+        isRequired: false, // based on if sizing
+        minValue: 0,
+        type: Number,
+        unit: 'kW<sub>AC</sub>',
+      }),
+      replacementCost: new ProjectFieldMetadata({
+        defaultValue: null,
+        displayName: 'Replacement Cost per kW<sub>AC</sub>',
+        isRequired: true,
+        minValue: 0,
+        type: Number,
+        unit: '$/kW<sub>AC</sub>',
+        description: 'Total cost of replacing the system at its end of life in $/kW of AC power capacity',
+        allowedValues: null,
+      }),
       shouldSize: new ProjectFieldMetadata({
         defaultValue: null,
         displayName: 'Sizing',
@@ -208,6 +223,7 @@ export default class TechnologySpecsSolarPVMetadata {
         description: null,
         allowedValues: SIZING_ALLOWED_VALUES,
       }),
+      ...sharedHardcodedMetadata,
     });
   }
 

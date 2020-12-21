@@ -30,12 +30,40 @@
         </radio-button-input>
 
         <div v-if="shouldSize === false">
+          
           <text-input
             v-model="ratedCapacity"
             v-bind:field="metadata.ratedCapacity"
             :isInvalid="submitted && $v.ratedCapacity.$error"
             :errorMessage="getErrorMsg('ratedCapacity')">
           </text-input>
+        </div>
+        
+        <div v-if="shouldSize === true">
+          
+          <radio-button-input
+            v-model="includeSizeLimits"
+            v-bind:field="metadata.includeSizeLimits"
+            :isInvalid="submitted && $v.includeSizeLimits.$error"
+            :errorMessage="getErrorMsg('includeSizeLimits')">
+          </radio-button-input>
+
+          <div v-if="includeSizeLimits === true">
+            
+            <text-input
+              v-model="ratedCapacityMaximum"
+              v-bind:field="metadata.ratedCapacityMaximum"
+              :isInvalid="submitted && $v.ratedCapacityMaximum.$error"
+              :errorMessage="getErrorMsg('ratedCapacityMaximum')">
+            </text-input>
+
+            <text-input
+              v-model="ratedCapacityMinimum"
+              v-bind:field="metadata.ratedCapacityMinimum"
+              :isInvalid="submitted && $v.ratedCapacityMinimum.$error"
+              :errorMessage="getErrorMsg('ratedCapacityMinimum')">
+            </text-input>
+          </div>
         </div>
 
         <drop-down-input
@@ -45,6 +73,15 @@
           :errorMessage="getErrorMsg('loc')">
         </drop-down-input>
 
+        <div v-if="loc === 'AC'">
+            <text-input
+              v-model="allowGridCharge"
+              v-bind:field="metadata.allowGridCharge"
+              :isInvalid="submitted && $v.allowGridCharge.$error"
+              :errorMessage="getErrorMsg('allowGridCharge')">
+            </text-input>
+          </div>
+
         <text-input
           v-model="inverterMax"
           v-bind:field="metadata.inverterMax"
@@ -53,27 +90,136 @@
           :errorMessage="getErrorMsg('inverterMax')">
         </text-input>
 
+        <radio-button-input
+          v-model="includeCurtailment"
+          v-bind:field="metadata.includeCurtailment"
+          :isInvalid="submitted && $v.includeCurtailment.$error"
+          :errorMessage="getErrorMsg('includeCurtailment')">
+        </radio-button-input>
+
+        <fieldset class="section-group" v-if="reliabilitySelected">
+          <legend>Generation Variation</legend>
+
+          <text-input
+            v-model="nu"
+            v-bind:field="metadata.nu"
+            :isInvalid="submitted && $v.nu.$error"
+            :errorMessage="getErrorMsg('nu')">
+          </text-input>
+          <text-input
+            v-model="gamma"
+            v-bind:field="metadata.gamma"
+            :isInvalid="submitted && $v.gamma.$error"
+            :errorMessage="getErrorMsg('gamma')">
+          </text-input>
+        </fieldset>
+
         <text-input
-          v-model="constructionDate"
-          v-bind:field="metadata.constructionDate"
-          :isInvalid="submitted && $v.constructionDate.$error"
-          :errorMessage="getErrorMsg('constructionDate')">
+          v-model="constructionYear"
+          v-bind:field="metadata.constructionYear"
+          :isInvalid="submitted && $v.constructionYear.$error"
+          :errorMessage="getErrorMsg('constructionYear')">
         </text-input>
 
         <text-input
-          v-model="operationDate"
-          v-bind:field="metadata.operationDate"
-          :isInvalid="submitted && $v.operationDate.$error"
-          :errorMessage="getErrorMsg('operationDate')">
+          v-model="operationYear"
+          v-bind:field="metadata.operationYear"
+          :isInvalid="submitted && $v.operationYear.$error"
+          :errorMessage="getErrorMsg('operationYear')">
         </text-input>
 
-        <drop-down-input
-          v-model="macrsTerm"
-          v-bind:field="metadata.macrsTerm"
-          :isInvalid="submitted && $v.macrsTerm.$error"
-          :errorMessage="getErrorMsg('macrsTerm')">
-        </drop-down-input>
+        <text-input
+          v-model="expectedLifetime"
+          v-bind:field="metadata.expectedLifetime"
+          :isInvalid="submitted && $v.expectedLifetime.$error"
+          :errorMessage="getErrorMsg('expectedLifetime')">
+        </text-input>
 
+        <text-input
+          v-model="ter"
+          v-bind:field="metadata.ter"
+          :isInvalid="submitted && $v.ter.$error"
+          :errorMessage="getErrorMsg('ter')">
+        </text-input>
+
+        <radio-button-input
+          v-model="includePPA"
+          v-bind:field="metadata.includePPA"
+          :isInvalid="submitted && $v.includePPA.$error"
+          :errorMessage="getErrorMsg('includePPA')">
+        </radio-button-input>
+
+        <div v-if="includePPA === true">
+          <text-input
+            v-model="ppaCost"
+            v-bind:field="metadata.ppaCost"
+            :isInvalid="submitted && $v.ppaCost.$error"
+            :errorMessage="getErrorMsg('ppaCost')">
+          </text-input>
+          
+          <text-input
+            v-model="ppaInflationRate"
+            v-bind:field="metadata.ppaInflationRate"
+            :isInvalid="submitted && $v.ppaInflationRate.$error"
+            :errorMessage="getErrorMsg('ppaInflationRate')">
+          </text-input>
+        </div>
+        
+        <radio-button-input
+          v-model="isReplaceable"
+          v-bind:field="metadata.isReplaceable"
+          :isInvalid="submitted && $v.isReplaceable.$error"
+          :errorMessage="getErrorMsg('isReplaceable')">
+        </radio-button-input>
+
+        <div v-if="includePPA === false">  
+          <div v-if="isReplaceable === true">
+            <text-input
+              v-model="replacementConstructionTime"
+              v-bind:field="metadata.replacementConstructionTime"
+              :isInvalid="submitted && $v.replacementConstructionTime.$error"
+              :errorMessage="getErrorMsg('replacementConstructionTime')">
+            </text-input>
+            
+            <text-input
+              v-model="replacementCost"
+              v-bind:field="metadata.replacementCost"
+              :isInvalid="submitted && $v.replacementCost.$error"
+              :errorMessage="getErrorMsg('replacementCost')">
+            </text-input>
+          </div>
+
+          <text-input
+            v-model="decomissioningCost"
+            v-bind:field="metadata.decomissioningCost"
+            :isInvalid="submitted && $v.decomissioningCost.$error"
+            :errorMessage="getErrorMsg('decomissioningCost')">
+          </text-input>
+
+          <drop-down-input
+            v-model="salvageValueOption"
+            v-bind:field="metadata.salvageValueOption"
+            :isInvalid="submitted && $v.salvageValueOption.$error"
+            :errorMessage="getErrorMsg('salvageValueOption')">
+          </drop-down-input>
+
+          <div v-if="salvageValueOption === 'User defined'">
+            <text-input
+              v-model="salvageValue"
+              v-bind:field="metadata.salvageValue"
+              :isInvalid="submitted && $v.salvageValue.$error"
+              :errorMessage="getErrorMsg('salvageValue')">
+            </text-input>
+          </div>
+
+          <drop-down-input
+            v-model="macrsTerm"
+            v-bind:field="metadata.macrsTerm"
+            :isInvalid="submitted && $v.macrsTerm.$error"
+            :errorMessage="getErrorMsg('macrsTerm')">
+          </drop-down-input>
+        </div>
+        
         <save-buttons
           :continue-link="`${TECH_SPECS_PV_PATH}-upload/${this.solarId}`"
           :displayError="submitted && $v.$anyError"
@@ -112,10 +258,88 @@
     },
     validations: {
       ...validations,
+      allowGridCharge: {
+        ...validations.allowGridCharge,
+        required: requiredIf(function isAllowGridChargeRequired() {
+          return (this.loc === 'AC');
+        }),
+      },
+      decomissioningCost: {
+        ...validations.decomissioningCost,
+        required: requiredIf(function isDecomissioningCostRequired() {
+          return (this.includePPA === false);
+        }),
+      },
+      gamma: {
+        ...validations.gamma,
+        required: requiredIf(function isGammaRequired() {
+          return this.reliabilitySelected;
+        }),
+      },
+      macrsTerm: {
+        ...validations.macrsTerm,
+        required: requiredIf(function isMacrsTermRequired() {
+          return (this.includePPA === false);
+        }),
+      },
+      nu: {
+        ...validations.nu,
+        required: requiredIf(function isNuRequired() {
+          return this.reliabilitySelected;
+        }),
+      },
+      ppaCost: {
+        ...validations.ppaCost,
+        required: requiredIf(function isPpaCostRequired() {
+          return (this.includePPA === true);
+        }),
+      },
+      ppaInflationRate: {
+        ...validations.ppaInflationRate,
+        required: requiredIf(function isPpaInflationRateRequired() {
+          return (this.includePPA === true);
+        }),
+      },
       ratedCapacity: {
         ...validations.ratedCapacity,
         required: requiredIf(function isRatedCapacityRequired() {
           return this.shouldSize === false;
+        }),
+      },
+      ratedCapacityMaximum: {
+        ...validations.ratedCapacityMaximum,
+        required: requiredIf(function isRatedCapacityMaximumRequired() {
+          return (this.includeSizeLimits === true) && (this.shouldSize === true);
+        }),
+      },
+      ratedCapacityMinimum: {
+        ...validations.ratedCapacityMinimum,
+        required: requiredIf(function isRatedCapacityMinimumRequired() {
+          return (this.includeSizeLimits === true) && (this.shouldSize === true);
+        }),
+      },
+      replacementCost: {
+        ...validations.replacementCost,
+        required: requiredIf(function isReplacementCostRequired() {
+          return (this.isReplaceable === true) || (this.includePPA === false);
+        }),
+      },
+      replacementConstructionTime: {
+        ...validations.replacementConstructionTime,
+        required: requiredIf(function isReplacementConstructionTimeRequired() {
+          return (this.isReplaceable === true) || (this.includePPA === false);
+        }),
+      },
+      salvageValue: {
+        ...validations.salvageValue,
+        required: requiredIf(function isSalvageValueRequired() {
+          return (this.salvageValueOption === 'User defined') || (this.includePPA === false);
+        }),
+      },
+      salvageValueOption: {
+        ...validations.salvageValueOption,
+        required: requiredIf(function isSalvageValueOptionRequired() {
+          return (this.includePPA === false);
         }),
       },
     },
@@ -127,6 +351,11 @@
         this.submitted = true;
         this.$v.$touch();
       }
+    },
+    computed: {
+      reliabilitySelected() {
+        return this.$store.state.Project.objectivesResilience;
+      },
     },
     methods: {
       resetNonRequired(list) {
@@ -157,6 +386,21 @@
         // reset all non-required inputs to their defaults prior to saving
         if (this.shouldSize === true) {
           this.resetNonRequired(['ratedCapacity']);
+          if (this.includeSizeLimits === false) {
+            this.resetNonRequired(['ratedCapacityMaximum', 'ratedCapacityMinimum']);
+          }
+        } else {
+          this.resetNonRequired(['includeSizeLimits']);
+        }
+        if (this.reliabilitySelected) {
+          this.resetNonRequired(['gamma', 'nu']);
+        }
+        // shared inputs: reset all non-requred inputs to default
+        if (this.isReplaceable === false) {
+          this.resetNonRequired(['replacementConstructionTime', 'replacementCost']);
+        }
+        if (this.salvageValueOption !== 'User defined') {
+          this.resetNonRequired(['salvageValue']);
         }
         this.submitted = true;
         this.$v.$touch();
@@ -181,21 +425,40 @@
       buildSolarPV() {
         return {
           active: this.active,
+          allowGridCharge: this.allowGridCharge,
           complete: this.complete,
-          constructionDate: this.constructionDate,
+          constructionYear: this.constructionYear,
           cost: this.cost,
+          decomissioningCost: this.decomissioningCost,
           errorList: this.errorList,
+          expectedLifetime: this.expectedLifetime,
+          fixedOMCosts: this.fixedOMCosts,
+          gamma: this.gamma,
           generationProfile: this.generationProfile,
           id: this.id,
+          includeCurtailment: this.includeCurtailment,
+          includePPA: this.includePPA,
+          includeSizeLimits: this.includeSizeLimits,
           inverterMax: this.inverterMax,
+          isReplaceable: this.isReplaceable,
           loc: this.loc,
           macrsTerm: this.macrsTerm,
           name: this.name,
-          operationDate: this.operationDate,
+          nu: this.nu,
+          operationYear: this.operationYear,
+          ppaCost: this.ppaCost,
+          ppaInflationRate: this.ppaInflationRate,
           ratedCapacity: this.ratedCapacity,
+          ratedCapacityMaximum: this.ratedCapacityMaximum,
+          ratedCapacityMinimum: this.ratedCapacityMinimum,
+          replacementCost: this.replacementCost,
+          replacementConstructionTime: this.replacementConstructionTime,
+          salvageValue: this.salvageValue,
+          salvageValueOption: this.salvageValueOption,
           shouldSize: this.shouldSize,
           tag: this.tag,
           technologyType: this.technologyType,
+          ter: this.ter,
         };
       },
     },

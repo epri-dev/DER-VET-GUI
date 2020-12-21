@@ -15,26 +15,60 @@
           :isInvalid="submitted && $v.name.$error"
           :errorMessage="getErrorMsg('name')">
         </text-input>
-
+        
         <text-input
-          v-model="ratedCapacity"
-          v-bind:field="metadata.ratedCapacity"
-          :isInvalid="submitted && $v.ratedCapacity.$error"
-          :errorMessage="getErrorMsg('ratedCapacity')">
+          v-model="numGenerators"
+          v-bind:field="metadata.numGenerators"
+          :isInvalid="submitted && $v.numGenerators.$error"
+          :errorMessage="getErrorMsg('numGenerators')">
         </text-input>
+
+        <radio-button-input
+          v-model="shouldSize"
+          v-bind:field="metadata.shouldSize"
+          :isInvalid="submitted && $v.shouldSize.$error"
+          :errorMessage="getErrorMsg('shouldSize')">
+        </radio-button-input>
+
+        <div v-if="shouldSize === false">
+          <text-input
+            v-model="ratedCapacity"
+            v-bind:field="metadata.ratedCapacity"
+            :isInvalid="submitted && $v.ratedCapacity.$error"
+            :errorMessage="getErrorMsg('ratedCapacity')">
+          </text-input>
+        </div>
+        
+        <div v-if="shouldSize === true">
+          <radio-button-input
+            v-model="includeSizeLimits"
+            v-bind:field="metadata.includeSizeLimits"
+            :isInvalid="submitted && $v.includeSizeLimits.$error"
+            :errorMessage="getErrorMsg('includeSizeLimits')">
+          </radio-button-input>
+
+          <div v-if="includeSizeLimits === true">
+            <text-input
+              v-model="ratedCapacityMaximum"
+              v-bind:field="metadata.ratedCapacityMaximum"
+              :isInvalid="submitted && $v.ratedCapacityMaximum.$error"
+              :errorMessage="getErrorMsg('ratedCapacityMaximum')">
+            </text-input>
+
+            <text-input
+              v-model="ratedCapacityMinimum"
+              v-bind:field="metadata.ratedCapacityMinimum"
+              :isInvalid="submitted && $v.ratedCapacityMinimum.$error"
+              :errorMessage="getErrorMsg('ratedCapacityMinimum')">
+            </text-input>
+          </div>
+        </div>
 
         <text-input
           v-model="minimumPower"
           v-bind:field="metadata.minimumPower"
           :isInvalid="submitted && $v.minimumPower.$error"
           :errorMessage="getErrorMsg('minimumPower')">
-        </text-input>
-
-        <text-input
-          v-model="startupTime"
-          v-bind:field="metadata.startupTime"
-          :isInvalid="submitted && $v.startupTime.$error"
-          :errorMessage="getErrorMsg('startupTime')">
         </text-input>
 
         <text-input
@@ -51,12 +85,24 @@
           :errorMessage="getErrorMsg('fuelCost')">
         </text-input>
 
-        <text-input
-          v-model="capitalCost"
-          v-bind:field="metadata.capitalCost"
-          :isInvalid="submitted && $v.capitalCost.$error"
-          :errorMessage="getErrorMsg('capitalCost')">
-        </text-input>
+        <fieldset class="section-group">
+          <legend>Cost Function</legend>
+
+          <text-input
+            v-model="capitalCost"
+            v-bind:field="metadata.capitalCost"
+            :isInvalid="submitted && $v.capitalCost.$error"
+            :errorMessage="getErrorMsg('capitalCost')">
+          </text-input>
+
+          <text-input
+            v-model="capitalCostPerkW"
+            v-bind:field="metadata.capitalCostPerkW"
+            :isInvalid="submitted && $v.capitalCostPerkW.$error"
+            :errorMessage="getErrorMsg('capitalCostPerkW')">
+          </text-input>
+
+        </fieldset>
 
         <text-input
           v-model="variableOMCost"
@@ -73,17 +119,87 @@
         </text-input>
 
         <text-input
-          v-model="constructionDate"
-          v-bind:field="metadata.constructionDate"
-          :isInvalid="submitted && $v.constructionDate.$error"
-          :errorMessage="getErrorMsg('constructionDate')">
+          v-model="constructionYear"
+          v-bind:field="metadata.constructionYear"
+          :isInvalid="submitted && $v.constructionYear.$error"
+          :errorMessage="getErrorMsg('constructionYear')">
         </text-input>
 
         <text-input
-          v-model="operationDate"
-          v-bind:field="metadata.operationDate"
-          :isInvalid="submitted && $v.operationDate.$error"
-          :errorMessage="getErrorMsg('operationDate')">
+          v-model="operationYear"
+          v-bind:field="metadata.operationYear"
+          :isInvalid="submitted && $v.operationYear.$error"
+          :errorMessage="getErrorMsg('operationYear')">
+        </text-input>
+
+        <text-input
+          v-model="expectedLifetime"
+          v-bind:field="metadata.expectedLifetime"
+          :isInvalid="submitted && $v.expectedLifetime.$error"
+          :errorMessage="getErrorMsg('expectedLifetime')">
+        </text-input>
+
+        <radio-button-input
+          v-model="isReplaceable"
+          v-bind:field="metadata.isReplaceable"
+          :isInvalid="submitted && $v.isReplaceable.$error"
+          :errorMessage="getErrorMsg('isReplaceable')">
+        </radio-button-input>
+
+        <div v-if="isReplaceable === true">
+          <text-input
+            v-model="replacementConstructionTime"
+            v-bind:field="metadata.replacementConstructionTime"
+            :isInvalid="submitted && $v.replacementConstructionTime.$error"
+            :errorMessage="getErrorMsg('replacementConstructionTime')">
+          </text-input>
+
+          <fieldset class="section-group">
+            <legend>Replacement Cost Function</legend>
+            <text-input
+              v-model="replacementCost"
+              v-bind:field="metadata.replacementCost"
+              :isInvalid="submitted && $v.replacementCost.$error"
+              :errorMessage="getErrorMsg('replacementCost')">
+            </text-input>
+
+            <text-input
+              v-model="replacementCostPerkW"
+              v-bind:field="metadata.replacementCostPerkW"
+              :isInvalid="submitted && $v.replacementCostPerkW.$error"
+              :errorMessage="getErrorMsg('replacementCostPerkW')">
+            </text-input>
+          </fieldset>
+        </div>
+
+        <text-input
+          v-model="decomissioningCost"
+          v-bind:field="metadata.decomissioningCost"
+          :isInvalid="submitted && $v.decomissioningCost.$error"
+          :errorMessage="getErrorMsg('decomissioningCost')">
+        </text-input>
+
+        <drop-down-input
+          v-model="salvageValueOption"
+          v-bind:field="metadata.salvageValueOption"
+          :isInvalid="submitted && $v.salvageValueOption.$error"
+          :errorMessage="getErrorMsg('salvageValueOption')">
+        </drop-down-input>
+
+        <div v-if="salvageValueOption === 'User defined'">
+          <text-input
+            v-model="salvageValue"
+            v-bind:field="metadata.salvageValue"
+            :isInvalid="submitted && $v.salvageValue.$error"
+            :errorMessage="getErrorMsg('salvageValue')">
+          </text-input>
+        </div>
+
+        <text-input
+          v-model="ter"
+          v-bind:field="metadata.ter"
+          :isInvalid="submitted && $v.ter.$error"
+          :errorMessage="getErrorMsg('ter')">
         </text-input>
 
         <drop-down-input
@@ -92,37 +208,6 @@
           :isInvalid="submitted && $v.macrsTerm.$error"
           :errorMessage="getErrorMsg('macrsTerm')">
         </drop-down-input>
-
-        <radio-button-input
-          v-model="shouldSize"
-          v-bind:field="metadata.shouldSize"
-          :isInvalid="submitted && $v.shouldSize.$error"
-          :errorMessage="getErrorMsg('shouldSize')">
-        </radio-button-input>
-
-        <div v-if="shouldSize === false">
-          <text-input
-            v-model="numGenerators"
-            v-bind:field="metadata.numGenerators"
-            :isInvalid="submitted && $v.numGenerators.$error"
-            :errorMessage="getErrorMsg('numGenerators')">
-          </text-input>
-        </div>
-
-        <div v-if="shouldSize === true">
-          <text-input
-            v-model="minGenerators"
-            v-bind:field="metadata.minGenerators"
-            :isInvalid="submitted && $v.minGenerators.$error"
-            :errorMessage="getErrorMsg('minGenerators')">
-          </text-input>
-          <text-input
-            v-model="maxGenerators"
-            v-bind:field="metadata.maxGenerators"
-            :isInvalid="submitted && $v.maxGenerators.$error"
-            :errorMessage="getErrorMsg('maxGenerators')">
-          </text-input>
-        </div>
 
         <save-buttons
           :continue-link="WIZARD_COMPONENT_PATH"
@@ -161,22 +246,46 @@
     },
     validations: {
       ...validations,
-      numGenerators: {
-        ...validations.numGenerators,
-        required: requiredIf(function isNumGeneratorsRequired() {
+      ratedCapacity: {
+        ...validations.ratedCapacity,
+        required: requiredIf(function isRatedCapacityRequired() {
           return this.shouldSize === false;
         }),
       },
-      minGenerators: {
-        ...validations.minGenerators,
-        required: requiredIf(function isMinGeneratorsRequired() {
-          return this.shouldSize === true;
+      ratedCapacityMaximum: {
+        ...validations.ratedCapacityMaximum,
+        required: requiredIf(function isRatedCapacityMaximumRequired() {
+          return (this.includeSizeLimits === true) && (this.shouldSize === true);
         }),
       },
-      maxGenerators: {
-        ...validations.maxGenerators,
-        required: requiredIf(function isMaxGeneratorsRequired() {
-          return this.shouldSize === true;
+      ratedCapacityMinimum: {
+        ...validations.ratedCapacityMinimum,
+        required: requiredIf(function isRatedCapacityMinimumRequired() {
+          return (this.includeSizeLimits === true) && (this.shouldSize === true);
+        }),
+      },
+      replacementCost: {
+        ...validations.replacementCost,
+        required: requiredIf(function isReplacementCostRequired() {
+          return (this.isReplaceable === true);
+        }),
+      },
+      replacementCostPerkW: {
+        ...validations.replacementCostPerkW,
+        required: requiredIf(function isReplacementCostPerkWRequired() {
+          return (this.isReplaceable === true);
+        }),
+      },
+      replacementConstructionTime: {
+        ...validations.replacementConstructionTime,
+        required: requiredIf(function isReplacementConstructionTimeRequired() {
+          return (this.isReplaceable === true);
+        }),
+      },
+      salvageValue: {
+        ...validations.salvageValue,
+        required: requiredIf(function isSalvageValueRequired() {
+          return (this.salvageValueOption === 'User defined');
         }),
       },
     },
@@ -217,9 +326,18 @@
       validatedSave() {
         // reset all non-required inputs to their defaults prior to saving
         if (this.shouldSize === true) {
-          this.resetNonRequired(['numGenerators']);
-        } else if (this.shouldSize === false) {
-          this.resetNonRequired(['minGenerators', 'maxGenerators']);
+          this.resetNonRequired(['ratedCapacity']);
+          if (this.includeSizeLimits === true) {
+            this.resetNonRequired(['ratedCapacityMaximum', 'ratedCapacityMinimum']);
+          }
+        } else {
+          this.resetNonRequired(['includeSizeLimits']);
+        }
+        if (this.isReplaceable === false) {
+          this.resetNonRequired(['replacementConstructionTime', 'replacementCost', 'replacementCostPerkW']);
+        }
+        if (this.salvageValueOption !== 'User defined') {
+          this.resetNonRequired(['salvageValue']);
         }
         this.submitted = true;
         this.$v.$touch();
@@ -245,25 +363,35 @@
         return {
           active: this.active,
           capitalCost: this.capitalCost,
+          capitalCostPerkW: this.capitalCostPerkW,
           complete: this.complete,
-          constructionDate: this.constructionDate,
+          constructionYear: this.constructionYear,
+          decomissioningCost: this.decomissioningCost,
           efficiency: this.efficiency,
           errorList: this.errorList,
+          expectedLifetime: this.expectedLifetime,
           fixedOMCostIncludingExercise: this.fixedOMCostIncludingExercise,
           fuelCost: this.fuelCost,
           id: this.id,
+          includeSizeLimits: this.includeSizeLimits,
+          isReplaceable: this.isReplaceable,
           macrsTerm: this.macrsTerm,
-          maxGenerators: this.maxGenerators,
-          minGenerators: this.minGenerators,
           minimumPower: this.minimumPower,
           name: this.name,
           numGenerators: this.numGenerators,
-          operationDate: this.operationDate,
+          operationYear: this.operationYear,
           ratedCapacity: this.ratedCapacity,
+          ratedCapacityMaximum: this.ratedCapacityMaximum,
+          ratedCapacityMinimum: this.ratedCapacityMinimum,
+          replacementCost: this.replacementCost,
+          replacementCostPerkW: this.replacementCostPerkW,
+          replacementConstructionTime: this.replacementConstructionTime,
+          salvageValue: this.salvageValue,
+          salvageValueOption: this.salvageValueOption,
           shouldSize: this.shouldSize,
-          startupTime: this.startupTime,
           tag: this.tag,
           technologyType: this.technologyType,
+          ter: this.ter,
           variableOMCost: this.variableOMCost,
         };
       },

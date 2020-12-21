@@ -43,13 +43,13 @@ export const USER_PRICE = 'userPrice';
 
 export const makeAllowedValues = lst => _.map(lst, x => ({ value: x, label: x }));
 
-const makeAllowedValuesWithNull = (lst) => {
+export const makeAllowedValuesWithNull = (lst) => {
   const mapped = makeAllowedValues(lst);
   mapped.unshift({ value: null, label: '-' });
   return mapped;
 };
 
-const optionsYN = [
+export const optionsYN = [
   { value: true, label: 'Yes' },
   { value: false, label: 'No' },
 ];

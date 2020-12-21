@@ -7,20 +7,6 @@ const metadataDefaultValues = projectMetadata.getDefaultValues();
 
 export const getDefaultState = () => ({
   ...metadataDefaultValues,
-  type: 'Wizard',
-
-  // TODO: these defaults should all be null or undefined
-  // TODO: remove this? is it being used?
-
-  dcmGrowth: 0,
-  daETSGrowth: 0,
-
-  reliabilityNu: 0, // TODO move to PV
-  reliabilityGamma: 0, // TODO move to PV
-  retailETSGrowth: 0, // TODO collect value
-  retailTimeShiftGrowth: 0, // TODO possibly the same as above?
-
-  userDefined: { price: 0 },
 
   // DERS
   technologySpecsSolarPV: [],
