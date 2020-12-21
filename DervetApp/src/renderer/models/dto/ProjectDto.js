@@ -33,6 +33,7 @@ const MONTHLY = 'monthly';
 const TARIFF = 'tariff';
 const TIMESERIES = 'timeseries';
 const YEARLY = 'yearly';
+const LOAD_SHEAD = 'load_shed_percentage';
 
 const MODEL_PARAMETERS = 'model_parameters.json';
 export const LOG_FILE = 'dervet_log.log';
@@ -437,6 +438,8 @@ export const makeReliabilityParameters = (project) => {
       post_facto_initial_soc: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
       post_facto_only: makeBaseKey(convertToOneZero(project.reliabilityPostOptimizationOnly), BOOL),
       target: makeBaseKey(project.reliabilityTarget, FLOAT),
+      load_shed_percentage: makeBaseKey(convertToOneZero(false), BOOL), // hardcoded
+      load_shed_perc_filename: makeBaseKey(makeCsvFilePath(project.inputsDirectory, LOAD_SHEAD), STRING),
     };
     return makeGroup('', isActive, keys);
   }
@@ -593,6 +596,17 @@ export const makeMonthlyCsv = (project) => {
   return objectToCsv(data, fields, headers);
 };
 
+export const makeLoadShedCsv = () => {
+  // TODO implement this
+  const data = _.map(_.range(1, 13), i => ({
+    length: i,
+    loadShed: i,
+  }));
+  const fields = ['length', 'loadShed'];
+  const headers = ['Outage Length (hrs)', 'Load Shed (%)']; // TODO LL string constants
+  return objectToCsv(data, fields, headers);
+};
+
 export const makeDatetimeIndex = (dataYear) => {
   const start = new Date(Date.UTC(dataYear, 0, 1, 1));
   const end = new Date(Date.UTC(dataYear + 1, 0, 1, 1));
@@ -697,6 +711,13 @@ class MonthlyDto {
   }
 }
 
+class LoadShedDto {
+  constructor(project) {
+    this.csv = makeLoadShedCsv(project);
+    this.filePath = makeCsvFilePath(project.inputsDirectory, LOAD_SHEAD);
+  }
+}
+
 class TariffDto {
   constructor(project) {
     this.csv = makeTariffCsv(project);
@@ -785,6 +806,7 @@ export const makeCsvs = (project) => {
   const result = [
     // TODO add monthly data
     (new MonthlyDto(project)),
+    (new LoadShedDto(project)),
     (new TariffDto(project)),
     (new YearlyDto(project)),
     (new TimeSeriesDto(project)),
