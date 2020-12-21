@@ -42,6 +42,9 @@
 
   const metadata = p.projectMetadata;
   const validations = metadata.getValidationSchema(c.DA_FIELDS);
+  const PAGEGROUP = 'components';
+  const PAGEKEY = 'objectives';
+  const PAGE = 'DA';
 
   export default {
     components: { TimeseriesDataUpload },
@@ -66,7 +69,7 @@
         return new DAPriceTimeSeries(this.inputTimeseries);
       },
       complete() {
-        return this.$store.state.Application.pageCompleteness.components.objectives.DA;
+        return this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGEKEY][PAGE];
       },
     },
     beforeMount() {
@@ -87,9 +90,9 @@
       },
       getCompletenessPayload() {
         return {
-          pageGroup: 'components',
-          pageKey: 'objectives',
-          page: 'DA',
+          pageGroup: PAGEGROUP,
+          pageKey: PAGEKEY,
+          page: PAGE,
           completeness: !this.$v.$invalid,
         };
       },
@@ -101,9 +104,9 @@
           }
         });
         return {
-          pageGroup: 'components',
-          pageKey: 'objectives',
-          page: 'DA',
+          pageGroup: PAGEGROUP,
+          pageKey: PAGEKEY,
+          page: PAGE,
           errorList: errors,
         };
       },

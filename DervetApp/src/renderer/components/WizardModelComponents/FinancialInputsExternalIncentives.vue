@@ -90,6 +90,9 @@
     FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
   } from '@/router/constants';
 
+  const PAGEGROUP = 'components';
+  const PAGEKEY = 'financial';
+  const PAGE = 'externalIncentives';
 
   export default {
     mounted() {
@@ -125,9 +128,9 @@
       },
       getCompletenessPayload() {
         return {
-          pageGroup: 'components',
-          pageKey: 'financial',
-          page: 'externalIncentives',
+          pageGroup: PAGEGROUP,
+          pageKey: PAGEKEY,
+          page: PAGE,
           completeness: this.complete,
         };
       },
@@ -137,9 +140,9 @@
           errors.push(this.getSingleErrorMsg());
         }
         return {
-          pageGroup: 'components',
-          pageKey: 'financial',
-          page: 'externalIncentives',
+          pageGroup: PAGEGROUP,
+          pageKey: PAGEKEY,
+          page: PAGE,
           errorList: errors,
         };
       },

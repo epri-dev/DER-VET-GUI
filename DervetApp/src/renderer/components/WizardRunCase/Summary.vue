@@ -30,7 +30,7 @@
               <li>
                 <router-link class="text-decoration-none"
                              :to="getTechPath(tech)">
-                  {{ tech.technologyType + ': ' + tech.tag + ': ' + getTechDisplayName(tech) }}
+                  {{ tech.technologyType + ': ' + tech.tag + getTechDisplayName(tech) }}
                 </router-link>
                 <ul>
                   <li v-for="error in tech.errorList">
@@ -94,7 +94,7 @@
           <h5>Generators</h5>
           <ul>
             <li v-for="tech in techGen">
-              {{ tech.tag + ': ' + getTechDisplayName(tech) }}
+              {{ tech.tag + getTechDisplayName(tech) }}
             </li>
           </ul>
         </ul>
@@ -102,7 +102,7 @@
           <h5>Intermittent Resources</h5>
           <ul>
             <li v-for="tech in techIR">
-              {{ tech.tag + ': ' + getTechDisplayName(tech) }}
+              {{ tech.tag + getTechDisplayName(tech) }}
             </li>
           </ul>
         </ul>
@@ -110,7 +110,7 @@
           <h5>Energy Storage Systems</h5>
           <ul>
             <li v-for="tech in techESS">
-              {{ tech.tag + ': ' + getTechDisplayName(tech) }}
+              {{ tech.tag + getTechDisplayName(tech) }}
             </li>
           </ul>
         </ul>
@@ -372,9 +372,9 @@
         if (tech.complete === null) {
           return NOT_STARTED;
         } else if (!tech.name) {
-          return 'Undefined';
+          return ': Undefined';
         }
-        return tech.name;
+        return `: ${tech.name}`;
       },
       componentTechErrorExists() {
         let errorsTF = false;

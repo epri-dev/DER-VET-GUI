@@ -98,6 +98,10 @@
     FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
   } from '@/router/constants';
 
+  const PAGEGROUP = 'components';
+  const PAGEKEY = 'financial';
+  const PAGE = 'retailTariff';
+
   export default {
     mounted() {
       this.setRetailTariffData();
@@ -128,9 +132,9 @@
       },
       getCompletenessPayload() {
         return {
-          pageGroup: 'components',
-          pageKey: 'financial',
-          page: 'retailTariff',
+          pageGroup: PAGEGROUP,
+          pageKey: PAGEKEY,
+          page: PAGE,
           completeness: this.complete,
         };
       },
@@ -140,9 +144,9 @@
           errors.push(this.getSingleErrorMsg());
         }
         return {
-          pageGroup: 'components',
-          pageKey: 'financial',
-          page: 'retailTariff',
+          pageGroup: PAGEGROUP,
+          pageKey: PAGEKEY,
+          page: PAGE,
           errorList: errors,
         };
       },

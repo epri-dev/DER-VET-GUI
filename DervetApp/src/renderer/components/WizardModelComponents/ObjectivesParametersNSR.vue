@@ -48,6 +48,9 @@
 
   const metadata = p.projectMetadata;
   const validations = metadata.getValidationSchema(c.NSR_FIELDS);
+  const PAGEGROUP = 'components';
+  const PAGEKEY = 'objectives';
+  const PAGE = 'NSR';
 
   export default {
     components: { TimeseriesDataUpload },
@@ -73,7 +76,7 @@
         return new NSRPriceTimeSeries(this.inputTimeseries);
       },
       complete() {
-        return this.$store.state.Application.pageCompleteness.components.objectives.NSR;
+        return this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGEKEY][PAGE];
       },
     },
     beforeMount() {
@@ -94,9 +97,9 @@
       },
       getCompletenessPayload() {
         return {
-          pageGroup: 'components',
-          pageKey: 'objectives',
-          page: 'NSR',
+          pageGroup: PAGEGROUP,
+          pageKey: PAGEKEY,
+          page: PAGE,
           completeness: !this.$v.$invalid,
         };
       },
@@ -108,9 +111,9 @@
           }
         });
         return {
-          pageGroup: 'components',
-          pageKey: 'objectives',
-          page: 'NSR',
+          pageGroup: PAGEGROUP,
+          pageKey: PAGEKEY,
+          page: PAGE,
           errorList: errors,
         };
       },

@@ -129,6 +129,8 @@
   const metadataBattery = TechnologySpecsBatteryMetadata.getHardcodedMetadata();
   const metadataICE = TechnologySpecsICEMetadata.getHardcodedMetadata();
   const metadataDieselGen = TechnologySpecsDieselGenMetadata.getHardcodedMetadata();
+  const PAGEGROUP = 'overview';
+  const PAGE = 'technologySpecs';
 
   export default {
     components: { NavButtons },
@@ -176,7 +178,7 @@
         return this.$store.state.Project.technologySpecsDieselGen.length;
       },
       complete() {
-        return this.$store.state.Application.pageCompleteness.overview.technologySpecs;
+        return this.$store.state.Application.pageCompleteness.overview[PAGE];
       },
     },
     methods: {
@@ -220,26 +222,26 @@
       },
       getCompletenessPayload() {
         return {
-          pageGroup: 'overview',
-          page: 'technologySpecs',
+          pageGroup: PAGEGROUP,
+          page: PAGE,
           completeness: (this.getNumberOfActiveTechnologies() > 0),
         };
       },
       getSingleErrorMsg() {
         if (!this.complete &&
-            this.$store.state.Application.errorList.overview.technologySpecs !== null) {
-          return this.$store.state.Application.errorList.overview.technologySpecs[0];
+            this.$store.state.Application.errorList[PAGEGROUP][PAGE] !== null) {
+          return this.$store.state.Application.errorList[PAGEGROUP][PAGE][0];
         }
         return '';
       },
       getErrorListPayload() {
         const errors = [];
-        if (!this.$store.state.Application.pageCompleteness.overview.technologySpecs) {
+        if (!this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGE]) {
           errors.push('At least one Technology is required');
         }
         return {
-          pageGroup: 'overview',
-          page: 'technologySpecs',
+          pageGroup: PAGEGROUP,
+          page: PAGE,
           errorList: errors,
         };
       },

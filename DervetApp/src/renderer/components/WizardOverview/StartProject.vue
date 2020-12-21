@@ -132,6 +132,8 @@
 
   const metadata = p.projectMetadata;
   const validations = metadata.getValidationSchema(c.START_PROJECT_FIELDS);
+  const PAGEGROUP = 'overview';
+  const PAGE = 'start';
 
   export default {
     mixins: [wizardFormMixin],
@@ -162,7 +164,7 @@
     },
     computed: {
       complete() {
-        return this.$store.state.Application.pageCompleteness.overview.start;
+        return this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGE];
       },
       projID() {
         return this.$store.state.Project.id;
@@ -189,8 +191,8 @@
       },
       getCompletenessPayload() {
         return {
-          pageGroup: 'overview',
-          page: 'start',
+          pageGroup: PAGEGROUP,
+          page: PAGE,
           completeness: !this.$v.$invalid,
         };
       },
@@ -210,8 +212,8 @@
           }
         });
         return {
-          pageGroup: 'overview',
-          page: 'start',
+          pageGroup: PAGEGROUP,
+          page: PAGE,
           errorList: errors,
         };
       },

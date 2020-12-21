@@ -54,6 +54,9 @@
 
   const metadata = p.projectMetadata;
   const validations = metadata.getValidationSchema(c.FINANCE_FIELDS);
+  const PAGEGROUP = 'components';
+  const PAGEKEY = 'financial';
+  const PAGE = 'inputs';
 
   export default {
     mixins: [wizardFormMixin],
@@ -69,7 +72,7 @@
     },
     computed: {
       complete() {
-        return this.$store.state.Application.pageCompleteness.components.financial.inputs;
+        return this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGEKEY][PAGE];
       },
     },
     beforeMount() {
@@ -90,9 +93,9 @@
       },
       getCompletenessPayload() {
         return {
-          pageGroup: 'components',
-          pageKey: 'financial',
-          page: 'inputs',
+          pageGroup: PAGEGROUP,
+          pageKey: PAGEKEY,
+          page: PAGE,
           completeness: !this.$v.$invalid,
         };
       },
@@ -104,9 +107,9 @@
           }
         });
         return {
-          pageGroup: 'components',
-          pageKey: 'financial',
-          page: 'inputs',
+          pageGroup: PAGEGROUP,
+          pageKey: PAGEKEY,
+          page: PAGE,
           errorList: errors,
         };
       },
