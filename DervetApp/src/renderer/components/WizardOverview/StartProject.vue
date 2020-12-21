@@ -75,36 +75,15 @@
         <!-- TODO make a file picker component -->
         <div class="row form-group">
           <div class="col-md-5 control-label">
-            <b>Inputs Folder</b>
-            <div>{{this.inputsDirectory}}</div>
+            <b>Output Folder</b>
+            <div>{{this.outputDirectory}}</div>
           </div>
           <div class="col-md-3">
-            <label for="inputsFilePicker" class="btn btn-secondary btn-md">Select folder</label>
-            <input id="inputsFilePicker" class="file-picker" style="visibility:hidden;" type="file" @change="onInputsDirectorySelection" webkitdirectory directory>
+            <label for="outputDirectoryPicker" class="btn btn-secondary btn-md">Select folder</label>
+            <input id="outputDirectoryPicker" class="file-picker" style="visibility:hidden;" type="file" @change="onOutputDirectorySelection" webkitdirectory directory>
           </div>
           <div class="col-md-4">
-            <p class="tool-tip">Folder where input files will be saved</p>
-          </div>
-          <div v-if="submitted && $v.inputsDirectory.$error">
-            <span class="col-md-12 error-text-color error-align text-center">Inputs folder is required</span>
-          </div>
-        </div>
-
-
-        <div class="row form-group">
-          <div class="col-md-5 control-label">
-            <b>Results Folder</b>
-            <div>{{this.resultsDirectory}}</div>
-          </div>
-          <div class="col-md-3">
-            <label for="resultsFilePicker" class="btn btn-secondary btn-md">Select folder</label>
-            <input id="resultsFilePicker" style="visibility:hidden;" type="file" @change="onResultsDirectorySelection" webkitdirectory directory>
-          </div>
-          <div class="col-md-4">
-            <p class="tool-tip">Folder where results files will be saved</p>
-          </div>
-          <div v-if="submitted && $v.resultsDirectory.$error">
-            <span class="col-md-12 error-text-color error-align text-center">Results folder is required</span>
+            <p class="tool-tip">Folder where output files will be saved (optional).</p>
           </div>
         </div>
       </fieldset>
@@ -198,11 +177,8 @@
       },
       // TODO validate that directory is received using accepted answer here:
       // https://stackoverflow.com/questions/52667995/how-to-check-if-selected-file-is-a-directory-or-regular-file
-      onInputsDirectorySelection(e) {
-        this.inputsDirectory = e.target.files[0].path;
-      },
-      onResultsDirectorySelection(e) {
-        this.resultsDirectory = e.target.files[0].path;
+      onOutputDirectorySelection(e) {
+        this.outputDirectory = e.target.files[0].path;
       },
       getErrorListPayload() {
         const errors = [];
@@ -239,8 +215,7 @@
         this.$store.dispatch('setGridLocation', this.gridLocation);
         this.$store.dispatch('setOwnership', this.ownership);
         this.$store.dispatch('setTimestep', this.timestep);
-        this.$store.dispatch('setInputsDirectory', this.inputsDirectory);
-        this.$store.dispatch('setResultsDirectory', this.resultsDirectory);
+        this.$store.dispatch('setOutputDirectory', this.outputDirectory);
       },
     },
   };

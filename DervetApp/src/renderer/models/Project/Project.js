@@ -230,9 +230,9 @@ export class ProjectMetadata {
         type: Boolean,
         allowedValues: c.INCLUDE_INTERCONNECTION_CONSTRAINTS_ALLOWED_VALUES,
       }),
-      [c.INPUTS_DIRECTORY]: new ProjectFieldMetadata({
-        displayName: 'Inputs Directory',
-        isRequired: true,
+      [c.OUTPUT_DIRECTORY]: new ProjectFieldMetadata({
+        displayName: 'Outputs Directory',
+        isRequired: false,
         type: String,
       }),
       [c.MAX_EXPORT]: new ProjectFieldMetadata({
@@ -318,11 +318,6 @@ export class ProjectMetadata {
         type: 'float',
         unit: 'hours',
         description: 'How many hours of guaranteed outage coverage does the project need to supply based on the load?',
-      }),
-      [c.RESULTS_DIRECTORY]: new ProjectFieldMetadata({
-        displayName: 'Results Directory',
-        isRequired: true,
-        type: String,
       }),
       [c.SIZING_EQUIPMENT]: new ProjectFieldMetadata({
         displayName: 'Size equipment in microgrid',
