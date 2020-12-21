@@ -801,7 +801,8 @@ export const makeOutputDirectoryName = (outputDirectory) => {
     return path.join(getAppDataPath(), 'DER-VET');
   }
   // If user selects a directory, create a timestamped output folder
-  const timestamp = dateFormat(new Date(), 'yyyymmdd"T"HHMMss');
+  const timestamp = dateFormat(new Date(), 'yyyymmddHHMMss');
+  console.log(`timestamp ${timestamp}`);
   return path.join(outputDirectory, `DER-VET_${timestamp}`);
 };
 
