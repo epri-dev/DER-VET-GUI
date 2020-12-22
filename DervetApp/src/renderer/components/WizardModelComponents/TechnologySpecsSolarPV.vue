@@ -164,6 +164,16 @@
             :errorMessage="getErrorMsg('ppaInflationRate')">
           </text-input>
         </div>
+
+        <div v-if="includePPA === false">
+          <text-input
+            v-model="fixedOMCosts"
+            v-bind:field="metadata.fixedOMCosts"
+            :isInvalid="submitted && $v.fixedOMCosts.$error"
+            :errorMessage="getErrorMsg('fixedOMCosts')">
+          </text-input>
+          
+        </div>
         
         <radio-button-input
           v-model="isReplaceable"
@@ -270,6 +280,12 @@
           return (this.includePPA === false);
         }),
       },
+      fixedOMCosts: {
+        ...validations.fixedOMCosts,
+        required: requiredIf(function isFixedOMCostsRequired() {
+          return (this.includePPA === false);
+        }),
+      },
       gamma: {
         ...validations.gamma,
         required: requiredIf(function isGammaRequired() {
@@ -327,19 +343,19 @@
       replacementCost: {
         ...validations.replacementCost,
         required: requiredIf(function isReplacementCostRequired() {
-          return (this.isReplaceable === true) || (this.includePPA === false);
+          return (this.isReplaceable === true) && (this.includePPA === false);
         }),
       },
       replacementConstructionTime: {
         ...validations.replacementConstructionTime,
         required: requiredIf(function isReplacementConstructionTimeRequired() {
-          return (this.isReplaceable === true) || (this.includePPA === false);
+          return (this.isReplaceable === true) && (this.includePPA === false);
         }),
       },
       salvageValue: {
         ...validations.salvageValue,
         required: requiredIf(function isSalvageValueRequired() {
-          return (this.salvageValueOption === 'User defined') || (this.includePPA === false);
+          return (this.salvageValueOption === 'User defined') && (this.includePPA === false);
         }),
       },
       salvageValueOption: {
@@ -401,6 +417,9 @@
         }
         if (this.reliabilitySelected) {
           this.resetNonRequired(['gamma', 'nu']);
+        }
+        if (this.includePPA) {
+          this.resetNonRequired(['decomissioningCost', 'fixedOMCosts', 'macrsTerm', 'replacementCost', 'replacementConstructionTime', 'replacementCost', 'salvageValueOption', 'salvageValue']);
         }
         // shared inputs: reset all non-requred inputs to default
         if (this.isReplaceable === false) {
