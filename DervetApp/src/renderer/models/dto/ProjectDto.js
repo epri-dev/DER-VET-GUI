@@ -836,6 +836,7 @@ export const makeOutputDirectoryName = (outputDirectory) => {
 };
 
 export const createOutputDirectory = (outputDirectory) => {
+  console.log(`output dir ${outputDirectory}`);
   const timestampedOutputDir = makeOutputDirectoryName(outputDirectory);
   return createDirectory(timestampedOutputDir);
 };
@@ -852,6 +853,7 @@ export const makeDervetInputs = (project) => {
   // TODO if outputDirectory is undefined, add flag for main process to delete
   // timestamped directory once results are read and sent back to renderer process
   const timestampedOutputDir = createOutputDirectory(project.outputDirectory);
+  console.log(`timstamped output dir ${timestampedOutputDir}`);
   const inputsDirectory = createInputsDirectory(timestampedOutputDir);
   const resultsDirectory = createResultsDirectory(timestampedOutputDir);
   return {
