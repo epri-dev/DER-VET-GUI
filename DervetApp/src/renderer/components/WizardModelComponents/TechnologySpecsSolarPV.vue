@@ -398,7 +398,6 @@
       makeErrorList() {
         const errors = [];
         Object.keys(this.metadata).forEach((key) => {
-          console.log(JSON.stringify(key, null, 1));
           if (this.$v[key].$invalid) {
             errors.push(this.getErrorMsg(key));
           }

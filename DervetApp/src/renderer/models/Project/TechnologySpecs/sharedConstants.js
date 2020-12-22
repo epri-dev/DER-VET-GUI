@@ -103,6 +103,7 @@ export const createSharedHardcodedMetadata = derType => ({
     allowedValues: SALVAGE_OPTION_ALLOWED_VALUES,
   }),
   [SALVAGE_VALUE]: new ProjectFieldMetadata({
+    displayName: 'User-defined Salvage Value',
     isRequired: false, // based on SALVAGE_OPTION
     minValue: 0,
     type: Number,
