@@ -11,11 +11,11 @@ const DieselGen = 'DieselGen';
 const SIZING_ALLOWED_VALUES = [
   {
     value: true,
-    label: 'Have DER-VET determine the optimal number of Diesel Generators to install',
+    label: 'Have DER-VET determine the capacity of the diesel generators',
   },
   {
     value: false,
-    label: 'Known number of Diesel Generators',
+    label: 'Known size',
   },
 ];
 

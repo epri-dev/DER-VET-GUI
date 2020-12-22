@@ -15,11 +15,11 @@ const ICE = 'ICE';
 const SIZING_ALLOWED_VALUES = [
   {
     value: true,
-    label: 'Have DER-VET determine the optimal number of Internal Combustion Engines to install',
+    label: 'Have DER-VET determine the capacity of the Internal Combustion Engines',
   },
   {
     value: false,
-    label: 'Known number of Internal Combustion Engines',
+    label: 'Known size',
   },
 ];
 
