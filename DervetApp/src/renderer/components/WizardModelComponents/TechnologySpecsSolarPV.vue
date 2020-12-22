@@ -74,12 +74,12 @@
         </drop-down-input>
 
         <div v-if="loc === 'AC'">
-            <text-input
+            <radio-button-input
               v-model="allowGridCharge"
               v-bind:field="metadata.allowGridCharge"
               :isInvalid="submitted && $v.allowGridCharge.$error"
               :errorMessage="getErrorMsg('allowGridCharge')">
-            </text-input>
+            </radio-button-input>
           </div>
 
         <text-input
@@ -276,6 +276,12 @@
           return this.reliabilitySelected;
         }),
       },
+      includeSizeLimits: {
+        ...validations.includeSizeLimits,
+        required: requiredIf(function isIncludeSizeLimitsRequired() {
+          return (this.shouldSize === true);
+        }),
+      },
       macrsTerm: {
         ...validations.macrsTerm,
         required: requiredIf(function isMacrsTermRequired() {
@@ -376,6 +382,7 @@
       makeErrorList() {
         const errors = [];
         Object.keys(this.metadata).forEach((key) => {
+          console.log(JSON.stringify(key, null, 1));
           if (this.$v[key].$invalid) {
             errors.push(this.getErrorMsg(key));
           }

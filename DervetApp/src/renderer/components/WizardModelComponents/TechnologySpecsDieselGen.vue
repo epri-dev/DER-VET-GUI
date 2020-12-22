@@ -246,6 +246,12 @@
     },
     validations: {
       ...validations,
+      includeSizeLimits: {
+        ...validations.includeSizeLimits,
+        required: requiredIf(function isIncludeSizeLimitsRequired() {
+          return this.shouldSize;
+        }),
+      },
       ratedCapacity: {
         ...validations.ratedCapacity,
         required: requiredIf(function isRatedCapacityRequired() {
