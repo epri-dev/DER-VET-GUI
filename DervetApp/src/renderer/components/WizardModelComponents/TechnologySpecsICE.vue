@@ -15,7 +15,7 @@
           :isInvalid="submitted && $v.name.$error"
           :errorMessage="getErrorMsg('name')">
         </text-input>
-        
+
         <text-input
           v-model="numGenerators"
           v-bind:field="metadata.numGenerators"
@@ -38,7 +38,7 @@
             :errorMessage="getErrorMsg('ratedCapacity')">
           </text-input>
         </div>
-        
+
         <div v-if="shouldSize === true">
           <radio-button-input
             v-model="includeSizeLimits"
@@ -333,7 +333,7 @@
         // reset all non-required inputs to their defaults prior to saving
         if (this.shouldSize === true) {
           this.resetNonRequired(['ratedCapacity']);
-          if (this.includeSizeLimits === true) {
+          if (this.includeSizeLimits === false) {
             this.resetNonRequired(['ratedCapacityMaximum', 'ratedCapacityMinimum']);
           }
         } else {

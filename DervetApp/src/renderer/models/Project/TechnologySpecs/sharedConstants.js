@@ -44,7 +44,7 @@ export const createSharedHardcodedMetadata = derType => ({
     type: Number,
   }),
   [DECOMISSIONING_COST]: new ProjectFieldMetadata({
-    displayName: 'Decomissing Cost',
+    displayName: 'Decomissioning Cost',
     isRequired: true,
     minValue: 0,
     type: Number,
@@ -69,6 +69,7 @@ export const createSharedHardcodedMetadata = derType => ({
   }),
   [NAME]: new ProjectFieldMetadata({
     displayName: 'Name',
+    isRequired: true,
     type: String,
   }),
   [OPERATION_YEAR]: new ProjectFieldMetadata({
