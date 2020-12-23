@@ -46,7 +46,7 @@ export default class ExternalIncentivesMetadata {
         minValue: 0,
         type: 'int',
         unit: '',
-        description: '',
+        description: 'Please use a valid year for the project. Year one of the project is the year after the Project Start Year.',
         allowedValues: null,
       }),
       taxCredit: new ProjectFieldMetadata({

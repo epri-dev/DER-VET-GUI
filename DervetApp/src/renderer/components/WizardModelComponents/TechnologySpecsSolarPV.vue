@@ -30,7 +30,7 @@
         </radio-button-input>
 
         <div v-if="shouldSize === false">
-          
+
           <text-input
             v-model="ratedCapacity"
             v-bind:field="metadata.ratedCapacity"
@@ -38,9 +38,9 @@
             :errorMessage="getErrorMsg('ratedCapacity')">
           </text-input>
         </div>
-        
+
         <div v-if="shouldSize === true">
-          
+
           <radio-button-input
             v-model="includeSizeLimits"
             v-bind:field="metadata.includeSizeLimits"
@@ -49,7 +49,7 @@
           </radio-button-input>
 
           <div v-if="includeSizeLimits === true">
-            
+
             <text-input
               v-model="ratedCapacityMaximum"
               v-bind:field="metadata.ratedCapacityMaximum"
@@ -74,12 +74,12 @@
         </drop-down-input>
 
         <div v-if="loc === 'AC'">
-            <text-input
+            <radio-button-input
               v-model="allowGridCharge"
               v-bind:field="metadata.allowGridCharge"
               :isInvalid="submitted && $v.allowGridCharge.$error"
               :errorMessage="getErrorMsg('allowGridCharge')">
-            </text-input>
+            </radio-button-input>
           </div>
 
         <text-input
@@ -156,7 +156,7 @@
             :isInvalid="submitted && $v.ppaCost.$error"
             :errorMessage="getErrorMsg('ppaCost')">
           </text-input>
-          
+
           <text-input
             v-model="ppaInflationRate"
             v-bind:field="metadata.ppaInflationRate"
@@ -164,7 +164,17 @@
             :errorMessage="getErrorMsg('ppaInflationRate')">
           </text-input>
         </div>
-        
+
+        <div v-if="includePPA === false">
+          <text-input
+            v-model="fixedOMCosts"
+            v-bind:field="metadata.fixedOMCosts"
+            :isInvalid="submitted && $v.fixedOMCosts.$error"
+            :errorMessage="getErrorMsg('fixedOMCosts')">
+          </text-input>
+
+        </div>
+
         <radio-button-input
           v-model="isReplaceable"
           v-bind:field="metadata.isReplaceable"
@@ -172,7 +182,7 @@
           :errorMessage="getErrorMsg('isReplaceable')">
         </radio-button-input>
 
-        <div v-if="includePPA === false">  
+        <div v-if="includePPA === false">
           <div v-if="isReplaceable === true">
             <text-input
               v-model="replacementConstructionTime"
@@ -180,7 +190,7 @@
               :isInvalid="submitted && $v.replacementConstructionTime.$error"
               :errorMessage="getErrorMsg('replacementConstructionTime')">
             </text-input>
-            
+
             <text-input
               v-model="replacementCost"
               v-bind:field="metadata.replacementCost"
@@ -199,6 +209,7 @@
           <drop-down-input
             v-model="salvageValueOption"
             v-bind:field="metadata.salvageValueOption"
+            :isLargeBox="true"
             :isInvalid="submitted && $v.salvageValueOption.$error"
             :errorMessage="getErrorMsg('salvageValueOption')">
           </drop-down-input>
@@ -219,7 +230,7 @@
             :errorMessage="getErrorMsg('macrsTerm')">
           </drop-down-input>
         </div>
-        
+
         <save-buttons
           :continue-link="`${TECH_SPECS_PV_PATH}-upload/${this.solarId}`"
           :displayError="submitted && $v.$anyError"
@@ -270,10 +281,22 @@
           return (this.includePPA === false);
         }),
       },
+      fixedOMCosts: {
+        ...validations.fixedOMCosts,
+        required: requiredIf(function isFixedOMCostsRequired() {
+          return (this.includePPA === false);
+        }),
+      },
       gamma: {
         ...validations.gamma,
         required: requiredIf(function isGammaRequired() {
           return this.reliabilitySelected;
+        }),
+      },
+      includeSizeLimits: {
+        ...validations.includeSizeLimits,
+        required: requiredIf(function isIncludeSizeLimitsRequired() {
+          return (this.shouldSize === true);
         }),
       },
       macrsTerm: {
@@ -321,19 +344,19 @@
       replacementCost: {
         ...validations.replacementCost,
         required: requiredIf(function isReplacementCostRequired() {
-          return (this.isReplaceable === true) || (this.includePPA === false);
+          return (this.isReplaceable === true) && (this.includePPA === false);
         }),
       },
       replacementConstructionTime: {
         ...validations.replacementConstructionTime,
         required: requiredIf(function isReplacementConstructionTimeRequired() {
-          return (this.isReplaceable === true) || (this.includePPA === false);
+          return (this.isReplaceable === true) && (this.includePPA === false);
         }),
       },
       salvageValue: {
         ...validations.salvageValue,
         required: requiredIf(function isSalvageValueRequired() {
-          return (this.salvageValueOption === 'User defined') || (this.includePPA === false);
+          return (this.salvageValueOption === 'User defined') && (this.includePPA === false);
         }),
       },
       salvageValueOption: {
@@ -344,6 +367,10 @@
       },
     },
     beforeMount() {
+      // in quick start mode, do a save initially to reset non-required inputs
+      if (this.complete === true && this.submitted === false) {
+        this.validatedSave();
+      }
       // submitted is false initially; set it to true after the first save.
       // initially, complete is null; after saving, it is set to either true or false.
       // we want to show validation errors at any time after the first save, with submitted.
@@ -392,10 +419,16 @@
         } else {
           this.resetNonRequired(['includeSizeLimits']);
         }
-        if (this.reliabilitySelected) {
+        if (!this.reliabilitySelected) {
           this.resetNonRequired(['gamma', 'nu']);
         }
-        // shared inputs: reset all non-requred inputs to default
+        if (this.includePPA) {
+          this.resetNonRequired(['decomissioningCost', 'fixedOMCosts', 'macrsTerm', 'replacementCost', 'replacementConstructionTime', 'salvageValueOption', 'salvageValue']);
+        }
+        if (this.includePPA === false) {
+          this.resetNonRequired(['ppaCost', 'ppaInflationRate']);
+        }
+        // shared inputs: reset all non-required inputs to default
         if (this.isReplaceable === false) {
           this.resetNonRequired(['replacementConstructionTime', 'replacementCost']);
         }

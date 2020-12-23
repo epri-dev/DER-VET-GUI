@@ -265,7 +265,7 @@ export default class TechnologySpecsBatteryMetadata {
       }),
       includeSizeLimits: new ProjectFieldMetadata({
         displayName: 'Include limits on capacity sizing?',
-        isRequired: true,
+        isRequired: false,
         type: Boolean,
         allowedValues: optionsYN,
         description: 'Advanced sizing settings.',

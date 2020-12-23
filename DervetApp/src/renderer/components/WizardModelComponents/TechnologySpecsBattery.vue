@@ -443,6 +443,12 @@
           return (this.includeSizeLimits === true) && (this.shouldEnergySize === true);
         }),
       },
+      includeSizeLimits: {
+        ...validations.includeSizeLimits,
+        required: requiredIf(function isIncludeSizeLimitsRequired() {
+          return this.shouldEnergySize || this.shouldPowerSize;
+        }),
+      },
       maxDuration: {
         ...validations.maxDuration,
         required: requiredIf(function isMaxDurationRequired() {
@@ -583,7 +589,8 @@
             this.resetNonRequired(['energyCapacityMaximum', 'energyCapacityMinimum']);
           }
         }
-        if ((this.shouldEnergySize === false) && (this.shouldPowerSize === false)) {
+        console.log(`shouldEnergySize ${this.shouldEnergySize}`);
+        if ((this.shouldEnergySize === false) || (this.shouldPowerSize === false)) {
           this.resetNonRequired(['includeSizeLimits']);
         }
         if (this.shouldMaxDuration === false) {

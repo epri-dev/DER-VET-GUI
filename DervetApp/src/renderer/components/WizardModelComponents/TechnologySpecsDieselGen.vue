@@ -14,7 +14,7 @@
           :isInvalid="submitted && $v.name.$error"
           :errorMessage="getErrorMsg('name')">
         </text-input>
-        
+
         <text-input
           v-model="numGenerators"
           v-bind:field="metadata.numGenerators"
@@ -37,7 +37,7 @@
             :errorMessage="getErrorMsg('ratedCapacity')">
           </text-input>
         </div>
-        
+
         <div v-if="shouldSize === true">
           <radio-button-input
             v-model="includeSizeLimits"
@@ -181,6 +181,7 @@
         <drop-down-input
           v-model="salvageValueOption"
           v-bind:field="metadata.salvageValueOption"
+          :isLargeBox="true"
           :isInvalid="submitted && $v.salvageValueOption.$error"
           :errorMessage="getErrorMsg('salvageValueOption')">
         </drop-down-input>
@@ -246,6 +247,12 @@
     },
     validations: {
       ...validations,
+      includeSizeLimits: {
+        ...validations.includeSizeLimits,
+        required: requiredIf(function isIncludeSizeLimitsRequired() {
+          return this.shouldSize;
+        }),
+      },
       ratedCapacity: {
         ...validations.ratedCapacity,
         required: requiredIf(function isRatedCapacityRequired() {
@@ -328,7 +335,7 @@
         // reset all non-required inputs to their defaults prior to saving
         if (this.shouldSize === true) {
           this.resetNonRequired(['ratedCapacity']);
-          if (this.includeSizeLimits === true) {
+          if (this.includeSizeLimits === false) {
             this.resetNonRequired(['ratedCapacityMaximum', 'ratedCapacityMinimum']);
           }
         } else {

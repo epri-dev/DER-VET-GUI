@@ -109,7 +109,6 @@ export default class TechnologySpecsSolarPVMetadata {
         unit: '%',
         description: 'Worst-case percent of the timestep for which PV is at it\'s minimum generation (default=43)',
       }),
-      generationProfile: null,
       includeCurtailment: new ProjectFieldMetadata({
         displayName: 'Allow curtailment?',
         isRequired: true,
