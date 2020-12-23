@@ -263,8 +263,7 @@
         return `${rate} %`;
       },
       runDervetDisabled() {
-        // TODO: Use vuelidate to check if there are any errors in the project config
-        return false;
+        return this.anyErrorExists();
       },
       runInProgress() {
         return this.$store.state.Application.runInProgress;
@@ -436,6 +435,12 @@
           return `${overviewName}${NOT_STARTED}`;
         }
         return overviewName;
+      },
+
+      // all
+      anyErrorExists() {
+        return (this.overviewErrorExists() || this.componentTechErrorExists()
+          || this.componentObjectiveErrorExists() || this.componentFinancialErrorExists());
       },
     },
     data() {

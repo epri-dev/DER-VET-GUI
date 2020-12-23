@@ -419,7 +419,7 @@
         } else {
           this.resetNonRequired(['includeSizeLimits']);
         }
-        if (this.reliabilitySelected) {
+        if (!this.reliabilitySelected) {
           this.resetNonRequired(['gamma', 'nu']);
         }
         if (this.includePPA) {
