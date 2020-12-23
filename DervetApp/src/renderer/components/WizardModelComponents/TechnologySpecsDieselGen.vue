@@ -181,6 +181,7 @@
         <drop-down-input
           v-model="salvageValueOption"
           v-bind:field="metadata.salvageValueOption"
+          :isLargeBox="true"
           :isInvalid="submitted && $v.salvageValueOption.$error"
           :errorMessage="getErrorMsg('salvageValueOption')">
         </drop-down-input>

@@ -7,7 +7,7 @@
     </div>
     <div class="col-md-4">
       <select class="form-control valid numberbox"
-              :class="{'is-invalid': isInvalid}"
+              :class="[{'is-invalid': isInvalid}, isLargeBox ? 'numberbox-lg' : 'numberbox']"
               id="loc"
               v-model="$attrs.value"
               @change="$emit('input', $event.target.value)">
@@ -29,6 +29,6 @@
 
 <script>
   export default {
-    props: ['field', 'isInvalid', 'errorMessage'],
+    props: ['field', 'isInvalid', 'isLargeBox', 'errorMessage'],
   };
 </script>
