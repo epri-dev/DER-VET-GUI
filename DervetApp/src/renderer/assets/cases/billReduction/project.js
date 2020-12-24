@@ -49,14 +49,12 @@ export const billReductionProject = {
   objectivesUserDefined: false,
   includeSiteLoad: true,
   includeInterconnectionConstraints: false,
-  maxImport: -10000000000, // TODO figure this out
-  maxExport: 10000000000, // TODO figure this out
+  maxImport: -10000000000,
+  maxExport: 10000000000,
   ownership: 'Customer',
   financePropertyTaxRate: 0,
   reliabilityTarget: 1,
   reliabilityPostOptimizationOnly: true,
-  // nu: 20,
-  // gamma: 43,
   reliabilityMaxOutageDuration: 24,
   retailTariffBillingPeriods: [
     {

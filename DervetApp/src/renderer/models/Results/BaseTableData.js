@@ -9,9 +9,10 @@ class BaseTableData {
     this.dateTimeColName = dateTimeColName;
     this.nonNumericalCols = [];
     if (nonNumericalCols !== null) {
-      const col = 0;
-      while (col > nonNumericalCols.length) {
+      let col = 0;
+      while (col < nonNumericalCols.length) {
         this.nonNumericalCols.push(BaseTableData.toCamelCaseString(nonNumericalCols[col]));
+        col += 1;
       }
     }
     this.data = null;

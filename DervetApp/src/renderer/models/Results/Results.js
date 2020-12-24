@@ -7,7 +7,7 @@ import OutageEnergyContributionData from './OutageEnergyContributionData';
 import PeakLoadDayData from './PeakLoadDayData';
 import ProFormaData from './ProFormaData';
 import SizeData from './SizeData';
-import TimeseriesData from './TimeseriesData';
+import TimeSeriesData from './TimeSeriesData';
 
 export class ResultsData {
   constructor(id, data) {
@@ -24,13 +24,13 @@ export class ResultsData {
     this.financialCostBenefitBarChart = null;
     this.financialProformaTable = null;
     this.financialBeforeAfterBarChart = null;
-    this.dispatchSummaryMap = null;
+    this.dispatchSummaryMapData = null;
     this.dispatchStackedLineChart = null;
-    this.dispatchEnergyPriceMap = null;
+    this.dispatchEnergyPriceMapData = null;
     this.designSummaryBarChart = null;
     this.designSizeResultsTable = null;
     this.designCostsTable = null;
-    this.reliabilityOutageContributionBarChart = null;
+    this.reliabilityOutageContributionData = null;
     this.reliabilityLoadCoverageLineChart = null;
     this.deferralStackedBarChart = null;
 
@@ -97,32 +97,29 @@ export class ResultsData {
     const papaParseObject = papaParseCsvString(csvString, true);
     this.showOutageContribution = papaParseObject !== null;
     if (!this.showOutageContribution) {
-      console.log('outage contribution is null');
       return null;
     }
     const data = new OutageEnergyContributionData(papaParseObject.data);
-    console.log('outage contribution:');
-    console.log(JSON.stringify(data.data, null, 1));
     return data;
   }
   initializeDistpatch(csvString) {
     const papaParseObject = papaParseCsvString(csvString);
-    const data = new TimeseriesData(papaParseObject.data);
+    const data = new TimeSeriesData(papaParseObject.data);
     console.log('dispatch data:');
-    console.log(JSON.stringify(data.data, null, 1));
+    console.log(Object.keys(data.columnDataByYear[0]));
     return data;
   }
   createCharts() {
     // summary page charts
     this.financialSummaryBarChart = this.costBenefit.summaryData();
-    // TODO this.dispatchSummaryMap = null; this depends on dispatch data
+    this.dispatchSummaryMapData = null;
     if (this.showPeakLoadDay) {
       this.designSummaryBarChart = this.peakLoadDay.getFirstYearChartData();
     }
 
     // dispatch page charts
-    // TODO this.dispatchStackedLineChart = null; this depends on dispatch data
-    // TODO this.dispatchEnergyPriceMap = null; this depends on dispatch data
+    this.dispatchStackedLineChart = null;
+    this.dispatchEnergyPriceMapData = null;
 
     // design page charts
     this.designSizeResultsTable = this.size.createSizeTable();
@@ -137,7 +134,7 @@ export class ResultsData {
 
     // reliability charts
     if (this.showOutageContribution) {
-      this.reliabilityOutageContributionBarChart = this.outageContribution.getFirstYearChartData();
+      this.reliabilityOutageContributionData = this.outageContribution.getFirstYearChartData();
     }
     if (this.showLoadCoverageProbability) {
       this.reliabilityLoadCoverageLineChart = this.loadCoverageProbability.getFirstYearChartData();
