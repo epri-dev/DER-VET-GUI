@@ -31,6 +31,11 @@ body {
     width: 240px !important;
 }
 
+.cal-enviro-screen-img {
+    max-width: 100%;
+    height: auto;
+}
+
 .btn-quick-start {
     background-color: #ff9999 !important;
     color: white !important;

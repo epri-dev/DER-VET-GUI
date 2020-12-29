@@ -12,12 +12,11 @@
              v-model="$attrs.value"
              @input="onChange">
       </input>
-      <input
-        v-if="field.type === Number || field.type === 'float' || field.type === 'int'"
-        class="form-control valid numberbox"
-        :class="[{'is-invalid': isInvalid}, isLargeBox ? 'numberbox-lg' : 'numberbox']"
-        v-model.number="$attrs.value"
-        @input="onChange">
+      <input v-if="isNumeric(field)"
+             class="form-control valid"
+             :class="[{'is-invalid': isInvalid}, isLargeBox ? 'numberbox-lg' : 'numberbox']"
+             v-model.number="$attrs.value"
+             @input="onChange">
       </input>
       <input v-if="field.type === Date"
              type="date"
@@ -42,10 +41,12 @@
   export default {
     props: ['field', 'isInvalid', 'isLargeBox', 'errorMessage'],
     methods: {
+      isNumeric(field) {
+        return field.type === Number || field.type === 'float' || field.type === 'int';
+      },
       onChange(e) {
         let val = e.target.value;
-        if (this.field.type === Number || this.field.type === 'float'
-          || this.field.type === 'int') {
+        if (this.isNumeric(this.field)) {
           const n = parseFloat(val);
           val = Number.isNaN(n) ? val : n;
         /* // for type int, this approach was suboptimal

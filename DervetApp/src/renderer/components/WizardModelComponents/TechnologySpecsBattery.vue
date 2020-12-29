@@ -589,7 +589,6 @@
             this.resetNonRequired(['energyCapacityMaximum', 'energyCapacityMinimum']);
           }
         }
-        console.log(`shouldEnergySize ${this.shouldEnergySize}`);
         if ((this.shouldEnergySize === false) || (this.shouldPowerSize === false)) {
           this.resetNonRequired(['includeSizeLimits']);
         }

@@ -95,11 +95,8 @@ export class ResultsData {
     const papaParseObject = papaParseCsvString(csvString, true);
     this.showOutageContribution = papaParseObject !== null;
     if (!this.showOutageContribution) {
-      console.log('outage contribution is null');
       return null;
     }
-    console.log('outage contribution is not null');
-    console.log(papaParseObject);
     // TODO const data = new PeakLoadDayData(papaParseObject.data);
     // return data;
     return papaParseObject.data;
@@ -108,8 +105,6 @@ export class ResultsData {
     const papaParseObject = papaParseCsvString(csvString);
     // TODO const data = new PeakLoadDayData(papaParseObject.data);
     // return data;
-    console.log('dispatch data');
-    console.log(JSON.stringify(papaParseCsvString, null, 1));
     return papaParseObject.data;
   }
   createCharts() {

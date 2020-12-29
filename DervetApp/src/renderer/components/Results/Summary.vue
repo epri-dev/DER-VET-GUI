@@ -90,6 +90,7 @@
             </div>
           </div>
         </div>
+        <cal-enviro-screen/>
       </div>
     </form>
   </div>
@@ -99,9 +100,13 @@
   import Chart from 'chart.js';
   import Plotly from 'plotly.js';
   import { formatYAxisCurrency, formatXAxis6Hour, formatYAxis, arrayMax } from '@/util/chart';
+  import CalEnviroScreen from '@/components/CalEnviroScreen/Layout';
   import * as paths from '@/router/constants';
 
   export default {
+    components: {
+      CalEnviroScreen,
+    },
     data() {
       return {
         paths,
