@@ -218,7 +218,7 @@ export const projectFixture = {
     variableOMCosts: 0,
   }],
   technologySpecsDieselGen: [],
-  timestep: 1,
+  timestep: 60,
   type: 'Wizard',
   userEnergyMax: new UserEnergyMaxTimeSeries(_.fill(Array(8760), 9000)),
   userEnergyMin: new UserEnergyMinTimeSeries(_.fill(Array(8760), 0)),

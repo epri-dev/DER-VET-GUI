@@ -173,14 +173,20 @@ describe('modelParametersDto', () => {
     expect(actual).to.have.string('Datetime (he)');
   });
 
-  it('should generate a datetime index given a data year and timestep', () => {
-    const actualLeap = makeDatetimeIndex(2020);
-    const actualNonLeap = makeDatetimeIndex(2021);
+  it('should generate a datetime index given a data year and hourly timestep', () => {
+    const actualLeap = makeDatetimeIndex(2020, 60);
+    const actualNonLeap = makeDatetimeIndex(2021, 60);
     expect(actualLeap.length).to.equal(8784);
     expect(actualNonLeap.length).to.equal(8760);
     expect(actualLeap[0]).to.equal('1/1/2020 1:00');
     expect(actualLeap[actualLeap.length - 1]).to.equal('1/1/2021 0:00');
     expect(actualLeap[1609]).to.equal('3/8/2020 2:00'); // No daylight savings jumps
+  });
+
+  it('should generate a datetime index given a data year and 15-minute timestep', () => {
+    const actual = makeDatetimeIndex(2020, 15);
+    expect(actual[0]).to.equal('1/1/2020 0:15');
+    expect(actual[actual.length - 1]).to.equal('1/1/2021 0:00');
   });
 
   it('should make battery parameters', () => {
