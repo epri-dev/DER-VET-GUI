@@ -85,6 +85,7 @@
         this.$store.dispatch('resetProjectToDefault')
           .then(this.$store.dispatch('resetResultToDefault', this.$store.state.Project.id))
           .then(this.$store.dispatch('Application/resetApplicationToDefault', this.$store.state.Project.id))
+          .then(this.$store.dispatch('resetZipCode'))
           .then(this.$store.dispatch('loadQuickStartProject'))
           .then(this.$store.dispatch('Application/setQuickStartCompleteness'))
           .then(this.$router.push({ path: WIZARD_START_PATH }));
@@ -93,6 +94,7 @@
         this.$store.dispatch('resetProjectToDefault')
           .then(this.$store.dispatch('resetResultToDefault', this.$store.state.Project.id))
           .then(this.$store.dispatch('Application/resetApplicationToDefault', this.$store.state.Project.id))
+          .then(this.$store.dispatch('resetZipCode'))
           .then(this.$router.push({ path: WIZARD_START_PATH }));
       },
     },
