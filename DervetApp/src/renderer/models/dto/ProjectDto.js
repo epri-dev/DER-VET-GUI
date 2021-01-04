@@ -612,18 +612,17 @@ export const makeLoadShedCsv = () => {
   return objectToCsv(data, fields, headers);
 };
 
-export const makeDatetimeIndex = (dataYear) => {
-  const start = new Date(Date.UTC(dataYear, 0, 1, 1));
-  const end = new Date(Date.UTC(dataYear + 1, 0, 1, 1));
+export const makeDatetimeIndex = (dataYear, minuteTimestep) => {
+  const start = new Date(Date.UTC(dataYear, 0, 1, 0, minuteTimestep));
+  const end = new Date(Date.UTC(dataYear + 1, 0, 1, 0, minuteTimestep));
 
-  // TODO this hardcodes the timestep to 1 hour: extend to others based on input
-  const timedelta = d3.timeHour.every(1);
+  const timedelta = d3.timeMinute.every(minuteTimestep);
   const datetimeIndex = timedelta.range(start, end);
   return datetimeIndex.map(d => moment.utc(d).format('M/D/YYYY H:mm'));
 };
 
 export const makeEmptyCsvDataWithDatetimeIndex = (project) => {
-  const datetimeIndex = makeDatetimeIndex(project.dataYear);
+  const datetimeIndex = makeDatetimeIndex(project.dataYear, project.timestep);
   return datetimeIndex.map(d => ({ [TIMESERIES_DATETIME_INDEX]: d }));
 };
 
@@ -825,7 +824,7 @@ export const makeMeta = (project, inputsDirectory, resultsDirectory) => ({
 });
 
 export const makeOutputDirectoryName = (outputDirectory) => {
-  // When user does not select an output directory, use their app data as default
+  // If user does not select an output directory, default to their app data directory
   if (outputDirectory === undefined) {
     return path.join(getAppDataPath(), 'DER-VET');
   }
@@ -848,8 +847,6 @@ export const createResultsDirectory = timestampedOutputDir => (
 );
 
 export const makeDervetInputs = (project) => {
-  // TODO if outputDirectory is undefined, add flag for main process to delete
-  // timestamped directory once results are read and sent back to renderer process
   const timestampedOutputDir = createOutputDirectory(project.outputDirectory);
   const inputsDirectory = createInputsDirectory(timestampedOutputDir);
   const resultsDirectory = createResultsDirectory(timestampedOutputDir);
