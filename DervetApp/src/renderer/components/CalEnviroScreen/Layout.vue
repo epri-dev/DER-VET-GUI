@@ -25,7 +25,7 @@
       <ces-scores-table v-bind:cesScores="cesScores" />
     </div>
 
-    <div v-else-if="showNoScoresFoundMessage" class="row">
+    <div v-else-if="showErrorMessage" class="row">
       <div class="col-md-12 error-text-color">
         {{errorMessage}}
       </div>
@@ -63,8 +63,11 @@
       showCesScoresTable() {
         return this.zipCode !== null && this.cesScores.length > 0;
       },
-      showNoScoresFoundMessage() {
+      noScoresFound() {
         return this.zipCode !== null && this.cesScores.length === 0;
+      },
+      showErrorMessage() {
+        return this.errorMessage !== null;
       },
     },
     data() {
@@ -79,8 +82,10 @@
         this.zipCode = parseFloat(zipCode);
         this.$store.dispatch('setZipCode', this.zipCode)
           .then(() => {
-            if (this.showNoScoresFoundMessage) {
-              this.errorMessage = `No CES scores found for zip code ${this.zipCode}.`;
+            if (this.noScoresFound) {
+              this.errorMessage = `No scores found for zip code ${this.zipCode}.`;
+            } else {
+              this.errorMessage = null;
             }
           });
       },
@@ -89,6 +94,7 @@
         shell.openExternal('https://oehha.ca.gov/calenviroscreen/report/calenviroscreen-30');
       },
       setErrorMessage(message) {
+        this.zipCode = null;
         this.errorMessage = message;
       },
     },
