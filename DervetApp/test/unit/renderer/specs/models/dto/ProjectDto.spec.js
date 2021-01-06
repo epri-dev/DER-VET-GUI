@@ -107,7 +107,7 @@ describe('modelParametersDto', () => {
   });
 
   it('should have translated the retail ETS parameters correctly', () => {
-    expect(actualTags.RetailTimeShift).to.eql(tagFixture.RetailTimeShift);
+    expect(actualTags.retailTimeShift).to.eql(tagFixture.RetailTimeShift);
   });
 
   it('should have translated the scenario parameters correctly', () => {

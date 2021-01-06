@@ -36,8 +36,8 @@ const mutations = {
   CREATE_DISPATCH_PLOTS(state) {
     const runData = state.data;
     state.dispatchVueObjects = {
-      stackedLineChart: runData.dispatchStackedLineChart,
-      energyPriceMap: runData.dispatchEnergyPriceMap,
+      stackedLineData: runData.dispatchStackedLineChart,
+      heatMapData: runData.dispatchEnergyPriceMapData,
     };
   },
   CREATE_FINANCIAL_PLOTS(state) {
@@ -62,7 +62,7 @@ const mutations = {
     const runData = state.data;
     state.summaryVueObjects = {
       financial: runData.financialSummaryBarChart,
-      dispatch: runData.dispatchSummaryMap,
+      dispatchData: runData.dispatchSummaryMapData,
       design: runData.designSummaryBarChart,
       showReliability: runData.showLoadCoverageProbability,
       showDeferral: runData.showDeferral,

@@ -567,7 +567,7 @@ export const makeModelParameters = (project, inputsDirectory, resultsDirectory) 
     PV: makePVParameters(project),
     Reliability: makeReliabilityParameters(project, inputsDirectory),
     Results: makeResultsParameters(project, resultsDirectory),
-    RetailTimeShift: makeRetailTimeShiftParameters(project),
+    retailTimeShift: makeRetailTimeShiftParameters(project),
     Scenario: makeScenarioParameters(project, inputsDirectory),
     SR: makeSRParameters(project),
     User: makeUserParameters(project),
@@ -780,13 +780,12 @@ export const makeExpectedResultCsvs = (project) => {
       fieldName: 'loadCoverageProbability',
       fileName: 'load_coverage_prob.csv',
     });
-    // TODO: uncomment when postOptimizationOnly field added to Project
-    // if (!project.postOptimizationOnly) {
-    //   expectedResultsCsvs.push({
-    //     fieldName: 'outageContribution',
-    //     fileName: 'outage_energy_contributions.csv',
-    //   });
-    // }
+    if (!project.reliabilityPostOptimizationOnly) {
+      expectedResultsCsvs.push({
+        fieldName: 'outageContribution',
+        fileName: 'outage_energy_contributions.csv',
+      });
+    }
   }
   if (project.objectivesDeferral) {
     expectedResultsCsvs.push({
@@ -831,12 +830,10 @@ export const makeOutputDirectoryName = (outputDirectory) => {
   }
   // If user selects a directory, create a timestamped output folder
   const timestamp = dateFormat(new Date(), 'yyyymmddHHMMss');
-  console.log(`timestamp ${timestamp}`);
   return path.join(outputDirectory, `DER-VET_${timestamp}`);
 };
 
 export const createOutputDirectory = (outputDirectory) => {
-  console.log(`output dir ${outputDirectory}`);
   const timestampedOutputDir = makeOutputDirectoryName(outputDirectory);
   return createDirectory(timestampedOutputDir);
 };

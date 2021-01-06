@@ -6,87 +6,79 @@
           <div class="col-md-6">
             <h3>Results</h3>
           </div>
-        </div>
+        </div>      
         <hr>
         <div class="form-group">
           <div class="row">
             <div class="col-md-6">
               <h4 class="result-summary-title">
-                <a>
-                  Financials Summary
-                </a>
+                <a>Financials Summary</a>
               </h4>
-              <div class="form-group">
-                <div class="col-md-12">
-                  <div id="chartPlotlyCostBenefit">
-                  </div>
-                </div>
-              </div>
-              <div class="buffer-top text-center">
-                <a class="btn btn-sm btn-default">
-                  <router-link :to="paths.RESULTS_FINANCIAL_PATH">
-                    View Detailed Financials Results...
-                  </router-link>
-                </a>
-              </div>
             </div>
             <div class="col-md-6">
               <h4 class="result-summary-title">
-                <a>
-                  Dispatch Summary
-                </a>
+                <a>Dispatch Summary</a>
               </h4>
-              <div class="form-group">
-                <div class="col-md-12">
-                  <div id="chartBatteryDispatchHeatMap">
-                  </div>
-                </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div id="chartPlotlyCostBenefit">
               </div>
-              <div class="buffer-top text-center">
-                <a class="btn btn-sm btn-default">
-                  <router-link :to="paths.RESULTS_DISPATCH_PATH">
-                    View Detailed Dispatch Results...
-                  </router-link>
-                </a>
+            </div>
+            <div class="col-md-6">
+              <div id="chartBatteryDispatchHeatMap">
               </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 buffer-top text-center">
+              <a class="btn btn-sm btn-default">
+                <router-link :to="paths.RESULTS_FINANCIAL_PATH">
+                  View Detailed Financials Results...
+                </router-link>
+              </a>
+            </div>
+            <div class="col-md-6 buffer-top text-center">
+              <a class="btn btn-sm btn-default">
+                <router-link :to="paths.RESULTS_DISPATCH_PATH">
+                  View Detailed Dispatch Results...
+                </router-link>
+              </a>
             </div>
           </div>
           <div class="row">
             <div class="col-md-6" v-if="summaryData.showDesign">
               <h4 class="result-summary-title">
-                <a>
-                  Design Summary
-                </a>
+                <a>Design Summary</a>
               </h4>
-              <div class="form-group">
-                <div class="col-md-12">
-                  <canvas id="chartPeakLoadDay"
-                          class="chartjs-render-monitor"></canvas>
-                </div>
-              </div>
-              <div class="buffer-top text-center">
-                <a class="btn btn-sm btn-default">
-                  <router-link :to="paths.RESULTS_DESIGN_PATH">
-                    View Detailed Design Results...
-                  </router-link>
-                </a>
-              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <canvas id="chartPeakLoadDay"
+                      class="chartjs-render-monitor"></canvas>
             </div>
             <div class="col-md-6">
               <div class="buffer-top text-center" v-if="summaryData.showReliability">
-                <a class="btn btn-sm btn-default">
-                  <router-link :to="paths.RESULTS_RELIABILITY_PATH">
-                    View Detailed Reliability Results...
-                  </router-link>
-                </a>
+                <router-link :to="paths.RESULTS_RELIABILITY_PATH" class="btn btn-lg btn-info">
+                  View Reliability Results...
+                </router-link>
               </div>
               <div class="buffer-top text-center" v-if="summaryData.showDeferral">
-                <a class="btn btn-sm btn-default">
-                  <router-link :to="paths.RESULTS_DEFERRAL_PATH">
-                    View Detailed Deferral Results...
-                  </router-link>
-                </a>
+                <router-link :to="paths.RESULTS_DEFERRAL_PATH" class="btn btn-lg btn-info">
+                  View Deferral Results...
+                </router-link>
               </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 buffer-top text-center">
+              <a class="btn btn-sm btn-default">
+                <router-link :to="paths.RESULTS_DESIGN_PATH">
+                  View Detailed Design Results...
+                </router-link>
+              </a>
             </div>
           </div>
         </div>
@@ -159,61 +151,6 @@
           showlegend: false,
         };
         return Plotly.newPlot(ctx, data, layout);
-      },
-      createChartCostBenefit(chartId, chartData) {
-        const ctx = document.getElementById(chartId);
-        return new Chart(ctx, {
-          type: 'bar',
-          data: {
-            datasets: [
-              {
-                label: 'Cost ($)',
-                backgroundColor: '#182e44',
-                stack: 'Stack 1',
-                data: [chartData[0]],
-              },
-              {
-                label: 'Benefit ($)',
-                backgroundColor: '#618a2a',
-                stack: 'Stack 2',
-                data: [chartData[1]],
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            legend: {
-              position: 'bottom',
-            },
-            title: {
-              display: true,
-              text: 'Lifetime Present Value',
-            },
-            scales: {
-              xAxes: [
-                {
-                  stacked: true,
-                  gridLines: {
-                    display: false,
-                  },
-                },
-              ],
-              yAxes: [
-                {
-                  stacked: true,
-                  ticks: {
-                    callback: formatYAxisCurrency,
-                    beginAtZero: true,
-                  },
-                  scaleLabel: {
-                    display: true,
-                    labelString: 'Value ($)',
-                  },
-                },
-              ],
-            },
-          },
-        });
       },
       createChartPeakLoadDay(chartId, chartData) {
         const ctx = document.getElementById(chartId);
@@ -293,26 +230,9 @@
 
       createChartBatteryDispatchHeatMap(chartId) {
         const ctx = document.getElementById(chartId);
-        const xtot = 365;
-        const xstart = (new Date('2017-01-01')).getTime();
-        const xx = [];
-        const y1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
-          14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
-        const zz = [[], []];
-        const z = [-2300, 400, 1100, 2300];
-        const z1 = [];
-        for (let i = 0; i < xtot; i += 1) {
-          xx[i] = new Date(xstart + (i * 8.64e7));
-          z1[i] = z[(i % z.length)];
-        }
-        for (let j = 0; j < y1.length; j += 1) {
-          zz[j] = z1;
-        }
         const trace1 = {
           type: 'heatmap',
-          x: xx,
-          y: y1,
-          z: zz,
+          ...this.summaryData.dispatchData,
           colorscale: 'Viridis', // ''YlGnBu',
           colorbar: {
             thickness: 10,

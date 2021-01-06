@@ -191,22 +191,51 @@ export default class SizeData extends BaseTableData {
     return tableData;
   }
 
-  findEssSize() {
+  findLargestEssSize() {
     // todo write test for this
-    // assumes that there is only 1 ESS -- chooses the largest
+    // chooses the largest
     let i = 0;
     let essEnergy = 0;
     let essPower = 0;
     let essName = '';
     while (i < this.sizeTableDataRows.length) {
       const row = this.sizeTableDataRows[i];
-      if (row.energyRatingKWh !== undefined) {
-        essEnergy = Math.max(essEnergy, row.energyRatingKWh);
-        essPower = Math.max(essPower, row.dischargeRatingKW);
-        essName = row.systemName;
+      const energy = row.energyRatingKWh;
+      if (energy !== undefined) {
+        if (energy > row.energyRatingKWh) {
+          essEnergy = energy;
+          essPower = row.dischargeRatingKW;
+          essName = row.systemName;
+        }
       }
       i += 1;
     }
     return { essEnergy, essPower, essName };
+  }
+  getEssSizes() {
+    // todo write test for this
+    let i = 0;
+    const essEnergy = [];
+    const essPower = [];
+    const essName = [];
+    while (i < this.sizeTableDataRows.length) {
+      const row = this.sizeTableDataRows[i];
+      if (row.energyRatingKWh !== undefined) {
+        essEnergy.push(row.energyRatingKWh);
+        essPower.push(row.dischargeRatingKW);
+        essName.push(row.systemName);
+      }
+      i += 1;
+    }
+    return { essEnergy, essPower, essName };
+  }
+  getTotalEnergyStorageCapacity() {
+    // todo write test for this
+    const essSizes = this.getEssSizes();
+    const essEnergies = essSizes.essEnergy;
+    console.log(`energy storage capacities ${essEnergies}`);
+    const totalEnergyStorage = essEnergies.reduce((a, b) => a + b, 0);
+    console.log(`total energy storage capacity: ${totalEnergyStorage}`);
+    return totalEnergyStorage;
   }
 }
