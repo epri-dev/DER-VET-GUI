@@ -124,6 +124,10 @@ const mutations = {
     const tmpBatterySpecs = getters.getBatterySpecsClone(state)();
     const indexMatchingId = getters.getIndexOfBatteryId(state)(payload.batteryId);
     tmpBatterySpecs[indexMatchingId].batteryCycles = payload.batteryCycles;
+    tmpBatterySpecs[indexMatchingId].batteryCyclesComplete = payload.batteryCyclesComplete;
+    tmpBatterySpecs[indexMatchingId].complete
+      = tmpBatterySpecs[indexMatchingId].batterySpecsComplete && payload.batteryCyclesComplete;
+    tmpBatterySpecs[indexMatchingId].batteryCyclesErrorMsg = payload.batteryCyclesErrorMsg;
     state.technologySpecsBattery = tmpBatterySpecs;
   },
   // da page

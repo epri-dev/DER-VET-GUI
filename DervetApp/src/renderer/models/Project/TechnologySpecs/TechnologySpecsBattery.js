@@ -103,6 +103,9 @@ export default class TechnologySpecsBatteryMetadata {
         { ulimit: 1, val: 2250 },
         */
       ],
+      batteryCyclesComplete: null,
+      batteryCyclesErrorMsg: null,
+      batterySpecsComplete: null,
       complete: null,
       errorList: [],
       id: uuidv4(),

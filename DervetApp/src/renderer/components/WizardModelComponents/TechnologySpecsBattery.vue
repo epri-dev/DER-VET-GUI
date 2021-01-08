@@ -539,6 +539,12 @@
       isnewBattery() {
         return this.batteryId === 'null';
       },
+      getBatteryCyclesCompleteness() {
+        if (this.includeCycleDegradation) {
+          return (this.batteryCyclesComplete === true);
+        }
+        return true;
+      },
       getBatteryFromStore() {
         return this.$store.getters.getBatteryById(this.batteryId);
       },
@@ -558,6 +564,9 @@
             errors.push(this.getErrorMsg(key));
           }
         });
+        if (!this.getBatteryCyclesCompleteness()) {
+          errors.push(this.batteryCyclesErrorMsg);
+        }
         return errors;
       },
       validatedSave() {
@@ -611,7 +620,8 @@
         this.submitted = true;
         this.$v.$touch();
         // set complete to true or false
-        this.complete = !this.$v.$invalid;
+        this.batterySpecsComplete = !this.$v.$invalid;
+        this.complete = this.batterySpecsComplete && this.getBatteryCyclesCompleteness();
         // populate errorList for this technology
         if (this.complete !== true) {
           this.errorList = this.makeErrorList();
@@ -633,6 +643,9 @@
           active: this.active,
           auxiliaryLoad: this.auxiliaryLoad,
           batteryCycles: this.batteryCycles,
+          batteryCyclesComplete: this.batteryCyclesComplete,
+          batteryCyclesErrorMsg: this.batteryCyclesErrorMsg,
+          batterySpecsComplete: this.batterySpecsComplete,
           calendarDegradationRate: this.calendarDegradationRate,
           capitalCost: this.capitalCost,
           capitalCostPerkW: this.capitalCostPerkW,
