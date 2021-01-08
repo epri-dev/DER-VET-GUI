@@ -202,7 +202,7 @@ export default class SizeData extends BaseTableData {
       const row = this.sizeTableDataRows[i];
       const energy = row.energyRatingKWh;
       if (energy !== undefined) {
-        if (energy > row.energyRatingKWh) {
+        if (essEnergy < row.energyRatingKWh) {
           essEnergy = energy;
           essPower = row.dischargeRatingKW;
           essName = row.systemName;
