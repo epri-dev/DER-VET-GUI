@@ -6,6 +6,7 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import 'font-awesome/css/font-awesome.min.css';
+import 'vue-inner-image-zoom/lib/vue-inner-image-zoom.css';
 import './assets/site.css';
 
 import App from './App';

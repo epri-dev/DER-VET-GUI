@@ -134,7 +134,6 @@ export class ResultsData {
     // reliability charts
     if (this.showOutageContribution) {
       this.reliabilityOutageContributionData = this.outageContribution.getFirstYearChartData();
-      // this.reliabilityOutageContributionData = this.outageContribution;
     }
     if (this.showLoadCoverageProbability) {
       this.reliabilityLoadCoverageLineChart = this.loadCoverageProbability.getFirstYearChartData();

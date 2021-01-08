@@ -274,8 +274,6 @@
       runDervet() {
         // TODO: note that there is currently no validation, so calling this with an
         // incomplete Project object will likely result in an unhandled exception
-        console.log('Running DER-VET');
-        console.log(this.$store.state.Project);
         this.$store.dispatch('Application/runDervet', this.$store.state.Project)
           .then(this.$router.push({ path: RUN_ANALYSIS_PATH }));
       },
