@@ -10,7 +10,6 @@ export default class TimeSeriesData extends BaseTableData {
     const heatMapLabels = [];
     let i = 0;
     while (i < axis.length) {
-      console.log(axis[i]);
       const label = TimeSeriesData.getFullDate(axis[i]);
       heatMapLabels.push(label);
       i += 24;

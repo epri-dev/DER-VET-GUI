@@ -1,6 +1,7 @@
 import { cloneDeep, flatten, merge } from 'lodash';
 
-import { billReductionProject } from '@/assets/cases/billReduction/project';
+// import { billReductionProject } from '@/assets/cases/billReduction/project';
+import { reliabilityProject } from '@/assets/cases/reliability/project';
 import { projectMetadata } from '@/models/Project/Project';
 
 const metadataDefaultValues = projectMetadata.getDefaultValues();
@@ -473,7 +474,7 @@ const actions = {
     // TODO load actual quickStartProject;
     const defaultProject = getDefaultState();
     return new Promise((resolve) => {
-      commit('LOAD_QUICK_START_PROJECT', merge(defaultProject, billReductionProject));
+      commit('LOAD_QUICK_START_PROJECT', merge(defaultProject, reliabilityProject));
       resolve();
     });
   },

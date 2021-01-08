@@ -440,7 +440,7 @@ export const makeReliabilityParameters = (project, inputsDirectory) => {
     const keys = {
       max_outage_duration: makeBaseKey(project.reliabilityMaxOutageDuration, INT),
       'n-2': makeBaseKey(ZERO, BOOL), // hardcoded
-      post_facto_initial_soc: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
+      post_facto_initial_soc: makeBaseKey(100, FLOAT), // TODO new, verify value
       post_facto_only: makeBaseKey(convertToOneZero(project.reliabilityPostOptimizationOnly), BOOL),
       target: makeBaseKey(project.reliabilityTarget, FLOAT),
       load_shed_percentage: makeBaseKey(convertToOneZero(false), BOOL), // hardcoded
@@ -850,7 +850,6 @@ export const makeDervetInputs = (project) => {
   // TODO if outputDirectory is undefined, add flag for main process to delete
   // timestamped directory once results are read and sent back to renderer process
   const timestampedOutputDir = createOutputDirectory(project.outputDirectory);
-  console.log(`timstamped output dir ${timestampedOutputDir}`);
   const inputsDirectory = createInputsDirectory(timestampedOutputDir);
   const resultsDirectory = createResultsDirectory(timestampedOutputDir);
   return {

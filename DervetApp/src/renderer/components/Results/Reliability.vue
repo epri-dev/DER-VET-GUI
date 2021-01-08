@@ -10,7 +10,6 @@
         <hr>
         <div v-if="chartData.showOutageContribution" class="form-group">
           <div class="col-md-12">
-            <p>Hard Coded Data</p>
             <div id="chartOutageContribution">
             </div>
           </div>
@@ -59,7 +58,7 @@
           return '#e2d06b';
         } else if (tech === 'ess') {
           return '#a2c7db';
-        } else if (tech === 'ice') {
+        } else if (tech === 'genSet') {
           return '#99999';
         }
         return '#666666';
@@ -67,51 +66,53 @@
 
       createChartOutageContribution(chartId) {
         const ctx = document.getElementById(chartId);
-        const xtot = 8760;
-        const xstart = (new Date('2017-01-01')).getTime();
-        const xx = [];
-        for (let i = 0; i < xtot; i += 1) {
-          xx[i] = new Date(xstart + (i * 36e5));
+        const rawData = this.chartData.outageContribution;
+        const xx = rawData.startDatetimeHb;
+        const data = [];
+
+        const pvData = rawData.pVOutageContributionKWh;
+        if (!(pvData === undefined)) {
+          const pvTrace = {
+            x: xx,
+            y: pvData,
+            type: 'bar',
+            name: 'PV Outage Contribution',
+            hovertemplate: '%{y:,.0f} kWh',
+            marker: {
+              color: this.getColorFromTechnology('pv'),
+            },
+          };
+          data.push(pvTrace);
+        }
+        const essData = rawData.storageOutageContributionKWh;
+        if (!(essData === undefined)) {
+          const essTrace = {
+            x: xx,
+            y: rawData.storageOutageContributionKWh,
+            type: 'bar',
+            name: 'ESS Outage Contribution',
+            hovertemplate: '%{y:,.0f} kWh',
+            marker: {
+              color: this.getColorFromTechnology('ess'),
+            },
+          };
+          data.push(essTrace);
+        }
+        const genSetData = rawData.generatorSetOutageContributionKWh;
+        if (!(genSetData === undefined)) {
+          const genSetTrace = {
+            x: xx,
+            y: rawData.generatorSetOutageContributionKWh,
+            type: 'bar',
+            name: 'Generator Set Outage Contribution',
+            hovertemplate: '%{y:,.0f} kWh',
+            marker: {
+              color: this.getColorFromTechnology('genSet'),
+            },
+          };
+          data.push(genSetTrace);
         }
 
-        const yyPV = [];
-        const yPV = [0, 0, 0, 0,
-          15, 78.889, 440, 862, 1315, 1764, 1907,
-          1874, 1508, 1012, 508, 119, 16,
-          0, 0, 0, 0, 0, 0, 0];
-        for (let i = 0; i < xtot; i += 1) {
-          yyPV[i] = yPV[(i % yPV.length)];
-        }
-        const pv = {
-          x: xx,
-          y: yyPV,
-          type: 'bar',
-          name: 'PV Outage Contribution',
-          hovertemplate: '%{y:,.0f} kWh',
-          marker: {
-            color: this.getColorFromTechnology('pv'),
-          },
-        };
-
-        const yyESS = [];
-        const yESS = [5341, 5360, 5157, 5312, 5411, 5328, 5295, 5030,
-          4733, 4550, 4362, 4087, 4157, 4358, 4678, 5215, 5518, 5593,
-          5623.36545, 5711, 5747, 5607, 5450, 5152];
-        for (let i = 0; i < xtot; i += 1) {
-          yyESS[i] = yESS[(i % yESS.length)];
-        }
-        const ess = {
-          x: xx,
-          y: yyESS,
-          type: 'bar',
-          name: 'ESS Outage Contribution',
-          hovertemplate: '%{y:,.0f} kWh',
-          marker: {
-            color: this.getColorFromTechnology('ess'),
-          },
-        };
-
-        const data = [pv, ess];
         const selectorOptions = {
           buttons: [
             {

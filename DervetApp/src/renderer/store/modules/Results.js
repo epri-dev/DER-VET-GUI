@@ -51,9 +51,10 @@ const mutations = {
   },
   CREATE_RELIABILITY_PLOTS(state) {
     const runData = state.data;
+    console.log(JSON.stringify(runData.reliabilityOutageContributionData, null, 1));
     state.reliabilityVueObjects = {
       loadCoverageProbability: runData.reliabilityLoadCoverageLineChart,
-      outageContribution: runData.reliabilityOutageContributionBarChart,
+      outageContribution: runData.reliabilityOutageContributionData,
       showLoadCoverageProbability: runData.showLoadCoverageProbability,
       showOutageContribution: runData.showOutageContribution,
     };

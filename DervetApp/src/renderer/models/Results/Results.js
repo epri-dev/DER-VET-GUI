@@ -94,7 +94,7 @@ export class ResultsData {
     return new LoadCoverageProbabilityData(papaParsedObject.data);
   }
   initializeOutageContribution(csvString) {
-    const papaParsedObject = papaParseCsvString(csvString, true);
+    const papaParsedObject = papaParseCsvString(csvString);
     this.showOutageContribution = papaParsedObject !== null;
     if (!this.showOutageContribution) {
       return null;
@@ -105,8 +105,6 @@ export class ResultsData {
   initializeDistpatch(csvString) {
     const papaParsedObject = papaParseCsvString(csvString);
     const data = new TimeSeriesData(papaParsedObject.data);
-    console.log('dispatch data:');
-    console.log(Object.keys(data.columnDataByYear[0]));
     return data;
   }
   createCharts() {
@@ -136,6 +134,7 @@ export class ResultsData {
     // reliability charts
     if (this.showOutageContribution) {
       this.reliabilityOutageContributionData = this.outageContribution.getFirstYearChartData();
+      // this.reliabilityOutageContributionData = this.outageContribution;
     }
     if (this.showLoadCoverageProbability) {
       this.reliabilityLoadCoverageLineChart = this.loadCoverageProbability.getFirstYearChartData();
