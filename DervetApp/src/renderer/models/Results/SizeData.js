@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import BaseTableData from './BaseTableData';
 
 export default class SizeData extends BaseTableData {
@@ -194,12 +195,10 @@ export default class SizeData extends BaseTableData {
   findLargestEssSize() {
     // todo write test for this
     // chooses the largest
-    let i = 0;
     let essEnergy = 0;
     let essPower = 0;
     let essName = '';
-    while (i < this.sizeTableDataRows.length) {
-      const row = this.sizeTableDataRows[i];
+    _.forEach(this.sizeTableDataRows, (row) => {
       const energy = row.energyRatingKWh;
       if (energy !== undefined) {
         if (essEnergy < row.energyRatingKWh) {
@@ -208,8 +207,7 @@ export default class SizeData extends BaseTableData {
           essName = row.systemName;
         }
       }
-      i += 1;
-    }
+    });
     return { essEnergy, essPower, essName };
   }
   getEssSizes() {

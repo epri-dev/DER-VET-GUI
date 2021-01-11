@@ -1,4 +1,6 @@
+// import _ from 'lodash';
 import BaseTableData from './BaseTableData';
+
 
 export default class TimeSeriesData extends BaseTableData {
   constructor(data) {
@@ -72,6 +74,8 @@ export default class TimeSeriesData extends BaseTableData {
     return 0;
   }
   static listToMap(list) {
+    // const data = _.fill(Array(24), []);
+    // console.log(data);
     const data = [[], [], [], [], [], [], [], [], [], [], [], [],
       [], [], [], [], [], [], [], [], [], [], [], []];
     let i = 0;

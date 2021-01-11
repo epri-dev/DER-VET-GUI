@@ -71,7 +71,7 @@
         const data = [];
 
         const pvData = rawData.pVOutageContributionKWh;
-        if (!(pvData === undefined)) {
+        if (pvData !== undefined) {
           const pvTrace = {
             x: xx,
             y: pvData,
@@ -85,7 +85,7 @@
           data.push(pvTrace);
         }
         const essData = rawData.storageOutageContributionKWh;
-        if (!(essData === undefined)) {
+        if (essData !== undefined) {
           const essTrace = {
             x: xx,
             y: rawData.storageOutageContributionKWh,
@@ -99,7 +99,7 @@
           data.push(essTrace);
         }
         const genSetData = rawData.generatorSetOutageContributionKWh;
-        if (!(genSetData === undefined)) {
+        if (genSetData !== undefined) {
           const genSetTrace = {
             x: xx,
             y: rawData.generatorSetOutageContributionKWh,
