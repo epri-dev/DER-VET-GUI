@@ -9,7 +9,7 @@ import {
 } from '@/models/Project/TechnologySpecs/sharedConstants';
 
 
-// const ICE = 'ICE';
+const CHP = 'CHP';
 
 const DYNAMIC_FIELDS = [
   ...SHARED_DYNAMIC_FIELDS,
@@ -33,8 +33,8 @@ export default class TechnologySpecsHomeEVMetadata {
       complete: null,
       errorList: [],
       id: uuidv4(),
-      // tag: ICE,
-      // technologyType: 'Generator',
+      tag: CHP,
+      technologyType: 'Generator',
       ...this.operateOnDynamicFields(f => f.defaultValue),
     };
   }
