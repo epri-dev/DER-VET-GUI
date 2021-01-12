@@ -4,13 +4,6 @@ import { proFormaTableData, proFormaTableFields, proFormaArrayData } from '../..
 
 describe('ProFormaData model', () => {
   const actualData = new ProFormaData(proFormaArrayData);
-  it('should convert the string to camel case', () => {
-    const testString = 'Solar PV Fixed O&M Cost ($)';
-    const expected = 'solarPVFixedOMCost';
-    const actual = ProFormaData.toCamelCaseString(testString);
-    expect(actual).to.eql(expected);
-  });
-
   it('should load data and column headers', () => {
     const expectedDataArr = [
       ['CAPEX YEAR', -6711650, -1660000, 0, 0, 0, 0, 0],

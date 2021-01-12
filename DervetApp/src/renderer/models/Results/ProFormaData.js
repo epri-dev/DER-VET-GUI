@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { formatYAxisCurrency } from '@/util/chart';
 import BaseTableData from './BaseTableData';
 
@@ -9,9 +10,7 @@ export default class ProFormaData extends BaseTableData {
     // create fields
     const dataColumns = [];
     const keys = [];
-    let i = 0;
-    while (i < this.columnHeaders.length) {
-      const colString = this.columnHeaders[i];
+    _.forEach(this.columnHeaders, (colString) => {
       if (colString !== null) {
         const camelCol = BaseTableData.toCamelCaseString(colString);
         keys.push(camelCol);
@@ -23,18 +22,15 @@ export default class ProFormaData extends BaseTableData {
         };
         dataColumns.push(fieldTemplate);
       }
-      i += 1;
-    }
+    });
     // create data
     const rows = [];
-    i = 0; // reset index
-    while (i < this.data.length) {
-      const rawData = this.data[i];
-      if (!BaseTableData.isRowNull(rawData)) {
+    _.forEach(this.data, (rowData) => {
+      if (!BaseTableData.isRowNull(rowData)) {
         const rowTamplate = {};
         let nameIndex = 0;
         while (nameIndex < dataColumns.length) {
-          const value = rawData[nameIndex];
+          const value = rowData[nameIndex];
           if (value !== 0) {
             rowTamplate[keys[nameIndex]] = value;
           }
@@ -42,8 +38,7 @@ export default class ProFormaData extends BaseTableData {
         }
         rows.push(rowTamplate);
       }
-      i += 1;
-    }
+    });
     return {
       data: rows,
       fields: dataColumns,

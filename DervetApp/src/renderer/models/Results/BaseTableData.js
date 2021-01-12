@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 class BaseTableData {
   constructor(
     fileName, rawArrayData, hasHeaderRow = false, columnifyData = false, dateTimeColName = null,
@@ -6,14 +8,12 @@ class BaseTableData {
     this.fileName = fileName;
     this.hasHeaderRow = hasHeaderRow;
     this.columnifyData = columnifyData;
-    this.dateTimeColName = dateTimeColName;
+    this.dateTimeColName = dateTimeColName; // exclude from "columnifyDataByYear"
     this.nonNumericalCols = [];
     if (nonNumericalCols !== null) {
-      let col = 0;
-      while (col < nonNumericalCols.length) {
-        this.nonNumericalCols.push(BaseTableData.toCamelCaseString(nonNumericalCols[col]));
-        col += 1;
-      }
+      _.forEach(nonNumericalCols, (col) => {
+        this.nonNumericalCols.push(BaseTableData.toCamelCaseString(col));
+      });
     }
     this.data = null;
     this.columnHeaders = null;
@@ -21,30 +21,10 @@ class BaseTableData {
     this.loadDataFromFile(rawArrayData);
   }
   getColumnIndex(colHeader) {
-    let i = 0;
-    let column = this.columnHeaders[i];
-    while ((column === null) || (column !== colHeader)) {
-      if ((i + 1) === this.columnHeaders.length) {
-        i = -1;
-        break;
-      }
-      i += 1;
-      column = this.columnHeaders[i];
-    }
-    return i;
+    return _.findIndex(this.columnHeaders, item => (item === colHeader));
   }
   getColumnIndexThatContains(text) {
-    let i = 0;
-    let column = this.columnHeaders[i];
-    while ((column === null) || (column.toLowerCase().indexOf(text) === -1)) {
-      if ((i + 1) === this.columnHeaders.length) {
-        i = -1;
-        break;
-      }
-      i += 1;
-      column = this.columnHeaders[i];
-    }
-    return i;
+    return _.findIndex(this.columnHeaders, item => (item.toLowerCase().indexOf(text) !== -1));
   }
   getDataValueByColHeader(rowIndex, colHeader) {
     const colIndex = this.getColumnIndex(colHeader);
@@ -68,15 +48,12 @@ class BaseTableData {
     // creates an object where the keys are CamelCased column headers
     // and the values are empty lists
     const template = {};
-    let colNum = 0;
-    while (colNum < this.columnHeaders.length) {
-      const currentHeader = this.columnHeaders[colNum];
-      if ((currentHeader !== this.dateTimeColName) && (currentHeader !== null)) {
-        const key = BaseTableData.toCamelCaseString(this.columnHeaders[colNum]);
+    _.forEach(this.columnHeaders, (header) => {
+      if ((header !== this.dateTimeColName) && (header !== null)) {
+        const key = BaseTableData.toCamelCaseString(header);
         template[key] = [];
       }
-      colNum += 1;
-    }
+    });
     return template;
   }
   static getYearFromString(text) {
@@ -108,10 +85,9 @@ class BaseTableData {
       // save year of data
       currentData.year = currentYear;
     }
+    const calculatedIndexOfDateTime = this.indexOfDateTime();
     // iterate over all rows
-    let rowNum = 0;
-    while (rowNum < this.data.length) {
-      const rowData = this.data[rowNum];
+    _.forEach(this.data, (rowData) => {
       if (!BaseTableData.isRowNull(rowData)) {
         if (this.hasDateTimeColumn()) {
           // check if year has changed
@@ -126,10 +102,10 @@ class BaseTableData {
           }
           // FALSE --> continue iteration
         }
-        // iterate over all columns
+        // iterate over all columns (expect datetime column)
         let colNum = 0;
         while (colNum < this.columnHeaders.length) {
-          if (colNum !== this.indexOfDateTime()) {
+          if (colNum !== calculatedIndexOfDateTime) {
             const key = BaseTableData.toCamelCaseString(this.columnHeaders[colNum]);
             let value = null;
             if (this.nonNumericalCols.indexOf(key) >= 0) {
@@ -143,8 +119,7 @@ class BaseTableData {
           colNum += 1;
         }
       }
-      rowNum += 1;
-    }
+    });
     // append last year of data (bc loop breaks before it appends)
     dataByYear.push(currentData);
     return dataByYear;

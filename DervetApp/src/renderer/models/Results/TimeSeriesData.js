@@ -1,4 +1,4 @@
-// import _ from 'lodash';
+import _ from 'lodash';
 import BaseTableData from './BaseTableData';
 
 
@@ -26,11 +26,7 @@ export default class TimeSeriesData extends BaseTableData {
     const z = TimeSeriesData.listToMap(this.energyPriceTimeSeriesData(yearIndex));
     const x = this.heatMapLabels;
     const y = Array.from({ length: 24 }, (_, i) => i); // hour begining
-    return {
-      x,
-      y,
-      z,
-    };
+    return { x, y, z };
   }
   energyStorageDispatchTimeSeriesData(yearIndex) {
     const tsData = this.columnDataByYear[yearIndex];
@@ -40,11 +36,7 @@ export default class TimeSeriesData extends BaseTableData {
     const z = TimeSeriesData.listToMap(this.energyStorageDispatchTimeSeriesData(yearIndex));
     const x = this.heatMapLabels;
     const y = Array.from({ length: 24 }, (_, i) => i); // hour begining
-    return {
-      x,
-      y,
-      z,
-    };
+    return { x, y, z };
   }
   dispatchData(yearIndex, totalEnergyStorageCap) {
     const tsData = this.columnDataByYear[yearIndex];
@@ -78,16 +70,15 @@ export default class TimeSeriesData extends BaseTableData {
     // console.log(data);
     const data = [[], [], [], [], [], [], [], [], [], [], [], [],
       [], [], [], [], [], [], [], [], [], [], [], []];
-    let i = 0;
     let hourOfDay = 0;
-    while (i < list.length) {
+    _.forEach(list, (item) => {
       if (hourOfDay === 24) {
         hourOfDay = 0;
       }
-      data[hourOfDay].push(list[i]);
+      data[hourOfDay].push(item);
       hourOfDay += 1;
-      i += 1;
-    }
+    });
+
     return data;
   }
 }

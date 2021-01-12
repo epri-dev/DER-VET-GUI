@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import tinycolor from 'tinycolor2';
 import BaseTableData from './BaseTableData';
 
@@ -27,10 +28,8 @@ export default class CostBenefitData extends BaseTableData {
   }
   createBarChartTraces() {
     const traces = [];
-    let rowNum = 0;
     const traceX = [this.columnHeaders[1], this.columnHeaders[2]];
-    while (rowNum < this.data.length) {
-      const rowData = this.data[rowNum];
+    _.forEach(this.data, (rowData) => {
       if (!BaseTableData.isRowNull(rowData)) {
         const valueStream = rowData[0];
         if (valueStream !== 'Lifetime Present Value') {
@@ -56,8 +55,7 @@ export default class CostBenefitData extends BaseTableData {
           traces.push(traceTemplate);
         }
       }
-      rowNum += 1;
-    }
+    });
     return traces;
   }
 }

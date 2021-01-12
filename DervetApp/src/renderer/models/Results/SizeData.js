@@ -13,10 +13,8 @@ export default class SizeData extends BaseTableData {
   }
 
   createDataObject() {
-    let rowNum = 0;
     const rowDataObjects = [];
-    while (rowNum < this.data.length) {
-      const rawData = this.data[rowNum];
+    _.forEach(this.data, (rawData) => {
       if (!BaseTableData.isRowNull(rawData)) {
         const rowTemplate = {
           systemName: rawData[0],
@@ -37,8 +35,7 @@ export default class SizeData extends BaseTableData {
         }
         rowDataObjects.push(rowTemplate);
       }
-      rowNum += 1;
-    }
+    });
     return rowDataObjects;
   }
 
@@ -58,9 +55,8 @@ export default class SizeData extends BaseTableData {
       label: 'System Name',
     }];
     // power columns
-    let i = 0;
-    while (i < this.powerCols.length) {
-      const colIndex = this.getColumnIndexThatContains(this.powerCols[i]);
+    _.forEach(this.powerCols, (powerColName) => {
+      const colIndex = this.getColumnIndexThatContains(powerColName);
       if (colIndex !== -1) {
         // then the power column exists
         const label = this.columnHeaders[colIndex];
@@ -71,12 +67,10 @@ export default class SizeData extends BaseTableData {
         });
         this.numPowerCols += 1;
       }
-      i += 1;
-    }
+    });
     // energy columns
-    i = 0;
-    while (i < this.energyCols.length) {
-      const colIndex = this.getColumnIndexThatContains(this.energyCols[i]);
+    _.forEach(this.energyCols, (energyColName) => {
+      const colIndex = this.getColumnIndexThatContains(energyColName);
       if (colIndex !== -1) {
         // then the energy column exists
         const label = this.columnHeaders[colIndex];
@@ -87,8 +81,7 @@ export default class SizeData extends BaseTableData {
         });
         this.numEnergyCols += 1;
       }
-      i += 1;
-    }
+    });
     // quantity column
     dataColumnsFeilds.push({
       key: BaseTableData.toCamelCaseString('Quantity'),
@@ -231,9 +224,7 @@ export default class SizeData extends BaseTableData {
     // todo write test for this
     const essSizes = this.getEssSizes();
     const essEnergies = essSizes.essEnergy;
-    console.log(`energy storage capacities ${essEnergies}`);
     const totalEnergyStorage = essEnergies.reduce((a, b) => a + b, 0);
-    console.log(`total energy storage capacity: ${totalEnergyStorage}`);
     return totalEnergyStorage;
   }
 }
