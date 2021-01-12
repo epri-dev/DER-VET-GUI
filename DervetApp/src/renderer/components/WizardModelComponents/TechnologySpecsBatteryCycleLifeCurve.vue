@@ -63,14 +63,14 @@
 
 <script>
   import { cloneDeep } from 'lodash';
-  import { WIZARD_COMPONENT_PATH, TECH_SPECS_BATTERY_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT_PATH, TECH_SPECS_BATTERY_DATA_CYCLES_PATH } from '@/router/constants';
   import SaveButtons from '@/components/Shared/SaveButtons';
 
   export default {
     components: { SaveButtons },
     props: {
       batteryId: String,
-      batteryCycles: Array,
+      // batteryCycles: Array,
     },
     computed: {
       complete() {
@@ -79,7 +79,9 @@
       loadingMessage() {
         const battery = this.$store.getters.getBatteryById(this.batteryId);
         if (battery) {
-          this.callThis(cloneDeep(battery).batteryCycles);
+          if (battery.additionalData[0]) {
+            this.callThis(cloneDeep(battery).additionalData[0].dataRows);
+          }
           return '';
         }
         return 'Loading...';
@@ -94,7 +96,7 @@
         ],
         items: [],
         WIZARD_COMPONENT_PATH,
-        TECH_SPECS_BATTERY_PATH,
+        TECH_SPECS_BATTERY_DATA_CYCLES_PATH,
       };
     },
     methods: {
@@ -143,13 +145,17 @@
       save() {
         const payload = this.makeSavePayload();
         this.$store.dispatch('addBatteryCyclesToTechnologySpecsBattery', payload);
+        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
       makeSavePayload() {
         return {
           batteryId: this.batteryId,
-          batteryCycles: this.items,
-          batteryCyclesComplete: this.complete,
-          batteryCyclesErrorMsg: this.getSingleErrorMsg(),
+          batteryCycles: {
+            complete: this.complete,
+            dataRows: this.items,
+            displayName: 'Battery Cycle Life Curve',
+            errorList: [this.getSingleErrorMsg()],
+          },
         };
       },
     },

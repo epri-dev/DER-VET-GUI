@@ -87,8 +87,17 @@ export default class TechnologySpecsBatteryMetadata {
   getDefaultValues() {
     return {
       active: true,
+      additionalData: [{
+        // batteryCycles: {
+        complete: false,
+        dataRows: [],
+        displayName: 'Battery Cycle Life Curve',
+        errorList: ['Not Started'],
+        // },
+      }],
+      additionalDataComplete: null,
+      /*
       batteryCycles: [
-        /*
         { ulimit: 0.05, val: 75000 },
         { ulimit: 0.1, val: 40500 },
         { ulimit: 0.15, val: 27000 },
@@ -101,14 +110,12 @@ export default class TechnologySpecsBatteryMetadata {
         { ulimit: 0.8, val: 2813 },
         { ulimit: 0.9, val: 2475 },
         { ulimit: 1, val: 2250 },
-        */
       ],
-      batteryCyclesComplete: null,
-      batteryCyclesErrorMsg: null,
-      batterySpecsComplete: null,
+      */
       complete: null,
       errorList: [],
       id: uuidv4(),
+      specsComplete: null,
       tag: Battery,
       technologyType: 'Energy Storage System',
       ...this.operateOnDynamicFields(f => f.defaultValue),

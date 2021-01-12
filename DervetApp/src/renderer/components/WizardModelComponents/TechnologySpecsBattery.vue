@@ -539,9 +539,13 @@
       isnewBattery() {
         return this.batteryId === 'null';
       },
-      getBatteryCyclesCompleteness() {
+      getAdditionalDataCompleteness() {
+        // loop through additionalData array and check complete param
         if (this.includeCycleDegradation) {
-          return (this.batteryCyclesComplete === true);
+          if (this.additionalData[0]) {
+            return this.additionalData[0].complete;
+          }
+          return false;
         }
         return true;
       },
@@ -564,9 +568,6 @@
             errors.push(this.getErrorMsg(key));
           }
         });
-        if (!this.getBatteryCyclesCompleteness()) {
-          errors.push(this.batteryCyclesErrorMsg);
-        }
         return errors;
       },
       validatedSave() {
@@ -610,7 +611,7 @@
         if (this.includeAuxiliaryLoad === false) {
           this.resetNonRequired(['auxiliaryLoad']);
         }
-        // shared inputs: reset all non-requred inputs to default
+        // shared inputs: reset all non-required inputs to default
         if (this.isReplaceable === false) {
           this.resetNonRequired(['replacementCost', 'replacementCostPerkW', 'replacementCostPerkWh', 'replacementConstructionTime']);
         }
@@ -620,8 +621,9 @@
         this.submitted = true;
         this.$v.$touch();
         // set complete to true or false
-        this.batterySpecsComplete = !this.$v.$invalid;
-        this.complete = this.batterySpecsComplete && this.getBatteryCyclesCompleteness();
+        this.specsComplete = !this.$v.$invalid;
+        this.additionalDataComplete = this.getAdditionalDataCompleteness();
+        this.complete = this.specsComplete && this.additionalDataComplete;
         // populate errorList for this technology
         if (this.complete !== true) {
           this.errorList = this.makeErrorList();
@@ -641,11 +643,10 @@
       buildBattery() {
         return {
           active: this.active,
+          additionalData: this.additionalData,
+          additionalDataComplete: this.additionalDataComplete,
           auxiliaryLoad: this.auxiliaryLoad,
-          batteryCycles: this.batteryCycles,
-          batteryCyclesComplete: this.batteryCyclesComplete,
-          batteryCyclesErrorMsg: this.batteryCyclesErrorMsg,
-          batterySpecsComplete: this.batterySpecsComplete,
+          // batteryCycles: this.batteryCycles,
           calendarDegradationRate: this.calendarDegradationRate,
           capitalCost: this.capitalCost,
           capitalCostPerkW: this.capitalCostPerkW,
@@ -692,6 +693,7 @@
           shouldLimitDailyCycling: this.shouldLimitDailyCycling,
           shouldMaxDuration: this.shouldMaxDuration,
           shouldPowerSize: this.shouldPowerSize,
+          specsComplete: this.specsComplete,
           stateOfHealth: this.stateOfHealth,
           tag: this.tag,
           targetSOC: this.targetSOC,

@@ -6,21 +6,22 @@
 
         <div v-if="overviewErrorExists()" class="incomplete">
           <h4>Errors in Project Overview</h4>
-            <div v-for="overviewItem in overviewAll()">
-              <div v-if="!overviewItem.complete">
-                <li>
-                  <router-link class="text-decoration-none"
-                              :to=overviewItem.path>
-                    {{ overviewItem.name }}
-                  </router-link>
-                  <ul>
-                    <li v-for="error in overviewItem.errors">
-                      <span v-html="error"></span>
-                    </li>
-                  </ul>
-                </li>
-              </div>
+          <div v-for="overviewItem in overviewAll()">
+            <div v-if="!overviewItem.complete">
+              <li>
+                <router-link
+                  class="text-decoration-none"
+                  :to=overviewItem.path>
+                  {{ overviewItem.name }}
+                </router-link>
+                <ul>
+                  <li v-for="error in overviewItem.errors">
+                    <span v-html="error"></span>
+                  </li>
+                </ul>
+              </li>
             </div>
+          </div>
         </div>
 
         <div v-if="componentTechErrorExists()" class="incomplete">
@@ -28,14 +29,35 @@
           <div v-for="tech in techAll()">
             <div v-if="tech.complete !== true">
               <li>
-                <router-link class="text-decoration-none"
-                             :to="getTechPath(tech)">
+                <router-link
+                  class="text-decoration-none"
+                  :to="getTechPath(tech)">
                   {{ tech.technologyType + ': ' + tech.tag + getTechDisplayName(tech) }}
                 </router-link>
                 <ul>
                   <li v-for="error in tech.errorList">
                     <span v-html="error"></span>
                   </li>
+
+                  <div v-if="tech.additionalDataComplete === false">
+                    <div v-for="additionalData in tech.additionalData">
+                      <div v-if="!additionalData.complete">
+                        <li>
+                          <router-link
+                            class="text-decoration-none"
+                            :to="getTechAdditionalDataPath(tech)">
+                            {{ additionalData.displayName + getTechDisplayName(tech) }}
+                          </router-link>
+                          <ul>
+                            <li v-for="dataError in additionalData.errorList">
+                              <span v-html="dataError"></span>
+                            </li>
+                          </ul>
+                        </li>
+                      </div>
+                    </div>
+                  </div>
+
                 </ul>
               </li>
             </div>
@@ -369,6 +391,17 @@
           }
         });
         return errorsTF;
+      },
+      getTechAdditionalDataPath(tech) {
+        const techTag = tech.tag;
+        const techID = tech.id;
+        let dataPath = '';
+        if (techTag === 'PV') {
+          dataPath = paths.TECH_SPECS_PV_DATA_GENERATION_PATH;
+        } else if (techTag === 'Battery') {
+          dataPath = paths.TECH_SPECS_BATTERY_DATA_CYCLES_PATH;
+        }
+        return `${dataPath}/${techID}`;
       },
       getTechPath(tech) {
         const techTag = tech.tag;

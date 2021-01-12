@@ -123,11 +123,10 @@ const mutations = {
   ADD_BATTERY_CYCLES_TO_TECHNOLOGY_SPECS_BATTERY(state, payload) {
     const tmpBatterySpecs = getters.getBatterySpecsClone(state)();
     const indexMatchingId = getters.getIndexOfBatteryId(state)(payload.batteryId);
-    tmpBatterySpecs[indexMatchingId].batteryCycles = payload.batteryCycles;
-    tmpBatterySpecs[indexMatchingId].batteryCyclesComplete = payload.batteryCyclesComplete;
+    tmpBatterySpecs[indexMatchingId].additionalDataComplete = payload.batteryCycles.complete;
     tmpBatterySpecs[indexMatchingId].complete
-      = tmpBatterySpecs[indexMatchingId].batterySpecsComplete && payload.batteryCyclesComplete;
-    tmpBatterySpecs[indexMatchingId].batteryCyclesErrorMsg = payload.batteryCyclesErrorMsg;
+      = payload.batteryCycles.complete && tmpBatterySpecs[indexMatchingId].specsComplete;
+    tmpBatterySpecs[indexMatchingId].additionalData[0] = payload.batteryCycles;
     state.technologySpecsBattery = tmpBatterySpecs;
   },
   // da page
