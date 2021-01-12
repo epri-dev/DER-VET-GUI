@@ -2,9 +2,9 @@ import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
 import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
 import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
 
-import { pvGen, criticalLoad, siteLoad } from '@/assets/cases/billReduction/csvs';
+import { pvGen, criticalLoad, siteLoad } from '@/assets/cases/reliability/csvs';
 
-export const billReductionCompleteness = {
+export const reliabilityCompleteness = {
   overview: {
     start: true,
     objectives: true,
@@ -24,7 +24,7 @@ export const billReductionCompleteness = {
 };
 
 // TODO turn this into a function
-export const billReductionProject = {
+export const reliabilityProject = {
   analysisHorizon: 20,
   analysisHorizonMode: '1',
   criticalLoad: new CriticalLoadTimeSeries(criticalLoad),
@@ -34,7 +34,7 @@ export const billReductionProject = {
   financeFederalTaxRate: 0,
   gridLocation: 'Customer',
   financeInflationRate: 2.2,
-  name: 'Economic BTM DER Sizing - Use Case 1',
+  name: 'Reliability BTM DER Sizing - Usecase2',
   listOfActiveServices: ['Reliability', 'Retail Demand Charge Reduction'],
   objectivesBackupPower: false,
   objectivesDA: false,
@@ -53,8 +53,8 @@ export const billReductionProject = {
   maxExport: 10000000000,
   ownership: 'Customer',
   financePropertyTaxRate: 0,
-  reliabilityTarget: 1,
-  reliabilityPostOptimizationOnly: true,
+  reliabilityTarget: 4,
+  reliabilityPostOptimizationOnly: false,
   reliabilityMaxOutageDuration: 24,
   retailTariffBillingPeriods: [
     {
@@ -354,4 +354,4 @@ export const billReductionProject = {
   timestep: 60,
 };
 
-export default billReductionProject;
+export default reliabilityProject;

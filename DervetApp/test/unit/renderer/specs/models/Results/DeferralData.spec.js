@@ -1,8 +1,8 @@
+import DeferralData from '@/models/Results/DeferralData';
 import {
-  DeferralData,
   deferralArrayData,
   deferralDefaultData,
-} from '@/models/Results/DeferralData';
+} from '../../fixtures/models/Results/DeferralData';
 
 describe('DeferralData model', () => {
   const actualData = new DeferralData(deferralArrayData);

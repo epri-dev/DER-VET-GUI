@@ -1,8 +1,8 @@
+import PeakLoadDayData from '@/models/Results/PeakLoadDayData';
 import {
-  PeakLoadDayData,
   peakLoadDayArrayData,
   peakLoadDayDefaultData,
-} from '@/models/Results/PeakLoadDayData';
+} from '../../fixtures/models/Results/PeakLoadDayData';
 
 describe('PeakLoadDayData model', () => {
   const actualData = new PeakLoadDayData(peakLoadDayArrayData);

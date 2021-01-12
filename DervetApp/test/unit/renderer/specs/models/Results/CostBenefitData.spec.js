@@ -1,9 +1,9 @@
+import CostBenefitData from '@/models/Results/CostBenefitData';
 import {
-  CostBenefitData,
   costBenefitArrayData,
   costBenefitSummaryData,
   costBenefitTraces,
-} from '@/models/Results/CostBenefitData';
+} from '../../fixtures/models/Results/CostBenefitData';
 
 describe('CostBenefitData model', () => {
   const actualData = new CostBenefitData(costBenefitArrayData);

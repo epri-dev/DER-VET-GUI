@@ -127,7 +127,7 @@ describe('SizeData model', () => {
   });
 
   it('(4) should find an ESS and return the correct P and E', () => {
-    const essSize = actualData.findEssSize();
+    const essSize = actualData.findLargestEssSize();
     expect(essSize.essEnergy).to.eql(19477);
     expect(essSize.essPower).to.eql(2303);
   });

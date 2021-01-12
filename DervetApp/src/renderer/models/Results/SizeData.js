@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import BaseTableData from './BaseTableData';
 
 export default class SizeData extends BaseTableData {
@@ -12,10 +13,8 @@ export default class SizeData extends BaseTableData {
   }
 
   createDataObject() {
-    let rowNum = 0;
     const rowDataObjects = [];
-    while (rowNum < this.data.length) {
-      const rawData = this.data[rowNum];
+    _.forEach(this.data, (rawData) => {
       if (!BaseTableData.isRowNull(rawData)) {
         const rowTemplate = {
           systemName: rawData[0],
@@ -36,8 +35,7 @@ export default class SizeData extends BaseTableData {
         }
         rowDataObjects.push(rowTemplate);
       }
-      rowNum += 1;
-    }
+    });
     return rowDataObjects;
   }
 
@@ -57,9 +55,8 @@ export default class SizeData extends BaseTableData {
       label: 'System Name',
     }];
     // power columns
-    let i = 0;
-    while (i < this.powerCols.length) {
-      const colIndex = this.getColumnIndexThatContains(this.powerCols[i]);
+    _.forEach(this.powerCols, (powerColName) => {
+      const colIndex = this.getColumnIndexThatContains(powerColName);
       if (colIndex !== -1) {
         // then the power column exists
         const label = this.columnHeaders[colIndex];
@@ -70,12 +67,10 @@ export default class SizeData extends BaseTableData {
         });
         this.numPowerCols += 1;
       }
-      i += 1;
-    }
+    });
     // energy columns
-    i = 0;
-    while (i < this.energyCols.length) {
-      const colIndex = this.getColumnIndexThatContains(this.energyCols[i]);
+    _.forEach(this.energyCols, (energyColName) => {
+      const colIndex = this.getColumnIndexThatContains(energyColName);
       if (colIndex !== -1) {
         // then the energy column exists
         const label = this.columnHeaders[colIndex];
@@ -86,8 +81,7 @@ export default class SizeData extends BaseTableData {
         });
         this.numEnergyCols += 1;
       }
-      i += 1;
-    }
+    });
     // quantity column
     dataColumnsFeilds.push({
       key: BaseTableData.toCamelCaseString('Quantity'),
@@ -191,22 +185,46 @@ export default class SizeData extends BaseTableData {
     return tableData;
   }
 
-  findEssSize() {
+  findLargestEssSize() {
     // todo write test for this
-    // assumes that there is only 1 ESS -- chooses the largest
-    let i = 0;
+    // chooses the largest
     let essEnergy = 0;
     let essPower = 0;
     let essName = '';
+    _.forEach(this.sizeTableDataRows, (row) => {
+      const energy = row.energyRatingKWh;
+      if (energy !== undefined) {
+        if (essEnergy < row.energyRatingKWh) {
+          essEnergy = energy;
+          essPower = row.dischargeRatingKW;
+          essName = row.systemName;
+        }
+      }
+    });
+    return { essEnergy, essPower, essName };
+  }
+  getEssSizes() {
+    // todo write test for this
+    let i = 0;
+    const essEnergy = [];
+    const essPower = [];
+    const essName = [];
     while (i < this.sizeTableDataRows.length) {
       const row = this.sizeTableDataRows[i];
       if (row.energyRatingKWh !== undefined) {
-        essEnergy = Math.max(essEnergy, row.energyRatingKWh);
-        essPower = Math.max(essPower, row.dischargeRatingKW);
-        essName = row.systemName;
+        essEnergy.push(row.energyRatingKWh);
+        essPower.push(row.dischargeRatingKW);
+        essName.push(row.systemName);
       }
       i += 1;
     }
     return { essEnergy, essPower, essName };
+  }
+  getTotalEnergyStorageCapacity() {
+    // todo write test for this
+    const essSizes = this.getEssSizes();
+    const essEnergies = essSizes.essEnergy;
+    const totalEnergyStorage = essEnergies.reduce((a, b) => a + b, 0);
+    return totalEnergyStorage;
   }
 }

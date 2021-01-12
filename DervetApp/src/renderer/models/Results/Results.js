@@ -1,11 +1,13 @@
 import { papaParseCsvString } from '@/util/file';
+import BeforeAndAfterMonthlyBillData from './BeforeAndAfterMonthlyBillData';
+import CostBenefitData from './CostBenefitData';
+import DeferralData from './DeferralData';
+import LoadCoverageProbabilityData from './LoadCoverageProbabilityData';
+import OutageEnergyContributionData from './OutageEnergyContributionData';
+import PeakLoadDayData from './PeakLoadDayData';
+import ProFormaData from './ProFormaData';
 import SizeData from './SizeData';
-import { ProFormaData } from './ProFormaData';
-import { CostBenefitData } from './CostBenefitData';
-import { BeforeAndAfterMonthlyBillData } from './BeforeAndAfterMonthlyBillData';
-import { DeferralData } from './DeferralData';
-import { LoadCoverageProbabilityData } from './LoadCoverageProbabilityData';
-import { PeakLoadDayData } from './PeakLoadDayData';
+import TimeSeriesData from './TimeSeriesData';
 
 export class ResultsData {
   constructor(id, data) {
@@ -22,13 +24,13 @@ export class ResultsData {
     this.financialCostBenefitBarChart = null;
     this.financialProformaTable = null;
     this.financialBeforeAfterBarChart = null;
-    this.dispatchSummaryMap = null;
+    this.dispatchSummaryMapData = null;
     this.dispatchStackedLineChart = null;
-    this.dispatchEnergyPriceMap = null;
+    this.dispatchEnergyPriceMapData = null;
     this.designSummaryBarChart = null;
     this.designSizeResultsTable = null;
     this.designCostsTable = null;
-    this.reliabilityOutageContributionBarChart = null;
+    this.reliabilityOutageContributionData = null;
     this.reliabilityLoadCoverageLineChart = null;
     this.deferralStackedBarChart = null;
 
@@ -48,76 +50,75 @@ export class ResultsData {
     this.createCharts();
   }
   initializeSize(csvString) {
-    const papaParseObject = papaParseCsvString(csvString);
-    return new SizeData(papaParseObject.data);
+    const papaParsedObject = papaParseCsvString(csvString);
+    return new SizeData(papaParsedObject.data);
   }
   initializeProForma(csvString) {
-    const papaParseObject = papaParseCsvString(csvString);
-    return new ProFormaData(papaParseObject.data);
+    const papaParsedObject = papaParseCsvString(csvString);
+    return new ProFormaData(papaParsedObject.data);
   }
   initializeCostBenefit(csvString) {
-    const papaParseObject = papaParseCsvString(csvString);
-    return new CostBenefitData(papaParseObject.data);
+    const papaParsedObject = papaParseCsvString(csvString);
+    return new CostBenefitData(papaParsedObject.data);
   }
   initializeBeforeAfterMonthly(csvString) {
-    const papaParseObject = papaParseCsvString(csvString);
-    this.showBeforeAfterMonthlyEnergyBill = papaParseObject !== null;
+    const papaParsedObject = papaParseCsvString(csvString);
+    this.showBeforeAfterMonthlyEnergyBill = papaParsedObject !== null;
     if (!this.showBeforeAfterMonthlyEnergyBill) {
       return null;
     }
-    return new BeforeAndAfterMonthlyBillData(papaParseObject.data);
+    return new BeforeAndAfterMonthlyBillData(papaParsedObject.data);
   }
   initializePeakLoadDay(csvString) {
-    const papaParseObject = papaParseCsvString(csvString);
-    this.showPeakLoadDay = papaParseObject !== null;
+    const papaParsedObject = papaParseCsvString(csvString);
+    this.showPeakLoadDay = papaParsedObject !== null;
     if (!this.showPeakLoadDay) {
       return null;
     }
-    return new PeakLoadDayData(papaParseObject.data);
+    return new PeakLoadDayData(papaParsedObject.data);
   }
   initializeDeferral(csvString) {
-    const papaParseObject = papaParseCsvString(csvString);
-    this.showDeferral = papaParseObject !== null;
+    const papaParsedObject = papaParseCsvString(csvString);
+    this.showDeferral = papaParsedObject !== null;
     if (!this.showDeferral) {
       return null;
     }
-    return new DeferralData(papaParseObject.data);
+    return new DeferralData(papaParsedObject.data);
   }
   initializeLoadCoverageProb(csvString) {
-    const papaParseObject = papaParseCsvString(csvString);
-    this.showLoadCoverageProbability = papaParseObject !== null;
+    const papaParsedObject = papaParseCsvString(csvString);
+    this.showLoadCoverageProbability = papaParsedObject !== null;
     if (!this.showLoadCoverageProbability) {
       return null;
     }
-    return new LoadCoverageProbabilityData(papaParseObject.data);
+    return new LoadCoverageProbabilityData(papaParsedObject.data);
   }
   initializeOutageContribution(csvString) {
-    const papaParseObject = papaParseCsvString(csvString, true);
-    this.showOutageContribution = papaParseObject !== null;
+    const papaParsedObject = papaParseCsvString(csvString);
+    this.showOutageContribution = papaParsedObject !== null;
     if (!this.showOutageContribution) {
       return null;
     }
-    // TODO const data = new PeakLoadDayData(papaParseObject.data);
-    // return data;
-    return papaParseObject.data;
+    const data = new OutageEnergyContributionData(papaParsedObject.data);
+    return data;
   }
   initializeDistpatch(csvString) {
-    const papaParseObject = papaParseCsvString(csvString);
-    // TODO const data = new PeakLoadDayData(papaParseObject.data);
-    // return data;
-    return papaParseObject.data;
+    const papaParsedObject = papaParseCsvString(csvString);
+    const data = new TimeSeriesData(papaParsedObject.data);
+    return data;
   }
   createCharts() {
     // summary page charts
     this.financialSummaryBarChart = this.costBenefit.summaryData();
-    // TODO this.dispatchSummaryMap = null; this depends on dispatch data
+    this.dispatchSummaryMapData = this.dispatch.essDispatchHeatMapTraceData(0);
     if (this.showPeakLoadDay) {
       this.designSummaryBarChart = this.peakLoadDay.getFirstYearChartData();
     }
 
     // dispatch page charts
-    // TODO this.dispatchStackedLineChart = null; this depends on dispatch data
-    // TODO this.dispatchEnergyPriceMap = null; this depends on dispatch data
+    const totalEnergyStorageCapacity = this.size.getTotalEnergyStorageCapacity();
+    this.dispatchStackedLineChart = this.dispatch.dispatchData(0, totalEnergyStorageCapacity);
+    this.dispatchEnergyPriceMapData = this.dispatch.energyPriceHeatMapTraceData(0);
 
     // design page charts
     this.designSizeResultsTable = this.size.createSizeTable();
@@ -132,7 +133,7 @@ export class ResultsData {
 
     // reliability charts
     if (this.showOutageContribution) {
-      // TODO this.reliabilityOutageContributionBarChart = null;
+      this.reliabilityOutageContributionData = this.outageContribution.getFirstYearChartData();
     }
     if (this.showLoadCoverageProbability) {
       this.reliabilityLoadCoverageLineChart = this.loadCoverageProbability.getFirstYearChartData();
@@ -141,7 +142,7 @@ export class ResultsData {
     // deferral chart
     if (this.showDeferral) {
       this.deferralStackedBarChart = {
-        ...this.size.findEssSize(),
+        ...this.size.findLargestEssSize(),
         ...this.deferral.createBarChart(),
       };
     }

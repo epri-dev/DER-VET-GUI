@@ -1,6 +1,7 @@
 import { cloneDeep, flatten, merge } from 'lodash';
 
 import { billReductionProject } from '@/assets/cases/billReduction/project';
+// import { reliabilityProject } from '@/assets/cases/reliability/project';
 import { projectMetadata } from '@/models/Project/Project';
 
 const metadataDefaultValues = projectMetadata.getDefaultValues();

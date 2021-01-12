@@ -440,7 +440,7 @@ export const makeReliabilityParameters = (project, inputsDirectory) => {
     const keys = {
       max_outage_duration: makeBaseKey(project.reliabilityMaxOutageDuration, INT),
       'n-2': makeBaseKey(ZERO, BOOL), // hardcoded
-      post_facto_initial_soc: makeBaseKey(ZERO, FLOAT), // TODO new, verify value
+      post_facto_initial_soc: makeBaseKey(100, FLOAT), // TODO new, verify value
       post_facto_only: makeBaseKey(convertToOneZero(project.reliabilityPostOptimizationOnly), BOOL),
       target: makeBaseKey(project.reliabilityTarget, FLOAT),
       load_shed_percentage: makeBaseKey(convertToOneZero(false), BOOL), // hardcoded
@@ -567,7 +567,7 @@ export const makeModelParameters = (project, inputsDirectory, resultsDirectory) 
     PV: makePVParameters(project),
     Reliability: makeReliabilityParameters(project, inputsDirectory),
     Results: makeResultsParameters(project, resultsDirectory),
-    RetailTimeShift: makeRetailTimeShiftParameters(project),
+    retailTimeShift: makeRetailTimeShiftParameters(project),
     Scenario: makeScenarioParameters(project, inputsDirectory),
     SR: makeSRParameters(project),
     User: makeUserParameters(project),
@@ -779,13 +779,12 @@ export const makeExpectedResultCsvs = (project) => {
       fieldName: 'loadCoverageProbability',
       fileName: 'load_coverage_prob.csv',
     });
-    // TODO: uncomment when postOptimizationOnly field added to Project
-    // if (!project.postOptimizationOnly) {
-    //   expectedResultsCsvs.push({
-    //     fieldName: 'outageContribution',
-    //     fileName: 'outage_energy_contributions.csv',
-    //   });
-    // }
+    if (!project.reliabilityPostOptimizationOnly) {
+      expectedResultsCsvs.push({
+        fieldName: 'outageContribution',
+        fileName: 'outage_energy_contributions.csv',
+      });
+    }
   }
   if (project.objectivesDeferral) {
     expectedResultsCsvs.push({
