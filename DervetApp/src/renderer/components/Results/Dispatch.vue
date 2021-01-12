@@ -51,6 +51,18 @@
     methods: {
       save() {
       },
+      getColorFromTechnology(tech) {
+        if (tech === 'pv') {
+          return '#e2d06b';
+        } else if (tech === 'ess') {
+          return '#a2c7db';
+        } else if (tech === 'genSet') {
+          return '#99999';
+        } else if (tech === 'ev') {
+          return '#a1eda5';
+        }
+        return '#666666';
+      },
 
       createChartDispatchTimeSeriesPlots(chartId) {
         const ctx = document.getElementById(chartId);
@@ -62,7 +74,8 @@
           x: rawData.timeSeriesDateAxis,
           y: rawData.aggregatedStateOfCharge,
           mode: 'lines',
-          name: 'Aggregated ESS SOC',
+          name: 'Aggregate ESS SOC',
+          yaxis: 'y',
         };
 
         // TODO - optionally add reservations
@@ -76,7 +89,7 @@
             shape: 'hv',
           },
           // xaxis: 'x',
-          yaxis: 'y2',
+          yaxis: 'y5',
         };
 
         // TODO - optionally add
@@ -97,7 +110,7 @@
           x: xx,
           y: rawData.energyPriceKWh,
           mode: 'lines',
-          name: '$/kWh Prices',
+          name: 'Energy Price',
           line: {
             shape: 'hv',
           },
@@ -105,11 +118,6 @@
           yaxis: 'y4',
         };
 
-        // const yyPower = [];
-        // const yPower = [5e3, 6e3, 7e3, 9.6e3, 7e3, 6e3, 6e3, 7e3, 3e3, 4e3, 5e3, 4e3];
-        // for (let i = 0; i < xtot; i += 1) {
-        //   yyPower[i] = yPower[(i % yPower.length)];
-        // }
         const power = [
           {
             x: xx,
@@ -120,7 +128,7 @@
               shape: 'hv',
             },
             // xaxis: 'x',
-            yaxis: 'y5',
+            yaxis: 'y2',
           },
           {
             x: xx,
@@ -131,7 +139,7 @@
               shape: 'hv',
             },
             // xaxis: 'x',
-            yaxis: 'y5',
+            yaxis: 'y2',
           },
           {
             x: xx,
@@ -142,18 +150,18 @@
               shape: 'hv',
             },
             // xaxis: 'x',
-            yaxis: 'y5',
+            yaxis: 'y2',
           },
           {
             x: xx,
             y: rawData.criticalLoadKW,
             mode: 'lines',
-            name: 'Critial Load',
+            name: 'Critical Load',
             line: {
               shape: 'hv',
             },
             // xaxis: 'x',
-            yaxis: 'y5',
+            yaxis: 'y2',
           },
         ];
 
@@ -228,7 +236,7 @@
           yaxis4: {
             domain: [0.202, 0.394],
             title: {
-              text: '$ / kWh',
+              text: 'Energy Price',
               font: {
                 size: 12,
               },
