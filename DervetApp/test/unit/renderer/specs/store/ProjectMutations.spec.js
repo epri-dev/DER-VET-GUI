@@ -5,6 +5,34 @@ const { mutations } = project;
 
 
 describe('Project Mutations', () => {
+  it('should replace additional data for battery cycle with proper completeness', () => {
+    const batteryId = '123qwe789uio';
+    const state = {
+      technologySpecsBattery: [{
+        id: batteryId,
+        additionalData: [],
+        additionalDataComplete: true,
+        complete: true,
+        specsComplete: true,
+      }],
+    };
+    const payload = {
+      batteryId,
+      batteryCycles: {
+        complete: false,
+        // dataRows: [],
+        // displayNamed: '',
+        // errorList: [],
+      },
+    };
+
+    mutations.ADD_BATTERY_CYCLES_TO_TECHNOLOGY_SPECS_BATTERY(state, payload);
+
+    expect(state.technologySpecsBattery[0].complete).to.equal(false);
+    expect(state.technologySpecsBattery[0].additionalDataComplete).to.equal(false);
+    expect(state.technologySpecsBattery[0].additionalData[0].complete).to.equal(false);
+  });
+
   it('should set project ID', () => {
     const state = { id: null };
     const newId = 'e4ccd19f-0f3c-49ef-a955-bf063687982d';
