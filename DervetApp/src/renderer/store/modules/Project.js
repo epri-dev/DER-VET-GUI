@@ -1,8 +1,13 @@
 import { cloneDeep, flatten, merge } from 'lodash';
 
 import { billReductionProject } from '@/assets/cases/billReduction/project';
-// import { reliabilityProject } from '@/assets/cases/reliability/project';
+import { reliabilityProject } from '@/assets/cases/reliability/project';
 import { projectMetadata } from '@/models/Project/Project';
+
+const usecaseDatabase = { // its a sad excuse for a database, but serves as one.
+  billReductionProject,
+  reliabilityProject,
+};
 
 const metadataDefaultValues = projectMetadata.getDefaultValues();
 
@@ -470,11 +475,12 @@ const actions = {
   resetProjectToDefault({ commit }) {
     commit('RESET_PROJECT_TO_DEFAULT');
   },
-  loadQuickStartProject({ commit }) {
+  loadQuickStartProject({ commit }, caseName) {
     // TODO load actual quickStartProject;
+    const selectedUseCase = usecaseDatabase[caseName];
     const defaultProject = getDefaultState();
     return new Promise((resolve) => {
-      commit('LOAD_QUICK_START_PROJECT', merge(defaultProject, billReductionProject));
+      commit('LOAD_QUICK_START_PROJECT', merge(defaultProject, selectedUseCase));
       resolve();
     });
   },
