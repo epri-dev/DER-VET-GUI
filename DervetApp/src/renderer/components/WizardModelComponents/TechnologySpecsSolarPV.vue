@@ -479,6 +479,7 @@
           name: this.name,
           nu: this.nu,
           operationYear: this.operationYear,
+          path: this.path,
           ppaCost: this.ppaCost,
           ppaInflationRate: this.ppaInflationRate,
           ratedCapacity: this.ratedCapacity,

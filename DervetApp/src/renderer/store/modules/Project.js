@@ -126,7 +126,8 @@ const mutations = {
     tmpBatterySpecs[indexMatchingId].additionalDataComplete = payload.batteryCycles.complete;
     tmpBatterySpecs[indexMatchingId].complete
       = payload.batteryCycles.complete && tmpBatterySpecs[indexMatchingId].specsComplete;
-    tmpBatterySpecs[indexMatchingId].additionalData[0] = payload.batteryCycles;
+    // this updates the object, while retaining untouched pieces
+    Object.assign(tmpBatterySpecs[indexMatchingId].additionalData[0], payload.batteryCycles);
     state.technologySpecsBattery = tmpBatterySpecs;
   },
   // da page

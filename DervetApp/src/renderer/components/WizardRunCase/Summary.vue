@@ -393,30 +393,12 @@
         return errorsTF;
       },
       getTechAdditionalDataPath(tech) {
-        const techTag = tech.tag;
         const techID = tech.id;
-        let dataPath = '';
-        if (techTag === 'PV') {
-          dataPath = paths.TECH_SPECS_PV_DATA_GENERATION_PATH;
-        } else if (techTag === 'Battery') {
-          dataPath = paths.TECH_SPECS_BATTERY_DATA_CYCLES_PATH;
-        }
-        return `${dataPath}/${techID}`;
+        return `${tech.additionalData[0].path}/${techID}`;
       },
       getTechPath(tech) {
-        const techTag = tech.tag;
         const techID = tech.id;
-        let techPath = '';
-        if (techTag === 'PV') {
-          techPath = paths.TECH_SPECS_PV_PATH;
-        } else if (techTag === 'Battery') {
-          techPath = paths.TECH_SPECS_BATTERY_PATH;
-        } else if (techTag === 'ICE') {
-          techPath = paths.TECH_SPECS_ICE_PATH;
-        } else if (techTag === 'DieselGen') {
-          techPath = paths.TECH_SPECS_DIESEL_PATH;
-        }
-        return `${techPath}/${techID}`;
+        return `${tech.path}/${techID}`;
       },
 
       // wizard overview

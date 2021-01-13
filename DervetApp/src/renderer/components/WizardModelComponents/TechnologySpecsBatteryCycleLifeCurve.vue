@@ -63,7 +63,7 @@
 
 <script>
   import { cloneDeep } from 'lodash';
-  import { WIZARD_COMPONENT_PATH, TECH_SPECS_BATTERY_DATA_CYCLES_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import SaveButtons from '@/components/Shared/SaveButtons';
 
   export default {
@@ -96,7 +96,6 @@
         ],
         items: [],
         WIZARD_COMPONENT_PATH,
-        TECH_SPECS_BATTERY_DATA_CYCLES_PATH,
       };
     },
     methods: {
@@ -153,7 +152,6 @@
           batteryCycles: {
             complete: this.complete,
             dataRows: this.items,
-            displayName: 'Battery Cycle Life Curve',
             errorList: [this.getSingleErrorMsg()],
           },
         };

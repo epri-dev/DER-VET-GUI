@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import ProjectFieldMetadata from '@/models/Project/Fields';
 import { SHARED_DYNAMIC_FIELDS, createSharedHardcodedMetadata } from '@/models/Project/TechnologySpecs/sharedConstants';
 import { optionsYN } from '@/models/Project/constants';
+import { TECH_SPECS_BATTERY_PATH, TECH_SPECS_BATTERY_DATA_CYCLES_PATH } from '@/router/constants';
 
 
 const Battery = 'Battery';
@@ -88,33 +89,17 @@ export default class TechnologySpecsBatteryMetadata {
     return {
       active: true,
       additionalData: [{
-        // batteryCycles: {
         complete: false,
         dataRows: [],
         displayName: 'Battery Cycle Life Curve',
         errorList: ['Not Started'],
-        // },
+        path: TECH_SPECS_BATTERY_DATA_CYCLES_PATH,
       }],
       additionalDataComplete: null,
-      /*
-      batteryCycles: [
-        { ulimit: 0.05, val: 75000 },
-        { ulimit: 0.1, val: 40500 },
-        { ulimit: 0.15, val: 27000 },
-        { ulimit: 0.2, val: 20250 },
-        { ulimit: 0.3, val: 11250 },
-        { ulimit: 0.4, val: 6750 },
-        { ulimit: 0.5, val: 4500 },
-        { ulimit: 0.6, val: 3750 },
-        { ulimit: 0.7, val: 3225 },
-        { ulimit: 0.8, val: 2813 },
-        { ulimit: 0.9, val: 2475 },
-        { ulimit: 1, val: 2250 },
-      ],
-      */
       complete: null,
       errorList: [],
       id: uuidv4(),
+      path: TECH_SPECS_BATTERY_PATH,
       specsComplete: null,
       tag: Battery,
       technologyType: 'Energy Storage System',

@@ -374,7 +374,8 @@
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsBatteryMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsBattery';
-  import { WIZARD_COMPONENT_PATH, TECH_SPECS_BATTERY_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT_PATH }
+    from '@/router/constants';
 
   const metadata = TechnologySpecsBatteryMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
@@ -390,7 +391,6 @@
         metadata,
         ...values,
         WIZARD_COMPONENT_PATH,
-        TECH_SPECS_BATTERY_PATH,
       };
     },
     validations: {
@@ -554,7 +554,7 @@
       },
       getContinueLink() {
         if (this.includeCycleDegradation) {
-          return `${TECH_SPECS_BATTERY_PATH}-cycle/${this.id}`;
+          return `${this.additionalData[0].path}/${this.id}`;
         }
         return WIZARD_COMPONENT_PATH;
       },
@@ -646,7 +646,6 @@
           additionalData: this.additionalData,
           additionalDataComplete: this.additionalDataComplete,
           auxiliaryLoad: this.auxiliaryLoad,
-          // batteryCycles: this.batteryCycles,
           calendarDegradationRate: this.calendarDegradationRate,
           capitalCost: this.capitalCost,
           capitalCostPerkW: this.capitalCostPerkW,
@@ -677,6 +676,7 @@
           maxDuration: this.maxDuration,
           name: this.name,
           operationYear: this.operationYear,
+          path: this.path,
           powerCapacity: this.powerCapacity,
           powerCapacityMaximum: this.powerCapacityMaximum,
           powerCapacityMinimum: this.powerCapacityMinimum,
