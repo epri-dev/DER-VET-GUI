@@ -3,7 +3,15 @@ import path from 'path';
 
 import { papaParsePromise } from '@/util/file';
 
-const makeFileFromFileName = fileName => fs.createReadStream(path.join(__dirname, fileName));
+const CES_FILE_NAME = 'ces3.0.csv';
+
+const getFilePath = () => {
+  const builtPath = path.join(process.resourcesPath, 'extraResources', CES_FILE_NAME);
+  const devPath = path.join(__dirname, CES_FILE_NAME);
+  return fs.existsSync(builtPath) ? builtPath : devPath;
+};
+
+const makeFileFromFileName = () => fs.createReadStream(getFilePath());
 
 const loadCesScoresFromFile = () => {
   /**
@@ -12,7 +20,7 @@ const loadCesScoresFromFile = () => {
     (CalEnviroScreen). See the website for more information:
     https://oehha.ca.gov/calenviroscreen/report/calenviroscreen-30.
   */
-  const file = makeFileFromFileName('ces3.0.csv');
+  const file = makeFileFromFileName();
   return papaParsePromise(file);
 };
 
