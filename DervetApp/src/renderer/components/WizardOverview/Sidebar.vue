@@ -25,6 +25,12 @@
         Technology Specifications
       </router-link>
 
+      <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
+                   v-bind:class="{ current: isActive(this.paths.CAL_ENVIRO_SCREEN_PATH) }"
+                   :to="this.paths.CAL_ENVIRO_SCREEN_PATH">
+        CalEnviroScreen
+      </router-link>
+
     </b-nav>
   </div>
 </template>

@@ -229,7 +229,7 @@ export const makeDAParameters = (project) => {
 export const makeDCMParameters = (project) => {
   if (project.objectivesRetailDemandChargeReduction) {
     const isActive = convertToYesNo(project.objectivesRetailDemandChargeReduction);
-    const keys = { growth: makeBaseKey(project.dcmGrowth, FLOAT) };
+    const keys = { growth: makeBaseKey(setUndefinedNullToZero(project.dcmGrowth, FLOAT)) };
     return makeGroup('', isActive, keys);
   }
   return makeEmptyGroup();
@@ -463,7 +463,9 @@ export const makeResultsParameters = (project, resultsDirectory) => {
 export const makeRetailTimeShiftParameters = (project) => {
   if (project.objectivesRetailEnergyChargeReduction) {
     const isActive = convertToYesNo(project.objectivesRetailEnergyChargeReduction);
-    const keys = { growth: makeBaseKey(project.retailTimeShiftGrowth, FLOAT) };
+    const keys = {
+      growth: makeBaseKey(setUndefinedNullToZero(project.retailTimeShiftGrowth), FLOAT),
+    };
     return makeGroup('', isActive, keys);
   }
   return makeEmptyGroup();
