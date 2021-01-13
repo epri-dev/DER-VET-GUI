@@ -21,11 +21,13 @@
         </router-link>
       </div>
       <div class="col-md-4 text-center">
-        <router-link :to="$route.path"
-                     class="btn btn-lg btn-light btn-index-page btn-quick-start"
-                     v-on:click.native="loadQuickStartProject()">
-          Quick Start
-        </router-link>
+        <b-dropdown text="Quick Start"
+                    toggle-class="btn btn-lg btn-light btn-quick-start btn-index-page">
+          <b-dropdown-item v-for="option in useCases"
+                           v-on:click.native="loadQuickStartProject(option.value)">
+            {{option.text}}
+          </b-dropdown-item>
+        </b-dropdown>
       </div>
     </div>
 
@@ -47,7 +49,7 @@
       </div>
       <div class="col-md-4">
         <p>
-          Load a quick-start general DER bill reduction case.
+          Load a pre-defined case.
         </p>
       </div>
     </div>
@@ -70,10 +72,19 @@
 <script>
   import { WIZARD_START_PATH } from '@/router/constants';
 
+  const useCases = [
+    { value: 'billReductionProject', text: 'General DER Bill Reduction' },
+    { value: 'reliabilityProject', text: 'General DER Sizing for Reliability' },
+  ];
+
   export default {
     name: 'index',
     data() {
-      return { WIZARD_START_PATH };
+      return {
+        WIZARD_START_PATH,
+        selectedUseCase: null,
+        useCases,
+      };
     },
     computed: {
       projID() {
@@ -81,12 +92,12 @@
       },
     },
     methods: {
-      loadQuickStartProject() {
+      loadQuickStartProject(selectedUseCase) {
         this.$store.dispatch('resetProjectToDefault')
           .then(this.$store.dispatch('resetResultToDefault', this.$store.state.Project.id))
           .then(this.$store.dispatch('Application/resetApplicationToDefault', this.$store.state.Project.id))
           .then(this.$store.dispatch('resetZipCode'))
-          .then(this.$store.dispatch('loadQuickStartProject'))
+          .then(this.$store.dispatch('loadQuickStartProject', selectedUseCase))
           .then(this.$store.dispatch('Application/setQuickStartCompleteness'))
           .then(this.$router.push({ path: WIZARD_START_PATH }));
       },
