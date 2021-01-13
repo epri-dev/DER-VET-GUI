@@ -290,14 +290,14 @@ export const billReductionProject = {
   technologySpecsBattery: [{
     active: true,
     // this should be set elsewhere
-    additionalData: [{
+    associatedInputs: [{
       complete: false,
       dataRows: [],
       displayName: 'Battery Cycle Life Curve',
       errorList: ['Not Started'],
       path: TECH_SPECS_BATTERY_DATA_CYCLES_PATH,
     }],
-    additionalDataComplete: false,
+    associatedInputsComplete: false,
     auxiliaryLoad: 0,
     calendarDegradationRate: 0,
     capitalCost: 0,
@@ -347,7 +347,7 @@ export const billReductionProject = {
     shouldLimitDailyCycling: false,
     shouldMaxDuration: false,
     shouldPowerSize: true,
-    specsComplete: true,
+    componentSpecsComplete: true,
     stateOfHealth: 0,
     tag: 'Battery',
     targetSOC: 50,

@@ -88,19 +88,19 @@ export default class TechnologySpecsBatteryMetadata {
   getDefaultValues() {
     return {
       active: true,
-      additionalData: [{
+      associatedInputs: [{
         complete: false,
         dataRows: [],
         displayName: 'Battery Cycle Life Curve',
         errorList: ['Not Started'],
         path: TECH_SPECS_BATTERY_DATA_CYCLES_PATH,
       }],
-      additionalDataComplete: null,
+      associatedInputsComplete: null,
       complete: null,
       errorList: [],
       id: uuidv4(),
       path: TECH_SPECS_BATTERY_PATH,
-      specsComplete: null,
+      componentSpecsComplete: null,
       tag: Battery,
       technologyType: 'Energy Storage System',
       ...this.operateOnDynamicFields(f => f.defaultValue),

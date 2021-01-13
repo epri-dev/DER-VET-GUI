@@ -39,17 +39,17 @@
                     <span v-html="error"></span>
                   </li>
 
-                  <div v-if="tech.additionalDataComplete === false">
-                    <div v-for="additionalData in tech.additionalData">
-                      <div v-if="!additionalData.complete">
+                  <div v-if="tech.associatedInputsComplete === false">
+                    <div v-for="associatedInputs in tech.associatedInputs">
+                      <div v-if="!associatedInputs.complete">
                         <li>
                           <router-link
                             class="text-decoration-none"
-                            :to="getTechAdditionalDataPath(tech)">
-                            {{ additionalData.displayName + getTechDisplayName(tech) }}
+                            :to="getTechAssociatedInputsPath(tech)">
+                            {{ associatedInputs.displayName + getTechDisplayName(tech) }}
                           </router-link>
                           <ul>
-                            <li v-for="dataError in additionalData.errorList">
+                            <li v-for="dataError in associatedInputs.errorList">
                               <span v-html="dataError"></span>
                             </li>
                           </ul>
@@ -392,9 +392,9 @@
         });
         return errorsTF;
       },
-      getTechAdditionalDataPath(tech) {
+      getTechAssociatedInputsPath(tech) {
         const techID = tech.id;
-        return `${tech.additionalData[0].path}/${techID}`;
+        return `${tech.associatedInputs[0].path}/${techID}`;
       },
       getTechPath(tech) {
         const techID = tech.id;

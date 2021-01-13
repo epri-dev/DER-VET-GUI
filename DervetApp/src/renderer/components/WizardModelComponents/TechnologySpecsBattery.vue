@@ -539,11 +539,11 @@
       isnewBattery() {
         return this.batteryId === 'null';
       },
-      getAdditionalDataCompleteness() {
-        // loop through additionalData array and check complete param
+      getAssociatedInputsCompleteness() {
+        // loop through associatedInputs array and check complete param
         if (this.includeCycleDegradation) {
-          if (this.additionalData[0]) {
-            return this.additionalData[0].complete;
+          if (this.associatedInputs[0]) {
+            return this.associatedInputs[0].complete;
           }
           return false;
         }
@@ -554,7 +554,7 @@
       },
       getContinueLink() {
         if (this.includeCycleDegradation) {
-          return `${this.additionalData[0].path}/${this.id}`;
+          return `${this.associatedInputs[0].path}/${this.id}`;
         }
         return WIZARD_COMPONENT_PATH;
       },
@@ -621,9 +621,9 @@
         this.submitted = true;
         this.$v.$touch();
         // set complete to true or false
-        this.specsComplete = !this.$v.$invalid;
-        this.additionalDataComplete = this.getAdditionalDataCompleteness();
-        this.complete = this.specsComplete && this.additionalDataComplete;
+        this.componentSpecsComplete = !this.$v.$invalid;
+        this.associatedInputsComplete = this.getAssociatedInputsCompleteness();
+        this.complete = this.componentSpecsComplete && this.associatedInputsComplete;
         // populate errorList for this technology
         if (this.complete !== true) {
           this.errorList = this.makeErrorList();
@@ -643,8 +643,8 @@
       buildBattery() {
         return {
           active: this.active,
-          additionalData: this.additionalData,
-          additionalDataComplete: this.additionalDataComplete,
+          associatedInputs: this.associatedInputs,
+          associatedInputsComplete: this.associatedInputsComplete,
           auxiliaryLoad: this.auxiliaryLoad,
           calendarDegradationRate: this.calendarDegradationRate,
           capitalCost: this.capitalCost,
@@ -693,7 +693,7 @@
           shouldLimitDailyCycling: this.shouldLimitDailyCycling,
           shouldMaxDuration: this.shouldMaxDuration,
           shouldPowerSize: this.shouldPowerSize,
-          specsComplete: this.specsComplete,
+          componentSpecsComplete: this.componentSpecsComplete,
           stateOfHealth: this.stateOfHealth,
           tag: this.tag,
           targetSOC: this.targetSOC,

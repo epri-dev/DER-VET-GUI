@@ -79,8 +79,8 @@
       loadingMessage() {
         const battery = this.$store.getters.getBatteryById(this.batteryId);
         if (battery) {
-          if (battery.additionalData[0]) {
-            this.callThis(cloneDeep(battery).additionalData[0].dataRows);
+          if (battery.associatedInputs[0]) {
+            this.callThis(cloneDeep(battery).associatedInputs[0].dataRows);
           }
           return '';
         }
