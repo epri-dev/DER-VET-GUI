@@ -10,6 +10,7 @@ export const RESULTS_PATH = '/results';
 export const START_PROJECT_PATH = `${WIZARD_START_PATH}/start-project`;
 export const TECH_SPECS_PATH = `${WIZARD_START_PATH}/technology-specs`;
 export const OBJECTIVES_PATH = `${WIZARD_START_PATH}/objectives`;
+export const CAL_ENVIRO_SCREEN_PATH = `${WIZARD_START_PATH}/cal-enviro-screen`;
 
 export const TECH_SPECS_PV_PATH = `${WIZARD_COMPONENT_PATH}/technology-specs-solar-pv`;
 export const TECH_SPECS_BATTERY_PATH = `${WIZARD_COMPONENT_PATH}/technology-specs-battery`;

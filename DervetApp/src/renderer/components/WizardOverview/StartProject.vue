@@ -2,6 +2,8 @@
   <div class="container body-content">
 
     <h3>Project Configuration</h3>
+    <hr />
+
     <div class="form-horizontal form-buffer">
 
       <text-input

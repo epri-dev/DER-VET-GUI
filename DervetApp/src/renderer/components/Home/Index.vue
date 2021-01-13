@@ -23,7 +23,8 @@
       <div class="col-md-4 text-center">
         <b-dropdown text="Quick Start"
                     toggle-class="btn btn-lg btn-light btn-quick-start btn-index-page">
-          <b-dropdown-item v-for="option in useCases"
+          <b-dropdown-item v-for="option, idx in useCases"
+                           :key="idx"
                            v-on:click.native="loadQuickStartProject(option.value)">
             {{option.text}}
           </b-dropdown-item>
