@@ -10,27 +10,28 @@ describe('Project Mutations', () => {
     const state = {
       technologySpecsBattery: [{
         id: batteryId,
-        additionalData: [],
-        additionalDataComplete: true,
+        associatedInputs: [{ displayName: 'Name', errorList: [] }],
+        associatedInputsComplete: true,
         complete: true,
-        specsComplete: true,
+        componentSpecsComplete: true,
       }],
     };
     const payload = {
       batteryId,
       batteryCycles: {
         complete: false,
-        // dataRows: [],
-        // displayNamed: '',
-        // errorList: [],
+        errorList: ['error here'],
       },
     };
 
     mutations.ADD_BATTERY_CYCLES_TO_TECHNOLOGY_SPECS_BATTERY(state, payload);
 
     expect(state.technologySpecsBattery[0].complete).to.equal(false);
-    expect(state.technologySpecsBattery[0].additionalDataComplete).to.equal(false);
-    expect(state.technologySpecsBattery[0].additionalData[0].complete).to.equal(false);
+    expect(state.technologySpecsBattery[0].associatedInputsComplete).to.equal(false);
+    expect(state.technologySpecsBattery[0].associatedInputs[0].complete).to.equal(false);
+    expect(state.technologySpecsBattery[0].componentSpecsComplete).to.equal(true);
+    expect(state.technologySpecsBattery[0].associatedInputs[0].displayName).to.equal('Name');
+    expect(state.technologySpecsBattery[0].associatedInputs[0].errorList[0]).to.equal('error here');
   });
 
   it('should set project ID', () => {
