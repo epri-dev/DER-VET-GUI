@@ -388,6 +388,7 @@
           name: this.name,
           numGenerators: this.numGenerators,
           operationYear: this.operationYear,
+          path: this.path,
           ratedCapacity: this.ratedCapacity,
           ratedCapacityMaximum: this.ratedCapacityMaximum,
           ratedCapacityMinimum: this.ratedCapacityMinimum,

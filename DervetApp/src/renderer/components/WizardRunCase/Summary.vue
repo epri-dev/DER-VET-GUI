@@ -6,21 +6,22 @@
 
         <div v-if="overviewErrorExists()" class="incomplete">
           <h4>Errors in Project Overview</h4>
-            <div v-for="overviewItem in overviewAll()">
-              <div v-if="!overviewItem.complete">
-                <li>
-                  <router-link class="text-decoration-none"
-                              :to=overviewItem.path>
-                    {{ overviewItem.name }}
-                  </router-link>
-                  <ul>
-                    <li v-for="error in overviewItem.errors">
-                      <span v-html="error"></span>
-                    </li>
-                  </ul>
-                </li>
-              </div>
+          <div v-for="overviewItem in overviewAll()">
+            <div v-if="!overviewItem.complete">
+              <li>
+                <router-link
+                  class="text-decoration-none"
+                  :to=overviewItem.path>
+                  {{ overviewItem.name }}
+                </router-link>
+                <ul>
+                  <li v-for="error in overviewItem.errors">
+                    <span v-html="error"></span>
+                  </li>
+                </ul>
+              </li>
             </div>
+          </div>
         </div>
 
         <div v-if="componentTechErrorExists()" class="incomplete">
@@ -28,14 +29,35 @@
           <div v-for="tech in techAll()">
             <div v-if="tech.complete !== true">
               <li>
-                <router-link class="text-decoration-none"
-                             :to="getTechPath(tech)">
+                <router-link
+                  class="text-decoration-none"
+                  :to="getTechPath(tech)">
                   {{ tech.technologyType + ': ' + tech.tag + getTechDisplayName(tech) }}
                 </router-link>
                 <ul>
                   <li v-for="error in tech.errorList">
                     <span v-html="error"></span>
                   </li>
+
+                  <div v-if="tech.associatedInputsComplete === false">
+                    <div v-for="associatedInputs in tech.associatedInputs">
+                      <div v-if="!associatedInputs.complete">
+                        <li>
+                          <router-link
+                            class="text-decoration-none"
+                            :to="getTechAssociatedInputsPath(tech)">
+                            {{ associatedInputs.displayName + getTechDisplayName(tech) }}
+                          </router-link>
+                          <ul>
+                            <li v-for="dataError in associatedInputs.errorList">
+                              <span v-html="dataError"></span>
+                            </li>
+                          </ul>
+                        </li>
+                      </div>
+                    </div>
+                  </div>
+
                 </ul>
               </li>
             </div>
@@ -370,20 +392,13 @@
         });
         return errorsTF;
       },
-      getTechPath(tech) {
-        const techTag = tech.tag;
+      getTechAssociatedInputsPath(tech) {
         const techID = tech.id;
-        let techPath = '';
-        if (techTag === 'PV') {
-          techPath = paths.TECH_SPECS_PV_PATH;
-        } else if (techTag === 'Battery') {
-          techPath = paths.TECH_SPECS_BATTERY_PATH;
-        } else if (techTag === 'ICE') {
-          techPath = paths.TECH_SPECS_ICE_PATH;
-        } else if (techTag === 'DieselGen') {
-          techPath = paths.TECH_SPECS_DIESEL_PATH;
-        }
-        return `${techPath}/${techID}`;
+        return `${tech.associatedInputs[0].path}/${techID}`;
+      },
+      getTechPath(tech) {
+        const techID = tech.id;
+        return `${tech.path}/${techID}`;
       },
 
       // wizard overview
