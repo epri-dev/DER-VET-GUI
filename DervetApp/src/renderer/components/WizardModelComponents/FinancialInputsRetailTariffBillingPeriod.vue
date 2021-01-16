@@ -115,25 +115,30 @@
           required: requiredIf(function isExcludingStartTimeRequired() {
             return !(this.excludingEndTime === null || this.excludingEndTime === '' || this.excludingEndTime === undefined);
           }),
-          minValue: minValue(this.startTime),
-          maxValue: maxValue(this.endTime),
+          minValue: !(this.startTime >= 1 && this.startTime <= 24)
+            ? 1 : minValue(this.startTime),
+          maxValue: !(this.endTime >= 1 && this.endTime <= 24)
+            ? 1 : maxValue(this.endTime),
         },
         excludingEndTime: {
           ...validations.excludingEndTime,
           required: requiredIf(function isExcludingEndTimeRequired() {
             return !(this.excludingStartTime === null || this.excludingStartTime === '' || this.excludingStartTime === undefined);
           }),
-          // minValue: minValue(this.startTime),
-          maxValue: maxValue(this.endTime),
-          minValue: minValue(this.excludingStartTime),
+          minValue: !(this.excludingStartTime >= 1 && this.excludingStartTime <= 24)
+            ? 1 : minValue(this.excludingStartTime),
+          maxValue: !(this.endTime >= 1 && this.endTime <= 24)
+            ? 1 : maxValue(this.endTime),
         },
         endMonth: {
           ...validations.endMonth,
-          minValue: minValue(this.startMonth),
+          minValue: !(this.startMonth >= 1 && this.startMonth <= 12)
+            ? 1 : minValue(this.startMonth),
         },
         endTime: {
           ...validations.endTime,
-          minValue: minValue(this.startTime),
+          minValue: !(this.startTime >= 1 && this.startTime <= 24)
+            ? 1 : minValue(this.startTime),
         },
       };
     },
@@ -157,12 +162,24 @@
         return this.unpackData(pd);
       },
       getErrorMsg(fieldName) {
-        this.metadata.endMonth.minValue = this.startMonth;
-        this.metadata.endTime.minValue = this.startTime;
-        this.metadata.excludingStartTime.minValue = this.startTime;
-        this.metadata.excludingStartTime.maxValue = this.endTime;
-        this.metadata.excludingEndTime.minValue = this.excludingStartTime;
-        this.metadata.excludingEndTime.maxValue = this.endTime;
+        // endMonth dynamic validation
+        this.metadata.endMonth.minValue = !(this.startMonth >= 1 && this.startMonth <= 12)
+          ? 1 : this.startMonth;
+        // endTime dynamic validation
+        this.metadata.endTime.minValue = !(this.startTime >= 1 && this.startTime <= 24)
+          ? 1 : this.startTime;
+        // excludingStartTime dynamic validation
+        this.metadata.excludingStartTime.minValue = !(this.startTime >= 1 && this.startTime <= 24)
+          ? 1 : this.startTime;
+        this.metadata.excludingStartTime.maxValue = !(this.endTime >= 1 && this.endTime <= 24)
+          ? 1 : this.endTime;
+        // excludingEndTime dynamic validation
+        this.metadata.excludingEndTime.minValue
+          = !(this.excludingStartTime >= 1 && this.excludingStartTime <= 24)
+            ? 1 : this.excludingStartTime;
+        this.metadata.excludingEndTime.maxValue = !(this.endTime >= 1 && this.endTime <= 24)
+          ? 1 : this.endTime;
+
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       getChargeTypeFromValue() {
