@@ -88,6 +88,10 @@
   const metadata = RetailTariffBillingPeriodMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
 
+  const PAGEGROUP = 'components';
+  const PAGEKEY = 'financial';
+  const PAGE = 'retailTariff';
+
   export default {
     components: { SaveOnlyButton },
     props: ['billingPeriodId'],
@@ -185,6 +189,24 @@
       getChargeTypeFromValue() {
         return this.metadata.chargeType.allowedValues.find(type => type.value === this.chargeType);
       },
+      getCompletenessPayload() {
+        return {
+          pageGroup: PAGEGROUP,
+          pageKey: PAGEKEY,
+          page: PAGE,
+          completeness: false,
+        };
+      },
+      getErrorListPayload() {
+        const errors = [];
+        errors.push(this.getSingleErrorMsg());
+        return {
+          pageGroup: PAGEGROUP,
+          pageKey: PAGEKEY,
+          page: PAGE,
+          errorList: errors,
+        };
+      },
       getMetadataValue() {
         const allowedValues = this.getChargeTypeFromValue();
         if (allowedValues !== undefined) {
@@ -195,6 +217,24 @@
           this.metadata.value.unit = this.metadata.value.initUnit;
         }
         return this.metadata.value;
+      },
+      getNumberOfInvalidRows(rows) {
+        let invalidRowsCount = 0;
+        Object.values(rows).forEach((row) => {
+          if (!row.complete) {
+            invalidRowsCount += 1;
+          }
+        });
+        return invalidRowsCount;
+      },
+      getSingleErrorMsg() {
+        const billingPeriods = this.$store.state.Project.retailTariffBillingPeriods;
+        if (billingPeriods.length === 0) {
+          return 'There are no billing periods specified.';
+        }
+        const invalidRowCount = this.getNumberOfInvalidRows(billingPeriods);
+        const pluralizeRow = (invalidRowCount === 1) ? '' : 's';
+        return `There are errors with ${invalidRowCount} row${pluralizeRow} in the table.`;
       },
       isNewBillingPeriod() {
         return this.billingPeriodId === 'null';
@@ -232,6 +272,12 @@
           this.$store.dispatch('replaceListField', payload);
         }
         this.submitted = true;
+        // set retail tariff completeness and errorList
+        // only do this when the current row is invalid
+        if (!this.complete) {
+          this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
+          this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
+        }
       },
       // saveAndAdd() {
       // reload page ? (reset form)
