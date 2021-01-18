@@ -26,33 +26,4 @@ export default class ProjectField {
         && { between: between(this.minValue, this.maxValue) }),
     };
   }
-
-  /**
-  args:
-    value
-    displayName
-    isRequired
-    description
-    schemaTag
-    schemaKey
-  */
-  static fromSchema(args) {
-    // const d = getFromSchema(schemaTag, schemaKey);
-    const d = {
-      minValue: 0, maxValue: 1, allowedValues: 'allowedVals', unit: 'unit', type: 'type',
-    };
-    return new ProjectField({
-      defaultValue: args.defaultValue,
-      displayName: args.displayName,
-      isRequired: args.isRequired,
-      description: args.description,
-      minValue: d.minValue,
-      maxValue: d.maxValue,
-      allowedValues: d.allowedValues,
-      unit: d.unit,
-      type: d.type,
-      initDisplayName: args.initDisplayName,
-      initUnit: d.initUnit,
-    });
-  }
 }

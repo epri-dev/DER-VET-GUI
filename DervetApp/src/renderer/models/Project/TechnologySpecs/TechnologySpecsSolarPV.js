@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
-import ProjectFieldMetadata from '@/models/Project/Fields';
+import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 import { SHARED_DYNAMIC_FIELDS, createSharedHardcodedMetadata } from '@/models/Project/TechnologySpecs/sharedConstants';
 import { optionsYN, makeAllowedValuesWithNull } from '@/models/Project/constants';
 import { TECH_SPECS_PV_PATH } from '@/router/constants';
@@ -225,19 +225,6 @@ export default class TechnologySpecsSolarPVMetadata {
         allowedValues: SIZING_ALLOWED_VALUES,
       }),
       ...sharedHardcodedMetadata,
-    });
-  }
-
-  static getMetadataFromSchema() {
-    return new TechnologySpecsSolarPVMetadata({
-      cost: ProjectFieldMetadata.fromSchema({
-        defaultValue: 0,
-        displayName: 'Cost per kW',
-        isRequired: true,
-        description: 'Capital cost per kW of rated power capacity (applied in year 0 of the analysis)',
-        schemaTag: PV,
-        schemaKey: 'ccost_kW',
-      }),
     });
   }
 }

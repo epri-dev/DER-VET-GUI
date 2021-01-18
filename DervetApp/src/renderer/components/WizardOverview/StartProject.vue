@@ -105,7 +105,7 @@
 
   import { requiredIf } from 'vuelidate/lib/validators';
 
-  import * as p from '@/models/Project/Project';
+  import * as p from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import * as paths from '@/router/constants';
@@ -146,15 +146,6 @@
     computed: {
       complete() {
         return this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGE];
-      },
-      projID() {
-        return this.$store.state.Project.id;
-      },
-      projResultsID() {
-        return this.$store.state.Results.id;
-      },
-      applicationID() {
-        return this.$store.state.Application.id;
       },
     },
     methods: {

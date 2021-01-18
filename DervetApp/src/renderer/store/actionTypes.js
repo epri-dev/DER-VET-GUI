@@ -4,6 +4,7 @@
 // index page
 export const RESET_PROJECT_TO_DEFAULT = 'resetProjectToDefault';
 export const LOAD_QUICK_START_PROJECT = 'loadQuickStartProject';
+export const LOAD_NEW_PROJECT = 'loadNewProject';
 // battery page
 export const REPLACE_TECHNOLOGY_SPECS_BATTERY = 'replaceTechnologySpecsBattery';
 // battery cycle page

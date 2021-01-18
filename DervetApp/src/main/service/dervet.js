@@ -102,10 +102,10 @@ export const callDervet = (modelParametersPath) => {
 export const readDervetResults = (resultsPath, expectedResultCsvs) => {
   console.log('Reading dervet results...'); // eslint-disable-line
 
-  const promises = (_.map(expectedResultCsvs, (csvMeta) => {
+  const promises = _.map(expectedResultCsvs, (csvMeta) => {
     const filePath = path.join(resultsPath, csvMeta.fileName);
     return parseCsvFromFile(filePath, csvMeta.fieldName);
-  }));
+  });
 
   return Promise.all(promises);
 };

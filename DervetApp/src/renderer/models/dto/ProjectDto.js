@@ -229,7 +229,7 @@ export const makeDAParameters = (project) => {
 export const makeDCMParameters = (project) => {
   if (project.objectivesRetailDemandChargeReduction) {
     const isActive = convertToYesNo(project.objectivesRetailDemandChargeReduction);
-    const keys = { growth: makeBaseKey(setUndefinedNullToZero(project.dcmGrowth, FLOAT)) };
+    const keys = { growth: makeBaseKey(setUndefinedNullToZero(project.dcmGrowth), FLOAT) };
     return makeGroup('', isActive, keys);
   }
   return makeEmptyGroup();
@@ -574,7 +574,6 @@ export const makeModelParameters = (project, inputsDirectory, resultsDirectory) 
     SR: makeSRParameters(project),
     User: makeUserParameters(project),
   },
-  type: project.type,
 });
 
 export const makeBatteryCycleLifeCsv = (battery) => {
@@ -826,7 +825,7 @@ export const makeMeta = (project, inputsDirectory, resultsDirectory) => ({
 
 export const makeOutputDirectoryName = (outputDirectory) => {
   // If user does not select an output directory, default to their app data directory
-  if (outputDirectory === undefined) {
+  if (outputDirectory === undefined || outputDirectory === null) {
     return path.join(getAppDataPath(), 'DER-VET');
   }
   // If user selects a directory, create a timestamped output folder

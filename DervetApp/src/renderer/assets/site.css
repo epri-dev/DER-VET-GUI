@@ -31,6 +31,11 @@ body {
     width: 240px !important;
 }
 
+.btn-summary {
+    width: 180px !important;
+    height: 50px !important;
+}
+
 .cal-enviro-screen-img {
     max-width: 100%;
     height: auto;

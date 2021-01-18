@@ -138,25 +138,14 @@
         </template>
         </br>
 
-<!-- Under Construction
-        <h4>Scenario Analysis</h4>
-        <template>
-          <b-table-lite thead-tr-class="d-none" fixed hover bordered striped
-            :items="scenario">
-          </b-table-lite>
-        </template>
-        </br>
--->
-
         <div class="form-group form-buffer row">
-          <div class="col-md-5">
-            <router-link
-              v-on:click.native="exportProject"
-              :to="this.$route.path"
-              class="btn btn-lg btn-info pull-right">
-              Export Project
-            </router-link>
-          </div>
+          <file-picker
+            label="Export Project"
+            :onFileSelect="exportProject"
+            :isAsync="true"
+            :isDirectory="true"
+            buttonAttributes="btn btn-lg btn-info pull-right btn-summary"
+            wrapperDivAttributes="col-md-5"/>
 
           <div class="col-md-2"/>
 
@@ -165,7 +154,7 @@
               v-on:click.native="(runInProgress() || runDervetDisabled()) ? () => null : runDervet()"
               :event="runDervetDisabled() ? '' : 'click'"
               :to="this.$route.path"
-              class="btn btn-lg btn-danger pull-left">
+              class="btn btn-lg btn-danger pull-left btn-summary">
               {{ runInProgress() ? 'Running Analysis...' : 'Run Analysis' }}
             </router-link>
           </div>
@@ -183,6 +172,8 @@
   import { RUN_ANALYSIS_PATH } from '@/router/constants';
   import model from '@/models/StartProject';
   import * as techLabels from '@/models/Project/TechnologySpecs/labelConstants';
+  import { exportProject } from '@/service/ProjectFileManager';
+  import FilePicker from '@/components/Shared/FilePicker';
 
   const { validation } = model;
 
@@ -260,6 +251,9 @@
         return flatten(Object.values(techList));
       },
     },
+    components: {
+      FilePicker,
+    },
     methods: {
       modeDescription() {
         if (this.$store.state.Project.analysisHorizonMode === null) {
@@ -284,8 +278,8 @@
       runInProgress() {
         return this.$store.state.Application.runInProgress;
       },
-      exportProject() {
-        return 'TODO: this will export the project';
+      exportProject(selectedPath) {
+        return exportProject(selectedPath, this.$store.state.Project, this.$store.state.Application);
       },
       runDervet() {
         // TODO: note that there is currently no validation, so calling this with an

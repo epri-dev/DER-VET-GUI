@@ -86,7 +86,7 @@
 
 <script>
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import * as p from '@/models/Project/Project';
+  import * as p from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
   import operateOnKeysList from '@/util/object';
   import csvUploadMixin from '@/mixins/csvUploadMixin';

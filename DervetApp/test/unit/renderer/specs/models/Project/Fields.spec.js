@@ -1,19 +1,7 @@
-import ProjectField from '@/models/Project/Fields';
+import ProjectField from '@/models/Project/FieldMetadata';
 import { required, decimal, minValue } from 'vuelidate/lib/validators';
 
 describe('Field model', () => {
-  it('should initialize from schema properly', () => {
-    const actual = ProjectField.fromSchema({
-      defaultValue: 0,
-      displayName: 'Cost per kW',
-      isRequired: true,
-      description: 'Capital cost per kW of rated power capacity (applied in year 0 of the analysis)',
-      schemaTag: 'foo',
-      schemaKey: 'ccost_kW',
-    });
-    expect(actual.defaultValue).to.eql(0);
-  });
-
   it('should translate to a validation schema', () => {
     // Refactor into shared w/ other tests
     const cost = new ProjectField({

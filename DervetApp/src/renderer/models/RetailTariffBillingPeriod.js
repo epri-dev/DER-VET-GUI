@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { objectToCsv } from '@/util/file';
 
-import ProjectFieldMetadata from '@/models/Project/Fields';
+import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 
 const WEEKDAY_ALLOWED_VALUES = [
   {
