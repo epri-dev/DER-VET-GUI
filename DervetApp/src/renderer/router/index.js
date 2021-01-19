@@ -91,6 +91,12 @@ export default new Router({
           props: true,
         },
         {
+          path: 'technology-specs-controllable-load-upload/:id',
+          name: 'technologySpecsControllableLoadUpload',
+          component: require('@/components/WizardModelComponents/TechnologySpecsControllableLoadUpload').default,
+          props: true,
+        },
+        {
           path: 'technology-specs-single-ev/:id',
           name: 'technologySpecsSingleEV',
           component: require('@/components/WizardModelComponents/TechnologySpecsSingleEV').default,

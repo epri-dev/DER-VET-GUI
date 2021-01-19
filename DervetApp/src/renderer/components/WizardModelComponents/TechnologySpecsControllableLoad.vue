@@ -106,7 +106,7 @@
         </drop-down-input>
 
         <save-buttons
-          :continue-link="WIZARD_COMPONENT_PATH"
+          :continue-link="`${TECH_SPECS_CONTROLLABLE_LOAD_PATH}-upload/${this.id}`"
           :displayError="submitted && $v.$anyError"
           :save="validatedSave"
         />
@@ -123,7 +123,11 @@
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsControllableLoadMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsControllableLoad';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT_PATH, TECH_SPECS_CONTROLLABLE_LOAD_PATH } from '@/router/constants';
+  import {
+    REPLACE_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD,
+    MAKE_LIST_OF_ACTIVE_TECHNOLOGIES,
+  } from '@/store/actionTypes';
 
   const metadata = TechnologySpecsControllableLoadMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
@@ -139,6 +143,7 @@
         metadata,
         ...valuesMinusId,
         WIZARD_COMPONENT_PATH,
+        TECH_SPECS_CONTROLLABLE_LOAD_PATH,
       };
     },
     validations: {
@@ -214,8 +219,8 @@
           newControllableLoad: controllableLoadSpec,
           id: this.id,
         };
-        this.$store.dispatch('replaceTechnologySpecsControllableLoad', payload);
-        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
+        this.$store.dispatch(REPLACE_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD, payload);
+        this.$store.dispatch(MAKE_LIST_OF_ACTIVE_TECHNOLOGIES, this.$store.state.Project);
       },
       buildControllableLoad() {
         return {
