@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container body-content">
     <h3>Technology Specs</h3>
     <hr>
     <div class="form-horizontal form-buffer row ">

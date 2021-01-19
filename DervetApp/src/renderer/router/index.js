@@ -34,6 +34,10 @@ export default new Router({
           path: 'objectives',
           component: require('@/components/WizardOverview/Objectives').default,
         },
+        {
+          path: 'cal-enviro-screen',
+          component: require('@/components/WizardOverview/CalEnviroScreen/Layout').default,
+        },
       ],
     },
     {

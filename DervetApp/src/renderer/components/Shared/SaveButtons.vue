@@ -5,7 +5,7 @@
     </div>
 
     <div v-if="displayError" class="col-md-5 error-text-color">
-      There are errors on the page.
+      {{ errorText }}
     </div>
     <div v-else class="col-md-5">
     </div>
@@ -50,6 +50,10 @@
       continueText: {
         type: String,
         default: 'Save and Continue >>',
+      },
+      errorText: {
+        type: String,
+        default: 'There are errors on the page.',
       },
       save: {
         type: Function,

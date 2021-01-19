@@ -374,7 +374,8 @@
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsBatteryMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsBattery';
-  import { WIZARD_COMPONENT_PATH, TECH_SPECS_BATTERY_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT_PATH }
+    from '@/router/constants';
 
   const metadata = TechnologySpecsBatteryMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
@@ -390,7 +391,6 @@
         metadata,
         ...values,
         WIZARD_COMPONENT_PATH,
-        TECH_SPECS_BATTERY_PATH,
       };
     },
     validations: {
@@ -539,12 +539,22 @@
       isnewBattery() {
         return this.batteryId === 'null';
       },
+      getAssociatedInputsCompleteness() {
+        // loop through associatedInputs array and check complete param
+        if (this.includeCycleDegradation) {
+          if (this.associatedInputs[0]) {
+            return this.associatedInputs[0].complete;
+          }
+          return false;
+        }
+        return true;
+      },
       getBatteryFromStore() {
         return this.$store.getters.getBatteryById(this.batteryId);
       },
       getContinueLink() {
         if (this.includeCycleDegradation) {
-          return `${TECH_SPECS_BATTERY_PATH}-cycle/${this.id}`;
+          return `${this.associatedInputs[0].path}/${this.id}`;
         }
         return WIZARD_COMPONENT_PATH;
       },
@@ -601,7 +611,7 @@
         if (this.includeAuxiliaryLoad === false) {
           this.resetNonRequired(['auxiliaryLoad']);
         }
-        // shared inputs: reset all non-requred inputs to default
+        // shared inputs: reset all non-required inputs to default
         if (this.isReplaceable === false) {
           this.resetNonRequired(['replacementCost', 'replacementCostPerkW', 'replacementCostPerkWh', 'replacementConstructionTime']);
         }
@@ -611,7 +621,9 @@
         this.submitted = true;
         this.$v.$touch();
         // set complete to true or false
-        this.complete = !this.$v.$invalid;
+        this.componentSpecsComplete = !this.$v.$invalid;
+        this.associatedInputsComplete = this.getAssociatedInputsCompleteness();
+        this.complete = this.componentSpecsComplete && this.associatedInputsComplete;
         // populate errorList for this technology
         if (this.complete !== true) {
           this.errorList = this.makeErrorList();
@@ -631,8 +643,9 @@
       buildBattery() {
         return {
           active: this.active,
+          associatedInputs: this.associatedInputs,
+          associatedInputsComplete: this.associatedInputsComplete,
           auxiliaryLoad: this.auxiliaryLoad,
-          batteryCycles: this.batteryCycles,
           calendarDegradationRate: this.calendarDegradationRate,
           capitalCost: this.capitalCost,
           capitalCostPerkW: this.capitalCostPerkW,
@@ -663,6 +676,7 @@
           maxDuration: this.maxDuration,
           name: this.name,
           operationYear: this.operationYear,
+          path: this.path,
           powerCapacity: this.powerCapacity,
           powerCapacityMaximum: this.powerCapacityMaximum,
           powerCapacityMinimum: this.powerCapacityMinimum,
@@ -679,6 +693,7 @@
           shouldLimitDailyCycling: this.shouldLimitDailyCycling,
           shouldMaxDuration: this.shouldMaxDuration,
           shouldPowerSize: this.shouldPowerSize,
+          componentSpecsComplete: this.componentSpecsComplete,
           stateOfHealth: this.stateOfHealth,
           tag: this.tag,
           targetSOC: this.targetSOC,

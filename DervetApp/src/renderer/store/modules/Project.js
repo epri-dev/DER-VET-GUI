@@ -165,7 +165,11 @@ const mutations = {
   [m.ADD_BATTERY_CYCLES_TO_TECHNOLOGY_SPECS_BATTERY](state, payload) {
     const tmpBatterySpecs = getters.getBatterySpecsClone(state)();
     const indexMatchingId = getters.getIndexOfBatteryId(state)(payload.batteryId);
-    tmpBatterySpecs[indexMatchingId].batteryCycles = payload.batteryCycles;
+    tmpBatterySpecs[indexMatchingId].associatedInputsComplete = payload.batteryCycles.complete;
+    tmpBatterySpecs[indexMatchingId].complete
+      = payload.batteryCycles.complete && tmpBatterySpecs[indexMatchingId].componentSpecsComplete;
+    // this updates the object, while retaining untouched pieces
+    Object.assign(tmpBatterySpecs[indexMatchingId].associatedInputs[0], payload.batteryCycles);
     state.technologySpecsBattery = tmpBatterySpecs;
   },
   // Controllable Load

@@ -1,6 +1,11 @@
 import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
 import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
 import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
+import {
+  TECH_SPECS_PV_PATH,
+  TECH_SPECS_BATTERY_PATH,
+  TECH_SPECS_BATTERY_DATA_CYCLES_PATH,
+} from '@/router/constants';
 
 import { pvGen, criticalLoad, siteLoad } from '@/assets/cases/billReduction/csvs';
 
@@ -265,6 +270,7 @@ export const billReductionProject = {
     name: 'Installation 1',
     nu: 20,
     operationYear: 2017,
+    path: TECH_SPECS_PV_PATH,
     ppaCost: null,
     ppaInflationRate: null,
     ratedCapacity: 1000,
@@ -281,21 +287,16 @@ export const billReductionProject = {
   }],
   technologySpecsBattery: [{
     active: true,
+    // this should be set elsewhere
+    associatedInputs: [{
+      complete: false,
+      dataRows: [],
+      displayName: 'Battery Cycle Life Curve',
+      errorList: ['Not Started'],
+      path: TECH_SPECS_BATTERY_DATA_CYCLES_PATH,
+    }],
+    associatedInputsComplete: false,
     auxiliaryLoad: 0,
-    batteryCycles: [
-      { ulimit: 0.05, val: 75000 },
-      { ulimit: 0.1, val: 40500 },
-      { ulimit: 0.15, val: 27000 },
-      { ulimit: 0.2, val: 20250 },
-      { ulimit: 0.3, val: 11250 },
-      { ulimit: 0.4, val: 6750 },
-      { ulimit: 0.5, val: 4500 },
-      { ulimit: 0.6, val: 3750 },
-      { ulimit: 0.7, val: 3225 },
-      { ulimit: 0.8, val: 2813 },
-      { ulimit: 0.9, val: 2475 },
-      { ulimit: 1, val: 2250 },
-    ],
     calendarDegradationRate: 0,
     capitalCost: 0,
     capitalCostPerkW: 800,
@@ -327,6 +328,7 @@ export const billReductionProject = {
     maxDuration: 0,
     name: 'BESS 1',
     operationYear: 2017,
+    path: TECH_SPECS_BATTERY_PATH,
     powerCapacity: null,
     powerCapacityMaximum: null,
     powerCapacityMinimum: null,
@@ -343,6 +345,7 @@ export const billReductionProject = {
     shouldLimitDailyCycling: false,
     shouldMaxDuration: false,
     shouldPowerSize: true,
+    componentSpecsComplete: true,
     stateOfHealth: 0,
     tag: 'Battery',
     targetSOC: 50,
