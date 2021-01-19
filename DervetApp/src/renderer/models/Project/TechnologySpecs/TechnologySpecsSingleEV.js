@@ -1,8 +1,6 @@
 import _ from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
 
 import ProjectFieldMetadata from '@/models/Project/Fields';
-import { optionsYN } from '@/models/Project/constants';
 import {
   SHARED_DYNAMIC_FIELDS,
   createSharedHardcodedMetadata,
@@ -20,12 +18,12 @@ const DYNAMIC_FIELDS = [
   'minimumChargingPower',
   'plugInHour',
   'plugOutHour',
-  'replacmentCosts',
+  'replacmentCost',
 ];
 
 const sharedHardcodedMetadata = createSharedHardcodedMetadata('single EV');
 
-export default class TechnologySpecsHomeEVMetadata {
+export default class TechnologySpecsSingleEVMetadata {
   constructor(arg) {
     Object.assign(this, arg);
   }
@@ -39,7 +37,7 @@ export default class TechnologySpecsHomeEVMetadata {
       active: true,
       complete: null,
       errorList: [],
-      id: uuidv4(),
+      id: null,
       tag: ELECTRIC_VEHICLE1,
       technologyType: 'Electric Vehicle',
       ...this.operateOnDynamicFields(f => f.defaultValue),
@@ -52,7 +50,7 @@ export default class TechnologySpecsHomeEVMetadata {
 
   // to be removed in favor of getMetadataFromSchema
   static getHardcodedMetadata() {
-    return new TechnologySpecsHomeEVMetadata({  
+    return new TechnologySpecsSingleEVMetadata({
       capitalCost: new ProjectFieldMetadata({
         displayName: 'Capital Cost',
         isRequired: true,

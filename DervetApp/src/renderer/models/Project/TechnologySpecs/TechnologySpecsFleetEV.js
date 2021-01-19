@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
 
 import ProjectFieldMetadata from '@/models/Project/Fields';
 import {
@@ -36,7 +35,7 @@ export default class TechnologySpecsFleetEVMetadata {
       baselineLoad: null,
       complete: null,
       errorList: [],
-      id: uuidv4(),
+      id: null,
       tag: ELECTRIC_VEHICLE2,
       technologyType: 'Electric Vehicle',
       ...this.operateOnDynamicFields(f => f.defaultValue),

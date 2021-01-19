@@ -81,6 +81,24 @@ export default new Router({
           props: true,
         },
         {
+          path: 'technology-specs-controllable-load/:id',
+          name: 'technologySpecsControllableLoad',
+          component: require('@/components/WizardModelComponents/TechnologySpecsControllableLoad').default,
+          props: true,
+        },
+        {
+          path: 'technology-specs-single-ev/:id',
+          name: 'technologySpecsSingleEV',
+          component: require('@/components/WizardModelComponents/TechnologySpecsSingleEV').default,
+          props: true,
+        },
+        {
+          path: 'technology-specs-fleet-ev/:id',
+          name: 'technologySpecsFleetEV',
+          component: require('@/components/WizardModelComponents/TechnologySpecsFleetEV').default,
+          props: true,
+        },
+        {
           path: 'objectives-parameters-da',
           component: require('@/components/WizardModelComponents/ObjectivesParametersDA').default,
         },

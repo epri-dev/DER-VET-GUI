@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Technology Specs: Internal Combustion Engine Generator</h3>
+    <h3>Technology Specs: Controllable Load</h3>
     <hr />
     <form>
       <div class="form-horizontal form-buffer container">
@@ -17,105 +17,17 @@
         </text-input>
 
         <text-input
-          v-model="numGenerators"
-          v-bind:field="metadata.numGenerators"
-          :isInvalid="submitted && $v.numGenerators.$error"
-          :errorMessage="getErrorMsg('numGenerators')">
-        </text-input>
-
-        <radio-button-input
-          v-model="shouldSize"
-          v-bind:field="metadata.shouldSize"
-          :isInvalid="submitted && $v.shouldSize.$error"
-          :errorMessage="getErrorMsg('shouldSize')">
-        </radio-button-input>
-
-        <div v-if="shouldSize === false">
-          <text-input
-            v-model="ratedCapacity"
-            v-bind:field="metadata.ratedCapacity"
-            :isInvalid="submitted && $v.ratedCapacity.$error"
-            :errorMessage="getErrorMsg('ratedCapacity')">
-          </text-input>
-        </div>
-
-        <div v-if="shouldSize === true">
-          <radio-button-input
-            v-model="includeSizeLimits"
-            v-bind:field="metadata.includeSizeLimits"
-            :isInvalid="submitted && $v.includeSizeLimits.$error"
-            :errorMessage="getErrorMsg('includeSizeLimits')">
-          </radio-button-input>
-
-          <div v-if="includeSizeLimits === true">
-            <text-input
-              v-model="ratedCapacityMaximum"
-              v-bind:field="metadata.ratedCapacityMaximum"
-              :isInvalid="submitted && $v.ratedCapacityMaximum.$error"
-              :errorMessage="getErrorMsg('ratedCapacityMaximum')">
-            </text-input>
-
-            <text-input
-              v-model="ratedCapacityMinimum"
-              v-bind:field="metadata.ratedCapacityMinimum"
-              :isInvalid="submitted && $v.ratedCapacityMinimum.$error"
-              :errorMessage="getErrorMsg('ratedCapacityMinimum')">
-            </text-input>
-          </div>
-        </div>
-
-        <text-input
-          v-model="minimumPower"
-          v-bind:field="metadata.minimumPower"
-          :isInvalid="submitted && $v.minimumPower.$error"
-          :errorMessage="getErrorMsg('minimumPower')">
+          v-model="duration"
+          v-bind:field="metadata.duration"
+          :isInvalid="submitted && $v.duration.$error"
+          :errorMessage="getErrorMsg('duration')">
         </text-input>
 
         <text-input
-          v-model="efficiency"
-          v-bind:field="metadata.efficiency"
-          :isInvalid="submitted && $v.efficiency.$error"
-          :errorMessage="getErrorMsg('efficiency')">
-        </text-input>
-
-        <text-input
-          v-model="fuelCost"
-          v-bind:field="metadata.fuelCost"
-          :isInvalid="submitted && $v.fuelCost.$error"
-          :errorMessage="getErrorMsg('fuelCost')">
-        </text-input>
-
-        <fieldset class="section-group">
-          <legend>Cost Function</legend>
-
-          <text-input
-            v-model="capitalCost"
-            v-bind:field="metadata.capitalCost"
-            :isInvalid="submitted && $v.capitalCost.$error"
-            :errorMessage="getErrorMsg('capitalCost')">
-          </text-input>
-
-          <text-input
-            v-model="capitalCostPerkW"
-            v-bind:field="metadata.capitalCostPerkW"
-            :isInvalid="submitted && $v.capitalCostPerkW.$error"
-            :errorMessage="getErrorMsg('capitalCostPerkW')">
-          </text-input>
-
-        </fieldset>
-
-        <text-input
-          v-model="variableOMCost"
-          v-bind:field="metadata.variableOMCost"
-          :isInvalid="submitted && $v.variableOMCost.$error"
-          :errorMessage="getErrorMsg('variableOMCost')">
-        </text-input>
-
-        <text-input
-          v-model="fixedOMCostIncludingExercise"
-          v-bind:field="metadata.fixedOMCostIncludingExercise"
-          :isInvalid="submitted && $v.fixedOMCostIncludingExercise.$error"
-          :errorMessage="getErrorMsg('fixedOMCostIncludingExercise')">
+          v-model="ratedCapacity"
+          v-bind:field="metadata.ratedCapacity"
+          :isInvalid="submitted && $v.ratedCapacity.$error"
+          :errorMessage="getErrorMsg('ratedCapacity')">
         </text-input>
 
         <text-input
@@ -153,23 +65,6 @@
             :isInvalid="submitted && $v.replacementConstructionTime.$error"
             :errorMessage="getErrorMsg('replacementConstructionTime')">
           </text-input>
-
-          <fieldset class="section-group">
-            <legend>Replacement Cost Function</legend>
-            <text-input
-              v-model="replacementCost"
-              v-bind:field="metadata.replacementCost"
-              :isInvalid="submitted && $v.replacementCost.$error"
-              :errorMessage="getErrorMsg('replacementCost')">
-            </text-input>
-
-            <text-input
-              v-model="replacementCostPerkW"
-              v-bind:field="metadata.replacementCostPerkW"
-              :isInvalid="submitted && $v.replacementCostPerkW.$error"
-              :errorMessage="getErrorMsg('replacementCostPerkW')">
-            </text-input>
-          </fieldset>
         </div>
 
         <text-input
@@ -223,22 +118,22 @@
 </template>
 
 <script>
+  import { v4 as uuidv4 } from 'uuid';
   import { requiredIf } from 'vuelidate/lib/validators';
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import TechnologySpecsICEMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsICE';
+  import TechnologySpecsControllableLoadMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsControllableLoad';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
 
-  const metadata = TechnologySpecsICEMetadata.getHardcodedMetadata();
+  const metadata = TechnologySpecsControllableLoadMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
 
   export default {
-    name: 'TechnologySpecsICE',
-    // TODO maybe rename this to just 'id'
+    name: 'TechnologySpecsControllableLoad',
     mixins: [wizardFormMixin],
-    props: ['iceId'],
+    props: ['id'],
     data() {
-      const values = this.isnewICE() ? metadata.getDefaultValues() : this.getICEFromStore();
+      const values = this.isnew() ? metadata.getDefaultValues() : this.getControllableLoadFromStore();
       return {
         metadata,
         ...values,
@@ -247,39 +142,9 @@
     },
     validations: {
       ...validations,
-      includeSizeLimits: {
-        ...validations.includeSizeLimits,
-        required: requiredIf(function isIncludeSizeLimitsRequired() {
-          return this.shouldSize;
-        }),
-      },
-      ratedCapacity: {
-        ...validations.ratedCapacity,
-        required: requiredIf(function isRatedCapacityRequired() {
-          return !this.shouldSize;
-        }),
-      },
-      ratedCapacityMaximum: {
-        ...validations.ratedCapacityMaximum,
-        required: requiredIf(function isRatedCapacityMaximumRequired() {
-          return (this.includeSizeLimits === true) && (this.shouldSize === true);
-        }),
-      },
-      ratedCapacityMinimum: {
-        ...validations.ratedCapacityMinimum,
-        required: requiredIf(function isRatedCapacityMinimumRequired() {
-          return (this.includeSizeLimits === true) && (this.shouldSize === true);
-        }),
-      },
       replacementCost: {
         ...validations.replacementCost,
         required: requiredIf(function isReplacementCostRequired() {
-          return (this.isReplaceable === true);
-        }),
-      },
-      replacementCostPerkW: {
-        ...validations.replacementCostPerkW,
-        required: requiredIf(function isReplacementCostPerkWRequired() {
           return (this.isReplaceable === true);
         }),
       },
@@ -312,11 +177,11 @@
         });
         return true;
       },
-      isnewICE() {
-        return this.iceId === 'null';
+      isnew() {
+        return this.id === 'null';
       },
-      getICEFromStore() {
-        return this.$store.getters.getICEById(this.iceId);
+      getControllableLoadFromStore() {
+        return this.$store.getters.getControllableLoadById(this.id);
       },
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
@@ -332,16 +197,8 @@
       },
       validatedSave() {
         // reset all non-required inputs to their defaults prior to saving
-        if (this.shouldSize === true) {
-          this.resetNonRequired(['ratedCapacity']);
-          if (this.includeSizeLimits === false) {
-            this.resetNonRequired(['ratedCapacityMaximum', 'ratedCapacityMinimum']);
-          }
-        } else {
-          this.resetNonRequired(['includeSizeLimits']);
-        }
         if (this.isReplaceable === false) {
-          this.resetNonRequired(['replacementConstructionTime', 'replacementCost', 'replacementCostPerkW']);
+          this.resetNonRequired(['replacementConstructionTime', 'replacementCost']);
         }
         if (this.salvageValueOption !== 'User defined') {
           this.resetNonRequired(['salvageValue']);
@@ -354,52 +211,41 @@
         if (this.complete !== true) {
           this.errorList = this.makeErrorList();
         }
-        const iceSpec = this.buildICE();
-        if (this.isnewICE()) {
-          this.$store.dispatch('addTechnologySpecsICE', iceSpec);
+        const controllableLoadSpec = this.buildControllableLoad();
+        if (this.isnew()) {
+          controllableLoadSpec.id = uuidv4();
+          this.$store.dispatch('addTechnologySpecsControllableLoad', controllableLoadSpec);
         } else {
           const payload = {
-            newICE: iceSpec,
-            iceId: this.iceId,
+            newControllableLoad: controllableLoadSpec,
+            id: this.id,
           };
-          this.$store.dispatch('replaceTechnologySpecsICE', payload);
+          this.$store.dispatch('replaceTechnologySpecsControllableLoad', payload);
         }
         this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
-      buildICE() {
+      buildControllableLoad() {
         return {
           active: this.active,
-          capitalCost: this.capitalCost,
-          capitalCostPerkW: this.capitalCostPerkW,
           complete: this.complete,
           constructionYear: this.constructionYear,
           decomissioningCost: this.decomissioningCost,
-          efficiency: this.efficiency,
+          duration: this.duration,
           errorList: this.errorList,
           expectedLifetime: this.expectedLifetime,
-          fixedOMCostIncludingExercise: this.fixedOMCostIncludingExercise,
-          fuelCost: this.fuelCost,
+          fixedOMCosts: this.fixedOMCosts,
           id: this.id,
-          includeSizeLimits: this.includeSizeLimits,
           isReplaceable: this.isReplaceable,
           macrsTerm: this.macrsTerm,
-          minimumPower: this.minimumPower,
           name: this.name,
-          numGenerators: this.numGenerators,
           operationYear: this.operationYear,
           ratedCapacity: this.ratedCapacity,
-          ratedCapacityMaximum: this.ratedCapacityMaximum,
-          ratedCapacityMinimum: this.ratedCapacityMinimum,
-          replacementCost: this.replacementCost,
-          replacementCostPerkW: this.replacementCostPerkW,
           replacementConstructionTime: this.replacementConstructionTime,
           salvageValue: this.salvageValue,
           salvageValueOption: this.salvageValueOption,
-          shouldSize: this.shouldSize,
           tag: this.tag,
           technologyType: this.technologyType,
           ter: this.ter,
-          variableOMCost: this.variableOMCost,
         };
       },
     },

@@ -3,6 +3,9 @@ import { cloneDeep, flatten, merge } from 'lodash';
 import { billReductionProject } from '@/assets/cases/billReduction/project';
 import { reliabilityProject } from '@/assets/cases/reliability/project';
 import { projectMetadata } from '@/models/Project/Project';
+import * as m from '@/store/mutationTypes';
+import * as a from '@/store/actionTypes';
+
 
 const usecaseDatabase = { // its a sad excuse for a database, but serves as one.
   billReductionProject,
@@ -15,14 +18,20 @@ export const getDefaultState = () => ({
   ...metadataDefaultValues,
 
   // DERS
-  technologySpecsSolarPV: [],
-  technologySpecsICE: [],
   technologySpecsBattery: [],
+  technologySpecsControllableLoad: [],
   technologySpecsDieselGen: [],
-  listOfActiveTechnologies: {
+  technologySpecsFleetEV: [],
+  technologySpecsICE: [],
+  technologySpecsSingleEV: [],
+  technologySpecsSolarPV: [],
+
+  listOfActiveTechnologies: { // do we need this anymore?
     Generator: [],
     'Energy Storage System': [],
     'Intermittent Resource': [],
+    'Controllable Load': [],
+    'Electric Vehicle': [],
   },
 
   // TIMESERIES ARRAYS
@@ -47,47 +56,14 @@ export const getDefaultState = () => ({
 const state = getDefaultState();
 
 const getters = {
-  getListFieldById(state) {
-    return (field, id) => state[field].find(x => x.id === id);
-  },
-  getIndexOfListFieldById(state) {
-    return (field, id) => state[field].findIndex(x => x.id === id);
-  },
   cloneListField(state) {
     return field => cloneDeep(state[field]);
   },
-  getSolarPVById(state) {
-    return id => state.technologySpecsSolarPV.find(x => x.id === id);
+  getControllableLoadById(state) {
+    return id => state.technologySpecsControllableLoad.find(x => x.id === id);
   },
-  getSolarPVSpecsClone(state) {
-    return () => cloneDeep(state.technologySpecsSolarPV);
-  },
-  getIndexOfSolarId(state) {
-    return id => state.technologySpecsSolarPV.findIndex(x => x.id === id);
-  },
-  getICEById(state) {
-    return id => state.technologySpecsICE.find(x => x.id === id);
-  },
-  getICESpecsClone(state) {
-    return () => cloneDeep(state.technologySpecsICE);
-  },
-  getIndexOfICEId(state) {
-    return id => state.technologySpecsICE.findIndex(x => x.id === id);
-  },
-  getDieselGenById(state) {
-    return id => state.technologySpecsDieselGen.find(x => x.id === id);
-  },
-  getDieselGenSpecsClone(state) {
-    return () => cloneDeep(state.technologySpecsDieselGen);
-  },
-  getIndexOfDieselGenId(state) {
-    return id => state.technologySpecsDieselGen.findIndex(x => x.id === id);
-  },
-  getIndexOfBillingPeriodId(state) {
-    return id => state.retailTariffBillingPeriods.findIndex(x => x.id === id);
-  },
-  getIndexOfExternalIncentiveId(state) {
-    return id => state.externalIncentives.findIndex(x => x.id === id);
+  getControllableLoadSpecsClone(state) {
+    return () => cloneDeep(state.technologySpecsControllableLoad);
   },
   getBatteryById(state) {
     return id => state.technologySpecsBattery.find(x => x.id === id);
@@ -95,8 +71,56 @@ const getters = {
   getBatterySpecsClone(state) {
     return () => cloneDeep(state.technologySpecsBattery);
   },
+  getDieselGenById(state) {
+    return id => state.technologySpecsDieselGen.find(x => x.id === id);
+  },
+  getDieselGenSpecsClone(state) {
+    return () => cloneDeep(state.technologySpecsDieselGen);
+  },
+  geFleetEVById(state) {
+    return id => state.technologySpecsFleetEV.find(x => x.id === id);
+  },
+  getFleetEVSpecsClone(state) {
+    return () => cloneDeep(state.technologySpecsFleetEV);
+  },
+  getICEById(state) {
+    return id => state.technologySpecsICE.find(x => x.id === id);
+  },
+  getICESpecsClone(state) {
+    return () => cloneDeep(state.technologySpecsICE);
+  },
   getIndexOfBatteryId(state) {
     return id => state.technologySpecsBattery.findIndex(x => x.id === id);
+  },
+  getIndexOfBillingPeriodId(state) {
+    return id => state.retailTariffBillingPeriods.findIndex(x => x.id === id);
+  },
+  getIndexOfControllableLoadId(state) {
+    return id => state.technologySpecsControllableLoad.findIndex(x => x.id === id);
+  },
+  getIndexOfDieselGenId(state) {
+    return id => state.technologySpecsDieselGen.findIndex(x => x.id === id);
+  },
+  getIndexOfExternalIncentiveId(state) {
+    return id => state.externalIncentives.findIndex(x => x.id === id);
+  },
+  getIndexOfFleetEVId(state) {
+    return id => state.technologySpecsFleetEV.findIndex(x => x.id === id);
+  },
+  getIndexOfICEId(state) {
+    return id => state.technologySpecsICE.findIndex(x => x.id === id);
+  },
+  getIndexOfListFieldById(state) {
+    return (field, id) => state[field].findIndex(x => x.id === id);
+  },
+  getIndexOfSingleEVId(state) {
+    return id => state.technologySpecsSingleEV.findIndex(x => x.id === id);
+  },
+  getIndexOfSolarId(state) {
+    return id => state.technologySpecsSolarPV.findIndex(x => x.id === id);
+  },
+  getListFieldById(state) {
+    return (field, id) => state[field].find(x => x.id === id);
   },
   getNewRetailTariffBillingPeriodId(state) {
     // Billing Period IDs are integers that begin with 1, and increment by 1
@@ -109,64 +133,83 @@ const getters = {
     const lastId = state.retailTariffBillingPeriods[numberOfRetailTariffRows - 1].id;
     return lastId + 1;
   },
+  geSingleEVById(state) {
+    return id => state.technologySpecsDieselGen.find(x => x.id === id);
+  },
+  getSingleEVSpecsClone(state) {
+    return () => cloneDeep(state.technologySpecsDieselGen);
+  },
+  getSolarPVById(state) {
+    return id => state.technologySpecsSolarPV.find(x => x.id === id);
+  },
+  getSolarPVSpecsClone(state) {
+    return () => cloneDeep(state.technologySpecsSolarPV);
+  },
 };
 
 const mutations = {
-  RESET_PROJECT_TO_DEFAULT(state) {
+  [m.RESET_PROJECT_TO_DEFAULT](state) {
     Object.assign(state, getDefaultState());
   },
-  LOAD_QUICK_START_PROJECT(state, quickStartBillReduction) {
+  [m.LOAD_QUICK_START_PROJECT](state, quickStartBillReduction) {
     Object.assign(state, quickStartBillReduction);
   },
   // Battery
-  REPLACE_TECHNOLOGY_SPECS_BATTERY(state, payload) {
+  [m.REPLACE_TECHNOLOGY_SPECS_BATTERY](state, payload) {
     const tmpBatterySpecs = getters.getBatterySpecsClone(state)();
     const indexMatchingId = getters.getIndexOfBatteryId(state)(payload.batteryId);
     tmpBatterySpecs[indexMatchingId] = payload.newBattery;
     state.technologySpecsBattery = tmpBatterySpecs;
   },
   // battery cycle file
-  ADD_BATTERY_CYCLES_TO_TECHNOLOGY_SPECS_BATTERY(state, payload) {
+  [m.ADD_BATTERY_CYCLES_TO_TECHNOLOGY_SPECS_BATTERY](state, payload) {
     const tmpBatterySpecs = getters.getBatterySpecsClone(state)();
     const indexMatchingId = getters.getIndexOfBatteryId(state)(payload.batteryId);
     tmpBatterySpecs[indexMatchingId].batteryCycles = payload.batteryCycles;
     state.technologySpecsBattery = tmpBatterySpecs;
   },
+  // Controllable Load
+  [m.REPLACE_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD](state, payload) {
+    const tmpSpecs = getters.getControllableLoadSpecsClone(state)();
+    const indexMatchingId = getters.getIndexOfControllableLoadId(state)(payload.id);
+    tmpSpecs[indexMatchingId] = payload.newControllableLoad;
+    state.technologySpecsControllableLoad = tmpSpecs;
+  },
   // da page
-  SET_DA_GROWTH(state, newDAGrowth) {
+  [m.SET_DA_GROWTH](state, newDAGrowth) {
     state.daGrowth = newDAGrowth;
   },
-  SET_DA_PRICE(state, newDAPrice) {
+  [m.SET_DA_PRICE](state, newDAPrice) {
     state.daPrice = newDAPrice;
   },
   // deferral page
-  SET_DEFERRAL_GROWTH(state, newDeferralGrowth) {
+  [m.SET_DEFERRAL_GROWTH](state, newDeferralGrowth) {
     state.deferralGrowth = newDeferralGrowth;
   },
-  SET_DEFERRAL_PRICE(state, newDeferralPrice) {
+  [m.SET_DEFERRAL_PRICE](state, newDeferralPrice) {
     state.deferralPrice = newDeferralPrice;
   },
-  SET_DEFERRAL_PLANNED_LOAD_LIMIT(state, newDeferralPlannedLoadLimit) {
+  [m.SET_DEFERRAL_PLANNED_LOAD_LIMIT](state, newDeferralPlannedLoadLimit) {
     state.deferralPlannedLoadLimit = newDeferralPlannedLoadLimit;
   },
-  SET_DEFERRAL_LOAD(state, newDeferralLoad) {
+  [m.SET_DEFERRAL_LOAD](state, newDeferralLoad) {
     state.deferralLoad = newDeferralLoad;
   },
-  SET_DEFERRAL_REVERSE_POWER_FLOW_LIMIT(state, newDeferralReversePowerFlowLimit) {
+  [m.SET_DEFERRAL_REVERSE_POWER_FLOW_LIMIT](state, newDeferralReversePowerFlowLimit) {
     state.deferralReversePowerFlowLimit = newDeferralReversePowerFlowLimit;
   },
   // Diesel
-  REPLACE_TECHNOLOGY_SPECS_DIESEL_GEN(state, payload) {
+  [m.REPLACE_TECHNOLOGY_SPECS_DIESEL_GEN](state, payload) {
     const tmpDieselGenSpecs = getters.getDieselGenSpecsClone(state)();
     const indexMatchingId = getters.getIndexOfDieselGenId(state)(payload.dieselGenId);
     tmpDieselGenSpecs[indexMatchingId] = payload.newDieselGen;
     state.technologySpecsDieselGen = tmpDieselGenSpecs;
   },
   // External incentives file
-  ADD_EXTERNAL_INCENTIVE(state, newExternalIncentive) {
+  [m.ADD_EXTERNAL_INCENTIVE](state, newExternalIncentive) {
     state.externalIncentives.push(newExternalIncentive);
   },
-  REPLACE_EXTERNAL_INCENTIVES(state, newExternalIncentives) {
+  [m.REPLACE_EXTERNAL_INCENTIVES](state, newExternalIncentives) {
     state.externalIncentives = newExternalIncentives;
   },
   REMOVE_ALL_EXTERNAL_INCENTIVES(state) {
@@ -219,6 +262,13 @@ const mutations = {
   },
   SET_FR_UP_PRICE(state, newFRUpPrice) {
     state.frUpPrice = newFRUpPrice;
+  },
+  // Fleet EV
+  REPLACE_TECHNOLOGY_SPECS_FLEET_EV(state, payload) {
+    const tmpSpecs = getters.getFleetEVSpecsClone(state)();
+    const indexMatchingId = getters.getIndexOfFleetEVId(state)(payload.id);
+    tmpSpecs[indexMatchingId] = payload.newFleetEV;
+    state.technologySpecsFleetEV = tmpSpecs;
   },
   // ICE
   REPLACE_TECHNOLOGY_SPECS_ICE(state, payload) {
@@ -309,6 +359,13 @@ const mutations = {
   REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS(state) {
     state.retailTariffBillingPeriods = [];
   },
+  // Single EV
+  REPLACE_TECHNOLOGY_SPECS_SINGLE_EV(state, payload) {
+    const tmpSpecs = getters.getSingleEVSpecsClone(state)();
+    const indexMatchingId = getters.getIndexOfSingleEVId(state)(payload.id);
+    tmpSpecs[indexMatchingId] = payload.newSingleEV;
+    state.technologySpecsSingleEV = tmpSpecs;
+  },
   // site information
   SET_INCLUDE_POI_CONTRAINTS(state, newIncludePOIConstraints) {
     state.includeInterconnectionConstraints = newIncludePOIConstraints;
@@ -381,76 +438,121 @@ const mutations = {
     state.type = type;
   },
   // technology specs
-  ACTIVATE_TECH_BATTERY(state, payload) {
+  [m.ACTIVATE_TECH_BATTERY](state, payload) {
     const indexMatchingId = getters.getIndexOfBatteryId(state)(payload.id);
     state.technologySpecsBattery[indexMatchingId].active = true;
   },
-  ACTIVATE_TECH_DIESEL_GEN(state, payload) {
+  [m.ACTIVATE_TECH_CONTROLLABLE_LOAD](state, payload) {
+    const indexMatchingId = getters.getIndexOfControllableLoadId(state)(payload.id);
+    state.technologySpecsControllableLoad[indexMatchingId].active = true;
+  },
+  [m.ACTIVATE_TECH_DIESEL_GEN](state, payload) {
     const indexMatchingId = getters.getIndexOfDieselGenId(state)(payload.id);
     state.technologySpecsDieselGen[indexMatchingId].active = true;
   },
-  ACTIVATE_TECH_ICE(state, payload) {
+  [m.ACTIVATE_TECH_FLEET_EV](state, payload) {
+    const indexMatchingId = getters.getIndexOfFleetEVId(state)(payload.id);
+    state.technologySpecsFleetEV[indexMatchingId].active = true;
+  },
+  [m.ACTIVATE_TECH_ICE](state, payload) {
     const indexMatchingId = getters.getIndexOfICEId(state)(payload.id);
     state.technologySpecsICE[indexMatchingId].active = true;
   },
-  ACTIVATE_TECH_SOLAR_PV(state, payload) {
+  [m.ACTIVATE_TECH_SINGLE_EV](state, payload) {
+    const indexMatchingId = getters.getIndexOfSingleEVId(state)(payload.id);
+    state.technologySpecsSingleEV[indexMatchingId].active = true;
+  },
+  [m.ACTIVATE_TECH_SOLAR_PV](state, payload) {
     const indexMatchingId = getters.getIndexOfSolarId(state)(payload.id);
     state.technologySpecsSolarPV[indexMatchingId].active = true;
   },
-  ADD_TECHNOLOGY_SPECS_BATTERY(state, newBattery) {
+  [m.ADD_TECHNOLOGY_SPECS_BATTERY](state, newBattery) {
     state.technologySpecsBattery.push(newBattery);
   },
-  ADD_TECHNOLOGY_SPECS_DIESEL_GEN(state, newDieselGen) {
+  [m.ADD_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD](state, newControllableLoad) {
+    state.technologySpecsControllableLoad.push(newControllableLoad);
+  },
+  [m.ADD_TECHNOLOGY_SPECS_DIESEL_GEN](state, newDieselGen) {
     state.technologySpecsDieselGen.push(newDieselGen);
   },
-  ADD_TECHNOLOGY_SPECS_ICE(state, newICE) {
+  [m.ADD_TECHNOLOGY_SPECS_FLEET_EV](state, newFleetEV) {
+    state.technologySpecsFleetEV.push(newFleetEV);
+  },
+  [m.ADD_TECHNOLOGY_SPECS_ICE](state, newICE) {
     state.technologySpecsICE.push(newICE);
   },
-  ADD_TECHNOLOGY_SPECS_SOLAR_PV(state, newSolar) {
+  [m.ADD_TECHNOLOGY_SPECS_SINGLE_EV](state, newFleetEV) {
+    state.technologySpecsSingleEV.push(newFleetEV);
+  },
+  [m.ADD_TECHNOLOGY_SPECS_SOLAR_PV](state, newSolar) {
     state.technologySpecsSolarPV.push(newSolar);
   },
-  ADD_TO_LIST_OF_ACTIVE_TECHNOLOGIES(state, tech) {
+  [m.ADD_TO_LIST_OF_ACTIVE_TECHNOLOGIES](state, tech) {
     state.listOfActiveTechnologies[tech.technologyType].push(tech);
   },
-  DEACTIVATE_TECH_BATTERY(state, payload) {
+  [m.DEACTIVATE_TECH_BATTERY](state, payload) {
     const indexMatchingId = getters.getIndexOfBatteryId(state)(payload.id);
     state.technologySpecsBattery[indexMatchingId].active = false;
   },
-  DEACTIVATE_TECH_DIESEL_GEN(state, payload) {
+  [m.DEACTIVATE_TECH_CONTROLLABLE_LOAD](state, payload) {
+    const indexMatchingId = getters.getIndexOfControllableLoadId(state)(payload.id);
+    state.technologySpecsControllableLoad[indexMatchingId].active = false;
+  },
+  [m.DEACTIVATE_TECH_DIESEL_GEN](state, payload) {
     const indexMatchingId = getters.getIndexOfDieselGenId(state)(payload.id);
     state.technologySpecsDieselGen[indexMatchingId].active = false;
   },
-  DEACTIVATE_TECH_ICE(state, payload) {
+  [m.DEACTIVATE_TECH_FLEET_EV](state, payload) {
+    const indexMatchingId = getters.getIndexOfFleetEVId(state)(payload.id);
+    state.technologySpecsFleetEV[indexMatchingId].active = false;
+  },
+  [m.DEACTIVATE_TECH_ICE](state, payload) {
     const indexMatchingId = getters.getIndexOfICEId(state)(payload.id);
     state.technologySpecsICE[indexMatchingId].active = false;
   },
-  DEACTIVATE_TECH_SOLAR_PV(state, payload) {
+  [m.DEACTIVATE_TECH_SINGLE_EV](state, payload) {
+    const indexMatchingId = getters.getIndexOfSingleEVId(state)(payload.id);
+    state.technologySpecsSingleEV[indexMatchingId].active = false;
+  },
+  [m.DEACTIVATE_TECH_SOLAR_PV](state, payload) {
     const indexMatchingId = getters.getIndexOfSolarId(state)(payload.id);
     state.technologySpecsSolarPV[indexMatchingId].active = false;
   },
-  REMOVE_TECH_BATTERY(state, payload) {
+  [m.REMOVE_TECH_BATTERY](state, payload) {
     const indexMatchingId = getters.getIndexOfBatteryId(state)(payload.id);
     state.technologySpecsBattery.splice(indexMatchingId, 1);
   },
-  REMOVE_TECH_DIESEL_GEN(state, payload) {
+  [m.REMOVE_TECH_CONTROLLABLE_LOAD](state, payload) {
+    const indexMatchingId = getters.getIndexOfControllableLoadId(state)(payload.id);
+    state.technologySpecsControllableLoad.splice(indexMatchingId, 1);
+  },
+  [m.REMOVE_TECH_DIESEL_GEN](state, payload) {
     const indexMatchingId = getters.getIndexOfDieselGenId(state)(payload.id);
     state.technologySpecsDieselGen.splice(indexMatchingId, 1);
   },
-  REMOVE_TECH_ICE(state, payload) {
+  [m.REMOVE_TECH_FLEET_EV](state, payload) {
+    const indexMatchingId = getters.getIndexOfHomeEVId(state)(payload.id);
+    state.technologySpecsHomeEV.splice(indexMatchingId, 1);
+  },
+  [m.REMOVE_TECH_ICE](state, payload) {
     const indexMatchingId = getters.getIndexOfICEId(state)(payload.id);
     state.technologySpecsICE.splice(indexMatchingId, 1);
   },
-  REMOVE_TECH_SOLAR_PV(state, payload) {
+  [m.REMOVE_TECH_SINGLE_EV](state, payload) {
+    const indexMatchingId = getters.getIndexOfSingleEVId(state)(payload.id);
+    state.technologySpecsSingleEV.splice(indexMatchingId, 1);
+  },
+  [m.REMOVE_TECH_SOLAR_PV](state, payload) {
     const indexMatchingId = getters.getIndexOfSolarId(state)(payload.id);
     state.technologySpecsSolarPV.splice(indexMatchingId, 1);
   },
-  REPLACE_LIST_FIELD(state, payload) {
+  [m.REPLACE_LIST_FIELD](state, payload) {
     const clonedList = getters.cloneListField(state)(payload.field);
     const index = getters.getIndexOfListFieldById(state)(payload.field, payload.id);
     clonedList[index] = payload.newListItem;
     state[payload.field] = clonedList;
   },
-  RESET_LIST_OF_ACTIVE_TECHNOLOGIES(state) {
+  [m.RESET_LIST_OF_ACTIVE_TECHNOLOGIES](state) {
     state.listOfActiveTechnologies = getDefaultState().listOfActiveTechnologies;
   },
   // user defined service
@@ -472,15 +574,15 @@ const mutations = {
 };
 
 const actions = {
-  resetProjectToDefault({ commit }) {
-    commit('RESET_PROJECT_TO_DEFAULT');
+  [a.RESET_PROJECT_TO_DEFAULT]({ commit }) {
+    commit(m.RESET_PROJECT_TO_DEFAULT);
   },
-  loadQuickStartProject({ commit }, caseName) {
+  [a.LOAD_QUICK_START_PROJECT]({ commit }, caseName) {
     // TODO load actual quickStartProject;
     const selectedUseCase = usecaseDatabase[caseName];
     const defaultProject = getDefaultState();
     return new Promise((resolve) => {
-      commit('LOAD_QUICK_START_PROJECT', merge(defaultProject, selectedUseCase));
+      commit(m.LOAD_QUICK_START_PROJECT, merge(defaultProject, selectedUseCase));
       resolve();
     });
   },
@@ -488,46 +590,50 @@ const actions = {
     commit('SET_TYPE', type);
   },
   // battery
-  replaceTechnologySpecsBattery({ commit }, payload) {
-    commit('REPLACE_TECHNOLOGY_SPECS_BATTERY', payload);
+  [a.REPLACE_TECHNOLOGY_SPECS_BATTERY]({ commit }, payload) {
+    commit(m.REPLACE_TECHNOLOGY_SPECS_BATTERY, payload);
+  },
+  // Controllable Load
+  [a.REPLACE_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD]({ commit }, payload) {
+    commit(m.REPLACE_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD, payload);
   },
   // battery cycle file
-  addBatteryCyclesToTechnologySpecsBattery({ commit }, payload) {
-    commit('ADD_BATTERY_CYCLES_TO_TECHNOLOGY_SPECS_BATTERY', payload);
+  [a.ADD_BATTERY_CYCLES_TO_TECHNOLOGY_SPECS_BATTERY]({ commit }, payload) {
+    commit(m.ADD_BATTERY_CYCLES_TO_TECHNOLOGY_SPECS_BATTERY, payload);
   },
   // da
   setDAGrowth({ commit }, newDAGrowth) {
-    commit('SET_DA_GROWTH', newDAGrowth);
+    commit(m.SET_DA_GROWTH, newDAGrowth);
   },
   setDAPrice({ commit }, newDAPrice) {
-    commit('SET_DA_PRICE', newDAPrice);
+    commit(m.SET_DA_PRICE, newDAPrice);
   },
   // deferral
   setDeferralGrowth({ commit }, newDeferralGrowth) {
-    commit('SET_DEFERRAL_GROWTH', newDeferralGrowth);
+    commit(m.SET_DEFERRAL_GROWTH, newDeferralGrowth);
   },
   setDeferralLoad({ commit }, newDeferralLoad) {
-    commit('SET_DEFERRAL_LOAD', newDeferralLoad);
+    commit(m.SET_DEFERRAL_LOAD, newDeferralLoad);
   },
   setDeferralPlannedLoadLimit({ commit }, newDeferralPlannedLoadLimit) {
-    commit('SET_DEFERRAL_PLANNED_LOAD_LIMIT', newDeferralPlannedLoadLimit);
+    commit(m.SET_DEFERRAL_PLANNED_LOAD_LIMIT, newDeferralPlannedLoadLimit);
   },
   setDeferralPrice({ commit }, newDeferralPrice) {
-    commit('SET_DEFERRAL_PRICE', newDeferralPrice);
+    commit(m.SET_DEFERRAL_PRICE, newDeferralPrice);
   },
   setDeferralReversePowerFlowLimit({ commit }, newDeferralReversePowerFlowLimit) {
-    commit('SET_DEFERRAL_REVERSE_POWER_FLOW_LIMIT', newDeferralReversePowerFlowLimit);
+    commit(m.SET_DEFERRAL_REVERSE_POWER_FLOW_LIMIT, newDeferralReversePowerFlowLimit);
   },
   // diesel
   replaceTechnologySpecsDieselGen({ commit }, payload) {
-    commit('REPLACE_TECHNOLOGY_SPECS_DIESEL_GEN', payload);
+    commit(m.REPLACE_TECHNOLOGY_SPECS_DIESEL_GEN, payload);
   },
   // external incentives
   addExternalIncentive({ commit }, newExternalIncentive) {
-    commit('ADD_EXTERNAL_INCENTIVE', newExternalIncentive);
+    commit(m.ADD_EXTERNAL_INCENTIVE, newExternalIncentive);
   },
   replaceExternalIncentives({ commit }, newExternalIncentives) {
-    commit('REPLACE_EXTERNAL_INCENTIVES', newExternalIncentives);
+    commit(m.REPLACE_EXTERNAL_INCENTIVES, newExternalIncentives);
   },
   removeAllExternalIncentives({ commit }) {
     commit('REMOVE_ALL_EXTERNAL_INCENTIVES');
@@ -578,6 +684,10 @@ const actions = {
   },
   setFRUpPrice({ commit }, newFRUpPrice) {
     commit('SET_FR_UP_PRICE', newFRUpPrice);
+  },
+  // Fleet EV
+  replaceTechnologySpecsFleetEV({ commit }, payload) {
+    commit('REPLACE_TECHNOLOGY_SPECS_FLEET_EV', payload);
   },
   // ice
   replaceTechnologySpecsICE({ commit }, payload) {
@@ -644,6 +754,10 @@ const actions = {
   removeRetailTariffBillingPeriod({ commit }, id) {
     commit('REMOVE_RETAIL_TARIFF_BILLING_PERIOD', id);
   },
+  // Single EV
+  replaceTechnologySpecsSingleEV({ commit }, payload) {
+    commit('REPLACE_TECHNOLOGY_SPECS_SINGLE_EV', payload);
+  },
   // site information
   setIncludePOIConstraints({ commit }, newIncludePOIConstraints) {
     commit('SET_INCLUDE_POI_CONTRAINTS', newIncludePOIConstraints);
@@ -707,66 +821,92 @@ const actions = {
     commit('SET_TIMESTEP', newTimestep);
   },
   // technology specs
-  activateTech({ commit }, payload) {
+  [a.ACTIVATE_TECH]({ commit }, payload) {
     if (payload.tag === 'ICE') {
-      commit('ACTIVATE_TECH_ICE', payload);
+      commit(m.ACTIVATE_TECH_ICE, payload);
     } else if (payload.tag === 'DieselGen') {
-      commit('ACTIVATE_TECH_DIESEL_GEN', payload);
+      commit(m.ACTIVATE_TECH_DIESEL_GEN, payload);
     } else if (payload.tag === 'PV') {
-      commit('ACTIVATE_TECH_SOLAR_PV', payload);
+      commit(m.ACTIVATE_TECH_SOLAR_PV, payload);
     } else if (payload.tag === 'Battery') {
-      commit('ACTIVATE_TECH_BATTERY', payload);
+      commit(m.ACTIVATE_TECH_BATTERY, payload);
+    } else if (payload.tag === 'ControllableLoad') {
+      commit(m.ACTIVATE_TECH_CONTROLLABLE_LOAD, payload);
+    } else if (payload.tag === 'ElectricVehicle1') {
+      commit(m.ACTIVATE_TECH_SINGLE_EV, payload);
+    } else if (payload.tag === 'ElectricVehicle2') {
+      commit(m.ACTIVATE_TECH_FLEET_EV, payload);
     }
   },
-  addTechnologySpecsSolarPV({ commit }, newSolar) {
-    commit('ADD_TECHNOLOGY_SPECS_SOLAR_PV', newSolar);
-  },
-  addTechnologySpecsICE({ commit }, newICE) {
-    commit('ADD_TECHNOLOGY_SPECS_ICE', newICE);
-  },
-  addTechnologySpecsDieselGen({ commit }, newDieselGen) {
-    commit('ADD_TECHNOLOGY_SPECS_DIESEL_GEN', newDieselGen);
-  },
-  addTechnologySpecsBattery({ commit }, newBattery) {
-    commit('ADD_TECHNOLOGY_SPECS_BATTERY', newBattery);
-  },
-  deactivateTech({ commit }, payload) {
+  [a.ADD_TECH]({ commit }, payload) {
     if (payload.tag === 'ICE') {
-      commit('DEACTIVATE_TECH_ICE', payload);
+      commit(m.ADD_TECHNOLOGY_SPECS_ICE, payload);
     } else if (payload.tag === 'DieselGen') {
-      commit('DEACTIVATE_TECH_DIESEL_GEN', payload);
+      commit(m.ADD_TECHNOLOGY_SPECS_DIESEL_GEN, payload);
     } else if (payload.tag === 'PV') {
-      commit('DEACTIVATE_TECH_SOLAR_PV', payload);
+      commit(m.ADD_TECHNOLOGY_SPECS_SOLAR_PV, payload);
     } else if (payload.tag === 'Battery') {
-      commit('DEACTIVATE_TECH_BATTERY', payload);
+      commit(m.ADD_TECHNOLOGY_SPECS_BATTERY, payload);
+    } else if (payload.tag === 'ControllableLoad') {
+      commit(m.ADD_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD, payload);
+    } else if (payload.tag === 'ElectricVehicle1') {
+      commit(m.ADD_TECHNOLOGY_SPECS_SINGLE_EV, payload);
+    } else if (payload.tag === 'ElectricVehicle2') {
+      commit(m.ADD_TECHNOLOGY_SPECS_FLEET_EV, payload);
     }
   },
-  makeListOfActiveTechnologies({ commit }, projectSpecs) {
-    commit('RESET_LIST_OF_ACTIVE_TECHNOLOGIES');
+  [a.DEACTIVATE_TECH]({ commit }, payload) {
+    if (payload.tag === 'ICE') {
+      commit(m.DEACTIVATE_TECH_ICE, payload);
+    } else if (payload.tag === 'DieselGen') {
+      commit(m.DEACTIVATE_TECH_DIESEL_GEN, payload);
+    } else if (payload.tag === 'PV') {
+      commit(m.DEACTIVATE_TECH_SOLAR_PV, payload);
+    } else if (payload.tag === 'Battery') {
+      commit(m.DEACTIVATE_TECH_BATTERY, payload);
+    } else if (payload.tag === 'ControllableLoad') {
+      commit(m.DEACTIVATE_TECH_CONTROLLABLE_LOAD, payload);
+    } else if (payload.tag === 'ElectricVehicle1') {
+      commit(m.DEACTIVATE_TECH_SINGLE_EV, payload);
+    } else if (payload.tag === 'ElectricVehicle2') {
+      commit(m.DEACTIVATE_TECH_FLEET_EV, payload);
+    }
+  },
+  [a.MAKE_LIST_OF_ACTIVE_TECHNOLOGIES]({ commit }, projectSpecs) {
+    commit(m.RESET_LIST_OF_ACTIVE_TECHNOLOGIES);
     const specs = [
       projectSpecs.technologySpecsICE,
       projectSpecs.technologySpecsDieselGen,
       projectSpecs.technologySpecsBattery,
       projectSpecs.technologySpecsSolarPV,
+      projectSpecs.technologySpecsControllableLoad,
+      projectSpecs.technologySpecsSingleEV,
+      projectSpecs.technologySpecsFleetEV,
     ];
     flatten(specs).forEach((tech) => {
       if (tech.active) {
-        commit('ADD_TO_LIST_OF_ACTIVE_TECHNOLOGIES', tech);
+        commit(m.ADD_TO_LIST_OF_ACTIVE_TECHNOLOGIES, tech);
       }
     });
   },
-  replaceListField({ commit }, payload) {
-    commit('REPLACE_LIST_FIELD', payload);
+  [a.REPLACE_LIST_FIELD]({ commit }, payload) {
+    commit(m.REPLACE_LIST_FIELD, payload);
   },
-  removeTech({ commit }, payload) {
+  [a.REMOVE_TECH]({ commit }, payload) {
     if (payload.tag === 'ICE') {
-      commit('REMOVE_TECH_ICE', payload);
+      commit(m.REMOVE_TECH_ICE, payload);
     } else if (payload.tag === 'DieselGen') {
-      commit('REMOVE_TECH_DIESEL_GEN', payload);
+      commit(m.REMOVE_TECH_DIESEL_GEN, payload);
     } else if (payload.tag === 'PV') {
-      commit('REMOVE_TECH_SOLAR_PV', payload);
+      commit(m.REMOVE_TECH_SOLAR_PV, payload);
     } else if (payload.tag === 'Battery') {
-      commit('REMOVE_TECH_BATTERY', payload);
+      commit(m.REMOVE_TECH_BATTERY, payload);
+    } else if (payload.tag === 'ControllableLoad') {
+      commit(m.REMOVE_TECH_CONTROLLABLE_LOAD, payload);
+    } else if (payload.tag === 'ElectricVehicle1') {
+      commit(m.REMOVE_TECH_SINGLE_EV, payload);
+    } else if (payload.tag === 'ElectricVehicle2') {
+      commit(m.REMOVE_TECH_FLEET_EV, payload);
     }
   },
   // user defined

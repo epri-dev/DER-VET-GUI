@@ -1,8 +1,7 @@
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
-import ProjectFieldMetadata from '@/models/Project/Fields';
-import { optionsYN } from '@/models/Project/constants';
+// import ProjectFieldMetadata from '@/models/Project/Fields';
 import {
   SHARED_DYNAMIC_FIELDS,
   createSharedHardcodedMetadata,
@@ -16,7 +15,7 @@ const DYNAMIC_FIELDS = [
 
 ];
 
-const sharedHardcodedMetadata = createSharedHardcodedMetadata('home EV');
+const sharedHardcodedMetadata = createSharedHardcodedMetadata('CHP');
 
 export default class TechnologySpecsHomeEVMetadata {
   constructor(arg) {

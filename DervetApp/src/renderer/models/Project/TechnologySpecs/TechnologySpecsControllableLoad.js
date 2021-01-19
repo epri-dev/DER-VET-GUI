@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
 
 import ProjectFieldMetadata from '@/models/Project/Fields';
 import {
@@ -31,10 +30,11 @@ export default class TechnologySpecsControllableLoadMetadata {
     return {
       active: true,
       complete: null,
+      id: null,
+      load: null,
       errorList: [],
-      id: uuidv4(),
       tag: CONTROLLABLE_LOAD,
-      technologyType: 'Energy Storage System', // TODO would this be confusing?
+      technologyType: 'Controllable Load',
       ...this.operateOnDynamicFields(f => f.defaultValue),
     };
   }

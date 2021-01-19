@@ -23,7 +23,7 @@
       <div class="col-md-4 text-center">
         <b-dropdown text="Quick Start"
                     toggle-class="btn btn-lg btn-light btn-quick-start btn-index-page">
-          <b-dropdown-item v-for="option in useCases"
+          <b-dropdown-item v-for="option in useCases" v-bind:key="option.id"
                            v-on:click.native="loadQuickStartProject(option.value)">
             {{option.text}}
           </b-dropdown-item>
@@ -73,8 +73,8 @@
   import { WIZARD_START_PATH } from '@/router/constants';
 
   const useCases = [
-    { value: 'billReductionProject', text: 'General DER Bill Reduction' },
-    { value: 'reliabilityProject', text: 'General DER Sizing for Reliability' },
+    { id: 1, value: 'billReductionProject', text: 'General DER Bill Reduction' },
+    { id: 2, value: 'reliabilityProject', text: 'General DER Sizing for Reliability' },
   ];
 
   export default {
