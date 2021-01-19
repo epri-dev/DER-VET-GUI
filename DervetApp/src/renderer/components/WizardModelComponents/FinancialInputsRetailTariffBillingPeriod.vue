@@ -115,30 +115,25 @@
           required: requiredIf(function isExcludingStartTimeRequired() {
             return !(this.excludingEndTime === null || this.excludingEndTime === '' || this.excludingEndTime === undefined);
           }),
-          minValue: !(this.startTime >= 1 && this.startTime <= 24)
-            ? 1 : minValue(this.startTime),
-          maxValue: !(this.endTime >= 1 && this.endTime <= 24)
-            ? 1 : maxValue(this.endTime),
+          minValue: !this.valueInHourRange(this.startTime) ? 1 : minValue(this.startTime),
+          maxValue: !this.valueInHourRange(this.endTime) ? 24 : maxValue(this.endTime),
         },
         excludingEndTime: {
           ...validations.excludingEndTime,
           required: requiredIf(function isExcludingEndTimeRequired() {
             return !(this.excludingStartTime === null || this.excludingStartTime === '' || this.excludingStartTime === undefined);
           }),
-          minValue: !(this.excludingStartTime >= 1 && this.excludingStartTime <= 24)
+          minValue: !this.valueInHourRange(this.excludingStartTime)
             ? 1 : minValue(this.excludingStartTime),
-          maxValue: !(this.endTime >= 1 && this.endTime <= 24)
-            ? 1 : maxValue(this.endTime),
+          maxValue: !this.valueInHourRange(this.endTime) ? 24 : maxValue(this.endTime),
         },
         endMonth: {
           ...validations.endMonth,
-          minValue: !(this.startMonth >= 1 && this.startMonth <= 12)
-            ? 1 : minValue(this.startMonth),
+          minValue: !this.valueInMonthRange(this.startMonth) ? 1 : minValue(this.startMonth),
         },
         endTime: {
           ...validations.endTime,
-          minValue: !(this.startTime >= 1 && this.startTime <= 24)
-            ? 1 : minValue(this.startTime),
+          minValue: !this.valueInHourRange(this.startTime) ? 1 : minValue(this.startTime),
         },
       };
     },
@@ -161,25 +156,33 @@
         const pd = this.$store.getters.getListFieldById('retailTariffBillingPeriods', this.billingPeriodId);
         return this.unpackData(pd);
       },
+      getDynamicExcludingEndTimeMinValue() {
+        if (!this.valueInHourRange(this.excludingStartTime)) {
+          if (!this.valueInHourRange(this.startTime)) {
+            return 1;
+          }
+          return this.startTime;
+        }
+        return this.excludingStartTime;
+      },
       getErrorMsg(fieldName) {
         // endMonth dynamic validation
-        this.metadata.endMonth.minValue = !(this.startMonth >= 1 && this.startMonth <= 12)
+        this.metadata.endMonth.minValue = !this.valueInMonthRange(this.startMonth)
           ? 1 : this.startMonth;
         // endTime dynamic validation
-        this.metadata.endTime.minValue = !(this.startTime >= 1 && this.startTime <= 24)
+        this.metadata.endTime.minValue = !this.valueInHourRange(this.startTime)
           ? 1 : this.startTime;
         // excludingStartTime dynamic validation
-        this.metadata.excludingStartTime.minValue = !(this.startTime >= 1 && this.startTime <= 24)
+        this.metadata.excludingStartTime.minValue = !this.valueInHourRange(this.startTime)
           ? 1 : this.startTime;
-        this.metadata.excludingStartTime.maxValue = !(this.endTime >= 1 && this.endTime <= 24)
-          ? 1 : this.endTime;
+        this.metadata.excludingStartTime.maxValue = !this.valueInHourRange(this.endTime)
+          ? 24 : this.endTime;
         // excludingEndTime dynamic validation
-        this.metadata.excludingEndTime.minValue
-          = !(this.excludingStartTime >= 1 && this.excludingStartTime <= 24)
-            ? 1 : this.excludingStartTime;
-        this.metadata.excludingEndTime.maxValue = !(this.endTime >= 1 && this.endTime <= 24)
-          ? 1 : this.endTime;
-
+        this.metadata.excludingEndTime.minValue = this.getDynamicExcludingEndTimeMinValue();
+        // this.metadata.excludingEndTime.minValue = !this.valueInHourRange(this.excludingStartTime)
+        // ? 1 : this.excludingStartTime;
+        this.metadata.excludingEndTime.maxValue = !this.valueInHourRange(this.endTime)
+          ? 24 : this.endTime;
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       getChargeTypeFromValue() {
@@ -232,6 +235,15 @@
           this.$store.dispatch('replaceListField', payload);
         }
         this.submitted = true;
+      },
+      valueInRange(value, lowValue, highValue) {
+        return (value >= lowValue && value <= highValue);
+      },
+      valueInHourRange(value) {
+        return this.valueInRange(value, 1, 24);
+      },
+      valueInMonthRange(value) {
+        return this.valueInRange(value, 1, 12);
       },
       // saveAndAdd() {
       // reload page ? (reset form)
