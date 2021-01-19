@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 
 import ProjectFieldMetadata from '@/models/Project/Fields';
 import {
@@ -30,7 +31,7 @@ export default class TechnologySpecsControllableLoadMetadata {
     return {
       active: true,
       complete: null,
-      id: null,
+      id: uuidv4(),
       load: null,
       errorList: [],
       tag: CONTROLLABLE_LOAD,

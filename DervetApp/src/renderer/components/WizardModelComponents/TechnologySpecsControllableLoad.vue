@@ -118,7 +118,7 @@
 </template>
 
 <script>
-  import { v4 as uuidv4 } from 'uuid';
+  import _ from 'lodash';
   import { requiredIf } from 'vuelidate/lib/validators';
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
@@ -133,10 +133,11 @@
     mixins: [wizardFormMixin],
     props: ['id'],
     data() {
-      const values = this.isnew() ? metadata.getDefaultValues() : this.getControllableLoadFromStore();
+      const values = this.getControllableLoadFromStore();
+      const valuesMinusId = _.pickBy(values, (value, key) => key !== 'id');
       return {
         metadata,
-        ...values,
+        ...valuesMinusId,
         WIZARD_COMPONENT_PATH,
       };
     },
@@ -177,9 +178,6 @@
         });
         return true;
       },
-      isnew() {
-        return this.id === 'null';
-      },
       getControllableLoadFromStore() {
         return this.$store.getters.getControllableLoadById(this.id);
       },
@@ -212,16 +210,11 @@
           this.errorList = this.makeErrorList();
         }
         const controllableLoadSpec = this.buildControllableLoad();
-        if (this.isnew()) {
-          controllableLoadSpec.id = uuidv4();
-          this.$store.dispatch('addTechnologySpecsControllableLoad', controllableLoadSpec);
-        } else {
-          const payload = {
-            newControllableLoad: controllableLoadSpec,
-            id: this.id,
-          };
-          this.$store.dispatch('replaceTechnologySpecsControllableLoad', payload);
-        }
+        const payload = {
+          newControllableLoad: controllableLoadSpec,
+          id: this.id,
+        };
+        this.$store.dispatch('replaceTechnologySpecsControllableLoad', payload);
         this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
       buildControllableLoad() {

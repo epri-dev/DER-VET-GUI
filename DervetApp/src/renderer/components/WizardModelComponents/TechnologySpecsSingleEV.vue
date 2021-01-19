@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Technology Specs: Internal Combustion Engine Generator</h3>
+    <h3>Technology Specs: Single Electric Vehicle (EV)</h3>
     <hr />
     <form>
       <div class="form-horizontal form-buffer container">
@@ -169,7 +169,7 @@
 </template>
 
 <script>
-  import { v4 as uuidv4 } from 'uuid';
+  import _ from 'lodash';
   import { requiredIf } from 'vuelidate/lib/validators';
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
@@ -184,10 +184,12 @@
     mixins: [wizardFormMixin],
     props: ['id'],
     data() {
-      const values = this.isnew() ? metadata.getDefaultValues() : this.getSingleEVFromStore();
+      const values = this.getSingleEVFromStore();
+      const valuesMinusId = _.pickBy(values, (value, key) => key !== 'id');
       return {
         metadata,
-        ...values,
+        values,
+        ...valuesMinusId,
         WIZARD_COMPONENT_PATH,
       };
     },
@@ -228,9 +230,6 @@
         });
         return true;
       },
-      isnew() {
-        return this.id === 'null';
-      },
       getSingleEVFromStore() {
         return this.$store.getters.getSingleEVById(this.id);
       },
@@ -262,16 +261,12 @@
           this.errorList = this.makeErrorList();
         }
         const singleEVSpec = this.buildSingleEV();
-        if (this.isnew()) {
-          singleEVSpec.id = uuidv4();
-          this.$store.dispatch('addTechnologySpecsSingleEV', singleEVSpec);
-        } else {
-          const payload = {
-            newSingleEV: singleEVSpec,
-            id: this.id,
-          };
-          this.$store.dispatch('replaceTechnologySpecsSingleEV', payload);
-        }
+        const payload = {
+          newSingleEV: singleEVSpec,
+          id: this.id,
+        };
+        this.$store.dispatch('replaceTechnologySpecsSingleEV', payload);
+
         this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
       buildSingleEV() {

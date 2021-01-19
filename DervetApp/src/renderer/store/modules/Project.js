@@ -77,7 +77,7 @@ const getters = {
   getDieselGenSpecsClone(state) {
     return () => cloneDeep(state.technologySpecsDieselGen);
   },
-  geFleetEVById(state) {
+  getFleetEVById(state) {
     return id => state.technologySpecsFleetEV.find(x => x.id === id);
   },
   getFleetEVSpecsClone(state) {
@@ -133,11 +133,11 @@ const getters = {
     const lastId = state.retailTariffBillingPeriods[numberOfRetailTariffRows - 1].id;
     return lastId + 1;
   },
-  geSingleEVById(state) {
-    return id => state.technologySpecsDieselGen.find(x => x.id === id);
+  getSingleEVById(state) {
+    return id => state.technologySpecsSingleEV.find(x => x.id === id);
   },
   getSingleEVSpecsClone(state) {
-    return () => cloneDeep(state.technologySpecsDieselGen);
+    return () => cloneDeep(state.technologySpecsSingleEV);
   },
   getSolarPVById(state) {
     return id => state.technologySpecsSolarPV.find(x => x.id === id);

@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 
 import ProjectFieldMetadata from '@/models/Project/Fields';
 import {
@@ -35,7 +36,7 @@ export default class TechnologySpecsFleetEVMetadata {
       baselineLoad: null,
       complete: null,
       errorList: [],
-      id: null,
+      id: uuidv4(),
       tag: ELECTRIC_VEHICLE2,
       technologyType: 'Electric Vehicle',
       ...this.operateOnDynamicFields(f => f.defaultValue),
@@ -49,7 +50,7 @@ export default class TechnologySpecsFleetEVMetadata {
   // to be removed in favor of getMetadataFromSchema
   static getHardcodedMetadata() {
     return new TechnologySpecsFleetEVMetadata({
-      baselineLoad: null,
+      // baselineLoad: null,
       capitalCost: new ProjectFieldMetadata({
         displayName: 'Capital Cost',
         isRequired: true,
@@ -58,7 +59,7 @@ export default class TechnologySpecsFleetEVMetadata {
         unit: '$',
         description: 'Capital cost of infrastructure for EV charging',
       }),
-      fixedOMCost: new ProjectFieldMetadata({
+      fixedOMCosts: new ProjectFieldMetadata({
         displayName: 'Fixed O&M Cost',
         isRequired: true,
         minValue: 0,

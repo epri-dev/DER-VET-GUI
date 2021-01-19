@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Technology Specs: Internal Combustion Engine Generator</h3>
+    <h3>Technology Specs: Fleet Electric Vehicle (EV)</h3>
     <hr />
     <form>
       <div class="form-horizontal form-buffer container">
@@ -148,7 +148,7 @@
 </template>
 
 <script>
-  import { v4 as uuidv4 } from 'uuid';
+  import _ from 'lodash';
   import { requiredIf } from 'vuelidate/lib/validators';
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
@@ -163,10 +163,11 @@
     mixins: [wizardFormMixin],
     props: ['id'],
     data() {
-      const values = this.isnew() ? metadata.getDefaultValues() : this.getFleetEVFromStore();
+      const values = this.getFleetEVFromStore();
+      const valuesMinusId = _.pickBy(values, (value, key) => key !== 'id');
       return {
         metadata,
-        ...values,
+        ...valuesMinusId,
         WIZARD_COMPONENT_PATH,
       };
     },
@@ -208,7 +209,7 @@
         return true;
       },
       isnew() {
-        return this.id === 'null';
+        return this.complete === null;
       },
       getFleetEVFromStore() {
         return this.$store.getters.getFleetEVById(this.id);
@@ -243,7 +244,6 @@
         }
         const fleetEVSpec = this.buildFleetEV();
         if (this.isnew()) {
-          fleetEVSpec.id = uuidv4();
           this.$store.dispatch('addTechnologySpecsFleetEV', fleetEVSpec);
         } else {
           const payload = {

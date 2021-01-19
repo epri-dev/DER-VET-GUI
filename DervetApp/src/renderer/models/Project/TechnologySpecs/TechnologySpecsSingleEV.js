@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 
 import ProjectFieldMetadata from '@/models/Project/Fields';
 import {
@@ -37,7 +38,7 @@ export default class TechnologySpecsSingleEVMetadata {
       active: true,
       complete: null,
       errorList: [],
-      id: null,
+      id: uuidv4(),
       tag: ELECTRIC_VEHICLE1,
       technologyType: 'Electric Vehicle',
       ...this.operateOnDynamicFields(f => f.defaultValue),
@@ -67,7 +68,7 @@ export default class TechnologySpecsSingleEVMetadata {
         unit: 'kWh',
         description: 'Energy to be collected during charge',
       }),
-      fixedOMCost: new ProjectFieldMetadata({
+      fixedOMCosts: new ProjectFieldMetadata({
         displayName: 'Fixed O&M Cost',
         isRequired: true,
         minValue: 0,

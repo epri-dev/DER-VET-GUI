@@ -81,16 +81,6 @@
   const metadataICE = TechnologySpecsICEMetadata.getHardcodedMetadata();
   const metadataSingleEV = TechnologySpecsSingleEVMetadata.getHardcodedMetadata();
   const metadataSolarPV = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
-
-  const techSpecMetadata = {
-    Battery: metadataBattery.getDefaultValues(),
-    ControllableLoad: metadataControllableLoad.getDefaultValues(),
-    DieselGen: metadataDieselGen.getDefaultValues(),
-    ElectricVehicle1: metadataSingleEV.getDefaultValues(),
-    ElectricVehicle2: metadataFleetEV.getDefaultValues(),
-    ICE: metadataICE.getDefaultValues(),
-    PV: metadataSolarPV.getDefaultValues(),
-  };
   
   const PAGEGROUP = 'overview';
   const PAGE = 'technologySpecs';
@@ -110,6 +100,15 @@
             label: '',
           },
         ],
+        techSpecMetadata: {
+          Battery: metadataBattery,
+          ControllableLoad: metadataControllableLoad,
+          DieselGen: metadataDieselGen,
+          ElectricVehicle1: metadataSingleEV,
+          ElectricVehicle2: metadataFleetEV,
+          ICE: metadataICE,
+          PV: metadataSolarPV,
+        },
         techSpecs: [
           {
             items: p.technologySpecsICE,
@@ -161,10 +160,11 @@
     },
     methods: {
       addTech(tag) {
-        const metadata = techSpecMetadata[tag];
-        console.log(JSON.stringify(metadata, null, 1));
-        this.$store.dispatch(ADD_TECH, metadata);
-        this.activateTech(metadata);
+        const metadata = this.techSpecMetadata[tag];
+        const defaultValues = metadata.getDefaultValues();
+        console.log(JSON.stringify(defaultValues, null, 1));
+        this.$store.dispatch(ADD_TECH, defaultValues);
+        this.activateTech(defaultValues);
       },
       activateTech(payload) {
         this.$store.dispatch(ACTIVATE_TECH, payload);
