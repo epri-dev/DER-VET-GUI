@@ -19,18 +19,18 @@
         <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
                      v-for="techItem in techTag.items"
                      v-if="techItem.active"
-                     :to="{ name: techTag.to.name, params: { [techTag.to.params]: techItem.id }}"
+                     :to="techPath(techTag.path, techItem)"
                      :key="techItem.id"
                      v-bind:class="{
-            current: isCurrentTech(techItem),
+            current: isCurrent(techPath(techTag.path, techItem)),
             incomplete: !techItem.complete }">
-          {{ getTechLabel(techItem) }}
+          {{ getTechLabel(techTag.title, techItem) }}
         </router-link>
       </div>
 
       <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
                    v-bind:class="{
-          current: isCurrent(`${this.paths.WIZARD_COMPONENT_PATH}/objectives`),
+          current: isCurrent(this.paths.OBJECTIVES_PATH),
           incomplete: isCompleteOverview('objectives') }"
                    :to="this.paths.OBJECTIVES_PATH">
         Services
@@ -142,7 +142,6 @@
 
 
 <script>
-  import _ from 'lodash';
   import * as paths from '@/router/constants';
 
   export default {
@@ -153,45 +152,45 @@
         technologyLinks: [
           {
             title: 'PV',
-            tag: 'PV',
             items: p.technologySpecsSolarPV,
-            to: { name: 'technologySpecsSolarPV', params: 'solarId' },
+            props: 'solarId',
+            path: paths.TECH_SPECS_PV_PATH,
           },
           {
             title: 'Battery',
-            tag: 'Battery',
             items: p.technologySpecsBattery,
-            to: { name: 'technologySpecsBattery', params: 'batteryId' },
+            props: 'batteryId',
+            path: paths.TECH_SPECS_BATTERY_PATH,
           },
           {
             title: 'ICE',
-            tag: 'ICE',
             items: p.technologySpecsICE,
-            to: { name: 'technologySpecsICE', params: 'iceId' },
+            props: 'iceId',
+            path: paths.TECH_SPECS_ICE_PATH,
           },
           {
             title: 'Diesel',
-            tag: 'DieselGen',
             items: p.technologySpecsDieselGen,
-            to: { name: 'technologySpecsDieselGen', params: 'dieselGenId' },
+            props: 'dieselGenId',
+            path: paths.TECH_SPECS_DIESEL_PATH,
           },
           {
             title: 'Controllable Load',
-            tag: 'ControllableLoad',
             items: p.technologySpecsControllableLoad,
-            to: { name: 'technologySpecsControllableLoad', params: 'id' },
+            props: 'id',
+            path: paths.TECH_SPECS_CONTROLLABLE_LOAD_PATH,
           },
           {
             title: 'Single EV',
-            tag: 'ElectricVehicle1',
             items: p.technologySpecsSingleEV,
-            to: { name: 'technologySpecsSingleEV', params: 'id' },
+            props: 'id',
+            path: paths.TECH_SPECS_SINGLE_EV_PATH,
           },
           {
             title: 'Fleet EV',
-            tag: 'ElectricVehicle2',
             items: p.technologySpecsFleetEV,
-            to: { name: 'technologySpecsFleetEV', params: 'id' },
+            props: 'id',
+            path: paths.TECH_SPECS_FLEET_EV_PATH,
           },
         ],
       };
@@ -203,9 +202,8 @@
       isComplete(pageKey, page) {
         return !this.$store.state.Application.pageCompleteness.components[pageKey][page];
       },
-      isCurrentTech(payload) {
-        const techPath = this.getTechBasePath(payload.tag);
-        return RegExp(`${techPath}.*/${payload.id}`).test(this.$route.path);
+      techPath(basePath, payload) {
+        return `${basePath}/${payload.id}`;
       },
       isCurrent(path) {
         return RegExp(path).test(this.$route.path);
@@ -213,21 +211,7 @@
       isActual(path) {
         return path === this.$route.path;
       },
-      getTechBasePath(techTag) {
-        let techPath = '';
-        if (techTag === 'PV') {
-          techPath = this.paths.TECH_SPECS_PV_PATH;
-        } else if (techTag === 'Battery') {
-          techPath = this.paths.TECH_SPECS_BATTERY_PATH;
-        } else if (techTag === 'ICE') {
-          techPath = this.paths.TECH_SPECS_ICE_PATH;
-        } else if (techTag === 'DieselGen') {
-          techPath = this.paths.TECH_SPECS_DIESEL_PATH;
-        }
-        return techPath;
-      },
-      getTechLabel(payload) {
-        const { title } = _.filter(this.technologyLinks, { tag: payload.tag })[0];
+      getTechLabel(title, payload) {
         if (payload.name) {
           return `${title}: ${payload.name}`;
         }

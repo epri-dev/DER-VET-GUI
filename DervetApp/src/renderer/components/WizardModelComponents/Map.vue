@@ -116,8 +116,8 @@
 </template>
 
 <script>
-  import _ from 'lodash';
   import * as paths from '@/router/constants';
+  import * as techLabels from '@/models/Project/TechnologySpecs/labelConstants';
 
   export default {
     data() {
@@ -126,44 +126,30 @@
         paths,
         technologyCards: [
           {
-            title: 'Solar PV Sytems',
-            tag: 'PV',
             items: p.technologySpecsSolarPV,
             to: { name: 'technologySpecsSolarPV', params: 'solarId' },
           },
           {
-            title: 'BESS',
-            tag: 'Battery',
             items: p.technologySpecsBattery,
             to: { name: 'technologySpecsBattery', params: 'batteryId' },
           },
           {
-            title: 'ICE Generator set',
-            tag: 'ICE',
             items: p.technologySpecsICE,
             to: { name: 'technologySpecsICE', params: 'iceId' },
           },
           {
-            title: 'Diesel Generator sets',
-            tag: 'DieselGen',
             items: p.technologySpecsDieselGen,
             to: { name: 'technologySpecsDieselGen', params: 'dieselGenId' },
           },
           {
-            title: 'Controllable Load',
-            tag: 'ControllableLoad',
             items: p.technologySpecsControllableLoad,
             to: { name: 'technologySpecsControllableLoad', params: 'id' },
           },
           {
-            title: 'Single EV',
-            tag: 'ElectricVehicle1',
             items: p.technologySpecsSingleEV,
             to: { name: 'technologySpecsSingleEV', params: 'id' },
           },
           {
-            title: 'Fleet EV',
-            tag: 'ElectricVehicle2',
             items: p.technologySpecsFleetEV,
             to: { name: 'technologySpecsFleetEV', params: 'id' },
           },
@@ -212,11 +198,11 @@
         return !this.$store.state.Application.pageCompleteness.components[pageKey][page];
       },
       getTechLabel(payload) {
-        const { title } = _.filter(this.technologyCards, { tag: payload.tag })[0];
+        const label = techLabels[payload.tag];
         if (payload.name) {
-          return `${title}: ${payload.name}`;
+          return `${label}: ${payload.name}`;
         }
-        return `Undefined ${title}`;
+        return `Undefined ${label}`;
       },
       save() {
       },

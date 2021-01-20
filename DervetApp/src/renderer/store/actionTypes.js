@@ -25,6 +25,8 @@ export const SET_DEFERRAL_REVERSE_POWER_FLOW_LIMIT = 'setDeferralReversePowerFlo
 export const REPLACE_TECHNOLOGY_SPECS_DIESEL_GEN = 'replaceTechnologySpecsDieselGen';
 // fleet EV
 export const REPLACE_TECHNOLOGY_SPECS_FLEET_EV = 'replaceTechnologySpecsFleetEV';
+// fleet ev upload page
+export const ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_FLEET_EV = 'addLoadProfileToTechnologySpecsFleetEV';
 
 export const ADD_EXTERNAL_INCENTIVE = 'addExternalIncentive';
 export const REPLACE_EXTERNAL_INCENTIVES = 'replaceExternalIncentives';

@@ -136,7 +136,7 @@
         </drop-down-input>
 
         <save-buttons
-          :continue-link="WIZARD_COMPONENT_PATH"
+          :continue-link="`${TECH_SPECS_FLEET_EV_BASELINE_PATH}/${this.id}`"
           :displayError="submitted && $v.$anyError"
           :save="validatedSave"
         />
@@ -153,7 +153,7 @@
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsFleetEVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsFleetEV';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
+  import { TECH_SPECS_FLEET_EV_BASELINE_PATH } from '@/router/constants';
 
   const metadata = TechnologySpecsFleetEVMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
@@ -168,7 +168,7 @@
       return {
         metadata,
         ...valuesMinusId,
-        WIZARD_COMPONENT_PATH,
+        TECH_SPECS_FLEET_EV_BASELINE_PATH,
       };
     },
     validations: {

@@ -109,6 +109,12 @@ export default new Router({
           props: true,
         },
         {
+          path: 'technology-specs-fleet-ev-baseline-upload/:id',
+          name: 'technologySpecsFleetEVBaselineUpload',
+          component: require('@/components/WizardModelComponents/TechnologySpecsFleetEVBaselineUpload').default,
+          props: true,
+        },
+        {
           path: 'objectives-parameters-da',
           component: require('@/components/WizardModelComponents/ObjectivesParametersDA').default,
         },

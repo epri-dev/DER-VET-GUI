@@ -26,7 +26,7 @@ export const getDefaultState = () => ({
   technologySpecsSingleEV: [],
   technologySpecsSolarPV: [],
 
-  listOfActiveTechnologies: { // do we need this anymore?
+  listOfActiveTechnologies: {
     Generator: [],
     'Energy Storage System': [],
     'Intermittent Resource': [],
@@ -179,6 +179,13 @@ const mutations = {
     tmpSpecs[indexMatchingId] = payload.newControllableLoad;
     state.technologySpecsControllableLoad = tmpSpecs;
   },
+  // Controllable Load upload
+  [m.ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD](state, payload) {
+    const tmpSpecs = getters.getControllableLoadSpecsClone(state)();
+    const indexMatchingId = getters.getIndexOfControllableLoadId(state)(payload.solarId);
+    tmpSpecs[indexMatchingId].load = payload.load;
+    state.technologySpecsControllableLoad = tmpSpecs;
+  },
   // da page
   [m.SET_DA_GROWTH](state, newDAGrowth) {
     state.daGrowth = newDAGrowth;
@@ -273,6 +280,13 @@ const mutations = {
     const indexMatchingId = getters.getIndexOfFleetEVId(state)(payload.id);
     tmpSpecs[indexMatchingId] = payload.newFleetEV;
     state.technologySpecsFleetEV = tmpSpecs;
+  },
+  // Controllable Load upload
+  [m.ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_FLEET_EV](state, payload) {
+    const tmpSpecs = getters.getFleetEVSpecsClone(state)();
+    const indexMatchingId = getters.getIndexOfFleetEVId(state)(payload.solarId);
+    tmpSpecs[indexMatchingId].baselineLoad = payload.baselineLoad;
+    state.technologySpecsControllableLoad = tmpSpecs;
   },
   // ICE
   REPLACE_TECHNOLOGY_SPECS_ICE(state, payload) {
@@ -601,6 +615,10 @@ const actions = {
   [a.REPLACE_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD]({ commit }, payload) {
     commit(m.REPLACE_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD, payload);
   },
+  // Controllable Load upload page
+  [a.ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD]({ commit }, payload) {
+    commit(m.ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD, payload);
+  },
   // battery cycle file
   [a.ADD_BATTERY_CYCLES_TO_TECHNOLOGY_SPECS_BATTERY]({ commit }, payload) {
     commit(m.ADD_BATTERY_CYCLES_TO_TECHNOLOGY_SPECS_BATTERY, payload);
@@ -692,6 +710,10 @@ const actions = {
   // Fleet EV
   replaceTechnologySpecsFleetEV({ commit }, payload) {
     commit('REPLACE_TECHNOLOGY_SPECS_FLEET_EV', payload);
+  },
+  // fleet ev upload page
+  [a.ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_FLEET_EV]({ commit }, payload) {
+    commit(m.ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_FLEET_EV, payload);
   },
   // ice
   replaceTechnologySpecsICE({ commit }, payload) {

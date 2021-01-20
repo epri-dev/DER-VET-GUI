@@ -26,13 +26,13 @@
 
         <div v-if="componentTechErrorExists()" class="incomplete">
           <h4>Errors in Technology Components</h4>
-          <div v-for="tech in techAll()">
+          <div v-for="tech in techAll">
             <div v-if="tech.complete !== true">
               <li>
                 <router-link
                   class="text-decoration-none"
                   :to="getTechPath(tech)">
-                  {{ tech.technologyType + ': ' + tech.tag + getTechDisplayName(tech) }}
+                  {{ `${techLabels[tech.tag]}${getTechDisplayName(tech)}` }}
                 </router-link>
                 <ul>
                   <li v-for="error in tech.errorList">
@@ -112,27 +112,11 @@
         </br>
 
         <h4>Technology Specifications</h4>
-        <ul>
-          <h5>Generators</h5>
+        <ul v-for="techType, typeName in listOfActiveTechnologies" :key="typeName">
+          <h5>{{ typeName }}</h5>
           <ul>
-            <li v-for="tech in techGen">
-              {{ tech.tag + getTechDisplayName(tech) }}
-            </li>
-          </ul>
-        </ul>
-        <ul>
-          <h5>Intermittent Resources</h5>
-          <ul>
-            <li v-for="tech in techIR">
-              {{ tech.tag + getTechDisplayName(tech) }}
-            </li>
-          </ul>
-        </ul>
-        <ul>
-          <h5>Energy Storage Systems</h5>
-          <ul>
-            <li v-for="tech in techESS">
-              {{ tech.tag + getTechDisplayName(tech) }}
+            <li v-for="tech in techType">
+              {{ `${techLabels[tech.tag]}${getTechDisplayName(tech)}` }}
             </li>
           </ul>
         </ul>
@@ -198,6 +182,7 @@
   import * as paths from '@/router/constants';
   import { RUN_ANALYSIS_PATH } from '@/router/constants';
   import model from '@/models/StartProject';
+  import * as techLabels from '@/models/Project/TechnologySpecs/labelConstants';
 
   const { validation } = model;
 
@@ -266,9 +251,18 @@
   };
 
   export default {
+    computed: {
+      listOfActiveTechnologies() {
+        return this.$store.state.Project.listOfActiveTechnologies;
+      },
+      techAll() {
+        const techList = this.$store.state.Project.listOfActiveTechnologies;
+        return flatten(Object.values(techList));
+      },
+    },
     methods: {
       modeDescription() {
-        if (this.$store.state.Project.analysisHorizonMode === undefined) {
+        if (this.$store.state.Project.analysisHorizonMode === null) {
           return '';
         }
         const modeNum = parseInt(this.$store.state.Project.analysisHorizonMode, 10) - 1;
@@ -279,7 +273,7 @@
         return horizon ? `${horizon} years` : '';
       },
       getRateDisplay(rate) {
-        if (rate === undefined) {
+        if (rate === null) {
           return '';
         }
         return `${rate} %`;
@@ -371,10 +365,6 @@
       },
 
       // technology components
-      techAll() {
-        const techList = [this.techGen, this.techIR, this.techESS];
-        return flatten(techList);
-      },
       getTechDisplayName(tech) {
         if (tech.complete === null) {
           return NOT_STARTED;
@@ -385,7 +375,7 @@
       },
       componentTechErrorExists() {
         let errorsTF = false;
-        Object.values(this.techAll()).forEach((tech) => {
+        this.techAll.forEach((tech) => {
           if (tech.complete !== true) {
             errorsTF = true;
           }
@@ -458,6 +448,7 @@
     },
     data() {
       return {
+        techLabels,
         paths,
         setup: [
           ['Project Name', (this.$store.state.Project.name || '')],

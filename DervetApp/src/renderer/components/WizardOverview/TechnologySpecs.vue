@@ -10,7 +10,7 @@
               {{tech.label}}
             </b-card-text>
             <template #footer  v-if="!(isEmpty(tech))">
-                <b-button @click="addTech(tech.tag)">Add</b-button>
+                <b-button @click="addTech(tech.metadata)">Add</b-button>
             </template>
           </b-card>
         </div>
@@ -63,6 +63,7 @@
     MAKE_LIST_OF_ACTIVE_TECHNOLOGIES,
     REMOVE_TECH,
   } from '@/store/actionTypes';
+  import * as techLabels from '@/models/Project/TechnologySpecs/labelConstants';
 
   import TechnologySpecsBatteryMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsBattery';
   import TechnologySpecsControllableLoadMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsControllableLoad';
@@ -100,52 +101,44 @@
             label: '',
           },
         ],
-        techSpecMetadata: {
-          Battery: metadataBattery,
-          ControllableLoad: metadataControllableLoad,
-          DieselGen: metadataDieselGen,
-          ElectricVehicle1: metadataSingleEV,
-          ElectricVehicle2: metadataFleetEV,
-          ICE: metadataICE,
-          PV: metadataSolarPV,
-        },
         techSpecs: [
           {
             items: p.technologySpecsICE,
-            label: 'Internal Combustion Engine (ICE) Generator sets',
-            tag: 'ICE',
+            label: techLabels.ICE,
+            metadata: metadataICE,
           },
           {
             items: p.technologySpecsDieselGen,
-            label: 'Diesel Generator sets',
-            tag: 'DieselGen',
+            label: techLabels.DieselGen,
+            metadata: metadataDieselGen,
+
           },
           {
             items: p.technologySpecsSolarPV,
-            label: 'Solar Photovoltaic (PV) Sytems',
-            tag: 'PV',
+            label: techLabels.PV,
+            metadata: metadataSolarPV,
           },
           {}, // filler card (empty, but gives some order when rendered)
           {
             items: p.technologySpecsBattery,
-            label: 'Battery Energy Storage Sytems (BESS)',
-            tag: 'Battery',
+            label: techLabels.Battery,
+            metadata: metadataBattery,
           },
           {}, // filler card (empty, but gives some order when rendered)
           {
             items: p.technologySpecsSingleEV,
-            label: 'Single Electric Vehicle (EV)',
-            tag: 'ElectricVehicle1',
+            label: techLabels.ElectricVehicle1,
+            metadata: metadataSingleEV,
           },
           {
             items: p.technologySpecsFleetEV,
-            label: 'Fleet Electric Vehicle (EV)',
-            tag: 'ElectricVehicle2',
+            label: techLabels.ElectricVehicle2,
+            metadata: metadataFleetEV,
           },
           {
             items: p.technologySpecsControllableLoad,
-            label: 'Controllable Loads (Demand Response)',
-            tag: 'ControllableLoad',
+            label: techLabels.ControllableLoad,
+            metadata: metadataControllableLoad,
           },
         ],
         WIZARD_COMPONENT_PATH,
@@ -159,8 +152,7 @@
       },
     },
     methods: {
-      addTech(tag) {
-        const metadata = this.techSpecMetadata[tag];
+      addTech(metadata) {
         const defaultValues = metadata.getDefaultValues();
         console.log(JSON.stringify(defaultValues, null, 1));
         this.$store.dispatch(ADD_TECH, defaultValues);
@@ -195,7 +187,7 @@
         };
       },
       getTechLabel(payload) {
-        const { label } = _.filter(this.techSpecs, { tag: payload.tag })[0];
+        const label = techLabels[payload.tag];
         if (payload.name) {
           return `${label}: ${payload.name}`;
         }

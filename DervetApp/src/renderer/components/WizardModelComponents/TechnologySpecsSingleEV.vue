@@ -213,6 +213,10 @@
           return (this.salvageValueOption === 'User defined');
         }),
       },
+      // plugOutHour: {
+      //   ...validations.plugOutHour,
+      //   minValue: !this.valueInHourRange(this.plugInHour) ? 1 : minValue(this.plugInHour),
+      // },
     },
     beforeMount() {
       // submitted is false initially; set it to true after the first save.
@@ -234,6 +238,10 @@
         return this.$store.getters.getSingleEVById(this.id);
       },
       getErrorMsg(fieldName) {
+        // plugOutHour dynamic validation
+        this.metadata.plugOutHour.minValue = !this.valueInMonthRange(this.plugInHour)
+          ? 1 : this.plugInHour;
+
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       makeErrorList() {
@@ -268,6 +276,12 @@
         this.$store.dispatch('replaceTechnologySpecsSingleEV', payload);
 
         this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
+      },
+      valueInRange(value, lowValue, highValue) {
+        return (value >= lowValue && value <= highValue);
+      },
+      valueInHourRange(value) {
+        return this.valueInRange(value, 1, 24);
       },
       buildSingleEV() {
         return {
