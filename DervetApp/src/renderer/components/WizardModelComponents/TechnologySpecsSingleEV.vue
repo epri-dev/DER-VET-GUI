@@ -250,7 +250,7 @@
         this.metadata.plugOutHour.minValue = !this.valueInRange(this.plugInHour, 0, 23)
           ? 1 : this.plugInHour;
         this.metadata.maximumChargingPower.minValue = !(this.minimumChargingPower >= 0)
-          ? 0 : minValue(this.minimumChargingPower);
+          ? 0 : this.minimumChargingPower;
 
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
