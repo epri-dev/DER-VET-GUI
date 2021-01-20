@@ -88,6 +88,10 @@
   const metadata = RetailTariffBillingPeriodMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
 
+  const PAGEGROUP = 'components';
+  const PAGEKEY = 'financial';
+  const PAGE = 'retailTariff';
+
   export default {
     components: { SaveOnlyButton },
     props: ['billingPeriodId'],
@@ -115,25 +119,25 @@
           required: requiredIf(function isExcludingStartTimeRequired() {
             return !(this.excludingEndTime === null || this.excludingEndTime === '' || this.excludingEndTime === undefined);
           }),
-          minValue: minValue(this.startTime),
-          maxValue: maxValue(this.endTime),
+          minValue: !this.valueInHourRange(this.startTime) ? 1 : minValue(this.startTime),
+          maxValue: !this.valueInHourRange(this.endTime) ? 24 : maxValue(this.endTime),
         },
         excludingEndTime: {
           ...validations.excludingEndTime,
           required: requiredIf(function isExcludingEndTimeRequired() {
             return !(this.excludingStartTime === null || this.excludingStartTime === '' || this.excludingStartTime === undefined);
           }),
-          // minValue: minValue(this.startTime),
-          maxValue: maxValue(this.endTime),
-          minValue: minValue(this.excludingStartTime),
+          minValue: !this.valueInHourRange(this.excludingStartTime)
+            ? 1 : minValue(this.excludingStartTime),
+          maxValue: !this.valueInHourRange(this.endTime) ? 24 : maxValue(this.endTime),
         },
         endMonth: {
           ...validations.endMonth,
-          minValue: minValue(this.startMonth),
+          minValue: !this.valueInMonthRange(this.startMonth) ? 1 : minValue(this.startMonth),
         },
         endTime: {
           ...validations.endTime,
-          minValue: minValue(this.startTime),
+          minValue: !this.valueInHourRange(this.startTime) ? 1 : minValue(this.startTime),
         },
       };
     },
@@ -156,17 +160,55 @@
         const pd = this.$store.getters.getListFieldById('retailTariffBillingPeriods', this.billingPeriodId);
         return this.unpackData(pd);
       },
+      getDynamicExcludingEndTimeMinValue() {
+        if (!this.valueInHourRange(this.excludingStartTime)) {
+          if (!this.valueInHourRange(this.startTime)) {
+            return 1;
+          }
+          return this.startTime;
+        }
+        return this.excludingStartTime;
+      },
       getErrorMsg(fieldName) {
-        this.metadata.endMonth.minValue = this.startMonth;
-        this.metadata.endTime.minValue = this.startTime;
-        this.metadata.excludingStartTime.minValue = this.startTime;
-        this.metadata.excludingStartTime.maxValue = this.endTime;
-        this.metadata.excludingEndTime.minValue = this.excludingStartTime;
-        this.metadata.excludingEndTime.maxValue = this.endTime;
+        // endMonth dynamic validation
+        this.metadata.endMonth.minValue = !this.valueInMonthRange(this.startMonth)
+          ? 1 : this.startMonth;
+        // endTime dynamic validation
+        this.metadata.endTime.minValue = !this.valueInHourRange(this.startTime)
+          ? 1 : this.startTime;
+        // excludingStartTime dynamic validation
+        this.metadata.excludingStartTime.minValue = !this.valueInHourRange(this.startTime)
+          ? 1 : this.startTime;
+        this.metadata.excludingStartTime.maxValue = !this.valueInHourRange(this.endTime)
+          ? 24 : this.endTime;
+        // excludingEndTime dynamic validation
+        this.metadata.excludingEndTime.minValue = this.getDynamicExcludingEndTimeMinValue();
+        // this.metadata.excludingEndTime.minValue = !this.valueInHourRange(this.excludingStartTime)
+        // ? 1 : this.excludingStartTime;
+        this.metadata.excludingEndTime.maxValue = !this.valueInHourRange(this.endTime)
+          ? 24 : this.endTime;
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       getChargeTypeFromValue() {
         return this.metadata.chargeType.allowedValues.find(type => type.value === this.chargeType);
+      },
+      getCompletenessPayload() {
+        return {
+          pageGroup: PAGEGROUP,
+          pageKey: PAGEKEY,
+          page: PAGE,
+          completeness: false,
+        };
+      },
+      getErrorListPayload() {
+        const errors = [];
+        errors.push(this.getSingleErrorMsg());
+        return {
+          pageGroup: PAGEGROUP,
+          pageKey: PAGEKEY,
+          page: PAGE,
+          errorList: errors,
+        };
       },
       getMetadataValue() {
         const allowedValues = this.getChargeTypeFromValue();
@@ -178,6 +220,24 @@
           this.metadata.value.unit = this.metadata.value.initUnit;
         }
         return this.metadata.value;
+      },
+      getNumberOfInvalidRows(rows) {
+        let invalidRowsCount = 0;
+        Object.values(rows).forEach((row) => {
+          if (!row.complete) {
+            invalidRowsCount += 1;
+          }
+        });
+        return invalidRowsCount;
+      },
+      getSingleErrorMsg() {
+        const billingPeriods = this.$store.state.Project.retailTariffBillingPeriods;
+        if (billingPeriods.length === 0) {
+          return 'There are no billing periods specified.';
+        }
+        const invalidRowCount = this.getNumberOfInvalidRows(billingPeriods);
+        const pluralizeRow = (invalidRowCount === 1) ? '' : 's';
+        return `There are errors with ${invalidRowCount} row${pluralizeRow} in the table.`;
       },
       isNewBillingPeriod() {
         return this.billingPeriodId === 'null';
@@ -215,6 +275,21 @@
           this.$store.dispatch('replaceListField', payload);
         }
         this.submitted = true;
+        // set retail tariff completeness and errorList
+        // only do this when the current row is invalid
+        if (!this.complete) {
+          this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
+          this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
+        }
+      },
+      valueInRange(value, lowValue, highValue) {
+        return (value >= lowValue && value <= highValue);
+      },
+      valueInHourRange(value) {
+        return this.valueInRange(value, 1, 24);
+      },
+      valueInMonthRange(value) {
+        return this.valueInRange(value, 1, 12);
       },
       // saveAndAdd() {
       // reload page ? (reset form)
