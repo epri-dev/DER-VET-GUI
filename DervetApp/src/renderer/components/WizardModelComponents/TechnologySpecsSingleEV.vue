@@ -174,7 +174,8 @@
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsSingleEVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSingleEV';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
+  // import { WIZARD_COMPONENT_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT_PATH, minValue } from '@/router/constants';
 
   const metadata = TechnologySpecsSingleEVMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
@@ -193,30 +194,33 @@
         WIZARD_COMPONENT_PATH,
       };
     },
-    validations: {
-      ...validations,
-      replacementCost: {
-        ...validations.replacementCost,
-        required: requiredIf(function isReplacementCostRequired() {
-          return (this.isReplaceable === true);
-        }),
-      },
-      replacementConstructionTime: {
-        ...validations.replacementConstructionTime,
-        required: requiredIf(function isReplacementConstructionTimeRequired() {
-          return (this.isReplaceable === true);
-        }),
-      },
-      salvageValue: {
-        ...validations.salvageValue,
-        required: requiredIf(function isSalvageValueRequired() {
-          return (this.salvageValueOption === 'User defined');
-        }),
-      },
-      // plugOutHour: {
-      //   ...validations.plugOutHour,
-      //   minValue: !this.valueInHourRange(this.plugInHour) ? 1 : minValue(this.plugInHour),
-      // },
+    validations() {
+      return {
+        ...validations,
+        replacementCost: {
+          ...validations.replacementCost,
+          required: requiredIf(function isReplacementCostRequired() {
+            return (this.isReplaceable === true);
+          }),
+        },
+        replacementConstructionTime: {
+          ...validations.replacementConstructionTime,
+          required: requiredIf(function isReplacementConstructionTimeRequired() {
+            return (this.isReplaceable === true);
+          }),
+        },
+        salvageValue: {
+          ...validations.salvageValue,
+          required: requiredIf(function isSalvageValueRequired() {
+            return (this.salvageValueOption === 'User defined');
+          }),
+        },
+        plugOutHour: {
+          ...validations.plugOutHour,
+          minValue: !this.valueInRange(this.plugInHour, 0, 23)
+            ? 0 : minValue(this.plugInHour),
+        },
+      };
     },
     beforeMount() {
       // submitted is false initially; set it to true after the first save.
@@ -239,8 +243,8 @@
       },
       getErrorMsg(fieldName) {
         // plugOutHour dynamic validation
-        this.metadata.plugOutHour.minValue = !this.valueInMonthRange(this.plugInHour)
-          ? 1 : this.plugInHour;
+        // this.metadata.plugOutHour.minValue = !this.valueInHourRange(this.plugInHour)
+        //   ? 1 : this.plugInHour;
 
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
