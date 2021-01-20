@@ -170,12 +170,11 @@
 
 <script>
   import _ from 'lodash';
-  import { requiredIf } from 'vuelidate/lib/validators';
+  import { requiredIf, minValue } from 'vuelidate/lib/validators';
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsSingleEVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSingleEV';
-  // import { WIZARD_COMPONENT_PATH } from '@/router/constants';
-  import { WIZARD_COMPONENT_PATH, minValue } from '@/router/constants';
+  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
 
   const metadata = TechnologySpecsSingleEVMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
@@ -220,6 +219,11 @@
           minValue: !this.valueInRange(this.plugInHour, 0, 23)
             ? 0 : minValue(this.plugInHour),
         },
+        maximumChargingPower: {
+          ...validations.maximumChargingPower,
+          minValue: !(this.minimumChargingPower >= 0)
+            ? 0 : minValue(this.minimumChargingPower),
+        },
       };
     },
     beforeMount() {
@@ -243,8 +247,10 @@
       },
       getErrorMsg(fieldName) {
         // plugOutHour dynamic validation
-        // this.metadata.plugOutHour.minValue = !this.valueInHourRange(this.plugInHour)
-        //   ? 1 : this.plugInHour;
+        this.metadata.plugOutHour.minValue = !this.valueInRange(this.plugInHour, 0, 23)
+          ? 1 : this.plugInHour;
+        this.metadata.maximumChargingPower.minValue = !(this.minimumChargingPower >= 0)
+          ? 0 : minValue(this.minimumChargingPower);
 
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
@@ -283,9 +289,6 @@
       },
       valueInRange(value, lowValue, highValue) {
         return (value >= lowValue && value <= highValue);
-      },
-      valueInHourRange(value) {
-        return this.valueInRange(value, 1, 24);
       },
       buildSingleEV() {
         return {
