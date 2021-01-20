@@ -121,10 +121,16 @@
 
   export default {
     data() {
-      const p = this.$store.state.Project;
       return {
         paths,
-        technologyCards: [
+        objectiveCards: [],
+        financialCards: [],
+      };
+    },
+    computed: {
+      technologyCards() {
+        const p = this.$store.state.Project;
+        return [
           {
             items: p.technologySpecsSolarPV,
             to: { name: 'technologySpecsSolarPV', params: 'solarId' },
@@ -153,12 +159,8 @@
             items: p.technologySpecsFleetEV,
             to: { name: 'technologySpecsFleetEV', params: 'id' },
           },
-        ],
-        objectiveCards: [],
-        financialCards: [],
-      };
-    },
-    computed: {
+        ];
+      },
       objectivesRetailEnergyChargeReduction() {
         return this.$store.state.Project.objectivesRetailEnergyChargeReduction;
       },

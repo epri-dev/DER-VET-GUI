@@ -6,6 +6,7 @@ import {
   SHARED_DYNAMIC_FIELDS,
   createSharedHardcodedMetadata,
 } from '@/models/Project/TechnologySpecs/sharedConstants';
+import { TECH_SPECS_SINGLE_EV_PATH } from '@/router/constants';
 
 
 const ELECTRIC_VEHICLE1 = 'ElectricVehicle1';
@@ -39,6 +40,7 @@ export default class TechnologySpecsSingleEVMetadata {
       complete: null,
       errorList: [],
       id: uuidv4(),
+      path: TECH_SPECS_SINGLE_EV_PATH,
       tag: ELECTRIC_VEHICLE1,
       technologyType: 'Electric Vehicle',
       ...this.operateOnDynamicFields(f => f.defaultValue),
@@ -96,7 +98,7 @@ export default class TechnologySpecsSingleEVMetadata {
         displayName: 'Plug-in Hour',
         isRequired: true,
         minValue: 0,
-        maxValue: 23,
+        maxValue: 22,
         type: 'int',
         unit: 'hb',
         description: 'Hour of the day when EV is plugged-in',

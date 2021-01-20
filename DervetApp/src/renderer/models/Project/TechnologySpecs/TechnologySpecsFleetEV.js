@@ -6,6 +6,7 @@ import {
   SHARED_DYNAMIC_FIELDS,
   createSharedHardcodedMetadata,
 } from '@/models/Project/TechnologySpecs/sharedConstants';
+import { TECH_SPECS_FLEET_EV_PATH } from '@/router/constants';
 
 
 const ELECTRIC_VEHICLE2 = 'ElectricVehicle2';
@@ -37,6 +38,7 @@ export default class TechnologySpecsFleetEVMetadata {
       complete: null,
       errorList: [],
       id: uuidv4(),
+      path: TECH_SPECS_FLEET_EV_PATH,
       tag: ELECTRIC_VEHICLE2,
       technologyType: 'Electric Vehicle',
       ...this.operateOnDynamicFields(f => f.defaultValue),

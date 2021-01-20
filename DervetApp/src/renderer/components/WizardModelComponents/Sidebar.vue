@@ -146,10 +146,37 @@
 
   export default {
     data() {
-      const p = this.$store.state.Project;
       return {
         paths,
-        technologyLinks: [
+      };
+    },
+    methods: {
+      isCompleteOverview(page) {
+        return !this.$store.state.Application.pageCompleteness.overview[page];
+      },
+      isComplete(pageKey, page) {
+        return !this.$store.state.Application.pageCompleteness.components[pageKey][page];
+      },
+      techPath(basePath, payload) {
+        return `${basePath}/${payload.id}`;
+      },
+      isCurrent(path) {
+        return RegExp(path).test(this.$route.path);
+      },
+      isActual(path) {
+        return path === this.$route.path;
+      },
+      getTechLabel(title, payload) {
+        if (typeof payload.name === 'string') {
+          return `${title}: ${payload.name}`;
+        }
+        return `Undefined ${title}`;
+      },
+    },
+    computed: {
+      technologyLinks() {
+        const p = this.$store.state.Project;
+        return [
           {
             title: 'PV',
             items: p.technologySpecsSolarPV,
@@ -192,33 +219,8 @@
             props: 'id',
             path: paths.TECH_SPECS_FLEET_EV_PATH,
           },
-        ],
-      };
-    },
-    methods: {
-      isCompleteOverview(page) {
-        return !this.$store.state.Application.pageCompleteness.overview[page];
+        ];
       },
-      isComplete(pageKey, page) {
-        return !this.$store.state.Application.pageCompleteness.components[pageKey][page];
-      },
-      techPath(basePath, payload) {
-        return `${basePath}/${payload.id}`;
-      },
-      isCurrent(path) {
-        return RegExp(path).test(this.$route.path);
-      },
-      isActual(path) {
-        return path === this.$route.path;
-      },
-      getTechLabel(title, payload) {
-        if (payload.name) {
-          return `${title}: ${payload.name}`;
-        }
-        return `Undefined ${title}`;
-      },
-    },
-    computed: {
       objectivesRetailEnergyChargeReduction() {
         return this.$store.state.Project.objectivesRetailEnergyChargeReduction;
       },

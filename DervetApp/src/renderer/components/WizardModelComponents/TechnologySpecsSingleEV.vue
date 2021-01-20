@@ -216,8 +216,8 @@
         },
         plugOutHour: {
           ...validations.plugOutHour,
-          minValue: !this.valueInRange(this.plugInHour, 0, 23)
-            ? 0 : minValue(this.plugInHour),
+          minValue: !this.valueInRange(this.plugInHour, 0, 22)
+            ? 0 : minValue(this.plugInHour + 1),
         },
         maximumChargingPower: {
           ...validations.maximumChargingPower,
@@ -308,6 +308,7 @@
           minimumChargingPower: this.minimumChargingPower,
           name: this.name,
           operationYear: this.operationYear,
+          path: this.path,
           plugInHour: this.plugInHour,
           plugOutHour: this.plugOutHour,
           replacementCost: this.replacementCost,

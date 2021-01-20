@@ -271,6 +271,7 @@
           maximumLoadCtrl: this.maximumLoadCtrl,
           name: this.name,
           operationYear: this.operationYear,
+          path: this.path,
           replacementCost: this.replacementCost,
           replacementConstructionTime: this.replacementConstructionTime,
           salvageValue: this.salvageValue,

@@ -237,6 +237,7 @@
           macrsTerm: this.macrsTerm,
           name: this.name,
           operationYear: this.operationYear,
+          path: this.path,
           ratedCapacity: this.ratedCapacity,
           replacementConstructionTime: this.replacementConstructionTime,
           salvageValue: this.salvageValue,
