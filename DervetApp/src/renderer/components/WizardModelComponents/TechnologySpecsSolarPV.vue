@@ -496,6 +496,7 @@
           salvageValue: this.salvageValue,
           salvageValueOption: this.salvageValueOption,
           shouldSize: this.shouldSize,
+          submitted: this.submitted,
           tag: this.tag,
           technologyType: this.technologyType,
           ter: this.ter,

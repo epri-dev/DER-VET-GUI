@@ -703,6 +703,7 @@
           shouldLimitDailyCycling: this.shouldLimitDailyCycling,
           shouldMaxDuration: this.shouldMaxDuration,
           shouldPowerSize: this.shouldPowerSize,
+          submitted: this.submitted,
           componentSpecsComplete: this.componentSpecsComplete,
           stateOfHealth: this.stateOfHealth,
           tag: this.tag,
