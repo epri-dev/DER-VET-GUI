@@ -4,47 +4,14 @@
     <hr>
 
     <h4>Technologies</h4>
-    <div class="row align-items-center">
-      <div class="col-md-4 buffer-bottom" v-for="solar in solarPVItems">
+    <div class="row align-items-center" v-for="tagItems in technologyCards" key:bind="tagItems.tag">
+      <div class="col-md-4 buffer-bottom" v-for="techItem in tagItems.items">
         <b-button block size="lg"
-                  v-if="solar.active"
-                  :to="{ name: 'technologySpecsSolarPV', params: { solarId: solar.id }}"
-                  v-bind:class="{ 'incomplete-btn': !solar.complete }"
-                  :key="solar.id">
-          {{getTechLabel(solar)}}
-        </b-button>
-      </div>
-    </div>
-    <div class="row align-items-center">
-      <div class="col-md-4 buffer-bottom" v-for="battery in batteryItems">
-        <b-button block size="lg"
-                  v-if="battery.active"
-                  :to="{ name: 'technologySpecsBattery', params: { batteryId: battery.id }}"
-                  v-bind:class="{ 'incomplete-btn': !battery.complete }"
-                  :key="battery.id">
-          {{getTechLabel(battery)}}
-        </b-button>
-      </div>
-    </div>
-    <div class="row align-items-center">
-      <div class="col-md-4 buffer-bottom" v-for="ice in iceItems">
-        <b-button block size="lg"
-                  v-if="ice.active"
-                  :to="{ name: 'technologySpecsICE', params: { iceId: ice.id }}"
-                  v-bind:class="{ 'incomplete-btn': !ice.complete }"
-                  :key="ice.id">
-          {{getTechLabel(ice)}}
-        </b-button>
-      </div>
-    </div>
-    <div class="row align-items-center">
-      <div class="col-md-4 buffer-bottom" v-for="dieselGen in dieselGenItems">
-        <b-button block size="lg"
-                  v-if="dieselGen.active"
-                  :to="{ name: 'technologySpecsDieselGen', params: { dieselGenId: dieselGen.id }}"
-                  v-bind:class="{ 'incomplete-btn': !dieselGen.complete }"
-                  :key="dieselGen.id">
-          {{getTechLabel(dieselGen)}}
+                  v-if="techItem.active"
+                  :to="{ name: tagItems.to.name, params: { [tagItems.to.params]: techItem.id }}"
+                  v-bind:class="{ 'incomplete-btn': !techItem.complete }"
+                  :key="techItem.id">
+          {{getTechLabel(techItem)}}
         </b-button>
       </div>
     </div>
@@ -150,49 +117,50 @@
 
 <script>
   import * as paths from '@/router/constants';
+  import * as techLabels from '@/models/Project/TechnologySpecs/labelConstants';
 
   export default {
     data() {
       return {
         paths,
-        fieldsGen: [
-          { key: 'tagname', label: 'Generators' },
-          { key: 'buttons', label: '' },
-        ],
-        fieldsIR: [
-          { key: 'tagname', label: 'Intermittent Resources' },
-          { key: 'buttons', label: '' },
-        ],
-        fieldsESS: [
-          { key: 'tagname', label: 'Energy Storage Systems' },
-          { key: 'buttons', label: '' },
-        ],
+        objectiveCards: [],
+        financialCards: [],
       };
     },
     computed: {
-      techGen() {
-        return this.$store.state.Project.listOfActiveTechnologies.Generator;
+      technologyCards() {
+        const p = this.$store.state.Project;
+        return [
+          {
+            items: p.technologySpecsSolarPV,
+            to: { name: 'technologySpecsSolarPV', params: 'solarId' },
+          },
+          {
+            items: p.technologySpecsBattery,
+            to: { name: 'technologySpecsBattery', params: 'batteryId' },
+          },
+          {
+            items: p.technologySpecsICE,
+            to: { name: 'technologySpecsICE', params: 'iceId' },
+          },
+          {
+            items: p.technologySpecsDieselGen,
+            to: { name: 'technologySpecsDieselGen', params: 'dieselGenId' },
+          },
+          {
+            items: p.technologySpecsControllableLoad,
+            to: { name: 'technologySpecsControllableLoad', params: 'id' },
+          },
+          {
+            items: p.technologySpecsSingleEV,
+            to: { name: 'technologySpecsSingleEV', params: 'id' },
+          },
+          {
+            items: p.technologySpecsFleetEV,
+            to: { name: 'technologySpecsFleetEV', params: 'id' },
+          },
+        ];
       },
-      techIR() {
-        return this.$store.state.Project.listOfActiveTechnologies['Intermittent Resource'];
-      },
-      techESS() {
-        return this.$store.state.Project.listOfActiveTechnologies['Energy Storage System'];
-      },
-
-      solarPVItems() {
-        return this.$store.state.Project.technologySpecsSolarPV;
-      },
-      iceItems() {
-        return this.$store.state.Project.technologySpecsICE;
-      },
-      dieselGenItems() {
-        return this.$store.state.Project.technologySpecsDieselGen;
-      },
-      batteryItems() {
-        return this.$store.state.Project.technologySpecsBattery;
-      },
-
       objectivesRetailEnergyChargeReduction() {
         return this.$store.state.Project.objectivesRetailEnergyChargeReduction;
       },
@@ -232,10 +200,11 @@
         return !this.$store.state.Application.pageCompleteness.components[pageKey][page];
       },
       getTechLabel(payload) {
+        const label = techLabels[payload.tag];
         if (payload.name) {
-          return `${payload.tag}: ${payload.name}`;
+          return `${label}: ${payload.name}`;
         }
-        return `Undefined ${payload.tag}`;
+        return `Undefined ${label}`;
       },
       save() {
       },

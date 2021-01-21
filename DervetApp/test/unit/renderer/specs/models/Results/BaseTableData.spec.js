@@ -15,7 +15,6 @@ describe('BaseTableData model', () => {
     const testString = '2017-01-01 1:00:00 AM';
     const expectedString = '2017';
     const actualString = BaseTableData.getYearFromString(testString);
-    console.log(actualString);
     expect(actualString).to.eql(expectedString);
   });
 });

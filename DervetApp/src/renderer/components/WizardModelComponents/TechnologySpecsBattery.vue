@@ -370,7 +370,7 @@
 </template>
 
 <script>
-  import { requiredIf } from 'vuelidate/lib/validators';
+  import { requiredIf, minValue } from 'vuelidate/lib/validators';
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsBatteryMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsBattery';
@@ -393,128 +393,134 @@
         WIZARD_COMPONENT_PATH,
       };
     },
-    validations: {
-      ...validations,
-      auxiliaryLoad: {
-        ...validations.auxiliaryLoad,
-        required: requiredIf(function isAuxiliaryLoadRequired() {
-          return (this.includeAuxiliaryLoad === true);
-        }),
-      },
-      calendarDegradationRate: {
-        ...validations.calendarDegradationRate,
-        required: requiredIf(function isCalendarDegradationRateRequired() {
-          return (this.includeCycleDegradation === true);
-        }),
-      },
-      chargingCapacity: {
-        ...validations.chargingCapacity,
-        required: requiredIf(function isChargingCapacityRequired() {
-          return (this.shouldPowerSize === false) && (this.shouldDiffChargeDischarge === true);
-        }),
-      },
-      dailyCycleLimit: {
-        ...validations.dailyCycleLimit,
-        required: requiredIf(function isDailyCycleLimitRequired() {
-          return (this.shouldLimitDailyCycling === true);
-        }),
-      },
-      dischargingCapacity: {
-        ...validations.dischargingCapacity,
-        required: requiredIf(function isDischargingCapacityRequired() {
-          return (this.shouldPowerSize === false) && (this.shouldDiffChargeDischarge === true);
-        }),
-      },
-      energyCapacity: {
-        ...validations.energyCapacity,
-        required: requiredIf(function isEnergyCapacityRequired() {
-          return this.shouldEnergySize === false;
-        }),
-      },
-      energyCapacityMaximum: {
-        ...validations.energyCapacityMaximum,
-        required: requiredIf(function isEnergyCapacityMaximumRequired() {
-          return (this.includeSizeLimits === true) && (this.shouldEnergySize === true);
-        }),
-      },
-      energyCapacityMinimum: {
-        ...validations.energyCapacityMinimum,
-        required: requiredIf(function isEnergyCapacityMinimumRequired() {
-          return (this.includeSizeLimits === true) && (this.shouldEnergySize === true);
-        }),
-      },
-      includeSizeLimits: {
-        ...validations.includeSizeLimits,
-        required: requiredIf(function isIncludeSizeLimitsRequired() {
-          return this.shouldEnergySize || this.shouldPowerSize;
-        }),
-      },
-      maxDuration: {
-        ...validations.maxDuration,
-        required: requiredIf(function isMaxDurationRequired() {
-          return (this.shouldMaxDuration === true);
-        }),
-      },
-      powerCapacity: {
-        ...validations.powerCapacity,
-        required: requiredIf(function isPowerCapacityRequired() {
-          return (this.shouldPowerSize === false) && (this.shouldDiffChargeDischarge === false);
-        }),
-      },
-      powerCapacityMaximum: {
-        ...validations.powerCapacityMaximum,
-        required: requiredIf(function isPowerCapacityMaximumRequired() {
-          return (this.includeSizeLimits === true) && (this.shouldPowerSize === true);
-        }),
-      },
-      powerCapacityMinimum: {
-        ...validations.powerCapacityMinimum,
-        required: requiredIf(function isPowerCapacityMinimumRequired() {
-          return (this.includeSizeLimits === true) && (this.shouldPowerSize === true);
-        }),
-      },
-      replacementCost: {
-        ...validations.replacementCost,
-        required: requiredIf(function isReplacementCostRequired() {
-          return (this.isReplaceable === true);
-        }),
-      },
-      replacementCostPerkW: {
-        ...validations.replacementCostPerkW,
-        required: requiredIf(function isReplacementCostPerkWRequired() {
-          return (this.isReplaceable === true);
-        }),
-      },
-      replacementCostPerkWh: {
-        ...validations.replacementCostPerkWh,
-        required: requiredIf(function isReplacementCostPerkWhRequired() {
-          return (this.isReplaceable === true);
-        }),
-      },
-      replacementConstructionTime: {
-        ...validations.replacementConstructionTime,
-        required: requiredIf(function isReplacementConstructionTimeRequired() {
-          return (this.isReplaceable === true);
-        }),
-      },
-      stateOfHealth: {
-        ...validations.stateOfHealth,
-        required: requiredIf(function isStateOfHealthRequired() {
-          return (this.includeCycleDegradation === true);
-        }),
-      },
-      salvageValue: {
-        ...validations.salvageValue,
-        required: requiredIf(function isSalvageValueRequired() {
-          return (this.salvageValueOption === 'User defined');
-        }),
-      },
-      shouldDiffChargeDischarge: {
-        ...validations.shouldDiffChargeDischarge,
-        required: requiredIf(function isShouldDiffChargeDischargeRequired() {
-          return this.shouldPowerSize === false;
-        }),
-      },
+    validations() {
+      return {
+        ...validations,
+        auxiliaryLoad: {
+          ...validations.auxiliaryLoad,
+          required: requiredIf(function isAuxiliaryLoadRequired() {
+            return (this.includeAuxiliaryLoad === true);
+          }),
+        },
+        calendarDegradationRate: {
+          ...validations.calendarDegradationRate,
+          required: requiredIf(function isCalendarDegradationRateRequired() {
+            return (this.includeCycleDegradation === true);
+          }),
+        },
+        chargingCapacity: {
+          ...validations.chargingCapacity,
+          required: requiredIf(function isChargingCapacityRequired() {
+            return (this.shouldPowerSize === false) && (this.shouldDiffChargeDischarge === true);
+          }),
+        },
+        dailyCycleLimit: {
+          ...validations.dailyCycleLimit,
+          required: requiredIf(function isDailyCycleLimitRequired() {
+            return (this.shouldLimitDailyCycling === true);
+          }),
+        },
+        dischargingCapacity: {
+          ...validations.dischargingCapacity,
+          required: requiredIf(function isDischargingCapacityRequired() {
+            return (this.shouldPowerSize === false) && (this.shouldDiffChargeDischarge === true);
+          }),
+        },
+        energyCapacity: {
+          ...validations.energyCapacity,
+          required: requiredIf(function isEnergyCapacityRequired() {
+            return this.shouldEnergySize === false;
+          }),
+        },
+        energyCapacityMaximum: {
+          ...validations.energyCapacityMaximum,
+          required: requiredIf(function isEnergyCapacityMaximumRequired() {
+            return (this.includeSizeLimits === true) && (this.shouldEnergySize === true);
+          }),
+          minValue: !(this.energyCapacityMinimum >= 0)
+            ? 0 : minValue(this.energyCapacityMinimum),
+        },
+        energyCapacityMinimum: {
+          ...validations.energyCapacityMinimum,
+          required: requiredIf(function isEnergyCapacityMinimumRequired() {
+            return (this.includeSizeLimits === true) && (this.shouldEnergySize === true);
+          }),
+        },
+        includeSizeLimits: {
+          ...validations.includeSizeLimits,
+          required: requiredIf(function isIncludeSizeLimitsRequired() {
+            return this.shouldEnergySize || this.shouldPowerSize;
+          }),
+        },
+        maxDuration: {
+          ...validations.maxDuration,
+          required: requiredIf(function isMaxDurationRequired() {
+            return (this.shouldMaxDuration === true);
+          }),
+        },
+        powerCapacity: {
+          ...validations.powerCapacity,
+          required: requiredIf(function isPowerCapacityRequired() {
+            return (this.shouldPowerSize === false) && (this.shouldDiffChargeDischarge === false);
+          }),
+        },
+        powerCapacityMaximum: {
+          ...validations.powerCapacityMaximum,
+          required: requiredIf(function isPowerCapacityMaximumRequired() {
+            return (this.includeSizeLimits === true) && (this.shouldPowerSize === true);
+          }),
+          minValue: !(this.powerCapacityMinimum >= 1)
+            ? 1 : minValue(this.powerCapacityMinimum),
+        },
+        powerCapacityMinimum: {
+          ...validations.powerCapacityMinimum,
+          required: requiredIf(function isPowerCapacityMinimumRequired() {
+            return (this.includeSizeLimits === true) && (this.shouldPowerSize === true);
+          }),
+        },
+        replacementCost: {
+          ...validations.replacementCost,
+          required: requiredIf(function isReplacementCostRequired() {
+            return (this.isReplaceable === true);
+          }),
+        },
+        replacementCostPerkW: {
+          ...validations.replacementCostPerkW,
+          required: requiredIf(function isReplacementCostPerkWRequired() {
+            return (this.isReplaceable === true);
+          }),
+        },
+        replacementCostPerkWh: {
+          ...validations.replacementCostPerkWh,
+          required: requiredIf(function isReplacementCostPerkWhRequired() {
+            return (this.isReplaceable === true);
+          }),
+        },
+        replacementConstructionTime: {
+          ...validations.replacementConstructionTime,
+          required: requiredIf(function isReplacementConstructionTimeRequired() {
+            return (this.isReplaceable === true);
+          }),
+        },
+        stateOfHealth: {
+          ...validations.stateOfHealth,
+          required: requiredIf(function isStateOfHealthRequired() {
+            return (this.includeCycleDegradation === true);
+          }),
+        },
+        salvageValue: {
+          ...validations.salvageValue,
+          required: requiredIf(function isSalvageValueRequired() {
+            return (this.salvageValueOption === 'User defined');
+          }),
+        },
+        shouldDiffChargeDischarge: {
+          ...validations.shouldDiffChargeDischarge,
+          required: requiredIf(function isShouldDiffChargeDischargeRequired() {
+            return this.shouldPowerSize === false;
+          }),
+        },
+      };
     },
     beforeMount() {
       // in quick start mode, do a save initially to reset non-required inputs
@@ -559,6 +565,10 @@
         return WIZARD_COMPONENT_PATH;
       },
       getErrorMsg(fieldName) {
+        this.metadata.energyCapacityMaximum.minValue = !(this.energyCapacityMinimum >= 0)
+          ? 0 : this.energyCapacityMinimum;
+        this.metadata.powerCapacityMaximum.minValue = !(this.powerCapacityMinimum >= 1)
+          ? 1 : this.powerCapacityMinimum;
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       makeErrorList() {

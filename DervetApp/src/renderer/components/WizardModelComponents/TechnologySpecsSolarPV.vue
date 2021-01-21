@@ -232,7 +232,7 @@
         </div>
 
         <save-buttons
-          :continue-link="`${TECH_SPECS_PV_PATH}-upload/${this.solarId}`"
+          :continue-link="`${TECH_SPECS_PV_DATA_GENERATION_PATH}/${this.solarId}`"
           :displayError="submitted && $v.$anyError"
           :save="validatedSave"
         />
@@ -244,11 +244,11 @@
 </template>
 
 <script>
-  import { requiredIf } from 'vuelidate/lib/validators';
+  import { requiredIf, minValue } from 'vuelidate/lib/validators';
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
-  import { WIZARD_COMPONENT_PATH, TECH_SPECS_PV_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT_PATH, TECH_SPECS_PV_DATA_GENERATION_PATH } from '@/router/constants';
 
   const metadata = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
@@ -264,107 +264,111 @@
         metadata,
         ...values,
         WIZARD_COMPONENT_PATH,
-        TECH_SPECS_PV_PATH,
+        TECH_SPECS_PV_DATA_GENERATION_PATH,
       };
     },
-    validations: {
-      ...validations,
-      allowGridCharge: {
-        ...validations.allowGridCharge,
-        required: requiredIf(function isAllowGridChargeRequired() {
-          return (this.loc === 'AC');
-        }),
-      },
-      decomissioningCost: {
-        ...validations.decomissioningCost,
-        required: requiredIf(function isDecomissioningCostRequired() {
-          return (this.includePPA === false);
-        }),
-      },
-      fixedOMCosts: {
-        ...validations.fixedOMCosts,
-        required: requiredIf(function isFixedOMCostsRequired() {
-          return (this.includePPA === false);
-        }),
-      },
-      gamma: {
-        ...validations.gamma,
-        required: requiredIf(function isGammaRequired() {
-          return this.reliabilitySelected;
-        }),
-      },
-      includeSizeLimits: {
-        ...validations.includeSizeLimits,
-        required: requiredIf(function isIncludeSizeLimitsRequired() {
-          return (this.shouldSize === true);
-        }),
-      },
-      macrsTerm: {
-        ...validations.macrsTerm,
-        required: requiredIf(function isMacrsTermRequired() {
-          return (this.includePPA === false);
-        }),
-      },
-      nu: {
-        ...validations.nu,
-        required: requiredIf(function isNuRequired() {
-          return this.reliabilitySelected;
-        }),
-      },
-      ppaCost: {
-        ...validations.ppaCost,
-        required: requiredIf(function isPpaCostRequired() {
-          return (this.includePPA === true);
-        }),
-      },
-      ppaInflationRate: {
-        ...validations.ppaInflationRate,
-        required: requiredIf(function isPpaInflationRateRequired() {
-          return (this.includePPA === true);
-        }),
-      },
-      ratedCapacity: {
-        ...validations.ratedCapacity,
-        required: requiredIf(function isRatedCapacityRequired() {
-          return this.shouldSize === false;
-        }),
-      },
-      ratedCapacityMaximum: {
-        ...validations.ratedCapacityMaximum,
-        required: requiredIf(function isRatedCapacityMaximumRequired() {
-          return (this.includeSizeLimits === true) && (this.shouldSize === true);
-        }),
-      },
-      ratedCapacityMinimum: {
-        ...validations.ratedCapacityMinimum,
-        required: requiredIf(function isRatedCapacityMinimumRequired() {
-          return (this.includeSizeLimits === true) && (this.shouldSize === true);
-        }),
-      },
-      replacementCost: {
-        ...validations.replacementCost,
-        required: requiredIf(function isReplacementCostRequired() {
-          return (this.isReplaceable === true) && (this.includePPA === false);
-        }),
-      },
-      replacementConstructionTime: {
-        ...validations.replacementConstructionTime,
-        required: requiredIf(function isReplacementConstructionTimeRequired() {
-          return (this.isReplaceable === true) && (this.includePPA === false);
-        }),
-      },
-      salvageValue: {
-        ...validations.salvageValue,
-        required: requiredIf(function isSalvageValueRequired() {
-          return (this.salvageValueOption === 'User defined') && (this.includePPA === false);
-        }),
-      },
-      salvageValueOption: {
-        ...validations.salvageValueOption,
-        required: requiredIf(function isSalvageValueOptionRequired() {
-          return (this.includePPA === false);
-        }),
-      },
+    validations() {
+      return {
+        ...validations,
+        allowGridCharge: {
+          ...validations.allowGridCharge,
+          required: requiredIf(function isAllowGridChargeRequired() {
+            return (this.loc === 'AC');
+          }),
+        },
+        decomissioningCost: {
+          ...validations.decomissioningCost,
+          required: requiredIf(function isDecomissioningCostRequired() {
+            return (this.includePPA === false);
+          }),
+        },
+        fixedOMCosts: {
+          ...validations.fixedOMCosts,
+          required: requiredIf(function isFixedOMCostsRequired() {
+            return (this.includePPA === false);
+          }),
+        },
+        gamma: {
+          ...validations.gamma,
+          required: requiredIf(function isGammaRequired() {
+            return this.reliabilitySelected;
+          }),
+        },
+        includeSizeLimits: {
+          ...validations.includeSizeLimits,
+          required: requiredIf(function isIncludeSizeLimitsRequired() {
+            return (this.shouldSize === true);
+          }),
+        },
+        macrsTerm: {
+          ...validations.macrsTerm,
+          required: requiredIf(function isMacrsTermRequired() {
+            return (this.includePPA === false);
+          }),
+        },
+        nu: {
+          ...validations.nu,
+          required: requiredIf(function isNuRequired() {
+            return this.reliabilitySelected;
+          }),
+        },
+        ppaCost: {
+          ...validations.ppaCost,
+          required: requiredIf(function isPpaCostRequired() {
+            return (this.includePPA === true);
+          }),
+        },
+        ppaInflationRate: {
+          ...validations.ppaInflationRate,
+          required: requiredIf(function isPpaInflationRateRequired() {
+            return (this.includePPA === true);
+          }),
+        },
+        ratedCapacity: {
+          ...validations.ratedCapacity,
+          required: requiredIf(function isRatedCapacityRequired() {
+            return this.shouldSize === false;
+          }),
+        },
+        ratedCapacityMaximum: {
+          ...validations.ratedCapacityMaximum,
+          required: requiredIf(function isRatedCapacityMaximumRequired() {
+            return (this.includeSizeLimits === true) && (this.shouldSize === true);
+          }),
+          minValue: !(this.ratedCapacityMinimum >= 1)
+            ? 1 : minValue(this.ratedCapacityMinimum),
+        },
+        ratedCapacityMinimum: {
+          ...validations.ratedCapacityMinimum,
+          required: requiredIf(function isRatedCapacityMinimumRequired() {
+            return (this.includeSizeLimits === true) && (this.shouldSize === true);
+          }),
+        },
+        replacementCost: {
+          ...validations.replacementCost,
+          required: requiredIf(function isReplacementCostRequired() {
+            return (this.isReplaceable === true) && (this.includePPA === false);
+          }),
+        },
+        replacementConstructionTime: {
+          ...validations.replacementConstructionTime,
+          required: requiredIf(function isReplacementConstructionTimeRequired() {
+            return (this.isReplaceable === true) && (this.includePPA === false);
+          }),
+        },
+        salvageValue: {
+          ...validations.salvageValue,
+          required: requiredIf(function isSalvageValueRequired() {
+            return (this.salvageValueOption === 'User defined') && (this.includePPA === false);
+          }),
+        },
+        salvageValueOption: {
+          ...validations.salvageValueOption,
+          required: requiredIf(function isSalvageValueOptionRequired() {
+            return (this.includePPA === false);
+          }),
+        },
+      };
     },
     beforeMount() {
       // in quick start mode, do a save initially to reset non-required inputs
@@ -398,6 +402,8 @@
         return this.$store.getters.getSolarPVById(this.solarId);
       },
       getErrorMsg(fieldName) {
+        this.metadata.ratedCapacityMaximum.minValue = !(this.ratedCapacityMinimum >= 1)
+          ? 1 : this.ratedCapacityMinimum;
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       makeErrorList() {

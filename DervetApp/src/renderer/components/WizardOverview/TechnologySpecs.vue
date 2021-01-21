@@ -5,52 +5,23 @@
     <div class="form-horizontal form-buffer row ">
       <div class="col-md-6">
         <div class="form-group row">
-          <b-card class="col-md-6" :title="String(numTechICE)">
-            <b-card-text>
-              {{getCardTechText(numTechICE, "Internal Combustion Engine (ICE) Generator sets")}}
+          <b-card class="col-md-6" v-for="tech in techSpecs" v-bind:key="tech.tag" :title="getNumberOfTechnology(tech)"> 
+            <b-card-text v-if="!(isEmpty(tech))">
+              {{tech.label}}
             </b-card-text>
-            <template #footer>
-                <b-button @click="addICETech">Add</b-button>
-
-            </template>
-          </b-card>
-          <b-card class="col-md-6" :title="String(numTechDieselGen)">
-            <b-card-text>
-              {{getCardTechText(numTechDieselGen, "Diesel Generator sets")}}
-            </b-card-text>
-            <template #footer>
-                <b-button @click="addDieselGenTech">Add</b-button>
-
-            </template>
-          </b-card>
-        </div>
-        <div class="form-group row">
-          <b-card class="col-md-6" :title="String(numTechSolarPV)">
-            <b-card-text>
-              {{ getCardTechText(numTechSolarPV, "Solar Photovoltaic (PV) Sytems") }}
-            </b-card-text>
-            <template #footer>
-                <b-button @click="addPVTech">Add</b-button>
-            </template>
-          </b-card>
-        </div>
-        <div class="form-group row ">
-          <b-card class="col-md-6" :title="String(numTechBattery)">
-            <b-card-text>
-              {{ getCardTechText(numTechBattery, "Battery Energy Storage Sytems") }}
-            </b-card-text>
-            <template #footer>
-                <b-button @click="addBatteryTech">Add</b-button>
-
+            <template #footer  v-if="!(isEmpty(tech))">
+                <b-button @click="addTech(tech.metadata)">Add</b-button>
             </template>
           </b-card>
         </div>
       </div>
-      <div class="col-md-6 table-bordered">
+
+      <div class="col-md-6">
         <h4>List of Technologies Added</h4>
-        <b-table-lite striped hover borderless small
-                      :fields="fieldsGen"
-                      :items="techGen">
+        <b-table hover outlined small :no-border-collapse="false" class="mb-0" thead-class="d-none"
+                      v-for="tech in techSpecs" v-bind:key="tech.tag"
+                      :fields="viewTechTableFields"
+                      :items="tech.items">
           <template v-slot:cell(tagname)="row">
             <b-col class="text-left">{{getTechLabel(row.item) }}</b-col>
           </template>
@@ -67,46 +38,11 @@
                         class="btn btn-xs btn-danger delete-tech">Remove</b-button>
             </b-col>
           </template>
-        </b-table-lite>
-        <b-table-lite striped hover borderless small
-                      :fields="fieldsIR"
-                      :items="techIR">
-          <template v-slot:cell(tagname)="row">
-            <b-col class="text-left">{{ getTechLabel(row.item) }}</b-col>
-          </template>
-          <template v-slot:cell(buttons)="row">
-            <b-col class="text-right">
-              <b-button size="sm"
-                        @click="toggleActivationOfTech(row.item)"
-                        variant="outline-secondary"
-                        :pressed="row.item.active"
-                        class="btn btn-xs">{{getActivationToggleLabel(row.item)}}</b-button>
-              <b-button pill size="sm" @click="removeTech(row.item)" class="btn btn-xs btn-danger delete-tech">Remove</b-button>
-            </b-col>
-          </template>
-        </b-table-lite>
-        <b-table-lite striped hover borderless small
-                      :fields="fieldsESS"
-                      :items="techESS">
-          <template v-slot:cell(tagname)="row">
-            <b-col class="text-left">{{ getTechLabel(row.item) }}</b-col>
-          </template>
-          <template v-slot:cell(buttons)="row">
-            <b-col class="text-right">
-              <b-button size="sm"
-                        @click="toggleActivationOfTech(row.item)"
-                        variant="outline-secondary"
-                        :pressed="row.item.active"
-                        class="btn btn-xs">{{getActivationToggleLabel(row.item)}}</b-button>
-              <b-button pill size="sm" @click="removeTech(row.item)" class="btn btn-xs btn-danger delete-tech">Remove</b-button>
-            </b-col>
-          </template>
-        </b-table-lite>
+        </b-table>
       </div>
     </div>
     <hr>
-    <nav-buttons
-                 :continue-link="WIZARD_COMPONENT_PATH"
+    <nav-buttons :continue-link="WIZARD_COMPONENT_PATH"
                  continue-text="Done Adding Technologies"
                  :displayError="!complete"
                  :error-text="this.getSingleErrorMsg()"
@@ -114,39 +50,96 @@
   </div>
 </template>
 <script>
+  import _ from 'lodash';
   import {
     WIZARD_COMPONENT_PATH,
     OBJECTIVES_PATH,
     TECH_SPECS_PATH,
   } from '@/router/constants';
-  import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
+  import {
+    ACTIVATE_TECH,
+    ADD_TECH,
+    DEACTIVATE_TECH,
+    MAKE_LIST_OF_ACTIVE_TECHNOLOGIES,
+    REMOVE_TECH,
+  } from '@/store/actionTypes';
+  import * as techLabels from '@/models/Project/TechnologySpecs/labelConstants';
+
   import TechnologySpecsBatteryMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsBattery';
-  import TechnologySpecsICEMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsICE';
+  import TechnologySpecsControllableLoadMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsControllableLoad';
   import TechnologySpecsDieselGenMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsDieselGen';
+  import TechnologySpecsFleetEVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsFleetEV';
+  import TechnologySpecsICEMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsICE';
+  import TechnologySpecsSingleEVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSingleEV';
+  import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
   import NavButtons from '@/components/Shared/NavButtons';
 
-  const metadataSolarPV = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
+
   const metadataBattery = TechnologySpecsBatteryMetadata.getHardcodedMetadata();
-  const metadataICE = TechnologySpecsICEMetadata.getHardcodedMetadata();
+  const metadataControllableLoad = TechnologySpecsControllableLoadMetadata.getHardcodedMetadata();
   const metadataDieselGen = TechnologySpecsDieselGenMetadata.getHardcodedMetadata();
+  const metadataFleetEV = TechnologySpecsFleetEVMetadata.getHardcodedMetadata();
+  const metadataICE = TechnologySpecsICEMetadata.getHardcodedMetadata();
+  const metadataSingleEV = TechnologySpecsSingleEVMetadata.getHardcodedMetadata();
+  const metadataSolarPV = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
+  
   const PAGEGROUP = 'overview';
   const PAGE = 'technologySpecs';
 
   export default {
     components: { NavButtons },
     data() {
+      const p = this.$store.state.Project;
       return {
-        fieldsGen: [
-          { key: 'tagname', label: 'Generators' },
-          { key: 'buttons', label: '' }, // how do I use this?
+        viewTechTableFields: [
+          {
+            key: 'tagname',
+            label: '',
+          },
+          {
+            key: 'buttons',
+            label: '',
+          },
         ],
-        fieldsIR: [
-          { key: 'tagname', label: 'Intermittent Resources' },
-          { key: 'buttons', label: '' },
-        ],
-        fieldsESS: [
-          { key: 'tagname', label: 'Energy Storage Systems' },
-          { key: 'buttons', label: '' },
+        techSpecs: [
+          {
+            items: p.technologySpecsICE,
+            label: techLabels.ICE,
+            metadata: metadataICE,
+          },
+          {
+            items: p.technologySpecsDieselGen,
+            label: techLabels.DieselGen,
+            metadata: metadataDieselGen,
+
+          },
+          {
+            items: p.technologySpecsSolarPV,
+            label: techLabels.PV,
+            metadata: metadataSolarPV,
+          },
+          {}, // filler card (empty, but gives some order when rendered)
+          {
+            items: p.technologySpecsBattery,
+            label: techLabels.Battery,
+            metadata: metadataBattery,
+          },
+          {}, // filler card (empty, but gives some order when rendered)
+          {
+            items: p.technologySpecsSingleEV,
+            label: techLabels.ElectricVehicle1,
+            metadata: metadataSingleEV,
+          },
+          {
+            items: p.technologySpecsFleetEV,
+            label: techLabels.ElectricVehicle2,
+            metadata: metadataFleetEV,
+          },
+          {
+            items: p.technologySpecsControllableLoad,
+            label: techLabels.ControllableLoad,
+            metadata: metadataControllableLoad,
+          },
         ],
         WIZARD_COMPONENT_PATH,
         OBJECTIVES_PATH,
@@ -154,60 +147,26 @@
       };
     },
     computed: {
-      techGen() {
-        const iceList = this.$store.state.Project.technologySpecsICE;
-        const dieselGenList = this.$store.state.Project.technologySpecsDieselGen;
-        return [...iceList, ...dieselGenList];
-      },
-      techIR() {
-        return this.$store.state.Project.technologySpecsSolarPV;
-      },
-      techESS() {
-        return this.$store.state.Project.technologySpecsBattery;
-      },
-      numTechSolarPV() {
-        return this.$store.state.Project.technologySpecsSolarPV.length;
-      },
-      numTechICE() {
-        return this.$store.state.Project.technologySpecsICE.length;
-      },
-      numTechBattery() {
-        return this.$store.state.Project.technologySpecsBattery.length;
-      },
-      numTechDieselGen() {
-        return this.$store.state.Project.technologySpecsDieselGen.length;
-      },
       complete() {
         return this.$store.state.Application.pageCompleteness.overview[PAGE];
       },
     },
     methods: {
-      addPVTech() {
-        const newPV = metadataSolarPV.getDefaultValues();
-        this.$store.dispatch('addTechnologySpecsSolarPV', newPV);
-        this.activateTech(newPV);
-      },
-      addBatteryTech() {
-        const newBattery = metadataBattery.getDefaultValues();
-        this.$store.dispatch('addTechnologySpecsBattery', newBattery);
-        this.activateTech(newBattery);
-      },
-      addICETech() {
-        const newICE = metadataICE.getDefaultValues();
-        this.$store.dispatch('addTechnologySpecsICE', newICE);
-        this.activateTech(newICE);
-      },
-      addDieselGenTech() {
-        const newDieselGen = metadataDieselGen.getDefaultValues();
-        this.$store.dispatch('addTechnologySpecsDieselGen', newDieselGen);
-        this.activateTech(newDieselGen);
+      addTech(metadata) {
+        const defaultValues = metadata.getDefaultValues();
+        console.log(JSON.stringify(defaultValues, null, 1));
+        this.$store.dispatch(ADD_TECH, defaultValues);
+        this.activateTech(defaultValues);
       },
       activateTech(payload) {
-        this.$store.dispatch('activateTech', payload);
+        this.$store.dispatch(ACTIVATE_TECH, payload);
         this.setTech();
       },
+      isEmpty(payload) {
+        return _.isEmpty(payload);
+      },
       deactivateTech(payload) {
-        this.$store.dispatch('deactivateTech', payload);
+        this.$store.dispatch(DEACTIVATE_TECH, payload);
         this.setTech();
       },
       getActivationToggleLabel(payload) {
@@ -226,6 +185,13 @@
           page: PAGE,
           completeness: (this.getNumberOfActiveTechnologies() > 0),
         };
+      },
+      getTechLabel(payload) {
+        const label = techLabels[payload.tag];
+        if (payload.name) {
+          return `${label}: ${payload.name}`;
+        }
+        return `Undefined ${label}`;
       },
       getSingleErrorMsg() {
         if (!this.complete &&
@@ -253,11 +219,13 @@
         });
         return numberOfActiveTechnologies;
       },
-      getTechLabel(payload) {
-        if (payload.name) {
-          return `${payload.tag}: ${payload.name}`;
+      getNumberOfTechnology(payload) {
+        const { items } = payload;
+        if (items === undefined) {
+          return '';
         }
-        return `Undefined ${payload.tag}`;
+        const activeItems = _.filter(items, { active: true });
+        return String(activeItems.length);
       },
       toggleActivationOfTech(payload) {
         if (payload.active) {
@@ -267,13 +235,13 @@
         }
       },
       removeTech(payload) {
-        this.$store.dispatch('removeTech', payload);
+        this.$store.dispatch(REMOVE_TECH, payload);
         this.setTech();
       },
       save() {
       },
       setTech() {
-        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
+        this.$store.dispatch(MAKE_LIST_OF_ACTIVE_TECHNOLOGIES, this.$store.state.Project);
         this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
         this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
       },

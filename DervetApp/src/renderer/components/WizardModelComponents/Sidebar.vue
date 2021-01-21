@@ -15,53 +15,22 @@
         Technologies
       </router-link>
 
-      <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
-                   v-for="solar in solarPVItems"
-                   v-if="solar.active"
-                   :to="{ name: 'technologySpecsSolarPV', params: { solarId: solar.id }}"
-                   :key="solar.id"
-                   v-bind:class="{
-          current: isCurrentTech(solar),
-          incomplete: !solar.complete }">
-        {{ getTechLabel(solar) }}
-      </router-link>
-
-      <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
-                   v-for="battery in batteryItems"
-                   v-if="battery.active"
-                   :to="{ name: 'technologySpecsBattery', params: { batteryId: battery.id }}"
-                   :key="battery.id"
-                   v-bind:class="{
-          current: isCurrentTech(battery),
-          incomplete: !battery.complete }">
-        {{ getTechLabel(battery) }}
-      </router-link>
-
-      <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
-                   v-for="ice in iceItems"
-                   v-if="ice.active"
-                   :to="{ name: 'technologySpecsICE', params: { iceId: ice.id }}"
-                   :key="ice.id"
-                   v-bind:class="{
-          current: isCurrentTech(ice),
-          incomplete: !ice.complete }">
-        {{ getTechLabel(ice) }}
-      </router-link>
-
-      <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
-                   v-for="dieselGen in dieselGenItems"
-                   v-if="dieselGen.active"
-                   :to="{ name: 'technologySpecsDieselGen', params: { dieselGenId: dieselGen.id }}"
-                   :key="dieselGen.id"
-                   v-bind:class="{
-          current: isCurrentTech(dieselGen),
-          incomplete: !dieselGen.complete }">
-        {{ getTechLabel(dieselGen) }}
-      </router-link>
+      <div v-for="techTag in technologyLinks">
+        <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
+                     v-for="techItem in techTag.items"
+                     v-if="techItem.active"
+                     :to="techPath(techTag.path, techItem)"
+                     :key="techItem.id"
+                     v-bind:class="{
+            current: isCurrent(techPath(techTag.path, techItem)),
+            incomplete: !techItem.complete }">
+          {{ getTechLabel(techTag.title, techItem) }}
+        </router-link>
+      </div>
 
       <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
                    v-bind:class="{
-          current: isCurrent(`${this.paths.WIZARD_COMPONENT_PATH}/objectives`),
+          current: isCurrent(this.paths.OBJECTIVES_PATH),
           incomplete: isCompleteOverview('objectives') }"
                    :to="this.paths.OBJECTIVES_PATH">
         Services
@@ -188,9 +157,8 @@
       isComplete(pageKey, page) {
         return !this.$store.state.Application.pageCompleteness.components[pageKey][page];
       },
-      isCurrentTech(payload) {
-        const techPath = this.getTechBasePath(payload.tag);
-        return RegExp(`${techPath}.*/${payload.id}`).test(this.$route.path);
+      techPath(basePath, payload) {
+        return `${basePath}/${payload.id}`;
       },
       isCurrent(path) {
         return RegExp(path).test(this.$route.path);
@@ -198,38 +166,60 @@
       isActual(path) {
         return path === this.$route.path;
       },
-      getTechBasePath(techTag) {
-        let techPath = '';
-        if (techTag === 'PV') {
-          techPath = this.paths.TECH_SPECS_PV_PATH;
-        } else if (techTag === 'Battery') {
-          techPath = this.paths.TECH_SPECS_BATTERY_PATH;
-        } else if (techTag === 'ICE') {
-          techPath = this.paths.TECH_SPECS_ICE_PATH;
-        } else if (techTag === 'DieselGen') {
-          techPath = this.paths.TECH_SPECS_DIESEL_PATH;
+      getTechLabel(title, payload) {
+        if (typeof payload.name === 'string') {
+          return `${title}: ${payload.name}`;
         }
-        return techPath;
-      },
-      getTechLabel(payload) {
-        if (payload.name !== null) {
-          return `${payload.tag}: ${payload.name}`;
-        }
-        return `Undefined ${payload.tag}`;
+        return `Undefined ${title}`;
       },
     },
     computed: {
-      solarPVItems() {
-        return this.$store.state.Project.technologySpecsSolarPV;
-      },
-      iceItems() {
-        return this.$store.state.Project.technologySpecsICE;
-      },
-      dieselGenItems() {
-        return this.$store.state.Project.technologySpecsDieselGen;
-      },
-      batteryItems() {
-        return this.$store.state.Project.technologySpecsBattery;
+      technologyLinks() {
+        const p = this.$store.state.Project;
+        return [
+          {
+            title: 'PV',
+            items: p.technologySpecsSolarPV,
+            props: 'solarId',
+            path: paths.TECH_SPECS_PV_PATH,
+          },
+          {
+            title: 'Battery',
+            items: p.technologySpecsBattery,
+            props: 'batteryId',
+            path: paths.TECH_SPECS_BATTERY_PATH,
+          },
+          {
+            title: 'ICE',
+            items: p.technologySpecsICE,
+            props: 'iceId',
+            path: paths.TECH_SPECS_ICE_PATH,
+          },
+          {
+            title: 'Diesel',
+            items: p.technologySpecsDieselGen,
+            props: 'dieselGenId',
+            path: paths.TECH_SPECS_DIESEL_PATH,
+          },
+          {
+            title: 'Controllable Load',
+            items: p.technologySpecsControllableLoad,
+            props: 'id',
+            path: paths.TECH_SPECS_CONTROLLABLE_LOAD_PATH,
+          },
+          {
+            title: 'Single EV',
+            items: p.technologySpecsSingleEV,
+            props: 'id',
+            path: paths.TECH_SPECS_SINGLE_EV_PATH,
+          },
+          {
+            title: 'Fleet EV',
+            items: p.technologySpecsFleetEV,
+            props: 'id',
+            path: paths.TECH_SPECS_FLEET_EV_PATH,
+          },
+        ];
       },
       objectivesRetailEnergyChargeReduction() {
         return this.$store.state.Project.objectivesRetailEnergyChargeReduction;

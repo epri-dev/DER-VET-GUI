@@ -222,7 +222,7 @@
 </template>
 
 <script>
-  import { requiredIf } from 'vuelidate/lib/validators';
+  import { requiredIf, minValue } from 'vuelidate/lib/validators';
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsDieselGenMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsDieselGen';
@@ -245,57 +245,61 @@
         WIZARD_COMPONENT_PATH,
       };
     },
-    validations: {
-      ...validations,
-      includeSizeLimits: {
-        ...validations.includeSizeLimits,
-        required: requiredIf(function isIncludeSizeLimitsRequired() {
-          return this.shouldSize;
-        }),
-      },
-      ratedCapacity: {
-        ...validations.ratedCapacity,
-        required: requiredIf(function isRatedCapacityRequired() {
-          return this.shouldSize === false;
-        }),
-      },
-      // shared validation extention
-      replacementConstructionTime: {
-        ...validations.replacementConstructionTime,
-        required: requiredIf(function isReplacementConstructionTimeRequired() {
-          return (this.isReplaceable === true);
-        }),
-      },
-      replacementCost: {
-        ...validations.replacementCost,
-        required: requiredIf(function isReplacementCostRequired() {
-          return (this.isReplaceable === true);
-        }),
-      },
-      replacementCostPerkW: {
-        ...validations.replacementCostPerkW,
-        required: requiredIf(function isReplacementCostPerkWRequired() {
-          return (this.isReplaceable === true);
-        }),
-      },
-      ratedCapacityMaximum: {
-        ...validations.ratedCapacityMaximum,
-        required: requiredIf(function isRatedCapacityMaximumRequired() {
-          return (this.includeSizeLimits === true) && (this.shouldSize === true);
-        }),
-      },
-      ratedCapacityMinimum: {
-        ...validations.ratedCapacityMinimum,
-        required: requiredIf(function isRatedCapacityMinimumRequired() {
-          return (this.includeSizeLimits === true) && (this.shouldSize === true);
-        }),
-      },
-      salvageValue: {
-        ...validations.salvageValue,
-        required: requiredIf(function isSalvageValueRequired() {
-          return (this.salvageValueOption === 'User defined');
-        }),
-      },
+    validations() {
+      return {
+        ...validations,
+        includeSizeLimits: {
+          ...validations.includeSizeLimits,
+          required: requiredIf(function isIncludeSizeLimitsRequired() {
+            return this.shouldSize;
+          }),
+        },
+        ratedCapacity: {
+          ...validations.ratedCapacity,
+          required: requiredIf(function isRatedCapacityRequired() {
+            return this.shouldSize === false;
+          }),
+        },
+        // shared validation extention
+        replacementConstructionTime: {
+          ...validations.replacementConstructionTime,
+          required: requiredIf(function isReplacementConstructionTimeRequired() {
+            return (this.isReplaceable === true);
+          }),
+        },
+        replacementCost: {
+          ...validations.replacementCost,
+          required: requiredIf(function isReplacementCostRequired() {
+            return (this.isReplaceable === true);
+          }),
+        },
+        replacementCostPerkW: {
+          ...validations.replacementCostPerkW,
+          required: requiredIf(function isReplacementCostPerkWRequired() {
+            return (this.isReplaceable === true);
+          }),
+        },
+        ratedCapacityMaximum: {
+          ...validations.ratedCapacityMaximum,
+          required: requiredIf(function isRatedCapacityMaximumRequired() {
+            return (this.includeSizeLimits === true) && (this.shouldSize === true);
+          }),
+          minValue: !(this.ratedCapacityMinimum >= 1)
+            ? 1 : minValue(this.ratedCapacityMinimum),
+        },
+        ratedCapacityMinimum: {
+          ...validations.ratedCapacityMinimum,
+          required: requiredIf(function isRatedCapacityMinimumRequired() {
+            return (this.includeSizeLimits === true) && (this.shouldSize === true);
+          }),
+        },
+        salvageValue: {
+          ...validations.salvageValue,
+          required: requiredIf(function isSalvageValueRequired() {
+            return (this.salvageValueOption === 'User defined');
+          }),
+        },
+      };
     },
     beforeMount() {
       // submitted is false initially; set it to true after the first save.
@@ -320,6 +324,8 @@
         return this.$store.getters.getDieselGenById(this.dieselGenId);
       },
       getErrorMsg(fieldName) {
+        this.metadata.ratedCapacityMaximum.minValue = !(this.ratedCapacityMinimum >= 1)
+          ? 1 : this.ratedCapacityMinimum;
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       makeErrorList() {

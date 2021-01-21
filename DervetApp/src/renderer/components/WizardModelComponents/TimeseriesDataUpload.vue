@@ -118,6 +118,9 @@
         return conditionOne && conditionTwo;
       },
       numberOfEntriesRequired() {
+        if (this.timestep === null || this.timestep === undefined) {
+          return 'TBD';
+        }
         if (this.isLeapYear) {
           return (8784 * 60) / this.timestep;
         }

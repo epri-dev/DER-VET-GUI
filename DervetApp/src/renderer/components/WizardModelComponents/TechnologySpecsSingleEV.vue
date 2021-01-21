@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Technology Specs: Internal Combustion Engine Generator</h3>
+    <h3>Technology Specs: Single Electric Vehicle (EV)</h3>
     <hr />
     <form>
       <div class="form-horizontal form-buffer container">
@@ -17,72 +17,38 @@
         </text-input>
 
         <text-input
-          v-model="numGenerators"
-          v-bind:field="metadata.numGenerators"
-          :isInvalid="submitted && $v.numGenerators.$error"
-          :errorMessage="getErrorMsg('numGenerators')">
-        </text-input>
-
-        <radio-button-input
-          v-model="shouldSize"
-          v-bind:field="metadata.shouldSize"
-          :isInvalid="submitted && $v.shouldSize.$error"
-          :errorMessage="getErrorMsg('shouldSize')">
-        </radio-button-input>
-
-        <div v-if="shouldSize === false">
-          <text-input
-            v-model="ratedCapacity"
-            v-bind:field="metadata.ratedCapacity"
-            :isInvalid="submitted && $v.ratedCapacity.$error"
-            :errorMessage="getErrorMsg('ratedCapacity')">
-          </text-input>
-        </div>
-
-        <div v-if="shouldSize === true">
-          <radio-button-input
-            v-model="includeSizeLimits"
-            v-bind:field="metadata.includeSizeLimits"
-            :isInvalid="submitted && $v.includeSizeLimits.$error"
-            :errorMessage="getErrorMsg('includeSizeLimits')">
-          </radio-button-input>
-
-          <div v-if="includeSizeLimits === true">
-            <text-input
-              v-model="ratedCapacityMaximum"
-              v-bind:field="metadata.ratedCapacityMaximum"
-              :isInvalid="submitted && $v.ratedCapacityMaximum.$error"
-              :errorMessage="getErrorMsg('ratedCapacityMaximum')">
-            </text-input>
-
-            <text-input
-              v-model="ratedCapacityMinimum"
-              v-bind:field="metadata.ratedCapacityMinimum"
-              :isInvalid="submitted && $v.ratedCapacityMinimum.$error"
-              :errorMessage="getErrorMsg('ratedCapacityMinimum')">
-            </text-input>
-          </div>
-        </div>
-
-        <text-input
-          v-model="minimumPower"
-          v-bind:field="metadata.minimumPower"
-          :isInvalid="submitted && $v.minimumPower.$error"
-          :errorMessage="getErrorMsg('minimumPower')">
+          v-model="energyTarget"
+          v-bind:field="metadata.energyTarget"
+          :isInvalid="submitted && $v.energyTarget.$error"
+          :errorMessage="getErrorMsg('energyTarget')">
         </text-input>
 
         <text-input
-          v-model="efficiency"
-          v-bind:field="metadata.efficiency"
-          :isInvalid="submitted && $v.efficiency.$error"
-          :errorMessage="getErrorMsg('efficiency')">
+          v-model="maximumChargingPower"
+          v-bind:field="metadata.maximumChargingPower"
+          :isInvalid="submitted && $v.maximumChargingPower.$error"
+          :errorMessage="getErrorMsg('maximumChargingPower')">
         </text-input>
 
         <text-input
-          v-model="fuelCost"
-          v-bind:field="metadata.fuelCost"
-          :isInvalid="submitted && $v.fuelCost.$error"
-          :errorMessage="getErrorMsg('fuelCost')">
+          v-model="minimumChargingPower"
+          v-bind:field="metadata.minimumChargingPower"
+          :isInvalid="submitted && $v.minimumChargingPower.$error"
+          :errorMessage="getErrorMsg('minimumChargingPower')">
+        </text-input>
+
+        <text-input
+          v-model="plugInHour"
+          v-bind:field="metadata.plugInHour"
+          :isInvalid="submitted && $v.plugInHour.$error"
+          :errorMessage="getErrorMsg('plugInHour')">
+        </text-input>
+
+        <text-input
+          v-model="plugOutHour"
+          v-bind:field="metadata.plugOutHour"
+          :isInvalid="submitted && $v.plugOutHour.$error"
+          :errorMessage="getErrorMsg('plugOutHour')">
         </text-input>
 
         <fieldset class="section-group">
@@ -95,27 +61,13 @@
             :errorMessage="getErrorMsg('capitalCost')">
           </text-input>
 
-          <text-input
-            v-model="capitalCostPerkW"
-            v-bind:field="metadata.capitalCostPerkW"
-            :isInvalid="submitted && $v.capitalCostPerkW.$error"
-            :errorMessage="getErrorMsg('capitalCostPerkW')">
-          </text-input>
-
         </fieldset>
 
         <text-input
-          v-model="variableOMCost"
-          v-bind:field="metadata.variableOMCost"
-          :isInvalid="submitted && $v.variableOMCost.$error"
-          :errorMessage="getErrorMsg('variableOMCost')">
-        </text-input>
-
-        <text-input
-          v-model="fixedOMCostIncludingExercise"
-          v-bind:field="metadata.fixedOMCostIncludingExercise"
-          :isInvalid="submitted && $v.fixedOMCostIncludingExercise.$error"
-          :errorMessage="getErrorMsg('fixedOMCostIncludingExercise')">
+          v-model="fixedOMCosts"
+          v-bind:field="metadata.fixedOMCosts"
+          :isInvalid="submitted && $v.fixedOMCosts.$error"
+          :errorMessage="getErrorMsg('fixedOMCosts')">
         </text-input>
 
         <text-input
@@ -163,12 +115,6 @@
               :errorMessage="getErrorMsg('replacementCost')">
             </text-input>
 
-            <text-input
-              v-model="replacementCostPerkW"
-              v-bind:field="metadata.replacementCostPerkW"
-              :isInvalid="submitted && $v.replacementCostPerkW.$error"
-              :errorMessage="getErrorMsg('replacementCostPerkW')">
-            </text-input>
           </fieldset>
         </div>
 
@@ -223,66 +169,36 @@
 </template>
 
 <script>
+  import _ from 'lodash';
   import { requiredIf, minValue } from 'vuelidate/lib/validators';
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import TechnologySpecsICEMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsICE';
+  import TechnologySpecsSingleEVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSingleEV';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
 
-  const metadata = TechnologySpecsICEMetadata.getHardcodedMetadata();
+  const metadata = TechnologySpecsSingleEVMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
 
   export default {
-    name: 'TechnologySpecsICE',
-    // TODO maybe rename this to just 'id'
+    name: 'TechnologySpecsSingleEV',
     mixins: [wizardFormMixin],
-    props: ['iceId'],
+    props: ['id'],
     data() {
-      const values = this.isnewICE() ? metadata.getDefaultValues() : this.getICEFromStore();
+      const values = this.getSingleEVFromStore();
+      const valuesMinusId = _.pickBy(values, (value, key) => key !== 'id');
       return {
         metadata,
-        ...values,
+        values,
+        ...valuesMinusId,
         WIZARD_COMPONENT_PATH,
       };
     },
     validations() {
       return {
         ...validations,
-        includeSizeLimits: {
-          ...validations.includeSizeLimits,
-          required: requiredIf(function isIncludeSizeLimitsRequired() {
-            return this.shouldSize;
-          }),
-        },
-        ratedCapacity: {
-          ...validations.ratedCapacity,
-          required: requiredIf(function isRatedCapacityRequired() {
-            return !this.shouldSize;
-          }),
-        },
-        ratedCapacityMaximum: {
-          ...validations.ratedCapacityMaximum,
-          required: requiredIf(function isRatedCapacityMaximumRequired() {
-            return (this.includeSizeLimits === true) && (this.shouldSize === true);
-          }),
-          minValue: !(this.ratedCapacityMinimum >= 1)
-            ? 1 : minValue(this.ratedCapacityMinimum),
-        },
-        ratedCapacityMinimum: {
-          ...validations.ratedCapacityMinimum,
-          required: requiredIf(function isRatedCapacityMinimumRequired() {
-            return (this.includeSizeLimits === true) && (this.shouldSize === true);
-          }),
-        },
         replacementCost: {
           ...validations.replacementCost,
           required: requiredIf(function isReplacementCostRequired() {
-            return (this.isReplaceable === true);
-          }),
-        },
-        replacementCostPerkW: {
-          ...validations.replacementCostPerkW,
-          required: requiredIf(function isReplacementCostPerkWRequired() {
             return (this.isReplaceable === true);
           }),
         },
@@ -297,6 +213,16 @@
           required: requiredIf(function isSalvageValueRequired() {
             return (this.salvageValueOption === 'User defined');
           }),
+        },
+        plugOutHour: {
+          ...validations.plugOutHour,
+          minValue: !this.valueInRange(this.plugInHour, 0, 22)
+            ? 1 : minValue(this.plugInHour + 1),
+        },
+        maximumChargingPower: {
+          ...validations.maximumChargingPower,
+          minValue: !(this.minimumChargingPower >= 0)
+            ? 0 : minValue(this.minimumChargingPower),
         },
       };
     },
@@ -316,15 +242,16 @@
         });
         return true;
       },
-      isnewICE() {
-        return this.iceId === 'null';
-      },
-      getICEFromStore() {
-        return this.$store.getters.getICEById(this.iceId);
+      getSingleEVFromStore() {
+        return this.$store.getters.getSingleEVById(this.id);
       },
       getErrorMsg(fieldName) {
-        this.metadata.ratedCapacityMaximum.minValue = !(this.ratedCapacityMinimum >= 1)
-          ? 1 : this.ratedCapacityMinimum;
+        // plugOutHour dynamic validation
+        this.metadata.plugOutHour.minValue = !this.valueInRange(this.plugInHour, 0, 22)
+          ? 1 : (this.plugInHour + 1);
+        this.metadata.maximumChargingPower.minValue = !(this.minimumChargingPower >= 0)
+          ? 0 : this.minimumChargingPower;
+
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       makeErrorList() {
@@ -337,17 +264,8 @@
         return errors;
       },
       validatedSave() {
-        // reset all non-required inputs to their defaults prior to saving
-        if (this.shouldSize === true) {
-          this.resetNonRequired(['ratedCapacity']);
-          if (this.includeSizeLimits === false) {
-            this.resetNonRequired(['ratedCapacityMaximum', 'ratedCapacityMinimum']);
-          }
-        } else {
-          this.resetNonRequired(['includeSizeLimits']);
-        }
         if (this.isReplaceable === false) {
-          this.resetNonRequired(['replacementConstructionTime', 'replacementCost', 'replacementCostPerkW']);
+          this.resetNonRequired(['replacementConstructionTime', 'replacementCost']);
         }
         if (this.salvageValueOption !== 'User defined') {
           this.resetNonRequired(['salvageValue']);
@@ -360,53 +278,46 @@
         if (this.complete !== true) {
           this.errorList = this.makeErrorList();
         }
-        const iceSpec = this.buildICE();
-        if (this.isnewICE()) {
-          this.$store.dispatch('addTechnologySpecsICE', iceSpec);
-        } else {
-          const payload = {
-            newICE: iceSpec,
-            iceId: this.iceId,
-          };
-          this.$store.dispatch('replaceTechnologySpecsICE', payload);
-        }
+        const singleEVSpec = this.buildSingleEV();
+        const payload = {
+          newSingleEV: singleEVSpec,
+          id: this.id,
+        };
+        this.$store.dispatch('replaceTechnologySpecsSingleEV', payload);
+
         this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
-      buildICE() {
+      valueInRange(value, lowValue, highValue) {
+        return (value >= lowValue && value <= highValue);
+      },
+      buildSingleEV() {
         return {
           active: this.active,
           capitalCost: this.capitalCost,
-          capitalCostPerkW: this.capitalCostPerkW,
           complete: this.complete,
           constructionYear: this.constructionYear,
           decomissioningCost: this.decomissioningCost,
-          efficiency: this.efficiency,
+          energyTarget: this.energyTarget,
           errorList: this.errorList,
           expectedLifetime: this.expectedLifetime,
-          fixedOMCostIncludingExercise: this.fixedOMCostIncludingExercise,
-          fuelCost: this.fuelCost,
+          fixedOMCosts: this.fixedOMCosts,
           id: this.id,
-          includeSizeLimits: this.includeSizeLimits,
           isReplaceable: this.isReplaceable,
           macrsTerm: this.macrsTerm,
-          minimumPower: this.minimumPower,
+          maximumChargingPower: this.maximumChargingPower,
+          minimumChargingPower: this.minimumChargingPower,
           name: this.name,
-          numGenerators: this.numGenerators,
           operationYear: this.operationYear,
           path: this.path,
-          ratedCapacity: this.ratedCapacity,
-          ratedCapacityMaximum: this.ratedCapacityMaximum,
-          ratedCapacityMinimum: this.ratedCapacityMinimum,
+          plugInHour: this.plugInHour,
+          plugOutHour: this.plugOutHour,
           replacementCost: this.replacementCost,
-          replacementCostPerkW: this.replacementCostPerkW,
           replacementConstructionTime: this.replacementConstructionTime,
           salvageValue: this.salvageValue,
           salvageValueOption: this.salvageValueOption,
-          shouldSize: this.shouldSize,
           tag: this.tag,
           technologyType: this.technologyType,
           ter: this.ter,
-          variableOMCost: this.variableOMCost,
         };
       },
     },

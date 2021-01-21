@@ -2,7 +2,7 @@ import { required, decimal, maxValue, minValue, between, integer } from 'vuelida
 
 export default class ProjectField {
   constructor(args) {
-    this.defaultValue = args.defaultValue;
+    this.defaultValue = args.defaultValue === undefined ? null : args.defaultValue;
     this.displayName = args.displayName;
     this.isRequired = args.isRequired;
     this.type = args.type;

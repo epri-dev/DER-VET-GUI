@@ -12,13 +12,18 @@ export const TECH_SPECS_PATH = `${WIZARD_START_PATH}/technology-specs`;
 export const OBJECTIVES_PATH = `${WIZARD_START_PATH}/objectives`;
 export const CAL_ENVIRO_SCREEN_PATH = `${WIZARD_START_PATH}/cal-enviro-screen`;
 
-export const TECH_SPECS_PV_PATH = `${WIZARD_COMPONENT_PATH}/technology-specs-solar-pv`;
 export const TECH_SPECS_BATTERY_PATH = `${WIZARD_COMPONENT_PATH}/technology-specs-battery`;
-export const TECH_SPECS_ICE_PATH = `${WIZARD_COMPONENT_PATH}/technology-specs-ice`;
+export const TECH_SPECS_CONTROLLABLE_LOAD_PATH = `${WIZARD_COMPONENT_PATH}/technology-specs-controllable-load`;
 export const TECH_SPECS_DIESEL_PATH = `${WIZARD_COMPONENT_PATH}/technology-specs-diesel-gen`;
+export const TECH_SPECS_FLEET_EV_PATH = `${WIZARD_COMPONENT_PATH}/technology-specs-fleet-ev`;
+export const TECH_SPECS_ICE_PATH = `${WIZARD_COMPONENT_PATH}/technology-specs-ice`;
+export const TECH_SPECS_PV_PATH = `${WIZARD_COMPONENT_PATH}/technology-specs-solar-pv`;
+export const TECH_SPECS_SINGLE_EV_PATH = `${WIZARD_COMPONENT_PATH}/technology-specs-single-ev`;
 
 export const TECH_SPECS_PV_DATA_GENERATION_PATH = `${WIZARD_COMPONENT_PATH}/technology-specs-solar-pv-upload`;
 export const TECH_SPECS_BATTERY_DATA_CYCLES_PATH = `${WIZARD_COMPONENT_PATH}/technology-specs-battery-cycle`;
+export const TECH_SPECS_CONTROLLABLE_LOAD_DATA_UPLOAD_PATH = `${WIZARD_COMPONENT_PATH}/technology-specs-controllable-load-upload`;
+export const TECH_SPECS_FLEET_EV_BASELINE_PATH = `${WIZARD_COMPONENT_PATH}/technology-specs-fleet-ev-baseline-upload`;
 
 export const FINANCIAL_INPUTS_PATH = `${WIZARD_COMPONENT_PATH}/financial-inputs`;
 export const FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH = `${WIZARD_COMPONENT_PATH}/financial-inputs-external-incentives`;

@@ -39,7 +39,7 @@ const DYNAMIC_FIELDS = [
   'variableOMCost',
 ];
 
-const sharedHardcodedMetadata = createSharedHardcodedMetadata(DieselGen);
+const sharedHardcodedMetadata = createSharedHardcodedMetadata('diesel generator');
 
 export default class TechnologySpecsDieselGenMetadata {
   constructor(arg) {
