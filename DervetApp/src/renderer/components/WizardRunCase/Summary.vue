@@ -251,6 +251,11 @@
   };
 
   export default {
+    beforeMount() {
+      // load the active tech list here
+      //   for quick start-mode when the user goes straight to the summary
+      this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
+    },
     computed: {
       listOfActiveTechnologies() {
         return this.$store.state.Project.listOfActiveTechnologies;
@@ -333,7 +338,7 @@
         return activeTF;
       },
       notStartedText(item) {
-        if (item === null) {
+        if (item === null || item === undefined) {
           return NOT_STARTED;
         }
         return '';
