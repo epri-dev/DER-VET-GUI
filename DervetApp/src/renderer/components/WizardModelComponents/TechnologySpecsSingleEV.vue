@@ -217,7 +217,7 @@
         plugOutHour: {
           ...validations.plugOutHour,
           minValue: !this.valueInRange(this.plugInHour, 0, 22)
-            ? 0 : minValue(this.plugInHour + 1),
+            ? 1 : minValue(this.plugInHour + 1),
         },
         maximumChargingPower: {
           ...validations.maximumChargingPower,
@@ -247,8 +247,8 @@
       },
       getErrorMsg(fieldName) {
         // plugOutHour dynamic validation
-        this.metadata.plugOutHour.minValue = !this.valueInRange(this.plugInHour, 0, 23)
-          ? 1 : this.plugInHour;
+        this.metadata.plugOutHour.minValue = !this.valueInRange(this.plugInHour, 0, 22)
+          ? 1 : (this.plugInHour + 1);
         this.metadata.maximumChargingPower.minValue = !(this.minimumChargingPower >= 0)
           ? 0 : this.minimumChargingPower;
 
