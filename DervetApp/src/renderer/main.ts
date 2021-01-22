@@ -9,8 +9,8 @@ import 'font-awesome/css/font-awesome.min.css';
 import 'vue-inner-image-zoom/lib/vue-inner-image-zoom.css';
 import './assets/site.css';
 
-import App from './App';
-import IpcService from './IpcService';
+import App from './App.vue';
+import IpcService from './service/Ipc';
 import router from './router';
 import store from './store';
 

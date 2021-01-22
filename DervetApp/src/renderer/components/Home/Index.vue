@@ -70,6 +70,7 @@
 </template>
 
 <script>
+  import { LOAD_QUICK_START_PROJECT } from '@/store/actionTypes';
   import { WIZARD_START_PATH } from '@/router/constants';
 
   const useCases = [
@@ -97,7 +98,7 @@
           .then(this.$store.dispatch('resetResultToDefault', this.$store.state.Project.id))
           .then(this.$store.dispatch('Application/resetApplicationToDefault', this.$store.state.Project.id))
           .then(this.$store.dispatch('resetZipCode'))
-          .then(this.$store.dispatch('loadQuickStartProject', selectedUseCase))
+          .then(this.$store.dispatch(LOAD_QUICK_START_PROJECT, selectedUseCase))
           .then(this.$store.dispatch('Application/setQuickStartCompleteness'))
           .then(this.$router.push({ path: WIZARD_START_PATH }));
       },

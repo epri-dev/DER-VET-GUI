@@ -1,5 +1,5 @@
 import { ipcRenderer } from 'electron'; // eslint-disable-line
-import store from './store';
+import store from '@/store';
 
 const DERVET_ERROR = 'dervet-error';
 const DERVET_INPUTS = 'dervet-inputs';

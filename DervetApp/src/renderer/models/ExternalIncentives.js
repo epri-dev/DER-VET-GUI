@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { objectToCsv } from '@/util/file';
 
-import ProjectFieldMetadata from '@/models/Project/Fields';
+import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 
 export const INCENTIVES_HEADERS = ['Year', 'Tax Credit (nominal $)', 'Other Incentive (nominal $)'];
 

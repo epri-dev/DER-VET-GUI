@@ -154,7 +154,6 @@
     methods: {
       addTech(metadata) {
         const defaultValues = metadata.getDefaultValues();
-        console.log(JSON.stringify(defaultValues, null, 1));
         this.$store.dispatch(ADD_TECH, defaultValues);
         this.activateTech(defaultValues);
       },

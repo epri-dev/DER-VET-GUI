@@ -3,7 +3,7 @@
 
 // Project actions
 export const RESET_PROJECT_TO_DEFAULT = 'RESET_PROJECT_TO_DEFAULT';
-export const LOAD_QUICK_START_PROJECT = 'LOAD_QUICK_START_PROJECT';
+export const LOAD_NEW_PROJECT = 'LOAD_NEW_PROJECT';
 // battery page
 export const REPLACE_TECHNOLOGY_SPECS_BATTERY = 'REPLACE_TECHNOLOGY_SPECS_BATTERY';
 // battery cycle page

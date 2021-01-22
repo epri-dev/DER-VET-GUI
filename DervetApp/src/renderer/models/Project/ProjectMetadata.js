@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import * as c from '@/models/Project/constants';
-import ProjectFieldMetadata from '@/models/Project/Fields';
+import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 import operateOnKeysList from '@/util/object';
 
 export class ProjectMetadata {
@@ -9,6 +9,7 @@ export class ProjectMetadata {
     Object.assign(this, arg);
   }
 
+  // TODO LL: would return a Project
   getDefaultValues() {
     return {
       energyPriceSourceWholesale: null,
@@ -26,7 +27,6 @@ export class ProjectMetadata {
       objectivesResilience: false,
       objectivesSR: false,
       objectivesUserDefined: false,
-      type: 'Wizard',
       ...this.operateOnFieldList(c.START_PROJECT_FIELDS, f => f.defaultValue),
       ...this.operateOnFieldList(c.OBJECTIVE_FIELDS, f => f.defaultValue),
       ...this.operateOnFieldList(c.SITE_INFORMATION_FIELDS, f => f.defaultValue),
@@ -367,9 +367,6 @@ export class ProjectMetadata {
         description: 'Yearly Cost Avoided for meeting the user-defined constraints',
       }),
     });
-  }
-  validation() {
-    // TODO add to list of errors on Summary
   }
 }
 

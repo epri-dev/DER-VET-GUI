@@ -30,29 +30,6 @@ describe('TimeSeriesData model', () => {
       Array.from({ length: days }, (_, i) => (24 * i) + 23),
       Array.from({ length: days }, (_, i) => (24 * i) + 24),
     ];
-    // const expectedDataArr = [
-    //   [1, 25, 46],
-    //   [2, 26, 47],
-    //   [3, 27, 48],
-    //   [4, 28, 49],
-    //   [5, 29, 50],
-    //   [6, 30, 51],
-    //   [7, 31, 52],
-    //   [8, 32, 53],
-    //   [9, 33, 54],
-    //   [10, 34, 55],
-    //   [11, 35, 56],
-    //   [12, 36, 57],
-    //   [13, 37, 58],
-    //   [14, 38, 59],
-    //   [15, 39, 60],
-    //   [16, 40, 61],
-    //   [17, 41, 62],
-    //   [18, 42, 63],
-    //   [19, 43, 64],
-    //   [20, 44, 65],
-    //   [24, 45, 66],
-    // ];
     const actualDataArr = TimeSeriesData.listToMap(testArray);
     expect(actualDataArr).to.eql(expectedDataArr);
   });

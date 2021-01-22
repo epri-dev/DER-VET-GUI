@@ -66,8 +66,6 @@ export default class TimeSeriesData extends BaseTableData {
     return 0;
   }
   static listToMap(list) {
-    // const data = _.fill(Array(24), []);
-    // console.log(data);
     const data = [[], [], [], [], [], [], [], [], [], [], [], [],
       [], [], [], [], [], [], [], [], [], [], [], []];
     let hourOfDay = 0;

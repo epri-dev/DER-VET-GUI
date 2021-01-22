@@ -55,10 +55,6 @@ describe('modelParametersDto', () => {
     expect(fullMp.name).to.eql(modelParametersFixture.name);
   });
 
-  it('should have translated the type correctly', () => {
-    expect(fullMp.type).to.eql(modelParametersFixture.type);
-  });
-
   const tagFixture = modelParametersFixture.tags;
   const actualTags = fullMp.tags;
 

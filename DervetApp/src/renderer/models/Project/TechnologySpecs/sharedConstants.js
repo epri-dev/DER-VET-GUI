@@ -1,4 +1,4 @@
-import ProjectFieldMetadata from '@/models/Project/Fields';
+import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 import {
   optionsYN,
   makeAllowedValuesWithNull,

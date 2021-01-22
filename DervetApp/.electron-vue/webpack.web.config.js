@@ -14,7 +14,7 @@ const { VueLoaderPlugin } = require('vue-loader')
 let webConfig = {
   devtool: '#cheap-module-eval-source-map',
   entry: {
-    web: path.join(__dirname, '../src/renderer/main.js')
+    web: path.join(__dirname, '../src/renderer/main.ts')
   },
   module: {
     rules: [
@@ -53,6 +53,11 @@ let webConfig = {
       test: /\.js$/,
       use: 'babel-loader',
       include: [ path.resolve(__dirname, '../src/renderer') ],
+      exclude: /node_modules/
+    },
+    {
+      test: /\.ts$/,
+      use: 'ts-loader',
       exclude: /node_modules/
     },
     {
@@ -131,7 +136,7 @@ let webConfig = {
       '@': path.join(__dirname, '../src/renderer'),
       'vue$': 'vue/dist/vue.esm.js'
     },
-    extensions: ['.js', '.vue', '.json', '.css']
+    extensions: ['.js', '.ts', '.vue', '.json', '.css']
   },
   target: 'web'
 }

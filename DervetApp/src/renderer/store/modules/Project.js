@@ -2,10 +2,9 @@ import { cloneDeep, flatten, merge } from 'lodash';
 
 import { billReductionProject } from '@/assets/cases/billReduction/project';
 import { reliabilityProject } from '@/assets/cases/reliability/project';
-import { projectMetadata } from '@/models/Project/Project';
+import { projectMetadata } from '@/models/Project/ProjectMetadata';
 import * as m from '@/store/mutationTypes';
 import * as a from '@/store/actionTypes';
-
 
 const usecaseDatabase = { // its a sad excuse for a database, but serves as one.
   billReductionProject,
@@ -14,6 +13,7 @@ const usecaseDatabase = { // its a sad excuse for a database, but serves as one.
 
 const metadataDefaultValues = projectMetadata.getDefaultValues();
 
+// TODO get rid of this completely...move over all DER, timeseries inits to getDefaultValues...
 export const getDefaultState = () => ({
   ...metadataDefaultValues,
 
@@ -26,6 +26,7 @@ export const getDefaultState = () => ({
   technologySpecsSingleEV: [],
   technologySpecsSolarPV: [],
 
+  // TODO: make this dynamic/move to getter
   listOfActiveTechnologies: {
     Generator: [],
     'Energy Storage System': [],
@@ -151,8 +152,8 @@ const mutations = {
   [m.RESET_PROJECT_TO_DEFAULT](state) {
     Object.assign(state, getDefaultState());
   },
-  [m.LOAD_QUICK_START_PROJECT](state, quickStartBillReduction) {
-    Object.assign(state, quickStartBillReduction);
+  [m.LOAD_NEW_PROJECT](state, project) {
+    Object.assign(state, project);
   },
   // Battery
   [m.REPLACE_TECHNOLOGY_SPECS_BATTERY](state, payload) {
@@ -452,9 +453,6 @@ const mutations = {
   SET_TIMESTEP(state, newTimestep) {
     state.timestep = newTimestep;
   },
-  SET_TYPE(state, type) {
-    state.type = type;
-  },
   // technology specs
   [m.ACTIVATE_TECH_BATTERY](state, payload) {
     const indexMatchingId = getters.getIndexOfBatteryId(state)(payload.id);
@@ -595,17 +593,18 @@ const actions = {
   [a.RESET_PROJECT_TO_DEFAULT]({ commit }) {
     commit(m.RESET_PROJECT_TO_DEFAULT);
   },
-  [a.LOAD_QUICK_START_PROJECT]({ commit }, caseName) {
-    // TODO load actual quickStartProject;
-    const selectedUseCase = usecaseDatabase[caseName];
-    const defaultProject = getDefaultState();
+  [a.LOAD_NEW_PROJECT]({ commit }, project) {
     return new Promise((resolve) => {
-      commit(m.LOAD_QUICK_START_PROJECT, merge(defaultProject, selectedUseCase));
+      commit(m.LOAD_NEW_PROJECT, merge(getDefaultState(), project));
       resolve();
     });
   },
-  setType({ commit }, type) {
-    commit('SET_TYPE', type);
+  [a.LOAD_QUICK_START_PROJECT]({ commit }, caseName) {
+    const selectedUseCase = usecaseDatabase[caseName];
+    return new Promise((resolve) => {
+      commit(m.LOAD_NEW_PROJECT, merge(getDefaultState(), selectedUseCase));
+      resolve();
+    });
   },
   // battery
   [a.REPLACE_TECHNOLOGY_SPECS_BATTERY]({ commit }, payload) {
