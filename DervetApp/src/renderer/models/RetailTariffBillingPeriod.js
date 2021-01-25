@@ -204,12 +204,25 @@ export default class RetailTariffBillingPeriodMetadata {
 export const parsedCsvToBillingPeriods = (csv) => {
   // TODO validate headers to ensure order of fields is correct
   // and billing period is complete
+  console.log('-------> csv a');
+  console.log(typeof csv);
+  console.log(csv);
+  // remove the first row
+  // TODO what if there is not a header row present?
   let csvValues = csv.slice(1);
+  console.log('-------> csvValues b');
+  console.log(typeof csvValues);
+  console.log(csvValues);
+  // only keep rows with 11 elements
   csvValues = csvValues.filter(row => row.length === 11);
 
+  console.log('-------> csvValues c');
+  console.log(typeof csvValues);
+  console.log(csvValues);
   return csvValues.map(row => (
     new RetailTariffBillingPeriodMetadata({
-      complete: true,
+      // TODO use a function here to validate each row, and set boolean complete
+      complete: null,
       id: row[0],
       startMonth: row[1],
       endMonth: row[2],
@@ -239,5 +252,14 @@ export const billingPeriodsToCsv = (billingPeriods) => {
     'chargeType',
     'name',
   ];
+  console.log('-------> billingPeriods');
+  console.log(typeof billingPeriods);
+  console.log(billingPeriods);
+  console.log('-------> fields');
+  console.log(typeof fields);
+  console.log(fields);
+  console.log('-------> RETAIL_TARIFF_HEADERS');
+  console.log(typeof RETAIL_TARIFF_HEADERS);
+  console.log(RETAIL_TARIFF_HEADERS);
   return objectToCsv(billingPeriods, fields, RETAIL_TARIFF_HEADERS);
 };
