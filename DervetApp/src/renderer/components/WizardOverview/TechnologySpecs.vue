@@ -7,7 +7,7 @@
         <div class="form-group row">
           <b-card class="col-md-6" v-for="tech in techSpecs" v-bind:key="tech.tag" :title="getNumberOfTechnology(tech)">
             <b-card-text v-if="!(isEmpty(tech))">
-              {{tech.label}}
+              {{tech.fullName}}
             </b-card-text>
             <template #footer  v-if="!(isEmpty(tech))">
                 <b-button @click="addTech(tech.metadata)">Add</b-button>
@@ -23,7 +23,7 @@
                       :fields="viewTechTableFields"
                       :items="tech.items">
           <template v-slot:cell(tagname)="row">
-            <b-col class="text-left">{{getTechLabel(row.item) }}</b-col>
+            <b-col class="text-left">{{getTechLabel(tech.shortHand, row.item) }}</b-col>
           </template>
           <template v-slot:cell(buttons)="row">
             <b-col class="text-right">
@@ -63,33 +63,16 @@
     MAKE_LIST_OF_ACTIVE_TECHNOLOGIES,
     REMOVE_TECH,
   } from '@/store/actionTypes';
-  import * as techLabels from '@/models/Project/TechnologySpecs/labelConstants';
-
-  import TechnologySpecsBatteryMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsBattery';
-  import TechnologySpecsControllableLoadMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsControllableLoad';
-  import TechnologySpecsDieselGenMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsDieselGen';
-  import TechnologySpecsFleetEVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsFleetEV';
-  import TechnologySpecsICEMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsICE';
-  import TechnologySpecsSingleEVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSingleEV';
-  import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
-  import NavButton from '@/components/Shared/NavButton';
-
-
-  const metadataBattery = TechnologySpecsBatteryMetadata.getHardcodedMetadata();
-  const metadataControllableLoad = TechnologySpecsControllableLoadMetadata.getHardcodedMetadata();
-  const metadataDieselGen = TechnologySpecsDieselGenMetadata.getHardcodedMetadata();
-  const metadataFleetEV = TechnologySpecsFleetEVMetadata.getHardcodedMetadata();
-  const metadataICE = TechnologySpecsICEMetadata.getHardcodedMetadata();
-  const metadataSingleEV = TechnologySpecsSingleEVMetadata.getHardcodedMetadata();
-  const metadataSolarPV = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
+  import technologySpecsMixin from '@/mixins/technologySpecsMixin';
+  import NavButtons from '@/components/Shared/NavButtons';
 
   const PAGEGROUP = 'overview';
   const PAGE = 'technologySpecs';
 
   export default {
     components: { NavButton },
+    mixins: [technologySpecsMixin],
     data() {
-      const p = this.$store.state.Project;
       return {
         viewTechTableFields: [
           {
@@ -99,46 +82,6 @@
           {
             key: 'buttons',
             label: '',
-          },
-        ],
-        techSpecs: [
-          {
-            items: p.technologySpecsICE,
-            label: techLabels.ICE,
-            metadata: metadataICE,
-          },
-          {
-            items: p.technologySpecsDieselGen,
-            label: techLabels.DieselGen,
-            metadata: metadataDieselGen,
-
-          },
-          {
-            items: p.technologySpecsSolarPV,
-            label: techLabels.PV,
-            metadata: metadataSolarPV,
-          },
-          {}, // filler card (empty, but gives some order when rendered)
-          {
-            items: p.technologySpecsBattery,
-            label: techLabels.Battery,
-            metadata: metadataBattery,
-          },
-          {}, // filler card (empty, but gives some order when rendered)
-          {
-            items: p.technologySpecsSingleEV,
-            label: techLabels.ElectricVehicle1,
-            metadata: metadataSingleEV,
-          },
-          {
-            items: p.technologySpecsFleetEV,
-            label: techLabels.ElectricVehicle2,
-            metadata: metadataFleetEV,
-          },
-          {
-            items: p.technologySpecsControllableLoad,
-            label: techLabels.ControllableLoad,
-            metadata: metadataControllableLoad,
           },
         ],
         WIZARD_COMPONENT_PATH,
@@ -161,9 +104,6 @@
         this.$store.dispatch(ACTIVATE_TECH, payload);
         this.setTech();
       },
-      isEmpty(payload) {
-        return _.isEmpty(payload);
-      },
       deactivateTech(payload) {
         this.$store.dispatch(DEACTIVATE_TECH, payload);
         this.setTech();
@@ -184,13 +124,6 @@
           page: PAGE,
           completeness: (this.getNumberOfActiveTechnologies() > 0),
         };
-      },
-      getTechLabel(payload) {
-        const label = techLabels[payload.tag];
-        if (payload.name) {
-          return `${label}: ${payload.name}`;
-        }
-        return `Undefined ${label}`;
       },
       getSingleErrorMsg() {
         if (!this.complete &&

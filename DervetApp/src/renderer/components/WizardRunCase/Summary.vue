@@ -26,27 +26,29 @@
 
         <div v-if="componentTechErrorExists()" class="incomplete">
           <h4>Errors in Technology Components</h4>
-          <div v-for="tech in techAll">
-            <div v-if="tech.complete !== true">
+          <div v-for="techTag in techSpecs">
+            <div v-for="techItem in filterNonActives(techTag.items)">
+              
               <li>
                 <router-link
                   class="text-decoration-none"
-                  :to="getTechPath(tech)">
-                  {{ `${techLabels[tech.tag]}${getTechDisplayName(tech)}` }}
+                  :to="techPath(techTag.path, techItem)">
+                  {{ getTechLabel(techTag.fullName, techItem) }}
                 </router-link>
+                
                 <ul>
-                  <li v-for="error in tech.errorList">
+                  <li v-for="error in techItem.errorList">
                     <span v-html="error"></span>
                   </li>
 
-                  <div v-if="tech.associatedInputsComplete === false">
-                    <div v-for="associatedInputs in tech.associatedInputs">
+                  <div v-if="techItem.associatedInputsComplete === false">
+                    <div v-for="associatedInputs in techItem.associatedInputs">
                       <div v-if="!associatedInputs.complete">
                         <li>
                           <router-link
                             class="text-decoration-none"
-                            :to="getTechAssociatedInputsPath(tech)">
-                            {{ associatedInputs.displayName + getTechDisplayName(tech) }}
+                            :to="getTechAssociatedInputsPath(techItem)">
+                            {{ associatedInputs.displayName + getTechDisplayName(techItem) }}
                           </router-link>
                           <ul>
                             <li v-for="dataError in associatedInputs.errorList">
@@ -57,7 +59,6 @@
                       </div>
                     </div>
                   </div>
-
                 </ul>
               </li>
             </div>
@@ -112,13 +113,10 @@
         </br>
 
         <h4>Technology Specifications</h4>
-        <ul v-for="techType, typeName in listOfActiveTechnologies" :key="typeName">
-          <h5>{{ typeName }}</h5>
-          <ul>
-            <li v-for="tech in techType">
-              {{ `${techLabels[tech.tag]}${getTechDisplayName(tech)}` }}
-            </li>
-          </ul>
+        <ul v-for="techTag in techSpecs" :key="techTag.shortHand">
+          <li v-for="techItem in filterNonActives(techTag.items)">
+            {{ getTechLabel(techTag.fullName, techItem) }}
+          </li>
         </ul>
         </br>
 
@@ -174,6 +172,7 @@
   import * as techLabels from '@/models/Project/TechnologySpecs/labelConstants';
   import { exportProject } from '@/service/ProjectFileManager';
   import FilePicker from '@/components/Shared/FilePicker';
+  import technologySpecsMixin from '@/mixins/technologySpecsMixin';
 
   const NOT_STARTED = ': Not Started';
 
@@ -240,6 +239,7 @@
   };
 
   export default {
+    mixins: [technologySpecsMixin],
     beforeMount() {
       // load the active tech list here
       //   for quick start-mode when the user goes straight to the summary
@@ -380,11 +380,6 @@
         const techID = tech.id;
         return `${tech.associatedInputs[0].path}/${techID}`;
       },
-      getTechPath(tech) {
-        const techID = tech.id;
-        return `${tech.path}/${techID}`;
-      },
-
       // wizard overview
       overviewAll() {
         const overviewObject = {};

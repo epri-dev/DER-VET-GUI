@@ -15,16 +15,15 @@
         Technologies
       </router-link>
 
-      <div v-for="techTag in technologyLinks">
+      <div v-for="techTag in techSpecs">
         <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
-                     v-for="techItem in techTag.items"
-                     v-if="techItem.active"
+                     v-for="techItem in filterNonActives(techTag.items)"
                      :to="techPath(techTag.path, techItem)"
                      :key="techItem.id"
                      v-bind:class="{
             current: isCurrent(techPath(techTag.path, techItem)),
             incomplete: !techItem.complete }">
-          {{ getTechLabel(techTag.title, techItem) }}
+          {{ getTechLabel(techTag.shortHand, techItem) }}
         </router-link>
       </div>
 
@@ -151,8 +150,10 @@
 
 <script>
   import * as paths from '@/router/constants';
+  import technologySpecsMixin from '@/mixins/technologySpecsMixin';
 
   export default {
+    mixins: [technologySpecsMixin],
     data() {
       return {
         paths,
@@ -165,70 +166,14 @@
       isComplete(pageKey, page) {
         return !this.$store.state.Application.pageCompleteness.components[pageKey][page];
       },
-      techPath(basePath, payload) {
-        return `${basePath}/${payload.id}`;
-      },
       isCurrent(path) {
         return RegExp(path).test(this.$route.path);
       },
       isActual(path) {
         return path === this.$route.path;
       },
-      getTechLabel(title, payload) {
-        if (typeof payload.name === 'string') {
-          return `${title}: ${payload.name}`;
-        }
-        return `Undefined ${title}`;
-      },
     },
     computed: {
-      technologyLinks() {
-        const p = this.$store.state.Project;
-        return [
-          {
-            title: 'PV',
-            items: p.technologySpecsSolarPV,
-            props: 'solarId',
-            path: paths.TECH_SPECS_PV_PATH,
-          },
-          {
-            title: 'Battery',
-            items: p.technologySpecsBattery,
-            props: 'batteryId',
-            path: paths.TECH_SPECS_BATTERY_PATH,
-          },
-          {
-            title: 'ICE',
-            items: p.technologySpecsICE,
-            props: 'iceId',
-            path: paths.TECH_SPECS_ICE_PATH,
-          },
-          {
-            title: 'Diesel',
-            items: p.technologySpecsDieselGen,
-            props: 'dieselGenId',
-            path: paths.TECH_SPECS_DIESEL_PATH,
-          },
-          {
-            title: 'Controllable Load',
-            items: p.technologySpecsControllableLoad,
-            props: 'id',
-            path: paths.TECH_SPECS_CONTROLLABLE_LOAD_PATH,
-          },
-          {
-            title: 'Single EV',
-            items: p.technologySpecsSingleEV,
-            props: 'id',
-            path: paths.TECH_SPECS_SINGLE_EV_PATH,
-          },
-          {
-            title: 'Fleet EV',
-            items: p.technologySpecsFleetEV,
-            props: 'id',
-            path: paths.TECH_SPECS_FLEET_EV_PATH,
-          },
-        ];
-      },
       objectivesRetailEnergyChargeReduction() {
         return this.$store.state.Project.objectivesRetailEnergyChargeReduction;
       },

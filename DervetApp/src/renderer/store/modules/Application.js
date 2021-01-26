@@ -17,7 +17,6 @@ const getDefaultApplicationState = () => ({
       technologySpecs: NULL,
     },
     components: {
-      // technology: {},
       objectives: {
         siteInformation: NULL,
         deferral: NULL,

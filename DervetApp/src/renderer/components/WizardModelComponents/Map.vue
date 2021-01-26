@@ -4,14 +4,13 @@
     <hr>
 
     <h4>Technologies</h4>
-    <div class="row align-items-center" v-for="tagItems in technologyCards" key:bind="tagItems.tag">
-      <div class="col-md-4 buffer-bottom" v-for="techItem in tagItems.items">
+    <div class="row align-items-center" v-for="tagItems in techSpecs" key:bind="tagItems.tag">
+      <div class="col-md-4 buffer-bottom" v-for="techItem in filterNonActives(tagItems.items)">
         <b-button block size="lg"
-                  v-if="techItem.active"
-                  :to="{ name: tagItems.to.name, params: { [tagItems.to.params]: techItem.id }}"
+                  :to="techPath(tagItems.path, techItem)"
                   v-bind:class="{ 'incomplete-btn': !techItem.complete }"
                   :key="techItem.id">
-          {{getTechLabel(techItem)}}
+          {{getTechLabel(tagItems.shortHand, techItem)}}
         </b-button>
       </div>
     </div>
@@ -125,9 +124,10 @@
 
 <script>
   import * as paths from '@/router/constants';
-  import * as techLabels from '@/models/Project/TechnologySpecs/labelConstants';
+  import technologySpecsMixin from '@/mixins/technologySpecsMixin';
 
   export default {
+    mixins: [technologySpecsMixin],
     data() {
       return {
         paths,
@@ -136,39 +136,6 @@
       };
     },
     computed: {
-      technologyCards() {
-        const p = this.$store.state.Project;
-        return [
-          {
-            items: p.technologySpecsSolarPV,
-            to: { name: 'technologySpecsSolarPV', params: 'solarId' },
-          },
-          {
-            items: p.technologySpecsBattery,
-            to: { name: 'technologySpecsBattery', params: 'batteryId' },
-          },
-          {
-            items: p.technologySpecsICE,
-            to: { name: 'technologySpecsICE', params: 'iceId' },
-          },
-          {
-            items: p.technologySpecsDieselGen,
-            to: { name: 'technologySpecsDieselGen', params: 'dieselGenId' },
-          },
-          {
-            items: p.technologySpecsControllableLoad,
-            to: { name: 'technologySpecsControllableLoad', params: 'id' },
-          },
-          {
-            items: p.technologySpecsSingleEV,
-            to: { name: 'technologySpecsSingleEV', params: 'id' },
-          },
-          {
-            items: p.technologySpecsFleetEV,
-            to: { name: 'technologySpecsFleetEV', params: 'id' },
-          },
-        ];
-      },
       objectivesRetailEnergyChargeReduction() {
         return this.$store.state.Project.objectivesRetailEnergyChargeReduction;
       },
@@ -209,13 +176,6 @@
     methods: {
       isComplete(pageKey, page) {
         return !this.$store.state.Application.pageCompleteness.components[pageKey][page];
-      },
-      getTechLabel(payload) {
-        const label = techLabels[payload.tag];
-        if (payload.name) {
-          return `${label}: ${payload.name}`;
-        }
-        return `Undefined ${label}`;
       },
       save() {
       },
