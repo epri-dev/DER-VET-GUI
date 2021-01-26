@@ -378,6 +378,10 @@ const mutations = {
   REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS(state) {
     state.retailTariffBillingPeriods = [];
   },
+  SET_ROW_COMPLETENESS_RETAIL_TARIFF_BILLING_PERIOD(state, payload) {
+    const index = getters.getIndexOfBillingPeriodId(state)(payload.id);
+    state.retailTariffBillingPeriods[index].complete = payload.isRowComplete;
+  },
   // Single EV
   REPLACE_TECHNOLOGY_SPECS_SINGLE_EV(state, payload) {
     const tmpSpecs = getters.getSingleEVSpecsClone(state)();
@@ -778,6 +782,9 @@ const actions = {
   },
   removeRetailTariffBillingPeriod({ commit }, id) {
     commit('REMOVE_RETAIL_TARIFF_BILLING_PERIOD', id);
+  },
+  setRowCompletenessRetailTariffBillingPeriod({ commit }, payload) {
+    commit('SET_ROW_COMPLETENESS_RETAIL_TARIFF_BILLING_PERIOD', payload);
   },
   // Single EV
   replaceTechnologySpecsSingleEV({ commit }, payload) {
