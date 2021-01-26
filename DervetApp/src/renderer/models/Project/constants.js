@@ -8,6 +8,12 @@ export const DEFERRAL_PLANNED_LOAD_LIMIT = 'deferralPlannedLoadLimit';
 export const DEFERRAL_REVERSE_POWER_FLOW_LIMIT = 'deferralReversePowerFlowLimit';
 export const DEFERRAL_GROWTH = 'deferralGrowth';
 export const DEFERRAL_PRICE = 'deferralPrice';
+export const DR_NUMBER_EVENTS = 'drNumberEvents';
+export const DR_INCLUDE_WEEKENDS = 'drIncludeWeekends';
+export const DR_START_HOUR = 'drStartHour';
+export const DR_END_HOUR = 'drEndHour';
+export const DR_EVENT_LENGTH = 'drEventLength';
+export const DR_PROGRAM_TYPE = 'drProgramType';
 export const ENERGY_PRICE_SOURCE_WHOLESALE = 'energyPriceSourceWholesale';
 export const FINANCE_DISCOUNT_RATE = 'financeDiscountRate';
 export const FINANCE_FEDERAL_TAX_RATE = 'financeFederalTaxRate';
@@ -34,6 +40,10 @@ export const OPTIMIZATION_HORIZON_NUM = 'optimizationHorizonNum';
 export const OUTPUT_DIRECTORY = 'outputDirectory';
 export const OWNERSHIP = 'ownership';
 export const PROJECT = 'project';
+export const RA_NUMBER_EVENTS = 'raNumberEvents';
+export const RA_EVENT_LENGTH = 'raEventLength';
+export const RA_DISPATCH_MODE = 'raDispatchMode';
+export const RA_EVENT_SELECTION_METHOD = 'raEventSelectionMethod';
 export const RELIABILITY_MAX_OUTAGE_DURATION = 'reliabilityMaxOutageDuration';
 export const RELIABILITY_POST_OPTIMIZATION_ONLY = 'reliabilityPostOptimizationOnly';
 export const RELIABILITY_TARGET = 'reliabilityTarget';
@@ -63,6 +73,7 @@ export const ANALYSIS_HORIZON_MODE_ALLOWED_VALUES = [
   { value: '2', label: 'Auto-calculate analysis horizon by shortest DER lifetime' },
   { value: '3', label: 'Auto-calculate analysis horizon by longest DER lifetime' },
 ];
+export const DR_PROGRAM_TYPE_ALLOWED_VALUES = makeAllowedValues(['Day of', 'Day ahead']);
 export const ENERGY_PRICE_SOURCE_WHOLESALE_ALLOWED_VALUES = [
   {
     value: false,
@@ -78,6 +89,8 @@ export const GRID_LOCATION_ALLOWED_VALUES = makeAllowedValues(['Generation', 'Tr
 export const INCLUDE_INTERCONNECTION_CONSTRAINTS_ALLOWED_VALUES = optionsYN;
 export const OPTIMIZATION_HORIZON_ALLOWED_VALUES = makeAllowedValues(['Year', 'Month', 'Hours']);
 export const OWNERSHIP_ALLOWED_VALUES = makeAllowedValues(['Customer', 'Utility', '3rd Party']);
+export const RA_DISPATCH_MODE_ALLOWED_VALUES = makeAllowedValues(['Contrain energy', 'Constrain power']);
+export const RA_EVENT_SELECTION_METHOD_ALLOWED_VALUES = makeAllowedValues(['Peak by Year', 'Peak by Month', 'Peak by Month with Active Hours']);
 export const RELIABILITY_POST_OPTIMIZATION_ONLY_ALLOWED_VALUES = [
   {
     value: false,
@@ -120,6 +133,14 @@ export const DEFERRAL_FIELDS = [
   DEFERRAL_PRICE,
   DEFERRAL_REVERSE_POWER_FLOW_LIMIT,
 ];
+export const DEMAND_RESPONSE_FIELDS = [
+  DR_NUMBER_EVENTS,
+  DR_INCLUDE_WEEKENDS,
+  DR_START_HOUR,
+  DR_END_HOUR,
+  DR_EVENT_LENGTH,
+  DR_PROGRAM_TYPE,
+];
 export const FINANCE_FIELDS = [
   FINANCE_DISCOUNT_RATE,
   FINANCE_FEDERAL_TAX_RATE,
@@ -142,6 +163,12 @@ export const LF_FIELDS = [
 export const NSR_FIELDS = [
   NSR_DURATION,
   NSR_GROWTH,
+];
+export const RESOURCE_ADEQUACY_FIELDS = [
+  RA_NUMBER_EVENTS,
+  RA_EVENT_LENGTH,
+  RA_DISPATCH_MODE,
+  RA_EVENT_SELECTION_METHOD,
 ];
 export const RESILIENCE_FIELDS = [
   RELIABILITY_MAX_OUTAGE_DURATION,

@@ -61,6 +61,14 @@
       </router-link>
       <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
                    v-bind:class="{
+          current: isCurrent(this.paths.OBJECTIVES_LF_PATH),
+          incomplete: isComplete('objectives', 'LF') }"
+                   :to="this.paths.OBJECTIVES_LF_PATH"
+                   v-if="objectivesLF">
+        Load Following
+      </router-link>
+      <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
+                   v-bind:class="{
           current: isCurrent(this.paths.OBJECTIVES_NSR_PATH),
           incomplete: isComplete('objectives', 'NSR') }"
                    :to="this.paths.OBJECTIVES_NSR_PATH"
@@ -244,6 +252,9 @@
       },
       objectivesFR() {
         return this.$store.state.Project.objectivesFR;
+      },
+      objectivesLF() {
+        return this.$store.state.Project.objectivesLF;
       },
       objectivesDeferral() {
         return this.$store.state.Project.objectivesDeferral;

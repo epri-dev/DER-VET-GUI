@@ -154,6 +154,10 @@
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsFleetEVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsFleetEV';
   import { TECH_SPECS_FLEET_EV_BASELINE_PATH } from '@/router/constants';
+  import {
+    REPLACE_TECHNOLOGY_SPECS_FLEET_EV,
+    MAKE_LIST_OF_ACTIVE_TECHNOLOGIES,
+  } from '@/store/actionTypes';
 
   const metadata = TechnologySpecsFleetEVMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
@@ -247,16 +251,12 @@
           this.errorList = this.makeErrorList();
         }
         const fleetEVSpec = this.buildFleetEV();
-        if (this.isnew()) {
-          this.$store.dispatch('addTechnologySpecsFleetEV', fleetEVSpec);
-        } else {
-          const payload = {
-            newFleetEV: fleetEVSpec,
-            id: this.id,
-          };
-          this.$store.dispatch('replaceTechnologySpecsFleetEV', payload);
-        }
-        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
+        const payload = {
+          newFleetEV: fleetEVSpec,
+          id: this.id,
+        };
+        this.$store.dispatch(REPLACE_TECHNOLOGY_SPECS_FLEET_EV, payload);
+        this.$store.dispatch(MAKE_LIST_OF_ACTIVE_TECHNOLOGIES, this.$store.state.Project);
       },
       buildFleetEV() {
         return {

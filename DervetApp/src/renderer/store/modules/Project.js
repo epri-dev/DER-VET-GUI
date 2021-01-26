@@ -5,6 +5,7 @@ import { reliabilityProject } from '@/assets/cases/reliability/project';
 import { projectMetadata } from '@/models/Project/ProjectMetadata';
 import * as m from '@/store/mutationTypes';
 import * as a from '@/store/actionTypes';
+import * as c from '@/models/Project/constants';
 
 const usecaseDatabase = { // its a sad excuse for a database, but serves as one.
   billReductionProject,
@@ -34,21 +35,6 @@ export const getDefaultState = () => ({
     'Controllable Load': [],
     'Electric Vehicle': [],
   },
-
-  // TIMESERIES ARRAYS
-  criticalLoad: null,
-  deferralLoad: null,
-  daPrice: null,
-  srPrice: null,
-  nsrPrice: null,
-  frPrice: null,
-  frUpPrice: null,
-  frDownPrice: null,
-  siteLoad: null,
-  userPowerMin: null,
-  userPowerMax: null,
-  userEnergyMin: null,
-  userEnergyMax: null,
 
   retailTariffBillingPeriods: [],
   retailTariffFileImportNotes: [],
@@ -157,6 +143,13 @@ const mutations = {
   [m.LOAD_NEW_PROJECT](state, project) {
     Object.assign(state, project);
   },
+  // Backup
+  [m.SET_BACKUP_PRICE](state, newValue) {
+    state.backUpPrice = newValue;
+  },
+  [m.SET_BACKUP_ENERGY](state, newValue) {
+    state.backUpEnergyReservation = newValue;
+  },
   // Battery
   [m.REPLACE_TECHNOLOGY_SPECS_BATTERY](state, payload) {
     const tmpBatterySpecs = getters.getBatterySpecsClone(state)();
@@ -218,6 +211,25 @@ const mutations = {
     const indexMatchingId = getters.getIndexOfDieselGenId(state)(payload.dieselGenId);
     tmpDieselGenSpecs[indexMatchingId] = payload.newDieselGen;
     state.technologySpecsDieselGen = tmpDieselGenSpecs;
+  },
+  // Demand response
+  [m.SET_DR_NUMBER_EVENTS](state, newValue) {
+    state[c.DR_NUMBER_EVENTS] = newValue;
+  },
+  [m.SET_DR_INCLUDE_WEEKENDS](state, newValue) {
+    state[c.DR_INCLUDE_WEEKENDS] = newValue;
+  },
+  [m.SET_DR_START_HOUR](state, newValue) {
+    state[c.DR_START_HOUR] = newValue;
+  },
+  [m.SET_DR_END_HOUR](state, newValue) {
+    state[c.DR_END_HOUR] = newValue;
+  },
+  [m.SET_DR_EVENT_LENGTH](state, newValue) {
+    state[c.DR_EVENT_LENGTH] = newValue;
+  },
+  [m.SET_DR_PROGRAM_TYPE](state, newValue) {
+    state[c.DR_PROGRAM_TYPE] = newValue;
   },
   // External incentives file
   [m.ADD_EXTERNAL_INCENTIVE](state, newExternalIncentive) {
@@ -281,13 +293,13 @@ const mutations = {
     state.frUpPrice = newFRUpPrice;
   },
   // Fleet EV
-  REPLACE_TECHNOLOGY_SPECS_FLEET_EV(state, payload) {
+  [m.REPLACE_TECHNOLOGY_SPECS_FLEET_EV](state, payload) {
     const tmpSpecs = getters.getFleetEVSpecsClone(state)();
     const indexMatchingId = getters.getIndexOfFleetEVId(state)(payload.id);
     tmpSpecs[indexMatchingId] = payload.newFleetEV;
     state.technologySpecsFleetEV = tmpSpecs;
   },
-  // Controllable Load upload
+  // fleet ev upload
   [m.ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_FLEET_EV](state, payload) {
     const tmpSpecs = getters.getFleetEVSpecsClone(state)();
     const indexMatchingId = getters.getIndexOfFleetEVId(state)(payload.solarId);
@@ -301,6 +313,28 @@ const mutations = {
     tmpICESpecs[indexMatchingId] = payload.newICE;
     state.technologySpecsICE = tmpICESpecs;
   },
+  // load following
+  [m.SET_LF_COMBINED_MARKET](state, newFRCombinedMarket) {
+    state.lfCombinedMarket = newFRCombinedMarket;
+  },
+  [m.SET_LF_DOWN_PRICE](state, newFRDownPrice) {
+    state.lfDownPrice = newFRDownPrice;
+  },
+  [m.SET_LF_DURATION](state, newFRDuration) {
+    state.lfDuration = newFRDuration;
+  },
+  [m.SET_LF_EOU](state, newFReou) {
+    state.lfEOU = newFReou;
+  },
+  [m.SET_LF_EOD](state, newFReod) {
+    state.lfEOD = newFReod;
+  },
+  [m.SET_LF_PRICE](state, newFRPrice) {
+    state.lfPrice = newFRPrice;
+  },
+  [m.SET_LF_UP_PRICE](state, newFRUpPrice) {
+    state.lfUpPrice = newFRUpPrice;
+  },
   // non-spinning reserve
   SET_NSR_DURATION(state, newNSRDuration) {
     state.nsrDuration = newNSRDuration;
@@ -312,7 +346,7 @@ const mutations = {
     state.nsrPrice = newNSRPrice;
   },
   // objectives
-  CHOOSE_ENERGY_STRUCTURE(state, wholesaleEnergyPrices) {
+  [m.CHOOSE_ENERGY_STRUCTURE](state, wholesaleEnergyPrices) {
     state.energyPriceSourceWholesale = wholesaleEnergyPrices;
     if (wholesaleEnergyPrices) {
       state.objectivesDA = true;
@@ -322,22 +356,22 @@ const mutations = {
       state.objectivesRetailEnergyChargeReduction = true;
     }
   },
-  SET_INCLUDE_SITE_LOAD(state) {
+  [m.SET_INCLUDE_SITE_LOAD](state) {
     let customerSited = state.objectivesRetailEnergyChargeReduction;
     customerSited = customerSited || state.objectivesRetailEnergyChargeReduction;
     customerSited = customerSited || (state.ownership === 'Customer');
     state.includeSiteLoad = customerSited;
   },
-  SET_OPTIMIZATION_HORIZON(state, newOptimizataionHorizon) {
+  [m.SET_OPTIMIZATION_HORIZON](state, newOptimizataionHorizon) {
     state.optimizationHorizon = newOptimizataionHorizon;
   },
-  SET_OPTIMIZATION_HORIZON_NUM(state, newOptimizataionHorizonNum) {
+  [m.SET_OPTIMIZATION_HORIZON_NUM](state, newOptimizataionHorizonNum) {
     state.optimizationHorizonNum = newOptimizataionHorizonNum;
   },
-  SET_SIZING_EQUIPMENT(state, newSizingEquipment) {
+  [m.SET_SIZING_EQUIPMENT](state, newSizingEquipment) {
     state.sizingEquipment = newSizingEquipment;
   },
-  SELECT_OTHER_SERVICES(state, listOfServices) {
+  [m.SELECT_OTHER_SERVICES](state, listOfServices) {
     // TODO maybe refactor into one mutation per service
     state.listOfActiveServices = listOfServices;
     state.objectivesResilience = (listOfServices.indexOf('Reliability') > -1);
@@ -346,9 +380,24 @@ const mutations = {
     state.objectivesSR = (listOfServices.indexOf('SR') > -1);
     state.objectivesNSR = (listOfServices.indexOf('NSR') > -1);
     state.objectivesFR = (listOfServices.indexOf('FR') > -1);
-    state.objectivesLoadFollowing = (listOfServices.indexOf('LF') > -1);
+    state.objectivesLF = (listOfServices.indexOf('LF') > -1);
     state.objectivesDeferral = (listOfServices.indexOf('Deferral') > -1);
     state.objectivesUserDefined = (listOfServices.indexOf('User Defined') > -1);
+    state.objectivesDR = (listOfServices.indexOf('Demamd Response') > -1);
+    state.objectivesRA = (listOfServices.indexOf('Resource Adequacy') > -1);
+  },
+  // resource adequacy
+  [m.SET_RA_NUMBER_EVENTS](state, newValue) {
+    state[c.RA_NUMBER_EVENTS] = newValue;
+  },
+  [m.SET_RA_DISPATCH_MODE](state, newValue) {
+    state[c.RA_DISPATCH_MODE] = newValue;
+  },
+  [m.SET_RA_EVENT_SELECTION_METHOD](state, newValue) {
+    state[c.RA_EVENT_SELECTION_METHOD] = newValue;
+  },
+  [m.SET_RA_EVENT_LENGTH](state, newValue) {
+    state[c.RA_EVENT_LENGTH] = newValue;
   },
   // reliability page
   SET_CRITICAL_LOAD(state, newCriticalLoad) {
@@ -460,6 +509,13 @@ const mutations = {
   },
   SET_TIMESTEP(state, newTimestep) {
     state.timestep = newTimestep;
+  },
+  SET_TYPE(state, type) {
+    state.type = type;
+  },
+  // system load
+  [m.SET_SYSTEM_LOAD](state, newSystemLoad) {
+    state.siteLoad = newSystemLoad;
   },
   // technology specs
   [m.ACTIVATE_TECH_BATTERY](state, payload) {
@@ -631,37 +687,37 @@ const actions = {
     commit(m.ADD_BATTERY_CYCLES_TO_TECHNOLOGY_SPECS_BATTERY, payload);
   },
   // da
-  setDAGrowth({ commit }, newDAGrowth) {
+  [a.SET_DA_GROWTH]({ commit }, newDAGrowth) {
     commit(m.SET_DA_GROWTH, newDAGrowth);
   },
-  setDAPrice({ commit }, newDAPrice) {
+  [a.SET_DA_PRICE]({ commit }, newDAPrice) {
     commit(m.SET_DA_PRICE, newDAPrice);
   },
   // deferral
-  setDeferralGrowth({ commit }, newDeferralGrowth) {
+  [a.SET_DEFERRAL_GROWTH]({ commit }, newDeferralGrowth) {
     commit(m.SET_DEFERRAL_GROWTH, newDeferralGrowth);
   },
-  setDeferralLoad({ commit }, newDeferralLoad) {
+  [a.SET_DEFERRAL_LOAD]({ commit }, newDeferralLoad) {
     commit(m.SET_DEFERRAL_LOAD, newDeferralLoad);
   },
-  setDeferralPlannedLoadLimit({ commit }, newDeferralPlannedLoadLimit) {
+  [a.SET_DEFERRAL_PLANNED_LOAD_LIMIT]({ commit }, newDeferralPlannedLoadLimit) {
     commit(m.SET_DEFERRAL_PLANNED_LOAD_LIMIT, newDeferralPlannedLoadLimit);
   },
-  setDeferralPrice({ commit }, newDeferralPrice) {
+  [a.SET_DEFERRAL_PRICE]({ commit }, newDeferralPrice) {
     commit(m.SET_DEFERRAL_PRICE, newDeferralPrice);
   },
-  setDeferralReversePowerFlowLimit({ commit }, newDeferralReversePowerFlowLimit) {
+  [a.SET_DEFERRAL_REVERSE_POWER_FLOW_LIMIT]({ commit }, newDeferralReversePowerFlowLimit) {
     commit(m.SET_DEFERRAL_REVERSE_POWER_FLOW_LIMIT, newDeferralReversePowerFlowLimit);
   },
   // diesel
-  replaceTechnologySpecsDieselGen({ commit }, payload) {
+  [a.REPLACE_TECHNOLOGY_SPECS_DIESEL_GEN]({ commit }, payload) {
     commit(m.REPLACE_TECHNOLOGY_SPECS_DIESEL_GEN, payload);
   },
   // external incentives
-  addExternalIncentive({ commit }, newExternalIncentive) {
+  [a.ADD_EXTERNAL_INCENTIVE]({ commit }, newExternalIncentive) {
     commit(m.ADD_EXTERNAL_INCENTIVE, newExternalIncentive);
   },
-  replaceExternalIncentives({ commit }, newExternalIncentives) {
+  [a.REPLACE_EXTERNAL_INCENTIVES]({ commit }, newExternalIncentives) {
     commit(m.REPLACE_EXTERNAL_INCENTIVES, newExternalIncentives);
   },
   replaceExternalIncentivesFileImportNotes({ commit }, newImportNotes) {
@@ -729,6 +785,28 @@ const actions = {
   replaceTechnologySpecsICE({ commit }, payload) {
     commit('REPLACE_TECHNOLOGY_SPECS_ICE', payload);
   },
+  // load following
+  [a.SET_LF_COMBINED_MARKET]({ commit }, newLFCombinedMarket) {
+    commit(m.SET_LF_COMBINED_MARKET, newLFCombinedMarket);
+  },
+  [a.SET_LF_DOWN_PRICE]({ commit }, newLFDownPrice) {
+    commit(m.SET_LF_DOWN_PRICE, newLFDownPrice);
+  },
+  [a.SET_LF_DURATION]({ commit }, newLFDuration) {
+    commit(m.SET_LF_DURATION, newLFDuration);
+  },
+  [a.SET_LF_EOU]({ commit }, newLFEnergyGrowth) {
+    commit(m.SET_LF_EOU, newLFEnergyGrowth);
+  },
+  [a.SET_LF_EOD]({ commit }, newLFeou) {
+    commit(m.SET_LF_EOD, newLFeou);
+  },
+  [a.SET_LF_PRICE]({ commit }, newLFeod) {
+    commit(m.SET_LF_PRICE, newLFeod);
+  },
+  [a.SET_LF_UP_PRICE]({ commit }, newLFGrowth) {
+    commit(m.SET_LF_UP_PRICE, newLFGrowth);
+  },
   // non spinning reserves
   setNSRDuration({ commit }, newNSRDuration) {
     commit('SET_NSR_DURATION', newNSRDuration);
@@ -740,23 +818,23 @@ const actions = {
     commit('SET_NSR_PRICE', newNSRPrice);
   },
   // objectives
-  chooseEnergyStructure({ commit }, energyPriceStructure) {
-    commit('CHOOSE_ENERGY_STRUCTURE', energyPriceStructure);
+  [a.CHOOSE_ENERGY_STRUCTURE]({ commit }, energyPriceStructure) {
+    commit(m.CHOOSE_ENERGY_STRUCTURE, energyPriceStructure);
   },
-  selectOtherServices({ commit }, listOfServices) {
-    commit('SELECT_OTHER_SERVICES', listOfServices);
+  [a.SELECT_OTHER_SERVICES]({ commit }, listOfServices) {
+    commit(m.SELECT_OTHER_SERVICES, listOfServices);
   },
-  setIncludeSiteLoad({ commit }) {
-    commit('SET_INCLUDE_SITE_LOAD');
+  [a.SET_INCLUDE_SITE_LOAD]({ commit }) {
+    commit(m.SET_INCLUDE_SITE_LOAD);
   },
-  setOptimizationHorizon({ commit }, newOptimizataionHorizon) {
-    commit('SET_OPTIMIZATION_HORIZON', newOptimizataionHorizon);
+  [a.SET_OPTIMIZATION_HORIZON]({ commit }, newOptimizataionHorizon) {
+    commit(m.SET_OPTIMIZATION_HORIZON, newOptimizataionHorizon);
   },
-  setOptimizationHorizonNum({ commit }, newOptimizataionHorizonNum) {
-    commit('SET_OPTIMIZATION_HORIZON_NUM', newOptimizataionHorizonNum);
+  [a.SET_OPTIMIZATION_HORIZON_NUM]({ commit }, newOptimizataionHorizonNum) {
+    commit(m.SET_OPTIMIZATION_HORIZON_NUM, newOptimizataionHorizonNum);
   },
-  setSizingEquipment({ commit }, newSizingEquipment) {
-    commit('SET_SIZING_EQUIPMENT', newSizingEquipment);
+  [a.SET_SIZING_EQUIPMENT]({ commit }, newSizingEquipment) {
+    commit(m.SET_SIZING_EQUIPMENT, newSizingEquipment);
   },
   // reliability
   setCriticalLoad({ commit }, newCriticalLoad) {
@@ -776,6 +854,22 @@ const actions = {
   },
   setReliabilityTarget({ commit }, newReliabilityTarget) {
     commit('SET_RELIABILITY_TARGET', newReliabilityTarget);
+  },
+  // resource adequacy
+  [a.SET_RA_CAPACITY_PRICE]({ commit }, newRACapacityPrice) {
+    commit(m.SET_RA_CAPACITY_PRICE, newRACapacityPrice);
+  },
+  [a.SET_RA_DISPATCH_MODE]({ commit }, newRADispatchMode) {
+    commit(m.SET_RA_DISPATCH_MODE, newRADispatchMode);
+  },
+  [a.SET_RA_EVENT_LENGTH]({ commit }, newRAEventDuration) {
+    commit(m.SET_RA_EVENT_LENGTH, newRAEventDuration);
+  },
+  [a.SET_RA_EVENT_SELECTION_METHOD]({ commit }, newRAEventSelectionMethod) {
+    commit(m.SET_RA_EVENT_SELECTION_METHOD, newRAEventSelectionMethod);
+  },
+  [a.SET_RA_NUMBER_EVENTS]({ commit }, newRANumberEvents) {
+    commit(m.SET_RA_NUMBER_EVENTS, newRANumberEvents);
   },
   // retail tariff billing period
   addRetailTariffBillingPeriod({ commit }, newBillingPeriod) {
@@ -858,6 +952,10 @@ const actions = {
   },
   setTimestep({ commit }, newTimestep) {
     commit('SET_TIMESTEP', newTimestep);
+  },
+  // system load
+  [a.SET_SYSTEM_LOAD]({ commit }, newSiteLoad) {
+    commit(m.SET_SYSTEM_LOAD, newSiteLoad);
   },
   // technology specs
   [a.ACTIVATE_TECH]({ commit }, payload) {

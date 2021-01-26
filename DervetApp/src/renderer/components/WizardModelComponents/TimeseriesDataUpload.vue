@@ -59,25 +59,7 @@
       </div>
     </div>
     <div v-if="this.dataExists">
-      <div v-if="this.chartName === 'chartUploadedTimeSeries'">
-        <div class="col-md-10"
-          id="chartUploadedTimeSeries">
-        </div>
-      </div>
-      <div v-if="this.chartName === 'chartUploadedTimeSeries2'">
-        <div class="col-md-10"
-          id="chartUploadedTimeSeries2">
-        </div>
-      </div>
-      <div v-if="this.chartName === 'chartUploadedTimeSeries3'">
-        <div class="col-md-10"
-          id="chartUploadedTimeSeries3">
-        </div>
-      </div>
-      <div v-if="this.chartName === 'chartUploadedTimeSeries4'">
-        <div class="col-md-10"
-          id="chartUploadedTimeSeries4">
-        </div>
+      <div class="col-md-10" :id="this.chartName">
       </div>
     </div>
   </div>
@@ -103,6 +85,13 @@
       };
     },
     computed: {
+      dataExists() {
+        const data = this.dataTimeSeries;
+        if (data === null || data === undefined) {
+          return false;
+        }
+        return data.data !== null || data.data !== undefined;
+      },
       firstLetterCapitalized() {
         return this.dataName.charAt(0).toUpperCase() + this.dataName.slice(1);
       },
@@ -130,14 +119,20 @@
     props: {
       dataName: String,
       units: String,
-      dataExists: Boolean,
       dataTimeSeries: Object,
       chartName: String,
+      TimeSeriesModel: Function,
     },
     methods: {
       onFileUpload(e) {
-        const onSuccess = (results) => { this.$emit('uploaded', flatten(results)); };
+        const onSuccess = (results) => { this.$emit('uploaded', this.uploadPayload(flatten(results))); };
         parseCsvFromEvent(e, onSuccess);
+      },
+      uploadPayload(dataResults) {
+        return {
+          timeseries: new this.TimeSeriesModel(dataResults),
+          key: this.dataName,
+        };
       },
       createChartUploadedTimeSeriesPlot(chartId) {
         const ctx = document.getElementById(chartId);

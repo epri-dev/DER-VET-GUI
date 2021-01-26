@@ -19,19 +19,15 @@ const csvUploadMixin = {
   },
   methods: {
     receiveTimeseriesData(timeseries) {
-      this.childKey = uuidv4();
       this.inputTimeseries = timeseries;
     },
     receiveTimeseriesData2(timeseries) {
-      this.childKey2 = uuidv4();
       this.inputTimeseries2 = timeseries;
     },
     receiveTimeseriesData3(timeseries) {
-      this.childKey3 = uuidv4();
       this.inputTimeseries3 = timeseries;
     },
     receiveTimeseriesData4(timeseries) {
-      this.childKey4 = uuidv4();
       this.inputTimeseries4 = timeseries;
     },
   },

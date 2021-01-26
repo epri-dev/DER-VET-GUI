@@ -43,6 +43,14 @@
         </b-button>
       </div>
 
+      <div class="col-md-4 buffer-bottom" v-if="objectivesLF">
+        <b-button block size="lg"
+                  :to="this.paths.OBJECTIVES_LF_PATH"
+                  v-bind:class="{ 'incomplete-btn': isComplete('objectives', 'LF') }">
+          Load Following
+        </b-button>
+      </div>
+
       <div class="col-md-4 buffer-bottom" v-if="objectivesNSR">
         <b-button block size="lg"
                   :to="this.paths.OBJECTIVES_NSR_PATH"
@@ -184,6 +192,9 @@
       },
       objectivesFR() {
         return this.$store.state.Project.objectivesFR;
+      },
+      objectivesLF() {
+        return this.$store.state.Project.objectivesLF;
       },
       objectivesDeferral() {
         return this.$store.state.Project.objectivesDeferral;

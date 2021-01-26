@@ -1,5 +1,7 @@
 import IpcService from '@/service/Ipc';
 import { makeDervetInputs } from '@/models/dto/ProjectDto';
+import * as m from '@/store/mutationTypes';
+import * as a from '@/store/actionTypes';
 
 import { billReductionCompleteness } from '@/assets/cases/billReduction/project';
 
@@ -85,7 +87,7 @@ const mutations = {
     state.isError = true;
     state.runInProgress = false;
   },
-  SET_COMPLETENESS(state, payload) {
+  [m.SET_COMPLETENESS](state, payload) {
     const {
       pageGroup,
       pageKey,
@@ -100,7 +102,7 @@ const mutations = {
       state.pageCompleteness[pageGroup][page] = completeness;
     }
   },
-  SET_ERROR_LIST(state, payload) {
+  [m.SET_ERROR_LIST](state, payload) {
     const {
       pageGroup,
       pageKey,
@@ -127,11 +129,11 @@ const mutations = {
 };
 
 const actions = {
-  setCompleteness({ commit }, payload) {
-    commit('SET_COMPLETENESS', payload);
+  [a.SET_COMPLETENESS]({ commit }, payload) {
+    commit(m.SET_COMPLETENESS, payload);
   },
-  setErrorList({ commit }, payload) {
-    commit('SET_ERROR_LIST', payload);
+  [a.SET_ERROR_LIST]({ commit }, payload) {
+    commit(m.SET_ERROR_LIST, payload);
   },
   setNewApplicationState({ commit }, application) {
     return new Promise((resolve) => {

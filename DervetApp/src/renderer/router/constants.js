@@ -28,10 +28,12 @@ export const TECH_SPECS_FLEET_EV_BASELINE_PATH = `${WIZARD_COMPONENT_PATH}/techn
 export const FINANCIAL_INPUTS_PATH = `${WIZARD_COMPONENT_PATH}/financial-inputs`;
 export const FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH = `${WIZARD_COMPONENT_PATH}/financial-inputs-external-incentives`;
 export const FINANCIAL_INPUTS_RETAIL_TARIFF_PATH = `${WIZARD_COMPONENT_PATH}/financial-inputs-retail-tariff`;
+
 export const OBJECTIVES_BACKUP_POWER_PATH = `${WIZARD_COMPONENT_PATH}/objectives-backup-power`;
 export const OBJECTIVES_SITE_INFORMATION_PATH = `${WIZARD_COMPONENT_PATH}/objectives-parameters-site-information`;
 export const OBJECTIVES_DEFERRAL_PATH = `${WIZARD_COMPONENT_PATH}/objectives-parameters-deferral`;
 export const OBJECTIVES_FR_PATH = `${WIZARD_COMPONENT_PATH}/objectives-parameters-fr`;
+export const OBJECTIVES_LF_PATH = `${WIZARD_COMPONENT_PATH}/objectives-parameters-lf`;
 export const OBJECTIVES_NSR_PATH = `${WIZARD_COMPONENT_PATH}/objectives-parameters-nsr`;
 export const OBJECTIVES_RESILIENCE_PATH = `${WIZARD_COMPONENT_PATH}/objectives-parameters-reliability`;
 export const OBJECTIVES_SR_PATH = `${WIZARD_COMPONENT_PATH}/objectives-parameters-sr`;
