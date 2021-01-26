@@ -24,7 +24,7 @@
           </div>
         </div>
 
-        <div v-if="componentTechErrorExists()" class="incomplete">
+        <div v-if="activeTechErrorExists" class="incomplete">
           <h4>Errors in Technology Components</h4>
           <div v-for="techTag in techSpecs">
             <div v-for="techItem in filterNonActives(techTag.items)">
@@ -65,14 +65,14 @@
           </div>
         </div>
 
-        <div v-if="componentObjectiveErrorExists()" class="incomplete">
+        <div v-if="activeObjectivesErrorExists" class="incomplete">
           <h4>Errors in Services Components</h4>
-          <div v-for="service in activeServicesObject()">
+          <div v-for="service in activeObjectivesWithErrors">
             <div v-if="!service.complete">
               <li>
                 <router-link class="text-decoration-none"
                              :to="service.path">
-                  {{ service.name + notStartedText(service.complete) }}
+                  {{ service.fullName + notStartedText(service.complete) }}
                 </router-link>
                 <ul>
                   <li v-for="error in service.errors">
@@ -84,14 +84,14 @@
           </div>
         </div>
 
-        <div v-if="componentFinancialErrorExists()" class="incomplete">
+        <div v-if="activeFinancialErrorExists" class="incomplete">
           <h4>Errors in Finances Components</h4>
-          <div v-for="finance in activeFinancesObject()">
+          <div v-for="finance in activeFinancesWithErrors">
             <div v-if="!finance.complete">
               <li>
                 <router-link class="text-decoration-none"
                              :to="finance.path">
-                  {{ finance.name + notStartedText(finance.complete) }}
+                  {{ finance.fullName + notStartedText(finance.complete) }}
                 </router-link>
                 <ul>
                   <li v-for="error in finance.errors">
@@ -149,8 +149,8 @@
 
           <div class="col-md-5">
             <router-link
-              v-on:click.native="(runInProgress() || runDervetDisabled()) ? () => null : runDervet()"
-              :event="runDervetDisabled() ? '' : 'click'"
+              v-on:click.native="(runInProgress() || runDervetDisabled) ? () => null : runDervet()"
+              :event="runDervetDisabled ? '' : 'click'"
               :to="this.$route.path"
               class="btn btn-lg btn-danger pull-left btn-summary">
               {{ runInProgress() ? 'Running Analysis...' : 'Run Analysis' }}
@@ -173,91 +173,72 @@
   import { exportProject } from '@/service/ProjectFileManager';
   import FilePicker from '@/components/Shared/FilePicker';
   import technologySpecsMixin from '@/mixins/technologySpecsMixin';
+  import objectivesMixin from '@/mixins/objectivesMixin';
+  import financeMixin from '@/mixins/financeMixin';
 
   const NOT_STARTED = ': Not Started';
 
-  const SERVICE_COMPONENTS_MAPPING = {
-    siteInformation: {
-      name: 'Site Information',
-      path: paths.OBJECTIVES_SITE_INFORMATION_PATH,
-      // empty list means that the component is always active
-      activeVar: [],
-    },
-    deferral: {
-      name: 'Deferral',
-      path: paths.OBJECTIVES_DEFERRAL_PATH,
-      // component is active if any item in the list is true
-      activeVar: ['objectivesDeferral'],
-    },
-    FR: {
-      name: 'Frequency Regulation',
-      path: paths.OBJECTIVES_FR_PATH,
-      activeVar: ['objectivesFR'],
-    },
-    NSR: {
-      name: 'Non-Spinning Reserves',
-      path: paths.OBJECTIVES_NSR_PATH,
-      activeVar: ['objectivesNSR'],
-    },
-    resilience: {
-      name: 'Reliability',
-      path: paths.OBJECTIVES_RESILIENCE_PATH,
-      activeVar: ['objectivesResilience'],
-    },
-    SR: {
-      name: 'Spinning Reserves',
-      path: paths.OBJECTIVES_SR_PATH,
-      activeVar: ['objectivesSR'],
-    },
-    userDefined: {
-      name: 'Custom Service',
-      path: paths.OBJECTIVES_USER_DEFINED_PATH,
-      activeVar: ['objectivesUserDefined'],
-    },
-    DA: {
-      name: 'Day Ahead Pricing',
-      path: paths.OBJECTIVES_DA_PATH,
-      activeVar: ['objectivesDA'],
-    },
-  };
-  const FINANCE_COMPONENTS_MAPPING = {
-    inputs: {
-      name: 'Miscellaneous Inputs',
-      path: paths.FINANCIAL_INPUTS_PATH,
-      activeVar: [],
-    },
-    externalIncentives: {
-      name: 'External Incentives',
-      path: paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
-      activeVar: [],
-    },
-    retailTariff: {
-      name: 'Retail Tariff',
-      path: paths.FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
-      activeVar: ['objectivesRetailEnergyChargeReduction', 'objectivesRetailDemandChargeReduction'],
-    },
-  };
-
   export default {
-    mixins: [technologySpecsMixin],
-    beforeMount() {
-      // load the active tech list here
-      //   for quick start-mode when the user goes straight to the summary
-      this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
-    },
+    mixins: [technologySpecsMixin, objectivesMixin, financeMixin],
     computed: {
-      listOfActiveTechnologies() {
-        return this.$store.state.Project.listOfActiveTechnologies;
+      activeFinancesWithErrors() {
+        return this.activeWithErrors(this.financial);
+      },
+      activeFinancialErrorExists() {
+        return this.activeErrorExists(this.activeFinancesWithErrors);
+      },
+      activeObjectivesWithErrors() {
+        return this.activeWithErrors(this.objectives);
+      },
+      activeObjectivesErrorExists() {
+        return this.activeErrorExists(this.activeObjectivesWithErrors);
+      },
+      activeTechErrorExists() {
+        let errorsTF = false;
+        this.techAll.forEach((tech) => {
+          if (tech.complete !== true) {
+            errorsTF = true;
+          }
+        });
+        return errorsTF;
+      },
+      anyErrorExists() {
+        return (this.overviewErrorExists() || this.activeTechErrorExists
+          || this.activeObjectivesErrorExists || this.activeFinancialErrorExists);
+      },
+      errorList() {
+        return this.$store.state.Application.errorList;
       },
       techAll() {
-        const techList = this.$store.state.Project.listOfActiveTechnologies;
-        return _.flatten(Object.values(techList));
+        const techList = [];
+        this.techSpecs.forEach((item) => {
+          techList.push(this.filterNonActives(item.items));
+        });
+        return _.flatten(techList);
+      },
+      runDervetDisabled() {
+        return this.anyErrorExists;
       },
     },
     components: {
       FilePicker,
     },
     methods: {
+      activeWithErrors(mixinObject) {
+        mixinObject.forEach((value) => {
+          if (value.show) {
+            value.errors = this.errorList.components[value.pageKey][value.pageName];
+          }
+        });
+        return mixinObject;
+      },
+      activeErrorExists(activeWithErrorsObject) {
+        const noErrors = function noErrors(o) {
+          return o.errors === null || o.errors === undefined || o.errors.length !== 0;
+        };
+        const pageWithErrors = _.filter(activeWithErrorsObject, noErrors);
+        return pageWithErrors.length !== 0;
+      },
       modeDescription() {
         const mode = this.$store.state.Project.analysisHorizonMode;
         return mode === null ? '' : _.find(ANALYSIS_HORIZON_MODE_ALLOWED_VALUES, { value: mode }).label;
@@ -272,9 +253,7 @@
         }
         return `${rate} %`;
       },
-      runDervetDisabled() {
-        return this.anyErrorExists();
-      },
+  
       runInProgress() {
         return this.$store.state.Application.runInProgress;
       },
@@ -286,31 +265,6 @@
         // incomplete Project object will likely result in an unhandled exception
         this.$store.dispatch('Application/runDervet', this.$store.state.Project)
           .then(this.$router.push({ path: RUN_ANALYSIS_PATH }));
-      },
-
-      // objectives (Services) components
-      activeServicesObject() {
-        const servicesObject = {};
-        Object.entries(SERVICE_COMPONENTS_MAPPING).forEach(([key, value]) => {
-          if (this.isActive(value.activeVar)) {
-            servicesObject[key] = {
-              name: value.name,
-              complete: this.$store.state.Application.pageCompleteness.components.objectives[key],
-              errors: this.$store.state.Application.errorList.components.objectives[key],
-              path: value.path,
-            };
-          }
-        });
-        return servicesObject;
-      },
-      componentObjectiveErrorExists() {
-        let errorsTF = false;
-        Object.values(this.activeServicesObject()).forEach((item) => {
-          if (item.complete !== true) {
-            errorsTF = true;
-          }
-        });
-        return errorsTF;
       },
 
       // components
@@ -333,31 +287,6 @@
         return '';
       },
 
-      // financial components
-      activeFinancesObject() {
-        const financesObject = {};
-        Object.entries(FINANCE_COMPONENTS_MAPPING).forEach(([key, value]) => {
-          if (this.isActive(value.activeVar)) {
-            financesObject[key] = {
-              name: value.name,
-              complete: this.$store.state.Application.pageCompleteness.components.financial[key],
-              errors: this.$store.state.Application.errorList.components.financial[key],
-              path: value.path,
-            };
-          }
-        });
-        return financesObject;
-      },
-      componentFinancialErrorExists() {
-        let errorsTF = false;
-        Object.values(this.activeFinancesObject()).forEach((item) => {
-          if (item.complete !== true) {
-            errorsTF = true;
-          }
-        });
-        return errorsTF;
-      },
-
       // technology components
       getTechDisplayName(tech) {
         if (tech.complete === null) {
@@ -367,15 +296,7 @@
         }
         return `: ${tech.name}`;
       },
-      componentTechErrorExists() {
-        let errorsTF = false;
-        this.techAll.forEach((tech) => {
-          if (tech.complete !== true) {
-            errorsTF = true;
-          }
-        });
-        return errorsTF;
-      },
+  
       getTechAssociatedInputsPath(tech) {
         const techID = tech.id;
         return `${tech.associatedInputs[0].path}/${techID}`;
@@ -430,10 +351,7 @@
       },
 
       // all
-      anyErrorExists() {
-        return (this.overviewErrorExists() || this.componentTechErrorExists()
-          || this.componentObjectiveErrorExists() || this.componentFinancialErrorExists());
-      },
+  
     },
     data() {
       return {

@@ -348,12 +348,14 @@ const mutations = {
   // objectives
   [m.CHOOSE_ENERGY_STRUCTURE](state, wholesaleEnergyPrices) {
     state.energyPriceSourceWholesale = wholesaleEnergyPrices;
-    if (wholesaleEnergyPrices) {
-      state.objectivesDA = true;
-      state.objectivesRetailEnergyChargeReduction = false;
-    } else {
-      state.objectivesDA = false;
-      state.objectivesRetailEnergyChargeReduction = true;
+    if (wholesaleEnergyPrices !== null) {
+      if (wholesaleEnergyPrices) {
+        state.objectivesDA = true;
+        state.objectivesRetailEnergyChargeReduction = false;
+      } else {
+        state.objectivesDA = false;
+        state.objectivesRetailEnergyChargeReduction = true;
+      }
     }
   },
   [m.SET_INCLUDE_SITE_LOAD](state) {
