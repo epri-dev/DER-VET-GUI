@@ -41,7 +41,7 @@
 </template>
 
 <script>
-  import { requiredIf, minValue, maxValue } from 'vuelidate/lib/validators';
+  import { requiredIf } from 'vuelidate/lib/validators';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import RetailTariffBillingPeriodMetadata, { parsedCsvToBillingPeriods } from '@/models/RetailTariffBillingPeriod';
   import { parseCsvFromEvent } from '@/util/file';
@@ -71,25 +71,12 @@
           required: requiredIf(function isExcludingStartTimeRequired() {
             return !(this.excludingEndTime === null || this.excludingEndTime === '' || this.excludingEndTime === undefined);
           }),
-          minValue: !this.valueInHourRange(this.startTime) ? 1 : minValue(this.startTime),
-          maxValue: !this.valueInHourRange(this.endTime) ? 24 : maxValue(this.endTime),
         },
         excludingEndTime: {
           ...validationz.excludingEndTime,
           required: requiredIf(function isExcludingEndTimeRequired() {
             return !(this.excludingStartTime === null || this.excludingStartTime === '' || this.excludingStartTime === undefined);
           }),
-          minValue: !this.valueInHourRange(this.excludingStartTime)
-            ? 1 : minValue(this.excludingStartTime),
-          maxValue: !this.valueInHourRange(this.endTime) ? 24 : maxValue(this.endTime),
-        },
-        endMonth: {
-          ...validationz.endMonth,
-          minValue: !this.valueInMonthRange(this.startMonth) ? 1 : minValue(this.startMonth),
-        },
-        endTime: {
-          ...validationz.endTime,
-          minValue: !this.valueInHourRange(this.startTime) ? 1 : minValue(this.startTime),
         },
       };
     },
@@ -113,22 +100,44 @@
         const onSuccess = (results) => { this.parsedBillingPeriodCsv = results; };
         parseCsvFromEvent(e, onSuccess);
       },
+      isRowComplete() {
+        this.$v.$touch();
+        if (this.$v.$anyError === true) {
+          return false;
+        }
+        // secondary validation checks on allowed values
+        if ((this.metadata.chargeType.allowedValues
+          .find(type => type.value === this.chargeType) === undefined)
+          || (this.metadata.weekday.allowedValues
+            .find(type => type.value === this.weekday) === undefined)) {
+          return false;
+        }
+        // secondary validation checks for dynamic fields
+        if ((this.startMonth > this.endMonth)
+          || (this.startTime > this.endTime)) {
+          return false;
+        }
+        if (this.excludingStartTime) {
+          if ((this.excludingStartTime > this.excludingEndTime)
+            || (this.excludingStartTime < this.startTime)
+            || (this.excludingStartTime > this.endTime)
+            || (this.excludingEndTime < this.startTime)
+            || (this.excludingEndTime > this.endTime)) {
+            return false;
+          }
+        }
+        return true;
+      },
       save() {
         const pds = parsedCsvToBillingPeriods(this.parsedBillingPeriodCsv);
-        this.$store.dispatch('replaceRetailTariffBillingPeriods', pds);
-
         // validate each row, by setting complete to true or false
         Object.values(pds).forEach((row) => {
           Object.keys(row).forEach((key) => {
             this[key] = row[key];
           });
-          this.$v.$touch();
-          const payload = {
-            id: row.id,
-            isRowComplete: !this.$v.$anyError,
-          };
-          this.$store.dispatch('setRowCompletenessRetailTariffBillingPeriod', payload);
+          row.complete = this.isRowComplete();
         });
+        this.$store.dispatch('replaceRetailTariffBillingPeriods', pds);
       },
     },
   };
