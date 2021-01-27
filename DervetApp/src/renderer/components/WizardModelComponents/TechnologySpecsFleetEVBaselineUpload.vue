@@ -33,7 +33,7 @@
     ACTIVATE_TECH,
     MAKE_LIST_OF_ACTIVE_TECHNOLOGIES,
   } from '@/store/actionTypes';
-  import TimeseriesDataUpload from './TimeseriesDataUpload';
+  import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
 
   export default {
     components: { SaveButtons, TimeseriesDataUpload },

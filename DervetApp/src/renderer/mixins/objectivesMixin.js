@@ -39,7 +39,7 @@ const objectivesMixin = {
         },
         {
           show: p.objectivesNSR,
-          fullName: 'Load Following',
+          fullName: 'Non-Spinning Reserves',
           pageName: 'NSR',
           pageKey: OBJECTIVES_PAGEKEY,
           path: paths.OBJECTIVES_NSR_PATH,

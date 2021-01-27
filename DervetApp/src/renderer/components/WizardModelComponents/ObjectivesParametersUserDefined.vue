@@ -71,7 +71,7 @@
   import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
   import UserEnergyMinTimeSeries from '@/models/TimeSeries/UserEnergyMinTimeSeries';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
-  import TimeseriesDataUpload from './TimeseriesDataUpload';
+  import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
 
   const metadata = p.projectMetadata;
   const validations = metadata.getValidationSchema(c.USER_DEFINED_FIELDS);

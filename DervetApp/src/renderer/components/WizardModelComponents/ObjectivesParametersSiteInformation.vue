@@ -72,7 +72,7 @@
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
-  import TimeseriesDataUpload from './TimeseriesDataUpload';
+  import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
 
   const metadata = p.projectMetadata;
   const validations = metadata.getValidationSchema(c.SITE_INFORMATION_FIELDS);

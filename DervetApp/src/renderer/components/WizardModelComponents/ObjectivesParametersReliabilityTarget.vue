@@ -52,7 +52,7 @@
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
-  import TimeseriesDataUpload from './TimeseriesDataUpload';
+  import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
 
   const metadata = p.projectMetadata;
   const validations = metadata.getValidationSchema(c.RESILIENCE_FIELDS);

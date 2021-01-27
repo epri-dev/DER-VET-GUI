@@ -100,7 +100,7 @@
     SET_LF_PRICE,
     SET_LF_UP_PRICE,
   } from '@/store/actionTypes';
-  import TimeseriesDataUpload from './TimeseriesDataUpload';
+  import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
 
   const metadata = p.projectMetadata;
   const validations = metadata.getValidationSchema(c.LF_FIELDS);
