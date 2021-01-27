@@ -18,7 +18,7 @@ describe('RetailTariffBillingPeriodMetadata model', () => {
       value: 10,
       chargeType: 'Demand',
       name: 'bp1',
-      complete: true,
+      complete: null,
     });
 
     const actual = parsedCsvToBillingPeriods(testCsv).shift();
