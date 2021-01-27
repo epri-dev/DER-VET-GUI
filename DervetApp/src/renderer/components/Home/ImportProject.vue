@@ -9,13 +9,12 @@
     </p>
 
     <div class="form-horizontal form-buffer">
-      <!-- TODO change isDirectory to false once zipping is implemented -->
       <file-picker
         label="Select Project"
         :onFileSelect="setImportDirectory"
         buttonAttributes="btn btn-primary"
         wrapperDivAttributes="col-md-2"
-        :isDirectory="true"
+        :isDirectory="false"
         :isAsync="false"
       />
       <div class=col-md-10>
@@ -37,7 +36,9 @@
   import { WIZARD_START_PATH } from '@/router/constants';
   import { importProject } from '@/service/ProjectFileManager';
   import store from '@/store';
+  import { APPLICATION } from '@/store/modules/Application';
   import { LOAD_NEW_PROJECT } from '@/store/actionTypes';
+  import { PROJECT } from '@/models/Project/constants';
 
   export default {
     components: {
@@ -59,7 +60,8 @@
         if (this.importDirectory !== null) {
           importProject(this.importDirectory)
             .then((parsed) => {
-              [project, this.applicationState] = parsed;
+              project = parsed.find(item => item.storeType === PROJECT);
+              this.applicationState = parsed.find(item => item.storeType === APPLICATION);
               store.dispatch(LOAD_NEW_PROJECT, project);
             })
             .then(() => store.dispatch('Application/setNewApplicationState', this.applicationState))

@@ -45,7 +45,13 @@ module.exports = config => {
     customLaunchers: {
       'visibleElectron': {
         base: 'Electron',
-      }
+        browserWindowOptions: {
+          webPreferences: {
+            nodeIntegration: true,
+            enableRemoteModule: true,
+          },
+        },
+      },
     },
     frameworks: ['mocha', 'chai'],
     files: ['./index.js'],

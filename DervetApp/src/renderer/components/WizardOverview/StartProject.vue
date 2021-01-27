@@ -73,17 +73,19 @@
 
       <fieldset class="section-group">
         <legend>Run Configuration</legend>
-
-        <!-- TODO make a file picker component -->
         <div class="row form-group">
           <div class="col-md-5 control-label">
             <b>Output Folder</b>
             <div>{{this.outputDirectory}}</div>
           </div>
-          <div class="col-md-3">
-            <label for="outputDirectoryPicker" class="btn btn-secondary btn-md">Select folder</label>
-            <input id="outputDirectoryPicker" class="file-picker" style="visibility:hidden;" type="file" @change="onOutputDirectorySelection" webkitdirectory directory>
-          </div>
+          <file-picker
+            label="Select folder"
+            :onFileSelect="onOutputDirectorySelection"
+            :isAsync="false"
+            :isDirectory="true"
+            buttonAttributes="btn btn-secondary btn-md"
+            wrapperDivAttributes="col-md-3"
+          />
           <div class="col-md-4">
             <p class="tool-tip">Folder where output files will be saved (optional).</p>
           </div>
@@ -105,6 +107,7 @@
 
   import { requiredIf } from 'vuelidate/lib/validators';
 
+  import FilePicker from '@/components/Shared/FilePicker';
   import * as p from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
@@ -118,6 +121,9 @@
 
   export default {
     mixins: [wizardFormMixin],
+    components: {
+      FilePicker,
+    },
     data() {
       return {
         paths,
@@ -168,10 +174,8 @@
           completeness: !this.$v.$invalid,
         };
       },
-      // TODO validate that directory is received using accepted answer here:
-      // https://stackoverflow.com/questions/52667995/how-to-check-if-selected-file-is-a-directory-or-regular-file
-      onOutputDirectorySelection(e) {
-        this.outputDirectory = e.target.files[0].path;
+      onOutputDirectorySelection(path) {
+        this.outputDirectory = path;
       },
       getErrorListPayload() {
         const errors = [];

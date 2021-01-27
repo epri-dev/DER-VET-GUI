@@ -21,9 +21,11 @@
 </template>
 
 <script>
+  import { getRootDirectoryFromWebkitEvent } from '@/util/file';
   /* TODO
     - Use typescript in script
-    - Use this component in StartProject component
+    - Validate that directory is received using accepted answer here:
+      https://stackoverflow.com/questions/52667995/how-to-check-if-selected-file-is-a-directory-or-regular-file
   */
   export default {
     props: {
@@ -67,12 +69,13 @@
           .finally(this.setSavingWithTimeout);
       },
       onChange(e) {
-        const files = e.target.files[0];
-        if (files !== undefined) {
+        const file = e.target.files[0];
+        if (file !== undefined) {
+          const path = this.isDirectory ? getRootDirectoryFromWebkitEvent(file) : file.path;
           if (this.isAsync) {
-            this.onFileSelectAsync(files.path);
+            this.onFileSelectAsync(path);
           } else {
-            this.onFileSelect(files.path);
+            this.onFileSelect(path);
           }
         }
       },
