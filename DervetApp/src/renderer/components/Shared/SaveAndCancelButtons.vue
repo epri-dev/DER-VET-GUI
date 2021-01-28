@@ -39,7 +39,7 @@
     props: {
       backLink: {
         type: String,
-        default: null,
+        default: 'noRouteDefined',
       },
       backText: {
         type: String,
@@ -47,7 +47,7 @@
       },
       continueLink: {
         type: String,
-        default: null,
+        default: 'noRouteDefined',
       },
       continueText: {
         type: String,

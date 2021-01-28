@@ -31,7 +31,6 @@
         <save-and-cancel-buttons
           :back-link="FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
           backText="Cancel"
-          :continueLink="FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
           continueText="Import Retail Tariff"
           :save="this.save"
         />
@@ -42,7 +41,6 @@
 
 <script>
   import { requiredIf } from 'vuelidate/lib/validators';
-  import wizardFormMixin from '@/mixins/wizardFormMixin';
   import RetailTariffBillingPeriodMetadata, { parsedCsvToBillingPeriods } from '@/models/RetailTariffBillingPeriod';
   import { parseCsvFromEvent } from '@/util/file';
   import SaveAndCancelButtons from '@/components/Shared/SaveAndCancelButtons';
@@ -52,7 +50,6 @@
   const validationz = metadata.toValidationSchema();
 
   export default {
-    mixins: [wizardFormMixin],
     components: { SaveAndCancelButtons },
     data() {
       return {
@@ -81,24 +78,12 @@
       };
     },
     beforeMount() {
+      // this.$v.$reset();
       this.$v.$touch();
     },
     methods: {
-      valueInRange(value, lowValue, highValue) {
-        return (value >= lowValue && value <= highValue);
-      },
-      valueInHourRange(value) {
-        return this.valueInRange(value, 1, 24);
-      },
-      valueInMonthRange(value) {
-        return this.valueInRange(value, 1, 12);
-      },
       getDefaultData() {
         return metadata.getDefaultValues();
-      },
-      onFileUpload(e) {
-        const onSuccess = (results) => { this.parsedBillingPeriodCsv = results; };
-        parseCsvFromEvent(e, onSuccess);
       },
       isRowComplete() {
         this.$v.$touch();
@@ -128,16 +113,23 @@
         }
         return true;
       },
+      onFileUpload(e) {
+        const onSuccess = (results) => { this.parsedBillingPeriodCsv = results; };
+        parseCsvFromEvent(e, onSuccess);
+      },
       save() {
         const pds = parsedCsvToBillingPeriods(this.parsedBillingPeriodCsv);
         // validate each row, by setting complete to true or false
         Object.values(pds).forEach((row) => {
+          // redefine data for each column of this row (needed for vuelidate to work)
           Object.keys(row).forEach((key) => {
             this[key] = row[key];
           });
           row.complete = this.isRowComplete();
         });
-        this.$store.dispatch('replaceRetailTariffBillingPeriods', pds);
+        // complete this mutation before navigation to next page
+        this.$store.dispatch('replaceRetailTariffBillingPeriods', pds)
+          .then(this.$router.push({ path: FINANCIAL_INPUTS_RETAIL_TARIFF_PATH }));
       },
     },
   };
