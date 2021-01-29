@@ -32,8 +32,8 @@ export const SET_DR_END_HOUR = 'setDREndHour';
 export const SET_DR_EVENT_LENGTH = 'setDREventLength';
 export const SET_DR_PROGRAM_TYPE = 'setDRProgramType';
 export const SET_DR_APPLIED_MONTHS = 'setDRAppliedMonths';
+export const SET_DR_APPLIED_MONTHS_LABELS = 'setDRAppliedMonthsLabels';
 export const SET_DR_CAPACITY_RESERVATION = 'setDRCapacityReservation';
-export const SET_DR_ENERGY_RESERVATION = 'setDREnergyReservation';
 export const SET_DR_CAPACITY_AWARDS = 'setDRCapacityAwards';
 export const SET_DR_ENERGY_AWARDS = 'setDREnergyAwards';
 // deferral page
@@ -62,6 +62,7 @@ export const SET_LF_UP_PRICE = 'setLFUpPrice';
 // objectives
 export const CHOOSE_ENERGY_STRUCTURE = 'chooseEnergyStructure';
 export const SET_INCLUDE_SITE_LOAD = 'setIncludeSiteLoad';
+export const SET_INCLUDE_SYSTEM_LOAD = 'setIncludeSystemLoad';
 export const SET_OPTIMIZATION_HORIZON = 'setOptimizationHorizon';
 export const SET_OPTIMIZATION_HORIZON_NUM = 'setOptimizationHorizonNum';
 export const SET_SIZING_EQUIPMENT = 'setSizingEquipment';

@@ -17,6 +17,13 @@ const objectivesMixin = {
           path: paths.OBJECTIVES_SITE_INFORMATION_PATH,
         },
         {
+          show: p.includeSystemLoad,
+          fullName: 'System Information',
+          pageName: 'systemInformation',
+          pageKey: OBJECTIVES_PAGEKEY,
+          path: paths.OBJECTIVES_SYSTEM_INFORMATION_PATH,
+        },
+        {
           show: p.objectivesDeferral,
           fullName: 'Deferral',
           pageName: 'deferral',
@@ -26,7 +33,7 @@ const objectivesMixin = {
         {
           show: p.objectivesFR,
           fullName: 'Frequency Regulation',
-          pageName: 'FR',
+          pageName: 'FR', // todo make pageName the camelcase of fullName
           pageKey: OBJECTIVES_PAGEKEY,
           path: paths.OBJECTIVES_FR_PATH,
         },
@@ -45,6 +52,13 @@ const objectivesMixin = {
           path: paths.OBJECTIVES_NSR_PATH,
         },
         {
+          show: p.objectivesSR,
+          fullName: 'Spinning Reserves',
+          pageName: 'SR',
+          pageKey: OBJECTIVES_PAGEKEY,
+          path: paths.OBJECTIVES_SR_PATH,
+        },
+        {
           show: p.objectivesResilience,
           fullName: 'Reliability',
           pageName: 'resilience',
@@ -52,11 +66,25 @@ const objectivesMixin = {
           path: paths.OBJECTIVES_RESILIENCE_PATH,
         },
         {
-          show: p.objectivesSR,
-          fullName: 'Spinning Reserves',
-          pageName: 'SR',
+          show: p.objectivesDR,
+          fullName: 'Demand Response',
+          pageName: 'DR',
           pageKey: OBJECTIVES_PAGEKEY,
-          path: paths.OBJECTIVES_SR_PATH,
+          path: paths.OBJECTIVES_DR_PATH,
+        },
+        {
+          show: p.objectivesRA,
+          fullName: 'Resourse Adequacy',
+          pageName: 'RA',
+          pageKey: OBJECTIVES_PAGEKEY,
+          path: paths.OBJECTIVES_RA_PATH,
+        },
+        {
+          show: p.objectivesBackupPower,
+          fullName: 'Backup Energy',
+          pageName: 'backup',
+          pageKey: OBJECTIVES_PAGEKEY,
+          path: paths.OBJECTIVES_BACKUP_POWER_PATH,
         },
         {
           show: p.objectivesUserDefined,

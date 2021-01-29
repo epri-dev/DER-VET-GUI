@@ -18,16 +18,20 @@ const csvUploadMixin = {
     };
   },
   methods: {
-    receiveTimeseriesData(timeseries) {
+    receiveTimeseriesData(payload) {
+      const timeseries = payload.dataArray;
       this.inputTimeseries = timeseries;
     },
-    receiveTimeseriesData2(timeseries) {
+    receiveTimeseriesData2(payload) {
+      const timeseries = payload.dataArray;
       this.inputTimeseries2 = timeseries;
     },
-    receiveTimeseriesData3(timeseries) {
+    receiveTimeseriesData3(payload) {
+      const timeseries = payload.dataArray;
       this.inputTimeseries3 = timeseries;
     },
-    receiveTimeseriesData4(timeseries) {
+    receiveTimeseriesData4(payload) {
+      const timeseries = payload.dataArray;
       this.inputTimeseries4 = timeseries;
     },
   },

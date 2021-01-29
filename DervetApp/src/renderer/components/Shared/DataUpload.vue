@@ -17,7 +17,7 @@
     <div id="DataFile-Form" v-if="!(useExisting)||!(this.dataExists)">
       <div class="row">
         <div class="col-md-12">
-          Upload the <b>{{this.dataName}}</b> as a <code>.csv</code> file that contains a reading for each month on a separate line.
+          Upload the <b>{{this.dataName}}</b> as a <code>.csv</code> file that contains a reading for each <b>{{this.stringifyDataFrequency}}</b> on a separate line.
         </div>
       </div>
       <br>
@@ -66,7 +66,7 @@
 <script>
   import Plotly from 'plotly.js';
   import { flatten } from 'lodash';
-
+  import { notNullAndUndefined } from '@/util/logic';
   import { parseCsvFromEvent } from '@/util/file';
   import { sharedDefaults, sharedValidation } from '@/models/Shared.js';
 
@@ -85,16 +85,21 @@
     computed: {
       dataExists() {
         const data = this.uploadedData;
-        if (data === null || data === undefined) {
+        if (!notNullAndUndefined(data)) {
+          // this.updloadedData is empty
           return false;
         }
-        return data.data !== null || data.data !== undefined;
+        // this.uploadedData is object, so check if data is empty
+        return notNullAndUndefined(data.data);
       },
       firstLetterCapitalized() {
         return this.dataName.charAt(0).toUpperCase() + this.dataName.slice(1);
       },
       dataYear() {
         return this.$store.state.Project.dataYear;
+      },
+      stringifyDataFrequency() {
+        return this.dataFrequency.value === 'monthly' ? 'monthly' : 'timestep';
       },
     },
     props: {
@@ -114,8 +119,8 @@
       },
       uploadPayload(dataResults) {
         return {
-          timeseries: new this.DataModel(dataResults),
-          key: this.dataName,
+          dataArray: new this.DataModel(dataResults),
+          dataName: this.dataName,
         };
       },
       createChartUploadedDataPlot(chartId) {

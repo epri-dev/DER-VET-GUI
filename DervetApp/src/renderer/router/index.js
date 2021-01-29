@@ -116,8 +116,16 @@ export default new Router({
           props: true,
         },
         {
+          path: 'objectives-parameters-backup',
+          component: require('@/components/WizardModelComponents/ObjectivesParametersBackup').default,
+        },
+        {
           path: 'objectives-parameters-da',
           component: require('@/components/WizardModelComponents/ObjectivesParametersDA').default,
+        },
+        {
+          path: 'objectives-parameters-dr',
+          component: require('@/components/WizardModelComponents/ObjectivesParametersDR').default,
         },
         {
           path: 'objectives-parameters-fr',
@@ -130,6 +138,10 @@ export default new Router({
         {
           path: 'objectives-parameters-nsr',
           component: require('@/components/WizardModelComponents/ObjectivesParametersNSR').default,
+        },
+        {
+          path: 'objectives-parameters-ra',
+          component: require('@/components/WizardModelComponents/ObjectivesParametersRA').default,
         },
         {
           path: 'objectives-parameters-reliability',
@@ -152,6 +164,11 @@ export default new Router({
           path: 'objectives-parameters-site-information',
           name: 'objectivesParametersSiteInformation',
           component: require('@/components/WizardModelComponents/ObjectivesParametersSiteInformation').default,
+        },
+        {
+          path: 'objectives-parameters-system-information',
+          name: 'objectivesParametersSystemInformation',
+          component: require('@/components/WizardModelComponents/ObjectivesParametersSystemInformation').default,
         },
         {
           path: 'financial-inputs-retail-tariff',

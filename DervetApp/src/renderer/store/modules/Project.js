@@ -145,10 +145,10 @@ const mutations = {
   },
   // Backup
   [m.SET_BACKUP_PRICE](state, newValue) {
-    state.backUpPrice = newValue;
+    state.backupPrice = newValue;
   },
   [m.SET_BACKUP_ENERGY](state, newValue) {
-    state.backUpEnergyReservation = newValue;
+    state.backupEnergyReservation = newValue;
   },
   // Battery
   [m.REPLACE_TECHNOLOGY_SPECS_BATTERY](state, payload) {
@@ -230,6 +230,21 @@ const mutations = {
   },
   [m.SET_DR_PROGRAM_TYPE](state, newValue) {
     state[c.DR_PROGRAM_TYPE] = newValue;
+  },
+  [m.SET_DR_APPLIED_MONTHS](state, newValue) {
+    state.drMonthsApplied = newValue;
+  },
+  [m.SET_DR_APPLIED_MONTHS_LABELS](state, newValue) {
+    state.drMonthsAppliedLabels = newValue;
+  },
+  [m.SET_DR_CAPACITY_RESERVATION](state, newValue) {
+    state.drCapacityReservation = newValue;
+  },
+  [m.SET_DR_CAPACITY_AWARDS](state, newValue) {
+    state.drCapacityAwards = newValue;
+  },
+  [m.SET_DR_ENERGY_AWARDS](state, newValue) {
+    state.drEnergyAwards = newValue;
   },
   // External incentives file
   [m.ADD_EXTERNAL_INCENTIVE](state, newExternalIncentive) {
@@ -364,6 +379,12 @@ const mutations = {
     customerSited = customerSited || (state.ownership === 'Customer');
     state.includeSiteLoad = customerSited;
   },
+  [m.SET_INCLUDE_SYSTEM_LOAD](state) {
+    let gridDomainProject = state.objectivesDR;
+    gridDomainProject = gridDomainProject || state.objectivesRA;
+    gridDomainProject = gridDomainProject || (state.ownership !== 'Customer');
+    state.includeSystemLoad = gridDomainProject;
+  },
   [m.SET_OPTIMIZATION_HORIZON](state, newOptimizataionHorizon) {
     state.optimizationHorizon = newOptimizataionHorizon;
   },
@@ -376,19 +397,22 @@ const mutations = {
   [m.SELECT_OTHER_SERVICES](state, listOfServices) {
     // TODO maybe refactor into one mutation per service
     state.listOfActiveServices = listOfServices;
-    state.objectivesResilience = (listOfServices.indexOf('Reliability') > -1);
-    state.objectivesBackupPower = (listOfServices.indexOf('Backup Power') > -1);
-    state.objectivesRetailDemandChargeReduction = (listOfServices.indexOf('Retail Demand Charge Reduction') > -1);
+    state.objectivesResilience = (listOfServices.indexOf('Resilience') > -1);
+    state.objectivesBackupPower = (listOfServices.indexOf('BackupPower') > -1);
+    state.objectivesRetailDemandChargeReduction = (listOfServices.indexOf('RetailDemandChargeReduction') > -1);
     state.objectivesSR = (listOfServices.indexOf('SR') > -1);
     state.objectivesNSR = (listOfServices.indexOf('NSR') > -1);
     state.objectivesFR = (listOfServices.indexOf('FR') > -1);
     state.objectivesLF = (listOfServices.indexOf('LF') > -1);
     state.objectivesDeferral = (listOfServices.indexOf('Deferral') > -1);
-    state.objectivesUserDefined = (listOfServices.indexOf('User Defined') > -1);
-    state.objectivesDR = (listOfServices.indexOf('Demamd Response') > -1);
-    state.objectivesRA = (listOfServices.indexOf('Resource Adequacy') > -1);
+    state.objectivesUserDefined = (listOfServices.indexOf('UserDefined') > -1);
+    state.objectivesDR = (listOfServices.indexOf('DR') > -1);
+    state.objectivesRA = (listOfServices.indexOf('RA') > -1);
   },
   // resource adequacy
+  [m.SET_RA_CAPACITY_PRICE](state, newValue) {
+    state.raCapacityAwards = newValue;
+  },
   [m.SET_RA_NUMBER_EVENTS](state, newValue) {
     state[c.RA_NUMBER_EVENTS] = newValue;
   },
@@ -517,7 +541,7 @@ const mutations = {
   },
   // system load
   [m.SET_SYSTEM_LOAD](state, newSystemLoad) {
-    state.siteLoad = newSystemLoad;
+    state.systemLoad = newSystemLoad;
   },
   // technology specs
   [m.ACTIVATE_TECH_BATTERY](state, payload) {
@@ -711,6 +735,21 @@ const actions = {
   [a.SET_DEFERRAL_REVERSE_POWER_FLOW_LIMIT]({ commit }, newDeferralReversePowerFlowLimit) {
     commit(m.SET_DEFERRAL_REVERSE_POWER_FLOW_LIMIT, newDeferralReversePowerFlowLimit);
   },
+  [a.SET_DR_APPLIED_MONTHS]({ commit }, newValue) {
+    commit(m.SET_DR_APPLIED_MONTHS, newValue);
+  },
+  [a.SET_DR_APPLIED_MONTHS_LABELS]({ commit }, newValue) {
+    commit(m.SET_DR_APPLIED_MONTHS_LABELS, newValue);
+  },
+  [a.SET_DR_CAPACITY_RESERVATION]({ commit }, newValue) {
+    commit(m.SET_DR_CAPACITY_RESERVATION, newValue);
+  },
+  [a.SET_DR_CAPACITY_AWARDS]({ commit }, newValue) {
+    commit(m.SET_DR_CAPACITY_AWARDS, newValue);
+  },
+  [a.SET_DR_ENERGY_AWARDS]({ commit }, newValue) {
+    commit(m.SET_DR_ENERGY_AWARDS, newValue);
+  },
   // diesel
   [a.REPLACE_TECHNOLOGY_SPECS_DIESEL_GEN]({ commit }, payload) {
     commit(m.REPLACE_TECHNOLOGY_SPECS_DIESEL_GEN, payload);
@@ -828,6 +867,9 @@ const actions = {
   },
   [a.SET_INCLUDE_SITE_LOAD]({ commit }) {
     commit(m.SET_INCLUDE_SITE_LOAD);
+  },
+  [a.SET_INCLUDE_SYSTEM_LOAD]({ commit }) {
+    commit(m.SET_INCLUDE_SYSTEM_LOAD);
   },
   [a.SET_OPTIMIZATION_HORIZON]({ commit }, newOptimizataionHorizon) {
     commit(m.SET_OPTIMIZATION_HORIZON, newOptimizataionHorizon);

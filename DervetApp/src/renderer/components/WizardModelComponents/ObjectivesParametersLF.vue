@@ -18,7 +18,7 @@
       </radio-button-input>
 
       <timeseries-data-upload
-        chart-name="chartUploadedTimeSeries"
+        chart-name="chartUploadedEOUTimeSeries"
         data-name="energy option up"
         units="$/kW"
         :TimeSeriesModel="LFEnergyOptionUpTimeSeries"
@@ -27,7 +27,7 @@
         key="1"
       />
       <timeseries-data-upload
-        chart-name="chartUploadedTimeSeries"
+        chart-name="chartUploadedEODTimeSeries"
         data-name="energy option down"
         units="$/kW"
         :TimeSeriesModel="LFEnergyOptionDownTimeSeries"
@@ -37,7 +37,7 @@
       />
 
       <timeseries-data-upload
-        chart-name="chartUploadedTimeSeries"
+        chart-name="chartUploadedPriceTimeSeries"
         data-name="load following price"
         units="$/kW"
         :TimeSeriesModel="LFPriceTimeSeries"
@@ -48,7 +48,7 @@
       />
 
       <timeseries-data-upload
-        chart-name="chartUploadedTimeSeries2"
+        chart-name="chartUploadedUpPriceTimeSeries2"
         data-name="load following up price"
         units="$/kW"
         :TimeSeriesModel="LFUpPriceTimeSeries"
@@ -59,7 +59,7 @@
       />
 
       <timeseries-data-upload
-        chart-name="chartUploadedTimeSeries3"
+        chart-name="chartUploadedDownPriceTimeSeries3"
         data-name="load following down price"
         units="$/kW"
         :TimeSeriesModel="LFDownPriceTimeSeries"
@@ -84,6 +84,7 @@
   import * as p from '@/models/Project/Project';
   import * as c from '@/models/Project/constants';
   import operateOnKeysList from '@/util/object';
+  import { notNullAndUndefined } from '@/util/logic';
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import LFPriceTimeSeries from '@/models/TimeSeries/LFPriceTimeSeries';
   import LFUpPriceTimeSeries from '@/models/TimeSeries/LFUpPriceTimeSeries';
@@ -112,13 +113,13 @@
     components: { TimeseriesDataUpload },
     mixins: [csvUploadMixin, wizardFormMixin],
     data() {
-      const p = this.$store.state.Project;
+      const projState = this.$store.state.Project;
       return {
-        price: p.lfPrice,
-        upPrice: p.lfUpPrice,
-        downPrice: p.lfDownPrice,
-        energyOptionUp: p.lfEOU,
-        energyOptionDown: p.lfEOD,
+        price: projState.lfPrice,
+        upPrice: projState.lfUpPrice,
+        downPrice: projState.lfDownPrice,
+        energyOptionUp: projState.lfEOU,
+        energyOptionDown: projState.lfEOD,
         metadata,
         ...this.getDataFromProject(),
         WIZARD_COMPONENT_PATH,
@@ -139,9 +140,9 @@
     },
     beforeMount() {
       // submitted is false initially; set it to true after the first save.
-      // initially, complete is null; after saving, it is set to either true or false.
+      // initially, errorList is null/undefined
       // we want to show validation errors at any time after the first save, with submitted.
-      if (typeof this.errorList === 'object') {
+      if (notNullAndUndefined(this.errorList)) {
         this.submitted = true;
         this.$v.$touch();
       }

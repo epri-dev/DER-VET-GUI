@@ -13,6 +13,7 @@ export class ProjectMetadata {
   getDefaultValues() {
     return {
       storeType: c.PROJECT,
+      drMonthsAppliedLabels: [],
       energyPriceSourceWholesale: null,
       id: uuidv4(),
       includeSiteLoad: null,
@@ -68,11 +69,10 @@ export class ProjectMetadata {
       userEnergyMax: null,
 
       // MONTHLY ARRAYS
-      backUpPrice: null,
-      backUpEnergyReservation: null,
+      backupPrice: null,
+      backupEnergyReservation: null,
       drMonthsApplied: null,
       drCapacityReservation: null,
-      drEnergyReservation: null,
       drCapacityAwards: null,
       drEnergyAwards: null,
       raCapacityAwards: null,

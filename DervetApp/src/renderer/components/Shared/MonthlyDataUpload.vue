@@ -1,13 +1,12 @@
 <template>
   <div id="monthly-data-upload">
     <data-upload
-      chart-name="chartName"
-      data-name="dataName"
-      data-frequency="{ value: 'monthly', unit: '' }"
-      :DataModel="TimeSeriesModel"
+      :chart-name="chartName"
+      :data-name="dataName"
+      :data-frequency="{ value: 'monthly', unit: '' }"
+      :DataModel="DataModel"
       number-of-entries-required='12'
-      units="units"
-      @uploaded="uponUpload"
+      :units="units"
       :uploaded-data="monthlyData"
       :x-axis="month"
     />
@@ -15,22 +14,24 @@
 </template>
 
 <script>
-  const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
-                 "Aug", "Sep", "Oct", "Nov", "Dec"];
+  import DataUpload from './DataUpload';
+
+  const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
+    'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   export default {
+    components: { DataUpload },
     data() {
       return {
         month,
       };
     },
     props: {
-      uponUpload: Function,
-      dataName: String,
-      units: String,
-      monthlyData: Object,
       chartName: String,
+      dataName: String,
+      monthlyData: Object,
       DataModel: Function,
+      units: String,
     },
   };
 </script>

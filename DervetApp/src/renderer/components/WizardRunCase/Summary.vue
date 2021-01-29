@@ -175,6 +175,8 @@
   import technologySpecsMixin from '@/mixins/technologySpecsMixin';
   import objectivesMixin from '@/mixins/objectivesMixin';
   import financeMixin from '@/mixins/financeMixin';
+  import { notNullAndUndefined } from '@/util/logic';
+
 
   const NOT_STARTED = ': Not Started';
 
@@ -233,10 +235,10 @@
         return mixinObject;
       },
       activeErrorExists(activeWithErrorsObject) {
-        const noErrors = function noErrors(o) {
-          return o.errors === null || o.errors === undefined || o.errors.length !== 0;
+        const hasErrors = function hasErrors(o) {
+          return notNullAndUndefined(o.errors) && o.errors.length !== 0;
         };
-        const pageWithErrors = _.filter(activeWithErrorsObject, noErrors);
+        const pageWithErrors = _.filter(activeWithErrorsObject, hasErrors);
         return pageWithErrors.length !== 0;
       },
       modeDescription() {
