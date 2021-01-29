@@ -81,10 +81,10 @@
 
     <hr>
 
-    <nav-buttons :continue-link="WIZARD_COMPONENT_PATH"
-                 :displayError="!complete"
-                 :error-text="getSingleErrorMsg()"
-                 continue-text="Done Adding Billing Periods" />
+    <nav-button :continue-link="WIZARD_COMPONENT_PATH"
+                :displayError="!complete"
+                :error-text="getSingleErrorMsg()"
+                continue-text="Done Adding Billing Periods" />
 
   </div>
 </template>
@@ -92,7 +92,7 @@
 <script>
   import { RETAIL_TARIFF_HEADERS, billingPeriodsToCsv } from '@/models/RetailTariffBillingPeriod';
   import { formatCsvForHref } from '@/util/file';
-  import NavButtons from '@/components/Shared/NavButtons';
+  import NavButton from '@/components/Shared/NavButton';
   import {
     WIZARD_COMPONENT_PATH,
     FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
@@ -106,7 +106,7 @@
     mounted() {
       this.setRetailTariffData();
     },
-    components: { NavButtons },
+    components: { NavButton },
     computed: {
       billingPeriods() {
         return this.$store.state.Project.retailTariffBillingPeriods;

@@ -28,10 +28,9 @@
         </div>
         <hr>
 
-        <nav-buttons
+        <cancel-and-save-buttons
           :backLink="FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH"
           backText="Cancel"
-          :continueLink="FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH"
           continueText="Import External Incentives"
           :save="this.save"
         />
@@ -43,11 +42,11 @@
 <script>
   import { parsedCsvToExternalIncentives } from '@/models/ExternalIncentives';
   import { parseCsvFromEvent } from '@/util/file';
-  import NavButtons from '@/components/Shared/NavButtons';
+  import CancelAndSaveButtons from '@/components/Shared/CancelAndSaveButtons';
   import { FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH } from '@/router/constants';
 
   export default {
-    components: { NavButtons },
+    components: { CancelAndSaveButtons },
     data() {
       return {
         parsedExternalIncentiveCsv: null,
@@ -61,7 +60,8 @@
       },
       save() {
         const eis = parsedCsvToExternalIncentives(this.parsedExternalIncentiveCsv);
-        this.$store.dispatch('replaceExternalIncentives', eis);
+        this.$store.dispatch('replaceExternalIncentives', eis)
+          .then(this.$router.push({ path: FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH }));
       },
     },
   };

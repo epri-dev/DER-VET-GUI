@@ -72,7 +72,7 @@
     </div>
 
     <hr>
-    <nav-buttons
+    <nav-button
       :continue-link="WIZARD_COMPONENT_PATH"
       :displayError="!complete"
       :error-text="getSingleErrorMsg()"
@@ -84,7 +84,7 @@
 <script>
   import { INCENTIVES_HEADERS, externalIncentivesToCsv } from '@/models/ExternalIncentives';
   import { formatCsvForHref } from '@/util/file';
-  import NavButtons from '@/components/Shared/NavButtons';
+  import NavButton from '@/components/Shared/NavButton';
   import {
     WIZARD_COMPONENT_PATH,
     FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
@@ -98,7 +98,7 @@
     mounted() {
       this.setExternalIncentiveData();
     },
-    components: { NavButtons },
+    components: { NavButton },
     computed: {
       externalIncentives() {
         return this.$store.state.Project.externalIncentives;

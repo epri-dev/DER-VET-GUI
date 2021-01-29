@@ -66,11 +66,9 @@
 
       <hr>
 
-      <save-only-button
+      <save-and-nav-buttons
         :displayError="submitted && $v.$anyError"
-        :save="validatedSave" />
-
-      <nav-buttons
+        :save="validatedSave"
         :continue-link="FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
         continue-text="Back To Retail Tariff" />
 
@@ -83,7 +81,6 @@
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import RetailTariffBillingPeriodMetadata from '@/models/RetailTariffBillingPeriod';
   import { FINANCIAL_INPUTS_RETAIL_TARIFF_PATH } from '@/router/constants';
-  import SaveOnlyButton from '@/components/Shared/SaveOnlyButton';
 
   const metadata = RetailTariffBillingPeriodMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
@@ -93,7 +90,6 @@
   const PAGE = 'retailTariff';
 
   export default {
-    components: { SaveOnlyButton },
     props: ['billingPeriodId'],
     mixins: [wizardFormMixin],
     data() {
@@ -305,6 +301,7 @@
         //   the page reloads after a delay of a few seconds, with a blank screen.
         //   the console displays this warning:
         //   [Violation] Forced reflow while executing JavaScript took 51ms
+        // it's possible that it only occurs in dev mode
       },
       valueInRange(value, lowValue, highValue) {
         return (value >= lowValue && value <= highValue);

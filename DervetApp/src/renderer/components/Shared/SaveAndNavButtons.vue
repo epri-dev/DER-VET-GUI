@@ -1,9 +1,7 @@
 <template>
   <div class="form-group form-buffer row">
     <div class="col-md-3 back-btn">
-      <router-link :to="backLink" class="btn btn-primary">
-        {{backText}}
-      </router-link>
+      <button @click="save" class="btn btn-primary">Save</button>
     </div>
 
     <div v-if="displayError" class="col-md-6 error-text-color">
@@ -37,17 +35,9 @@
       },
     },
     props: {
-      backLink: {
-        type: String,
-        default: 'noRouteDefined',
-      },
-      backText: {
-        type: String,
-        default: '<< Back',
-      },
       continueLink: {
         type: String,
-        default: 'noRouteDefined',
+        default: null,
       },
       continueText: {
         type: String,

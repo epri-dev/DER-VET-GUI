@@ -28,7 +28,7 @@
         </div>
         <hr>
 
-        <save-and-cancel-buttons
+        <cancel-and-save-buttons
           :back-link="FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
           backText="Cancel"
           continueText="Import Retail Tariff"
@@ -43,14 +43,14 @@
   import { requiredIf } from 'vuelidate/lib/validators';
   import RetailTariffBillingPeriodMetadata, { parsedCsvToBillingPeriods } from '@/models/RetailTariffBillingPeriod';
   import { parseCsvFromEvent } from '@/util/file';
-  import SaveAndCancelButtons from '@/components/Shared/SaveAndCancelButtons';
+  import CancelAndSaveButtons from '@/components/Shared/CancelAndSaveButtons';
   import { FINANCIAL_INPUTS_RETAIL_TARIFF_PATH } from '@/router/constants';
 
   const metadata = RetailTariffBillingPeriodMetadata.getHardcodedMetadata();
   const validationz = metadata.toValidationSchema();
 
   export default {
-    components: { SaveAndCancelButtons },
+    components: { CancelAndSaveButtons },
     data() {
       return {
         metadata,

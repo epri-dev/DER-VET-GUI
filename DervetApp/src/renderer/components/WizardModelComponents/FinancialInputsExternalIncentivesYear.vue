@@ -23,11 +23,9 @@
       </text-input>
       <hr>
 
-      <save-only-button
+      <save-and-nav-buttons
         :displayError="submitted && $v.$anyError"
-        :save="validatedSave" />
-
-      <nav-buttons
+        :save="validatedSave"
         :continue-link="FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH"
         continue-text="Back To External Incentives" />
 
@@ -40,13 +38,11 @@
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import ExternalIncentivesMetadata from '@/models/ExternalIncentives';
   import { FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH } from '@/router/constants';
-  import SaveOnlyButton from '@/components/Shared/SaveOnlyButton';
 
   const metadata = ExternalIncentivesMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
 
   export default {
-    components: { SaveOnlyButton },
     props: ['incentiveId'],
     mixins: [wizardFormMixin],
     data() {
