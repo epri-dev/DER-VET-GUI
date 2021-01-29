@@ -735,6 +735,25 @@ const actions = {
   [a.SET_DEFERRAL_REVERSE_POWER_FLOW_LIMIT]({ commit }, newDeferralReversePowerFlowLimit) {
     commit(m.SET_DEFERRAL_REVERSE_POWER_FLOW_LIMIT, newDeferralReversePowerFlowLimit);
   },
+  // Demand response
+  [a.SET_DR_NUMBER_EVENTS]({ commit }, newValue) {
+    commit(m.SET_DR_NUMBER_EVENTS, newValue);
+  },
+  [a.SET_DR_INCLUDE_WEEKENDS]({ commit }, newValue) {
+    commit(m.SET_DR_INCLUDE_WEEKENDS, newValue);
+  },
+  [a.SET_DR_START_HOUR]({ commit }, newValue) {
+    commit(m.SET_DR_START_HOUR, newValue);
+  },
+  [a.SET_DR_END_HOUR]({ commit }, newValue) {
+    commit(m.SET_DR_END_HOUR, newValue);
+  },
+  [a.SET_DR_EVENT_LENGTH]({ commit }, newValue) {
+    commit(m.SET_DR_EVENT_LENGTH, newValue);
+  },
+  [a.SET_DR_PROGRAM_TYPE]({ commit }, newValue) {
+    commit(m.SET_DR_PROGRAM_TYPE, newValue);
+  },
   [a.SET_DR_APPLIED_MONTHS]({ commit }, newValue) {
     commit(m.SET_DR_APPLIED_MONTHS, newValue);
   },

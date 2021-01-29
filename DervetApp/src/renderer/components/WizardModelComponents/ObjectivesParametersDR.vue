@@ -1,15 +1,23 @@
 ﻿<template>
   <div>
-    <h3>Services: Load Following</h3>
+    <h3>Services: Demand Response</h3>
     <hr>
     <form class="form-horizontal form-buffer">
-       <div class="row form-group">
-        <div class="col-md-4 checkboxes" v-for="month in monthsList">
-          <b-form-checkbox size='lg' v-model="monthsAppliedLabels" value="month"><b>{{month}}</b></b-form-checkbox>
+      <div class="form-group row">
+        <div class="col-md-3">
+          <label class="control-label" for="size">
+            <b>Select all months when the demand response program will be active</b>
+          </label>
         </div>
-
+        <b-form-group class="col-md-7 form-control-static">
+          <b-form-checkbox-group
+            size="lg"
+            v-model="monthsAppliedLabels"
+            :options="monthsList"
+            name="activeMonthsCheckboxes"
+          ></b-form-checkbox-group>
+        </b-form-group>
       </div>
-
       <text-input v-model="drNumberEvents"
                   v-bind:field="metadata.drNumberEvents"
                   :isInvalid="submitted && $v.drNumberEvents.$error"
@@ -54,7 +62,7 @@
         units="$/kW"
         :DataModel="DRCapacityAdwardsMonthly"
         @uploaded="receiveMonthlyData"
-        :data-time-series="capacityAwards"
+        :monthly-data="capacityAwards"
         key="1"
       />
       <monthly-data-upload
@@ -63,7 +71,7 @@
         units="$/kWh"
         :DataModel="DREnergyAwardsMonthly"
         @uploaded="receiveMonthlyData"
-        :data-time-series="energyAwards"
+        :monthly-data="energyAwards"
         key="2"
       />
       <monthly-data-upload
@@ -72,7 +80,7 @@
         units="kW"
         :DataModel="DRCapacityReservationMonthly"
         @uploaded="receiveMonthlyData"
-        :data-time-series="capacityReservation"
+        :monthly-data="capacityReservation"
         key="3"
       />
       <hr>
@@ -111,6 +119,7 @@
     SET_DR_ENERGY_AWARDS,
   } from '@/store/actionTypes';
   import MonthlyDataUpload from '@/components/Shared/MonthlyDataUpload';
+  import { notNullAndUndefined } from '@/util/logic';
 
 
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
@@ -157,7 +166,7 @@
       // submitted is false initially; set it to true after the first save.
       // initially, complete is null; after saving, it is set to either true or false.
       // we want to show validation errors at any time after the first save, with submitted.
-      if (this.errorList !== null || this.errorList !== undefined) {
+      if (notNullAndUndefined(this.errorList)) {
         this.submitted = true;
         this.$v.$touch();
       }

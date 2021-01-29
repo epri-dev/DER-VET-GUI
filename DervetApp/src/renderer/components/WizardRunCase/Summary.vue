@@ -67,7 +67,7 @@
 
         <div v-if="activeObjectivesErrorExists" class="incomplete">
           <h4>Errors in Services Components</h4>
-          <div v-for="service in activeObjectivesWithErrors">
+          <div v-for="service in activeObjectivesAndErrorsOnly">
             <div v-if="!service.complete">
               <li>
                 <router-link class="text-decoration-none"
@@ -86,7 +86,7 @@
 
         <div v-if="activeFinancialErrorExists" class="incomplete">
           <h4>Errors in Finances Components</h4>
-          <div v-for="finance in activeFinancesWithErrors">
+          <div v-for="finance in activeFinancialAndErrorsOnly">
             <div v-if="!finance.complete">
               <li>
                 <router-link class="text-decoration-none"
@@ -175,7 +175,7 @@
   import technologySpecsMixin from '@/mixins/technologySpecsMixin';
   import objectivesMixin from '@/mixins/objectivesMixin';
   import financeMixin from '@/mixins/financeMixin';
-  import { notNullAndUndefined } from '@/util/logic';
+  import { isObjectOfLengthZero } from '@/util/logic';
 
 
   const NOT_STARTED = ': Not Started';
@@ -189,8 +189,14 @@
       activeFinancialErrorExists() {
         return this.activeErrorExists(this.activeFinancesWithErrors);
       },
+      activeFinancialAndErrorsOnly() {
+        return this.activeAndErrorsOnly(this.activeFinancesWithErrors);
+      },
       activeObjectivesWithErrors() {
         return this.activeWithErrors(this.objectives);
+      },
+      activeObjectivesAndErrorsOnly() {
+        return this.activeAndErrorsOnly(this.activeObjectivesWithErrors);
       },
       activeObjectivesErrorExists() {
         return this.activeErrorExists(this.activeObjectivesWithErrors);
@@ -234,12 +240,15 @@
         });
         return mixinObject;
       },
-      activeErrorExists(activeWithErrorsObject) {
+      activeAndErrorsOnly(activeWithErrorsObject) {
         const hasErrors = function hasErrors(o) {
-          return notNullAndUndefined(o.errors) && o.errors.length !== 0;
+          return isObjectOfLengthZero(o.errors);
         };
         const pageWithErrors = _.filter(activeWithErrorsObject, hasErrors);
-        return pageWithErrors.length !== 0;
+        return pageWithErrors;
+      },
+      activeErrorExists(activeWithErrorsObject) {
+        return this.activeAndErrorsOnly(activeWithErrorsObject).length !== 0;
       },
       modeDescription() {
         const mode = this.$store.state.Project.analysisHorizonMode;

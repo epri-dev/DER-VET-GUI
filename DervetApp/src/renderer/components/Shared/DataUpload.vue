@@ -73,7 +73,7 @@
   export default {
     mounted() {
       if (this.dataExists) {
-        this.createChartUploadedTimeSeriesPlot(this.chartName);
+        this.createChartUploadedDataPlot(this.chartName);
       }
     },
     data() {
@@ -114,7 +114,9 @@
     },
     methods: {
       onFileUpload(e) {
-        const onSuccess = (results) => { this.$emit('uploaded', this.uploadPayload(flatten(results))); };
+        const onSuccess = (results) => {
+          this.$emit('uploaded', this.uploadPayload(flatten(results)));
+        };
         parseCsvFromEvent(e, onSuccess);
       },
       uploadPayload(dataResults) {

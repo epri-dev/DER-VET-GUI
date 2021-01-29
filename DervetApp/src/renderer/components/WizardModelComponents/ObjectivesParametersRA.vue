@@ -1,14 +1,8 @@
 ﻿<template>
   <div>
-    <h3>Services: Load Following</h3>
+    <h3>Services: Resource Adequacy</h3>
     <hr>
     <form class="form-horizontal form-buffer">
-       <div class="row form-group">
-        <div class="col-md-4 checkboxes" v-for="month in monthsList">
-          <b-form-checkbox size='lg' v-model="monthsAppliedLabels" value="month"><b>{{month}}</b></b-form-checkbox>
-        </div>
-
-      </div>
 
       <text-input v-model="raNumberEvents"
                   v-bind:field="metadata.raNumberEvents"

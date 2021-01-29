@@ -6,6 +6,7 @@
       :data-frequency="{ value: 'monthly', unit: '' }"
       :DataModel="DataModel"
       number-of-entries-required='12'
+      @uploaded="onFileUpload"
       :units="units"
       :uploaded-data="monthlyData"
       :x-axis="month"
@@ -25,6 +26,11 @@
       return {
         month,
       };
+    },
+    methods: {
+      onFileUpload(payload) {
+        this.$emit('uploaded', payload);
+      },
     },
     props: {
       chartName: String,

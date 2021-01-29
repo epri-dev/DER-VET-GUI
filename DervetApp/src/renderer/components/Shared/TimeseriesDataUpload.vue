@@ -6,6 +6,7 @@
       :data-frequency="{ value: this.timestep, unit: 'minutes' }"
       :DataModel="TimeSeriesModel"
       :number-of-entries-required="this.numberOfEntriesRequired"
+      @uploaded="onFileUpload"
       :units="units"
       :uploaded-data="dataTimeSeries"
       :x-axis="timeseriesXAxis"
@@ -14,16 +15,10 @@
 </template>
 
 <script>
-
   import { sharedDefaults, sharedValidation } from '@/models/Shared.js';
   import DataUpload from './DataUpload';
 
   export default {
-    mounted() {
-      if (this.dataExists) {
-        this.createChartUploadedTimeSeriesPlot(this.chartName);
-      }
-    },
     data() {
       const xstart = (new Date(`${this.dataYear}-01-01`)).getTime();
       const xx = [];
@@ -37,6 +32,11 @@
       };
     },
     components: { DataUpload },
+    methods: {
+      onFileUpload(payload) {
+        this.$emit('uploaded', payload);
+      },
+    },
     computed: {
       dataExists() {
         const data = this.dataTimeSeries;

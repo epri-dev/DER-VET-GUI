@@ -42,7 +42,7 @@
         units="$/kW"
         :TimeSeriesModel="LFPriceTimeSeries"
         @uploaded="receiveTimeseriesData"
-        :data-time-series="tsData"
+        :data-time-series="price"
         key="3"
         v-if="lfCombinedMarket === true"
       />
@@ -53,7 +53,7 @@
         units="$/kW"
         :TimeSeriesModel="LFUpPriceTimeSeries"
         @uploaded="receiveTimeseriesData"
-        :data-time-series="tsData2"
+        :data-time-series="upPrice"
         key="4"
         v-if="lfCombinedMarket === false"
       />
@@ -64,7 +64,7 @@
         units="$/kW"
         :TimeSeriesModel="LFDownPriceTimeSeries"
         @uploaded="receiveTimeseriesData"
-        :data-time-series="tsData3"
+        :data-time-series="downPrice"
         key="5"
         v-if="lfCombinedMarket === false"
       />
