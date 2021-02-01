@@ -41,6 +41,7 @@
       },
     },
     props: {
+      /*
       backLink: {
         type: String,
         default: null,
@@ -49,6 +50,7 @@
         type: String,
         default: '<< Back',
       },
+      */
       continueLink: {
         type: String,
         default: null,
