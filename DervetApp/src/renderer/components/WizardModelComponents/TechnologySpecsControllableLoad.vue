@@ -235,7 +235,6 @@
           duration: this.duration,
           errorList: this.errorList,
           expectedLifetime: this.expectedLifetime,
-          fixedOMCosts: this.fixedOMCosts,
           id: this.id,
           isReplaceable: this.isReplaceable,
           macrsTerm: this.macrsTerm,

@@ -14,15 +14,6 @@ export const makeModelParamsBattery = id => ({
       },
       type: 'float',
     },
-    acr: {
-      opt_value: '0',
-      sensitivity: {
-        active: 'no',
-        coupled: 'None',
-        value: 'nan',
-      },
-      type: 'float',
-    },
     ccost: {
       opt_value: '0',
       sensitivity: {
@@ -507,15 +498,6 @@ export const makeModelParamsPV = id => ({
         },
         type: 'float',
       },
-      acr: {
-        opt_value: '0',
-        sensitivity: {
-          active: 'no',
-          coupled: 'None',
-          value: 'nan',
-        },
-        type: 'float',
-      },
       ccost_kW: {
         opt_value: '1660',
         sensitivity: {
@@ -776,15 +758,6 @@ export const makeModelParamsIceDiesel = id => ({
   [id]: {
     active: 'yes',
     keys: {
-      acr: {
-        opt_value: '0',
-        sensitivity: {
-          active: 'no',
-          coupled: 'None',
-          value: 'nan',
-        },
-        type: 'float',
-      },
       ccost: {
         opt_value: '0',
         sensitivity: {

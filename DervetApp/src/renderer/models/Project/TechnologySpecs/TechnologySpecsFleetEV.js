@@ -38,7 +38,7 @@ export default class TechnologySpecsFleetEVMetadata {
       complete: null,
       errorList: [],
       id: uuidv4(),
-      path: TECH_SPECS_FLEET_EV_PATH,
+      path: TECH_SPECS_FLEET_EV_PATH, // TODO remove
       tag: ELECTRIC_VEHICLE2,
       technologyType: 'Electric Vehicle',
       ...this.operateOnDynamicFields(f => f.defaultValue),

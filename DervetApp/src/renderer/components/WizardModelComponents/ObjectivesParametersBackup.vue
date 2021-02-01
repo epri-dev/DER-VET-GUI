@@ -42,6 +42,7 @@
     SET_BACKUP_ENERGY,
   } from '@/store/actionTypes';
   import MonthlyDataUpload from '@/components/Shared/MonthlyDataUpload';
+  import { isNotNullAndNotUndefined } from '@/util/logic';
 
   const PAGEGROUP = 'components';
   const PAGEKEY = 'objectives';
@@ -71,7 +72,7 @@
       // submitted is false initially; set it to true after the first save.
       // initially, complete is null; after saving, it is set to either true or false.
       // we want to show validation errors at any time after the first save, with submitted.
-      if (typeof this.errorList === 'object') {
+      if (isNotNullAndNotUndefined(this.errorList)) {
         this.submitted = true;
         this.$v.$touch();
       }

@@ -112,14 +112,14 @@
     SET_DR_END_HOUR,
     SET_DR_EVENT_LENGTH,
     SET_DR_PROGRAM_TYPE,
-    // SET_DR_APPLIED_MONTHS,
+    SET_DR_APPLIED_MONTHS,
     SET_DR_APPLIED_MONTHS_LABELS,
     SET_DR_CAPACITY_RESERVATION,
     SET_DR_CAPACITY_AWARDS,
     SET_DR_ENERGY_AWARDS,
   } from '@/store/actionTypes';
   import MonthlyDataUpload from '@/components/Shared/MonthlyDataUpload';
-  import { notNullAndUndefined } from '@/util/logic';
+  import { isNotNullAndNotUndefined } from '@/util/logic';
 
 
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
@@ -161,12 +161,15 @@
       errorList() {
         return this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE];
       },
+      monthsAppliedConvertedIntoOnesAndZeros() {
+        return this.monthsList.map(month => (this.monthsAppliedLabels.includes(month) ? 1 : 0));
+      },
     },
     beforeMount() {
       // submitted is false initially; set it to true after the first save.
       // initially, complete is null; after saving, it is set to either true or false.
       // we want to show validation errors at any time after the first save, with submitted.
-      if (notNullAndUndefined(this.errorList)) {
+      if (isNotNullAndNotUndefined(this.errorList)) {
         this.submitted = true;
         this.$v.$touch();
       }
@@ -200,9 +203,7 @@
         return this.save();
       },
       save() {
-        // if (this.inputMonthly[this.priceName] !== undefined) {
-        //   this.$store.dispatch(SET_DR_APPLIED_MONTHS, this.inputMonthly[this.priceName]);
-        // } TODO write a method to calculate applied months
+        this.$store.dispatch(SET_DR_APPLIED_MONTHS, this.monthsAppliedConvertedIntoOnesAndZeros);
         this.$store.dispatch(SET_DR_APPLIED_MONTHS_LABELS, this.monthsAppliedLabels);
 
         if (this.inputMonthly[this.capacityReservationName] !== undefined) {

@@ -1,8 +1,10 @@
-export const notNullAndUndefined = value => value !== null && value !== undefined;
+// all functions in this file should return a boolean
 
-export const valueInRange = (value, lowValue, highValue) => (
+export const isNotNullAndNotUndefined = value => value !== null && value !== undefined;
+
+export const isValueInRange = (value, lowValue, highValue) => (
   value >= lowValue && value <= highValue
 );
 
 export const isObjectOfLengthZero = value =>
-  notNullAndUndefined(value) && value.length !== 0;
+  isNotNullAndNotUndefined(value) && value.length !== 0;

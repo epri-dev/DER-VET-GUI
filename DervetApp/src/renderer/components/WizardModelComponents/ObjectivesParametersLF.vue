@@ -84,7 +84,7 @@
   import * as p from '@/models/Project/Project';
   import * as c from '@/models/Project/constants';
   import operateOnKeysList from '@/util/object';
-  import { notNullAndUndefined } from '@/util/logic';
+  import { isNotNullAndNotUndefined } from '@/util/logic';
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import LFPriceTimeSeries from '@/models/TimeSeries/LFPriceTimeSeries';
   import LFUpPriceTimeSeries from '@/models/TimeSeries/LFUpPriceTimeSeries';
@@ -142,7 +142,7 @@
       // submitted is false initially; set it to true after the first save.
       // initially, errorList is null/undefined
       // we want to show validation errors at any time after the first save, with submitted.
-      if (notNullAndUndefined(this.errorList)) {
+      if (isNotNullAndNotUndefined(this.errorList)) {
         this.submitted = true;
         this.$v.$touch();
       }

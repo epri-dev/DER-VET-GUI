@@ -413,6 +413,9 @@ const mutations = {
   [m.SET_RA_CAPACITY_PRICE](state, newValue) {
     state.raCapacityAwards = newValue;
   },
+  [m.SET_RA_ACTIVE_TIMESTEP](state, newValue) {
+    state.raActive = newValue;
+  },
   [m.SET_RA_NUMBER_EVENTS](state, newValue) {
     state[c.RA_NUMBER_EVENTS] = newValue;
   },
@@ -919,6 +922,9 @@ const actions = {
     commit('SET_RELIABILITY_TARGET', newReliabilityTarget);
   },
   // resource adequacy
+  [a.SET_RA_ACTIVE_TIMESTEP]({ commit }, newRAActive) {
+    commit(m.SET_RA_ACTIVE_TIMESTEP, newRAActive);
+  },
   [a.SET_RA_CAPACITY_PRICE]({ commit }, newRACapacityPrice) {
     commit(m.SET_RA_CAPACITY_PRICE, newRACapacityPrice);
   },

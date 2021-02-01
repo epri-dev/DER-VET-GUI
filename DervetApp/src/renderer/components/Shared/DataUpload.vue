@@ -66,7 +66,7 @@
 <script>
   import Plotly from 'plotly.js';
   import { flatten } from 'lodash';
-  import { notNullAndUndefined } from '@/util/logic';
+  import { isNotNullAndNotUndefined } from '@/util/logic';
   import { parseCsvFromEvent } from '@/util/file';
   import { sharedDefaults, sharedValidation } from '@/models/Shared.js';
 
@@ -85,12 +85,12 @@
     computed: {
       dataExists() {
         const data = this.uploadedData;
-        if (!notNullAndUndefined(data)) {
+        if (!isNotNullAndNotUndefined(data)) {
           // this.updloadedData is empty
           return false;
         }
         // this.uploadedData is object, so check if data is empty
-        return notNullAndUndefined(data.data);
+        return isNotNullAndNotUndefined(data.data);
       },
       firstLetterCapitalized() {
         return this.dataName.charAt(0).toUpperCase() + this.dataName.slice(1);

@@ -41,6 +41,17 @@
       />
       <hr>
 
+      <timeseries-data-upload
+        chart-name="chartUploadedActiveTimestepsTimeSeries"
+        :data-name="activeName"
+        units="$/kW"
+        :TimeSeriesModel="RAActiveTimeSeries"
+        @uploaded="receiveTimeseriesData"
+        :data-time-series="activeTimeSeries"
+        key="2"
+        :v-if="raEventSelectionMethod === 'Peak by Month with Active Hours'"
+      />
+
       <save-buttons
         :continue-link="WIZARD_COMPONENT_PATH"
         :displayError="submitted && $v.$anyError"
@@ -56,9 +67,11 @@
   import * as c from '@/models/Project/constants';
   import operateOnKeysList from '@/util/object';
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
+  import RAActiveTimeSeries from '@/models/TimeSeries/RAActiveTimeSeries';
   import RACapacityAdwardsMonthly from '@/models/Monthly/RACapacityAdwardsMonthly';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import {
+    SET_RA_ACTIVE_TIMESTEP,
     SET_RA_CAPACITY_PRICE,
     SET_RA_DISPATCH_MODE,
     SET_RA_EVENT_LENGTH,
@@ -66,6 +79,7 @@
     SET_RA_NUMBER_EVENTS,
   } from '@/store/actionTypes';
   import MonthlyDataUpload from '@/components/Shared/MonthlyDataUpload';
+  import { isNotNullAndNotUndefined } from '@/util/logic';
 
 
   const metadata = p.projectMetadata;
@@ -82,11 +96,13 @@
       return {
         capacityAwards: p.raCapacityAwards,
         capacityAwardsName: 'monthly value of resource adequacy',
-
+        activeTimeSeries: p.raActive,
+        activeName: 'if the resourse adequacy event selection considers the load (1) or not (0) ',
         metadata,
         ...this.getDataFromProject(),
         WIZARD_COMPONENT_PATH,
         RACapacityAdwardsMonthly,
+        RAActiveTimeSeries,
       };
     },
     validations: {
@@ -101,7 +117,7 @@
       // submitted is false initially; set it to true after the first save.
       // initially, complete is null; after saving, it is set to either true or false.
       // we want to show validation errors at any time after the first save, with submitted.
-      if (this.errorList !== null || this.errorList !== undefined) {
+      if (isNotNullAndNotUndefined(this.errorList)) {
         this.submitted = true;
         this.$v.$touch();
       }
@@ -138,7 +154,9 @@
         if (this.inputMonthly[this.capacityAwardsName] !== undefined) {
           this.$store.dispatch(SET_RA_CAPACITY_PRICE, this.inputMonthly[this.capacityAwardsName]);
         }
-
+        if (this.inputTimeseries[this.activeName] !== undefined) {
+          this.$store.dispatch(SET_RA_ACTIVE_TIMESTEP, this.inputTimeseries[this.activeName]);
+        }
         this.$store.dispatch(SET_RA_DISPATCH_MODE, this[c.RA_DISPATCH_MODE]);
         this.$store.dispatch(SET_RA_EVENT_LENGTH, this[c.RA_EVENT_LENGTH]);
         this.$store.dispatch(SET_RA_EVENT_SELECTION_METHOD, this[c.RA_EVENT_SELECTION_METHOD]);

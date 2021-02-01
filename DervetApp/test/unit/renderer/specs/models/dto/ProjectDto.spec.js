@@ -220,7 +220,7 @@ describe('modelParametersDto', () => {
       ],
       inputsDirectory: testInputsDirectory,
     };
-
+    console.log(JSON.stringify(testProject, null, 1));
     const actual = makeDieselGensetParameters(testProject);
     const expected = {
       ...makeModelParamsIceDiesel(testUuid1),
