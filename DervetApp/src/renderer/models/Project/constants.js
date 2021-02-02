@@ -28,6 +28,8 @@ export const FR_DURATION = 'frDuration';
 export const FR_COMBINED_MARKET = 'frCombinedMarket';
 export const LF_DURATION = 'lfDuration';
 export const LF_COMBINED_MARKET = 'lfCombinedMarket';
+export const LF_GROWTH = 'lfGrowth';
+export const LF_ENERGY_PRICE_GROWTH = 'lfEnergyPriceGrowth';
 export const GRID_LOCATION = 'gridLocation';
 export const INCLUDE_INTERCONNECTION_CONSTRAINTS = 'includeInterconnectionConstraints';
 export const MAX_EXPORT = 'maxExport';
@@ -159,6 +161,8 @@ export const FR_FIELDS = [
 export const LF_FIELDS = [
   LF_COMBINED_MARKET,
   LF_DURATION,
+  LF_GROWTH,
+  LF_ENERGY_PRICE_GROWTH,
 ];
 export const NSR_FIELDS = [
   NSR_DURATION,

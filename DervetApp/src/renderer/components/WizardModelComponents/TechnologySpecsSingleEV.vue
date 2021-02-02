@@ -315,7 +315,7 @@
           minimumChargingPower: this.minimumChargingPower,
           name: this.name,
           operationYear: this.operationYear,
-          path: this.path,
+          path: this.path, // todo remove
           plugInHour: this.plugInHour,
           plugOutHour: this.plugOutHour,
           replacementCost: this.replacementCost,

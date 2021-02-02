@@ -467,11 +467,101 @@ export const makeModelParamsBattery = id => ({
   },
 });
 
-export const makeModelParamsPV = id => ({
+export const makeModelParamsControllableLoad = id => ({
   [id]: {
     active: 'yes',
     keys: {
-      PPA: {
+      construction_year: {
+        opt_value: '2017',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'Period',
+      },
+      decommissioning_cost: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      duration: {
+        opt_value: '2',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      'ecc%': {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      expected_lifetime: {
+        opt_value: '7',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      macrs_term: {
+        opt_value: '3',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      name: {
+        opt_value: 'demand response',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'string',
+      },
+      nsr_response_time: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      operation_year: {
+        opt_value: '2018',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'Period',
+      },
+      power_rating: {
+        opt_value: '100',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      replaceable: {
         opt_value: '0',
         sensitivity: {
           active: 'no',
@@ -480,8 +570,44 @@ export const makeModelParamsPV = id => ({
         },
         type: 'bool',
       },
-      PPA_cost: {
+      replacement_construction_time: {
         opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      salvage_value: {
+        opt_value: 'Sunk Cost',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'string/int',
+      },
+      sr_response_time: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      startup_time: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      ter: {
+        opt_value: '7',
         sensitivity: {
           active: 'no',
           coupled: 'None',
@@ -489,8 +615,16 @@ export const makeModelParamsPV = id => ({
         },
         type: 'float',
       },
-      PPA_inflation_rate: {
-        opt_value: '0',
+    },
+  },
+});
+
+export const makeModelParamsElectricVehicle1 = id => ({
+  [id]: {
+    active: 'yes',
+    keys: {
+      ccost: {
+        opt_value: '800',
         sensitivity: {
           active: 'no',
           coupled: 'None',
@@ -498,8 +632,17 @@ export const makeModelParamsPV = id => ({
         },
         type: 'float',
       },
-      ccost_kW: {
-        opt_value: '1660',
+      ch_max_rated: {
+        opt_value: '600',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      ch_min_rated: {
+        opt_value: '125',
         sensitivity: {
           active: 'no',
           coupled: 'None',
@@ -516,7 +659,115 @@ export const makeModelParamsPV = id => ({
         },
         type: 'Period',
       },
-      curtail: {
+      decommissioning_cost: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      ene_target: {
+        opt_value: '50',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      'ecc%': {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      expected_lifetime: {
+        opt_value: '7',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      fixed_om_cost: {
+        opt_value: '50',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      macrs_term: {
+        opt_value: '3',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      name: {
+        opt_value: 'single ev',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'string',
+      },
+      nsr_response_time: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      operation_year: {
+        opt_value: '2018',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'Period',
+      },
+      plugin_time: {
+        opt_value: '14',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      plugout_time: {
+        opt_value: '20',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      rcost: {
+        opt_value: '250',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      replaceable: {
         opt_value: '0',
         sensitivity: {
           active: 'no',
@@ -524,6 +775,77 @@ export const makeModelParamsPV = id => ({
           value: 'nan',
         },
         type: 'bool',
+      },
+      replacement_construction_time: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      salvage_value: {
+        opt_value: 'Sunk Cost',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'string/int',
+      },
+      sr_response_time: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      startup_time: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      ter: {
+        opt_value: '7',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+    },
+  },
+});
+
+export const makeModelParamsElectricVehicle2 = id => ({
+  [id]: {
+    active: 'yes',
+    keys: {
+      ccost: {
+        opt_value: '600',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      construction_year: {
+        opt_value: '2017',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'Period',
       },
       decommissioning_cost: {
         opt_value: '0',
@@ -544,7 +866,7 @@ export const makeModelParamsPV = id => ({
         type: 'float',
       },
       expected_lifetime: {
-        opt_value: '99',
+        opt_value: '7',
         sensitivity: {
           active: 'no',
           coupled: 'None',
@@ -553,7 +875,7 @@ export const makeModelParamsPV = id => ({
         type: 'int',
       },
       fixed_om_cost: {
-        opt_value: '0',
+        opt_value: '100',
         sensitivity: {
           active: 'no',
           coupled: 'None',
@@ -561,53 +883,8 @@ export const makeModelParamsPV = id => ({
         },
         type: 'float',
       },
-      gamma: {
-        opt_value: '0',
-        sensitivity: {
-          active: 'no',
-          coupled: 'None',
-          value: 'nan',
-        },
-        type: 'float',
-      },
-      grid_charge: {
-        opt_value: '0',
-        sensitivity: {
-          active: 'no',
-          coupled: 'None',
-          value: 'nan',
-        },
-        type: 'bool',
-      },
-      grid_charge_penalty: {
-        opt_value: '0',
-        sensitivity: {
-          active: 'no',
-          coupled: 'None',
-          value: 'nan',
-        },
-        type: 'bool',
-      },
-      growth: {
-        opt_value: '0',
-        sensitivity: {
-          active: 'no',
-          coupled: 'None',
-          value: 'nan',
-        },
-        type: 'float',
-      },
-      inv_max: {
-        opt_value: '1000000000',
-        sensitivity: {
-          active: 'no',
-          coupled: 'None',
-          value: 'nan',
-        },
-        type: 'float',
-      },
-      loc: {
-        opt_value: 'AC',
+      lost_load_cost: {
+        opt_value: '60',
         sensitivity: {
           active: 'no',
           coupled: 'None',
@@ -624,26 +901,17 @@ export const makeModelParamsPV = id => ({
         },
         type: 'float',
       },
-      max_rated_capacity: {
-        opt_value: '0',
+      max_load_ctrl: {
+        opt_value: '20',
         sensitivity: {
           active: 'no',
           coupled: 'None',
           value: 'nan',
         },
-        type: 'bool',
-      },
-      min_rated_capacity: {
-        opt_value: '0',
-        sensitivity: {
-          active: 'no',
-          coupled: 'None',
-          value: 'nan',
-        },
-        type: 'bool',
+        type: 'int',
       },
       name: {
-        opt_value: 'Installation 1',
+        opt_value: 'fleet ev',
         sensitivity: {
           active: 'no',
           coupled: 'None',
@@ -660,17 +928,8 @@ export const makeModelParamsPV = id => ({
         },
         type: 'int',
       },
-      nu: {
-        opt_value: '0',
-        sensitivity: {
-          active: 'no',
-          coupled: 'None',
-          value: 'nan',
-        },
-        type: 'float',
-      },
       operation_year: {
-        opt_value: '2017',
+        opt_value: '2018',
         sensitivity: {
           active: 'no',
           coupled: 'None',
@@ -678,17 +937,8 @@ export const makeModelParamsPV = id => ({
         },
         type: 'Period',
       },
-      rated_capacity: {
-        opt_value: '1000',
-        sensitivity: {
-          active: 'no',
-          coupled: 'None',
-          value: 'nan',
-        },
-        type: 'float',
-      },
-      rcost_kW: {
-        opt_value: '100',
+      rcost: {
+        opt_value: '500',
         sensitivity: {
           active: 'no',
           coupled: 'None',
@@ -706,7 +956,7 @@ export const makeModelParamsPV = id => ({
         type: 'bool',
       },
       replacement_construction_time: {
-        opt_value: '1',
+        opt_value: '0',
         sensitivity: {
           active: 'no',
           coupled: 'None',
@@ -715,7 +965,7 @@ export const makeModelParamsPV = id => ({
         type: 'int',
       },
       salvage_value: {
-        opt_value: '0',
+        opt_value: 'Sunk Cost',
         sensitivity: {
           active: 'no',
           coupled: 'None',
@@ -994,6 +1244,293 @@ export const makeModelParamsIceDiesel = id => ({
       },
       variable_om_cost: {
         opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+    },
+  },
+});
+
+export const makeModelParamsPV = id => ({
+  [id]: {
+    active: 'yes',
+    keys: {
+      PPA: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'bool',
+      },
+      PPA_cost: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      PPA_inflation_rate: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      ccost_kW: {
+        opt_value: '1660',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      construction_year: {
+        opt_value: '2017',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'Period',
+      },
+      curtail: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'bool',
+      },
+      decommissioning_cost: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      'ecc%': {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      expected_lifetime: {
+        opt_value: '99',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      fixed_om_cost: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      gamma: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      grid_charge: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'bool',
+      },
+      grid_charge_penalty: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'bool',
+      },
+      growth: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      inv_max: {
+        opt_value: '1000000000',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      loc: {
+        opt_value: 'AC',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      macrs_term: {
+        opt_value: '3',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      max_rated_capacity: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'bool',
+      },
+      min_rated_capacity: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'bool',
+      },
+      name: {
+        opt_value: 'Installation 1',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'string',
+      },
+      nsr_response_time: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      nu: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      operation_year: {
+        opt_value: '2017',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'Period',
+      },
+      rated_capacity: {
+        opt_value: '1000',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      rcost_kW: {
+        opt_value: '100',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      replaceable: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'bool',
+      },
+      replacement_construction_time: {
+        opt_value: '1',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      salvage_value: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'string/int',
+      },
+      sr_response_time: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      startup_time: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      ter: {
+        opt_value: '7',
         sensitivity: {
           active: 'no',
           coupled: 'None',

@@ -59,6 +59,8 @@ export const SET_LF_EOU = 'SET_LF_EOU';
 export const SET_LF_EOD = 'SET_LF_EOD';
 export const SET_LF_PRICE = 'SET_LF_PRICE';
 export const SET_LF_UP_PRICE = 'SET_LF_UP_PRICE';
+export const SET_LF_GROWTH = 'SET_LF_GROWTH';
+export const SET_LF_ENERGY_GROWTH = 'SET_LF_ENERGY_GROWTH';
 // objectives
 export const CHOOSE_ENERGY_STRUCTURE = 'CHOOSE_ENERGY_STRUCTURE';
 export const SET_INCLUDE_SITE_LOAD = 'SET_INCLUDE_SITE_LOAD';

@@ -255,6 +255,7 @@ export const makeSingleControllableLoadParameter = (controllableLoad) => {
     name: makeBaseKey(controllableLoad.name, STRING),
     nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
     operation_year: makeBaseKey(controllableLoad.operationYear, PERIOD),
+    power_rating: makeBaseKey(controllableLoad.ratedCapacity, FLOAT),
     replaceable: makeBaseKey(convertToOneZero(controllableLoad.isReplaceable), BOOL),
     replacement_construction_time: makeBaseKey(replaceConstruction, INT),
     salvage_value: makeBaseKey(calculateSalvageValue(controllableLoad), STRING_INT),
@@ -391,9 +392,9 @@ export const makeSingleFleetEVParameter = (fleetEV) => {
     'ecc%': makeBaseKey(ZERO, FLOAT), // TODO hardcoded
     expected_lifetime: makeBaseKey(fleetEV.expectedLifetime, INT),
     fixed_om_cost: makeBaseKey(fleetEV.fixedOMCosts, FLOAT),
-    load_load_cost: makeBaseKey(fleetEV.lostLoadCost, FLOAT),
+    lost_load_cost: makeBaseKey(fleetEV.lostLoadCost, FLOAT),
     macrs_term: makeBaseKey(fleetEV.macrsTerm, FLOAT),
-    max_load_ctrl: makeBaseKey(fleetEV.maximumLoadCtrl, FLOAT),
+    max_load_ctrl: makeBaseKey(fleetEV.maximumLoadCtrl, INT),
     name: makeBaseKey(fleetEV.name, STRING),
     nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
     operation_year: makeBaseKey(fleetEV.operationYear, PERIOD),
@@ -481,8 +482,8 @@ export const makeLFParameters = (project) => {
       CombinedMarket: makeBaseKey(project[c.LF_COMBINED_MARKET], BOOL),
       d_ts_constraints: makeBaseKey(ZERO, BOOL), // hardcoded
       duration: makeBaseKey(project[c.LF_DURATION], FLOAT),
-      energyprice_growth: makeBaseKey(ZERO, FLOAT), // hardcoded
-      growth: makeBaseKey(ZERO, FLOAT), // hardcoded
+      energyprice_growth: makeBaseKey(project[c.LF_ENERGY_PRICE_GROWTH], FLOAT),
+      growth: makeBaseKey(project[c.LF_GROWTH], FLOAT),
       u_ts_constraints: makeBaseKey(ZERO, BOOL), // hardcoded
     };
     return makeGroup('', isActive, keys);
@@ -678,8 +679,8 @@ export const makeSingleSingleEVParameter = (singleEV) => {
     name: makeBaseKey(singleEV.name, STRING),
     nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
     operation_year: makeBaseKey(singleEV.operationYear, PERIOD),
-    plugin_time: makeBaseKey(singleEV.plugInHour, FLOAT),
-    plugout_time: makeBaseKey(setUndefinedNullToZero(singleEV.plugOutHour), FLOAT),
+    plugin_time: makeBaseKey(singleEV.plugInHour, INT),
+    plugout_time: makeBaseKey(setUndefinedNullToZero(singleEV.plugOutHour), INT),
     rcost: makeBaseKey(setUndefinedNullToZero(singleEV.replacementCost), FLOAT),
     replaceable: makeBaseKey(convertToOneZero(singleEV.isReplaceable), BOOL),
     replacement_construction_time: makeBaseKey(replacementConstructionTime, INT),

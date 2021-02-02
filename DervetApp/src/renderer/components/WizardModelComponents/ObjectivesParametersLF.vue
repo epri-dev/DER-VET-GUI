@@ -4,6 +4,18 @@
     <hr>
     <form class="form-horizontal form-buffer">
 
+      <text-input v-model="lfGrowth"
+                  v-bind:field="metadata.lfGrowth"
+                  :isInvalid="submitted && $v.lfGrowth.$error"
+                  :errorMessage="getErrorMsg('lfGrowth')">
+      </text-input>
+
+      <text-input v-model="lfEnergyPriceGrowth"
+                  v-bind:field="metadata.lfEnergyPriceGrowth"
+                  :isInvalid="submitted && $v.lfEnergyPriceGrowth.$error"
+                  :errorMessage="getErrorMsg('lfEnergyPriceGrowth')">
+      </text-input>
+
       <text-input v-model="lfDuration"
                   v-bind:field="metadata.lfDuration"
                   :isInvalid="submitted && $v.lfDuration.$error"
@@ -100,6 +112,8 @@
     SET_LF_EOD,
     SET_LF_PRICE,
     SET_LF_UP_PRICE,
+    SET_LF_GROWTH,
+    SET_LF_ENERGY_GROWTH,
   } from '@/store/actionTypes';
   import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
 
@@ -194,6 +208,8 @@
 
         this.$store.dispatch(SET_LF_COMBINED_MARKET, this.lfCombinedMarket);
         this.$store.dispatch(SET_LF_DURATION, this.lfDuration);
+        this.$store.dispatch(SET_LF_GROWTH, this.lfGrowth);
+        this.$store.dispatch(SET_LF_ENERGY_GROWTH, this.lfEnergyPriceGrowth);
       },
     },
   };

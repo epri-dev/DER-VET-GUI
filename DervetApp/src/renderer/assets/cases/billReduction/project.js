@@ -40,7 +40,7 @@ export const billReductionProject = {
   gridLocation: 'Customer',
   financeInflationRate: 2.2,
   name: 'Economic BTM DER Sizing - Use Case 1',
-  listOfActiveServices: ['Reliability', 'Retail Demand Charge Reduction'],
+  listOfActiveServices: ['Resilience', 'RetailDemandChargeReduction'],
   objectivesBackupPower: false,
   objectivesDA: false,
   objectivesDeferral: false,

@@ -4,6 +4,18 @@
     <hr>
     <form class="form-horizontal form-buffer">
 
+      <text-input v-model="frGrowth"
+                  v-bind:field="metadata.frGrowth"
+                  :isInvalid="submitted && $v.frGrowth.$error"
+                  :errorMessage="getErrorMsg('frGrowth')">
+      </text-input>
+
+      <text-input v-model="frEnergyPriceGrowth"
+                  v-bind:field="metadata.frEnergyPriceGrowth"
+                  :isInvalid="submitted && $v.frEnergyPriceGrowth.$error"
+                  :errorMessage="getErrorMsg('frEnergyPriceGrowth')">
+      </text-input>
+
       <text-input v-model="frEOU"
                   v-bind:field="metadata.frEOU"
                   :isInvalid="submitted && $v.frEOU.$error"

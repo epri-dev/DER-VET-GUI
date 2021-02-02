@@ -6,22 +6,29 @@ import {
   makeBatteryCycleLifeCsv,
   makeBatteryParameters,
   makeBatteryCsvs,
+  makeControllableLoadParameters,
   makeCsvs,
   makeDAParameters,
+  makeDatetimeIndex,
   makeDCMParameters,
   makeDeferralParameters,
   makeDieselGensetParameters,
+  // makeDRParameters, TODO
   makeFinanceParameters,
+  makeFleetEVParameters,
   makeFRParameters,
   makeICEParameters,
+  // makeLFParameters, TODO
   makeModelParameters,
+  // makeMonthlyCsv, TODO
   makeNSRParameters,
   makePVParameters,
-  makeDatetimeIndex,
+  // makeRAParameters, TODO
   makeReliabilityParameters,
   makeResultsParameters,
   makeRetailTimeShiftParameters,
   makeScenarioParameters,
+  makeSingleEVParameters,
   makeSinglePVParameter,
   makeSRParameters,
   makeUserParameters,
@@ -33,9 +40,12 @@ import { projectFixtureAllActive } from '@/assets/samples/projectFixture-everyth
 import modelParametersFixture from '../../../../fixtures/case0/000-DA_battery_month.json';
 import {
   makeProjectBattery,
+  makeProjectControllableLoad,
   makeProjectPV,
+  makeProjectFleetEV,
   makeProjectICE,
   makeProjectDieselGen,
+  makeProjectSingleEV,
   testInputsDirectory,
   testResultsDirectory,
   testUuid1,
@@ -43,6 +53,9 @@ import {
 } from '../../fixtures/models/dto/ProjectDtoProjectFixtures';
 import {
   makeModelParamsBattery,
+  makeModelParamsControllableLoad,
+  makeModelParamsElectricVehicle1,
+  makeModelParamsElectricVehicle2,
   makeModelParamsPV,
   makeModelParamsIceDiesel,
   makeModelParamsResults,
@@ -199,7 +212,22 @@ describe('modelParametersDto', () => {
     expect(actual[testUuid1]).to.eql(expected);
     expect(Object.keys(actual)).to.eql([testUuid1, testUuid2]);
   });
+  it('should make controllable load parameters', () => {
+    const testProject = {
+      technologySpecsControllableLoad: [
+        makeProjectControllableLoad(testUuid1),
+        makeProjectControllableLoad(testUuid2),
+      ],
+      inputsDirectory: testInputsDirectory,
+    };
 
+    const actual = makeControllableLoadParameters(testProject, testInputsDirectory);
+    const expected = {
+      ...makeModelParamsControllableLoad(testUuid1),
+      ...makeModelParamsControllableLoad(testUuid2),
+    };
+    expect(actual).to.eql(expected);
+  });
   it('should make DA parameters', () => {
     const actual = makeDAParameters(projectFixture);
     expect(Object.keys(actual[''].keys).length).to.eql(1);
@@ -220,13 +248,44 @@ describe('modelParametersDto', () => {
       ],
       inputsDirectory: testInputsDirectory,
     };
-    console.log(JSON.stringify(testProject, null, 1));
     const actual = makeDieselGensetParameters(testProject);
     const expected = {
       ...makeModelParamsIceDiesel(testUuid1),
       ...makeModelParamsIceDiesel(testUuid2),
     };
 
+    expect(actual).to.eql(expected);
+  });
+  it('should make elevtric vehicle 1 (single EV) parameters', () => {
+    const testProject = {
+      technologySpecsSingleEV: [
+        makeProjectSingleEV(testUuid1),
+        makeProjectSingleEV(testUuid2),
+      ],
+      inputsDirectory: testInputsDirectory,
+    };
+
+    const actual = makeSingleEVParameters(testProject, testInputsDirectory);
+    const expected = {
+      ...makeModelParamsElectricVehicle1(testUuid1),
+      ...makeModelParamsElectricVehicle1(testUuid2),
+    };
+    expect(actual).to.eql(expected);
+  });
+  it('should make elevtric vehicle 2 (fleet EV) parameters', () => {
+    const testProject = {
+      technologySpecsFleetEV: [
+        makeProjectFleetEV(testUuid1),
+        makeProjectFleetEV(testUuid2),
+      ],
+      inputsDirectory: testInputsDirectory,
+    };
+
+    const actual = makeFleetEVParameters(testProject, testInputsDirectory);
+    const expected = {
+      ...makeModelParamsElectricVehicle2(testUuid1),
+      ...makeModelParamsElectricVehicle2(testUuid2),
+    };
     expect(actual).to.eql(expected);
   });
   it('should make finance parameters', () => {

@@ -155,11 +155,11 @@ export class ProjectMetadata {
       [c.DR_END_HOUR]: new ProjectFieldMetadata({
         displayName: 'End Hour',
         isRequired: true,
-        minValue: 0,
-        maxValue: 22,
+        minValue: 2,
+        maxValue: 24,
         type: 'int',
-        unit: 'hb',
-        description: 'End hour of the Demand Response period. (Optional)',
+        unit: 'he',
+        description: 'Last hour of the Demand Response period. (Optional)',
       }),
       [c.DR_NUMBER_EVENTS]: new ProjectFieldMetadata({
         displayName: 'Number of Events',
@@ -195,10 +195,10 @@ export class ProjectMetadata {
       [c.DR_START_HOUR]: new ProjectFieldMetadata({
         displayName: 'Start Hour',
         isRequired: true,
-        minValue: 0,
+        minValue: 1,
         maxValue: 23,
         type: 'int',
-        unit: 'hb',
+        unit: 'he',
         description: 'Start hour of the Demand Response period',
       }),
       [c.ENERGY_PRICE_SOURCE_WHOLESALE]: new ProjectFieldMetadata({
@@ -333,6 +333,24 @@ export class ProjectMetadata {
         type: Number,
         unit: 'hours',
         description: 'How much energy capability (kWh) should the DERs reserve for each kW of participation in Load Following? The DERs will not use this energy capability for other services to be ready for the worst-case scenario.',
+      }),
+      [c.LF_ENERGY_PRICE_GROWTH]: new ProjectFieldMetadata({
+        displayName: 'Growth Rate of Load Following Energy Price',
+        isRequired: true,
+        minValue: 0,
+        maxValue: 100,
+        type: Number,
+        unit: '% / year',
+        description: 'Yearly growth rate to apply to the value of energy',
+      }),
+      [c.LF_GROWTH]: new ProjectFieldMetadata({
+        displayName: 'Growth Rate of Load Following Price',
+        isRequired: true,
+        minValue: 0,
+        maxValue: 100,
+        type: Number,
+        unit: '% / year',
+        description: 'Yearly growth rate to apply to regulation prices?',
       }),
       [c.MAX_EXPORT]: new ProjectFieldMetadata({
         displayName: 'Maximum Power Exported',
