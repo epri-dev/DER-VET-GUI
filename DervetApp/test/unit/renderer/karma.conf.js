@@ -45,10 +45,12 @@ module.exports = config => {
     customLaunchers: {
       'visibleElectron': {
         base: 'Electron',
+        flags: ['--no-sandbox'],
         browserWindowOptions: {
           webPreferences: {
             nodeIntegration: true,
             enableRemoteModule: true,
+            sandbox: false,
           },
         },
       },
