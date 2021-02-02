@@ -21,7 +21,7 @@ describe('RetailTariffBillingPeriodMetadata model', () => {
       complete: null,
     });
 
-    const actual = parsedCsvToBillingPeriods(testCsv).shift();
+    const actual = parsedCsvToBillingPeriods(testCsv).csvValues.shift();
     expect(actual).to.eql(expected);
   });
 });

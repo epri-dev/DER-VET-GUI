@@ -6,15 +6,17 @@
       </router-link>
     </div>
 
-    <div v-if="displayError" class="col-md-6 error-text-color">
-      {{ errorText }}
+    <div
+      v-if="displayError"
+      class="col-md-6 error-text-color">
+      <span v-html="errorText"></span>
     </div>
     <div v-else class="col-md-6">
     </div>
 
     <div class="col-md-3 continue-btn">
       <router-link
-        v-on:click.native="save"
+        v-on:click.native="disabled ? () => null : save()"
         :event="disabled ? '' : 'click'"
         :to="continueLink"
         class="btn btn-primary pull-right">

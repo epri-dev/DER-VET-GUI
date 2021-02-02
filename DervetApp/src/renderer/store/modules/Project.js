@@ -51,6 +51,7 @@ export const getDefaultState = () => ({
   userEnergyMax: null,
 
   retailTariffBillingPeriods: [],
+  retailTariffFileImportNotes: [],
   externalIncentives: [],
 });
 
@@ -370,6 +371,9 @@ const mutations = {
   },
   REPLACE_RETAIL_TARIFF_BILLING_PERIODS(state, newBillingPeriods) {
     state.retailTariffBillingPeriods = newBillingPeriods;
+  },
+  REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES(state, newImportNotes) {
+    state.retailTariffFileImportNotes = newImportNotes;
   },
   REMOVE_RETAIL_TARIFF_BILLING_PERIOD(state, id) {
     const index = getters.getIndexOfBillingPeriodId(state)(id);
@@ -772,6 +776,9 @@ const actions = {
   },
   replaceRetailTariffBillingPeriods({ commit }, newBillingPeriods) {
     commit('REPLACE_RETAIL_TARIFF_BILLING_PERIODS', newBillingPeriods);
+  },
+  replaceRetailTariffFileImportNotes({ commit }, newImportNotes) {
+    commit('REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES', newImportNotes);
   },
   removeAllRetailTariffBillingPeriods({ commit }) {
     commit('REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS');

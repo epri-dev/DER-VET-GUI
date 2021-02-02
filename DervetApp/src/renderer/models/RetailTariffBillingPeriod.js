@@ -202,15 +202,31 @@ export default class RetailTariffBillingPeriodMetadata {
 }
 
 export const parsedCsvToBillingPeriods = (csv) => {
+  // returns data object, and an array of import notes
+
+  const fileImportNotes = [];
   // TODO validate headers to ensure order of fields is correct
   //   and billing period is complete
+
   // remove the first row
   // TODO what if there is not a header row present?
+  fileImportNotes.push('The first line was assumed a header, and skipped');
   let csvValues = csv.slice(1);
-  // only keep rows with 11 elements
-  csvValues = csvValues.filter(row => row.length === 11);
 
-  return csvValues.map(row => (
+  // only keep rows with validRowLength elements
+  const validRowLength = 11;
+  // subtracting 1 is necessary here
+  const origLinesCount = csvValues.length - 1;
+  csvValues = csvValues.filter(row => row.length === validRowLength);
+  const postLinesCount = csvValues.length;
+  const removedLinesCount = origLinesCount - postLinesCount;
+  if (removedLinesCount > 0) {
+    const wasOrWere = (removedLinesCount === 1) ? 'was' : 'were';
+    fileImportNotes.push(`${removedLinesCount} out of ${origLinesCount} lines did not have
+      the required ${validRowLength} columns of data, and ${wasOrWere} skipped`);
+  }
+
+  csvValues = csvValues.map(row => (
     new RetailTariffBillingPeriodMetadata({
       // TODO use a function here to validate each row, and set boolean complete
       complete: null,
@@ -227,6 +243,10 @@ export const parsedCsvToBillingPeriods = (csv) => {
       name: row[10],
     })
   ));
+  return {
+    csvValues,
+    fileImportNotes,
+  };
 };
 
 export const billingPeriodsToCsv = (billingPeriods) => {

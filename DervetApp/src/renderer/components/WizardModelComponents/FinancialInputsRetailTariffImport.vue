@@ -31,8 +31,11 @@
         <cancel-and-save-buttons
           :back-link="FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
           backText="Cancel"
+          :disabled="importDisabled()"
           continueText="Import Retail Tariff"
-          :save="this.save"
+          :displayError="importDisabled()"
+          :errorText="importError"
+          :save="save"
         />
       </div>
     </form>
@@ -40,6 +43,7 @@
 </template>
 
 <script>
+  // import { flatten } from 'lodash';
   import { requiredIf } from 'vuelidate/lib/validators';
   import RetailTariffBillingPeriodMetadata, { parsedCsvToBillingPeriods } from '@/models/RetailTariffBillingPeriod';
   import { parseCsvFromEvent } from '@/util/file';
@@ -56,6 +60,8 @@
         metadata,
         ...this.getDefaultData(),
         parsedBillingPeriodCsv: null,
+        importError: undefined,
+        importedFilePath: null,
         FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
       };
     },
@@ -82,6 +88,11 @@
       this.$v.$touch();
     },
     methods: {
+      compileImportNotes(importNotes) {
+        // add source (file path) to the list
+        importNotes.push(`source: ${this.importedFilePath}`);
+        return importNotes;
+      },
       getDefaultData() {
         return metadata.getDefaultValues();
       },
@@ -114,21 +125,37 @@
         return true;
       },
       onFileUpload(e) {
-        const onSuccess = (results) => { this.parsedBillingPeriodCsv = results; };
+        const onSuccess = (results, importedFilePath, errors) => {
+          // 1st argument is data
+          this.parsedBillingPeriodCsv = results;
+          // 2nd argument is the full path of the imported file
+          this.importedFilePath = importedFilePath;
+          // 3rd argument will remain undefined when file is successfully imported
+          this.importError = errors;
+        };
         parseCsvFromEvent(e, onSuccess);
       },
+      importDisabled() {
+        return this.importError !== undefined;
+      },
       save() {
-        const pds = parsedCsvToBillingPeriods(this.parsedBillingPeriodCsv);
-        // validate each row, by setting complete to true or false
-        Object.values(pds).forEach((row) => {
-          // redefine data for each column of this row (needed for vuelidate to work)
-          Object.keys(row).forEach((key) => {
-            this[key] = row[key];
+        // obtain data and import notes
+        const pdsObject = parsedCsvToBillingPeriods(this.parsedBillingPeriodCsv);
+        const fileImportNotes = this.compileImportNotes(pdsObject.fileImportNotes);
+        const pds = pdsObject.csvValues;
+        if (pds.length > 0) {
+          // validate each row, by setting complete to true or false
+          Object.values(pds).forEach((row) => {
+            // redefine data for each column of this row (needed for vuelidate to work)
+            Object.keys(row).forEach((key) => {
+              this[key] = row[key];
+            });
+            row.complete = this.isRowComplete();
           });
-          row.complete = this.isRowComplete();
-        });
+        }
         // complete this mutation before navigation to next page
         this.$store.dispatch('replaceRetailTariffBillingPeriods', pds)
+          .then(this.$store.dispatch('replaceRetailTariffFileImportNotes', fileImportNotes))
           .then(this.$router.push({ path: FINANCIAL_INPUTS_RETAIL_TARIFF_PATH }));
       },
     },

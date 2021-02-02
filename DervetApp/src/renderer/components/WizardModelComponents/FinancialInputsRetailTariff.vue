@@ -10,6 +10,18 @@
     <hr>
 
     <div class="form-horizontal form-buffer">
+
+      <div class="form-group" v-if="fileImportSuccess()">
+        <ul>
+        <i>NOTES on file import:</i>
+        <ul>
+        <div v-for="note in fileImportNotes">
+          <li><i>{{ note }}</i></li>
+        </div>
+        </ul>
+        </ul>
+      </div>
+
       <div class="form-group" v-if="billingPeriodsExist()">
         <div class="col-md-12">
           <table class="table table-bordered">
@@ -52,11 +64,13 @@
           </table>
         </div>
       </div>
+<!--
       <div class="form-group" v-else>
         <div class="col-md-12 buffer-bottom">
           <i>There are currently no retail tariff billing periods specified...</i>
         </div>
       </div>
+-->
     </div>
 
     <div class="form-group row">
@@ -114,6 +128,9 @@
       complete() {
         return this.billingPeriodsExist() && this.getNumberOfInvalidRows() === 0;
       },
+      fileImportNotes() {
+        return this.$store.state.Project.retailTariffFileImportNotes;
+      },
     },
     data() {
       return {
@@ -129,6 +146,9 @@
       },
       billingPeriodsExist() {
         return this.billingPeriods.length > 0;
+      },
+      fileImportSuccess() {
+        return (this.fileImportNotes.length > 0);
       },
       getCompletenessPayload() {
         return {
