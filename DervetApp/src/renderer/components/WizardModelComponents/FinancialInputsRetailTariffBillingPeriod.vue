@@ -66,11 +66,9 @@
 
       <hr>
 
-      <save-only-button
+      <save-and-nav-buttons
         :displayError="submitted && $v.$anyError"
-        :save="validatedSave" />
-
-      <nav-buttons
+        :save="validatedSave"
         :continue-link="FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
         continue-text="Back To Retail Tariff" />
 
@@ -83,7 +81,6 @@
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import RetailTariffBillingPeriodMetadata from '@/models/RetailTariffBillingPeriod';
   import { FINANCIAL_INPUTS_RETAIL_TARIFF_PATH } from '@/router/constants';
-  import SaveOnlyButton from '@/components/Shared/SaveOnlyButton';
 
   const metadata = RetailTariffBillingPeriodMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
@@ -93,7 +90,6 @@
   const PAGE = 'retailTariff';
 
   export default {
-    components: { SaveOnlyButton },
     props: ['billingPeriodId'],
     mixins: [wizardFormMixin],
     data() {
@@ -147,6 +143,9 @@
       // we want to show validation errors at any time after the first save, with submitted.
       if (this.complete !== null) {
         this.submitted = true;
+        // if weekday is not one of its allowed values, then set it to it's default value
+        //   this is needed for better validation handling
+        this.setWeekdayValue();
         this.$v.$touch();
       }
     },
@@ -157,7 +156,8 @@
         return defaultValues;
       },
       getDataFromProject() {
-        const pd = this.$store.getters.getListFieldById('retailTariffBillingPeriods', this.billingPeriodId);
+        // the prop can become a string, but needs to be a number for this to work here
+        const pd = this.$store.getters.getListFieldById('retailTariffBillingPeriods', parseInt(this.billingPeriodId, 10));
         return this.unpackData(pd);
       },
       getDynamicExcludingEndTimeMinValue() {
@@ -189,6 +189,9 @@
           ? 24 : this.endTime;
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
+      getWeekdayFromValue() {
+        return this.metadata.weekday.allowedValues.find(type => type.value === this.weekday);
+      },
       getChargeTypeFromValue() {
         return this.metadata.chargeType.allowedValues.find(type => type.value === this.chargeType);
       },
@@ -197,7 +200,7 @@
           pageGroup: PAGEGROUP,
           pageKey: PAGEKEY,
           page: PAGE,
-          completeness: false,
+          completeness: this.complete,
         };
       },
       getErrorListPayload() {
@@ -210,6 +213,13 @@
           errorList: errors,
         };
       },
+      setWeekdayValue() {
+        // sets weekday to default value if it is not one of the allowed values
+        const allowedValues = this.getWeekdayFromValue();
+        if (allowedValues === undefined) {
+          this.weekday = this.metadata.weekday.defaultValue;
+        }
+      },
       getMetadataValue() {
         const allowedValues = this.getChargeTypeFromValue();
         if (allowedValues !== undefined) {
@@ -218,6 +228,8 @@
         } else {
           this.metadata.value.displayName = this.metadata.value.initDisplayName;
           this.metadata.value.unit = this.metadata.value.initUnit;
+          // also set chargeType to default to get proper error message
+          this.chargeType = this.metadata.chargeType.defaultValue;
         }
         return this.metadata.value;
       },
@@ -236,6 +248,9 @@
           return 'There are no billing periods specified.';
         }
         const invalidRowCount = this.getNumberOfInvalidRows(billingPeriods);
+        if (invalidRowCount === 0) {
+          return '';
+        }
         const pluralizeRow = (invalidRowCount === 1) ? '' : 's';
         return `There are errors with ${invalidRowCount} row${pluralizeRow} in the table.`;
       },
@@ -276,11 +291,14 @@
         }
         this.submitted = true;
         // set retail tariff completeness and errorList
-        // only do this when the current row is invalid
-        if (!this.complete) {
-          this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
-          this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
-        }
+        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
+        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
+        // TODO - AE: investigate why this happens:
+        // the first time this validatedSave() occurs in a session, on any page,
+        //   the page reloads after a delay of a few seconds, with a blank screen.
+        //   the console displays this warning:
+        //   [Violation] Forced reflow while executing JavaScript took 51ms
+        // it's possible that it only occurs in dev mode
       },
       valueInRange(value, lowValue, highValue) {
         return (value >= lowValue && value <= highValue);

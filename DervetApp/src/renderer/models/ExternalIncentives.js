@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
-import { objectToCsv } from '@/util/file';
+import { objectToCsv, filterRowsByColumnCount } from '@/util/file';
 
 import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 
@@ -74,12 +74,26 @@ export default class ExternalIncentivesMetadata {
 }
 
 export const parsedCsvToExternalIncentives = (csv) => {
-  // TODO validate headers to ensure order of fields is correct
-  // TODO make reusable function to be shared between billing pds and external incentives
-  let csvValues = csv.slice(1);
-  csvValues = csvValues.filter(row => row.length === 3);
+  // returns data object, and an array of import notes
 
-  return csvValues.map(row => (
+  const fileImportNotes = [];
+  // TODO validate headers to ensure order of fields is correct
+  //   and billing period is complete
+
+  // remove the first row
+  // TODO what if there is not a header row present?
+  fileImportNotes.push('The first line was assumed a header, and skipped');
+  let csvValues = csv.slice(1);
+
+  // only keep rows with validRowLength elements
+  const validRowLength = 3;
+  const filterRowsObject = filterRowsByColumnCount(csvValues, validRowLength);
+  csvValues = filterRowsObject.rows;
+  if (filterRowsObject.importNotes !== null) {
+    fileImportNotes.push(filterRowsObject.importNotes);
+  }
+
+  csvValues = csvValues.map(row => (
     new ExternalIncentivesMetadata({
       complete: true,
       id: uuidv4(),
@@ -88,6 +102,10 @@ export const parsedCsvToExternalIncentives = (csv) => {
       otherIncentive: row[2],
     })
   ));
+  return {
+    csvValues,
+    fileImportNotes,
+  };
 };
 
 export const externalIncentivesToCsv = (incentives) => {

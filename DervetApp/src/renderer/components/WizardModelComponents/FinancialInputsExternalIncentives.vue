@@ -10,6 +10,18 @@
     <hr>
 
     <div class="form-horizontal form-buffer">
+
+      <div class="form-group" v-if="fileImportSuccess()">
+        <ul>
+        <i>NOTES on file import:</i>
+          <ul>
+          <div v-for="note in fileImportNotes">
+            <li><i>{{ note }}</i></li>
+          </div>
+          </ul>
+        </ul>
+      </div>
+
       <div class="form-group" v-if="externalIncentivesExist()">
         <div class="col-md-12">
           <table class="table table-bordered">
@@ -44,11 +56,13 @@
           </table>
         </div>
       </div>
+<!--
       <div class="form-group" v-else>
         <div class="col-md-12 buffer-bottom">
           <i>There are currently no external incentives specified...</i>
         </div>
       </div>
+-->
     </div>
 
     <div class="form-group row">
@@ -72,7 +86,7 @@
     </div>
 
     <hr>
-    <nav-buttons
+    <nav-button
       :continue-link="WIZARD_COMPONENT_PATH"
       :displayError="!complete"
       :error-text="getSingleErrorMsg()"
@@ -84,7 +98,7 @@
 <script>
   import { INCENTIVES_HEADERS, externalIncentivesToCsv } from '@/models/ExternalIncentives';
   import { formatCsvForHref } from '@/util/file';
-  import NavButtons from '@/components/Shared/NavButtons';
+  import NavButton from '@/components/Shared/NavButton';
   import {
     WIZARD_COMPONENT_PATH,
     FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
@@ -98,7 +112,7 @@
     mounted() {
       this.setExternalIncentiveData();
     },
-    components: { NavButtons },
+    components: { NavButton },
     computed: {
       externalIncentives() {
         return this.$store.state.Project.externalIncentives;
@@ -109,6 +123,9 @@
           return true;
         }
         return this.externalIncentivesExist() && this.getNumberOfInvalidRows() === 0;
+      },
+      fileImportNotes() {
+        return this.$store.state.Project.externalIncentivesFileImportNotes;
       },
     },
     data() {
@@ -125,6 +142,9 @@
       },
       externalIncentivesExist() {
         return this.externalIncentives.length > 0;
+      },
+      fileImportSuccess() {
+        return (this.fileImportNotes.length > 0);
       },
       getCompletenessPayload() {
         return {

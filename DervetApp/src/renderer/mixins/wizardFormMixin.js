@@ -1,15 +1,17 @@
 import DropDownInput from '@/components/Shared/DropDownInput';
-import NavButtons from '@/components/Shared/NavButtons';
-import SaveButtons from '@/components/Shared/SaveButtons';
+import NavButton from '@/components/Shared/NavButton';
 import RadioButtonInput from '@/components/Shared/RadioButtonInput';
+import SaveButtons from '@/components/Shared/SaveButtons';
+import SaveAndNavButtons from '@/components/Shared/SaveAndNavButtons';
 import TextInput from '@/components/Shared/TextInput';
 
 export default {
   components: {
     DropDownInput,
-    NavButtons,
-    SaveButtons,
+    NavButton,
     RadioButtonInput,
+    SaveButtons,
+    SaveAndNavButtons,
     TextInput,
   },
   data() {

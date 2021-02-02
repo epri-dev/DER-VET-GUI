@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { objectToCsv } from '@/util/file';
+import { objectToCsv, filterRowsByColumnCount } from '@/util/file';
 
 import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 
@@ -202,14 +202,29 @@ export default class RetailTariffBillingPeriodMetadata {
 }
 
 export const parsedCsvToBillingPeriods = (csv) => {
-  // TODO validate headers to ensure order of fields is correct
-  // and billing period is complete
-  let csvValues = csv.slice(1);
-  csvValues = csvValues.filter(row => row.length === 11);
+  // returns data object, and an array of import notes
 
-  return csvValues.map(row => (
+  const fileImportNotes = [];
+  // TODO validate headers to ensure order of fields is correct
+  //   and billing period is complete
+
+  // remove the first row
+  // TODO what if there is not a header row present?
+  fileImportNotes.push('The first line was assumed a header, and skipped');
+  let csvValues = csv.slice(1);
+
+  // only keep rows with validRowLength elements
+  const validRowLength = 11;
+  const filterRowsObject = filterRowsByColumnCount(csvValues, validRowLength);
+  csvValues = filterRowsObject.rows;
+  if (filterRowsObject.importNotes !== null) {
+    fileImportNotes.push(filterRowsObject.importNotes);
+  }
+
+  csvValues = csvValues.map(row => (
     new RetailTariffBillingPeriodMetadata({
-      complete: true,
+      // TODO use a function here to validate each row, and set boolean complete
+      complete: null,
       id: row[0],
       startMonth: row[1],
       endMonth: row[2],
@@ -223,6 +238,10 @@ export const parsedCsvToBillingPeriods = (csv) => {
       name: row[10],
     })
   ));
+  return {
+    csvValues,
+    fileImportNotes,
+  };
 };
 
 export const billingPeriodsToCsv = (billingPeriods) => {

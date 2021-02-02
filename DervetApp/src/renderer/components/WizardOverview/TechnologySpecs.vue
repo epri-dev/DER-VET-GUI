@@ -5,7 +5,7 @@
     <div class="form-horizontal form-buffer row ">
       <div class="col-md-6">
         <div class="form-group row">
-          <b-card class="col-md-6" v-for="tech in techSpecs" v-bind:key="tech.tag" :title="getNumberOfTechnology(tech)"> 
+          <b-card class="col-md-6" v-for="tech in techSpecs" v-bind:key="tech.tag" :title="getNumberOfTechnology(tech)">
             <b-card-text v-if="!(isEmpty(tech))">
               {{tech.label}}
             </b-card-text>
@@ -42,7 +42,7 @@
       </div>
     </div>
     <hr>
-    <nav-buttons :continue-link="WIZARD_COMPONENT_PATH"
+    <nav-button :continue-link="WIZARD_COMPONENT_PATH"
                  continue-text="Done Adding Technologies"
                  :displayError="!complete"
                  :error-text="this.getSingleErrorMsg()"
@@ -72,7 +72,7 @@
   import TechnologySpecsICEMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsICE';
   import TechnologySpecsSingleEVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSingleEV';
   import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
-  import NavButtons from '@/components/Shared/NavButtons';
+  import NavButton from '@/components/Shared/NavButton';
 
 
   const metadataBattery = TechnologySpecsBatteryMetadata.getHardcodedMetadata();
@@ -82,12 +82,12 @@
   const metadataICE = TechnologySpecsICEMetadata.getHardcodedMetadata();
   const metadataSingleEV = TechnologySpecsSingleEVMetadata.getHardcodedMetadata();
   const metadataSolarPV = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
-  
+
   const PAGEGROUP = 'overview';
   const PAGE = 'technologySpecs';
 
   export default {
-    components: { NavButtons },
+    components: { NavButton },
     data() {
       const p = this.$store.state.Project;
       return {

@@ -16,23 +16,25 @@
 
         <div class="form-group row">
           <div class="col-md-3">
-            <label class="control-label" for="retail-tariff-file">External Incentives File</label>
+            <label class="control-label" for="external-incentives-file">External Incentives File</label>
           </div>
           <div class="col-md-9">
             <input
               type="file"
               class="form-control"
-              id="retail-tariff-file"
+              id="external-incentives-file"
               @change="onFileUpload">
           </div>
         </div>
         <hr>
 
-        <nav-buttons
+        <cancel-and-save-buttons
           :backLink="FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH"
           backText="Cancel"
-          :continueLink="FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH"
+          :disabled="importDisabled()"
           continueText="Import External Incentives"
+          :displayError="importDisabled()"
+          :errorText="importError"
           :save="this.save"
         />
       </div>
@@ -41,27 +43,90 @@
 </template>
 
 <script>
-  import { parsedCsvToExternalIncentives } from '@/models/ExternalIncentives';
+  import ExternalIncentivesMetadata, { parsedCsvToExternalIncentives } from '@/models/ExternalIncentives';
   import { parseCsvFromEvent } from '@/util/file';
-  import NavButtons from '@/components/Shared/NavButtons';
+  import CancelAndSaveButtons from '@/components/Shared/CancelAndSaveButtons';
   import { FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH } from '@/router/constants';
 
+  const metadata = ExternalIncentivesMetadata.getHardcodedMetadata();
+  const validationz = metadata.toValidationSchema();
+
   export default {
-    components: { NavButtons },
+    components: { CancelAndSaveButtons },
     data() {
       return {
-        parsedExternalIncentiveCsv: null,
+        metadata,
+        ...this.getDefaultData(),
+        parsedExternalIncentivesCsv: null,
+        importError: undefined,
+        importedFilePath: null,
         FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
       };
     },
+    validations() {
+      return {
+        ...validationz,
+      };
+    },
+    beforeMount() {
+      this.$v.$touch();
+    },
     methods: {
+      compileImportNotes(importNotes) {
+        // add source (file path) to the list
+        importNotes.push(`source: ${this.importedFilePath}`);
+        return importNotes;
+      },
+      getDefaultData() {
+        return metadata.getDefaultValues();
+      },
+      getMinimumYear() {
+        if (!this.$store.state.Project.startYear) {
+          return 0;
+        }
+        return this.$store.state.Project.startYear + 1;
+      },
+      isRowComplete() {
+        this.$v.$touch();
+        if (this.$v.$anyError === true) {
+          return false;
+        }
+        // secondary validation checks for dynamic fields
+        return this.year >= this.getMinimumYear();
+      },
       onFileUpload(e) {
-        const onSuccess = (results) => { this.parsedExternalIncentiveCsv = results; };
+        const onSuccess = (results, importedFilePath, errors) => {
+          // 1st argument is data
+          this.parsedExternalIncentivesCsv = results;
+          // 2nd argument is the full path of the imported file
+          this.importedFilePath = importedFilePath;
+          // 3rd argument will remain undefined when file is successfully imported
+          this.importError = errors;
+        };
         parseCsvFromEvent(e, onSuccess);
       },
+      importDisabled() {
+        return this.importError !== undefined;
+      },
       save() {
-        const eis = parsedCsvToExternalIncentives(this.parsedExternalIncentiveCsv);
-        this.$store.dispatch('replaceExternalIncentives', eis);
+        // obtain data and import notes
+        const eisObject = parsedCsvToExternalIncentives(this.parsedExternalIncentivesCsv);
+        const fileImportNotes = this.compileImportNotes(eisObject.fileImportNotes);
+        const eis = eisObject.csvValues;
+        if (eis.length > 0) {
+          // validate each row, by setting complete to true or false
+          Object.values(eis).forEach((row) => {
+            // redefine data for each column of this row (needed for vuelidate to work)
+            Object.keys(row).forEach((key) => {
+              this[key] = row[key];
+            });
+            row.complete = this.isRowComplete();
+          });
+        }
+        // complete this mutation before navigation to next page
+        this.$store.dispatch('replaceExternalIncentives', eis)
+          .then(this.$store.dispatch('replaceExternalIncentivesFileImportNotes', fileImportNotes))
+          .then(this.$router.push({ path: FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH }));
       },
     },
   };

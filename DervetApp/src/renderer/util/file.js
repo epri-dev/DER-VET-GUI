@@ -39,17 +39,30 @@ export const papaParsePromise = file => new Promise((complete, error) => {
 
 const getFileFromEvent = e => e.target.files[0];
 
+export const wrongFileType = (file, desiredFileType, successCallback) => {
+  // return empty results array
+  // add error Text (3rd argument)
+  successCallback([], file.path, `Import Error: File type must be: <b>${desiredFileType}</b>`);
+};
+
 export const parseCsvFromFile = (file, successCallback) => {
   papaParsePromise(file)
     .then((results) => {
-      successCallback(results.data);
+      successCallback(results.data, file.path);
     });
   // TODO add catch with errorCallback
 };
 
 export const parseCsvFromEvent = (e, successCallback) => {
+  const FILE_TYPE_CSV = 'text/csv';
   const file = getFileFromEvent(e);
-  parseCsvFromFile(file, successCallback);
+  if (file.type !== FILE_TYPE_CSV) {
+    wrongFileType(file, FILE_TYPE_CSV, successCallback);
+  } else {
+    parseCsvFromFile(file, successCallback);
+  }
+  // TODO: also check file.size and have an upper limit to avoid
+  //   import attempts for huge files- AE
 };
 
 // TODO add test
@@ -89,3 +102,19 @@ export const readJsonFromFile = filePath => (
     });
   })
 );
+
+export const filterRowsByColumnCount = (rows, validRowLength) => {
+  let importNotes = null;
+  // subtracting 1 is necessary here
+  const origLinesCount = rows.length - 1;
+  rows = rows.filter(row => row.length === validRowLength);
+  const postLinesCount = rows.length;
+  const removedLinesCount = origLinesCount - postLinesCount;
+  if (removedLinesCount > 0) {
+    const wasOrWere = (removedLinesCount === 1) ? 'was' : 'were';
+    importNotes = `${removedLinesCount} out of ${origLinesCount} lines did not have
+      the required ${validRowLength} columns of data, and ${wasOrWere} skipped`;
+  }
+  return { rows, importNotes };
+};
+
