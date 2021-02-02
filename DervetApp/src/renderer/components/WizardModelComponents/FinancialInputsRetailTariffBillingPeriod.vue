@@ -291,11 +291,8 @@
         }
         this.submitted = true;
         // set retail tariff completeness and errorList
-        // only do this when the current row is invalid
-        // if (!this.complete) {
         this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
         this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
-        // }
         // TODO - AE: investigate why this happens:
         // the first time this validatedSave() occurs in a session, on any page,
         //   the page reloads after a delay of a few seconds, with a blank screen.

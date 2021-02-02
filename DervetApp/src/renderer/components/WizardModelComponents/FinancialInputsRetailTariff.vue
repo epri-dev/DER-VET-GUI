@@ -14,11 +14,11 @@
       <div class="form-group" v-if="fileImportSuccess()">
         <ul>
         <i>NOTES on file import:</i>
-        <ul>
-        <div v-for="note in fileImportNotes">
-          <li><i>{{ note }}</i></li>
-        </div>
-        </ul>
+          <ul>
+          <div v-for="note in fileImportNotes">
+            <li><i>{{ note }}</i></li>
+          </div>
+          </ul>
         </ul>
       </div>
 

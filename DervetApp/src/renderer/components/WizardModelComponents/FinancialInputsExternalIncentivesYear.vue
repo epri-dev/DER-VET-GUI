@@ -42,6 +42,10 @@
   const metadata = ExternalIncentivesMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
 
+  const PAGEGROUP = 'components';
+  const PAGEKEY = 'financial';
+  const PAGE = 'externalIncentives';
+
   export default {
     props: ['incentiveId'],
     mixins: [wizardFormMixin],
@@ -78,6 +82,26 @@
       }
     },
     methods: {
+      getCompletenessPayload() {
+        return {
+          pageGroup: PAGEGROUP,
+          pageKey: PAGEKEY,
+          page: PAGE,
+          completeness: this.complete,
+        };
+      },
+      getErrorListPayload() {
+        const errors = [];
+        if (!this.complete) {
+          errors.push(this.getSingleErrorMsg());
+        }
+        return {
+          pageGroup: PAGEGROUP,
+          pageKey: PAGEKEY,
+          page: PAGE,
+          errorList: errors,
+        };
+      },
       getDefaultData() {
         return metadata.getDefaultValues();
       },
@@ -125,6 +149,9 @@
           this.$store.dispatch('replaceListField', payload);
         }
         this.submitted = true;
+        // set retail tariff completeness and errorList
+        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
+        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
       },
       // saveAndAdd() {
       // reload page ? (reset form)

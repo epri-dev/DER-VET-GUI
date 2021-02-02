@@ -53,6 +53,7 @@ export const getDefaultState = () => ({
   retailTariffBillingPeriods: [],
   retailTariffFileImportNotes: [],
   externalIncentives: [],
+  externalIncentivesFileImportNotes: [],
 });
 
 const state = getDefaultState();
@@ -224,6 +225,9 @@ const mutations = {
   },
   [m.REPLACE_EXTERNAL_INCENTIVES](state, newExternalIncentives) {
     state.externalIncentives = newExternalIncentives;
+  },
+  REPLACE_EXTERNAL_INCENTIVES_FILE_IMPORT_NOTES(state, newImportNotes) {
+    state.externalIncentivesFileImportNotes = newImportNotes;
   },
   REMOVE_ALL_EXTERNAL_INCENTIVES(state) {
     state.externalIncentives = [];
@@ -660,6 +664,9 @@ const actions = {
   replaceExternalIncentives({ commit }, newExternalIncentives) {
     commit(m.REPLACE_EXTERNAL_INCENTIVES, newExternalIncentives);
   },
+  replaceExternalIncentivesFileImportNotes({ commit }, newImportNotes) {
+    commit('REPLACE_EXTERNAL_INCENTIVES_FILE_IMPORT_NOTES', newImportNotes);
+  },
   removeAllExternalIncentives({ commit }) {
     commit('REMOVE_ALL_EXTERNAL_INCENTIVES');
   },
@@ -771,8 +778,8 @@ const actions = {
     commit('SET_RELIABILITY_TARGET', newReliabilityTarget);
   },
   // retail tariff billing period
-  addRetailTariffBillingPeriod({ commit }, newExternalIncentive) {
-    commit('ADD_RETAIL_TARIFF_BILLING_PERIOD', newExternalIncentive);
+  addRetailTariffBillingPeriod({ commit }, newBillingPeriod) {
+    commit('ADD_RETAIL_TARIFF_BILLING_PERIOD', newBillingPeriod);
   },
   replaceRetailTariffBillingPeriods({ commit }, newBillingPeriods) {
     commit('REPLACE_RETAIL_TARIFF_BILLING_PERIODS', newBillingPeriods);

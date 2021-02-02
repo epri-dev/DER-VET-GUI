@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { objectToCsv } from '@/util/file';
+import { objectToCsv, filterRowsByColumnCount } from '@/util/file';
 
 import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 
@@ -215,15 +215,10 @@ export const parsedCsvToBillingPeriods = (csv) => {
 
   // only keep rows with validRowLength elements
   const validRowLength = 11;
-  // subtracting 1 is necessary here
-  const origLinesCount = csvValues.length - 1;
-  csvValues = csvValues.filter(row => row.length === validRowLength);
-  const postLinesCount = csvValues.length;
-  const removedLinesCount = origLinesCount - postLinesCount;
-  if (removedLinesCount > 0) {
-    const wasOrWere = (removedLinesCount === 1) ? 'was' : 'were';
-    fileImportNotes.push(`${removedLinesCount} out of ${origLinesCount} lines did not have
-      the required ${validRowLength} columns of data, and ${wasOrWere} skipped`);
+  const filterRowsObject = filterRowsByColumnCount(csvValues, validRowLength);
+  csvValues = filterRowsObject.rows;
+  if (filterRowsObject.importNotes !== null) {
+    fileImportNotes.push(filterRowsObject.importNotes);
   }
 
   csvValues = csvValues.map(row => (

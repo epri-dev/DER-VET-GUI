@@ -43,7 +43,6 @@
 </template>
 
 <script>
-  // import { flatten } from 'lodash';
   import { requiredIf } from 'vuelidate/lib/validators';
   import RetailTariffBillingPeriodMetadata, { parsedCsvToBillingPeriods } from '@/models/RetailTariffBillingPeriod';
   import { parseCsvFromEvent } from '@/util/file';
@@ -84,7 +83,6 @@
       };
     },
     beforeMount() {
-      // this.$v.$reset();
       this.$v.$touch();
     },
     methods: {
