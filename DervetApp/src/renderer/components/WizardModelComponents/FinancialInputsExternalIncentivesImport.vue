@@ -92,10 +92,7 @@
           return false;
         }
         // secondary validation checks for dynamic fields
-        if (this.year < this.getMinimumYear()) {
-          return false;
-        }
-        return true;
+        return this.year >= this.getMinimumYear();
       },
       onFileUpload(e) {
         const onSuccess = (results, importedFilePath, errors) => {
