@@ -7,7 +7,7 @@ import {
 const CONSTRUCTION_YEAR = 'constructionYear';
 const DECOMISSIONING_COST = 'decomissioningCost';
 const EXPECTED_LIFETIME = 'expectedLifetime';
-const MACRS_TERM = 'macrsTerm';
+export const MACRS_TERM = 'macrsTerm';
 const NAME = 'name';
 const OPERATION_YEAR = 'operationYear';
 const REPLACEABLE = 'isReplaceable';

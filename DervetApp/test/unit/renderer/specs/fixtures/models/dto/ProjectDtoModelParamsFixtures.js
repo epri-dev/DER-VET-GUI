@@ -516,15 +516,6 @@ export const makeModelParamsControllableLoad = id => ({
         },
         type: 'int',
       },
-      macrs_term: {
-        opt_value: '3',
-        sensitivity: {
-          active: 'no',
-          coupled: 'None',
-          value: 'nan',
-        },
-        type: 'float',
-      },
       name: {
         opt_value: 'demand response',
         sensitivity: {

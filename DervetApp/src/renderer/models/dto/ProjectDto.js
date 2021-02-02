@@ -251,7 +251,6 @@ export const makeSingleControllableLoadParameter = (controllableLoad) => {
     duration: makeBaseKey(setUndefinedNullToZero(controllableLoad.duration), FLOAT),
     'ecc%': makeBaseKey(ZERO, FLOAT), // TODO hardcoded
     expected_lifetime: makeBaseKey(controllableLoad.expectedLifetime, INT),
-    macrs_term: makeBaseKey(controllableLoad.macrsTerm, FLOAT),
     name: makeBaseKey(controllableLoad.name, STRING),
     nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
     operation_year: makeBaseKey(controllableLoad.operationYear, PERIOD),

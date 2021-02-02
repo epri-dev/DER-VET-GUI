@@ -94,7 +94,6 @@ export const makeProjectControllableLoad = id => ({
   id,
   isReplaceable: false,
   load: new SiteLoadTimeSeries((_.fill(Array(5), 1))),
-  macrsTerm: 3,
   name: 'demand response',
   operationYear: 2018,
   ratedCapacity: 100,
