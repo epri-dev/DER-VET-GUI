@@ -9,6 +9,7 @@ export const DEFERRAL_REVERSE_POWER_FLOW_LIMIT = 'deferralReversePowerFlowLimit'
 export const DEFERRAL_GROWTH = 'deferralGrowth';
 export const DEFERRAL_PRICE = 'deferralPrice';
 export const DR_NUMBER_EVENTS = 'drNumberEvents';
+export const DR_GROWTH = 'drGrowth';
 export const DR_INCLUDE_WEEKENDS = 'drIncludeWeekends';
 export const DR_START_HOUR = 'drStartHour';
 export const DR_END_HOUR = 'drEndHour';
@@ -46,6 +47,7 @@ export const RA_NUMBER_EVENTS = 'raNumberEvents';
 export const RA_EVENT_LENGTH = 'raEventLength';
 export const RA_DISPATCH_MODE = 'raDispatchMode';
 export const RA_EVENT_SELECTION_METHOD = 'raEventSelectionMethod';
+export const RA_GROWTH = 'raGrowth';
 export const RELIABILITY_MAX_OUTAGE_DURATION = 'reliabilityMaxOutageDuration';
 export const RELIABILITY_POST_OPTIMIZATION_ONLY = 'reliabilityPostOptimizationOnly';
 export const RELIABILITY_TARGET = 'reliabilityTarget';
@@ -142,6 +144,7 @@ export const DEMAND_RESPONSE_FIELDS = [
   DR_END_HOUR,
   DR_EVENT_LENGTH,
   DR_PROGRAM_TYPE,
+  DR_GROWTH,
 ];
 export const FINANCE_FIELDS = [
   FINANCE_DISCOUNT_RATE,
@@ -173,6 +176,7 @@ export const RESOURCE_ADEQUACY_FIELDS = [
   RA_EVENT_LENGTH,
   RA_DISPATCH_MODE,
   RA_EVENT_SELECTION_METHOD,
+  RA_GROWTH,
 ];
 export const RESILIENCE_FIELDS = [
   RELIABILITY_MAX_OUTAGE_DURATION,

@@ -231,6 +231,9 @@ const mutations = {
   [m.SET_DR_PROGRAM_TYPE](state, newValue) {
     state[c.DR_PROGRAM_TYPE] = newValue;
   },
+  [m.SET_DR_GROWTH](state, newDRGrowth) {
+    state[c.DR_GROWTH] = newDRGrowth;
+  },
   [m.SET_DR_APPLIED_MONTHS](state, newValue) {
     state.drMonthsApplied = newValue;
   },
@@ -427,6 +430,9 @@ const mutations = {
   },
   [m.SET_RA_EVENT_LENGTH](state, newValue) {
     state[c.RA_EVENT_LENGTH] = newValue;
+  },
+  [m.SET_RA_GROWTH](state, newRAGrowth) {
+    state[c.RA_GROWTH] = newRAGrowth;
   },
   // reliability page
   SET_CRITICAL_LOAD(state, newCriticalLoad) {
@@ -772,6 +778,9 @@ const actions = {
   [a.SET_DR_ENERGY_AWARDS]({ commit }, newValue) {
     commit(m.SET_DR_ENERGY_AWARDS, newValue);
   },
+  [a.SET_DR_GROWTH]({ commit }, newDRGrowth) {
+    commit(m.SET_DR_GROWTH, newDRGrowth);
+  },
   // diesel
   [a.REPLACE_TECHNOLOGY_SPECS_DIESEL_GEN]({ commit }, payload) {
     commit(m.REPLACE_TECHNOLOGY_SPECS_DIESEL_GEN, payload);
@@ -939,6 +948,9 @@ const actions = {
   },
   [a.SET_RA_NUMBER_EVENTS]({ commit }, newRANumberEvents) {
     commit(m.SET_RA_NUMBER_EVENTS, newRANumberEvents);
+  },
+  [a.SET_RA_GROWTH]({ commit }, newRAGrowth) {
+    commit(m.SET_RA_GROWTH, newRAGrowth);
   },
   // retail tariff billing period
   addRetailTariffBillingPeriod({ commit }, newBillingPeriod) {

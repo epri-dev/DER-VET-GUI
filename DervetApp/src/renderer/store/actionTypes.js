@@ -36,6 +36,7 @@ export const SET_DR_APPLIED_MONTHS_LABELS = 'setDRAppliedMonthsLabels';
 export const SET_DR_CAPACITY_RESERVATION = 'setDRCapacityReservation';
 export const SET_DR_CAPACITY_AWARDS = 'setDRCapacityAwards';
 export const SET_DR_ENERGY_AWARDS = 'setDREnergyAwards';
+export const SET_DR_GROWTH = 'setDRGrowth';
 // deferral page
 export const SET_DEFERRAL_GROWTH = 'setDeferralGrowth';
 export const SET_DEFERRAL_PRICE = 'setDeferralPrice';
@@ -76,6 +77,7 @@ export const SET_RA_DISPATCH_MODE = 'setRADispatchMode';
 export const SET_RA_EVENT_LENGTH = 'setRAEventLength';
 export const SET_RA_EVENT_SELECTION_METHOD = 'setRAEventSelectionMethod';
 export const SET_RA_NUMBER_EVENTS = 'setRANumberEvents';
+export const SET_RA_GROWTH = 'setRAGrowth';
 // single EV
 export const REPLACE_TECHNOLOGY_SPECS_SINGLE_EV = 'replaceTechnologySpecsSingleEV';
 // system load

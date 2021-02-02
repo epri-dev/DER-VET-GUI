@@ -56,6 +56,12 @@
         :errorMessage="getErrorMsg('drProgramType')">
       </radio-button-input>
 
+      <text-input v-model="drGrowth"
+                  v-bind:field="metadata.drGrowth"
+                  :isInvalid="submitted && $v.drGrowth.$error"
+                  :errorMessage="getErrorMsg('drGrowth')">
+      </text-input>
+
       <monthly-data-upload
         chart-name="chartUploadedCapacityAwardsTimeSeries"
         :data-name="capacityAwardsName"
@@ -117,6 +123,7 @@
     SET_DR_CAPACITY_RESERVATION,
     SET_DR_CAPACITY_AWARDS,
     SET_DR_ENERGY_AWARDS,
+    SET_DR_GROWTH,
   } from '@/store/actionTypes';
   import MonthlyDataUpload from '@/components/Shared/MonthlyDataUpload';
   import { isNotNullAndNotUndefined } from '@/util/logic';
@@ -225,6 +232,7 @@
         this.$store.dispatch(SET_DR_END_HOUR, this[c.DR_END_HOUR]);
         this.$store.dispatch(SET_DR_EVENT_LENGTH, this[c.DR_EVENT_LENGTH]);
         this.$store.dispatch(SET_DR_PROGRAM_TYPE, this[c.DR_PROGRAM_TYPE]);
+        this.$store.dispatch(SET_DR_GROWTH, this[c.DR_GROWTH]);
       },
     },
   };

@@ -161,6 +161,15 @@ export class ProjectMetadata {
         unit: 'he',
         description: 'Last hour of the Demand Response period. (Optional)',
       }),
+      [c.DR_GROWTH]: new ProjectFieldMetadata({
+        displayName: 'Growth Rate of Demand Response Awards',
+        isRequired: true,
+        minValue: 0,
+        maxValue: 100,
+        type: Number,
+        unit: '% / year',
+        description: 'Yearly growth rate to apply to awards?',
+      }),
       [c.DR_NUMBER_EVENTS]: new ProjectFieldMetadata({
         displayName: 'Number of Events',
         isRequired: true,
@@ -448,6 +457,15 @@ export class ProjectMetadata {
         type: 'int',
         unit: 'hours',
         description: 'How long will a resource adequacy event last for?',
+      }),
+      [c.RA_GROWTH]: new ProjectFieldMetadata({
+        displayName: 'Growth Rate of Resource Adequacy Awards',
+        isRequired: true,
+        minValue: 0,
+        maxValue: 100,
+        type: Number,
+        unit: '% / year',
+        description: 'Yearly growth rate to apply to awards?',
       }),
       [c.RELIABILITY_MAX_OUTAGE_DURATION]: new ProjectFieldMetadata({
         displayName: 'Maximum Outage Duration to Plot',

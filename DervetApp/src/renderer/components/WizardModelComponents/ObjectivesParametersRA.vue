@@ -30,6 +30,12 @@
         :errorMessage="getErrorMsg('raEventSelectionMethod')">
       </radio-button-input>
 
+      <text-input v-model="raGrowth"
+                  v-bind:field="metadata.raGrowth"
+                  :isInvalid="submitted && $v.raGrowth.$error"
+                  :errorMessage="getErrorMsg('raGrowth')">
+      </text-input>
+
       <monthly-data-upload
         chart-name="chartUploadedCapacityAwardsTimeSeries"
         :data-name="capacityAwardsName"
@@ -77,6 +83,7 @@
     SET_RA_EVENT_LENGTH,
     SET_RA_EVENT_SELECTION_METHOD,
     SET_RA_NUMBER_EVENTS,
+    SET_RA_GROWTH,
   } from '@/store/actionTypes';
   import MonthlyDataUpload from '@/components/Shared/MonthlyDataUpload';
   import { isNotNullAndNotUndefined } from '@/util/logic';
@@ -161,6 +168,7 @@
         this.$store.dispatch(SET_RA_EVENT_LENGTH, this[c.RA_EVENT_LENGTH]);
         this.$store.dispatch(SET_RA_EVENT_SELECTION_METHOD, this[c.RA_EVENT_SELECTION_METHOD]);
         this.$store.dispatch(SET_RA_NUMBER_EVENTS, this[c.RA_NUMBER_EVENTS]);
+        this.$store.dispatch(SET_RA_GROWTH, this[c.RA_GROWTH]);
       },
     },
   };
