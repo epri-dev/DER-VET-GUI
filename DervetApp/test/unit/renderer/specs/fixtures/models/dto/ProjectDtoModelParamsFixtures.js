@@ -1,6 +1,12 @@
 import path from 'path';
 import { testInputsDirectory } from './ProjectDtoProjectFixtures';
 
+export const makeModelParamsBackup = {
+  '': {
+    active: 'yes',
+    keys: {},
+  },
+};
 
 export const makeModelParamsBattery = id => ({
   active: 'yes',
@@ -609,6 +615,77 @@ export const makeModelParamsControllableLoad = id => ({
     },
   },
 });
+
+export const makeModelParamsDR = {
+  '': {
+    active: 'yes',
+    keys: {
+      day_ahead: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'bool',
+      },
+      days: {
+        opt_value: '8',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      growth: {
+        opt_value: '1.47',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      length: {
+        opt_value: 'nan',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'string/int',
+      },
+      program_end_hour: {
+        opt_value: '24',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'string/int',
+      },
+      program_start_hour: {
+        opt_value: '10',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      weekend: {
+        opt_value: '1',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'bool',
+      },
+    },
+  },
+};
 
 export const makeModelParamsElectricVehicle1 = id => ({
   [id]: {
@@ -1246,6 +1323,68 @@ export const makeModelParamsIceDiesel = id => ({
   },
 });
 
+export const makeModelParamsLF = {
+  '': {
+    active: 'yes',
+    keys: {
+      CombinedMarket: {
+        opt_value: '1',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'bool',
+      },
+      d_ts_constraints: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'bool',
+      },
+      duration: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      energyprice_growth: {
+        opt_value: '1.5',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      growth: {
+        opt_value: '2',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      u_ts_constraints: {
+        opt_value: '0',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'bool',
+      },
+    },
+  },
+};
+
 export const makeModelParamsPV = id => ({
   [id]: {
     active: 'yes',
@@ -1532,6 +1671,59 @@ export const makeModelParamsPV = id => ({
     },
   },
 });
+
+export const makeModelParamsRA = {
+  '': {
+    active: 'yes',
+    keys: {
+      days: {
+        opt_value: '24',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+      dispmode: {
+        opt_value: '1',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'bool',
+      },
+      growth: {
+        opt_value: '0.86',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      idmode: {
+        opt_value: 'Peak by Year',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'string',
+      },
+      length: {
+        opt_value: '6',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'int',
+      },
+    },
+  },
+};
 
 export const makeModelParamsResults = resultsDir => ({
   '': {

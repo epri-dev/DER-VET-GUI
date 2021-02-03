@@ -1,6 +1,7 @@
 import path from 'path';
 
 import {
+  makeBackupParameters,
   makeBaseKey,
   makeBatteryCsvFilePath,
   makeBatteryCycleLifeCsv,
@@ -13,17 +14,17 @@ import {
   makeDCMParameters,
   makeDeferralParameters,
   makeDieselGensetParameters,
-  // makeDRParameters, TODO
+  makeDRParameters,
   makeFinanceParameters,
   makeFleetEVParameters,
   makeFRParameters,
   makeICEParameters,
-  // makeLFParameters, TODO
+  makeLFParameters,
   makeModelParameters,
-  // makeMonthlyCsv, TODO
+  makeMonthlyCsv,
   makeNSRParameters,
   makePVParameters,
-  // makeRAParameters, TODO
+  makeRAParameters,
   makeReliabilityParameters,
   makeResultsParameters,
   makeRetailTimeShiftParameters,
@@ -52,12 +53,16 @@ import {
   testUuid2,
 } from '../../fixtures/models/dto/ProjectDtoProjectFixtures';
 import {
+  makeModelParamsBackup,
   makeModelParamsBattery,
   makeModelParamsControllableLoad,
+  makeModelParamsDR,
   makeModelParamsElectricVehicle1,
   makeModelParamsElectricVehicle2,
   makeModelParamsPV,
   makeModelParamsIceDiesel,
+  makeModelParamsLF,
+  makeModelParamsRA,
   makeModelParamsResults,
 } from '../../fixtures/models/dto/ProjectDtoModelParamsFixtures';
 
@@ -198,6 +203,17 @@ describe('modelParametersDto', () => {
     expect(actual[actual.length - 1]).to.equal('1/1/2021 0:00');
   });
 
+  it('should generate a CVS containing monthly data', () => {
+    const actual = makeMonthlyCsv(projectFixtureAllActive);
+    expect(actual).to.have.string('Year');
+  });
+
+  it('should have translated the Backup parameters correctly', () => {
+    const actual = makeBackupParameters(projectFixtureAllActive);
+    const expected = makeModelParamsBackup;
+    expect(actual).to.eql(expected);
+  });
+
   it('should make battery parameters', () => {
     const testProject = {
       technologySpecsBattery: [
@@ -254,6 +270,11 @@ describe('modelParametersDto', () => {
       ...makeModelParamsIceDiesel(testUuid2),
     };
 
+    expect(actual).to.eql(expected);
+  });
+  it('should have translated the DR parameters correctly', () => {
+    const actual = makeDRParameters(projectFixtureAllActive);
+    const expected = makeModelParamsDR;
     expect(actual).to.eql(expected);
   });
   it('should make elevtric vehicle 1 (single EV) parameters', () => {
@@ -313,6 +334,11 @@ describe('modelParametersDto', () => {
 
     expect(actual).to.eql(expected);
   });
+  it('should have translated the LF parameters correctly', () => {
+    const actual = makeLFParameters(projectFixtureAllActive);
+    const expected = makeModelParamsLF;
+    expect(actual).to.eql(expected);
+  });
 
   it('should make NSR parameters', () => {
     const actual = makeNSRParameters(projectFixtureAllActive);
@@ -334,6 +360,12 @@ describe('modelParametersDto', () => {
     };
     const actual = makePVParameters(testProject);
     expect(Object.keys(actual)).to.eql([testUuid1, testUuid2]);
+  });
+
+  it('should have translated the RA parameters correctly', () => {
+    const actual = makeRAParameters(projectFixtureAllActive);
+    const expected = makeModelParamsRA;
+    expect(actual).to.eql(expected);
   });
 
   it('should make reliability parameters', () => {

@@ -348,16 +348,21 @@ export const makeDieselGensetParameters = (project) => {
 };
 
 export const makeDRParameters = (project) => {
+  function convertToNan(value) {
+    return value === null ? 'nan' : value;
+  }
   if (project.objectivesDR) {
+    // convert DR_PROGRAM_TYPE into bool (day ahead is true)
+    const isDayAhead = project[c.DR_PROGRAM_TYPE] === 'Day ahead';
     const isActive = convertToYesNo(project.objectivesDR);
     const keys = {
-      day_ahead: makeBaseKey(project[c.DR_PROGRAM_TYPE], BOOL),
+      day_ahead: makeBaseKey(convertToOneZero(isDayAhead), BOOL),
       days: makeBaseKey(project[c.DR_NUMBER_EVENTS], INT),
-      growth: makeBaseKey(ZERO, FLOAT), // hardcoded
-      length: makeBaseKey(project[c.DR_EVENT_LENGTH], STRING_INT),
-      program_end_hour: makeBaseKey(project[c.DR_END_HOUR], INT),
+      growth: makeBaseKey(project[c.DR_GROWTH], FLOAT),
+      length: makeBaseKey(convertToNan(project[c.DR_EVENT_LENGTH]), STRING_INT),
+      program_end_hour: makeBaseKey(convertToNan(project[c.DR_END_HOUR]), STRING_INT),
       program_start_hour: makeBaseKey(project[c.DR_START_HOUR], INT),
-      weekend: makeBaseKey(project[c.DR_INCLUDE_WEEKENDS], BOOL),
+      weekend: makeBaseKey(convertToOneZero(project[c.DR_INCLUDE_WEEKENDS]), BOOL),
     };
     return makeGroup('', isActive, keys);
   }
@@ -478,7 +483,7 @@ export const makeLFParameters = (project) => {
   if (project.objectivesLF) {
     const isActive = convertToYesNo(project.objectivesLF);
     const keys = {
-      CombinedMarket: makeBaseKey(project[c.LF_COMBINED_MARKET], BOOL),
+      CombinedMarket: makeBaseKey(convertToOneZero(project[c.LF_COMBINED_MARKET]), BOOL),
       d_ts_constraints: makeBaseKey(ZERO, BOOL), // hardcoded
       duration: makeBaseKey(project[c.LF_DURATION], FLOAT),
       energyprice_growth: makeBaseKey(project[c.LF_ENERGY_PRICE_GROWTH], FLOAT),
@@ -553,11 +558,13 @@ export const makePVParameters = project => (
 
 export const makeRAParameters = (project) => {
   if (project.objectivesRA) {
+    // convert RA_DISPATCH_MODE to boolean (contrain power is TRUE)
+    const dispModeBool = project[c.RA_DISPATCH_MODE] === 'Constrain power';
     const isActive = convertToYesNo(project.objectivesRA);
     const keys = {
       days: makeBaseKey(project[c.RA_NUMBER_EVENTS], INT),
-      dispmode: makeBaseKey(project[c.RA_DISPATCH_MODE], BOOL), // todo convert mode to bool
-      growth: makeBaseKey(ZERO, FLOAT), // hardcoded
+      dispmode: makeBaseKey(convertToOneZero(dispModeBool), BOOL),
+      growth: makeBaseKey(project[c.RA_GROWTH], FLOAT),
       idmode: makeBaseKey(project[c.RA_EVENT_SELECTION_METHOD], STRING),
       length: makeBaseKey(project[c.RA_EVENT_LENGTH], INT),
     };

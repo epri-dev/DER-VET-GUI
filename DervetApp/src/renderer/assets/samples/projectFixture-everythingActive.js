@@ -6,22 +6,40 @@ import DAPriceTimeSeries from '@/models/TimeSeries/DAPriceTimeSeries';
 import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
 import FRPriceTimeSeries from '@/models/TimeSeries/FRPriceTimeSeries';
 import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
+import LFDownPriceTimeSeries from '@/models/TimeSeries/LFDownPriceTimeSeries';
+import LFEnergyOptionDownTimeSeries from '@/models/TimeSeries/LFEnergyOptionDownTimeSeries';
+import LFEnergyOptionUpTimeSeries from '@/models/TimeSeries/LFEnergyOptionUpTimeSeries';
+import LFPriceTimeSeries from '@/models/TimeSeries/LFPriceTimeSeries';
+import LFUpPriceTimeSeries from '@/models/TimeSeries/LFUpPriceTimeSeries';
 import NSRPriceTimeSeries from '@/models/TimeSeries/NSRPriceTimeSeries';
 import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
+import RAActiveTimeSeries from '@/models/TimeSeries/RAActiveTimeSeries';
 import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
 import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
+import SystemLoadTimeSeries from '@/models/TimeSeries/SystemLoadTimeSeries';
 import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
 import UserEnergyMinTimeSeries from '@/models/TimeSeries/UserEnergyMinTimeSeries';
 import UserPowerMaxTimeSeries from '@/models/TimeSeries/UserPowerMaxTimeSeries';
 import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
 
+import BackupEnergyAdwardsMonthly from '@/models/Monthly/BackupEnergyAdwardsMonthly';
+import BackupEnergyReservationMonthly from '@/models/Monthly/BackupEnergyReservationMonthly';
+import DRCapacityAdwardsMonthly from '@/models/Monthly/DRCapacityAdwardsMonthly';
+import DRCapacityReservationMonthly from '@/models/Monthly/DRCapacityReservationMonthly';
+import DREnergyAwardsMonthly from '@/models/Monthly/DREnergyAwardsMonthly';
+import DRMonthsMonthly from '@/models/Monthly/DRMonthsMonthly';
+import RACapacityAdwardsMonthly from '@/models/Monthly/RACapacityAdwardsMonthly';
+
 import csvs from './csvs';
 
 const OUTPUT_DIRECTORY = '/path/to/output';
+const TRUE = true;
 
 export const projectFixtureAllActive = {
   analysisHorizon: 0,
   analysisHorizonMode: '1',
+  backupPrice: new BackupEnergyAdwardsMonthly(new Array(12).fill(100)),
+  backupEnergyReservation: new BackupEnergyReservationMonthly(new Array(12).fill(30)),
   criticalLoad: new CriticalLoadTimeSeries(csvs.siteLoad), // note: using hardcoded site load
   daGrowth: 0,
   daPrice: new DAPriceTimeSeries(csvs.daPrice),
@@ -33,6 +51,17 @@ export const projectFixtureAllActive = {
   deferralGrowth: 0,
   deferralPrice: 10000,
   deferralLoad: new DeferralLoadTimeSeries(csvs.deferralLoad),
+  drCapacityReservation: new DRCapacityReservationMonthly(new Array(12).fill(100)),
+  drCapacityAwards: new DRCapacityAdwardsMonthly(new Array(12).fill(50)),
+  drEndHour: 24,
+  drEventLength: null,
+  drEnergyAwards: new DREnergyAwardsMonthly(new Array(12).fill(68)),
+  drGrowth: 1.47,
+  drIncludeWeekends: true,
+  drNumberEvents: 8,
+  drMonthsApplied: new DRMonthsMonthly([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]),
+  drProgramType: 'Day of',
+  drStartHour: 10,
   externalIncentives: [
     {
       id: '1',
@@ -58,29 +87,48 @@ export const projectFixtureAllActive = {
   frUpPrice: new FRUpPriceTimeSeries(csvs.price),
   frDownPrice: new FRDownPriceTimeSeries(csvs.price),
   gridLocation: 'Customer',
+  includeSiteLoad: TRUE,
+  includeInterconnectionConstraints: TRUE,
+  includeSystemLoad: TRUE,
   inflationRate: 3,
-  outputDirectory: OUTPUT_DIRECTORY,
+  lfDownPrice: new LFDownPriceTimeSeries(csvs.price),
+  lfDuration: 0,
+  lfCombinedMarket: TRUE,
+  lfGrowth: 2,
+  lfEnergyPriceGrowth: 1.5,
+  lfEOU: new LFEnergyOptionUpTimeSeries(csvs.deferralLoad), // TODO fix this
+  lfEOD: new LFEnergyOptionDownTimeSeries(csvs.deferralLoad), // TODO fix this
+  lfPrice: new LFPriceTimeSeries(csvs.price),
+  lfUpPrice: new LFUpPriceTimeSeries(csvs.price),
+  maxImport: -10000,
+  maxExport: 40000,
   nsrGrowth: 2,
   nsrDuration: 0,
   nsrPrice: new NSRPriceTimeSeries(csvs.price),
-  objectivesDA: true,
-  objectivesResilience: true,
-  objectivesBackupPower: true,
-  objectivesRetailDemandChargeReduction: true,
-  objectivesRetailEnergyChargeReduction: true,
-  objectivesSR: true,
-  objectivesNSR: true,
-  objectivesFR: true,
-  objectivesDeferral: true,
-  objectivesLoadFollowing: true,
-  objectivesUserDefined: true,
-  includeSiteLoad: true,
-  includeInterconnectionConstraints: false,
-  maxImport: -10000,
-  maxExport: 40000,
+  objectivesDA: TRUE,
+  objectivesDR: TRUE,
+  objectivesResilience: TRUE,
+  objectivesBackupPower: TRUE,
+  objectivesRA: TRUE,
+  objectivesRetailDemandChargeReduction: TRUE,
+  objectivesRetailEnergyChargeReduction: TRUE,
+  objectivesSR: TRUE,
+  objectivesNSR: TRUE,
+  objectivesFR: TRUE,
+  objectivesDeferral: TRUE,
+  objectivesLF: TRUE,
+  objectivesUserDefined: TRUE,
   optimizationHorizon: 'month',
+  outputDirectory: OUTPUT_DIRECTORY,
   ownership: 'Customer',
   propertyTaxRate: 3,
+  raActive: new RAActiveTimeSeries(new Array(8760).fill(0)),
+  raCapacityAwards: new RACapacityAdwardsMonthly(new Array(12).fill(350)),
+  raNumberEvents: 24,
+  raEventLength: 6,
+  raDispatchMode: 'Constrain power',
+  raEventSelectionMethod: 'Peak by Year',
+  raGrowth: 0.86,
   reliabilityTarget: 6,
   reliabilityPostOptimizationOnly: false,
   reliabilityMaxOutageDuration: 12,
@@ -171,6 +219,7 @@ export const projectFixtureAllActive = {
   srPrice: new SRPriceTimeSeries(csvs.price),
   startYear: 2017,
   stateTaxRate: 3,
+  systemLoad: new SystemLoadTimeSeries(csvs.siteLoad),
   technologySpecsSolarPV: [{
     active: true,
     allowGridCharge: false,
@@ -335,6 +384,9 @@ export const projectFixtureAllActive = {
     minGenerators: 0,
     maxGenerators: 1,
   }],
+  technologySpecsControllableLoad: [],
+  technologySpecsFleetEV: [],
+  technologySpecsSingleEV: [],
   timestep: 1,
   userPrice: 347,
   userEnergyMax: new UserEnergyMaxTimeSeries(_.fill(Array(8760), 9000)),
