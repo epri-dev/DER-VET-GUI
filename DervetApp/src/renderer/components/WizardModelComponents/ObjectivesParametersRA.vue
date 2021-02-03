@@ -69,7 +69,7 @@
 
 <script>
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import * as p from '@/models/Project/Project';
+  import * as p from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
   import operateOnKeysList from '@/util/object';
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
@@ -86,6 +86,7 @@
     SET_RA_GROWTH,
   } from '@/store/actionTypes';
   import MonthlyDataUpload from '@/components/Shared/MonthlyDataUpload';
+  import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
   import { isNotNullAndNotUndefined } from '@/util/logic';
 
 
@@ -96,7 +97,7 @@
   const PAGE = 'RA';
 
   export default {
-    components: { MonthlyDataUpload },
+    components: { MonthlyDataUpload, TimeseriesDataUpload },
     mixins: [csvUploadMixin, wizardFormMixin],
     data() {
       const p = this.$store.state.Project;

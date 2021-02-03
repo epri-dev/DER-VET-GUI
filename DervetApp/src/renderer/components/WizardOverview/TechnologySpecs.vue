@@ -64,7 +64,7 @@
     REMOVE_TECH,
   } from '@/store/actionTypes';
   import technologySpecsMixin from '@/mixins/technologySpecsMixin';
-  import NavButtons from '@/components/Shared/NavButtons';
+  import NavButton from '@/components/Shared/NavButton';
 
   const PAGEGROUP = 'overview';
   const PAGE = 'technologySpecs';
