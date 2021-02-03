@@ -4,6 +4,7 @@ import { makeDervetInputs } from '@/models/dto/ProjectDto';
 import { billReductionCompleteness } from '@/assets/cases/billReduction/project';
 
 const NULL = null;
+export const APPLICATION = 'application';
 
 const getDefaultApplicationState = () => ({
   errorMessage: NULL,
@@ -61,6 +62,7 @@ const getDefaultApplicationState = () => ({
     },
   },
   resultsLoaded: NULL,
+  storeType: APPLICATION,
   runInProgress: NULL,
 });
 

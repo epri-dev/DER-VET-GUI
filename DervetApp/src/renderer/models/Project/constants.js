@@ -31,6 +31,7 @@ export const OPTIMIZATION_HORIZON = 'optimizationHorizon';
 export const OPTIMIZATION_HORIZON_NUM = 'optimizationHorizonNum';
 export const OUTPUT_DIRECTORY = 'outputDirectory';
 export const OWNERSHIP = 'ownership';
+export const PROJECT = 'project';
 export const RELIABILITY_MAX_OUTAGE_DURATION = 'reliabilityMaxOutageDuration';
 export const RELIABILITY_POST_OPTIMIZATION_ONLY = 'reliabilityPostOptimizationOnly';
 export const RELIABILITY_TARGET = 'reliabilityTarget';

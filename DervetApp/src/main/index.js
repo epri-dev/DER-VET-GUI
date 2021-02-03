@@ -33,6 +33,11 @@ function createWindow() {
     height: 700,
     useContentSize: true,
     width: 1200,
+    webPreferences: {
+      // TODO refactor to use contextIntegration https://github.com/electron/electron/issues/23506
+      nodeIntegration: true,
+      enableRemoteModule: true,
+    },
   });
 
   mainWindow.loadURL(winURL);

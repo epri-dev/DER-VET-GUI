@@ -12,6 +12,7 @@ export class ProjectMetadata {
   // TODO LL: would return a Project
   getDefaultValues() {
     return {
+      storeType: c.PROJECT,
       energyPriceSourceWholesale: null,
       id: uuidv4(),
       includeSiteLoad: null,

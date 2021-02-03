@@ -167,15 +167,13 @@
 </template>
 
 <script>
-  import { flatten } from 'lodash';
+  import _ from 'lodash';
   import * as paths from '@/router/constants';
   import { RUN_ANALYSIS_PATH } from '@/router/constants';
-  import model from '@/models/StartProject';
+  import { ANALYSIS_HORIZON_MODE_ALLOWED_VALUES } from '@/models/Project/constants';
   import * as techLabels from '@/models/Project/TechnologySpecs/labelConstants';
   import { exportProject } from '@/service/ProjectFileManager';
   import FilePicker from '@/components/Shared/FilePicker';
-
-  const { validation } = model;
 
   const NOT_STARTED = ': Not Started';
 
@@ -253,7 +251,7 @@
       },
       techAll() {
         const techList = this.$store.state.Project.listOfActiveTechnologies;
-        return flatten(Object.values(techList));
+        return _.flatten(Object.values(techList));
       },
     },
     components: {
@@ -261,11 +259,8 @@
     },
     methods: {
       modeDescription() {
-        if (this.$store.state.Project.analysisHorizonMode === null) {
-          return '';
-        }
-        const modeNum = parseInt(this.$store.state.Project.analysisHorizonMode, 10) - 1;
-        return validation.analysisHorizonMode.allowedValues[modeNum].description;
+        const mode = this.$store.state.Project.analysisHorizonMode;
+        return mode === null ? '' : _.find(ANALYSIS_HORIZON_MODE_ALLOWED_VALUES, { value: mode }).label;
       },
       getAnalysisHorizonDisplay() {
         const horizon = this.$store.state.Project.analysisHorizon;
