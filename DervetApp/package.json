@@ -65,6 +65,7 @@
     "@types/papaparse": "^5.2.4",
     "@types/unzipper": "^0.10.3",
     "@types/vuelidate": "^0.7.13",
+    "app-builder-lib": "^22.10.4",
     "archiver": "4.0.2",
     "axios": "^0.18.1",
     "bootstrap": "^4.5.0",
@@ -94,7 +95,7 @@
     "vuex-electron": "^1.0.0"
   },
   "devDependencies": {
-    "ajv": "^6.5.0",
+    "ajv": "^6.12.6",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",
     "babel-loader": "^7.1.4",
