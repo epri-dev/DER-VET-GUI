@@ -129,6 +129,5 @@ export const findOverlap = (a, b) => {
 export const getRootDirectoryFromWebkitEvent = (file) => {
   const full = file.path.split(path.sep);
   const overlap = findOverlap(file.path, file.webkitRelativePath).split(path.sep);
-  console.log(`path.sep: ${path.sep}  full: ${full}  overlap: ${overlap}`);
   return _.dropRight(full, overlap.length - 1).join(path.sep);
 };
