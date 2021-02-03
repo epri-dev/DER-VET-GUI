@@ -1,4 +1,4 @@
-# dervetapp
+# DER-VET
 
 #### Architecture
 
