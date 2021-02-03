@@ -23,6 +23,7 @@ before_script:
   #   the command below will keep Xvfb running in the background
   - Xvfb -ac -screen scrn 1280x2000x24 :9.0 &
   - export DISPLAY=:9.0
+  - echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf && sysctl -p
   - cd DervetApp
   - npm ci --no-progress --quiet --depth 0 --legacy-peer-deps
 
