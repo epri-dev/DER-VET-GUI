@@ -27,7 +27,7 @@
         :displayError="submitted && $v.$anyError"
         :save="validatedSave"
         :continue-link="FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH"
-        continue-text="Back To External Incentives" />
+        continue-text="Save and Back To External Incentives" />
 
     </form>
   </div>
@@ -119,6 +119,24 @@
           return 0;
         }
         return this.$store.state.Project.startYear + 1;
+      },
+      getNumberOfInvalidRows(rows) {
+        let invalidRowsCount = 0;
+        Object.values(rows).forEach((row) => {
+          if (!row.complete) {
+            invalidRowsCount += 1;
+          }
+        });
+        return invalidRowsCount;
+      },
+      getSingleErrorMsg() {
+        const years = this.$store.state.Project.externalIncentives;
+        const invalidRowCount = this.getNumberOfInvalidRows(years);
+        if (years.length === 0 || invalidRowCount === 0) {
+          return '';
+        }
+        const pluralizeRow = (invalidRowCount === 1) ? '' : 's';
+        return `There are errors with ${invalidRowCount} row${pluralizeRow} in the table.`;
       },
       isNewExternalIncentive() {
         return this.incentiveId === 'null';

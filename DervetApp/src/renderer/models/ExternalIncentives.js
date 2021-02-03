@@ -95,7 +95,7 @@ export const parsedCsvToExternalIncentives = (csv) => {
 
   csvValues = csvValues.map(row => (
     new ExternalIncentivesMetadata({
-      complete: true,
+      complete: null,
       id: uuidv4(),
       year: row[0],
       taxCredit: row[1],
