@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-
+// TODO stop using - use csvUploadExtendableMixin
 // allow for up to 4 sets of TS data on a single page (user-defined services)
 const csvUploadMixin = {
   data() {
@@ -18,20 +18,20 @@ const csvUploadMixin = {
     };
   },
   methods: {
-    receiveTimeseriesData(timeseries) {
-      this.childKey = uuidv4();
+    receiveTimeseriesData(payload) {
+      const timeseries = payload.dataArray;
       this.inputTimeseries = timeseries;
     },
-    receiveTimeseriesData2(timeseries) {
-      this.childKey2 = uuidv4();
+    receiveTimeseriesData2(payload) {
+      const timeseries = payload.dataArray;
       this.inputTimeseries2 = timeseries;
     },
-    receiveTimeseriesData3(timeseries) {
-      this.childKey3 = uuidv4();
+    receiveTimeseriesData3(payload) {
+      const timeseries = payload.dataArray;
       this.inputTimeseries3 = timeseries;
     },
-    receiveTimeseriesData4(timeseries) {
-      this.childKey4 = uuidv4();
+    receiveTimeseriesData4(payload) {
+      const timeseries = payload.dataArray;
       this.inputTimeseries4 = timeseries;
     },
   },

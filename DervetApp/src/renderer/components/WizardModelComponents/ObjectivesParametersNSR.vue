@@ -44,7 +44,7 @@
   import csvUploadMixin from '@/mixins/csvUploadMixin';
   import NSRPriceTimeSeries from '@/models/TimeSeries/NSRPriceTimeSeries';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
-  import TimeseriesDataUpload from './TimeseriesDataUpload';
+  import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
 
   const metadata = p.projectMetadata;
   const validations = metadata.getValidationSchema(c.NSR_FIELDS);

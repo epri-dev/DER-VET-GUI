@@ -175,7 +175,10 @@
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsSingleEVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSingleEV';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
-
+  import {
+    REPLACE_TECHNOLOGY_SPECS_SINGLE_EV,
+    MAKE_LIST_OF_ACTIVE_TECHNOLOGIES,
+  } from '@/store/actionTypes';
   const metadata = TechnologySpecsSingleEVMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
 
@@ -287,9 +290,9 @@
           newSingleEV: singleEVSpec,
           id: this.id,
         };
-        this.$store.dispatch('replaceTechnologySpecsSingleEV', payload);
+        this.$store.dispatch(REPLACE_TECHNOLOGY_SPECS_SINGLE_EV, payload);
 
-        this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
+        this.$store.dispatch(MAKE_LIST_OF_ACTIVE_TECHNOLOGIES, this.$store.state.Project);
       },
       valueInRange(value, lowValue, highValue) {
         return (value >= lowValue && value <= highValue);
@@ -312,7 +315,7 @@
           minimumChargingPower: this.minimumChargingPower,
           name: this.name,
           operationYear: this.operationYear,
-          path: this.path,
+          path: this.path, // todo remove
           plugInHour: this.plugInHour,
           plugOutHour: this.plugOutHour,
           replacementCost: this.replacementCost,

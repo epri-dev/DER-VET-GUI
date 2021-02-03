@@ -4,18 +4,6 @@
     <hr>
     <form class="form-horizontal form-buffer">
 
-      <text-input v-model="frEOU"
-                  v-bind:field="metadata.frEOU"
-                  :isInvalid="submitted && $v.frEOU.$error"
-                  :errorMessage="getErrorMsg('frEOU')">
-      </text-input>
-
-      <text-input v-model="frEOD"
-                  v-bind:field="metadata.frEOD"
-                  :isInvalid="submitted && $v.frEOD.$error"
-                  :errorMessage="getErrorMsg('frEOD')">
-      </text-input>
-
       <text-input v-model="frGrowth"
                   v-bind:field="metadata.frGrowth"
                   :isInvalid="submitted && $v.frGrowth.$error"
@@ -26,6 +14,18 @@
                   v-bind:field="metadata.frEnergyPriceGrowth"
                   :isInvalid="submitted && $v.frEnergyPriceGrowth.$error"
                   :errorMessage="getErrorMsg('frEnergyPriceGrowth')">
+      </text-input>
+
+      <text-input v-model="frEOU"
+                  v-bind:field="metadata.frEOU"
+                  :isInvalid="submitted && $v.frEOU.$error"
+                  :errorMessage="getErrorMsg('frEOU')">
+      </text-input>
+
+      <text-input v-model="frEOD"
+                  v-bind:field="metadata.frEOD"
+                  :isInvalid="submitted && $v.frEOD.$error"
+                  :errorMessage="getErrorMsg('frEOD')">
       </text-input>
 
       <text-input v-model="frDuration"
@@ -46,10 +46,10 @@
         data-name="frequency regulation price"
         units="$/kW"
         @uploaded="receiveTimeseriesData"
-        :data-exists="(tsData !== null)"
-        :data-time-series="tsData"
+        :data-time-series="frPrice"
         :key="childKey"
         v-if="frCombinedMarket === true"
+        :TimeSeriesModel="FRPriceTimeSeries"
       />
 
       <timeseries-data-upload
@@ -57,8 +57,8 @@
         data-name="frequency regulation up price"
         units="$/kW"
         @uploaded="receiveTimeseriesData2"
-        :data-exists="(tsData2 !== null)"
-        :data-time-series="tsData2"
+        :TimeSeriesModel="FRUpPriceTimeSeries"
+        :data-time-series="frUpPrice"
         :key="childKey2"
         v-if="frCombinedMarket === false"
       />
@@ -68,8 +68,8 @@
         data-name="frequency regulation down price"
         units="$/kW"
         @uploaded="receiveTimeseriesData3"
-        :data-exists="(tsData3 !== null)"
-        :data-time-series="tsData3"
+        :TimeSeriesModel="FRDownPriceTimeSeries"
+        :data-time-series="frDownPrice"
         :key="childKey3"
         v-if="frCombinedMarket === false"
       />
@@ -94,7 +94,7 @@
   import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
   import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
-  import TimeseriesDataUpload from './TimeseriesDataUpload';
+  import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
 
   const metadata = p.projectMetadata;
   const validations = metadata.getValidationSchema(c.FR_FIELDS);
@@ -114,30 +114,15 @@
         metadata,
         ...this.getDataFromProject(),
         WIZARD_COMPONENT_PATH,
+        FRPriceTimeSeries,
+        FRUpPriceTimeSeries,
+        FRDownPriceTimeSeries,
       };
     },
     validations: {
       ...validations,
     },
     computed: {
-      tsData() {
-        if (this.inputTimeseries === null) {
-          return this.frPrice;
-        }
-        return new FRPriceTimeSeries(this.inputTimeseries);
-      },
-      tsData2() {
-        if (this.inputTimeseries2 === null) {
-          return this.frUpPrice;
-        }
-        return new FRUpPriceTimeSeries(this.inputTimeseries2);
-      },
-      tsData3() {
-        if (this.inputTimeseries3 === null) {
-          return this.frDownPrice;
-        }
-        return new FRDownPriceTimeSeries(this.inputTimeseries3);
-      },
       complete() {
         return this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGEKEY][PAGE];
       },
@@ -191,13 +176,13 @@
       },
       save() {
         if (this.inputTimeseries !== null) {
-          this.$store.dispatch('setFRPrice', this.tsData);
+          this.$store.dispatch('setFRPrice', this.inputTimeseries);
         }
         if (this.inputTimeseries2 !== null) {
-          this.$store.dispatch('setFRUpPrice', this.tsData2);
+          this.$store.dispatch('setFRUpPrice', this.inputTimeseries2);
         }
         if (this.inputTimeseries3 !== null) {
-          this.$store.dispatch('setFRDownPrice', this.tsData3);
+          this.$store.dispatch('setFRDownPrice', this.inputTimeseries3);
         }
         this.$store.dispatch('setFReou', this.frEOU);
         this.$store.dispatch('setFReod', this.frEOD);

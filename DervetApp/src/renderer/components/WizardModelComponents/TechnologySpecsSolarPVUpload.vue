@@ -48,7 +48,7 @@
   import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
   import SaveButtons from '@/components/Shared/SaveButtons';
   import { WIZARD_COMPONENT_PATH, TECH_SPECS_PV_PATH } from '@/router/constants';
-  import TimeseriesDataUpload from './TimeseriesDataUpload';
+  import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
 
   export default {
     components: { SaveButtons, TimeseriesDataUpload },

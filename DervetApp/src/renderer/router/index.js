@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import * as c from './constants';
 
 Vue.use(Router);
 
@@ -7,7 +8,7 @@ export default new Router({
   mode: 'hash',
   routes: [
     {
-      path: '/',
+      path: c.INDEX_PATH,
       component: require('@/components/Home/Index').default,
     },
     {
@@ -15,7 +16,7 @@ export default new Router({
       component: require('@/components/Home/ImportProject').default,
     },
     {
-      path: '/wizard-overview',
+      path: c.WIZARD_START_PATH,
       component: require('@/components/WizardOverview/Layout').default,
       children: [
         {
@@ -41,7 +42,7 @@ export default new Router({
       ],
     },
     {
-      path: '/wizard-model-components',
+      path: c.WIZARD_COMPONENT_PATH,
       component: require('@/components/WizardModelComponents/Layout').default,
       children: [
         {
@@ -115,16 +116,32 @@ export default new Router({
           props: true,
         },
         {
+          path: 'objectives-parameters-backup',
+          component: require('@/components/WizardModelComponents/ObjectivesParametersBackup').default,
+        },
+        {
           path: 'objectives-parameters-da',
           component: require('@/components/WizardModelComponents/ObjectivesParametersDA').default,
+        },
+        {
+          path: 'objectives-parameters-dr',
+          component: require('@/components/WizardModelComponents/ObjectivesParametersDR').default,
         },
         {
           path: 'objectives-parameters-fr',
           component: require('@/components/WizardModelComponents/ObjectivesParametersFR').default,
         },
         {
+          path: 'objectives-parameters-lf',
+          component: require('@/components/WizardModelComponents/ObjectivesParametersLF').default,
+        },
+        {
           path: 'objectives-parameters-nsr',
           component: require('@/components/WizardModelComponents/ObjectivesParametersNSR').default,
+        },
+        {
+          path: 'objectives-parameters-ra',
+          component: require('@/components/WizardModelComponents/ObjectivesParametersRA').default,
         },
         {
           path: 'objectives-parameters-reliability',
@@ -147,6 +164,11 @@ export default new Router({
           path: 'objectives-parameters-site-information',
           name: 'objectivesParametersSiteInformation',
           component: require('@/components/WizardModelComponents/ObjectivesParametersSiteInformation').default,
+        },
+        {
+          path: 'objectives-parameters-system-information',
+          name: 'objectivesParametersSystemInformation',
+          component: require('@/components/WizardModelComponents/ObjectivesParametersSystemInformation').default,
         },
         {
           path: 'financial-inputs-retail-tariff',
@@ -192,7 +214,7 @@ export default new Router({
       ],
     },
     {
-      path: '/wizard-run-case',
+      path: c.WIZARD_RUN_CASE_PATH,
       component: require('@/components/WizardRunCase/Layout').default,
       children: [
         {
@@ -213,7 +235,7 @@ export default new Router({
       ],
     },
     {
-      path: '/results',
+      path: c.RESULTS_PATH,
       component: require('@/components/Results/Layout').default,
       children: [
         {

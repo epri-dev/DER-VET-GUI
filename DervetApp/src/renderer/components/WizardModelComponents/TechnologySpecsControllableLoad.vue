@@ -98,13 +98,6 @@
           :errorMessage="getErrorMsg('ter')">
         </text-input>
 
-        <drop-down-input
-          v-model="macrsTerm"
-          v-bind:field="metadata.macrsTerm"
-          :isInvalid="submitted && $v.macrsTerm.$error"
-          :errorMessage="getErrorMsg('macrsTerm')">
-        </drop-down-input>
-
         <save-buttons
           :continue-link="`${TECH_SPECS_CONTROLLABLE_LOAD_DATA_UPLOAD_PATH}/${this.id}`"
           :displayError="submitted && $v.$anyError"
@@ -235,10 +228,8 @@
           duration: this.duration,
           errorList: this.errorList,
           expectedLifetime: this.expectedLifetime,
-          fixedOMCosts: this.fixedOMCosts,
           id: this.id,
           isReplaceable: this.isReplaceable,
-          macrsTerm: this.macrsTerm,
           name: this.name,
           operationYear: this.operationYear,
           path: this.path,

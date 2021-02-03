@@ -107,7 +107,7 @@ describe('Project Mutations', () => {
   });
 
   it('should set services accordingly from list', () => {
-    const list1 = ['User Defined', 'Retail Demand Charge Reduction', 'SR'];
+    const list1 = ['UserDefined', 'RetailDemandChargeReduction', 'SR'];
     const state = {};
 
     mutations.SELECT_OTHER_SERVICES(state, list1);
@@ -120,49 +120,8 @@ describe('Project Mutations', () => {
     expect(state.objectivesBackupPower).to.equal(false);
     expect(state.objectivesNSR).to.equal(false);
     expect(state.objectivesFR).to.equal(false);
-    expect(state.objectivesLoadFollowing).to.equal(false);
+    expect(state.objectivesLF).to.equal(false);
     expect(state.objectivesDeferral).to.equal(false);
     expect(state.objectivesFR).to.equal(false);
-  });
-
-  xit('should set ordered routes from objectives state', () => {
-    const state = {
-      // load a defaultState
-      ...project.state,
-      // and set these to true
-      objectivesDA: true,
-      objectivesRetailEnergyChargeReduction: true,
-    };
-
-    const orderedRoutes = {
-      path: '/wizard/objectives',
-      next: {
-        path: '/wizard/objectives-parameters-site-information',
-        next: {
-          path: '/wizard/objectives-parameters-da',
-          next: {
-            path: '/wizard/financial-inputs',
-            next: {
-              path: '/wizard/financial-inputs-external-incentives',
-              next: {
-                path: '/wizard/financial-inputs-retail-tariff',
-                next: null,
-              },
-            },
-          },
-        },
-      },
-    };
-
-    mutations.SET_OBJECTIVE_FINANCES_ORDER(state);
-
-    /* for debugging
-    console.log('orderedRoutes:');
-    console.log(JSON.stringify(orderedRoutes, null, 2));
-    console.log('actual:');
-    console.log(JSON.stringify(state.routeObjectivesFinancialsLL, null, 2));
-    */
-
-    expect(state.routeObjectivesFinancialsLL).to.eql(orderedRoutes);
   });
 });

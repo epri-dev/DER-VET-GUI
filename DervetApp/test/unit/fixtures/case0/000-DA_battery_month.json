@@ -14,15 +14,6 @@
             },
             "type": "float"
           },
-          "acr": {
-            "opt_value": "0",
-            "sensitivity": {
-              "active": "no",
-              "coupled": "None",
-              "value": "nan"
-            },
-            "type": "float"
-          },
           "ccost": {
             "opt_value": "0",
             "sensitivity": {

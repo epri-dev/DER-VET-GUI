@@ -35,7 +35,7 @@ export const reliabilityProject = {
   gridLocation: 'Customer',
   financeInflationRate: 2.2,
   name: 'Reliability BTM DER Sizing - Usecase2',
-  listOfActiveServices: ['Reliability', 'Retail Demand Charge Reduction'],
+  listOfActiveServices: ['Resilience', 'RetailDemandChargeReduction'],
   objectivesBackupPower: false,
   objectivesDA: false,
   objectivesDeferral: false,

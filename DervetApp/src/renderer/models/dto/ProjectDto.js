@@ -4,9 +4,11 @@ import dateFormat from 'dateformat';
 import moment from 'moment';
 import path from 'path';
 
+import * as c from '@/models/Project/constants';
 import { billingPeriodsToCsv } from '@/models/RetailTariffBillingPeriod';
 import { externalIncentivesToCsv } from '@/models/ExternalIncentives';
 import { getAppDataPath, createDirectory, objectToCsv } from '@/util/file';
+import { isNotNullAndNotUndefined } from '@/util/logic';
 
 const NO = 'no';
 const YES = 'yes';
@@ -45,16 +47,32 @@ const TIMESERIES_FIELDS = [
   'criticalLoad',
   'deferralLoad',
   'daPrice',
+  'lfEOU',
+  'lfEOD',
+  'lfPrice',
+  'lfUpPrice',
+  'lfDownPrice',
   'frPrice',
   'frUpPrice',
   'frDownPrice',
   'nsrPrice',
-  'srPrice',
   'siteLoad',
+  'srPrice',
+  'systemLoad',
   'userPowerMin',
   'userPowerMax',
   'userEnergyMin',
   'userEnergyMax',
+];
+
+const MONTHLY_FIELDS = [
+  'backupPrice',
+  'backupEnergyReservation',
+  'drMonthsApplied',
+  'drCapacityReservation',
+  'drCapacityAwards',
+  'drEnergyAwards',
+  'raCapacityAwards',
 ];
 
 export const convertToYesNo = condition => (condition ? YES : NO);
@@ -102,7 +120,7 @@ export const makeEmptyGroup = () => ({
 });
 
 export const checkNotNullOrEmpty = technologySpecs => (
-  technologySpecs !== null && technologySpecs.length > 0
+  isNotNullAndNotUndefined(technologySpecs) && technologySpecs.length > 0
 );
 
 export const mapListToObjectList = (lst, fieldName) => (
@@ -116,6 +134,15 @@ export const makeTechnologyParameters = (technologySpecs, makeSingleTechFn) => {
     return _.reduce(technologySpecs, (result, tech) => (
       _.extend(result, makeSingleTechFn(tech))
     ), {});
+  }
+  return makeEmptyGroup();
+};
+
+export const makeBackupParameters = (project) => {
+  if (project.objectivesBackupPower) {
+    const isActive = convertToYesNo(project.objectivesBackupPower);
+    const keys = {};
+    return makeGroup('', isActive, keys);
   }
   return makeEmptyGroup();
 };
@@ -135,7 +162,7 @@ export const makeSingleBatteryParameter = (battery, inputsDirectory) => {
   if (battery.includeAuxiliaryLoad) {
     hp = battery.auxiliaryLoad;
   }
-  // TODO determine DIS_MAX_RATED & CH_MAX_RATED
+  // determine DIS_MAX_RATED & CH_MAX_RATED
   let chargingCapacity = ZERO;
   let dischargingCapacity = ZERO;
   if (!battery.shouldPowerSize) {
@@ -147,8 +174,7 @@ export const makeSingleBatteryParameter = (battery, inputsDirectory) => {
     }
   }
 
-
-  // TODO determine ENE_MAX_RATED
+  // determine ENE_MAX_RATED
   let energyCapacity = ZERO;
   if (!battery.shouldEnergySize) {
     ({ energyCapacity } = battery);
@@ -157,7 +183,6 @@ export const makeSingleBatteryParameter = (battery, inputsDirectory) => {
 
   const keys = {
     OMexpenses: makeBaseKey(battery.variableOMCosts, FLOAT),
-    acr: makeBaseKey(0, FLOAT), // hardcoded (will eventually remove)
     ccost: makeBaseKey(battery.capitalCost, FLOAT),
     ccost_kw: makeBaseKey(battery.capitalCostPerkW, FLOAT),
     ccost_kwh: makeBaseKey(battery.capitalCostPerkWh, FLOAT),
@@ -170,7 +195,7 @@ export const makeSingleBatteryParameter = (battery, inputsDirectory) => {
     dis_max_rated: makeBaseKey(dischargingCapacity, FLOAT),
     dis_min_rated: makeBaseKey(ZERO, FLOAT), // hardcoded
     duration_max: makeBaseKey(setUndefinedNullToZero(battery.maxDuration), FLOAT),
-    'ecc%': makeBaseKey(ZERO, FLOAT), // hardcoded (will eventually remove)
+    'ecc%': makeBaseKey(ZERO, FLOAT), // TODO hardcoded
     ene_max_rated: makeBaseKey(energyCapacity, FLOAT),
     expected_lifetime: makeBaseKey(battery.expectedLifetime, INT),
     fixedOM: makeBaseKey(battery.fixedOMCosts, FLOAT),
@@ -217,6 +242,34 @@ export const makeBatteryParameters = (project, inputsDirectory) => {
   return makeTechnologyParameters(project.technologySpecsBattery, wrapped);
 };
 
+export const makeSingleControllableLoadParameter = (controllableLoad) => {
+  const replaceConstruction = setUndefinedNullToZero(controllableLoad.replacementConstructionTime);
+
+  const keys = {
+    construction_year: makeBaseKey(controllableLoad.constructionYear, PERIOD),
+    decommissioning_cost: makeBaseKey(controllableLoad.decomissioningCost, FLOAT),
+    duration: makeBaseKey(setUndefinedNullToZero(controllableLoad.duration), FLOAT),
+    'ecc%': makeBaseKey(ZERO, FLOAT), // TODO hardcoded
+    expected_lifetime: makeBaseKey(controllableLoad.expectedLifetime, INT),
+    name: makeBaseKey(controllableLoad.name, STRING),
+    nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
+    operation_year: makeBaseKey(controllableLoad.operationYear, PERIOD),
+    power_rating: makeBaseKey(controllableLoad.ratedCapacity, FLOAT),
+    replaceable: makeBaseKey(convertToOneZero(controllableLoad.isReplaceable), BOOL),
+    replacement_construction_time: makeBaseKey(replaceConstruction, INT),
+    salvage_value: makeBaseKey(calculateSalvageValue(controllableLoad), STRING_INT),
+    sr_response_time: makeBaseKey(ZERO, INT), // hardcoded
+    startup_time: makeBaseKey(ZERO, INT), // hardcoded
+    ter: makeBaseKey(controllableLoad.ter, FLOAT),
+  };
+  return makeGroup(controllableLoad.id, convertToYesNo(controllableLoad.active), keys);
+};
+
+export const makeControllableLoadParameters = (project) => {
+  const wrapped = tech => makeSingleControllableLoadParameter(tech);
+  return makeTechnologyParameters(project.technologySpecsControllableLoad, wrapped);
+};
+
 export const makeDAParameters = (project) => {
   if (project.objectivesDA) {
     const isActive = convertToYesNo(project.objectivesDA);
@@ -240,7 +293,7 @@ export const makeDeferralParameters = (project) => {
     const isActive = convertToYesNo(project.objectivesDeferral);
     const keys = {
       growth: makeBaseKey(project.deferralGrowth, FLOAT),
-      min_year_objective: makeBaseKey(ZERO, INT), // TODO new, verify value
+      min_year_objective: makeBaseKey(ZERO, INT), // TODO new, eventually add into GUI
       planned_load_limit: makeBaseKey(project.deferralPlannedLoadLimit, FLOAT),
       price: makeBaseKey(project.deferralPrice, FLOAT),
       reverse_power_flow_limit: makeBaseKey(project.deferralReversePowerFlowLimit, FLOAT),
@@ -258,12 +311,11 @@ export const makeSingleDieselGensetParameter = (dieselGen) => {
   }
   const replacementConstructionTime = setUndefinedNullToZero(dieselGen.replacementConstructionTime);
   const keys = {
-    acr: makeBaseKey(0, FLOAT), // hardcoded
     ccost: makeBaseKey(dieselGen.capitalCost, FLOAT),
     ccost_kW: makeBaseKey(dieselGen.capitalCostPerkW, FLOAT),
     construction_year: makeBaseKey(dieselGen.constructionYear, PERIOD),
     decommissioning_cost: makeBaseKey(dieselGen.decomissioningCost, FLOAT),
-    'ecc%': makeBaseKey(ZERO, FLOAT), // hardcoded
+    'ecc%': makeBaseKey(ZERO, FLOAT), // TODO hardcoded
     efficiency: makeBaseKey(dieselGen.efficiency, FLOAT),
     expected_lifetime: makeBaseKey(dieselGen.expectedLifetime, INT),
     fixed_om_cost: makeBaseKey(dieselGen.fixedOMCostIncludingExercise, FLOAT),
@@ -290,9 +342,32 @@ export const makeSingleDieselGensetParameter = (dieselGen) => {
   return makeGroup(dieselGen.id, convertToYesNo(dieselGen.active), keys);
 };
 
-export const makeDieselGensetParameters = project => (
-  makeTechnologyParameters(project.technologySpecsDieselGen, makeSingleDieselGensetParameter)
-);
+export const makeDieselGensetParameters = (project) => {
+  const wrapped = tech => makeSingleDieselGensetParameter(tech);
+  return makeTechnologyParameters(project.technologySpecsDieselGen, wrapped);
+};
+
+export const makeDRParameters = (project) => {
+  function convertToNan(value) {
+    return value === null ? 'nan' : value;
+  }
+  if (project.objectivesDR) {
+    // convert DR_PROGRAM_TYPE into bool (day ahead is true)
+    const isDayAhead = project[c.DR_PROGRAM_TYPE] === 'Day ahead';
+    const isActive = convertToYesNo(project.objectivesDR);
+    const keys = {
+      day_ahead: makeBaseKey(convertToOneZero(isDayAhead), BOOL),
+      days: makeBaseKey(project[c.DR_NUMBER_EVENTS], INT),
+      growth: makeBaseKey(project[c.DR_GROWTH], FLOAT),
+      length: makeBaseKey(convertToNan(project[c.DR_EVENT_LENGTH]), STRING_INT),
+      program_end_hour: makeBaseKey(convertToNan(project[c.DR_END_HOUR]), STRING_INT),
+      program_start_hour: makeBaseKey(project[c.DR_START_HOUR], INT),
+      weekend: makeBaseKey(convertToOneZero(project[c.DR_INCLUDE_WEEKENDS]), BOOL),
+    };
+    return makeGroup('', isActive, keys);
+  }
+  return makeEmptyGroup();
+};
 
 export const makeFinanceParameters = (project, inputsDirectory) => {
   const externalIncentivesExist = convertToOneZero(checkNotNullOrEmpty(project.externalIncentives));
@@ -309,6 +384,38 @@ export const makeFinanceParameters = (project, inputsDirectory) => {
     yearly_data_filename: makeBaseKey(makeCsvFilePath(inputsDirectory, YEARLY), STRING),
   };
   return makeGroup('', YES, keys);
+};
+
+
+export const makeSingleFleetEVParameter = (fleetEV) => {
+  const replacementConstructionTime = setUndefinedNullToZero(fleetEV.replacementConstructionTime);
+  const keys = {
+    ccost: makeBaseKey(fleetEV.capitalCost, FLOAT),
+    construction_year: makeBaseKey(fleetEV.constructionYear, PERIOD),
+    decommissioning_cost: makeBaseKey(fleetEV.decomissioningCost, FLOAT),
+    'ecc%': makeBaseKey(ZERO, FLOAT), // TODO hardcoded
+    expected_lifetime: makeBaseKey(fleetEV.expectedLifetime, INT),
+    fixed_om_cost: makeBaseKey(fleetEV.fixedOMCosts, FLOAT),
+    lost_load_cost: makeBaseKey(fleetEV.lostLoadCost, FLOAT),
+    macrs_term: makeBaseKey(fleetEV.macrsTerm, FLOAT),
+    max_load_ctrl: makeBaseKey(fleetEV.maximumLoadCtrl, INT),
+    name: makeBaseKey(fleetEV.name, STRING),
+    nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
+    operation_year: makeBaseKey(fleetEV.operationYear, PERIOD),
+    rcost: makeBaseKey(setUndefinedNullToZero(fleetEV.replacementCost), FLOAT),
+    replaceable: makeBaseKey(convertToOneZero(fleetEV.isReplaceable), BOOL),
+    replacement_construction_time: makeBaseKey(replacementConstructionTime, INT),
+    salvage_value: makeBaseKey(calculateSalvageValue(fleetEV), STRING_INT),
+    sr_response_time: makeBaseKey(ZERO, INT), // hardcoded
+    startup_time: makeBaseKey(ZERO, INT), // hardcoded
+    ter: makeBaseKey(fleetEV.ter, FLOAT),
+  };
+  return makeGroup(fleetEV.id, convertToYesNo(fleetEV.active), keys);
+};
+
+export const makeFleetEVParameters = (project) => {
+  const wrapped = tech => makeSingleFleetEVParameter(tech);
+  return makeTechnologyParameters(project.technologySpecsFleetEV, wrapped);
 };
 
 export const makeFRParameters = (project) => {
@@ -337,12 +444,11 @@ export const makeSingleICEParameter = (iceGen) => {
   }
   const replacementConstructionTime = setUndefinedNullToZero(iceGen.replacementConstructionTime);
   const keys = {
-    acr: makeBaseKey(0, FLOAT), // hardcoded
     ccost: makeBaseKey(iceGen.capitalCost, FLOAT),
     ccost_kW: makeBaseKey(iceGen.capitalCostPerkW, FLOAT),
     construction_year: makeBaseKey(iceGen.constructionYear, PERIOD),
     decommissioning_cost: makeBaseKey(iceGen.decomissioningCost, FLOAT),
-    'ecc%': makeBaseKey(ZERO, FLOAT), // hardcoded
+    'ecc%': makeBaseKey(ZERO, FLOAT), // TODO hardcoded
     efficiency: makeBaseKey(iceGen.efficiency, FLOAT),
     expected_lifetime: makeBaseKey(iceGen.expectedLifetime, INT),
     fixed_om_cost: makeBaseKey(iceGen.fixedOMCostIncludingExercise, FLOAT),
@@ -373,6 +479,23 @@ export const makeICEParameters = project => (
   makeTechnologyParameters(project.technologySpecsICE, makeSingleICEParameter)
 );
 
+export const makeLFParameters = (project) => {
+  if (project.objectivesLF) {
+    const isActive = convertToYesNo(project.objectivesLF);
+    const keys = {
+      CombinedMarket: makeBaseKey(convertToOneZero(project[c.LF_COMBINED_MARKET]), BOOL),
+      d_ts_constraints: makeBaseKey(ZERO, BOOL), // hardcoded
+      duration: makeBaseKey(project[c.LF_DURATION], FLOAT),
+      energyprice_growth: makeBaseKey(project[c.LF_ENERGY_PRICE_GROWTH], FLOAT),
+      growth: makeBaseKey(project[c.LF_GROWTH], FLOAT),
+      u_ts_constraints: makeBaseKey(ZERO, BOOL), // hardcoded
+    };
+    return makeGroup('', isActive, keys);
+  }
+  return makeEmptyGroup();
+};
+
+
 export const makeNSRParameters = (project) => {
   if (project.objectivesNSR) {
     const isActive = convertToYesNo(project.objectivesNSR);
@@ -394,12 +517,11 @@ export const makeSinglePVParameter = (pv) => {
   }
   const replacementConstructionTime = setUndefinedNullToZero(pv.replacementConstructionTime);
   const keys = {
-    acr: makeBaseKey(0, FLOAT), // hardcoded
     ccost_kW: makeBaseKey(pv.cost, FLOAT),
     construction_year: makeBaseKey(pv.constructionYear, PERIOD),
     curtail: makeBaseKey(convertToOneZero(pv.includeCurtailment), BOOL),
     decommissioning_cost: makeBaseKey(pv.decomissioningCost, FLOAT),
-    'ecc%': makeBaseKey(ZERO, FLOAT), // hardcoded
+    'ecc%': makeBaseKey(ZERO, FLOAT), // TODO hardcoded
     expected_lifetime: makeBaseKey(pv.expectedLifetime, INT),
     fixed_om_cost: makeBaseKey(pv.fixedOMCosts, FLOAT),
     gamma: makeBaseKey(setUndefinedNullToZero(pv.gamma), FLOAT),
@@ -434,13 +556,30 @@ export const makePVParameters = project => (
   makeTechnologyParameters(project.technologySpecsSolarPV, makeSinglePVParameter)
 );
 
+export const makeRAParameters = (project) => {
+  if (project.objectivesRA) {
+    // convert RA_DISPATCH_MODE to boolean (contrain power is TRUE)
+    const dispModeBool = project[c.RA_DISPATCH_MODE] === 'Constrain power';
+    const isActive = convertToYesNo(project.objectivesRA);
+    const keys = {
+      days: makeBaseKey(project[c.RA_NUMBER_EVENTS], INT),
+      dispmode: makeBaseKey(convertToOneZero(dispModeBool), BOOL),
+      growth: makeBaseKey(project[c.RA_GROWTH], FLOAT),
+      idmode: makeBaseKey(project[c.RA_EVENT_SELECTION_METHOD], STRING),
+      length: makeBaseKey(project[c.RA_EVENT_LENGTH], INT),
+    };
+    return makeGroup('', isActive, keys);
+  }
+  return makeEmptyGroup();
+};
+
 export const makeReliabilityParameters = (project, inputsDirectory) => {
   if (project.objectivesResilience) {
     const isActive = convertToYesNo(project.objectivesResilience);
     const keys = {
       max_outage_duration: makeBaseKey(project.reliabilityMaxOutageDuration, INT),
       'n-2': makeBaseKey(ZERO, BOOL), // hardcoded
-      post_facto_initial_soc: makeBaseKey(100, FLOAT), // TODO new, verify value
+      post_facto_initial_soc: makeBaseKey(100, FLOAT), // TODO new, hardcoded for now
       post_facto_only: makeBaseKey(convertToOneZero(project.reliabilityPostOptimizationOnly), BOOL),
       target: makeBaseKey(project.reliabilityTarget, FLOAT),
       load_shed_percentage: makeBaseKey(convertToOneZero(false), BOOL), // hardcoded
@@ -530,6 +669,40 @@ export const makeScenarioParameters = (project, inputsDirectory) => {
   return makeGroup('', YES, keys);
 };
 
+export const makeSingleSingleEVParameter = (singleEV) => {
+  const replacementConstructionTime = setUndefinedNullToZero(singleEV.replacementConstructionTime);
+  const keys = {
+    ccost: makeBaseKey(singleEV.capitalCost, FLOAT),
+    ch_max_rated: makeBaseKey(singleEV.maximumChargingPower, FLOAT),
+    ch_min_rated: makeBaseKey(singleEV.minimumChargingPower, FLOAT),
+    construction_year: makeBaseKey(singleEV.constructionYear, PERIOD),
+    decommissioning_cost: makeBaseKey(singleEV.decomissioningCost, FLOAT),
+    'ecc%': makeBaseKey(ZERO, FLOAT), // TODO hardcoded
+    ene_target: makeBaseKey(singleEV.energyTarget, FLOAT),
+    expected_lifetime: makeBaseKey(singleEV.expectedLifetime, INT),
+    fixed_om_cost: makeBaseKey(singleEV.fixedOMCosts, FLOAT),
+    macrs_term: makeBaseKey(singleEV.macrsTerm, FLOAT),
+    name: makeBaseKey(singleEV.name, STRING),
+    nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
+    operation_year: makeBaseKey(singleEV.operationYear, PERIOD),
+    plugin_time: makeBaseKey(singleEV.plugInHour, INT),
+    plugout_time: makeBaseKey(setUndefinedNullToZero(singleEV.plugOutHour), INT),
+    rcost: makeBaseKey(setUndefinedNullToZero(singleEV.replacementCost), FLOAT),
+    replaceable: makeBaseKey(convertToOneZero(singleEV.isReplaceable), BOOL),
+    replacement_construction_time: makeBaseKey(replacementConstructionTime, INT),
+    salvage_value: makeBaseKey(calculateSalvageValue(singleEV), STRING_INT),
+    sr_response_time: makeBaseKey(ZERO, INT), // hardcoded
+    startup_time: makeBaseKey(ZERO, INT), // hardcoded
+    ter: makeBaseKey(singleEV.ter, FLOAT),
+  };
+  return makeGroup(singleEV.id, convertToYesNo(singleEV.active), keys);
+};
+
+export const makeSingleEVParameters = (project) => {
+  const wrapped = tech => makeSingleSingleEVParameter(tech);
+  return makeTechnologyParameters(project.technologySpecsSingleEV, wrapped);
+};
+
 export const makeSRParameters = (project) => {
   if (project.objectivesSR) {
     const isActive = convertToYesNo(project.objectivesSR);
@@ -557,16 +730,23 @@ export const makeUserParameters = (project) => {
 export const makeModelParameters = (project, inputsDirectory, resultsDirectory) => ({
   name: project.name,
   tags: {
+    Backup: makeBackupParameters(project),
     Battery: makeBatteryParameters(project, inputsDirectory),
+    ControllableLoad: makeControllableLoadParameters(project),
     DA: makeDAParameters(project),
     DCM: makeDCMParameters(project),
     Deferral: makeDeferralParameters(project),
     DieselGenset: makeDieselGensetParameters(project),
+    DR: makeDRParameters(project),
+    ElectricVehicle1: makeSingleEVParameters(project),
+    ElectricVehicle2: makeFleetEVParameters(project),
     Finance: makeFinanceParameters(project, inputsDirectory),
     FR: makeFRParameters(project),
     ICE: makeICEParameters(project),
+    LF: makeLFParameters(project),
     NSR: makeNSRParameters(project),
     PV: makePVParameters(project),
+    RA: makeRAParameters(project),
     Reliability: makeReliabilityParameters(project, inputsDirectory),
     Results: makeResultsParameters(project, resultsDirectory),
     retailTimeShift: makeRetailTimeShiftParameters(project),
@@ -578,13 +758,12 @@ export const makeModelParameters = (project, inputsDirectory, resultsDirectory) 
 
 export const makeBatteryCycleLifeCsv = (battery) => {
   /* TODO:
-    - see if batteryCycleLife could be part of model parameters (i.e. not written to CSV)
     - check if batteryCycles exist
     - extend to support multiple battery case
   */
   const data = battery.batteryCycles;
   const fields = ['ulimit', 'val'];
-  const headers = ['Cycle Depth Upper Limit', 'Cycle Life Value'];
+  const headers = ['Cycle Depth Upper Limit', 'Cycle Life Value']; // TODO HN string constants
   return objectToCsv(data, fields, headers);
 };
 
@@ -593,12 +772,29 @@ export const makeTariffCsv = project => billingPeriodsToCsv(project.retailTariff
 export const makeYearlyCsv = project => externalIncentivesToCsv(project.externalIncentives);
 
 export const makeMonthlyCsv = (project) => {
+  // initialize variables with monthly index
   const data = _.map(_.range(1, 13), i => ({
     year: project.dataYear,
     month: i,
-  }));
-  const fields = ['year', 'month'];
-  const headers = ['Year', 'Month']; // TODO LL string constants
+  })); // List of lists of objects with format { 'field key': value }
+  const fields = ['year', 'month']; // List of field keys
+  const headers = ['Year', 'Month']; // TODO LL string constants - List of field headers
+
+  function addSingleSeries(d, f, h) {
+    data.push(d);
+    fields.push(f);
+    headers.push(h);
+  }
+
+  // Add all available monthly to CSV
+  MONTHLY_FIELDS.forEach((ts) => {
+    const tsClass = project[ts];
+    if (tsClass) {
+      const dataObjectList = mapListToObjectList(tsClass.data, ts);
+      addSingleSeries(dataObjectList, ts, tsClass.columnHeaderName);
+    }
+  });
+
   return objectToCsv(data, fields, headers);
 };
 
@@ -636,16 +832,7 @@ export const addPvTimeSeries = (pv) => {
 };
 
 /* TODO: new timeseries fields
-  - RA Active (y/n)
-  - POI: max export (kW)
-  - POI: max import (kW)
-  - Aggregate Energy Max (kWh)
-  - Aggregate Energy Min (kWh)
-  - LF Price ($/kW)
-  - LF Up Price ($/kW)
-  - LF Down Price ($/kW)
-  - LF Energy Option Up (kWh/kW-hr)
-  - LF Energy Option Down (kWh/kW-hr)
+  - RA Active (y/n)  TODO HN forgot about this input
   - LF Reg Up Max (kW)
   - LF Reg Up Min (kW)
   - LF Reg Down Max (kW)
@@ -696,6 +883,10 @@ export const makeTimeSeriesCsv = (project) => {
     const { pvData, pvField, pvHeader } = addPvTimeSeries(pv);
     addSingleSeries(pvData, pvField, pvHeader);
   });
+
+  // TODO HN Add fleet EV timeseries
+
+  // TODO HN Add controllable load timeseries
 
   // Convert to CSV
   const unzippedData = _.unzipWith(data, Object.assign);
