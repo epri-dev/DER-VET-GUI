@@ -1,5 +1,5 @@
 {
-  "name": "dervetapp",
+  "name": "DER-VET",
   "version": "0.0.1",
   "author": "",
   "description": "",
@@ -23,8 +23,8 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
-    "productName": "dervetapp",
-    "appId": "com.epri.dervetapp",
+    "productName": "DER-VET",
+    "appId": "com.epri.DER-VET",
     "directories": {
       "output": "build"
     },

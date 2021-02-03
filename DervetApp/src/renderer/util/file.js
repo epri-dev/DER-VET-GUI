@@ -4,7 +4,7 @@ import path from 'path';
 import Papa from 'papaparse';
 
 export const getAppDataPath = () => {
-  const appName = 'dervetapp'; // TODO get from a common place
+  const appName = 'DER-VET'; // TODO get from a common place
   switch (process.platform) {
     case 'darwin': {
       return path.join(process.env.HOME, 'Library', 'Application Support', appName);
