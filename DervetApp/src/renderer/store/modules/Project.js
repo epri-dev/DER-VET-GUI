@@ -788,6 +788,7 @@ const actions = {
   // external incentives
   [a.ADD_EXTERNAL_INCENTIVE]({ commit }, newExternalIncentive) {
     commit(m.ADD_EXTERNAL_INCENTIVE, newExternalIncentive);
+    commit('REPLACE_EXTERNAL_INCENTIVES_FILE_IMPORT_NOTES', []);
   },
   [a.REPLACE_EXTERNAL_INCENTIVES]({ commit }, newExternalIncentives) {
     commit(m.REPLACE_EXTERNAL_INCENTIVES, newExternalIncentives);
@@ -797,9 +798,11 @@ const actions = {
   },
   removeAllExternalIncentives({ commit }) {
     commit('REMOVE_ALL_EXTERNAL_INCENTIVES');
+    commit('REPLACE_EXTERNAL_INCENTIVES_FILE_IMPORT_NOTES', []);
   },
   removeExternalIncentive({ commit }, id) {
     commit('REMOVE_EXTERNAL_INCENTIVE', id);
+    commit('REPLACE_EXTERNAL_INCENTIVES_FILE_IMPORT_NOTES', []);
   },
   // finances
   setDiscountRate({ commit }, newDiscountRate) {
@@ -955,6 +958,7 @@ const actions = {
   // retail tariff billing period
   addRetailTariffBillingPeriod({ commit }, newBillingPeriod) {
     commit('ADD_RETAIL_TARIFF_BILLING_PERIOD', newBillingPeriod);
+    commit('REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES', []);
   },
   replaceRetailTariffBillingPeriods({ commit }, newBillingPeriods) {
     commit('REPLACE_RETAIL_TARIFF_BILLING_PERIODS', newBillingPeriods);
@@ -964,9 +968,11 @@ const actions = {
   },
   removeAllRetailTariffBillingPeriods({ commit }) {
     commit('REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS');
+    commit('REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES', []);
   },
   removeRetailTariffBillingPeriod({ commit }, id) {
     commit('REMOVE_RETAIL_TARIFF_BILLING_PERIOD', id);
+    commit('REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES', []);
   },
   // Single EV
   replaceTechnologySpecsSingleEV({ commit }, payload) {

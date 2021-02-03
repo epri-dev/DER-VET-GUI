@@ -70,7 +70,7 @@
         :displayError="submitted && $v.$anyError"
         :save="validatedSave"
         :continue-link="FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
-        continue-text="Back To Retail Tariff" />
+        continue-text="Save and Back To Retail Tariff" />
 
     </form>
   </div>
