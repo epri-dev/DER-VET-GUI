@@ -22,15 +22,11 @@ export const getAppDataPath = () => {
 };
 
 export const createDirectory = (dirName) => {
-  try {
-    if (!fs.existsSync(dirName)) {
-      fs.mkdirSync(dirName);
-    }
-    return dirName;
-  } catch (err) {
-    // TODO handle error properly
-    throw err;
+  // TODO handle error properly and replace with fsPromise
+  if (!fs.existsSync(dirName)) {
+    fs.mkdirSync(dirName);
   }
+  return dirName;
 };
 
 export const papaParsePromise = file => new Promise((complete, error) => {

@@ -177,7 +177,6 @@
   import financeMixin from '@/mixins/financeMixin';
   import { isObjectOfLengthZero } from '@/util/logic';
 
-
   const NOT_STARTED = ': Not Started';
 
   export default {
@@ -302,7 +301,7 @@
       getTechDisplayName(tech) {
         if (tech.complete === null) {
           return NOT_STARTED;
-        } else if (!tech.name) {
+        } if (!tech.name) {
           return ': Undefined';
         }
         return `: ${tech.name}`;

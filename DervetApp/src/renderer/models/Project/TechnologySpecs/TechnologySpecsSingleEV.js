@@ -8,7 +8,6 @@ import {
 } from '@/models/Project/TechnologySpecs/sharedConstants';
 import { TECH_SPECS_SINGLE_EV_PATH } from '@/router/constants';
 
-
 const ELECTRIC_VEHICLE1 = 'ElectricVehicle1';
 
 const DYNAMIC_FIELDS = [

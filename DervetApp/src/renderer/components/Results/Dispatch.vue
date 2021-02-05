@@ -54,11 +54,11 @@
       getColorFromTechnology(tech) {
         if (tech === 'pv') {
           return '#e2d06b';
-        } else if (tech === 'ess') {
+        } if (tech === 'ess') {
           return '#a2c7db';
-        } else if (tech === 'genSet') {
+        } if (tech === 'genSet') {
           return '#99999';
-        } else if (tech === 'ev') {
+        } if (tech === 'ev') {
           return '#a1eda5';
         }
         return '#666666';
@@ -361,5 +361,4 @@
       },
     },
   };
-
 </script>

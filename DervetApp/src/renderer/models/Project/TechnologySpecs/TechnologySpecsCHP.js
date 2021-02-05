@@ -6,7 +6,6 @@ import {
   createSharedHardcodedMetadata,
 } from '@/models/Project/TechnologySpecs/sharedConstants';
 
-
 const CHP = 'CHP';
 
 const DYNAMIC_FIELDS = [

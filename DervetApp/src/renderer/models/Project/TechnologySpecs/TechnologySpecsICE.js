@@ -9,7 +9,6 @@ import {
 } from '@/models/Project/TechnologySpecs/sharedConstants';
 import { TECH_SPECS_ICE_PATH } from '@/router/constants';
 
-
 const ICE = 'ICE';
 
 // TODO parse these from schema

@@ -104,7 +104,6 @@
 </template>
 
 <script>
-
   import { requiredIf } from 'vuelidate/lib/validators';
 
   import FilePicker from '@/components/Shared/FilePicker';
