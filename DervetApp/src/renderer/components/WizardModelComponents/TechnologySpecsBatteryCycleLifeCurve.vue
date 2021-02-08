@@ -55,16 +55,19 @@
     <save-buttons
       :continue-link="WIZARD_COMPONENT_PATH"
       :displayError="!complete"
-      :error-text="getSingleErrorMsg()"
+      :error-text="errorMessage"
       :save="this.save" />
 
   </div>
 </template>
 
 <script>
-  import { cloneDeep } from 'lodash';
+  import { _, cloneDeep } from 'lodash';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import SaveButtons from '@/components/Shared/SaveButtons';
+  import { xgetSingleErrorMsg } from '@/util/validation';
+
+  const TABLE_ITEM_NAME = 'battery cycle life periods';
 
   export default {
     components: { SaveButtons },
@@ -73,10 +76,21 @@
       // batteryCycles: Array,
     },
     computed: {
+      batteryCycleRows() {
+        const battery = this.$store.getters.getBatteryById(this.batteryId);
+        if (battery && battery.associatedInputs[0]) {
+          return battery.associatedInputs[0].dataRows;
+        }
+        return [];
+      },
       complete() {
-        return this.getNumberOfInvalidRows() === 0;
+        return this.errorMessage === '';
+      },
+      errorMessage() {
+        return xgetSingleErrorMsg(this.batteryCycleRows, TABLE_ITEM_NAME);
       },
       loadingMessage() {
+        /*
         const battery = this.$store.getters.getBatteryById(this.batteryId);
         if (battery) {
           if (battery.associatedInputs[0]) {
@@ -85,6 +99,9 @@
           return '';
         }
         return 'Loading...';
+        */
+        this.callThis(cloneDeep(this.batteryCycleRows));
+        return '';
       },
     },
     data() {
@@ -109,28 +126,12 @@
         if (Number.isNaN(n)) { return true; }
         return (val < 0);
       },
-      getSingleErrorMsg() {
-        if (this.getNumberOfInvalidRows() === -1) {
-          return 'There are no battery cycle life values specified.';
-        } else if (!this.complete) {
-          const pluralizeRow = (this.getNumberOfInvalidRows() === 1) ? '' : 's';
-          return `There are errors with ${this.getNumberOfInvalidRows()} row${pluralizeRow} in the table.`;
+      isRowComplete(row) {
+        if (this.isInvalidCycleDepthUpperLimit(row.ulimit)
+          || this.isInvalidCycleLifeValue(row.val)) {
+          return false;
         }
-        return '';
-      },
-      getNumberOfInvalidRows() {
-        // return the number of invalid rows; return -1 if there are zero rows
-        let invalidRowsCount = 0;
-        if (this.items.length === 0) {
-          return -1;
-        }
-        Object.values(this.items).forEach((row) => {
-          if (this.isInvalidCycleDepthUpperLimit(row.ulimit)
-            || (this.isInvalidCycleLifeValue(row.val))) {
-            invalidRowsCount += 1;
-          }
-        });
-        return invalidRowsCount;
+        return true;
       },
       callThis(cycles) {
         this.items = cycles;
@@ -142,17 +143,23 @@
         this.items.push({});
       },
       save() {
+        // add the completness of each row
+        Object.values(this.items).forEach((row) => {
+          row.complete = this.isRowComplete(row);
+        });
         const payload = this.makeSavePayload();
         this.$store.dispatch('addBatteryCyclesToTechnologySpecsBattery', payload);
         this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
       makeSavePayload() {
+        const payloadNotComplete = _.map(this.items, 'complete').includes(false);
         return {
           batteryId: this.batteryId,
           batteryCycles: {
-            complete: this.complete,
+            complete: !payloadNotComplete,
             dataRows: this.items,
-            errorList: [this.getSingleErrorMsg()],
+            errorList: !payloadNotComplete ? []
+              : [xgetSingleErrorMsg(this.items, TABLE_ITEM_NAME)],
           },
         };
       },

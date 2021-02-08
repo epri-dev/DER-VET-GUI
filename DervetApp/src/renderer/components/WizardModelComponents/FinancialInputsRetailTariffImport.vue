@@ -31,9 +31,9 @@
         <cancel-and-save-buttons
           :back-link="FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
           backText="Cancel"
-          :disabled="importDisabled()"
+          :disabled="isImportDisabled()"
           continueText="Import Retail Tariff"
-          :displayError="importDisabled()"
+          :displayError="isImportDisabled()"
           :errorText="importError"
           :save="save"
         />
@@ -48,6 +48,7 @@
   import { parseCsvFromEvent } from '@/util/file';
   import CancelAndSaveButtons from '@/components/Shared/CancelAndSaveButtons';
   import { FINANCIAL_INPUTS_RETAIL_TARIFF_PATH } from '@/router/constants';
+  import { xcompileImportNotes } from '@/util/validation';
 
   const metadata = RetailTariffBillingPeriodMetadata.getHardcodedMetadata();
   const validationz = metadata.toValidationSchema();
@@ -59,7 +60,7 @@
         metadata,
         ...this.getDefaultData(),
         parsedBillingPeriodCsv: null,
-        importError: undefined,
+        importError: '',
         importedFilePath: null,
         FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
       };
@@ -86,11 +87,6 @@
       this.$v.$touch();
     },
     methods: {
-      compileImportNotes(importNotes) {
-        // add source (file path) to the list
-        importNotes.push(`source: ${this.importedFilePath}`);
-        return importNotes;
-      },
       getDefaultData() {
         return metadata.getDefaultValues();
       },
@@ -133,13 +129,13 @@
         };
         parseCsvFromEvent(e, onSuccess);
       },
-      importDisabled() {
-        return this.importError !== undefined;
+      isImportDisabled() {
+        return (this.importError !== undefined || this.importedFilePath === null);
       },
       save() {
         // obtain data and import notes
         const pdsObject = parsedCsvToBillingPeriods(this.parsedBillingPeriodCsv);
-        const fileImportNotes = this.compileImportNotes(pdsObject.fileImportNotes);
+        const fileImportNotes = xcompileImportNotes(pdsObject.fileImportNotes, this.importedFilePath);
         const pds = pdsObject.csvValues;
         if (pds.length > 0) {
           // validate each row, by setting complete to true or false
