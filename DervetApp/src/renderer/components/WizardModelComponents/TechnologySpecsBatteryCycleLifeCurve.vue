@@ -65,7 +65,7 @@
   import { _, cloneDeep } from 'lodash';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import SaveButtons from '@/components/Shared/SaveButtons';
-  import { xgetSingleErrorMsg } from '@/util/validation';
+  import { getSingleErrorMsg } from '@/util/validation';
 
   const TABLE_ITEM_NAME = 'battery cycle life periods';
 
@@ -87,7 +87,7 @@
         return this.errorMessage === '';
       },
       errorMessage() {
-        return xgetSingleErrorMsg(this.batteryCycleRows, TABLE_ITEM_NAME);
+        return getSingleErrorMsg(this.batteryCycleRows, TABLE_ITEM_NAME);
       },
       loadingMessage() {
         /*
@@ -159,7 +159,7 @@
             complete: !payloadNotComplete,
             dataRows: this.items,
             errorList: !payloadNotComplete ? []
-              : [xgetSingleErrorMsg(this.items, TABLE_ITEM_NAME)],
+              : [getSingleErrorMsg(this.items, TABLE_ITEM_NAME)],
           },
         };
       },

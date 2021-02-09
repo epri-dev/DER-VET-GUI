@@ -111,7 +111,7 @@
     WIZARD_COMPONENT_PATH,
     FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
   } from '@/router/constants';
-  import { xgetSingleErrorMsg } from '@/util/validation';
+  import { getSingleErrorMsg } from '@/util/validation';
 
   const PAGEGROUP = 'components';
   const PAGEKEY = 'financial';
@@ -131,7 +131,7 @@
         return this.errorMessage === '';
       },
       errorMessage() {
-        return xgetSingleErrorMsg(this.billingPeriods, TABLE_ITEM_NAME);
+        return getSingleErrorMsg(this.billingPeriods, TABLE_ITEM_NAME);
       },
       fileImportNotes() {
         return this.$store.state.Project.retailTariffFileImportNotes;

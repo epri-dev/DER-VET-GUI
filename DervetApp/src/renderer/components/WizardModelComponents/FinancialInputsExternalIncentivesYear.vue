@@ -38,6 +38,7 @@
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import ExternalIncentivesMetadata from '@/models/ExternalIncentives';
   import { FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH } from '@/router/constants';
+  import { getSingleErrorMsg } from '@/util/validation';
 
   const metadata = ExternalIncentivesMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
@@ -45,6 +46,7 @@
   const PAGEGROUP = 'components';
   const PAGEKEY = 'financial';
   const PAGE = 'externalIncentives';
+  const TABLE_ITEM_NAME = 'external incentive periods';
 
   export default {
     props: ['incentiveId'],
@@ -81,6 +83,14 @@
         this.$v.$touch();
       }
     },
+    computed: {
+      externalIncentives() {
+        return this.$store.state.Project.externalIncentives;
+      },
+      errorMessage() {
+        return getSingleErrorMsg(this.externalIncentives, TABLE_ITEM_NAME);
+      },
+    },
     methods: {
       getCompletenessPayload() {
         return {
@@ -91,15 +101,11 @@
         };
       },
       getErrorListPayload() {
-        const errors = [];
-        if (!this.complete) {
-          errors.push(this.getSingleErrorMsg());
-        }
         return {
           pageGroup: PAGEGROUP,
           pageKey: PAGEKEY,
           page: PAGE,
-          errorList: errors,
+          errorList: this.errorMessage === '' ? [] : [this.errorMessage],
         };
       },
       getDefaultData() {
@@ -119,24 +125,6 @@
           return 0;
         }
         return this.$store.state.Project.startYear + 1;
-      },
-      getNumberOfInvalidRows(rows) {
-        let invalidRowsCount = 0;
-        Object.values(rows).forEach((row) => {
-          if (!row.complete) {
-            invalidRowsCount += 1;
-          }
-        });
-        return invalidRowsCount;
-      },
-      getSingleErrorMsg() {
-        const years = this.$store.state.Project.externalIncentives;
-        const invalidRowCount = this.getNumberOfInvalidRows(years);
-        if (years.length === 0 || invalidRowCount === 0) {
-          return '';
-        }
-        const pluralizeRow = (invalidRowCount === 1) ? '' : 's';
-        return `There are errors with ${invalidRowCount} row${pluralizeRow} in the table.`;
       },
       isNewExternalIncentive() {
         return this.incentiveId === 'null';

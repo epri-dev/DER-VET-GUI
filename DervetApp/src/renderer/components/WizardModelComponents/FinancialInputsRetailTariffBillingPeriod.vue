@@ -81,7 +81,7 @@
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import RetailTariffBillingPeriodMetadata from '@/models/RetailTariffBillingPeriod';
   import { FINANCIAL_INPUTS_RETAIL_TARIFF_PATH } from '@/router/constants';
-  import { xgetSingleErrorMsg } from '@/util/validation';
+  import { getSingleErrorMsg } from '@/util/validation';
 
   const metadata = RetailTariffBillingPeriodMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
@@ -156,7 +156,7 @@
         return this.$store.state.Project.retailTariffBillingPeriods;
       },
       errorMessage() {
-        return xgetSingleErrorMsg(this.billingPeriods, TABLE_ITEM_NAME);
+        return getSingleErrorMsg(this.billingPeriods, TABLE_ITEM_NAME);
       },
     },
     methods: {

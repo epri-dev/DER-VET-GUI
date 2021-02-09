@@ -48,7 +48,7 @@
   import { parseCsvFromEvent } from '@/util/file';
   import CancelAndSaveButtons from '@/components/Shared/CancelAndSaveButtons';
   import { FINANCIAL_INPUTS_RETAIL_TARIFF_PATH } from '@/router/constants';
-  import { xcompileImportNotes } from '@/util/validation';
+  import { compileImportNotes } from '@/util/validation';
 
   const metadata = RetailTariffBillingPeriodMetadata.getHardcodedMetadata();
   const validationz = metadata.toValidationSchema();
@@ -135,7 +135,7 @@
       save() {
         // obtain data and import notes
         const pdsObject = parsedCsvToBillingPeriods(this.parsedBillingPeriodCsv);
-        const fileImportNotes = xcompileImportNotes(pdsObject.fileImportNotes, this.importedFilePath);
+        const fileImportNotes = compileImportNotes(pdsObject.fileImportNotes, this.importedFilePath);
         const pds = pdsObject.csvValues;
         if (pds.length > 0) {
           // validate each row, by setting complete to true or false
