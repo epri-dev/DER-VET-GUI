@@ -81,6 +81,7 @@
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import RetailTariffBillingPeriodMetadata from '@/models/RetailTariffBillingPeriod';
   import { FINANCIAL_INPUTS_RETAIL_TARIFF_PATH } from '@/router/constants';
+  import { getSingleErrorMsg } from '@/util/validation';
 
   const metadata = RetailTariffBillingPeriodMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
@@ -88,6 +89,7 @@
   const PAGEGROUP = 'components';
   const PAGEKEY = 'financial';
   const PAGE = 'retailTariff';
+  const TABLE_ITEM_NAME = 'billing periods';
 
   export default {
     props: ['billingPeriodId'],
@@ -149,6 +151,14 @@
         this.$v.$touch();
       }
     },
+    computed: {
+      billingPeriods() {
+        return this.$store.state.Project.retailTariffBillingPeriods;
+      },
+      errorMessage() {
+        return getSingleErrorMsg(this.billingPeriods, TABLE_ITEM_NAME);
+      },
+    },
     methods: {
       getDefaultData() {
         const defaultValues = metadata.getDefaultValues();
@@ -204,13 +214,11 @@
         };
       },
       getErrorListPayload() {
-        const errors = [];
-        errors.push(this.getSingleErrorMsg());
         return {
           pageGroup: PAGEGROUP,
           pageKey: PAGEKEY,
           page: PAGE,
-          errorList: errors,
+          errorList: this.errorMessage === '' ? [] : [this.errorMessage],
         };
       },
       setWeekdayValue() {
@@ -232,27 +240,6 @@
           this.chargeType = this.metadata.chargeType.defaultValue;
         }
         return this.metadata.value;
-      },
-      getNumberOfInvalidRows(rows) {
-        let invalidRowsCount = 0;
-        Object.values(rows).forEach((row) => {
-          if (!row.complete) {
-            invalidRowsCount += 1;
-          }
-        });
-        return invalidRowsCount;
-      },
-      getSingleErrorMsg() {
-        const billingPeriods = this.$store.state.Project.retailTariffBillingPeriods;
-        if (billingPeriods.length === 0) {
-          return 'There are no billing periods specified.';
-        }
-        const invalidRowCount = this.getNumberOfInvalidRows(billingPeriods);
-        if (invalidRowCount === 0) {
-          return '';
-        }
-        const pluralizeRow = (invalidRowCount === 1) ? '' : 's';
-        return `There are errors with ${invalidRowCount} row${pluralizeRow} in the table.`;
       },
       isNewBillingPeriod() {
         return this.billingPeriodId === 'null';

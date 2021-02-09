@@ -1,14 +1,14 @@
-import FinancialInputsExternalIncentivesYear from '@/components/WizardModelComponents/FinancialInputsExternalIncentivesYear';
+import FinancialInputsRetailTariffBillingPeriod from '@/components/WizardModelComponents/FinancialInputsRetailTariffBillingPeriod';
 import mountVueElement from './helper';
 
-describe('FinancialInputsExternalIncentivesYear', () => {
-  const vm = mountVueElement(FinancialInputsExternalIncentivesYear, { incentiveId: 'null' });
+describe('FinancialInputsRetailTariffBillingPeriod', () => {
+  const vm = mountVueElement(FinancialInputsRetailTariffBillingPeriod, { billingPeriodId: 'null' });
 
   it('should render title properly', () => {
-    expect(vm.$el.querySelector('h3').textContent).to.contain('External Incentives: Add Data for Year');
+    expect(vm.$el.querySelector('h3').textContent).to.contain('Retail Tariff: Add Billing Period');
   });
 
-  const numberOfInputs = 3;
+  const numberOfInputs = 13;
   it(`should contain ${numberOfInputs} input elements`, () => {
     const inputs = vm.$el.querySelectorAll('input');
     expect(inputs.length).to.equal(numberOfInputs);

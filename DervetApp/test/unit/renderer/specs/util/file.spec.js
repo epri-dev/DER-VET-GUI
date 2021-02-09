@@ -4,7 +4,6 @@ import path from 'path';
 const SEP = path.sep;
 
 describe(`util${SEP}file`, () => {
-
   it('should get the root from a directory select event', () => {
     const file = {
       path: `${SEP}Users${SEP}foo${SEP}Desktop${SEP}$RECYCLE.BIN${SEP}desktop.ini`,

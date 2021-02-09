@@ -97,8 +97,8 @@
 
     <nav-button :continue-link="WIZARD_COMPONENT_PATH"
                 :displayError="!complete"
-                :error-text="getSingleErrorMsg()"
-                continue-text="Done Adding Billing Periods" />
+                :error-text="errorMessage"
+                continue-text="Done Adding Billing Periods"/>
 
   </div>
 </template>
@@ -111,10 +111,12 @@
     WIZARD_COMPONENT_PATH,
     FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
   } from '@/router/constants';
+  import { getSingleErrorMsg } from '@/util/validation';
 
   const PAGEGROUP = 'components';
   const PAGEKEY = 'financial';
   const PAGE = 'retailTariff';
+  const TABLE_ITEM_NAME = 'billing periods';
 
   export default {
     mounted() {
@@ -126,7 +128,10 @@
         return this.$store.state.Project.retailTariffBillingPeriods;
       },
       complete() {
-        return this.billingPeriodsExist() && this.getNumberOfInvalidRows() === 0;
+        return this.errorMessage === '';
+      },
+      errorMessage() {
+        return getSingleErrorMsg(this.billingPeriods, TABLE_ITEM_NAME);
       },
       fileImportNotes() {
         return this.$store.state.Project.retailTariffFileImportNotes;
@@ -159,34 +164,12 @@
         };
       },
       getErrorListPayload() {
-        const errors = [];
-        if (!this.complete) {
-          errors.push(this.getSingleErrorMsg());
-        }
         return {
           pageGroup: PAGEGROUP,
           pageKey: PAGEKEY,
           page: PAGE,
-          errorList: errors,
+          errorList: this.complete ? [] : [this.errorMessage],
         };
-      },
-      getNumberOfInvalidRows() {
-        let invalidRowsCount = 0;
-        Object.values(this.billingPeriods).forEach((row) => {
-          if (!row.complete) {
-            invalidRowsCount += 1;
-          }
-        });
-        return invalidRowsCount;
-      },
-      getSingleErrorMsg() {
-        if (!this.billingPeriodsExist()) {
-          return 'There are no billing periods specified.';
-        } else if (!this.complete) {
-          const pluralizeRow = (this.getNumberOfInvalidRows() === 1) ? '' : 's';
-          return `There are errors with ${this.getNumberOfInvalidRows()} row${pluralizeRow} in the table.`;
-        }
-        return '';
       },
       removeAll() {
         this.$store.dispatch('removeAllRetailTariffBillingPeriods');
