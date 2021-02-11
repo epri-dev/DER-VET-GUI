@@ -94,4 +94,3 @@ export const deferralData = {
     requirementValues: deferralDefaultData.energyCapacityRequirementKWh,
   }],
 };
-

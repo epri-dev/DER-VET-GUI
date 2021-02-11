@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  parser: 'babel-eslint',
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     sourceType: 'module',
   },
@@ -18,8 +18,11 @@ module.exports = {
   plugins: [
     'html',
     'vue',
+    '@typescript-eslint/eslint-plugin',
   ],
   rules: {
+    'no-unused-vars': 0,
+    '@typescript-eslint/no-unused-vars': 2,
     'arrow-parens': 0,
     'class-methods-use-this': 0,
     'global-require': 0,

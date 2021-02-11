@@ -2,7 +2,6 @@ import project from '@/store/modules/Project';
 
 const { getters } = project;
 
-
 describe('project getters', () => {
   it('should get index of solar by ID', () => {
     const solarId = 'e4ccd19f-0f3c-49ef-a955-bf063687982d';
