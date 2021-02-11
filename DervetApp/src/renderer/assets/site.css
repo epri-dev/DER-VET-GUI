@@ -19,10 +19,38 @@ body {
     text-align: center;
 }
 
+.error-align {
+    margin-left: 10px;
+}
+
 .text-white {
     color: white;
 }
 
+.btn-index-page {
+    width: 240px !important;
+}
+
+.btn-summary {
+    width: 180px !important;
+    height: 50px !important;
+}
+
+.cal-enviro-screen-img {
+    max-width: 100%;
+    height: auto;
+}
+
+.btn-quick-start {
+    background-color: #ff9999 !important;
+    color: white !important;
+}
+
+.error-text-color {
+    color: #dc3545;
+    font-weight: bold;
+    font-size: 14px;
+}
 
 .form-horizontal .control-label {
     text-align: left;
@@ -211,15 +239,20 @@ textarea {
 
 .current {
     font-weight: bolder;
-    color: darkblue;
 }
 
 .incomplete {
-    color: darkred;
+    color: #dc3545;
 }
 
-.complete {
-    color: darkgreen;
+.incomplete-btn {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.inactive {
+    background-color: #D3D3D3;
+    color: #fff;
 }
 
 .menutext {
@@ -238,7 +271,7 @@ textarea {
 
 .numberbox {
     display: inline-block;
-    width: 80px;
+    width: 100px;
 }
 
 .numberbox-lg {
@@ -878,4 +911,9 @@ input#NoDischargingToGrid ~ p.tool-tip {
 
 #OptimizationHorizon {
     max-width: 130px;
+}
+
+.invalid-feedback {
+    font-size: 14px;
+    font-weight: bold;
 }

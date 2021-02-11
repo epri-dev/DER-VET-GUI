@@ -1,7 +1,6 @@
-import DervetService from './service/dervet';
-
+import log from 'electron-log';
+import { callDervet, readDervetResults, writeDervetInputs } from './service/dervet';
 require('dotenv').config();
-
 import { app, BrowserWindow, ipcMain } from 'electron' // eslint-disable-line
 
 /**
@@ -34,6 +33,11 @@ function createWindow() {
     height: 700,
     useContentSize: true,
     width: 1200,
+    webPreferences: {
+      // TODO refactor to use contextIntegration https://github.com/electron/electron/issues/23506
+      nodeIntegration: true,
+      enableRemoteModule: true,
+    },
   });
 
   mainWindow.loadURL(winURL);
@@ -43,14 +47,24 @@ function createWindow() {
   });
 }
 
+function sendResults(event, results) {
+  event.sender.send('dervet-results', Object.assign(...results));
+}
 
 function registerIpcChannels() {
   ipcMain.on('dervet-inputs', (event, dervetInputs) => {
-    const modelParametersPath = ''; // TODO get from dervetInputs
-    // TODO Account for async writing before calling DERVET
-    DervetService.writeDervetInputs(dervetInputs);
-    DervetService.callDervet(modelParametersPath);
-    event.sender.send('dervet-results', 'done');
+    const { modelParametersPath, resultsPath } = dervetInputs.meta;
+
+    // TODO catch file-writing errors
+    Promise.all(writeDervetInputs(dervetInputs, modelParametersPath))
+      .then(() => callDervet(modelParametersPath))
+      .then(() => readDervetResults(resultsPath, dervetInputs.expectedResultCsvs))
+      .then(results => sendResults(event, results))
+      .catch((err) => {
+        const errMessage = JSON.stringify(err);
+        log.error(errMessage);
+        event.sender.send('dervet-error', errMessage);
+      });
   });
 }
 

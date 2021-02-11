@@ -1,52 +1,58 @@
 <template>
   <div class="left-sidebar">
     <b-nav vertical>
-        <router-link
-          class="nav nav-sidebar sidebar-root-el"
-          v-bind:class="{ current: isActive(this.pagePaths.results) }"
-          :to="this.pagePaths.results">
-          Summary
-        </router-link>
-        <router-link
-          class="nav nav-sidebar sidebar-root-el"
-          v-bind:class="{ current: isActive(this.pagePaths.resultsDispatch) }"
-          :to="this.pagePaths.resultsDispatch">
-          Dispatch
-        </router-link>
-        <router-link
-          class="nav nav-sidebar sidebar-root-el"
-          v-bind:class="{ current: isActive(this.pagePaths.resultsDesign) }"
-          :to="this.pagePaths.resultsDesign">
-          Design
-        </router-link>
-        <router-link
-          class="nav nav-sidebar sidebar-root-el"
-          v-bind:class="{ current: isActive(this.pagePaths.resultsReliability) }"
-          :to="this.pagePaths.resultsReliability">
-          Reliability
-        </router-link>
-        <router-link
-          class="nav nav-sidebar sidebar-root-el"
-          v-bind:class="{ current: isActive(this.pagePaths.resultsDeferral) }"
-          :to="this.pagePaths.resultsDeferral">
-          Deferral
-        </router-link>
-        <router-link
-          class="nav nav-sidebar sidebar-root-el"
-          v-bind:class="{ current: isActive(this.pagePaths.resultsFinancial) }"
-          :to="this.pagePaths.resultsFinancial">
-          Financial
-        </router-link>
+      <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
+                   v-bind:class="{ current: isActive(this.paths.RESULTS_PATH) }"
+                   :to="this.paths.RESULTS_PATH">
+        Summary
+      </router-link>
+      <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
+                   v-bind:class="{ current: isActive(this.paths.RESULTS_DISPATCH_PATH) }"
+                   :to="this.paths.RESULTS_DISPATCH_PATH">
+        Dispatch
+      </router-link>
+      <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
+                   v-bind:class="{ current: isActive(this.paths.RESULTS_DESIGN_PATH) }"
+                   :to="this.paths.RESULTS_DESIGN_PATH">
+        Design
+      </router-link>
+      <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
+                   v-bind:class="{ current: isActive(this.paths.RESULTS_FINANCIAL_PATH) }"
+                   :to="this.paths.RESULTS_FINANCIAL_PATH">
+        Financial
+      </router-link>
+      <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
+                   v-if="showReliabilityResults"
+                   v-bind:class="{ current: isActive(this.paths.RESULTS_RELIABILITY_PATH) }"
+                   :to="this.paths.RESULTS_RELIABILITY_PATH">
+        Reliability
+      </router-link>
+      <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
+                   v-if="showDeferralResults"
+                   v-bind:class="{ current: isActive(this.paths.RESULTS_DEFERRAL_PATH) }"
+                   :to="this.paths.RESULTS_DEFERRAL_PATH">
+        Deferral
+      </router-link>
     </b-nav>
-    <div class="export-project">
-      <router-link class="btn btn-md btn-primary" to="/">Export Project</router-link>
-    </div>
   </div>
 </template>
 
 
 <script>
+  import * as paths from '@/router/constants';
+
   export default {
+    computed: {
+      results() {
+        return this.$store.state.Results.data;
+      },
+      showReliabilityResults() {
+        return this.$store.state.Results.data.showLoadCoverageProbability;
+      },
+      showDeferralResults() {
+        return this.$store.state.Results.data.showDeferral;
+      },
+    },
     methods: {
       isActive(path) {
         // match to end of string here
@@ -54,10 +60,7 @@
       },
     },
     data() {
-      const p = this.$store.state.Project;
-      return {
-        pagePaths: p.paths,
-      };
+      return { paths };
     },
   };
 </script>

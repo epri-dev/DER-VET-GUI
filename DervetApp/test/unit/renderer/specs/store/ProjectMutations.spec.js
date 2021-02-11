@@ -1,9 +1,39 @@
 import project from '@/store/modules/Project';
 
+
 const { mutations } = project;
 
 
 describe('Project Mutations', () => {
+  it('should replace additional data for battery cycle with proper completeness', () => {
+    const batteryId = '123qwe789uio';
+    const state = {
+      technologySpecsBattery: [{
+        id: batteryId,
+        associatedInputs: [{ displayName: 'Name', errorList: [] }],
+        associatedInputsComplete: true,
+        complete: true,
+        componentSpecsComplete: true,
+      }],
+    };
+    const payload = {
+      batteryId,
+      batteryCycles: {
+        complete: false,
+        errorList: ['error here'],
+      },
+    };
+
+    mutations.ADD_BATTERY_CYCLES_TO_TECHNOLOGY_SPECS_BATTERY(state, payload);
+
+    expect(state.technologySpecsBattery[0].complete).to.equal(false);
+    expect(state.technologySpecsBattery[0].associatedInputsComplete).to.equal(false);
+    expect(state.technologySpecsBattery[0].associatedInputs[0].complete).to.equal(false);
+    expect(state.technologySpecsBattery[0].componentSpecsComplete).to.equal(true);
+    expect(state.technologySpecsBattery[0].associatedInputs[0].displayName).to.equal('Name');
+    expect(state.technologySpecsBattery[0].associatedInputs[0].errorList[0]).to.equal('error here');
+  });
+
   it('should set project ID', () => {
     const state = { id: null };
     const newId = 'e4ccd19f-0f3c-49ef-a955-bf063687982d';
@@ -54,5 +84,44 @@ describe('Project Mutations', () => {
     expect(state.retailTariffBillingPeriods).to.have.lengthOf(2);
     expect(state.retailTariffBillingPeriods[0]).to.equal(bp3);
     expect(state.retailTariffBillingPeriods[1]).to.equal(bp4);
+  });
+
+  it('should set retail and wholesale booleans accordingly when true', () => {
+    const state = { objectivesDA: false };
+
+    mutations.CHOOSE_ENERGY_STRUCTURE(state, true);
+
+    expect(state.objectivesDA).to.equal(true);
+    expect(state.objectivesRetailEnergyChargeReduction).to.equal(false);
+    expect(state.energyPriceSourceWholesale).to.equal(true);
+  });
+
+  it('should set retail and wholesale booleans accordingly when false', () => {
+    const state = { objectivesDA: true };
+
+    mutations.CHOOSE_ENERGY_STRUCTURE(state, false);
+
+    expect(state.objectivesDA).to.equal(false);
+    expect(state.objectivesRetailEnergyChargeReduction).to.equal(true);
+    expect(state.energyPriceSourceWholesale).to.equal(false);
+  });
+
+  it('should set services accordingly from list', () => {
+    const list1 = ['UserDefined', 'RetailDemandChargeReduction', 'SR'];
+    const state = {};
+
+    mutations.SELECT_OTHER_SERVICES(state, list1);
+
+    expect(state.listOfActiveServices).to.equal(list1);
+    expect(state.objectivesUserDefined).to.equal(true);
+    expect(state.objectivesRetailDemandChargeReduction).to.equal(true);
+    expect(state.objectivesSR).to.equal(true);
+    expect(state.objectivesResilience).to.equal(false);
+    expect(state.objectivesBackupPower).to.equal(false);
+    expect(state.objectivesNSR).to.equal(false);
+    expect(state.objectivesFR).to.equal(false);
+    expect(state.objectivesLF).to.equal(false);
+    expect(state.objectivesDeferral).to.equal(false);
+    expect(state.objectivesFR).to.equal(false);
   });
 });

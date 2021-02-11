@@ -12,7 +12,7 @@ process.env.BABEL_ENV = 'test'
 
 let webpackConfig = merge(baseConfig, {
   devtool: '#inline-source-map',
-  mode: 'production',
+  mode: 'development',
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"testing"'
@@ -45,14 +45,30 @@ module.exports = config => {
     customLaunchers: {
       'visibleElectron': {
         base: 'Electron',
-      }
+        flags: ['--no-sandbox'],
+        browserWindowOptions: {
+          webPreferences: {
+            nodeIntegration: true,
+            enableRemoteModule: true,
+            sandbox: false,
+          },
+        },
+      },
     },
     frameworks: ['mocha', 'chai'],
     files: ['./index.js'],
+    mochaReporter: {
+      colors: {
+        success: 'green',
+        warning: 'yellow',
+        error: 'bigRed'
+      },
+      showDiff: true,
+    },
     preprocessors: {
       './index.js': ['webpack', 'sourcemap']
     },
-    reporters: ['spec', 'coverage'],
+    reporters: ['mocha'],
     singleRun: true,
     webpack: webpackConfig,
     webpackMiddleware: {

@@ -1,55 +1,55 @@
 <template>
   <div>
-    <div class="row">
-      <div class="col-md-6">
-        <h3>Reliability</h3>
-      </div>
-    </div>
-    <hr>
     <form>
-      <div class="form-group">
-        <div class="col-md-12">
-          <div
-            id="chartOutageContribution">
+      <div class="form-horizontal form-buffer">
+        <div class="row">
+          <div class="col-md-6">
+            <h3>Reliability</h3>
+          </div>
+        </div>
+        <hr>
+        <div v-if="chartData.showOutageContribution" class="form-group">
+          <div class="col-md-12">
+            <div id="chartOutageContribution">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-md-12">
+            <div id="chartLoadCoverageProbability">
+            </div>
           </div>
         </div>
       </div>
     </form>
-    <hr>
-    <form>
-      <div class="form-group">
-        <div class="col-md-12">
-          <div
-            id="chartLoadCoverageProbability">
-          </div>
-        </div>
-      </div>
-    </form>
-    <hr />
-    <!-- TODO get rid of save & continue button -->
-    <nav-buttons
-      :back-link="resultsPath"
-      back-text="<< Return to results summary"
-    />
   </div>
 </template>
 
 <script>
   import Plotly from 'plotly.js';
-  import NavButtons from '@/components/Shared/NavButtons';
+  import { RESULTS_PATH } from '@/router/constants';
 
   export default {
-    components: { NavButtons },
+    beforeMount() {
+      this.$store.dispatch('createReliabilityPlots');
+    },
     mounted() {
       this.createChartLoadCoverageProbability('chartLoadCoverageProbability');
-      this.createChartOutageContribution('chartOutageContribution');
+      if (this.chartData.showOutageContribution) {
+        this.createChartOutageContribution('chartOutageContribution');
+      }
     },
     data() {
       const p = this.$store.state.Project;
       return {
-        resultsPath: p.paths.results,
+        resultsPath: RESULTS_PATH,
         reliabilityTarget: p.reliabilityTarget,
       };
+    },
+    computed: {
+      chartData() {
+        return this.$store.state.Results.reliabilityVueObjects;
+      },
     },
     methods: {
 
@@ -58,7 +58,7 @@
           return '#e2d06b';
         } else if (tech === 'ess') {
           return '#a2c7db';
-        } else if (tech === 'ice') {
+        } else if (tech === 'genSet') {
           return '#99999';
         }
         return '#666666';
@@ -66,51 +66,53 @@
 
       createChartOutageContribution(chartId) {
         const ctx = document.getElementById(chartId);
-        const xtot = 8760;
-        const xstart = (new Date('2017-01-01')).getTime();
-        const xx = [];
-        for (let i = 0; i < xtot; i += 1) {
-          xx[i] = new Date(xstart + (i * 36e5));
+        const rawData = this.chartData.outageContribution;
+        const xx = rawData.startDatetimeHb;
+        const data = [];
+
+        const pvData = rawData.pVOutageContributionKWh;
+        if (pvData !== undefined) {
+          const pvTrace = {
+            x: xx,
+            y: pvData,
+            type: 'bar',
+            name: 'PV Outage Contribution',
+            hovertemplate: '%{y:,.0f} kWh',
+            marker: {
+              color: this.getColorFromTechnology('pv'),
+            },
+          };
+          data.push(pvTrace);
+        }
+        const essData = rawData.storageOutageContributionKWh;
+        if (essData !== undefined) {
+          const essTrace = {
+            x: xx,
+            y: rawData.storageOutageContributionKWh,
+            type: 'bar',
+            name: 'ESS Outage Contribution',
+            hovertemplate: '%{y:,.0f} kWh',
+            marker: {
+              color: this.getColorFromTechnology('ess'),
+            },
+          };
+          data.push(essTrace);
+        }
+        const genSetData = rawData.generatorSetOutageContributionKWh;
+        if (genSetData !== undefined) {
+          const genSetTrace = {
+            x: xx,
+            y: rawData.generatorSetOutageContributionKWh,
+            type: 'bar',
+            name: 'Generator Set Outage Contribution',
+            hovertemplate: '%{y:,.0f} kWh',
+            marker: {
+              color: this.getColorFromTechnology('genSet'),
+            },
+          };
+          data.push(genSetTrace);
         }
 
-        const yyPV = [];
-        const yPV = [0, 0, 0, 0,
-          15, 78.889, 440, 862, 1315, 1764, 1907,
-          1874, 1508, 1012, 508, 119, 16,
-          0, 0, 0, 0, 0, 0, 0];
-        for (let i = 0; i < xtot; i += 1) {
-          yyPV[i] = yPV[(i % yPV.length)];
-        }
-        const pv = {
-          x: xx,
-          y: yyPV,
-          type: 'bar',
-          name: 'PV Outage Contribution',
-          hovertemplate: '%{y:.0f} kWh',
-          marker: {
-            color: this.getColorFromTechnology('pv'),
-          },
-        };
-
-        const yyESS = [];
-        const yESS = [5341, 5360, 5157, 5312, 5411, 5328, 5295, 5030,
-          4733, 4550, 4362, 4087, 4157, 4358, 4678, 5215, 5518, 5593,
-          5623.36545, 5711, 5747, 5607, 5450, 5152];
-        for (let i = 0; i < xtot; i += 1) {
-          yyESS[i] = yESS[(i % yESS.length)];
-        }
-        const ess = {
-          x: xx,
-          y: yyESS,
-          type: 'bar',
-          name: 'ESS Outage Contribution',
-          hovertemplate: '%{y:.0f} kWh',
-          marker: {
-            color: this.getColorFromTechnology('ess'),
-          },
-        };
-
-        const data = [pv, ess];
         const selectorOptions = {
           buttons: [
             {
@@ -170,6 +172,7 @@
               },
               standoff: 5, // create gap between axis and title
             },
+            tickformat: ',.0',
           },
         };
         const config = {
@@ -190,8 +193,8 @@
       createChartLoadCoverageProbability(chartId) {
         const ctx = document.getElementById(chartId);
         const trace1 = {
-          x: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13],
-          y: [1, 1, 1, 1, 0.99, 9.411 / 10, 8.999 / 10, 0.8, 3 / 4.1, 2 / 3, 1 / 2.004, null, 0.0],
+          x: this.chartData.loadCoverageProbability.outageLengthHrs,
+          y: this.chartData.loadCoverageProbability.loadCoverageProbability,
           mode: 'lines+markers', // 'lines' 'markers'
           connectgaps: true, // ignore null values when true
           name: '', // appears in legend, and next to hovertemplate
@@ -236,7 +239,7 @@
             // tickmode: 'linear', // 'auto', 'array',
             // type: 'linear', // '-', 'log', 'date'
             tick0: 0, // first tick mark will go here
-            dtick: 1, // tick interval
+            // dtick: 1, // tick interval
             fixedrange: true,
             // rangemode: 'tozero', // 'normal', 'nonnegative'
             // tickangle: 90,

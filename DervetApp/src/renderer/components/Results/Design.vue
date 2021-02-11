@@ -14,15 +14,15 @@
             :striped="true"
             :hover="true"
             :bordered="true"
-            :items="sizeItems"
-            :fields="sizeFields"
+            :items="chartData.sizeTable.data"
+            :fields="chartData.sizeTable.fields"
           >
             <template v-slot:thead-top="data">
               <b-tr>
                 <!-- TODO: assign columns based on column in rows -->
                 <b-th><span class="sr-only">Name</span></b-th>
-                <b-th colspan="3">Power Specifications</b-th>
-                <b-th colspan="2">Energy Specifications</b-th>
+                <b-th :colspan="chartData.numPowerCol">Power Specifications</b-th>
+                <b-th :colspan="chartData.numEnergyCol">Energy Specifications</b-th>
                 <b-th><span class="sr-only">Quantity</span></b-th>
               </b-tr>
             </template>
@@ -31,7 +31,7 @@
         <div class="col-md-12">
           <hr class="results" />
           <h4>Rated Power and Energy Costs</h4>
-          <div v-for="dataRow in costTableData">
+          <div v-for="dataRow in chartData.costsTable">
             <b-table
               :striped="true"
               :borderless="true"
@@ -47,27 +47,19 @@
         </div>
       </div>
     </div>
-    <hr />
-    <!-- TODO get rid of save & continue button -->
-    <nav-buttons
-      :back-link="resultsPath"
-      back-text="<< Return to results summary"
-    />
   </div>
 </template>
 
 <script>
-  import NavButtons from '@/components/Shared/NavButtons';
-  import { createCostTableData, sizeTableExpectedData, sizeTableExpectedFeilds } from '@/models/Results/sizeData';
+  import { RESULTS_PATH } from '@/router/constants';
 
   export default {
-    components: { NavButtons },
+    beforeMount() {
+      this.$store.dispatch('createDesignPlots');
+    },
     data() {
-      const p = this.$store.state.Project;
       return {
-        resultsPath: p.paths.results,
-        sizeItems: sizeTableExpectedData,
-        sizeFields: sizeTableExpectedFeilds,
+        RESULTS_PATH,
         costTableFields: [
           {
             key: 'total',
@@ -80,12 +72,12 @@
           'strEquation',
           'label',
         ],
-        costTableData: [
-          createCostTableData(sizeTableExpectedData[0]),
-          createCostTableData(sizeTableExpectedData[1]),
-          createCostTableData(sizeTableExpectedData[2]),
-        ],
       };
+    },
+    computed: {
+      chartData() {
+        return this.$store.state.Results.designVueObjects;
+      },
     },
   };
 </script>

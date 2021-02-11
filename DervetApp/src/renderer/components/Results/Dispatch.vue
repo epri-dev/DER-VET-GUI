@@ -1,89 +1,87 @@
 <template>
   <div>
-    <div class="row">
-      <div class="col-md-6">
-        <h3>Dispatch</h3>
-      </div>
-    </div>
-    <hr>
     <form>
-      <div class="form-group">
-        <div class="col-md-12">
-          <div
-            id="chartDispatchTimeSeriesPlots">
+      <div class="form-horizontal form-buffer">
+        <div class="row">
+          <div class="col-md-6">
+            <h3>Dispatch</h3>
+          </div>
+        </div>
+        <hr>
+        <div class="form-group">
+          <div class="col-md-12">
+            <div id="chartDispatchTimeSeriesPlots">
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="form-group">
+          <div class="col-md-12">
+            <div id="chartEnergyPriceHeatMap">
+            </div>
           </div>
         </div>
       </div>
     </form>
-    <hr>
-    <form>
-      <div class="form-group">
-        <div class="col-md-12">
-          <div
-            id="chartEnergyPriceHeatMap">
-          </div>
-        </div>
-      </div>
-    </form>
-    <hr />
-    <!-- TODO get rid of save & continue button -->
-    <nav-buttons
-      :back-link="resultsPath"
-      back-text="<< Return to results summary"
-    />
-
   </div>
 </template>
 
 <script>
   import Plotly from 'plotly.js';
-  import NavButtons from '@/components/Shared/NavButtons';
+  import { RESULTS_PATH } from '@/router/constants';
 
   export default {
-    components: { NavButtons },
+    beforeMount() {
+      this.$store.dispatch('createDispatchPlots');
+    },
     mounted() {
       this.createChartDispatchTimeSeriesPlots('chartDispatchTimeSeriesPlots');
       this.createChartEnergyPriceHeatMap('chartEnergyPriceHeatMap');
     },
     data() {
-      const p = this.$store.state.Project;
       return {
-        resultsPath: p.paths.results,
+        resultsPath: RESULTS_PATH,
       };
+    },
+    computed: {
+      chartData() {
+        return this.$store.state.Results.dispatchVueObjects;
+      },
     },
     methods: {
       save() {
       },
+      getColorFromTechnology(tech) {
+        if (tech === 'pv') {
+          return '#e2d06b';
+        } else if (tech === 'ess') {
+          return '#a2c7db';
+        } else if (tech === 'genSet') {
+          return '#99999';
+        } else if (tech === 'ev') {
+          return '#a1eda5';
+        }
+        return '#666666';
+      },
 
       createChartDispatchTimeSeriesPlots(chartId) {
         const ctx = document.getElementById(chartId);
-        const xtot = 8760;
-        const xstart = (new Date('2017-01-01')).getTime();
-        const xx = [];
-        for (let i = 0; i < xtot; i += 1) {
-          xx[i] = new Date(xstart + (i * 36e5));
-        }
+  
+        const rawData = this.chartData.stackedLineData;
+        const xx = rawData.timeSeriesDateAxis;
 
-        const yyBatterySOC = [];
-        const yBatterySOC = [0.5, 0.6, 0.7, 0.5, 1, 1, 1, 1, 0.8, 0.6, 0.5, 0.2];
-        for (let i = 0; i < xtot; i += 1) {
-          yyBatterySOC[i] = yBatterySOC[(i % yBatterySOC.length)];
-        }
         const batterySOC = {
-          x: xx,
-          y: yyBatterySOC,
+          x: rawData.timeSeriesDateAxis,
+          y: rawData.aggregatedStateOfCharge,
           mode: 'lines',
-          name: 'Battery SOC',
+          name: 'Aggregate ESS SOC',
+          yaxis: 'y',
         };
 
-        const yyPoi = [];
-        const yPoi = [-2e3, -600, 0, 0, 0, 0, 0, 0, -2e3, -2e3, 0, 0];
-        for (let i = 0; i < xtot; i += 1) {
-          yyPoi[i] = yPoi[(i % yPoi.length)];
-        }
+        // TODO - optionally add reservations
         const poi = {
           x: xx,
-          y: yyPoi,
+          y: rawData.netLoadKW,
           mode: 'lines',
           name: 'POI power with reservations',
           fill: 'tozeroy',
@@ -91,40 +89,28 @@
             shape: 'hv',
           },
           // xaxis: 'x',
-          yaxis: 'y2',
+          yaxis: 'y5',
         };
 
-        const yykWPrices = [];
-        const ykWPrices = [0, 0, 0, 0, 0, 0, 0,
-          0.14, 0.12, 0.33, 0.41, 0.81, 0.77, 0.44, 0.22, 0.11, 0.02,
-          0, 0, 0, 0, 0, 0, 0];
-        for (let i = 0; i < xtot; i += 1) {
-          yykWPrices[i] = ykWPrices[(i % ykWPrices.length)];
-        }
-        const kWPrices = {
-          x: xx,
-          y: yykWPrices,
-          mode: 'lines',
-          name: '$/kW Prices',
-          line: {
-            shape: 'hv',
-          },
-          // xaxis: 'x',
-          yaxis: 'y3',
-        };
+        // TODO - optionally add
+        // const yykWPrices = [];
+        // const kWPrices = {
+        //   x: xx,
+        //   y: yykWPrices,
+        //   mode: 'lines',
+        //   name: '$/kW Prices',
+        //   line: {
+        //     shape: 'hv',
+        //   },
+        //   // xaxis: 'x',
+        //   yaxis: 'y3',
+        // };
 
-        const yykWhPrices = [];
-        const ykWhPrices = [0, 0, 0, 0, 0, 0, 0,
-          0.14, 0.12, 0.33, 0.41, 0.81, 0.77, 0.44, 0.22, 0.11, 0.02,
-          0, 0, 0, 0, 0, 0, 0];
-        for (let i = 0; i < xtot; i += 1) {
-          yykWhPrices[i] = ykWhPrices[(i % ykWhPrices.length)];
-        }
         const kWhPrices = {
           x: xx,
-          y: yykWhPrices,
+          y: rawData.energyPriceKWh,
           mode: 'lines',
-          name: '$/kWh Prices',
+          name: 'Energy Price',
           line: {
             shape: 'hv',
           },
@@ -132,24 +118,55 @@
           yaxis: 'y4',
         };
 
-        const yyPower = [];
-        const yPower = [5e3, 6e3, 7e3, 9.6e3, 7e3, 6e3, 6e3, 7e3, 3e3, 4e3, 5e3, 4e3];
-        for (let i = 0; i < xtot; i += 1) {
-          yyPower[i] = yPower[(i % yPower.length)];
-        }
-        const power = {
-          x: xx,
-          y: yyPower,
-          mode: 'lines',
-          name: 'Power by Technology',
-          line: {
-            shape: 'hv',
+        const power = [
+          {
+            x: xx,
+            y: rawData.totalStoragePowerKW,
+            mode: 'lines',
+            name: 'Total Storage Net Power',
+            line: {
+              shape: 'hv',
+            },
+            // xaxis: 'x',
+            yaxis: 'y2',
           },
-          // xaxis: 'x',
-          yaxis: 'y5',
-        };
+          {
+            x: xx,
+            y: rawData.totalGenerationKW,
+            mode: 'lines',
+            name: 'Total Generation Power',
+            line: {
+              shape: 'hv',
+            },
+            // xaxis: 'x',
+            yaxis: 'y2',
+          },
+          {
+            x: xx,
+            y: rawData.totalLoadKW,
+            mode: 'lines',
+            name: 'Total Load',
+            line: {
+              shape: 'hv',
+            },
+            // xaxis: 'x',
+            yaxis: 'y2',
+          },
+          {
+            x: xx,
+            y: rawData.criticalLoadKW,
+            mode: 'lines',
+            name: 'Critical Load',
+            line: {
+              shape: 'hv',
+            },
+            // xaxis: 'x',
+            yaxis: 'y2',
+          },
+        ];
 
-        const data = [batterySOC, poi, kWPrices, kWhPrices, power];
+        // const data = [batterySOC, poi, kWPrices, kWhPrices, power];
+        const data = [batterySOC, poi, kWhPrices, ...power];
         // const data = [pv];
         const selectorOptions = {
           buttons: [
@@ -219,7 +236,7 @@
           yaxis4: {
             domain: [0.202, 0.394],
             title: {
-              text: '$ / kWh',
+              text: 'Energy Price',
               font: {
                 size: 12,
               },
@@ -277,28 +294,10 @@
 
       createChartEnergyPriceHeatMap(chartId) {
         const ctx = document.getElementById(chartId);
-        const xtot = 365;
-        const xstart = (new Date('2017-01-01')).getTime();
-        const xx = [];
-        const y1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
-          14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
-        const zz = [[], []];
-        const z = [0.054, 0.062, 0.062, 0.007];
-        const z1 = [];
-        for (let i = 0; i < xtot; i += 1) {
-          xx[i] = new Date(xstart + (i * 8.64e7));
-          z1[i] = z[(i % z.length)];
-        }
-        for (let j = 0; j < y1.length; j += 1) {
-          zz[j] = z1;
-        }
         const trace1 = {
           type: 'heatmap',
-          x: xx,
-          y: y1,
-          z: zz,
+          ...this.chartData.heatMapData,
           colorscale: 'Viridis', // ''YlGnBu',
-          reversescale: true,
           colorbar: {
             thickness: 10,
             tickprefix: '$ ',

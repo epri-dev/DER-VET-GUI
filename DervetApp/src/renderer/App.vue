@@ -14,6 +14,11 @@
 
   export default {
     components: { TopNavBar },
-    name: 'dervetapp',
+    name: 'DER-VET',
+    beforeMount() {
+      if (this.$store.state.CalEnviroScreen.cesScores === null) {
+        this.$store.dispatch('loadCesScores');
+      }
+    },
   };
 </script>
