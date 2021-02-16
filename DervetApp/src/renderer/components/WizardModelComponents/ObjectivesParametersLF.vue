@@ -83,7 +83,7 @@
       <hr>
 
       <save-buttons
-        :continue-link="WIZARD_COMPONENT_PATH"
+        :continue-link="WIZARD_COMPONENT"
         :displayError="submitted && $v.$anyError"
         :save="validatedSave" />
 
@@ -103,7 +103,7 @@
   import LFDownPriceTimeSeries from '@/models/TimeSeries/LFDownPriceTimeSeries';
   import LFEnergyOptionDownTimeSeries from '@/models/TimeSeries/LFEnergyOptionDownTimeSeries';
   import LFEnergyOptionUpTimeSeries from '@/models/TimeSeries/LFEnergyOptionUpTimeSeries';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT } from '@/router/constants';
   import {
     SET_LF_COMBINED_MARKET,
     SET_LF_DOWN_PRICE,
@@ -136,7 +136,7 @@
         energyOptionDown: projState.lfEOD,
         metadata,
         ...this.getDataFromProject(),
-        WIZARD_COMPONENT_PATH,
+        WIZARD_COMPONENT,
         LFPriceTimeSeries,
         LFUpPriceTimeSeries,
         LFDownPriceTimeSeries,

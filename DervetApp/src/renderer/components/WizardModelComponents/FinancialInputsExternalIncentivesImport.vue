@@ -29,7 +29,7 @@
         <hr>
 
         <cancel-and-save-buttons
-          :backLink="FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH"
+          :backLink="FINANCIAL_INPUTS_EXTERNAL_INCENTIVES"
           backText="Cancel"
           :disabled="isImportDisabled()"
           continueText="Import External Incentives"
@@ -46,7 +46,7 @@
   import ExternalIncentivesMetadata, { parsedCsvToExternalIncentives } from '@/models/ExternalIncentives';
   import { parseCsvFromEvent } from '@/util/file';
   import CancelAndSaveButtons from '@/components/Shared/CancelAndSaveButtons';
-  import { FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH } from '@/router/constants';
+  import { FINANCIAL_INPUTS_EXTERNAL_INCENTIVES } from '@/router/constants';
   import { compileImportNotes } from '@/util/validation';
 
   const metadata = ExternalIncentivesMetadata.getHardcodedMetadata();
@@ -61,7 +61,7 @@
         parsedExternalIncentivesCsv: null,
         importError: '',
         importedFilePath: null,
-        FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
+        FINANCIAL_INPUTS_EXTERNAL_INCENTIVES,
       };
     },
     validations() {
@@ -122,7 +122,7 @@
         // complete this mutation before navigation to next page
         this.$store.dispatch('replaceExternalIncentives', eis)
           .then(this.$store.dispatch('replaceExternalIncentivesFileImportNotes', fileImportNotes))
-          .then(this.$router.push({ path: FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH }));
+          .then(this.$router.push({ path: FINANCIAL_INPUTS_EXTERNAL_INCENTIVES }));
       },
     },
   };

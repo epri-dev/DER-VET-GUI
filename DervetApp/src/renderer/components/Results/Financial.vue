@@ -45,7 +45,7 @@
   import Chart from 'chart.js';
   import Plotly from 'plotly.js';
   import { formatYAxisCurrency } from '@/util/chart';
-  import { RESULTS_PATH } from '@/router/constants';
+  import { RESULTS } from '@/router/constants';
 
   export default {
     beforeMount() {
@@ -59,7 +59,7 @@
     },
     data() {
       return {
-        resultsPath: RESULTS_PATH,
+        resultsPath: RESULTS,
       };
     },
     computed: {

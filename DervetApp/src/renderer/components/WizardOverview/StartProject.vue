@@ -223,7 +223,7 @@
       validatedSaveContinue() {
         this.validatedSave();
         this.save();
-        this.$router.push({ path: this.paths.OBJECTIVES_PATH });
+        this.$router.push({ path: this.paths.OBJECTIVES });
       },
       validatedSaveStay() {
         this.validatedSave();

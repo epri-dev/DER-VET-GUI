@@ -52,7 +52,7 @@
       <hr>
 
       <save-buttons
-        :continue-link="WIZARD_COMPONENT_PATH"
+        :continue-link="WIZARD_COMPONENT"
         :displayError="submitted && $v.$anyError"
         :save="validatedSave" />
 
@@ -71,7 +71,7 @@
   import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
   import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
   import UserEnergyMinTimeSeries from '@/models/TimeSeries/UserEnergyMinTimeSeries';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT } from '@/router/constants';
   import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
 
   const metadata = p.projectMetadata;
@@ -100,7 +100,7 @@
         UserEnergyMinTimeSeries,
         metadata,
         ...this.getDataFromProject(),
-        WIZARD_COMPONENT_PATH,
+        WIZARD_COMPONENT,
       };
     },
     validations: {

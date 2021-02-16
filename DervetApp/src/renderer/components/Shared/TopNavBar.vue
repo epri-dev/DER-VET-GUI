@@ -5,24 +5,24 @@
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
           <!-- TODO add disabled attribute to show/hide buttons based on the state of the project -->
-          <b-nav-item :active="isActiveIndex(INDEX_PATH)"
-                      :to="INDEX_PATH">
+          <b-nav-item :active="isActiveIndex(INDEX)"
+                      :to="INDEX">
             Home
           </b-nav-item>
-          <b-nav-item :active="isActive(WIZARD_START_PATH)"
-                      :to="WIZARD_START_PATH">
+          <b-nav-item :active="isActive(WIZARD_OVERVIEW)"
+                      :to="WIZARD_OVERVIEW">
             Project Overview
           </b-nav-item>
-          <b-nav-item :active="isActive(WIZARD_COMPONENT_PATH)"
-                      :to="WIZARD_COMPONENT_PATH">
+          <b-nav-item :active="isActive(WIZARD_COMPONENT)"
+                      :to="WIZARD_COMPONENT">
             Model Components
           </b-nav-item>
-          <b-nav-item :active="isActive(WIZARD_RUN_CASE_PATH)"
-                      :to="WIZARD_RUN_CASE_PATH">
+          <b-nav-item :active="isActive(WIZARD_RUN_CASE)"
+                      :to="WIZARD_RUN_CASE">
             Summary
           </b-nav-item>
-          <b-nav-item :active="isActive(RESULTS_PATH)"
-                      :to="RESULTS_PATH"
+          <b-nav-item :active="isActive(RESULTS)"
+                      :to="RESULTS"
                       v-if="resultsExist">
             Results
           </b-nav-item>
@@ -34,21 +34,21 @@
 
 <script>
   import {
-    INDEX_PATH,
-    WIZARD_START_PATH,
-    WIZARD_COMPONENT_PATH,
-    RESULTS_PATH,
-    WIZARD_RUN_CASE_PATH,
+    INDEX,
+    WIZARD_OVERVIEW,
+    WIZARD_COMPONENT,
+    RESULTS,
+    WIZARD_RUN_CASE,
   } from '@/router/constants';
 
   export default {
     data() {
       return {
-        INDEX_PATH,
-        WIZARD_START_PATH,
-        WIZARD_COMPONENT_PATH,
-        RESULTS_PATH,
-        WIZARD_RUN_CASE_PATH,
+        INDEX,
+        WIZARD_OVERVIEW,
+        WIZARD_COMPONENT,
+        RESULTS,
+        WIZARD_RUN_CASE,
       };
     },
     computed: {
@@ -58,7 +58,7 @@
     },
     methods: {
       isActiveIndex() {
-        return this.$route.path === INDEX_PATH;
+        return this.$route.path === INDEX;
       },
       isActive(path) {
         return new RegExp(path).test(this.$route.path);

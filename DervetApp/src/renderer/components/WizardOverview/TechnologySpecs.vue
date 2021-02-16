@@ -42,7 +42,7 @@
       </div>
     </div>
     <hr>
-    <nav-button :continue-link="WIZARD_COMPONENT_PATH"
+    <nav-button :continue-link="WIZARD_COMPONENT"
                  continue-text="Done Adding Technologies"
                  :displayError="!complete"
                  :error-text="this.getSingleErrorMsg()"
@@ -52,9 +52,9 @@
 <script>
   import _ from 'lodash';
   import {
-    WIZARD_COMPONENT_PATH,
-    OBJECTIVES_PATH,
-    TECH_SPECS_PATH,
+    WIZARD_COMPONENT,
+    OBJECTIVES,
+    TECH_SPECS,
   } from '@/router/constants';
   import {
     ACTIVATE_TECH,
@@ -84,9 +84,9 @@
             label: '',
           },
         ],
-        WIZARD_COMPONENT_PATH,
-        OBJECTIVES_PATH,
-        TECH_SPECS_PATH,
+        WIZARD_COMPONENT,
+        OBJECTIVES,
+        TECH_SPECS,
       };
     },
     computed: {

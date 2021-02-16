@@ -13,21 +13,21 @@ const financeMixin = {
           fullName: 'Miscellaneous Inputs',
           pageName: 'inputs',
           pageKey: FINANCE_PAGEKEY,
-          path: paths.FINANCIAL_INPUTS_PATH,
+          path: paths.FINANCIAL_INPUTS_MISCELLANEOUS,
         },
         {
           show: true,
           fullName: 'External Incentives',
           pageName: 'externalIncentives',
           pageKey: FINANCE_PAGEKEY,
-          path: paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
+          path: paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES,
         },
         {
           show: p.objectivesRetailEnergyChargeReduction || p.objectivesRetailDemandChargeReduction,
           fullName: 'Retail Tariff',
           pageName: 'retailTariff',
           pageKey: FINANCE_PAGEKEY,
-          path: paths.FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
+          path: paths.FINANCIAL_INPUTS_RETAIL_TARIFF,
         },
       ];
       const pagesWithIsComplete = [];

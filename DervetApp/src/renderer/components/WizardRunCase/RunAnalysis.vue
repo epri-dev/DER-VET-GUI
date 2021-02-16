@@ -22,7 +22,7 @@
   import path from 'path';
 
   import { LOG_FILE } from '@/models/dto/ProjectDto';
-  import { RESULTS_PATH } from '@/router/constants';
+  import { RESULTS } from '@/router/constants';
 
   export default {
     name: 'runAnalysis',
@@ -39,7 +39,7 @@
       },
       resultsExist() {
         if (this.results !== null) {
-          this.$router.push({ path: RESULTS_PATH }).catch(() => {});
+          this.$router.push({ path: RESULTS }).catch(() => {});
         }
         return this.results !== null;
       },

@@ -15,7 +15,7 @@
       <hr>
 
       <save-buttons
-        :continue-link="WIZARD_COMPONENT_PATH"
+        :continue-link="WIZARD_COMPONENT"
         :save="this.save"
       />
 
@@ -27,7 +27,7 @@
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import FleetEVBaselineLoadTimeSeries from '@/models/TimeSeries/FleetEVBaselineLoadTimeSeries';
   import SaveButtons from '@/components/Shared/SaveButtons';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT } from '@/router/constants';
   import {
     ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_FLEET_EV,
     ACTIVATE_TECH,
@@ -43,7 +43,7 @@
       return {
         loadProfile: this.getloadProfile(),
         loadName: 'baseline load profile',
-        WIZARD_COMPONENT_PATH,
+        WIZARD_COMPONENT,
         FleetEVBaselineLoadTimeSeries,
       };
     },

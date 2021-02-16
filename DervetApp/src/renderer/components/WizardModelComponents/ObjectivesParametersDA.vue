@@ -22,7 +22,7 @@
       <hr>
 
       <save-buttons
-        :continue-link="WIZARD_COMPONENT_PATH"
+        :continue-link="WIZARD_COMPONENT"
         :displayError="submitted && $v.$anyError"
         :save="validatedSave" />
 
@@ -38,7 +38,7 @@
   import { isNotNullAndNotUndefined } from '@/util/logic';
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import DAPriceTimeSeries from '@/models/TimeSeries/DAPriceTimeSeries';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT } from '@/router/constants';
   import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
 
   const metadata = p.projectMetadata;
@@ -57,7 +57,7 @@
         name: 'day ahead price',
         metadata,
         ...this.getDataFromProject(),
-        WIZARD_COMPONENT_PATH,
+        WIZARD_COMPONENT,
         DAPriceTimeSeries,
       };
     },

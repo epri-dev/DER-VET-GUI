@@ -53,7 +53,7 @@
     <hr/>
 
     <save-buttons
-      :continue-link="WIZARD_COMPONENT_PATH"
+      :continue-link="WIZARD_COMPONENT"
       :displayError="!complete"
       :error-text="errorMessage"
       :save="this.save" />
@@ -63,7 +63,7 @@
 
 <script>
   import { _, cloneDeep } from 'lodash';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT } from '@/router/constants';
   import SaveButtons from '@/components/Shared/SaveButtons';
   import { getSingleErrorMsg } from '@/util/validation';
 
@@ -112,7 +112,7 @@
           { key: 'remove', label: '' },
         ],
         items: [],
-        WIZARD_COMPONENT_PATH,
+        WIZARD_COMPONENT,
       };
     },
     methods: {

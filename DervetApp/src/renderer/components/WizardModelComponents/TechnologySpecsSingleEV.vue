@@ -157,7 +157,7 @@
         </drop-down-input>
 
         <save-buttons
-          :continue-link="WIZARD_COMPONENT_PATH"
+          :continue-link="WIZARD_COMPONENT"
           :displayError="submitted && $v.$anyError"
           :save="validatedSave"
         />
@@ -174,7 +174,7 @@
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsSingleEVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSingleEV';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT } from '@/router/constants';
   import {
     REPLACE_TECHNOLOGY_SPECS_SINGLE_EV,
     MAKE_LIST_OF_ACTIVE_TECHNOLOGIES,
@@ -193,7 +193,7 @@
         metadata,
         values,
         ...valuesMinusId,
-        WIZARD_COMPONENT_PATH,
+        WIZARD_COMPONENT,
       };
     },
     validations() {

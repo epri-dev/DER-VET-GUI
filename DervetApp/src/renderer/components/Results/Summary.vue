@@ -21,7 +21,7 @@
             </div>
             <div class="col-md-12 buffer-bottom text-center">
               <a class="btn btn-sm btn-default">
-                <router-link :to="paths.RESULTS_FINANCIAL_PATH">
+                <router-link :to="paths.RESULTS_FINANCIAL">
                   View Detailed Financials Results...
                 </router-link>
               </a>
@@ -39,7 +39,7 @@
             </div>
             <div class="col-md-12 buffer-bottom text-center">
               <a class="btn btn-sm btn-default">
-                <router-link :to="paths.RESULTS_DISPATCH_PATH">
+                <router-link :to="paths.RESULTS_DISPATCH">
                   View Detailed Dispatch Results...
                 </router-link>
               </a>
@@ -58,7 +58,7 @@
           </div>
           <div class="col-md-12 buffer-bottom text-center">
             <a class="btn btn-sm btn-default">
-              <router-link :to="paths.RESULTS_DESIGN_PATH">
+              <router-link :to="paths.RESULTS_DESIGN">
                 View Detailed Design Results...
               </router-link>
             </a>

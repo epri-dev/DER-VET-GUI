@@ -29,7 +29,7 @@
 <script>
   import _ from 'lodash';
   import Plotly from 'plotly.js';
-  import { RESULTS_PATH } from '@/router/constants';
+  import { RESULTS } from '@/router/constants';
 
   export default {
     beforeMount() {
@@ -41,7 +41,7 @@
     },
     data() {
       return {
-        resultsPath: RESULTS_PATH,
+        resultsPath: RESULTS,
       };
     },
     computed: {

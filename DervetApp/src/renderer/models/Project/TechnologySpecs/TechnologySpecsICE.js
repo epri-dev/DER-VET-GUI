@@ -7,7 +7,7 @@ import {
   SHARED_DYNAMIC_FIELDS,
   createSharedHardcodedMetadata,
 } from '@/models/Project/TechnologySpecs/sharedConstants';
-import { TECH_SPECS_ICE_PATH } from '@/router/constants';
+import { TECH_SPECS_ICE } from '@/router/constants';
 
 const ICE = 'ICE';
 
@@ -59,7 +59,7 @@ export default class TechnologySpecsICEMetadata {
       complete: null,
       errorList: [],
       id: uuidv4(),
-      path: TECH_SPECS_ICE_PATH,
+      path: TECH_SPECS_ICE,
       tag: ICE,
       technologyType: 'Generator',
       ...this.operateOnDynamicFields(f => f.defaultValue),

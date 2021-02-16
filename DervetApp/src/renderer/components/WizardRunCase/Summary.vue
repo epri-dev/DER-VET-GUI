@@ -167,7 +167,7 @@
 <script>
   import _ from 'lodash';
   import * as paths from '@/router/constants';
-  import { RUN_ANALYSIS_PATH } from '@/router/constants';
+  import { RUN_ANALYSIS } from '@/router/constants';
   import { ANALYSIS_HORIZON_MODE_ALLOWED_VALUES } from '@/models/Project/constants';
   import * as techLabels from '@/models/Project/TechnologySpecs/labelConstants';
   import { exportProject } from '@/service/ProjectFileManager';
@@ -258,7 +258,7 @@
         // TODO: note that there is currently no validation, so calling this with an
         // incomplete Project object will likely result in an unhandled exception
         this.$store.dispatch('Application/runDervet', this.$store.state.Project)
-          .then(this.$router.push({ path: RUN_ANALYSIS_PATH }));
+          .then(this.$router.push({ path: RUN_ANALYSIS }));
       },
 
       // components
@@ -321,11 +321,11 @@
       getOverviewPath(page) {
         let overviewPath = '';
         if (page === 'start') {
-          overviewPath = paths.START_PROJECT_PATH;
+          overviewPath = paths.START_PROJECT;
         } else if (page === 'objectives') {
-          overviewPath = paths.OBJECTIVES_PATH;
+          overviewPath = paths.OBJECTIVES;
         } else if (page === 'technologySpecs') {
-          overviewPath = paths.TECH_SPECS_PATH;
+          overviewPath = paths.TECH_SPECS;
         }
         return overviewPath;
       },

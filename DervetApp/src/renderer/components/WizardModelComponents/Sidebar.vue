@@ -2,16 +2,16 @@
   <div class="left-sidebar">
     <b-nav vertical>
       <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
-                   v-bind:class="{ current: isActual(this.paths.WIZARD_COMPONENT_PATH) }"
-                   :to="this.paths.WIZARD_COMPONENT_PATH">
+                   v-bind:class="{ current: isActual(this.paths.WIZARD_COMPONENT) }"
+                   :to="this.paths.WIZARD_COMPONENT">
         Overview
       </router-link>
 
       <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
                    v-bind:class="{
-          current: isCurrent(`${this.paths.WIZARD_COMPONENT_PATH}/technology-specs`),
+          current: isCurrent(`${this.paths.WIZARD_COMPONENT}/technology-specs`),
           incomplete: isCompleteOverview('technologySpecs') }"
-                   :to="this.paths.TECH_SPECS_PATH">
+                   :to="this.paths.TECH_SPECS">
         Technologies
       </router-link>
 
@@ -29,9 +29,9 @@
 
       <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
                    v-bind:class="{
-          current: isCurrent(this.paths.OBJECTIVES_PATH),
+          current: isCurrent(this.paths.OBJECTIVES),
           incomplete: isCompleteOverview('objectives') }"
-                   :to="this.paths.OBJECTIVES_PATH">
+                   :to="this.paths.OBJECTIVES">
         Services
       </router-link>
       <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
@@ -43,7 +43,7 @@
       </router-link>
 
       <div class="nav nav-sidebar sidebar-root-el text-decoration-none"
-           v-bind:class="{ current: isCurrent(`${this.paths.WIZARD_COMPONENT_PATH}/financial`) }">
+           v-bind:class="{ current: isCurrent(`${this.paths.WIZARD_COMPONENT}/financial`) }">
         Finances
       </div>
 
@@ -56,8 +56,8 @@
       </router-link>
 
       <!-- <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
-                   v-bind:class="{ current: isCurrent(this.paths.SENSITIVITY_ANALYSIS_PATH) }"
-                   :to="this.paths.SENSITIVITY_ANALYSIS_PATH">
+                   v-bind:class="{ current: isCurrent(this.paths.SENSITIVITY_ANALYSIS) }"
+                   :to="this.paths.SENSITIVITY_ANALYSIS">
         Scenario Analysis
       </router-link> -->
 

@@ -35,7 +35,7 @@
       <hr>
 
       <save-buttons
-        :continue-link="WIZARD_COMPONENT_PATH"
+        :continue-link="WIZARD_COMPONENT"
         :displayError="submitted && $v.$anyError"
         :save="validatedSave" />
 
@@ -52,7 +52,7 @@
   import operateOnKeysList from '@/util/object';
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT } from '@/router/constants';
   import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
 
   const metadata = p.projectMetadata;
@@ -71,7 +71,7 @@
         loadName: 'critical load',
         metadata,
         ...this.getDataFromProject(),
-        WIZARD_COMPONENT_PATH,
+        WIZARD_COMPONENT,
         CriticalLoadTimeSeries,
       };
     },

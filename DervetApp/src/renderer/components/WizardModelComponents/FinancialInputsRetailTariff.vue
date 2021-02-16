@@ -64,21 +64,14 @@
           </table>
         </div>
       </div>
-<!--
-      <div class="form-group" v-else>
-        <div class="col-md-12 buffer-bottom">
-          <i>There are currently no retail tariff billing periods specified...</i>
-        </div>
-      </div>
--->
     </div>
 
     <div class="form-group row">
       <div class="col-md-12">
-        <router-link :to="`${FINANCIAL_INPUTS_RETAIL_TARIFF_PATH}-billing-period/null`" class="btn btn-secondary">
+        <router-link :to="`${FINANCIAL_INPUTS_RETAIL_TARIFF_BILLING_PERIOD}/null`" class="btn btn-secondary">
           Add Billing Period
         </router-link>
-        <router-link :to="`${FINANCIAL_INPUTS_RETAIL_TARIFF_PATH}-import`" class="btn btn-secondary">
+        <router-link :to="FINANCIAL_INPUTS_RETAIL_TARIFF_IMPORT" class="btn btn-secondary">
           <i class="fas fa-upload"/> Import Tariff
         </router-link>
         <a
@@ -95,7 +88,7 @@
 
     <hr>
 
-    <nav-button :continue-link="WIZARD_COMPONENT_PATH"
+    <nav-button :continue-link="WIZARD_COMPONENT"
                 :displayError="!complete"
                 :error-text="errorMessage"
                 continue-text="Done Adding Billing Periods"/>
@@ -108,8 +101,9 @@
   import { formatCsvForHref } from '@/util/file';
   import NavButton from '@/components/Shared/NavButton';
   import {
-    WIZARD_COMPONENT_PATH,
-    FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
+    WIZARD_COMPONENT,
+    FINANCIAL_INPUTS_RETAIL_TARIFF_IMPORT,
+    FINANCIAL_INPUTS_RETAIL_TARIFF_BILLING_PERIOD,
   } from '@/router/constants';
   import { getSingleErrorMsg } from '@/util/validation';
 
@@ -140,8 +134,9 @@
     data() {
       return {
         RETAIL_TARIFF_HEADERS,
-        WIZARD_COMPONENT_PATH,
-        FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
+        WIZARD_COMPONENT,
+        FINANCIAL_INPUTS_RETAIL_TARIFF_IMPORT,
+        FINANCIAL_INPUTS_RETAIL_TARIFF_BILLING_PERIOD,
       };
     },
     methods: {

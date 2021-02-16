@@ -2,9 +2,9 @@ import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
 import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
 import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
 import {
-  TECH_SPECS_PV_PATH,
-  TECH_SPECS_BATTERY_PATH,
-  TECH_SPECS_BATTERY_DATA_CYCLES_PATH,
+  TECH_SPECS_PV,
+  TECH_SPECS_BATTERY,
+  TECH_SPECS_BATTERY_DATA_CYCLES,
 } from '@/router/constants';
 
 import { pvGen, criticalLoad, siteLoad } from '@/assets/cases/billReduction/csvs';
@@ -289,7 +289,7 @@ export const billReductionProject = {
     name: 'Installation 1',
     nu: 20,
     operationYear: 2017,
-    path: TECH_SPECS_PV_PATH,
+    path: TECH_SPECS_PV,
     ppaCost: null,
     ppaInflationRate: null,
     ratedCapacity: 1000,
@@ -312,7 +312,7 @@ export const billReductionProject = {
       dataRows: [],
       displayName: 'Battery Cycle Life Curve',
       errorList: ['Not Started'],
-      path: TECH_SPECS_BATTERY_DATA_CYCLES_PATH,
+      path: TECH_SPECS_BATTERY_DATA_CYCLES,
     }],
     associatedInputsComplete: false,
     auxiliaryLoad: 0,
@@ -347,7 +347,7 @@ export const billReductionProject = {
     maxDuration: 0,
     name: 'BESS 1',
     operationYear: 2017,
-    path: TECH_SPECS_BATTERY_PATH,
+    path: TECH_SPECS_BATTERY,
     powerCapacity: null,
     powerCapacityMaximum: null,
     powerCapacityMinimum: null,

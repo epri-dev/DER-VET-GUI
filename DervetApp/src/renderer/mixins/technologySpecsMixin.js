@@ -29,7 +29,7 @@ const technologySpecsMixin = {
           fullName: 'Internal Combustion Engine (ICE) Generator sets',
           metadata: metadataICE,
           props: 'iceId',
-          path: paths.TECH_SPECS_ICE_PATH,
+          path: paths.TECH_SPECS_ICE,
         },
         {
           shortHand: 'Diesel',
@@ -37,7 +37,7 @@ const technologySpecsMixin = {
           fullName: 'Diesel Generator sets',
           metadata: metadataDieselGen,
           props: 'dieselGenId',
-          path: paths.TECH_SPECS_DIESEL_PATH,
+          path: paths.TECH_SPECS_DIESEL,
         },
         {
           shortHand: 'PV',
@@ -45,7 +45,7 @@ const technologySpecsMixin = {
           fullName: 'Solar Photovoltaic (PV) Sytems',
           metadata: metadataSolarPV,
           props: 'solarId',
-          path: paths.TECH_SPECS_PV_PATH,
+          path: paths.TECH_SPECS_PV,
         },
         {}, // filler card (empty, but gives some order when rendered)
         {
@@ -54,7 +54,7 @@ const technologySpecsMixin = {
           fullName: 'Battery Energy Storage Sytems (BESS)',
           metadata: metadataBattery,
           props: 'batteryId',
-          path: paths.TECH_SPECS_BATTERY_PATH,
+          path: paths.TECH_SPECS_BATTERY,
         },
         {}, // filler card (empty, but gives some order when rendered)
         {
@@ -63,7 +63,7 @@ const technologySpecsMixin = {
           fullName: 'Single Electric Vehicle (EV)',
           metadata: metadataSingleEV,
           props: 'id',
-          path: paths.TECH_SPECS_SINGLE_EV_PATH,
+          path: paths.TECH_SPECS_SINGLE_EV,
         },
         {
           shortHand: 'Fleet EV',
@@ -71,7 +71,7 @@ const technologySpecsMixin = {
           fullName: 'Fleet Electric Vehicle (EV)',
           metadata: metadataFleetEV,
           props: 'id',
-          path: paths.TECH_SPECS_FLEET_EV_PATH,
+          path: paths.TECH_SPECS_FLEET_EV,
         },
         {
           shortHand: 'Controllable Load',
@@ -79,7 +79,7 @@ const technologySpecsMixin = {
           fullName: 'Controllable Loads (Demand Response)',
           metadata: metadataControllableLoad,
           props: 'id',
-          path: paths.TECH_SPECS_CONTROLLABLE_LOAD_PATH,
+          path: paths.TECH_SPECS_CONTROLLABLE_LOAD,
         },
       ];
     },

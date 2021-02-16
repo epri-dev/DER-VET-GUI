@@ -29,7 +29,7 @@
         <hr>
 
         <cancel-and-save-buttons
-          :back-link="FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
+          :back-link="FINANCIAL_INPUTS_RETAIL_TARIFF"
           backText="Cancel"
           :disabled="isImportDisabled()"
           continueText="Import Retail Tariff"
@@ -47,7 +47,7 @@
   import RetailTariffBillingPeriodMetadata, { parsedCsvToBillingPeriods } from '@/models/RetailTariffBillingPeriod';
   import { parseCsvFromEvent } from '@/util/file';
   import CancelAndSaveButtons from '@/components/Shared/CancelAndSaveButtons';
-  import { FINANCIAL_INPUTS_RETAIL_TARIFF_PATH } from '@/router/constants';
+  import { FINANCIAL_INPUTS_RETAIL_TARIFF } from '@/router/constants';
   import { compileImportNotes } from '@/util/validation';
 
   const metadata = RetailTariffBillingPeriodMetadata.getHardcodedMetadata();
@@ -62,7 +62,7 @@
         parsedBillingPeriodCsv: null,
         importError: '',
         importedFilePath: null,
-        FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
+        FINANCIAL_INPUTS_RETAIL_TARIFF,
       };
     },
     validations() {
@@ -150,7 +150,7 @@
         // complete this mutation before navigation to next page
         this.$store.dispatch('replaceRetailTariffBillingPeriods', pds)
           .then(this.$store.dispatch('replaceRetailTariffFileImportNotes', fileImportNotes))
-          .then(this.$router.push({ path: FINANCIAL_INPUTS_RETAIL_TARIFF_PATH }));
+          .then(this.$router.push({ path: FINANCIAL_INPUTS_RETAIL_TARIFF }));
       },
     },
   };
