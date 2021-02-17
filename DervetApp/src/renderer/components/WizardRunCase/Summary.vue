@@ -321,7 +321,7 @@
       getOverviewPath(page) {
         let overviewPath = '';
         if (page === 'start') {
-          overviewPath = paths.START_PROJECT;
+          overviewPath = paths.PROJECT_CONFIGURATION;
         } else if (page === 'objectives') {
           overviewPath = paths.OBJECTIVES;
         } else if (page === 'technologySpecs') {

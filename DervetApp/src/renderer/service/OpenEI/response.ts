@@ -52,9 +52,15 @@ export interface UtilityCompanyItem {
   uri: string;
 }
 
+export interface UtilityCompaniesData {
+  items: Array<UtilityCompanyItem>
+  properties: object;
+}
+
 export interface UtilityCompaniesResponse {
-  properties: Array<any>;
-  items: Array<UtilityCompanyItem>;
+  data: UtilityCompaniesData;
+  status: number;
+  statusText: string;
 }
 
 export default UtilityRate;

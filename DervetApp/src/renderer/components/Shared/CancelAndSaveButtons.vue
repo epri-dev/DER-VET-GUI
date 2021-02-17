@@ -17,9 +17,11 @@
     <div class="col-md-3 continue-btn">
       <router-link
         v-on:click.native="disabled ? () => null : save()"
+        :disabled.native="true"
         :event="disabled ? '' : 'click'"
         :to="continueLink"
-        class="btn btn-primary pull-right">
+        class="btn pull-right"
+        :class="disabled ? 'btn-secondary disabled' : 'btn-primary'">
         {{ continueText }}
       </router-link>
     </div>

@@ -12,7 +12,7 @@ const runCase = subPath => `${WIZARD_RUN_CASE}/${subPath}`;
 const results = subPath => `${RESULTS}/${subPath}`;
 
 // Wizard sub-routes
-export const START_PROJECT = overview('start-project');
+export const PROJECT_CONFIGURATION = overview('project-configuration');
 export const TECH_SPECS = overview('technology-specs');
 export const OBJECTIVES = overview('objectives');
 export const CAL_ENVIRO_SCREEN = overview('cal-enviro-screen');
@@ -33,8 +33,9 @@ export const TECH_SPECS_FLEET_EV_BASELINE = component('technology-specs-fleet-ev
 export const FINANCIAL_INPUTS_MISCELLANEOUS = component('financial-inputs-miscellaneous');
 export const FINANCIAL_INPUTS_EXTERNAL_INCENTIVES = component('financial-inputs-external-incentives');
 export const FINANCIAL_INPUTS_RETAIL_TARIFF = component('financial-inputs-retail-tariff');
-export const FINANCIAL_INPUTS_RETAIL_TARIFF_IMPORT = component('financial-inputs-retail-tariff-import');
 export const FINANCIAL_INPUTS_RETAIL_TARIFF_BILLING_PERIOD = component('financial-inputs-retail-tariff-billing-period');
+export const FINANCIAL_INPUTS_RETAIL_TARIFF_IMPORT = component('financial-inputs-retail-tariff-import');
+export const FINANCIAL_INPUTS_RETAIL_TARIFF_OPEN_EI = component('financial-inputs-retail-tariff-open-ei');
 
 export const OBJECTIVES_BACKUP_POWER = component('objectives-parameters-backup');
 export const OBJECTIVES_DR = component('objectives-parameters-dr');

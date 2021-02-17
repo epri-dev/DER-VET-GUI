@@ -3,9 +3,9 @@
     <b-nav vertical>
       <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
                    v-bind:class="{
-          current: isActive(this.paths.START_PROJECT),
+          current: isActive(this.paths.PROJECT_CONFIGURATION) || this.isActive(this.paths.WIZARD_OVERVIEW),
           incomplete: !isComplete('start') }"
-                   :to="this.paths.START_PROJECT">
+                   :to="this.paths.PROJECT_CONFIGURATION">
         Project Configuration
       </router-link>
 
@@ -47,7 +47,7 @@
     },
     methods: {
       isActive(path) {
-        return RegExp(path).test(this.$route.path);
+        return path === this.$route.path;
       },
       isComplete(page) {
         return this.$store.state.Application.pageCompleteness.overview[page];

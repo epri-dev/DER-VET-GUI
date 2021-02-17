@@ -1,8 +1,8 @@
 import DAPriceTimeSeries from '@/models/TimeSeries/DAPriceTimeSeries';
 import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
 import {
-  TECH_SPECS_BATTERY_PATH,
-  TECH_SPECS_BATTERY_DATA_CYCLES_PATH,
+  TECH_SPECS_BATTERY,
+  TECH_SPECS_BATTERY_DATA_CYCLES,
 } from '@/router/constants';
 
 import { daPrice, marketPrice } from '@/assets/cases/ERCOTMarketService/csvs';
@@ -72,7 +72,7 @@ export const ERCOTMarketService = {
       dataRows: [],
       displayName: 'Battery Cycle Life Curve',
       errorList: ['Not Started'],
-      path: TECH_SPECS_BATTERY_DATA_CYCLES_PATH,
+      path: TECH_SPECS_BATTERY_DATA_CYCLES,
     }],
     associatedInputsComplete: false,
     auxiliaryLoad: 0,
@@ -107,7 +107,7 @@ export const ERCOTMarketService = {
     maxDuration: 0,
     name: 'BESS 1',
     operationYear: 2021,
-    path: TECH_SPECS_BATTERY_PATH,
+    path: TECH_SPECS_BATTERY,
     powerCapacity: 200,
     powerCapacityMaximum: null,
     powerCapacityMinimum: null,

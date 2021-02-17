@@ -67,6 +67,9 @@ body {
     margin-bottom: 15px;
 }
 
+.left-margin-table-buffer {
+    padding-left: 30px !important;
+}
 
 /*
  * Global add-ons
@@ -276,7 +279,7 @@ textarea {
 
 .numberbox-lg {
     display: inline-block;
-    width: 170px;
+    width: 100%;
 }
 
 .textbox-lg {

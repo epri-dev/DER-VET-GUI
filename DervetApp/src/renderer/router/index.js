@@ -22,11 +22,11 @@ export default new Router({
       children: [
         {
           path: '',
-          component: require('@/components/WizardOverview/StartProject').default,
+          component: require('@/components/WizardOverview/ProjectConfiguration').default,
         },
         {
-          path: 'start-project',
-          component: require('@/components/WizardOverview/StartProject').default,
+          path: 'project-configuration',
+          component: require('@/components/WizardOverview/ProjectConfiguration').default,
         },
         {
           path: 'technology-specs',
@@ -188,9 +188,14 @@ export default new Router({
           component: require('@/components/WizardModelComponents/FinancialInputsRetailTariffImport').default,
         },
         {
+          path: 'financial-inputs-retail-tariff-open-ei',
+          name: 'financialInputsRetailTariffOpenEI',
+          component: require('@/components/WizardModelComponents/OpenEI/Layout').default,
+        },
+        {
           path: 'financial-inputs-miscellaneous',
           name: 'financialInputsMiscellaneous',
-          component: require('@/components/WizardModelComponents/financialInputsMiscellaneous').default,
+          component: require('@/components/WizardModelComponents/FinancialInputsMiscellaneous').default,
         },
         {
           path: 'financial-inputs-external-incentives',
