@@ -6,5 +6,4 @@ export const isValueInRange = (value, lowValue, highValue) => (
   value >= lowValue && value <= highValue
 );
 
-export const isObjectOfLengthZero = value =>
-  isNotNullAndNotUndefined(value) && value.length !== 0;
+export const isObjectOfLengthZero = value => isNotNullAndNotUndefined(value) && value.length !== 0;

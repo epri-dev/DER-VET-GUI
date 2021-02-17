@@ -89,7 +89,6 @@
   import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
   import { isNotNullAndNotUndefined } from '@/util/logic';
 
-
   const metadata = p.projectMetadata;
   const validations = metadata.getValidationSchema(c.RESOURCE_ADEQUACY_FIELDS);
   const PAGEGROUP = 'components';

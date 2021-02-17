@@ -20,16 +20,20 @@ class BaseTableData {
     this.columnDataByYear = null;
     this.loadDataFromFile(rawArrayData);
   }
+
   getColumnIndex(colHeader) {
     return _.findIndex(this.columnHeaders, item => (item === colHeader));
   }
+
   getColumnIndexThatContains(text) {
     return _.findIndex(this.columnHeaders, item => (item.toLowerCase().indexOf(text) !== -1));
   }
+
   getDataValueByColHeader(rowIndex, colHeader) {
     const colIndex = this.getColumnIndex(colHeader);
     return this.getDataValueByColIndex(rowIndex, colIndex);
   }
+
   loadDataFromFile(arrayData) {
     this.data = arrayData;
     if (this.hasHeaderRow) {
@@ -40,10 +44,12 @@ class BaseTableData {
     }
     return true;
   }
+
   static toCamelCaseString(text) {
     text = text.replace(/([^a-zA-Z0-9.])/g, ' ').replace(/[\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''));
     return text.substr(0, 1).toLowerCase() + text.substr(1);
   }
+
   emptyRowObjectTemplate() {
     // creates an object where the keys are CamelCased column headers
     // and the values are empty lists
@@ -56,6 +62,7 @@ class BaseTableData {
     });
     return template;
   }
+
   static getYearFromString(text) {
     const yearList = text.match(/\d{4}/g);
     if (yearList.length) {
@@ -63,15 +70,19 @@ class BaseTableData {
     }
     return 0;
   }
+
   indexOfDateTime() {
     return this.getColumnIndex(this.dateTimeColName);
   }
+
   hasDateTimeColumn() {
     return typeof (this.dateTimeColName) === 'string';
   }
+
   static isRowNull(row) {
     return row[0] === null;
   }
+
   columnifyDataByYear() {
     // organize data by column instead of by row (in an object)
     const dataByYear = []; // each year of data will be saved here
@@ -124,6 +135,7 @@ class BaseTableData {
     dataByYear.push(currentData);
     return dataByYear;
   }
+
   getFirstYearChartData() {
     return this.columnDataByYear[0];
   }
