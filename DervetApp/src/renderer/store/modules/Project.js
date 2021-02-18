@@ -2,6 +2,7 @@ import { cloneDeep, flatten, merge } from 'lodash';
 
 import { billReductionProject } from '@/assets/cases/billReduction/project';
 import { reliabilityProject } from '@/assets/cases/reliability/project';
+import { dummyMarketServiceHourly } from '@/assets/cases/dummyMarketServiceHourly/project';
 import { projectMetadata } from '@/models/Project/ProjectMetadata';
 import * as m from '@/store/mutationTypes';
 import * as a from '@/store/actionTypes';
@@ -10,6 +11,7 @@ import * as c from '@/models/Project/constants';
 const usecaseDatabase = { // its a sad excuse for a database, but serves as one.
   billReductionProject,
   reliabilityProject,
+  dummyMarketServiceHourly,
 };
 
 const metadataDefaultValues = projectMetadata.getDefaultValues();
@@ -385,7 +387,6 @@ const mutations = {
   [m.SET_INCLUDE_SYSTEM_LOAD](state) {
     let gridDomainProject = state.objectivesDR;
     gridDomainProject = gridDomainProject || state.objectivesRA;
-    gridDomainProject = gridDomainProject || (state.ownership !== 'Customer');
     state.includeSystemLoad = gridDomainProject;
   },
   [m.SET_OPTIMIZATION_HORIZON](state, newOptimizataionHorizon) {
