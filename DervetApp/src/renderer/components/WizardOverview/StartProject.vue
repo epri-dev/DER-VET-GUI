@@ -80,7 +80,7 @@
           </div>
           <file-picker
             label="Select folder"
-            :onFileSelect="onOutputDirectorySelection"
+            :callback="onOutputDirectorySelection"
             :isAsync="false"
             :isDirectory="true"
             buttonAttributes="btn btn-secondary btn-md"

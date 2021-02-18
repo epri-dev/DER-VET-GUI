@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import fs from 'fs';
 import path from 'path';
 import Papa from 'papaparse';
@@ -120,10 +119,4 @@ export const findOverlap = (a, b) => {
   if (a.endsWith(b)) return b;
   if (a.indexOf(b) >= 0) return b;
   return findOverlap(a, b.substring(0, b.length - 1));
-};
-
-export const getRootDirectoryFromWebkitEvent = (file) => {
-  const full = file.path.split(path.sep);
-  const overlap = findOverlap(file.path, file.webkitRelativePath).split(path.sep);
-  return _.dropRight(full, overlap.length - 1).join(path.sep);
 };
