@@ -69,28 +69,41 @@
   
         const rawData = this.chartData.stackedLineData;
         const xx = rawData.timeSeriesDateAxis;
+        const data = [];
 
-        const batterySOC = {
-          x: rawData.timeSeriesDateAxis,
-          y: rawData.aggregatedStateOfCharge,
-          mode: 'lines',
-          name: 'Aggregate ESS SOC',
-          yaxis: 'y',
-        };
 
-        // TODO - optionally add reservations
-        const poi = {
+        // add 
+        const essSocData = rawData.aggregatedStateOfCharge;
+        if (essSocData.data !== undefined) {
+          const trace = {
+            x: xx,
+            y: essSocData.data,
+            type: 'bar',
+            name: essSocData.label,
+            yaxis: 'y',
+            marker: {
+              color: this.getColorFromTechnology('ess'),
+            },
+          };
+          data.push(trace);
+        }
+        const netLoadData = rawData.netPowerFlow;
+        const trace = {
           x: xx,
-          y: rawData.netLoadKW,
+          y: netLoadData.data,
           mode: 'lines',
-          name: 'POI power with reservations',
-          fill: 'tozeroy',
+          name: netLoadData.label,
+          fill: rawData.hasReservations ? 'tozeroy' : 'none',  
           line: {
             shape: 'hv',
           },
           // xaxis: 'x',
           yaxis: 'y5',
         };
+        data.push(trace);
+        if (hasReservations) {
+          _.forEach(rawData.capacityPrices)
+        }
 
         // TODO - optionally add
         // const yykWPrices = [];
@@ -165,9 +178,7 @@
           },
         ];
 
-        // const data = [batterySOC, poi, kWPrices, kWhPrices, power];
         const data = [batterySOC, poi, kWhPrices, ...power];
-        // const data = [pv];
         const selectorOptions = {
           buttons: [
             {

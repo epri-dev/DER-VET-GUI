@@ -42,16 +42,25 @@ export default class TimeSeriesData extends BaseTableData {
     const tsData = this.columnDataByYear[yearIndex];
     const aggregatedStateOfEnergy = tsData.aggregatedStateOfEnergyKWh;
     const aggregatedStateOfCharge = aggregatedStateOfEnergy.map(i => i / totalEnergyStorageCap);
-    // TODO check for market serices (grab prices and reservations)
+    // grab total power flows and pair with label
+    const powerFlows = [];
+    // add power flows that somes times show up
+
+    // look for data that represent market service prices
+    const capacityPrices = [];
+    
     return {
-      aggregatedStateOfCharge,
+      aggregatedSOC: TimeSeriesData.dataLabel(aggregatedStateOfCharge, 'Aggregate ESS SOC'),
+      powerFlows: [],
+      netPowerFlow: tsData.netLoadKW,
       totalStoragePowerKW: tsData.totalStoragePowerKW,
       totalGenerationKW: tsData.totalGenerationKW,
       totalLoadKW: tsData.totalLoadKW,
-      netLoadKW: tsData.netLoadKW,
       criticalLoadKW: tsData.criticalLoadKW, // might be undefined
       timeSeriesDateAxis: this.timeSeriesDateAxis(0),
-      energyPriceKWh: this.energyPriceTimeSeriesData(0),
+      energyPriceKWh: TimeSeriesData.dataLabel(this.energyPriceTimeSeriesData(0), 'Energy Price'),
+      capacityPrices: [],
+      hasReservations: false,
     };
   }
   timeSeriesDateAxis(yearIndex) {
@@ -76,8 +85,10 @@ export default class TimeSeriesData extends BaseTableData {
       data[hourOfDay].push(item);
       hourOfDay += 1;
     });
-
     return data;
+  }
+  static dataLabel(data, label) {
+    return { data, label }
   }
 }
 
