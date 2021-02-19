@@ -128,7 +128,7 @@
   
         const config = {
           displaylogo: false, // hides the plotly logo from the modebar when false
-          scrollZoom: true, // allows mouse wheel scroll when true
+          scrollZoom: false, // allows mouse wheel scroll when true
           staticPlot: false, // disable modebar options when true
           responsive: true, // responsive to window size
           autosizeable: true,
@@ -379,7 +379,7 @@
         const config = {
           displaylogo: false, // hides the plotly logo from the modebar when false
           scrollZoom: true, // allows mouse wheel scroll when true
-          staticPlot: false, // disable modebar options when true
+          staticPlot: true, // disable modebar options when true
           responsive: true, // responsive to window size
           autosizeable: true,
           toImageButtonOptions: {

@@ -131,7 +131,7 @@ export default class SizeData extends BaseTableData {
         },
         {
           subTotal: '=',
-          strEquation: `${powerCapacityKW.toLocaleString()}kW x $${cCostkW.toLocaleString()}/kWh`,
+          strEquation: `${powerCapacityKW.toLocaleString()}kW x $${cCostkW.toLocaleString()}/kW`,
         },
       ];
       costStructure = [...costPerkW, ...costStructure];
