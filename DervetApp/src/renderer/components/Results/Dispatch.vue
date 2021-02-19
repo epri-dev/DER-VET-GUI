@@ -137,6 +137,7 @@
             format: 'png', // 'jpeg',
             filename: 'dispatch-time-series-plots',
           },
+          modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d', 'toggleSpikelines'],
         };
 
         // BUILD LAYOUT AND DATA
@@ -379,7 +380,6 @@
         const config = {
           displaylogo: false, // hides the plotly logo from the modebar when false
           scrollZoom: true, // allows mouse wheel scroll when true
-          staticPlot: true, // disable modebar options when true
           responsive: true, // responsive to window size
           autosizeable: true,
           toImageButtonOptions: {
@@ -387,6 +387,7 @@
             format: 'png', // 'jpeg',
             filename: 'energy-price-heat-map',
           },
+          modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d', 'toggleSpikelines'],
         };
         return Plotly.newPlot(ctx, data, layout, config);
       },

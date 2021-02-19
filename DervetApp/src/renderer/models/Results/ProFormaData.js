@@ -17,7 +17,6 @@ export default class ProFormaData extends BaseTableData {
         keys.push(camelCol);
         const fieldTemplate = {
           key: camelCol,
-          sortable: true,
           label: colString,
           formatter: (camelCol === 'year') ? null : formatYAxisCurrency,
         };

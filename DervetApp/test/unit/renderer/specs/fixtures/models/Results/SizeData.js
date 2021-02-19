@@ -34,7 +34,7 @@ export const zeroDischargeBatteryCostTable = {
       subTotal: '$0',
     },
     {
-      strEquation: '0kW x $800/kWh',
+      strEquation: '0kW x $800/kW',
       subTotal: '=',
     },
     {
