@@ -3,7 +3,6 @@
 
     <div class="jumbotron dervet-title">
       <h1>DER-VET</h1>
-      
     </div>
 
     <div class="row buffer-bottom">
@@ -69,7 +68,7 @@
 
 </template>
 
-<script>
+<script language="ts">
   import { LOAD_QUICK_START_PROJECT } from '@/store/actionTypes';
   import { WIZARD_START_PATH } from '@/router/constants';
 

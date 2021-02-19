@@ -38,4 +38,3 @@ export const formatXAxis6Hour = (tick) => {
   }
   return '';
 };
-

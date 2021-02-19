@@ -1,4 +1,3 @@
-
 export const pvGen = [
   0,
   0,

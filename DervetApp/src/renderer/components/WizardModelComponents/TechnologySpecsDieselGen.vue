@@ -237,8 +237,8 @@
     mixins: [wizardFormMixin],
     props: ['dieselGenId'],
     data() {
-      const values = this.isnewDieselGen() ?
-        metadata.getDefaultValues() : this.getDieselGenFromStore();
+      const values = this.isnewDieselGen()
+        ? metadata.getDefaultValues() : this.getDieselGenFromStore();
       return {
         metadata,
         ...values,

@@ -126,8 +126,8 @@
         };
       },
       getSingleErrorMsg() {
-        if (!this.complete &&
-            this.$store.state.Application.errorList[PAGEGROUP][PAGE] !== null) {
+        if (!this.complete
+            && this.$store.state.Application.errorList[PAGEGROUP][PAGE] !== null) {
           return this.$store.state.Application.errorList[PAGEGROUP][PAGE][0];
         }
         return '';

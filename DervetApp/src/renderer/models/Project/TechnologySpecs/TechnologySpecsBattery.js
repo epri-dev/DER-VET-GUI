@@ -6,7 +6,6 @@ import { SHARED_DYNAMIC_FIELDS, createSharedHardcodedMetadata } from '@/models/P
 import { optionsYN } from '@/models/Project/constants';
 import { TECH_SPECS_BATTERY_PATH, TECH_SPECS_BATTERY_DATA_CYCLES_PATH } from '@/router/constants';
 
-
 const Battery = 'Battery';
 
 // TODO parse these from schema ?

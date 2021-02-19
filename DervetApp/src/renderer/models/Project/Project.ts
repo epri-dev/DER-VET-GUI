@@ -1,4 +1,4 @@
-interface Project {
+export interface Project {
   energyPriceSourceWholesale: boolean;
   id: string;
   includeSiteLoad: boolean;

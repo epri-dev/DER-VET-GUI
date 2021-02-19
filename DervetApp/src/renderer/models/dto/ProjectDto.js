@@ -391,7 +391,6 @@ export const makeFinanceParameters = (project, inputsDirectory) => {
   return makeGroup('', YES, keys);
 };
 
-
 export const makeSingleFleetEVParameter = (fleetEV) => {
   const replacementConstructionTime = setUndefinedNullToOne(fleetEV.replacementConstructionTime);
   const keys = {
@@ -499,7 +498,6 @@ export const makeLFParameters = (project) => {
   }
   return makeEmptyGroup();
 };
-
 
 export const makeNSRParameters = (project) => {
   if (project.objectivesNSR) {
