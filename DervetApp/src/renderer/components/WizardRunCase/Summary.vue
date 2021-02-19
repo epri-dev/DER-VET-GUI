@@ -139,7 +139,7 @@
         <div class="form-group form-buffer row">
           <file-picker
             label="Export Project"
-            :onFileSelect="exportProject"
+            :callback="exportProject"
             :isAsync="true"
             :isDirectory="true"
             buttonAttributes="btn btn-lg btn-info pull-right btn-summary"
