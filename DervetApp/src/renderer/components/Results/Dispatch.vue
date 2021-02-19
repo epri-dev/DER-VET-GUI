@@ -151,6 +151,7 @@
         // 1) Net load
         _.forEach(rawData.poiPower, (value) => {
           trace = {
+            legendgroup: 'poiPower',
             x: xx,
             y: value.data,
             mode: 'lines',
@@ -168,6 +169,7 @@
         // add reservations on top (if included in data)
         _.forEach(rawData.reservations, (value) => {
           trace = {
+            legendgroup: 'reservations',
             x: xx,
             y: value.data,
             type: 'bar',
@@ -223,6 +225,7 @@
         if (rawData.hasReservations) {
           _.forEach(rawData.marketPrices, (value) => {
             trace = {
+              legendgroup: 'marketPrices',
               x: xx,
               y: value.data,
               mode: 'lines',
@@ -254,6 +257,7 @@
         // 4) All other power flows
         _.forEach(rawData.internalPower, (value) => {
           trace = {
+            legendgroup: 'internalPower',
             x: xx,
             y: value.data,
             mode: 'lines',
@@ -334,6 +338,7 @@
         };
         const data = [trace1];
         const layout = {
+          hovermode: false,
           modebar: {
             orientation: 'h', // 'h' set how modebar will appear
           },

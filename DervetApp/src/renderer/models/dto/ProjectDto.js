@@ -92,6 +92,10 @@ export const setUndefinedNullToZero = value => (
   (value === undefined || value === null) ? 0 : value
 );
 
+export const setUndefinedNullToOne = value => (
+  (value === undefined || value === null) ? 1 : value
+);
+
 export const makeCsvFilePath = (directory, fileName) => (
   path.join(directory, `${fileName}.csv`)
 );
@@ -179,7 +183,7 @@ export const makeSingleBatteryParameter = (battery, inputsDirectory) => {
   if (!battery.shouldEnergySize) {
     ({ energyCapacity } = battery);
   }
-  const replacementConstructionTime = setUndefinedNullToZero(battery.replacementConstructionTime);
+  const replacementConstructionTime = setUndefinedNullToOne(battery.replacementConstructionTime);
 
   const keys = {
     OMexpenses: makeBaseKey(battery.variableOMCosts, FLOAT),
@@ -216,7 +220,7 @@ export const makeSingleBatteryParameter = (battery, inputsDirectory) => {
     rcost_kW: makeBaseKey(setUndefinedNullToZero(battery.replacementCostPerkW), FLOAT),
     rcost_kWh: makeBaseKey(setUndefinedNullToZero(battery.replacementCostPerkWh), FLOAT),
     replaceable: makeBaseKey(convertToOneZero(battery.isReplaceable), BOOL),
-    replacement_construction_time: makeBaseKey(replacementConstructionTime + 1, INT),
+    replacement_construction_time: makeBaseKey(replacementConstructionTime, INT),
     rte: makeBaseKey(battery.roundtripEfficiency, FLOAT),
     salvage_value: makeBaseKey(calculateSalvageValue(battery), STRING_INT),
     sdr: makeBaseKey(battery.selfDischargeRate, FLOAT),
@@ -244,7 +248,7 @@ export const makeBatteryParameters = (project, inputsDirectory) => {
 };
 
 export const makeSingleControllableLoadParameter = (controllableLoad) => {
-  const replaceConstruction = setUndefinedNullToZero(controllableLoad.replacementConstructionTime);
+  const replaceConstruction = setUndefinedNullToOne(controllableLoad.replacementConstructionTime);
 
   const keys = {
     construction_year: makeBaseKey(controllableLoad.constructionYear, PERIOD),
@@ -257,7 +261,7 @@ export const makeSingleControllableLoadParameter = (controllableLoad) => {
     operation_year: makeBaseKey(controllableLoad.operationYear, PERIOD),
     power_rating: makeBaseKey(controllableLoad.ratedCapacity, FLOAT),
     replaceable: makeBaseKey(convertToOneZero(controllableLoad.isReplaceable), BOOL),
-    replacement_construction_time: makeBaseKey(replaceConstruction + 1, INT),
+    replacement_construction_time: makeBaseKey(replaceConstruction, INT),
     salvage_value: makeBaseKey(calculateSalvageValue(controllableLoad), STRING_INT),
     sr_response_time: makeBaseKey(ZERO, INT), // hardcoded
     startup_time: makeBaseKey(ZERO, INT), // hardcoded
@@ -310,7 +314,7 @@ export const makeSingleDieselGensetParameter = (dieselGen) => {
   if (!dieselGen.shouldSize) {
     ({ ratedCapacity } = dieselGen);
   }
-  const replacementConstructionTime = setUndefinedNullToZero(dieselGen.replacementConstructionTime);
+  const replacementConstructionTime = setUndefinedNullToOne(dieselGen.replacementConstructionTime);
   const keys = {
     ccost: makeBaseKey(dieselGen.capitalCost, FLOAT),
     ccost_kW: makeBaseKey(dieselGen.capitalCostPerkW, FLOAT),
@@ -333,7 +337,7 @@ export const makeSingleDieselGensetParameter = (dieselGen) => {
     rcost: makeBaseKey(setUndefinedNullToZero(dieselGen.replacementCost), FLOAT),
     rcost_kW: makeBaseKey(setUndefinedNullToZero(dieselGen.replacementCostPerkW), FLOAT),
     replaceable: makeBaseKey(convertToOneZero(dieselGen.isReplaceable), BOOL),
-    replacement_construction_time: makeBaseKey(replacementConstructionTime + 1, INT),
+    replacement_construction_time: makeBaseKey(replacementConstructionTime, INT),
     salvage_value: makeBaseKey(calculateSalvageValue(dieselGen), STRING_INT),
     sr_response_time: makeBaseKey(ZERO, INT), // hardcoded
     startup_time: makeBaseKey(ZERO, INT), // hardcoded
@@ -389,7 +393,7 @@ export const makeFinanceParameters = (project, inputsDirectory) => {
 
 
 export const makeSingleFleetEVParameter = (fleetEV) => {
-  const replacementConstructionTime = setUndefinedNullToZero(fleetEV.replacementConstructionTime);
+  const replacementConstructionTime = setUndefinedNullToOne(fleetEV.replacementConstructionTime);
   const keys = {
     ccost: makeBaseKey(fleetEV.capitalCost, FLOAT),
     construction_year: makeBaseKey(fleetEV.constructionYear, PERIOD),
@@ -405,7 +409,7 @@ export const makeSingleFleetEVParameter = (fleetEV) => {
     operation_year: makeBaseKey(fleetEV.operationYear, PERIOD),
     rcost: makeBaseKey(setUndefinedNullToZero(fleetEV.replacementCost), FLOAT),
     replaceable: makeBaseKey(convertToOneZero(fleetEV.isReplaceable), BOOL),
-    replacement_construction_time: makeBaseKey(replacementConstructionTime + 1, INT),
+    replacement_construction_time: makeBaseKey(replacementConstructionTime, INT),
     salvage_value: makeBaseKey(calculateSalvageValue(fleetEV), STRING_INT),
     sr_response_time: makeBaseKey(ZERO, INT), // hardcoded
     startup_time: makeBaseKey(ZERO, INT), // hardcoded
@@ -443,7 +447,7 @@ export const makeSingleICEParameter = (iceGen) => {
   if (!iceGen.shouldSize) {
     ({ ratedCapacity } = iceGen);
   }
-  const replacementConstructionTime = setUndefinedNullToZero(iceGen.replacementConstructionTime);
+  const replacementConstructionTime = setUndefinedNullToOne(iceGen.replacementConstructionTime);
   const keys = {
     ccost: makeBaseKey(iceGen.capitalCost, FLOAT),
     ccost_kW: makeBaseKey(iceGen.capitalCostPerkW, FLOAT),
@@ -466,7 +470,7 @@ export const makeSingleICEParameter = (iceGen) => {
     rcost: makeBaseKey(setUndefinedNullToZero(iceGen.replacementCost), FLOAT),
     rcost_kW: makeBaseKey(setUndefinedNullToZero(iceGen.replacementCostPerkW), FLOAT),
     replaceable: makeBaseKey(convertToOneZero(iceGen.isReplaceable), BOOL),
-    replacement_construction_time: makeBaseKey(replacementConstructionTime + 1, INT),
+    replacement_construction_time: makeBaseKey(replacementConstructionTime, INT),
     salvage_value: makeBaseKey(calculateSalvageValue(iceGen), STRING_INT),
     sr_response_time: makeBaseKey(ZERO, INT), // hardcoded
     startup_time: makeBaseKey(ZERO, INT), // hardcoded
@@ -516,7 +520,7 @@ export const makeSinglePVParameter = (pv) => {
   if (!pv.shouldSize) {
     ({ ratedCapacity } = pv);
   }
-  const replacementConstructionTime = setUndefinedNullToZero(pv.replacementConstructionTime);
+  const replacementConstructionTime = setUndefinedNullToOne(pv.replacementConstructionTime);
   const keys = {
     ccost_kW: makeBaseKey(pv.cost, FLOAT),
     construction_year: makeBaseKey(pv.constructionYear, PERIOD),
@@ -544,7 +548,7 @@ export const makeSinglePVParameter = (pv) => {
     rated_capacity: makeBaseKey(ratedCapacity, FLOAT),
     rcost_kW: makeBaseKey(setUndefinedNullToZero(pv.replacementCost), FLOAT),
     replaceable: makeBaseKey(convertToOneZero(pv.isReplaceable), BOOL),
-    replacement_construction_time: makeBaseKey(replacementConstructionTime + 1, INT),
+    replacement_construction_time: makeBaseKey(replacementConstructionTime, INT),
     salvage_value: makeBaseKey(calculateSalvageValue(pv), STRING_INT),
     sr_response_time: makeBaseKey(ZERO, INT), // hardcoded
     startup_time: makeBaseKey(ZERO, INT), // hardcoded
@@ -671,7 +675,7 @@ export const makeScenarioParameters = (project, inputsDirectory) => {
 };
 
 export const makeSingleSingleEVParameter = (singleEV) => {
-  const replacementConstructionTime = setUndefinedNullToZero(singleEV.replacementConstructionTime);
+  const replacementConstructionTime = setUndefinedNullToOne(singleEV.replacementConstructionTime);
   const keys = {
     ccost: makeBaseKey(singleEV.capitalCost, FLOAT),
     ch_max_rated: makeBaseKey(singleEV.maximumChargingPower, FLOAT),
@@ -690,7 +694,7 @@ export const makeSingleSingleEVParameter = (singleEV) => {
     plugout_time: makeBaseKey(setUndefinedNullToZero(singleEV.plugOutHour), INT),
     rcost: makeBaseKey(setUndefinedNullToZero(singleEV.replacementCost), FLOAT),
     replaceable: makeBaseKey(convertToOneZero(singleEV.isReplaceable), BOOL),
-    replacement_construction_time: makeBaseKey(replacementConstructionTime + 1, INT),
+    replacement_construction_time: makeBaseKey(replacementConstructionTime, INT),
     salvage_value: makeBaseKey(calculateSalvageValue(singleEV), STRING_INT),
     sr_response_time: makeBaseKey(ZERO, INT), // hardcoded
     startup_time: makeBaseKey(ZERO, INT), // hardcoded
