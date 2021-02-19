@@ -5,4 +5,3 @@ export default class OutageEnergyContributionData extends BaseTableData {
     super('outage_energy_contributions.csv', data, true, true, null, ['Start Datetime (hb)']);
   }
 }
-

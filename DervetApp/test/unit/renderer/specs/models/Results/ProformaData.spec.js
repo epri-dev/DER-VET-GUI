@@ -1,7 +1,6 @@
 import ProFormaData from '@/models/Results/ProFormaData';
 import { proFormaTableData, proFormaTableFields, proFormaArrayData } from '../../fixtures/models/Results/ProFormaData';
 
-
 describe('ProFormaData model', () => {
   const actualData = new ProFormaData(proFormaArrayData);
   it('should load data and column headers', () => {

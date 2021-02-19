@@ -27,6 +27,7 @@
 </template>
 
 <script>
+  import _ from 'lodash';
   import Plotly from 'plotly.js';
   import { RESULTS_PATH } from '@/router/constants';
 
@@ -54,131 +55,21 @@
       getColorFromTechnology(tech) {
         if (tech === 'pv') {
           return '#e2d06b';
-        } else if (tech === 'ess') {
+        } if (tech === 'ess') {
           return '#a2c7db';
-        } else if (tech === 'genSet') {
+        } if (tech === 'genSet') {
           return '#99999';
-        } else if (tech === 'ev') {
+        } if (tech === 'ev') {
           return '#a1eda5';
         }
         return '#666666';
       },
-
       createChartDispatchTimeSeriesPlots(chartId) {
         const ctx = document.getElementById(chartId);
-  
+        const data = [];
         const rawData = this.chartData.stackedLineData;
         const xx = rawData.timeSeriesDateAxis;
-        const data = [];
 
-
-        // add 
-        const essSocData = rawData.aggregatedStateOfCharge;
-        if (essSocData.data !== undefined) {
-          const trace = {
-            x: xx,
-            y: essSocData.data,
-            type: 'bar',
-            name: essSocData.label,
-            yaxis: 'y',
-            marker: {
-              color: this.getColorFromTechnology('ess'),
-            },
-          };
-          data.push(trace);
-        }
-        const netLoadData = rawData.netPowerFlow;
-        const trace = {
-          x: xx,
-          y: netLoadData.data,
-          mode: 'lines',
-          name: netLoadData.label,
-          fill: rawData.hasReservations ? 'tozeroy' : 'none',  
-          line: {
-            shape: 'hv',
-          },
-          // xaxis: 'x',
-          yaxis: 'y5',
-        };
-        data.push(trace);
-        if (hasReservations) {
-          _.forEach(rawData.capacityPrices)
-        }
-
-        // TODO - optionally add
-        // const yykWPrices = [];
-        // const kWPrices = {
-        //   x: xx,
-        //   y: yykWPrices,
-        //   mode: 'lines',
-        //   name: '$/kW Prices',
-        //   line: {
-        //     shape: 'hv',
-        //   },
-        //   // xaxis: 'x',
-        //   yaxis: 'y3',
-        // };
-
-        const kWhPrices = {
-          x: xx,
-          y: rawData.energyPriceKWh,
-          mode: 'lines',
-          name: 'Energy Price',
-          line: {
-            shape: 'hv',
-          },
-          // xaxis: 'x',
-          yaxis: 'y4',
-        };
-
-        const power = [
-          {
-            x: xx,
-            y: rawData.totalStoragePowerKW,
-            mode: 'lines',
-            name: 'Total Storage Net Power',
-            line: {
-              shape: 'hv',
-            },
-            // xaxis: 'x',
-            yaxis: 'y2',
-          },
-          {
-            x: xx,
-            y: rawData.totalGenerationKW,
-            mode: 'lines',
-            name: 'Total Generation Power',
-            line: {
-              shape: 'hv',
-            },
-            // xaxis: 'x',
-            yaxis: 'y2',
-          },
-          {
-            x: xx,
-            y: rawData.totalLoadKW,
-            mode: 'lines',
-            name: 'Total Load',
-            line: {
-              shape: 'hv',
-            },
-            // xaxis: 'x',
-            yaxis: 'y2',
-          },
-          {
-            x: xx,
-            y: rawData.criticalLoadKW,
-            mode: 'lines',
-            name: 'Critical Load',
-            line: {
-              shape: 'hv',
-            },
-            // xaxis: 'x',
-            yaxis: 'y2',
-          },
-        ];
-
-        const data = [batterySOC, poi, kWhPrices, ...power];
         const selectorOptions = {
           buttons: [
             {
@@ -200,6 +91,7 @@
           //   x: 0,
           //   y: 1.12,
           // },
+          barmode: 'relative',
           height: 900,
           grid: {
             rows: 5,
@@ -232,62 +124,8 @@
             },
             // layer: 'below traces',
           },
-
-          // add vertical space between plots
-          yaxis5: {
-            domain: [0.00, 0.192],
-            title: {
-              text: 'Power (kW)',
-              font: {
-                size: 12,
-              },
-              standoff: 5, // create gap between axis and title
-            },
-          },
-          yaxis4: {
-            domain: [0.202, 0.394],
-            title: {
-              text: 'Energy Price',
-              font: {
-                size: 12,
-              },
-              standoff: 5, // create gap between axis and title
-            },
-          },
-          yaxis3: {
-            domain: [0.404, 0.596],
-            title: {
-              text: '$ / kW',
-              font: {
-                size: 12,
-              },
-              standoff: 5, // create gap between axis and title
-            },
-          },
-          yaxis2: {
-            domain: [0.606, 0.798],
-            title: {
-              text: 'Power (kW)',
-              font: {
-                size: 12,
-              },
-              standoff: 5, // create gap between axis and title
-            },
-          },
-          yaxis: {
-            domain: [0.808, 1.00],
-            fixedrange: true,
-            tickformat: ',.0%', // format yaxis as a percent
-            range: [0, 1.01],
-            title: {
-              text: 'SOC (%)',
-              font: {
-                size: 12,
-              },
-              standoff: 5, // create gap between axis and title
-            },
-          },
         };
+  
         const config = {
           displaylogo: false, // hides the plotly logo from the modebar when false
           scrollZoom: true, // allows mouse wheel scroll when true
@@ -300,6 +138,183 @@
             filename: 'dispatch-time-series-plots',
           },
         };
+
+        // BUILD LAYOUT AND DATA
+        let trace = null;
+        const buffer = 0.02;
+        let totalNumPlots = 5 - (rawData.hasReservations ? 0 : 1);
+        totalNumPlots -= (rawData.aggregatedSOC.data !== null ? 0 : 1);
+        console.log(`total number of plots ${totalNumPlots}`);
+        const subPlotHeight = (1 / totalNumPlots) - buffer;
+        let lastPlotHeight = 0;
+
+        // 1) Net load
+        _.forEach(rawData.poiPower, (value) => {
+          trace = {
+            x: xx,
+            y: value.data,
+            mode: 'lines',
+            type: 'scatter',
+            name: value.label,
+            // fill: rawData.hasReservations ? 'tozeroy' : 'none',
+            line: {
+              shape: 'vh',
+            },
+            // xaxis: 'x',
+            yaxis: 'y5',
+          };
+          data.push(trace);
+        });
+        // add reservations on top (if included in data)
+        _.forEach(rawData.reservations, (value) => {
+          trace = {
+            x: xx,
+            y: value.data,
+            type: 'bar',
+            name: value.label,
+            yaxis: 'y5',
+          };
+          data.push(trace);
+        });
+        // console.log([lastPlotHeight, lastPlotHeight + subPlotHeight]);
+        layout.yaxis5 = {
+          domain: [lastPlotHeight, lastPlotHeight + subPlotHeight],
+          title: {
+            text: 'Power (kW)',
+            font: {
+              size: 12,
+            },
+            standoff: 5, // create gap between axis and title
+          },
+        };
+        // increment plot height
+        lastPlotHeight = lastPlotHeight + subPlotHeight + buffer;
+
+        // 2) Energy Price
+        const energyPriceData = rawData.energyPrice;
+        trace = {
+          x: xx,
+          y: energyPriceData.data,
+          mode: 'lines',
+          type: 'scatter',
+          name: energyPriceData.label,
+          line: {
+            shape: 'vh',
+          },
+          // xaxis: 'x',
+          yaxis: 'y4',
+        };
+        data.push(trace);
+        console.log([lastPlotHeight, lastPlotHeight + subPlotHeight]);
+        layout.yaxis4 = {
+          domain: [lastPlotHeight, lastPlotHeight + subPlotHeight],
+          title: {
+            text: 'Energy Price',
+            font: {
+              size: 12,
+            },
+            standoff: 5, // create gap between axis and title
+          },
+        };
+        // increment plot height
+        lastPlotHeight = lastPlotHeight + subPlotHeight + buffer;
+
+        // 3) Market/Capacity Prices
+        if (rawData.hasReservations) {
+          _.forEach(rawData.marketPrices, (value) => {
+            trace = {
+              x: xx,
+              y: value.data,
+              mode: 'lines',
+              type: 'scatter',
+              name: value.label,
+              line: {
+                shape: 'vh',
+              },
+              // xaxis: 'x',
+              yaxis: 'y3',
+            };
+            data.push(trace);
+          });
+          console.log([lastPlotHeight, lastPlotHeight + subPlotHeight]);
+          layout.yaxis3 = {
+            domain: [lastPlotHeight, lastPlotHeight + subPlotHeight],
+            title: {
+              text: '$ / kW',
+              font: {
+                size: 12,
+              },
+              standoff: 5, // create gap between axis and title
+            },
+          };
+          // increment plot height
+          lastPlotHeight = lastPlotHeight + subPlotHeight + buffer;
+        }
+
+        // 4) All other power flows
+        _.forEach(rawData.internalPower, (value) => {
+          trace = {
+            x: xx,
+            y: value.data,
+            mode: 'lines',
+            type: 'scatter',
+            name: value.label,
+            line: {
+              shape: 'vh',
+            },
+            // xaxis: 'x',
+            yaxis: 'y2',
+          };
+          data.push(trace);
+        });
+        console.log([lastPlotHeight, lastPlotHeight + subPlotHeight]);
+        layout.yaxis2 = {
+          domain: [lastPlotHeight, lastPlotHeight + subPlotHeight],
+          title: {
+            text: 'Power (kW)',
+            font: {
+              size: 12,
+            },
+            standoff: 5, // create gap between axis and title
+          },
+        };
+        // increment plot height
+        lastPlotHeight = lastPlotHeight + subPlotHeight + buffer;
+
+        // 5) Aggregated SOC
+        const essSocData = rawData.aggregatedSOC;
+        if (essSocData.data !== null) {
+          // add trace
+          trace = {
+            x: xx,
+            y: essSocData.data,
+            mode: 'lines',
+            type: 'scatter',
+            name: essSocData.label,
+            yaxis: 'y',
+            line: {
+              shape: 'linear',
+            },
+            marker: {
+              color: this.getColorFromTechnology('ess'),
+            },
+          };
+          console.log([lastPlotHeight, lastPlotHeight + subPlotHeight]);
+          data.push(trace);
+          layout.yaxis = {
+            domain: [lastPlotHeight, lastPlotHeight + subPlotHeight],
+            fixedrange: true,
+            tickformat: ',.0%', // format yaxis as a percent
+            range: [0, 1.01],
+            title: {
+              text: 'SOC (%)',
+              font: {
+                size: 12,
+              },
+              standoff: 5, // create gap between axis and title
+            },
+          };
+        }
         return Plotly.newPlot(ctx, data, layout, config);
       },
 
@@ -372,5 +387,4 @@
       },
     },
   };
-
 </script>

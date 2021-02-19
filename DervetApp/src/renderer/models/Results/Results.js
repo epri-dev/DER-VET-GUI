@@ -49,18 +49,22 @@ export class ResultsData {
 
     this.createCharts();
   }
+
   initializeSize(csvString) {
     const papaParsedObject = papaParseCsvString(csvString);
     return new SizeData(papaParsedObject.data);
   }
+
   initializeProForma(csvString) {
     const papaParsedObject = papaParseCsvString(csvString);
     return new ProFormaData(papaParsedObject.data);
   }
+
   initializeCostBenefit(csvString) {
     const papaParsedObject = papaParseCsvString(csvString);
     return new CostBenefitData(papaParsedObject.data);
   }
+
   initializeBeforeAfterMonthly(csvString) {
     const papaParsedObject = papaParseCsvString(csvString);
     this.showBeforeAfterMonthlyEnergyBill = papaParsedObject !== null;
@@ -69,6 +73,7 @@ export class ResultsData {
     }
     return new BeforeAndAfterMonthlyBillData(papaParsedObject.data);
   }
+
   initializePeakLoadDay(csvString) {
     const papaParsedObject = papaParseCsvString(csvString);
     this.showPeakLoadDay = papaParsedObject !== null;
@@ -77,6 +82,7 @@ export class ResultsData {
     }
     return new PeakLoadDayData(papaParsedObject.data);
   }
+
   initializeDeferral(csvString) {
     const papaParsedObject = papaParseCsvString(csvString);
     this.showDeferral = papaParsedObject !== null;
@@ -85,6 +91,7 @@ export class ResultsData {
     }
     return new DeferralData(papaParsedObject.data);
   }
+
   initializeLoadCoverageProb(csvString) {
     const papaParsedObject = papaParseCsvString(csvString);
     this.showLoadCoverageProbability = papaParsedObject !== null;
@@ -93,6 +100,7 @@ export class ResultsData {
     }
     return new LoadCoverageProbabilityData(papaParsedObject.data);
   }
+
   initializeOutageContribution(csvString) {
     const papaParsedObject = papaParseCsvString(csvString);
     this.showOutageContribution = papaParsedObject !== null;
@@ -102,11 +110,13 @@ export class ResultsData {
     const data = new OutageEnergyContributionData(papaParsedObject.data);
     return data;
   }
+
   initializeDistpatch(csvString) {
     const papaParsedObject = papaParseCsvString(csvString);
     const data = new TimeSeriesData(papaParsedObject.data);
     return data;
   }
+
   createCharts() {
     // summary page charts
     this.financialSummaryBarChart = this.costBenefit.summaryData();

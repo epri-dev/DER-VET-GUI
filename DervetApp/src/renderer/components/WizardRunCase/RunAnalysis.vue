@@ -28,7 +28,7 @@
     name: 'runAnalysis',
     computed: {
       isError() {
-        return this.$store.state.Application.isError !== null;
+        return this.$store.state.Application.isError === true;
       },
       results() {
         return this.$store.state.Results.data;
