@@ -2,7 +2,7 @@
   <div id="timeseries-data-upload">
     <data-upload
       :chart-name="chartName"
-      :constants="constants"
+      @click="onRemove"
       :data-exists="dataExists"
       :data-name="dataName"
       :data-frequency="{
@@ -35,6 +35,9 @@
       },
       onFileUpload(payload) {
         this.$emit('uploaded', payload);
+      },
+      onRemove(payload) {
+        this.$emit('click', payload);
       },
     },
     computed: {
@@ -75,7 +78,6 @@
     },
     props: {
       chartName: String,
-      constants: Object,
       dataExists: Boolean,
       dataName: String,
       dataTimeSeries: Object,

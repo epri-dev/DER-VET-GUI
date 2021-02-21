@@ -129,6 +129,7 @@
         paths,
         ...this.getDataFromProject(),
         metadata,
+        tsRequiredLines: null,
       };
     },
     validations: {
@@ -148,10 +149,22 @@
         this.submitted = true;
         this.$v.$touch();
       }
+      this.tsRequiredLines = this.numberOfEntriesRequired;
     },
     computed: {
       complete() {
         return this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGE];
+      },
+      numberOfEntriesRequired() {
+        if (this.timeseriesXAxis.length === 0) {
+          return 'TBD';
+        }
+        return String(this.timeseriesXAxis.length);
+      },
+      timeseriesXAxis() {
+        // the first timestamp should be Jan 1 of dataYear at timestep minutes
+        //   to represent the period-ending value.
+        return this.$store.getters.getTimeseriesXAxis;
       },
     },
     methods: {
@@ -204,15 +217,23 @@
         return this.save();
       },
       save() {
+        this.$store.dispatch('setDataYear', this.dataYear)
+          .then(this.$store.dispatch('setTimestep', this.timestep)).then();
         this.$store.dispatch('setName', this.name);
         this.$store.dispatch('setStartYear', this.startYear);
         this.$store.dispatch('setAnalysisHorizonMode', this.analysisHorizonMode);
         this.$store.dispatch('setAnalysisHorizon', this.analysisHorizon);
-        this.$store.dispatch('setDataYear', this.dataYear);
         this.$store.dispatch('setGridLocation', this.gridLocation);
         this.$store.dispatch('setOwnership', this.ownership);
-        this.$store.dispatch('setTimestep', this.timestep);
         this.$store.dispatch('setOutputDirectory', this.outputDirectory);
+        // track ts required lines changes
+        if (this.tsRequiredLines !== this.numberOfEntriesRequired) {
+          console.log('need to do a simple validation (length check) on all stored TS');
+        } else {
+          console.log('no TS re-validation needed');
+        }
+        // reset the value in case of 'save'
+        this.tsRequiredLines = this.numberOfEntriesRequired;
       },
     },
   };

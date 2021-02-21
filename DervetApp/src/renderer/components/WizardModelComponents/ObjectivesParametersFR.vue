@@ -43,12 +43,12 @@
 
       <timeseries-data-upload
         chart-name="tsFrPricechartUploaded"
-        :constants="getConstants('tsFrPrice', CONSTANTS)"
+        @click="receiveRemove"
         :data-exists="tsData('tsFrPrice').data.length !== 0"
         :data-name="metadata.tsFrPrice.displayName"
         :data-time-series="tsData('tsFrPrice')"
         :errorMessage="getErrorMsgTS('tsFrPrice')"
-        :isInvalid="submitted && tsFrPrice.data.length === 0"
+        :isInvalid="submitted && tsData('tsFrPrice').data.length === 0"
         @input="receiveUseExisting"
         :key="childKey('tsFrPrice')"
         ts-name="tsFrPrice"
@@ -59,11 +59,12 @@
 
       <timeseries-data-upload
         chart-name="tsFrUpPriceChartUploaded"
+        @click="receiveRemove"
         :data-exists="tsData('tsFrUpPrice').data.length !== 0"
         :data-name="metadata.tsFrUpPrice.displayName"
         :data-time-series="tsData('tsFrUpPrice')"
         :errorMessage="getErrorMsgTS('tsFrUpPrice')"
-        :isInvalid="submitted && tsFrUpPrice.data.length === 0"
+        :isInvalid="submitted && tsData('tsFrUpPrice').data.length === 0"
         @input="receiveUseExisting"
         :key="childKey('tsFrUpPrice')"
         ts-name="tsFrUpPrice"
@@ -74,11 +75,12 @@
 
       <timeseries-data-upload
         chart-name="tsFrDownPriceChartUploaded"
+        @click="receiveRemove"
         :data-exists="tsData('tsFrDownPrice').data.length !== 0"
         :data-name="metadata.tsFrDownPrice.displayName"
         :data-time-series="tsData('tsFrDownPrice')"
         :errorMessage="getErrorMsgTS('tsFrDownPrice')"
-        :isInvalid="submitted && tsFrDownPrice.data.length === 0"
+        :isInvalid="submitted && tsData('tsFrDownPrice').data.length === 0"
         @input="receiveUseExisting"
         :key="childKey('tsFrDownPrice')"
         ts-name="tsFrDownPrice"
@@ -132,29 +134,40 @@
     validations: {
       ...validations,
     },
-    // updated() {
-    // this.$store.dispatch('Application/setErrorList', this.getErrorListPayload(CONSTANTS));
-    // },
     computed: {
       complete() {
         // return this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGEKEY][PAGE];
         return this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE] === 0;
       },
       isTSError() {
-        return this.getErrorListTS().length !== 0;
+        return this.getErrorListTS(false).length !== 0;
       },
     },
     methods: {
-      getErrorListTS() {
+      getErrorListTS(fromStore = true) {
         const errors = [];
-        (TS_FIELDS).forEach((key) => {
-          // skip non-required keys
-          if ((this.frCombinedMarket && key !== 'tsFrPrice')
-            || (!this.frCombinedMarket && key === 'tsFrPrice')) {
+        (TS_FIELDS).forEach((tsField) => {
+          // skip non-required tsFields
+          if ((this.frCombinedMarket && tsField !== 'tsFrPrice')
+            || (!this.frCombinedMarket && tsField === 'tsFrPrice')) {
             return;
           }
-          if (this[key].data.length === 0) {
-            errors.push(`A timeseries of ${this[key].columnHeaderName} is required`);
+          if (fromStore) {
+            // get ts from the store
+            if (this.$store.state.Project[tsField].data.length === 0) {
+              errors.push(`A timeseries of ${this[tsField].columnHeaderName} is required`);
+            }
+          } else {
+            // get ts from this page
+            const ts = this[tsField];
+            const tsFieldInput = `${tsField}Input`;
+            const tsInput = this[tsFieldInput];
+            const tsFieldUseExisting = `${tsField}UseExisting`;
+            const tsUseExisting = this[tsFieldUseExisting];
+            if ((ts.data.length === 0 && tsInput === null)
+              || (ts.data.length === 0 && !tsUseExisting)) {
+              errors.push(`A timeseries of ${this[tsField].columnHeaderName} is required`);
+            }
           }
         });
         return errors;
@@ -168,11 +181,11 @@
         // this.getCompletenessPayload(CONSTANTS));
         this.submitted = true;
         this.$v.$touch();
-        // set errorList
-        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload(CONSTANTS));
         // save
         this.tsSave(TS_FIELDS);
         this.save();
+        // set errorList (important to do this AFTER tsSave())
+        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
       },
       save() {
         this.$store.dispatch('setFReou', this.frEOU);

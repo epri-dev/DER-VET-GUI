@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { flatten, startCase } from 'lodash';
+import { cloneDeep, flatten, startCase } from 'lodash';
 import operateOnKeysList from '@/util/object';
 import { isNotNullAndNotUndefined } from '@/util/logic';
 import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
@@ -21,8 +21,10 @@ const csvUploadMixin = {
       return startCase(str);
     },
     childKey(tsField) {
-      const childKeyName = `${tsField}ChildKey`;
-      return this[childKeyName];
+      return this[this.childKeyField(tsField)];
+    },
+    childKeyField(tsField) {
+      return `${tsField}ChildKey`;
     },
     getChildKey() {
       return uuidv4();
@@ -30,15 +32,12 @@ const csvUploadMixin = {
     getChildKeys(tsFields) {
       const childKeys = {};
       tsFields.forEach((tsField) => {
-        const childKeyField = `${tsField}ChildKey`;
-        childKeys[childKeyField] = this.getChildKey();
+        childKeys[this.childKeyField(tsField)] = this.getChildKey();
       });
-      console.log(childKeys);
       return childKeys;
     },
     /*
     getCompletenessPayload(constants) {
-      console.log(this.$v);
       return {
         pageGroup: constants.PAGEGROUP,
         pageKey: constants.PAGEKEY,
@@ -47,17 +46,10 @@ const csvUploadMixin = {
       };
     },
     */
-    getConstants(tsField, constants) {
-      return {
-        setActionName: this.metadata[tsField].setActionName,
-        ...constants,
-      };
-    },
     getDataFromProject(fields) {
-      console.log(operateOnKeysList(this.$store.state.Project, fields, f => f));
       return operateOnKeysList(this.$store.state.Project, fields, f => f);
     },
-    getErrorListPayload(constants) {
+    getErrorListPayload() {
       const errors = [];
       Object.keys(this.$v).forEach((key) => {
         if (key.charAt(0) !== '$' && this.$v[key].$invalid) {
@@ -67,11 +59,10 @@ const csvUploadMixin = {
       // get TS errorlist, and append it
       const tsErrors = this.getErrorListTS();
       errors.push(tsErrors);
-      console.log('errors:', flatten(errors));
       return {
-        pageGroup: constants.PAGEGROUP,
-        pageKey: constants.PAGEKEY,
-        page: constants.PAGE,
+        pageGroup: this.CONSTANTS.PAGEGROUP,
+        pageKey: this.CONSTANTS.PAGEKEY,
+        page: this.CONSTANTS.PAGE,
         errorList: flatten(errors),
       };
     },
@@ -81,50 +72,58 @@ const csvUploadMixin = {
     getTSInputDefaultDataFromProject(tsFields) {
       const inputTS = {};
       tsFields.forEach((tsField) => {
-        console.log(tsField);
         const inputTSField = `${tsField}Input`;
         inputTS[inputTSField] = null;
       });
-      console.log(inputTS);
       return inputTS;
     },
     getUseExistingDefaults(tsFields) {
       const useExistingDefaults = {};
       tsFields.forEach((tsField) => {
-        const useExistingField = `${tsField}UseExisting`;
-        useExistingDefaults[useExistingField] = true;
+        useExistingDefaults[this.useExistingField(tsField)] = true;
       });
       return useExistingDefaults;
     },
+    inputField(tsField) {
+      return `${tsField}Input`;
+    },
+    receiveRemove(payload) {
+      const { tsName } = payload;
+      // remove ts by overwriting with an empty ts
+      const emptyTS = cloneDeep(this[tsName]);
+      emptyTS.data = [];
+      this.$store.dispatch(this.metadata[tsName].setActionName, emptyTS);
+      this[tsName] = cloneDeep(emptyTS);
+      // set input TS to null
+      this[this.inputField(tsName)] = null;
+      // set errorList
+      this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
+    },
     receiveUseExisting(payload) {
       const { button, tsName } = payload;
-      console.log(tsName);
-      console.log(button);
-      const tsNameButton = `${tsName}UseExisting`;
-      this[tsNameButton] = button;
+      this[this.useExistingField(tsName)] = button;
     },
     receiveTimeseriesData(payload) {
       const { dataArray, tsName } = payload;
-      console.log(tsName);
-      console.log(dataArray);
-      const tsNameInput = `${tsName}Input`;
-      this[tsNameInput] = dataArray;
+      this[this.inputField(tsName)] = dataArray;
     },
     tsData(tsField) {
-      const tsFieldInput = `${tsField}Input`;
-      const inputTSDataExists = (this[tsFieldInput] !== null);
-      console.log(tsFieldInput, inputTSDataExists);
-      return (inputTSDataExists) ? this[tsFieldInput] : this[tsField];
+      const inputTSDataExists = (this[this.inputField(tsField)] !== null);
+      return (inputTSDataExists) ? this[this.inputField(tsField)] : this[tsField];
     },
     tsSave(tsFields) {
       // only save uploaded data (if it exists, and useExisting is true)
       tsFields.forEach((tsField) => {
-        const inputTSField = `${tsField}Input`;
-        const useExistingField = `${tsField}UseExisting`;
-        if (this[inputTSField] !== null && this[useExistingField]) {
-          this.$store.dispatch(this.metadata[tsField].setActionName, this[inputTSField]);
+        if (this[this.inputField(tsField)] !== null && this[this.useExistingField(tsField)]) {
+          this.$store.dispatch(
+            this.metadata[tsField].setActionName,
+            this[this.inputField(tsField)],
+          );
         }
       });
+    },
+    useExistingField(tsField) {
+      return `${tsField}UseExisting`;
     },
   },
 };

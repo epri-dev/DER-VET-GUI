@@ -85,7 +85,7 @@
 
 <script>
   import Plotly from 'plotly.js';
-  import { flatten, cloneDeep } from 'lodash';
+  import { flatten } from 'lodash';
   import { parseCsvFromEvent } from '@/util/file';
   import { isNumeric } from '@/util/logic';
   import { sharedDefaults, sharedValidation } from '@/models/Shared.js';
@@ -123,7 +123,6 @@
     },
     props: {
       chartName: String,
-      constants: Object,
       dataExists: Boolean,
       dataName: String,
       dataFrequency: Object,
@@ -159,7 +158,6 @@
           button: e,
           tsName: this.tsName,
         };
-        console.log(payload);
         this.$emit('input', payload);
       },
       onFileUpload(e) {
@@ -174,7 +172,6 @@
             // this.importedFilePath = importedFilePath;
           }
           if (this.importError === undefined) {
-            console.log('there are no errors with these imported data... proceeding');
             // only emit back when there are no errors
             //   thus preventing an invalid TS from being saved
             this.$emit('uploaded', this.uploadPayload(flatten(results)));
@@ -185,28 +182,21 @@
         parseCsvFromEvent(e, onSuccess);
       },
       removeTS() {
-        console.log(this.constants);
-        // reset the stored TS data with an empty TS
-        // then set the associated errorList
+        // emit a payload to:
+        // - reset the stored TS data with an empty TS
+        // - then set the associated errorList
         // and set variables to not render existing upload
-        const emptyTS = cloneDeep(this.uploadedData);
-        emptyTS.data = [];
-        (this.$store.dispatch(this.constants.setActionName, emptyTS));
-        // .then(this.$store.dispatch('Application/setErrorList',
-        // this.getErrorListPayload(this.constants)));
         this.useExisting = false;
         this.importError = null;
-        /*
-        // then emit back null as the input TS
-        const nullPayload = {
-          dataArray: null,
+        // emit back payload to initiate a reset of the errorlist
+        const payload = {
           tsName: this.tsName,
         };
-        this.$emit('uploaded', nullPayload);
-        */
+        this.$emit('click', payload);
       },
       validateUploadedData(dataArray) {
-        // this method sets the importError string with up to 3 lines
+        // this method sets the importError string with up to 3 lines,
+        //   before any field-specific validations
         // 1. totalRowCount must equal numberOfEntriesRequired
         const totalRowCount = String(dataArray.length);
         if (totalRowCount !== this.numberOfEntriesRequired) {
@@ -231,11 +221,10 @@
         if (invalidRowsTypeCount !== 0) {
           this.importError += `<br><b>${invalidRowsTypeCount} Invalid Rows</b> with a non-numeric entry: [${this.firstNValues(invalidRowsType)}]`;
         }
+        // 4. add field-specific import-errors here as needed
+        // TODO: add these (e.g. solar data must be between 0 and 1)
       },
       uploadPayload(dataResults) {
-        console.log(dataResults);
-        console.log(this.uploadedData);
-        console.log(new TimeSeriesBase(dataResults));
         // grab columnHeaderName from the uploadedData TimeSeriesBase object
         const { columnHeaderName } = this.uploadedData;
         return {
