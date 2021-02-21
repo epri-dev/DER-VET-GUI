@@ -1,8 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import * as c from '@/models/Project/constants';
+import * as a from '@/store/actionTypes';
 import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 import operateOnKeysList from '@/util/object';
+
+import TimeSeriesBase from '@/models/TimeSeries/TimeSeriesBase';
 
 export class ProjectMetadata {
   constructor(arg) {
@@ -56,9 +59,6 @@ export class ProjectMetadata {
       lfPrice: null,
       lfUpPrice: null,
       lfDownPrice: null,
-      frPrice: null,
-      frUpPrice: null,
-      frDownPrice: null,
       nsrPrice: null,
       raActive: null,
       siteLoad: null,
@@ -116,7 +116,7 @@ export class ProjectMetadata {
       [c.DATA_YEAR]: new ProjectFieldMetadata({
         displayName: 'Data Year',
         isRequired: true,
-        type: Number,
+        type: 'int',
         description: 'Wizard mode only allows one year of data. If the year this data comes from is different from the year the optimization is run against, it will be escalated from the data year to the optimization year.',
       }),
       [c.DEFERRAL_GROWTH]: new ProjectFieldMetadata({
@@ -528,6 +528,24 @@ export class ProjectMetadata {
         unit: 'minutes',
         description: 'What timestep will the optimization will use?',
         allowedValues: c.TIMESTEP_ALLOWED_VALUES,
+      }),
+      [c.TS_FR_PRICE]: new ProjectFieldMetadata({
+        defaultValue: new TimeSeriesBase('FR Price ($/kW)', '$/kW', []),
+        displayName: 'frequency regulation price',
+        unit: '$/kW',
+        setActionName: a.SET_FR_PRICE,
+      }),
+      [c.TS_FR_UP_PRICE]: new ProjectFieldMetadata({
+        defaultValue: new TimeSeriesBase('Reg Up Price ($/kW)', '$/kW', []),
+        displayName: 'frequency regulation up price',
+        unit: '$/kW',
+        setActionName: a.SET_FR_UP_PRICE,
+      }),
+      [c.TS_FR_DOWN_PRICE]: new ProjectFieldMetadata({
+        defaultValue: new TimeSeriesBase('Reg Down Price ($/kW)', '$/kW', []),
+        displayName: 'frequency regulation down price',
+        unit: '$/kW',
+        setActionName: a.SET_FR_DOWN_PRICE,
       }),
       [c.USER_PRICE]: new ProjectFieldMetadata({
         displayName: 'Yearly Cost Avoided',

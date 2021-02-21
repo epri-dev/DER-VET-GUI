@@ -52,6 +52,16 @@ export const ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_FLEET_EV = 'addLoadProfileToTe
 // External incentives file
 export const ADD_EXTERNAL_INCENTIVE = 'addExternalIncentive';
 export const REPLACE_EXTERNAL_INCENTIVES = 'replaceExternalIncentives';
+// Frequency Regulation
+export const SET_FR_COMBINED_MARKET = 'setFRCombinedMarket';
+export const SET_FR_DOWN_PRICE = 'setFRDownPrice';
+export const SET_FR_DURATION = 'setFRDuration';
+export const SET_FR_ENERGY_GROWTH = 'setFREnergyGrowth';
+export const SET_FR_EOU = 'setFReou';
+export const SET_FR_EOD = 'setFReod';
+export const SET_FR_GROWTH = 'setFRGrowth';
+export const SET_FR_PRICE = 'setFRPrice';
+export const SET_FR_UP_PRICE = 'setFRUpPrice';
 // load following page
 export const SET_LF_COMBINED_MARKET = 'setLFCombinedMarket';
 export const SET_LF_DOWN_PRICE = 'setLFDownPrice';

@@ -42,42 +42,55 @@
       </radio-button-input>
 
       <timeseries-data-upload
-        chart-name="chartUploadedTimeSeries"
-        data-name="frequency regulation price"
-        units="$/kW"
+        chart-name="tsFrPricechartUploaded"
+        :constants="getConstants('tsFrPrice', CONSTANTS)"
+        :data-exists="tsData('tsFrPrice').data.length !== 0"
+        :data-name="metadata.tsFrPrice.displayName"
+        :data-time-series="tsData('tsFrPrice')"
+        :errorMessage="getErrorMsgTS('tsFrPrice')"
+        :isInvalid="submitted && tsFrPrice.data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('tsFrPrice')"
+        ts-name="tsFrPrice"
+        :units="metadata.tsFrPrice.unit"
         @uploaded="receiveTimeseriesData"
-        :data-time-series="frPrice"
-        :key="childKey"
         v-if="frCombinedMarket === true"
-        :TimeSeriesModel="FRPriceTimeSeries"
       />
 
       <timeseries-data-upload
-        chart-name="chartUploadedTimeSeries2"
-        data-name="frequency regulation up price"
-        units="$/kW"
-        @uploaded="receiveTimeseriesData2"
-        :TimeSeriesModel="FRUpPriceTimeSeries"
-        :data-time-series="frUpPrice"
-        :key="childKey2"
+        chart-name="tsFrUpPriceChartUploaded"
+        :data-exists="tsData('tsFrUpPrice').data.length !== 0"
+        :data-name="metadata.tsFrUpPrice.displayName"
+        :data-time-series="tsData('tsFrUpPrice')"
+        :errorMessage="getErrorMsgTS('tsFrUpPrice')"
+        :isInvalid="submitted && tsFrUpPrice.data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('tsFrUpPrice')"
+        ts-name="tsFrUpPrice"
+        :units="metadata.tsFrUpPrice.unit"
+        @uploaded="receiveTimeseriesData"
         v-if="frCombinedMarket === false"
       />
 
       <timeseries-data-upload
-        chart-name="chartUploadedTimeSeries3"
-        data-name="frequency regulation down price"
-        units="$/kW"
-        @uploaded="receiveTimeseriesData3"
-        :TimeSeriesModel="FRDownPriceTimeSeries"
-        :data-time-series="frDownPrice"
-        :key="childKey3"
+        chart-name="tsFrDownPriceChartUploaded"
+        :data-exists="tsData('tsFrDownPrice').data.length !== 0"
+        :data-name="metadata.tsFrDownPrice.displayName"
+        :data-time-series="tsData('tsFrDownPrice')"
+        :errorMessage="getErrorMsgTS('tsFrDownPrice')"
+        :isInvalid="submitted && tsFrDownPrice.data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('tsFrDownPrice')"
+        ts-name="tsFrDownPrice"
+        :units="metadata.tsFrDownPrice.unit"
+        @uploaded="receiveTimeseriesData"
         v-if="frCombinedMarket === false"
       />
       <hr>
 
       <save-buttons
         :continue-link="WIZARD_COMPONENT_PATH"
-        :displayError="submitted && $v.$anyError"
+        :displayError="submitted && ($v.$anyError || isTSError)"
         :save="validatedSave" />
 
     </form>
@@ -86,104 +99,82 @@
 
 <script>
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import * as p from '@/models/Project/ProjectMetadata';
+  import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
+  import { projectMetadata as metadata } from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
-  import operateOnKeysList from '@/util/object';
-  import csvUploadMixin from '@/mixins/csvUploadMixin';
-  import FRPriceTimeSeries from '@/models/TimeSeries/FRPriceTimeSeries';
-  import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
-  import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
-  import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
 
-  const metadata = p.projectMetadata;
   const validations = metadata.getValidationSchema(c.FR_FIELDS);
   const PAGEGROUP = 'components';
   const PAGEKEY = 'objectives';
   const PAGE = 'FR';
+  const TS_FIELDS = c.TS_FR_FIELDS;
+
+  const CONSTANTS = {
+    PAGEGROUP,
+    PAGEKEY,
+    PAGE,
+  };
 
   export default {
-    components: { TimeseriesDataUpload },
     mixins: [csvUploadMixin, wizardFormMixin],
     data() {
-      const p = this.$store.state.Project;
       return {
-        frPrice: p.frPrice,
-        frUpPrice: p.frUpPrice,
-        frDownPrice: p.frDownPrice,
         metadata,
-        ...this.getDataFromProject(),
+        ...this.getDataFromProject(c.FR_FIELDS),
+        ...this.getTSInputDefaultDataFromProject(TS_FIELDS),
+        ...this.getChildKeys(TS_FIELDS),
+        ...this.getUseExistingDefaults(TS_FIELDS),
         WIZARD_COMPONENT_PATH,
-        FRPriceTimeSeries,
-        FRUpPriceTimeSeries,
-        FRDownPriceTimeSeries,
+        CONSTANTS,
       };
     },
     validations: {
       ...validations,
     },
+    // updated() {
+    // this.$store.dispatch('Application/setErrorList', this.getErrorListPayload(CONSTANTS));
+    // },
     computed: {
       complete() {
-        return this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGEKEY][PAGE];
+        // return this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGEKEY][PAGE];
+        return this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE] === 0;
+      },
+      isTSError() {
+        return this.getErrorListTS().length !== 0;
       },
     },
-    beforeMount() {
-      // submitted is false initially; set it to true after the first save.
-      // initially, complete is null; after saving, it is set to either true or false.
-      // we want to show validation errors at any time after the first save, with submitted.
-      if (this.complete !== null && this.complete !== undefined) {
-        this.submitted = true;
-        this.$v.$touch();
-      }
-    },
     methods: {
+      getErrorListTS() {
+        const errors = [];
+        (TS_FIELDS).forEach((key) => {
+          // skip non-required keys
+          if ((this.frCombinedMarket && key !== 'tsFrPrice')
+            || (!this.frCombinedMarket && key === 'tsFrPrice')) {
+            return;
+          }
+          if (this[key].data.length === 0) {
+            errors.push(`A timeseries of ${this[key].columnHeaderName} is required`);
+          }
+        });
+        return errors;
+      },
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
-      getDataFromProject() {
-        return operateOnKeysList(this.$store.state.Project, c.FR_FIELDS, f => f);
-      },
-      getCompletenessPayload() {
-        return {
-          pageGroup: PAGEGROUP,
-          pageKey: PAGEKEY,
-          page: PAGE,
-          completeness: !this.$v.$invalid,
-        };
-      },
-      getErrorListPayload() {
-        const errors = [];
-        Object.keys(this.$v).forEach((key) => {
-          if (key.charAt(0) !== '$' && this.$v[key].$invalid) {
-            errors.push(this.getErrorMsg(key));
-          }
-        });
-        return {
-          pageGroup: PAGEGROUP,
-          pageKey: PAGEKEY,
-          page: PAGE,
-          errorList: errors,
-        };
-      },
       validatedSave() {
         // set completeness
-        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
+        // this.$store.dispatch('Application/setCompleteness',
+        // this.getCompletenessPayload(CONSTANTS));
         this.submitted = true;
         this.$v.$touch();
         // set errorList
-        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
-        return this.save();
+        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload(CONSTANTS));
+        // save
+        this.tsSave(TS_FIELDS);
+        this.save();
       },
       save() {
-        if (this.inputTimeseries !== null) {
-          this.$store.dispatch('setFRPrice', this.inputTimeseries);
-        }
-        if (this.inputTimeseries2 !== null) {
-          this.$store.dispatch('setFRUpPrice', this.inputTimeseries2);
-        }
-        if (this.inputTimeseries3 !== null) {
-          this.$store.dispatch('setFRDownPrice', this.inputTimeseries3);
-        }
         this.$store.dispatch('setFReou', this.frEOU);
         this.$store.dispatch('setFReod', this.frEOD);
         this.$store.dispatch('setFRGrowth', this.frGrowth);

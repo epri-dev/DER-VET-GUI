@@ -10,6 +10,7 @@
         :data-exists="(tsData !== null)"
         :data-time-series="tsData"
         :key="childKey"
+        :TimeSeriesModel="PVGenerationTimeSeries"
       />
       <div v-if="(generationProfile === null)">
         <hr>
@@ -60,6 +61,7 @@
           generationProfile: this.getGenerationProfile(),
           WIZARD_COMPONENT_PATH,
           TECH_SPECS_PV_PATH,
+          PVGenerationTimeSeries,
         };
       }
       const defaultValues = TechnologySpecsSolarPVMetadata.getHardcodedMetadata().getDefaultValues();
@@ -67,6 +69,7 @@
         generationProfile: defaultValues.generationProfile,
         WIZARD_COMPONENT_PATH,
         TECH_SPECS_PV_PATH,
+        PVGenerationTimeSeries,
       };
     },
     computed: {

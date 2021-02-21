@@ -2,7 +2,7 @@ import TimeSeriesBase from './TimeSeriesBase';
 
 class FRPriceTimeSeries extends TimeSeriesBase {
   constructor(data) {
-    super('FR Price ($/kW)', data);
+    super('tsFrPrice', 'FR Price ($/kW)', data);
   }
 }
 
