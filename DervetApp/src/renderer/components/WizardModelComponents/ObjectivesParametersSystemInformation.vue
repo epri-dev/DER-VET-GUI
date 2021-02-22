@@ -12,6 +12,7 @@
           :data-exists="(tsData !== null)"
           :data-time-series="tsData"
           :key="childKey"
+          :TimeSeriesModel="SystemLoadTimeSeries"
           />
         </div>
 
@@ -45,6 +46,7 @@
         includeSystemLoad: p.includeSystemLoad,
         systemLoad: p.systemLoad,
         WIZARD_COMPONENT_PATH,
+        SystemLoadTimeSeries,
       };
     },
     computed: {
@@ -64,17 +66,13 @@
       // we want to show validation errors at any time after the first save, with submitted.
       if (this.errorList !== null && this.errorList !== undefined) {
         this.submitted = true;
-        this.$v.$touch();
+        // this.$v.$touch();
       }
     },
     methods: {
       getErrorListPayload() {
         const errors = [];
-        Object.keys(this.$v).forEach((key) => {
-          if (key.charAt(0) !== '$' && this.$v[key].$invalid) {
-            errors.push(key);
-          }
-        });
+
         return {
           pageGroup: PAGEGROUP,
           pageKey: PAGEKEY,
@@ -84,11 +82,8 @@
       },
       validatedSave() {
         // reset all non-required inputs to their defaults prior to saving
-        if (this.includeInterconnectionConstraints === false) {
-          this.resetNonRequired(['maxExport', 'maxImport']);
-        }
         this.submitted = true;
-        this.$v.$touch();
+        // this.$v.$touch();
         // set errorList
         this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
         return this.save();
