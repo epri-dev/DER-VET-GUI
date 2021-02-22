@@ -137,7 +137,9 @@
     computed: {
       complete() {
         // return this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGEKEY][PAGE];
-        return this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE] === 0;
+        return (this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE] === null)
+          ? null
+          : this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE] === 0;
       },
       isTSError() {
         return this.getErrorListTS(false).length !== 0;

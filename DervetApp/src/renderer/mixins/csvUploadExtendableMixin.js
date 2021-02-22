@@ -12,6 +12,7 @@ const csvUploadMixin = {
     // initially, complete is null; after saving, it is set to either true or false.
     // we want to show validation errors at any time after the first save, with submitted.
     if (isNotNullAndNotUndefined(this.complete)) {
+      console.log(this.complete);
       this.submitted = true;
       this.$v.$touch();
     }
