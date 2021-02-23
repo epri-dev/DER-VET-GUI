@@ -75,6 +75,7 @@
   const useCases = [
     { id: 1, value: 'billReductionProject', text: 'General DER Bill Reduction' },
     { id: 2, value: 'reliabilityProject', text: 'General DER Sizing for Reliability' },
+    { id: 3, value: 'ERCOTMarketService', text: 'ERCOT Market Case' },
   ];
 
   export default {

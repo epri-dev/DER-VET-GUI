@@ -176,7 +176,6 @@ export default class TimeSeriesData extends BaseTableData {
           columnData.push({ data, label });
         }
       }
-      console.log(col);
     });
     return columnData;
   }

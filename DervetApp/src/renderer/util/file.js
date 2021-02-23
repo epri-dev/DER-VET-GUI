@@ -51,11 +51,12 @@ export const parseCsvFromFile = (file, successCallback) => {
 
 export const parseCsvFromEvent = (e, successCallback) => {
   const FILE_TYPE_CSV = 'text/csv';
+  const FILE_TYPE_XCEL = 'application/vnd.ms-excel';
   const file = getFileFromEvent(e);
-  if (file.type !== FILE_TYPE_CSV) {
-    wrongFileType(file, FILE_TYPE_CSV, successCallback);
-  } else {
+  if (file.type === FILE_TYPE_CSV || file.type === FILE_TYPE_XCEL) {
     parseCsvFromFile(file, successCallback);
+  } else {
+    wrongFileType(file, FILE_TYPE_CSV, successCallback);
   }
   // TODO: also check file.size and have an upper limit to avoid
   //   import attempts for huge files- AE

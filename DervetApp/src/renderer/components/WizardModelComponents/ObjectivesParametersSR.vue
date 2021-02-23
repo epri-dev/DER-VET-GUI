@@ -18,12 +18,12 @@
 
       <timeseries-data-upload
         chart-name="chartUploadedTimeSeries"
-        data-name="spinning reserve price"
+        :data-name="priceName"
         units="$/kW"
         @uploaded="receiveTimeseriesData"
-        :data-exists="(tsData !== null)"
-        :data-time-series="tsData"
-        :key="childKey"
+        :data-time-series="price"
+        key="1"
+        :TimeSeriesModel="SRPriceTimeSeries"
       />
       <hr>
 
@@ -41,7 +41,8 @@
   import * as p from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
   import operateOnKeysList from '@/util/object';
-  import csvUploadMixin from '@/mixins/csvUploadMixin';
+  import { isNotNullAndNotUndefined } from '@/util/logic';
+  import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
@@ -58,31 +59,27 @@
     data() {
       const p = this.$store.state.Project;
       return {
-        srPrice: p.srPrice,
+        price: p.srPrice,
+        priceName: 'spinning reserve price',
         metadata,
         ...this.getDataFromProject(),
         WIZARD_COMPONENT_PATH,
+        SRPriceTimeSeries,
       };
     },
     validations: {
       ...validations,
     },
     computed: {
-      tsData() {
-        if (this.inputTimeseries === null) {
-          return this.srPrice;
-        }
-        return new SRPriceTimeSeries(this.inputTimeseries);
-      },
-      complete() {
-        return this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGEKEY][PAGE];
+      errorList() {
+        return this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE];
       },
     },
     beforeMount() {
       // submitted is false initially; set it to true after the first save.
       // initially, complete is null; after saving, it is set to either true or false.
       // we want to show validation errors at any time after the first save, with submitted.
-      if (this.complete !== null && this.complete !== undefined) {
+      if (isNotNullAndNotUndefined(this.errorList)) {
         this.submitted = true;
         this.$v.$touch();
       }
@@ -93,14 +90,6 @@
       },
       getDataFromProject() {
         return operateOnKeysList(this.$store.state.Project, c.SR_FIELDS, f => f);
-      },
-      getCompletenessPayload() {
-        return {
-          pageGroup: PAGEGROUP,
-          pageKey: PAGEKEY,
-          page: PAGE,
-          completeness: !this.$v.$invalid,
-        };
       },
       getErrorListPayload() {
         const errors = [];
@@ -117,8 +106,6 @@
         };
       },
       validatedSave() {
-        // set completeness
-        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
         this.submitted = true;
         this.$v.$touch();
         // set errorList
@@ -126,8 +113,8 @@
         return this.save();
       },
       save() {
-        if (this.inputTimeseries !== null) {
-          this.$store.dispatch('setSRPrice', this.tsData);
+        if (this.inputTimeseries[this.priceName] !== null) {
+          this.$store.dispatch('setSRPrice', this.inputTimeseries[this.priceName]);
         }
         this.$store.dispatch('setSRGrowth', this.srGrowth);
         this.$store.dispatch('setSRDuration', this.srDuration);

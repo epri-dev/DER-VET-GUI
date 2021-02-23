@@ -127,9 +127,10 @@ export const checkNotNullOrEmpty = technologySpecs => (
   isNotNullAndNotUndefined(technologySpecs) && technologySpecs.length > 0
 );
 
-export const mapListToObjectList = (lst, fieldName) => (
-  lst.map(d => ({ [fieldName]: d }))
-);
+export const mapListToObjectList = (lst, fieldName) => {
+  console.log(fieldName);
+  return lst.map(d => ({ [fieldName]: d }));
+};
 
 export const makeTechnologyParameters = (technologySpecs, makeSingleTechFn) => {
   const includeTech = checkNotNullOrEmpty(technologySpecs);
