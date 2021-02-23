@@ -5,6 +5,7 @@ import { reliabilityProject } from '@/assets/cases/reliability/project';
 import { dummyMarketServiceHourly } from '@/assets/cases/dummyMarketServiceHourly/project';
 import { ERCOTMarketService } from '@/assets/cases/ERCOTMarketService/project';
 import { projectMetadata } from '@/models/Project/ProjectMetadata';
+import { makeDatetimeIndex } from '@/models/dto/ProjectDto';
 import * as m from '@/store/mutationTypes';
 import * as a from '@/store/actionTypes';
 import * as c from '@/models/Project/constants';
@@ -137,6 +138,9 @@ const getters = {
   },
   getSolarPVSpecsClone(state) {
     return () => cloneDeep(state.technologySpecsSolarPV);
+  },
+  getTimeseriesXAxis(state) {
+    return makeDatetimeIndex(state.dataYear, state.timestep, false);
   },
 };
 
