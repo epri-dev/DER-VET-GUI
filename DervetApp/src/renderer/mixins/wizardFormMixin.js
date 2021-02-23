@@ -2,6 +2,7 @@ import DropDownInput from '@/components/Shared/DropDownInput';
 import NavButton from '@/components/Shared/NavButton';
 import RadioButtonInput from '@/components/Shared/RadioButtonInput';
 import SaveButtons from '@/components/Shared/SaveButtons';
+import SaveAndSaveContinue from '@/components/Shared/SaveAndSaveContinue';
 import SaveAndNavButtons from '@/components/Shared/SaveAndNavButtons';
 import TextInput from '@/components/Shared/TextInput';
 
@@ -11,6 +12,7 @@ export default {
     NavButton,
     RadioButtonInput,
     SaveButtons,
+    SaveAndSaveContinue,
     SaveAndNavButtons,
     TextInput,
   },

@@ -61,9 +61,6 @@ const getters = {
   getBatterySpecsClone(state) {
     return () => cloneDeep(state.technologySpecsBattery);
   },
-  getDataYear(state) {
-    return state.dataYear;
-  },
   getDieselGenById(state) {
     return id => state.technologySpecsDieselGen.find(x => x.id === id);
   },
@@ -140,9 +137,6 @@ const getters = {
   },
   getTimeseriesXAxis(state) {
     return makeDatetimeIndex(state.dataYear, state.timestep, false);
-  },
-  getTimestep(state) {
-    return state.timestep;
   },
 };
 
@@ -294,31 +288,31 @@ const mutations = {
   },
   // frequency regulation
   [m.SET_FR_COMBINED_MARKET](state, newFRCombinedMarket) {
-    state.frCombinedMarket = newFRCombinedMarket;
+    state[c.FR_COMBINED_MARKET] = newFRCombinedMarket;
   },
   [m.SET_FR_DOWN_PRICE](state, newFRDownPrice) {
-    state.tsFrDownPrice = newFRDownPrice;
+    state[c.TS_FR_DOWN_PRICE] = newFRDownPrice;
   },
   [m.SET_FR_DURATION](state, newFRDuration) {
-    state.frDuration = newFRDuration;
+    state[c.FR_DURATION] = newFRDuration;
   },
   [m.SET_FR_ENERGY_GROWTH](state, newFREnergyGrowth) {
-    state.frEnergyPriceGrowth = newFREnergyGrowth;
+    state[c.FR_ENERGY_PRICE_GROWTH] = newFREnergyGrowth;
   },
   [m.SET_FR_EOU](state, newFReou) {
-    state.frEOU = newFReou;
+    state[c.FR_EOU] = newFReou;
   },
   [m.SET_FR_EOD](state, newFReod) {
-    state.frEOD = newFReod;
+    state[c.FR_EOD] = newFReod;
   },
   [m.SET_FR_GROWTH](state, newFRGrowth) {
-    state.frGrowth = newFRGrowth;
+    state[c.FR_GROWTH] = newFRGrowth;
   },
   [m.SET_FR_PRICE](state, newFRPrice) {
-    state.tsFrPrice = newFRPrice;
+    state[c.TS_FR_PRICE] = newFRPrice;
   },
   [m.SET_FR_UP_PRICE](state, newFRUpPrice) {
-    state.tsFrUpPrice = newFRUpPrice;
+    state[c.TS_FR_UP_PRICE] = newFRUpPrice;
   },
   // Fleet EV
   [m.REPLACE_TECHNOLOGY_SPECS_FLEET_EV](state, payload) {

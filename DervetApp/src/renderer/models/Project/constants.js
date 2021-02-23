@@ -64,7 +64,7 @@ export const TS_FR_UP_PRICE = 'tsFrUpPrice';
 export const TS_FR_DOWN_PRICE = 'tsFrDownPrice';
 export const TS_FR_FIELDS = [TS_FR_PRICE, TS_FR_UP_PRICE, TS_FR_DOWN_PRICE];
 
-export const TS_ALL = [TS_FR_FIELDS];
+export const TS_ALL = [...TS_FR_FIELDS];
 
 export const makeAllowedValues = lst => _.map(lst, x => ({ value: x, label: x }));
 
@@ -161,15 +161,15 @@ export const FINANCE_FIELDS = [
   FINANCE_PROPERTY_TAX_RATE,
   FINANCE_STATE_TAX_RATE,
 ];
-export const FR_FIELDS = _.flatten([
+export const FR_FIELDS = [
   FR_COMBINED_MARKET,
   FR_DURATION,
   FR_ENERGY_PRICE_GROWTH,
   FR_EOU,
   FR_EOD,
   FR_GROWTH,
-  TS_FR_FIELDS,
-]);
+  ...TS_FR_FIELDS,
+];
 export const LF_FIELDS = [
   LF_COMBINED_MARKET,
   LF_DURATION,

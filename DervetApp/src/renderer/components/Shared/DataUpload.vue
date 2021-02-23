@@ -18,8 +18,8 @@
         <div class="col-md-5">
           <b-button
             size="sm"
-            class="btn-xs btn-danger delete-ts pull-right"
-            v-on:click="removeTS">
+            class="btn-xs btn-danger delete-data pull-right"
+            @click="removeData">
             Remove Data
           </b-button>
         </div>
@@ -76,7 +76,7 @@
         <span v-html="errorMessage"></span>
       </div>
     </div>
-    <div v-if="(this.validDataExists && this.useExisting)">
+    <div v-if="showPlot">
       <div class="col-md-10" :id="this.chartName">
       </div>
     </div>
@@ -93,7 +93,7 @@
 
   export default {
     updated() {
-      if (this.validDataExists) {
+      if (this.showPlot) {
         this.createChartUploadedDataPlot(this.chartName);
       }
     },
@@ -103,7 +103,6 @@
         useExisting: sharedDefaults.useExistingTimeSeriesData,
         importError: undefined,
         importedFilePath: null,
-        // showPlot: true,
         ...this.importErrorOnDisabledUpload(),
       };
     },
@@ -117,9 +116,9 @@
       validDataExists() {
         return (this.dataExists && [undefined, ''].includes(this.importError));
       },
-      // showPlot() {
-      // return (this.validDataExists && this.importError === undefined);
-      // },
+      showPlot() {
+        return (this.validDataExists && this.useExisting);
+      },
     },
     props: {
       chartName: String,
@@ -131,20 +130,14 @@
       errorMessage: String,
       isInvalid: Boolean,
       numberOfEntriesRequired: String,
-      tsName: String,
+      objectName: String,
       units: String,
       uploadedData: Object,
       xAxis: Array,
     },
     methods: {
-      firstNValues(array) {
-        // for displaying only the first n elements, then ...
-        const n = 5;
-        const size = array.length;
-        if (size <= n) {
-          return array;
-        }
-        return [array.slice(0, n), '...'];
+      arrayDisplayFirstFive(array) {
+        return (array.length <= 5) ? array : [array.slice(0, 5), '...'];
       },
       importErrorOnDisabledUpload() {
         if (this.disableUpload) {
@@ -156,7 +149,7 @@
         this.importedFilePath = null;
         const payload = {
           button: e,
-          tsName: this.tsName,
+          objectName: this.objectName,
         };
         this.$emit('input', payload);
       },
@@ -169,19 +162,17 @@
           this.importedFilePath = importedFilePath;
           if (importedFilePath !== null && errors === undefined) {
             this.validateUploadedData(results);
-            // this.importedFilePath = importedFilePath;
           }
           if (this.importError === undefined) {
             // only emit back when there are no errors
             //   thus preventing an invalid TS from being saved
             this.$emit('uploaded', this.uploadPayload(flatten(results)));
-            // this.showPlot = true;
             this.useExisting = true;
           }
         };
         parseCsvFromEvent(e, onSuccess);
       },
-      removeTS() {
+      removeData() {
         // emit a payload to:
         // - reset the stored TS data with an empty TS
         // - then set the associated errorList
@@ -190,7 +181,7 @@
         this.importError = null;
         // emit back payload to initiate a reset of the errorlist
         const payload = {
-          tsName: this.tsName,
+          objectName: this.objectName,
         };
         this.$emit('click', payload);
       },
@@ -210,7 +201,7 @@
         }, []);
         const invalidRowsSizeCount = invalidRowsSize.length;
         if (invalidRowsSizeCount !== 0) {
-          this.importError += `<br><b>${invalidRowsSizeCount} Invalid Rows</b> with > 1 entry: [${this.firstNValues(invalidRowsSize)}]`;
+          this.importError += `<br><b>${invalidRowsSizeCount} Invalid Rows</b> with > 1 entry: [${this.arrayDisplayFirstFive(invalidRowsSize)}]`;
         }
         // 3. each row with a single array size of 1 must have a numeric value
         const invalidRowsType = columnsPerRow.reduce((a, val, i) => {
@@ -219,7 +210,7 @@
         }, []);
         const invalidRowsTypeCount = invalidRowsType.length;
         if (invalidRowsTypeCount !== 0) {
-          this.importError += `<br><b>${invalidRowsTypeCount} Invalid Rows</b> with a non-numeric entry: [${this.firstNValues(invalidRowsType)}]`;
+          this.importError += `<br><b>${invalidRowsTypeCount} Invalid Rows</b> with a non-numeric entry: [${this.arrayDisplayFirstFive(invalidRowsType)}]`;
         }
         // 4. add field-specific import-errors here as needed
         // TODO: add these (e.g. solar data must be between 0 and 1)
@@ -229,17 +220,11 @@
         const { columnHeaderName } = this.uploadedData;
         return {
           dataArray: new TimeSeriesBase(columnHeaderName, this.units, dataResults),
-          tsName: this.tsName,
+          objectName: this.objectName,
         };
       },
       createChartUploadedDataPlot(chartId) {
         const ctx = document.getElementById(chartId);
-        if (ctx === null) {
-          // TODO: AE: investigate if this is problematic (when ctx is null)
-          console.log('ctx is null -- cannot make plot');
-          return null;
-        }
-        console.log('making plot');
         const uploadedTS = {
           x: this.xAxis,
           y: this.uploadedData.data,

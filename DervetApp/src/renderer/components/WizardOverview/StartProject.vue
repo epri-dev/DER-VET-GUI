@@ -94,10 +94,10 @@
 
       <hr/>
 
-      <save-buttons
-        :continue-link="this.paths.OBJECTIVES_PATH"
+      <save-and-save-continue
         :displayError="submitted && $v.$anyError"
-        :save="validatedSave"
+        :save="validatedSaveStay"
+        :save-continue="validatedSaveContinue"
       />
     </div>
   </div>
@@ -203,6 +203,33 @@
           errorList: errors,
         };
       },
+      revalidateTS() {
+        // track ts required lines changes
+        console.log(
+          'new:',
+          this.tsRequiredLines,
+          '---> old:',
+          this.numberOfEntriesRequired,
+        );
+        if (this.tsRequiredLines !== this.numberOfEntriesRequired) {
+          console.log('!!! need to do a simple validation (length check) on all stored TS');
+        } else {
+          console.log('no TS re-validation needed');
+        }
+        // reset the value in case of 'saveStay'
+        this.tsRequiredLines = this.numberOfEntriesRequired;
+
+        // TODO: AE: re-validate all saved TS here
+      },
+      validatedSaveContinue() {
+        this.validatedSave();
+        this.save();
+        this.$router.push({ path: this.paths.OBJECTIVES_PATH });
+      },
+      validatedSaveStay() {
+        this.validatedSave();
+        this.save();
+      },
       validatedSave() {
         // reset all non-required inputs to their defaults prior to saving
         if (this.analysisHorizonMode !== '1') {
@@ -214,11 +241,12 @@
         this.$v.$touch();
         // set errorList
         this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
-        return this.save();
+        // handle a change in numberOfEntriesRequired
+        this.$store.dispatch('setDataYear', this.dataYear);
+        this.$store.dispatch('setTimestep', this.timestep);
+        this.revalidateTS();
       },
       save() {
-        this.$store.dispatch('setDataYear', this.dataYear)
-          .then(this.$store.dispatch('setTimestep', this.timestep)).then();
         this.$store.dispatch('setName', this.name);
         this.$store.dispatch('setStartYear', this.startYear);
         this.$store.dispatch('setAnalysisHorizonMode', this.analysisHorizonMode);
@@ -226,14 +254,6 @@
         this.$store.dispatch('setGridLocation', this.gridLocation);
         this.$store.dispatch('setOwnership', this.ownership);
         this.$store.dispatch('setOutputDirectory', this.outputDirectory);
-        // track ts required lines changes
-        if (this.tsRequiredLines !== this.numberOfEntriesRequired) {
-          console.log('need to do a simple validation (length check) on all stored TS');
-        } else {
-          console.log('no TS re-validation needed');
-        }
-        // reset the value in case of 'save'
-        this.tsRequiredLines = this.numberOfEntriesRequired;
       },
     },
   };

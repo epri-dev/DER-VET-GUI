@@ -16,7 +16,7 @@
       :number-of-entries-required="this.numberOfEntriesRequired"
       @uploaded="onFileUpload"
       @input="onChange"
-      :ts-name="tsName"
+      :object-name="objectName"
       :units="units"
       :uploaded-data="dataTimeSeries"
       :x-axis="timeseriesXAxis"
@@ -45,7 +45,7 @@
         return (this.timeseriesXAxis.length === 0);
       },
       dataYear() {
-        return this.$store.getters.getDataYear;
+        return this.$store.state.Project.dataYear;
       },
       dataYearValue() {
         if (['', null].includes(this.dataYear)) {
@@ -56,7 +56,7 @@
         return String(this.dataYear);
       },
       timestep() {
-        return this.$store.getters.getTimestep;
+        return this.$store.state.Project.timestep;
       },
       numberOfEntriesRequired() {
         if (this.disableUpload) {
@@ -83,7 +83,7 @@
       dataTimeSeries: Object,
       errorMessage: String,
       isInvalid: Boolean,
-      tsName: String,
+      objectName: String,
       units: String,
     },
   };

@@ -51,7 +51,7 @@
         :isInvalid="submitted && tsData('tsFrPrice').data.length === 0"
         @input="receiveUseExisting"
         :key="childKey('tsFrPrice')"
-        ts-name="tsFrPrice"
+        object-name="tsFrPrice"
         :units="metadata.tsFrPrice.unit"
         @uploaded="receiveTimeseriesData"
         v-if="frCombinedMarket === true"
@@ -67,7 +67,7 @@
         :isInvalid="submitted && tsData('tsFrUpPrice').data.length === 0"
         @input="receiveUseExisting"
         :key="childKey('tsFrUpPrice')"
-        ts-name="tsFrUpPrice"
+        object-name="tsFrUpPrice"
         :units="metadata.tsFrUpPrice.unit"
         @uploaded="receiveTimeseriesData"
         v-if="frCombinedMarket === false"
@@ -83,7 +83,7 @@
         :isInvalid="submitted && tsData('tsFrDownPrice').data.length === 0"
         @input="receiveUseExisting"
         :key="childKey('tsFrDownPrice')"
-        ts-name="tsFrDownPrice"
+        object-name="tsFrDownPrice"
         :units="metadata.tsFrDownPrice.unit"
         @uploaded="receiveTimeseriesData"
         v-if="frCombinedMarket === false"
@@ -136,7 +136,9 @@
     },
     computed: {
       complete() {
-        // return this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGEKEY][PAGE];
+        // TODO: AE: if this.complete is not being used except for when error list is null
+        //   before the first save, then it can be true otherwise.
+        //   - do we even need this?
         return (this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE] === null)
           ? null
           : this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE] === 0;
@@ -149,6 +151,8 @@
       getErrorListTS(fromStore = true) {
         const errors = [];
         (TS_FIELDS).forEach((tsField) => {
+          const xx = this[tsField].unit;
+          console.log(tsField, xx);
           // skip non-required tsFields
           if ((this.frCombinedMarket && tsField !== 'tsFrPrice')
             || (!this.frCombinedMarket && tsField === 'tsFrPrice')) {

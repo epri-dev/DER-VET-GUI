@@ -12,7 +12,6 @@ const csvUploadMixin = {
     // initially, complete is null; after saving, it is set to either true or false.
     // we want to show validation errors at any time after the first save, with submitted.
     if (isNotNullAndNotUndefined(this.complete)) {
-      console.log(this.complete);
       this.submitted = true;
       this.$v.$touch();
     }
@@ -89,24 +88,24 @@ const csvUploadMixin = {
       return `${tsField}Input`;
     },
     receiveRemove(payload) {
-      const { tsName } = payload;
-      // remove ts by overwriting with an empty ts
-      const emptyTS = cloneDeep(this[tsName]);
-      emptyTS.data = [];
-      this.$store.dispatch(this.metadata[tsName].setActionName, emptyTS);
-      this[tsName] = cloneDeep(emptyTS);
-      // set input TS to null
-      this[this.inputField(tsName)] = null;
+      const { objectName } = payload;
+      // remove data by overwriting with an empty data object
+      const emptyData = cloneDeep(this[objectName]);
+      emptyData.data = [];
+      this.$store.dispatch(this.metadata[objectName].setActionName, emptyData);
+      this[objectName] = cloneDeep(emptyData);
+      // set input Data object to null
+      this[this.inputField(objectName)] = null;
       // set errorList
       this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
     },
     receiveUseExisting(payload) {
-      const { button, tsName } = payload;
-      this[this.useExistingField(tsName)] = button;
+      const { button, objectName } = payload;
+      this[this.useExistingField(objectName)] = button;
     },
     receiveTimeseriesData(payload) {
-      const { dataArray, tsName } = payload;
-      this[this.inputField(tsName)] = dataArray;
+      const { dataArray, objectName } = payload;
+      this[this.inputField(objectName)] = dataArray;
     },
     tsData(tsField) {
       const inputTSDataExists = (this[this.inputField(tsField)] !== null);
