@@ -37,7 +37,7 @@
       <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
                    v-for="objectiveItem in objectives"  v-if="objectiveItem.show"
                    v-bind:class="{ current: isCurrent(objectiveItem.path),
-                   incomplete: isComplete(objectiveItem.pageKey, objectiveItem.pageName) }"
+                   incomplete: !objectiveItem.isComplete }"
                    :to="objectiveItem.path" :key="objectiveItem.pageName">
         {{ objectiveItem.fullName }}
       </router-link>

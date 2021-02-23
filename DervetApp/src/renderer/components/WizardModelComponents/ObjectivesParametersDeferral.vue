@@ -30,12 +30,12 @@
 
       <timeseries-data-upload
         chart-name="chartUploadedTimeSeries"
-        data-name="deferral load"
+        :data-name="loadName"
         units="kW"
         @uploaded="receiveTimeseriesData"
-        :data-exists="(tsData !== null)"
-        :data-time-series="tsData"
-        :key="childKey"
+        :data-time-series="deferralLoad"
+        key="1"
+        :TimeSeriesModel="DeferralLoadTimeSeries"
       />
       <hr>
 
@@ -53,7 +53,8 @@
   import * as p from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
   import operateOnKeysList from '@/util/object';
-  import csvUploadMixin from '@/mixins/csvUploadMixin';
+  import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
+  import { isNotNullAndNotUndefined } from '@/util/logic';
   import DeferralLoadTimeSeries from '@/models/TimeSeries/DeferralLoadTimeSeries';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
@@ -71,30 +72,26 @@
       const p = this.$store.state.Project;
       return {
         deferralLoad: p.deferralLoad,
+        loadName: 'deferral load',
         metadata,
         ...this.getDataFromProject(),
         WIZARD_COMPONENT_PATH,
+        DeferralLoadTimeSeries,
       };
     },
     validations: {
       ...validations,
     },
     computed: {
-      tsData() {
-        if (this.inputTimeseries === null) {
-          return this.deferralLoad;
-        }
-        return new DeferralLoadTimeSeries(this.inputTimeseries);
-      },
-      complete() {
-        return this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGEKEY][PAGE];
+      errorList() {
+        return this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE];
       },
     },
     beforeMount() {
       // submitted is false initially; set it to true after the first save.
       // initially, complete is null; after saving, it is set to either true or false.
       // we want to show validation errors at any time after the first save, with submitted.
-      if (this.complete !== null && this.complete !== undefined) {
+      if (isNotNullAndNotUndefined(this.errorList)) {
         this.submitted = true;
         this.$v.$touch();
       }
@@ -105,14 +102,6 @@
       },
       getDataFromProject() {
         return operateOnKeysList(this.$store.state.Project, c.DEFERRAL_FIELDS, f => f);
-      },
-      getCompletenessPayload() {
-        return {
-          pageGroup: PAGEGROUP,
-          pageKey: PAGEKEY,
-          page: PAGE,
-          completeness: !this.$v.$invalid,
-        };
       },
       getErrorListPayload() {
         const errors = [];
@@ -129,8 +118,6 @@
         };
       },
       validatedSave() {
-        // set completeness
-        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
         this.submitted = true;
         this.$v.$touch();
         // set errorList
@@ -138,8 +125,8 @@
         return this.save();
       },
       save() {
-        if (this.inputTimeseries !== null) {
-          this.$store.dispatch('setDeferralLoad', this.tsData);
+        if (this.inputTimeseries[this.loadName] !== undefined) {
+          this.$store.dispatch('setDeferralLoad', this.inputTimeseries[this.loadName]);
         }
         this.$store.dispatch('setDeferralPlannedLoadLimit', this.deferralPlannedLoadLimit);
         this.$store.dispatch('setDeferralReversePowerFlowLimit', this.deferralReversePowerFlowLimit);

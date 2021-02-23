@@ -26,12 +26,12 @@
 
       <div class="form-group" v-if="includeSiteLoad === true">
         <timeseries-data-upload chart-name="chartUploadedTimeSeries"
-                                data-name="site load"
+                                :data-name="siteLoadName"
                                 units="kW"
                                 @uploaded="receiveTimeseriesData"
-                                :data-exists="(tsData !== null)"
-                                :data-time-series="tsData"
-                                :key="childKey" />
+                                :data-time-series="siteLoad"
+                                key="1"
+                                :TimeSeriesModel="SiteLoadTimeSeries" />
         <div v-if="(siteLoad === null)">
           <hr>
           <div class="form-group row">
@@ -69,7 +69,7 @@
   import operateOnKeysList from '@/util/object';
   import '@/assets/samples/SampleSiteLoad-8760.csv';
   import '@/assets/samples/SampleSiteLoad-8784.csv';
-  import csvUploadMixin from '@/mixins/csvUploadMixin';
+  import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
@@ -88,9 +88,11 @@
       return {
         includeSiteLoad: p.includeSiteLoad,
         siteLoad: p.siteLoad,
+        siteLoadName: 'site load',
         metadata,
         ...this.getDataFromProject(),
         WIZARD_COMPONENT_PATH,
+        SiteLoadTimeSeries,
       };
     },
     validations: {
@@ -109,12 +111,7 @@
       },
     },
     computed: {
-      tsData() {
-        if (this.inputTimeseries === null) {
-          return this.siteLoad;
-        }
-        return new SiteLoadTimeSeries(this.inputTimeseries);
-      },
+
       complete() {
         return this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGEKEY][PAGE];
       },
@@ -177,8 +174,8 @@
         return this.save();
       },
       save() {
-        if (this.inputTimeseries !== null) {
-          this.$store.dispatch('setSiteLoad', this.tsData);
+        if (this.inputTimeseries[this.siteLoadName] !== undefined) {
+          this.$store.dispatch('setSiteLoad', this.inputTimeseries[this.siteLoadName]);
         }
         this.$store.dispatch('setIncludePOIConstraints', this.includeInterconnectionConstraints);
         this.$store.dispatch('setMaxImportFromGrid', this.maxImport);

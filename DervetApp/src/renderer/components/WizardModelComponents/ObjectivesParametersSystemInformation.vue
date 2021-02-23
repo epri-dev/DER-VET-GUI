@@ -6,12 +6,11 @@
       <div class="form-group">
         <timeseries-data-upload 
           chart-name="chartUploadedTimeSeries"
-          data-name="System load"
+          :data-name="systemLoadName"
           units="kW"
           @uploaded="receiveTimeseriesData"
-          :data-exists="(tsData !== null)"
-          :data-time-series="tsData"
-          :key="childKey"
+          :data-time-series="systemLoad"
+          key="1"
           :TimeSeriesModel="SystemLoadTimeSeries"
           />
         </div>
@@ -28,7 +27,7 @@
 
 <script>
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import csvUploadMixin from '@/mixins/csvUploadMixin';
+  import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import SystemLoadTimeSeries from '@/models/TimeSeries/SystemLoadTimeSeries';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
@@ -45,17 +44,12 @@
       return {
         includeSystemLoad: p.includeSystemLoad,
         systemLoad: p.systemLoad,
+        systemLoadName: 'system load',
         WIZARD_COMPONENT_PATH,
         SystemLoadTimeSeries,
       };
     },
     computed: {
-      tsData() {
-        if (this.inputTimeseries === null) {
-          return this.systemLoad;
-        }
-        return new SystemLoadTimeSeries(this.inputTimeseries);
-      },
       errorList() {
         return this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE];
       },
@@ -89,8 +83,8 @@
         return this.save();
       },
       save() {
-        if (this.inputTimeseries !== null) {
-          this.$store.dispatch('setSystemLoad', this.tsData);
+        if (this.inputTimeseries[this.systemLoadName] !== undefined) {
+          this.$store.dispatch('setSystemLoad', this.inputTimeseries[this.systemLoadName]);
         }
       },
     },

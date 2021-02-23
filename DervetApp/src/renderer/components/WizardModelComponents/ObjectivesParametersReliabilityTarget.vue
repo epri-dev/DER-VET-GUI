@@ -25,12 +25,12 @@
 
       <timeseries-data-upload
         chart-name="chartUploadedTimeSeries"
-        data-name="critical load"
+        :data-name="loadName"
         units="kW"
         @uploaded="receiveTimeseriesData"
-        :data-exists="(tsData !== null)"
-        :data-time-series="tsData"
-        :key="childKey"
+        :data-time-series="criticalLoad"
+        :TimeSeriesModel="CriticalLoadTimeSeries"
+        key="1"
       />
       <hr>
 
@@ -46,10 +46,11 @@
 <script>
   import { requiredIf } from 'vuelidate/lib/validators';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
+  import { isNotNullAndNotUndefined } from '@/util/logic';
   import * as p from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
   import operateOnKeysList from '@/util/object';
-  import csvUploadMixin from '@/mixins/csvUploadMixin';
+  import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
   import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
@@ -67,9 +68,11 @@
       const p = this.$store.state.Project;
       return {
         criticalLoad: p.criticalLoad,
+        loadName: 'critical load',
         metadata,
         ...this.getDataFromProject(),
         WIZARD_COMPONENT_PATH,
+        CriticalLoadTimeSeries,
       };
     },
     validations: {
@@ -82,21 +85,15 @@
       },
     },
     computed: {
-      tsData() {
-        if (this.inputTimeseries === null) {
-          return this.criticalLoad;
-        }
-        return new CriticalLoadTimeSeries(this.inputTimeseries);
-      },
-      complete() {
-        return this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGEKEY][PAGE];
+      errorList() {
+        return this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE];
       },
     },
     beforeMount() {
       // submitted is false initially; set it to true after the first save.
       // initially, complete is null; after saving, it is set to either true or false.
       // we want to show validation errors at any time after the first save, with submitted.
-      if (this.complete !== null && this.complete !== undefined) {
+      if (isNotNullAndNotUndefined(this.errorList)) {
         this.submitted = true;
         this.$v.$touch();
       }

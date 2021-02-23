@@ -113,7 +113,7 @@
         return this.save();
       },
       save() {
-        if (this.inputTimeseries[this.priceName] !== null) {
+        if (this.inputTimeseries[this.priceName] !== undefined) {
           this.$store.dispatch('setSRPrice', this.inputTimeseries[this.priceName]);
         }
         this.$store.dispatch('setSRGrowth', this.srGrowth);

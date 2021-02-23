@@ -65,14 +65,14 @@
           </div>
         </div>
 
-        <div v-if="activeObjectivesErrorExists" class="incomplete">
+        <div v-if="doesActiveObjectivesErrorExist" class="incomplete">
           <h4>Errors in Services Components</h4>
           <div v-for="service in activeObjectivesAndErrorsOnly">
-            <div v-if="!service.complete">
+            <div v-if="!service.isComplete">
               <li>
                 <router-link class="text-decoration-none"
                              :to="service.path">
-                  {{ service.fullName + notStartedText(service.complete) }}
+                  {{ service.fullName + notStartedText(service.isComplete) }}
                 </router-link>
                 <ul>
                   <li v-for="error in service.errors">
@@ -84,7 +84,7 @@
           </div>
         </div>
 
-        <div v-if="activeFinancialErrorExists" class="incomplete">
+        <div v-if="doesActiveFinancialErrorExist" class="incomplete">
           <h4>Errors in Finances Components</h4>
           <div v-for="finance in activeFinancialAndErrorsOnly">
             <div v-if="!finance.complete">
@@ -182,23 +182,23 @@
   export default {
     mixins: [technologySpecsMixin, objectivesMixin, financeMixin],
     computed: {
-      activeFinancesWithErrors() {
-        return this.activeWithErrors(this.financial);
-      },
-      activeFinancialErrorExists() {
-        return this.activeErrorExists(this.activeFinancesWithErrors);
+      activeFinancal() {
+        return this.filterActive(this.financial);
       },
       activeFinancialAndErrorsOnly() {
-        return this.activeAndErrorsOnly(this.activeFinancesWithErrors);
+        return this.errorsOnly(this.activeFinancesWithErrors);
       },
-      activeObjectivesWithErrors() {
-        return this.activeWithErrors(this.objectives);
+      doesActiveFinancialErrorExist() {
+        return this.activeFinancialAndErrorsOnly.length > 0;
+      },
+      activeObjectives() {
+        return this.filterActive(this.objectives);
       },
       activeObjectivesAndErrorsOnly() {
-        return this.activeAndErrorsOnly(this.activeObjectivesWithErrors);
+        return this.errorsOnly(this.activeObjectivesWithErrors);
       },
-      activeObjectivesErrorExists() {
-        return this.activeErrorExists(this.activeObjectivesWithErrors);
+      doesActiveObjectivesErrorExist() {
+        return this.activeObjectivesAndErrorsOnly.length > 0;
       },
       activeTechErrorExists() {
         let errorsTF = false;
@@ -211,7 +211,7 @@
       },
       anyErrorExists() {
         return (this.overviewErrorExists() || this.activeTechErrorExists
-          || this.activeObjectivesErrorExists || this.activeFinancialErrorExists);
+          || this.doesActiveFinancialErrorExist || this.doesActiveObjectivesErrorExist);
       },
       errorList() {
         return this.$store.state.Application.errorList;
@@ -231,23 +231,15 @@
       FilePicker,
     },
     methods: {
-      activeWithErrors(mixinObject) {
-        mixinObject.forEach((value) => {
-          if (value.show) {
-            value.errors = this.errorList.components[value.pageKey][value.pageName];
-          }
-        });
-        return mixinObject;
+      filterActive(mixinObject) {
+        return _.filter(mixinObject, 'show');
       },
-      activeAndErrorsOnly(activeWithErrorsObject) {
+      errorsOnly(activeWithErrorsObject) {
         const hasErrors = function hasErrors(o) {
-          return isObjectOfLengthZero(o.errors);
+          return isObjectOfLengthZero(o.errorList);
         };
         const pageWithErrors = _.filter(activeWithErrorsObject, hasErrors);
         return pageWithErrors;
-      },
-      activeErrorExists(activeWithErrorsObject) {
-        return this.activeAndErrorsOnly(activeWithErrorsObject).length !== 0;
       },
       modeDescription() {
         const mode = this.$store.state.Project.analysisHorizonMode;

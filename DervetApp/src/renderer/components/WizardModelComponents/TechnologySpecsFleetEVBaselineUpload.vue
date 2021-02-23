@@ -4,12 +4,11 @@
       <h3>Technology Specs: Fleet EV Baseline Load Profile Upload</h3>
       <timeseries-data-upload
         chart-name="chartUploadedTimeSeries"
-        data-name="baseline load profile"
+        :data-name="loadName"
         units='kW'
         @uploaded="receiveTimeseriesData"
-        :data-exists="(tsData !== null && tsData !== undefined)"
-        :data-time-series="tsData"
-        :key="childKey"
+        :data-time-series="loadProfile"
+        key="1"
       />
 
       <hr>
@@ -24,7 +23,7 @@
 </template>
 
 <script>
-  import csvUploadMixin from '@/mixins/csvUploadMixin';
+  import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import FleetEVBaselineLoadTimeSeries from '@/models/TimeSeries/FleetEVBaselineLoadTimeSeries';
   import SaveButtons from '@/components/Shared/SaveButtons';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
@@ -42,16 +41,10 @@
     data() {
       return {
         loadProfile: this.getloadProfile(),
+        loadName: 'baseline load profile',
         WIZARD_COMPONENT_PATH,
+        FleetEVBaselineLoadTimeSeries,
       };
-    },
-    computed: {
-      tsData() {
-        if (this.inputTimeseries === null) {
-          return this.loadProfile;
-        }
-        return new FleetEVBaselineLoadTimeSeries(this.inputTimeseries);
-      },
     },
     methods: {
       getloadProfile() {
@@ -59,7 +52,7 @@
         return fleetEVItem.baselineLoad;
       },
       save() {
-        if (this.inputTimeseries !== null) {
+        if (this.inputTimeseries[this.loadName] !== undefined) {
           const payload = this.makeSavePayload();
           this.$store.dispatch(ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_FLEET_EV, payload);
         }
@@ -76,7 +69,7 @@
       makeSavePayload() {
         return {
           id: this.id,
-          loadProfile: this.tsData,
+          loadProfile: this.inputTimeseries[this.loadName],
         };
       },
     },

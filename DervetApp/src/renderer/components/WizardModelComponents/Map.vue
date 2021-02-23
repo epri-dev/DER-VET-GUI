@@ -21,7 +21,7 @@
       <div class="col-md-4 buffer-bottom" v-for="objectiveItem in objectives"  v-if="objectiveItem.show">
         <b-button block size="lg"
                   :to="objectiveItem.path"
-                  v-bind:class="{ 'incomplete-btn': isComplete(objectiveItem.pageKey, objectiveItem.pageName) }">
+                  v-bind:class="{ 'incomplete-btn': !objectiveItem.isComplete }">
           {{ objectiveItem.fullName }}
         </b-button>
       </div>
