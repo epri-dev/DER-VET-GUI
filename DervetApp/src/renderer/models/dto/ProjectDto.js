@@ -44,6 +44,7 @@ const RESULTS = 'results';
 export const LOG_FILE = 'dervet_log.log';
 
 const TIMESERIES_FIELDS = [
+  'raActive',
   'criticalLoad',
   'deferralLoad',
   'daPrice',
@@ -68,7 +69,7 @@ const TIMESERIES_FIELDS = [
 const MONTHLY_FIELDS = [
   'backupPrice',
   'backupEnergyReservation',
-  // 'drMonthsApplied',
+  'drMonthsApplied',
   'drCapacityReservation',
   'drCapacityAwards',
   'drEnergyAwards',
@@ -801,6 +802,7 @@ export const makeMonthlyCsv = (project) => {
       addSingleSeries(dataObjectList, ts, tsClass.columnHeaderName);
     }
   });
+  console.log(JSON.stringify(data, null, 1));
   const unzippedData = _.unzipWith(data, Object.assign);
   return objectToCsv(unzippedData, fields, headers);
 };

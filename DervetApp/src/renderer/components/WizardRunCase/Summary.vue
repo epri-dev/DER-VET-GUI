@@ -149,7 +149,7 @@
 
           <div class="col-md-5">
             <router-link
-              v-on:click.native="(runInProgress() || runDervetDisabled) ? () => null : runDervet()"
+              v-on:click.native="(runDervetDisabled) ? () => null : runDervet()"
               :event="runDervetDisabled ? '' : 'click'"
               :to="this.$route.path"
               class="btn btn-lg btn-danger pull-left btn-summary">

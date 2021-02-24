@@ -144,6 +144,7 @@
       const p = this.$store.state.Project;
       return {
         monthsAppliedLabels: p.drMonthsAppliedLabels,
+        monthsApplied: p.drMonthsApplied,
         capacityReservation: p.drCapacityReservation,
         capacityReservationName: 'power that will be commited to the demand response program',
         capacityAwards: p.drCapacityAwards,
@@ -168,7 +169,11 @@
         return this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE];
       },
       monthsAppliedConvertedIntoOnesAndZeros() {
-        return this.monthsList.map(month => (this.monthsAppliedLabels.includes(month) ? 1 : 0));
+        if (this.monthsAppliedLabels.length > 0) {
+          const mon = this.monthsList.map(mon => (this.monthsAppliedLabels.includes(mon) ? 1 : 0));
+          return new DRMonthsMonthly(mon);
+        }
+        return null;
       },
     },
     beforeMount() {
