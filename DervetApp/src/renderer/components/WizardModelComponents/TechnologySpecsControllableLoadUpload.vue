@@ -4,12 +4,12 @@
       <h3>Technology Specs: Controllable Load Profile Upload</h3>
       <timeseries-data-upload
         chart-name="chartUploadedTimeSeries"
-        data-name="maximum load profile"
+        :data-name="loadName"
         units='kW'
         @uploaded="receiveTimeseriesData"
-        :data-exists="(tsData !== null && tsData !== undefined)"
-        :data-time-series="tsData"
-        :key="childKey"
+        :data-time-series="loadProfile"
+        key="1"
+        :TimeSeriesModel="SiteLoadTimeSeries"
       />
 
       <hr>
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-  import csvUploadMixin from '@/mixins/csvUploadMixin';
+  import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
   import SaveButtons from '@/components/Shared/SaveButtons';
   import { WIZARD_COMPONENT_PATH } from '@/router/constants';
@@ -42,16 +42,10 @@
     data() {
       return {
         loadProfile: this.getloadProfile(),
+        loadName: 'maximum load profile',
         WIZARD_COMPONENT_PATH,
+        SiteLoadTimeSeries,
       };
-    },
-    computed: {
-      tsData() {
-        if (this.inputTimeseries === null) {
-          return this.loadProfile;
-        }
-        return new SiteLoadTimeSeries(this.inputTimeseries);
-      },
     },
     methods: {
       getloadProfile() {
@@ -59,7 +53,7 @@
         return controllableLoadItem.load;
       },
       save() {
-        if (this.inputTimeseries !== null) {
+        if (this.inputTimeseries[this.loadName] !== undefined) {
           const payload = this.makeSavePayload();
           this.$store.dispatch(ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD, payload);
         }
@@ -76,7 +70,7 @@
       makeSavePayload() {
         return {
           id: this.id,
-          loadProfile: this.tsData,
+          loadProfile: this.inputTimeseries[this.loadName],
         };
       },
     },

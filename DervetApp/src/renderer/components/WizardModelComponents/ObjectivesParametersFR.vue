@@ -43,34 +43,34 @@
 
       <timeseries-data-upload
         chart-name="chartUploadedTimeSeries"
-        data-name="frequency regulation price"
+        :data-name="frPriceName"
         units="$/kW"
         @uploaded="receiveTimeseriesData"
         :data-time-series="frPrice"
-        :key="childKey"
+        key="1"
         v-if="frCombinedMarket === true"
         :TimeSeriesModel="FRPriceTimeSeries"
       />
 
       <timeseries-data-upload
         chart-name="chartUploadedTimeSeries2"
-        data-name="frequency regulation up price"
+        :data-name="frUpPriceName"
         units="$/kW"
-        @uploaded="receiveTimeseriesData2"
+        @uploaded="receiveTimeseriesData"
         :TimeSeriesModel="FRUpPriceTimeSeries"
         :data-time-series="frUpPrice"
-        :key="childKey2"
+        key="2"
         v-if="frCombinedMarket === false"
       />
 
       <timeseries-data-upload
         chart-name="chartUploadedTimeSeries3"
-        data-name="frequency regulation down price"
+        :data-name="frDownPriceName"
         units="$/kW"
-        @uploaded="receiveTimeseriesData3"
+        @uploaded="receiveTimeseriesData"
         :TimeSeriesModel="FRDownPriceTimeSeries"
         :data-time-series="frDownPrice"
-        :key="childKey3"
+        key="3"
         v-if="frCombinedMarket === false"
       />
       <hr>
@@ -89,7 +89,8 @@
   import * as p from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
   import operateOnKeysList from '@/util/object';
-  import csvUploadMixin from '@/mixins/csvUploadMixin';
+  import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
+  import { isNotNullAndNotUndefined } from '@/util/logic';
   import FRPriceTimeSeries from '@/models/TimeSeries/FRPriceTimeSeries';
   import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
   import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
@@ -109,8 +110,11 @@
       const p = this.$store.state.Project;
       return {
         frPrice: p.frPrice,
+        frPriceName: 'frequency regulation price',
         frUpPrice: p.frUpPrice,
+        frUpPriceName: 'frequency regulation up price',
         frDownPrice: p.frDownPrice,
+        frDownPriceName: 'frequency regulation down price',
         metadata,
         ...this.getDataFromProject(),
         WIZARD_COMPONENT_PATH,
@@ -123,15 +127,15 @@
       ...validations,
     },
     computed: {
-      complete() {
-        return this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGEKEY][PAGE];
+      errorList() {
+        return this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE];
       },
     },
     beforeMount() {
       // submitted is false initially; set it to true after the first save.
       // initially, complete is null; after saving, it is set to either true or false.
       // we want to show validation errors at any time after the first save, with submitted.
-      if (this.complete !== null && this.complete !== undefined) {
+      if (isNotNullAndNotUndefined(this.errorList)) {
         this.submitted = true;
         this.$v.$touch();
       }
@@ -142,14 +146,6 @@
       },
       getDataFromProject() {
         return operateOnKeysList(this.$store.state.Project, c.FR_FIELDS, f => f);
-      },
-      getCompletenessPayload() {
-        return {
-          pageGroup: PAGEGROUP,
-          pageKey: PAGEKEY,
-          page: PAGE,
-          completeness: !this.$v.$invalid,
-        };
       },
       getErrorListPayload() {
         const errors = [];
@@ -166,8 +162,6 @@
         };
       },
       validatedSave() {
-        // set completeness
-        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
         this.submitted = true;
         this.$v.$touch();
         // set errorList
@@ -175,14 +169,14 @@
         return this.save();
       },
       save() {
-        if (this.inputTimeseries !== null) {
+        if (this.inputTimeseries[this.frPriceName] !== undefined) {
           this.$store.dispatch('setFRPrice', this.inputTimeseries);
         }
-        if (this.inputTimeseries2 !== null) {
-          this.$store.dispatch('setFRUpPrice', this.inputTimeseries2);
+        if (this.inputTimeseries[this.frUpPriceName] !== undefined) {
+          this.$store.dispatch('setFRUpPrice', this.inputTimeseries[this.frUpPriceName]);
         }
-        if (this.inputTimeseries3 !== null) {
-          this.$store.dispatch('setFRDownPrice', this.inputTimeseries3);
+        if (this.inputTimeseries[this.frDownPriceName] !== undefined) {
+          this.$store.dispatch('setFRDownPrice', this.inputTimeseries[this.frDownPriceName]);
         }
         this.$store.dispatch('setFReou', this.frEOU);
         this.$store.dispatch('setFReod', this.frEOD);

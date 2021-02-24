@@ -20,15 +20,9 @@
 
   export default {
     data() {
-      const xstart = (new Date(`${this.dataYear}-01-01`)).getTime();
-      const xx = [];
-      for (let i = 0; i < this.numberOfEntriesRequired; i += 1) {
-        xx[i] = new Date(xstart + ((i * 36e5 * 60) / this.timestep));
-      }
       return {
         sharedValidation,
         useExisting: sharedDefaults.useExistingTimeSeriesData,
-        timeseriesXAxis: xx,
       };
     },
     components: { DataUpload },
@@ -67,6 +61,11 @@
           return String((8784 * 60) / this.timestep);
         }
         return String((8760 * 60) / this.timestep);
+      },
+      timeseriesXAxis() {
+        // the first timestamp should be Jan 1 of dataYear at timestep minutes
+        //   to represent the period-ending value.
+        return this.$store.getters.getTimeseriesXAxis;
       },
     },
     props: {

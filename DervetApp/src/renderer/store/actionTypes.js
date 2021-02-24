@@ -62,6 +62,10 @@ export const SET_LF_PRICE = 'setLFPrice';
 export const SET_LF_UP_PRICE = 'setLFUpPrice';
 export const SET_LF_GROWTH = 'setLFGrowth';
 export const SET_LF_ENERGY_GROWTH = 'setLFEnergyGrowth';
+// nsr page
+export const SET_NSR_DURATION = 'setNSRDuration';
+export const SET_NSR_GROWTH = 'setNSRGrowth';
+export const SET_NSR_PRICE = 'setNSRPrice';
 // objectives
 export const CHOOSE_ENERGY_STRUCTURE = 'chooseEnergyStructure';
 export const SET_INCLUDE_SITE_LOAD = 'setIncludeSiteLoad';

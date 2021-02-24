@@ -127,9 +127,10 @@ export const checkNotNullOrEmpty = technologySpecs => (
   isNotNullAndNotUndefined(technologySpecs) && technologySpecs.length > 0
 );
 
-export const mapListToObjectList = (lst, fieldName) => (
-  lst.map(d => ({ [fieldName]: d }))
-);
+export const mapListToObjectList = (lst, fieldName) => {
+  console.log(fieldName);
+  return lst.map(d => ({ [fieldName]: d }));
+};
 
 export const makeTechnologyParameters = (technologySpecs, makeSingleTechFn) => {
   const includeTech = checkNotNullOrEmpty(technologySpecs);
@@ -812,13 +813,19 @@ export const makeLoadShedCsv = () => {
   return objectToCsv(data, fields, headers);
 };
 
-export const makeDatetimeIndex = (dataYear, minuteTimestep) => {
+export const makeDatetimeIndex = (dataYear, minuteTimestep, reformat = true) => {
+  if (['', null].includes(minuteTimestep) || !Number.isInteger(dataYear)) {
+    return [];
+  }
   const start = new Date(Date.UTC(dataYear, 0, 1, 0, minuteTimestep));
   const end = new Date(Date.UTC(dataYear + 1, 0, 1, 0, minuteTimestep));
 
   const timedelta = d3.timeMinute.every(minuteTimestep);
   const datetimeIndex = timedelta.range(start, end);
-  return datetimeIndex.map(d => moment.utc(d).format('M/D/YYYY H:mm'));
+  if (reformat) {
+    return datetimeIndex.map(d => moment.utc(d).format('M/D/YYYY H:mm'));
+  }
+  return datetimeIndex.map(d => moment.utc(d).format());
 };
 
 export const makeEmptyCsvDataWithDatetimeIndex = (project) => {
