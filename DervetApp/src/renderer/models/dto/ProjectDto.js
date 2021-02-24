@@ -44,7 +44,6 @@ const RESULTS = 'results';
 export const LOG_FILE = 'dervet_log.log';
 
 const TIMESERIES_FIELDS = [
-  'raActive',
   'criticalLoad',
   'deferralLoad',
   'daPrice',
@@ -57,6 +56,7 @@ const TIMESERIES_FIELDS = [
   'frUpPrice',
   'frDownPrice',
   'nsrPrice',
+  'raActive',
   'siteLoad',
   'srPrice',
   'systemLoad',

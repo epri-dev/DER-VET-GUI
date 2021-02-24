@@ -13,6 +13,7 @@ export const DR_GROWTH = 'drGrowth';
 export const DR_INCLUDE_WEEKENDS = 'drIncludeWeekends';
 export const DR_START_HOUR = 'drStartHour';
 export const DR_END_HOUR = 'drEndHour';
+export const DR_END_MODE = 'drEndMode';
 export const DR_EVENT_LENGTH = 'drEventLength';
 export const DR_PROGRAM_TYPE = 'drProgramType';
 export const ENERGY_PRICE_SOURCE_WHOLESALE = 'energyPriceSourceWholesale';
@@ -78,6 +79,10 @@ export const ANALYSIS_HORIZON_MODE_ALLOWED_VALUES = [
   { value: '3', label: 'Auto-calculate analysis horizon by longest DER lifetime' },
 ];
 export const DR_PROGRAM_TYPE_ALLOWED_VALUES = makeAllowedValues(['Day of', 'Day ahead']);
+export const RA_DISPATCH_MODE_ALLOWED_VALUES = [
+  { value: true, label: 'Constrain power' },
+  { value: false, label: 'Contrain energy' },
+];
 export const ENERGY_PRICE_SOURCE_WHOLESALE_ALLOWED_VALUES = [
   {
     value: false,
@@ -93,7 +98,10 @@ export const GRID_LOCATION_ALLOWED_VALUES = makeAllowedValues(['Generation', 'Tr
 export const INCLUDE_INTERCONNECTION_CONSTRAINTS_ALLOWED_VALUES = optionsYN;
 export const OPTIMIZATION_HORIZON_ALLOWED_VALUES = makeAllowedValues(['Year', 'Month', 'Hours']);
 export const OWNERSHIP_ALLOWED_VALUES = makeAllowedValues(['Customer', 'Utility', '3rd Party']);
-export const RA_DISPATCH_MODE_ALLOWED_VALUES = makeAllowedValues(['Contrain energy', 'Constrain power']);
+export const DR_END_MODE_ALLOWED_VALUES = [
+  { value: true, label: 'Event Length' },
+  { value: false, label: 'End Hour' },
+];
 export const RA_EVENT_SELECTION_METHOD_ALLOWED_VALUES = makeAllowedValues(['Peak by Year', 'Peak by Month', 'Peak by Month with Active Hours']);
 export const RELIABILITY_POST_OPTIMIZATION_ONLY_ALLOWED_VALUES = [
   {
@@ -142,6 +150,7 @@ export const DEMAND_RESPONSE_FIELDS = [
   DR_INCLUDE_WEEKENDS,
   DR_START_HOUR,
   DR_END_HOUR,
+  DR_END_MODE,
   DR_EVENT_LENGTH,
   DR_PROGRAM_TYPE,
   DR_GROWTH,

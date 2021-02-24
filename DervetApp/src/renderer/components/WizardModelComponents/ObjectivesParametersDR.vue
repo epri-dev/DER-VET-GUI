@@ -37,13 +37,22 @@
                   :errorMessage="getErrorMsg('drStartHour')">
       </text-input>
 
+      <radio-button-input
+        v-model="drEndMode"
+        v-bind:field="metadata.drEndMode"
+        :isInvalid="submitted && $v.drEndMode.$error"
+        :errorMessage="getErrorMsg('drEndMode')">
+      </radio-button-input>
+
       <text-input v-model="drEndHour"
+                  v-if="!drEndMode"
                   v-bind:field="metadata.drEndHour"
                   :isInvalid="submitted && $v.drEndHour.$error"
                   :errorMessage="getErrorMsg('drEndHour')">
       </text-input>
 
       <text-input v-model="drEventLength"
+                  v-if="drEndMode"
                   v-bind:field="metadata.drEventLength"
                   :isInvalid="submitted && $v.drEventLength.$error"
                   :errorMessage="getErrorMsg('drEventLength')">
@@ -101,6 +110,7 @@
 </template>
 
 <script>
+  import { requiredIf } from 'vuelidate/lib/validators';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import * as p from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
@@ -163,6 +173,18 @@
     },
     validations: {
       ...validations,
+      drEndHour: {
+        ...validations.drEndHour,
+        required: requiredIf(function isRequired() {
+          return (!this.drEndMode);
+        }),
+      },
+      drEventLength: {
+        ...validations.drEventLength,
+        required: requiredIf(function isRequired() {
+          return (this.drEndMode);
+        }),
+      },
     },
     computed: {
       errorList() {
