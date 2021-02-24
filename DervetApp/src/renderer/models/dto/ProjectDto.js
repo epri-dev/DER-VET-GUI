@@ -127,10 +127,9 @@ export const checkNotNullOrEmpty = technologySpecs => (
   isNotNullAndNotUndefined(technologySpecs) && technologySpecs.length > 0
 );
 
-export const mapListToObjectList = (lst, fieldName) => {
-  console.log(fieldName);
-  return lst.map(d => ({ [fieldName]: d }));
-};
+export const mapListToObjectList = (lst, fieldName) => (
+  lst.map(d => ({ [fieldName]: d }))
+);
 
 export const makeTechnologyParameters = (technologySpecs, makeSingleTechFn) => {
   const includeTech = checkNotNullOrEmpty(technologySpecs);
@@ -585,7 +584,7 @@ export const makeReliabilityParameters = (project, inputsDirectory) => {
       'n-2': makeBaseKey(ZERO, BOOL), // hardcoded
       post_facto_initial_soc: makeBaseKey(100, FLOAT), // TODO new, hardcoded for now
       post_facto_only: makeBaseKey(convertToOneZero(project.reliabilityPostOptimizationOnly), BOOL),
-      target: makeBaseKey(project.reliabilityTarget, FLOAT),
+      target: makeBaseKey(setUndefinedNullToZero(project.reliabilityTarget), FLOAT),
       load_shed_percentage: makeBaseKey(convertToOneZero(false), BOOL), // hardcoded
       load_shed_perc_filename: makeBaseKey(makeCsvFilePath(inputsDirectory, LOAD_SHEAD), STRING),
     };
@@ -776,13 +775,9 @@ export const makeTariffCsv = project => billingPeriodsToCsv(project.retailTariff
 export const makeYearlyCsv = project => externalIncentivesToCsv(project.externalIncentives);
 
 export const makeMonthlyCsv = (project) => {
-  // initialize variables with monthly index
-  const data = _.map(_.range(1, 13), i => ({
-    year: project.dataYear,
-    month: i,
-  })); // List of lists of objects with format { 'field key': value }
-  const fields = ['year', 'month']; // List of field keys
-  const headers = ['Year', 'Month']; // TODO LL string constants - List of field headers
+  const data = []; // List of lists of objects with format { 'field key': value }
+  const fields = []; // List of field keys
+  const headers = []; // List of field headers
 
   function addSingleSeries(d, f, h) {
     data.push(d);
@@ -790,17 +785,24 @@ export const makeMonthlyCsv = (project) => {
     headers.push(h);
   }
 
+  // add month column
+  const monthObjectList = mapListToObjectList(_.range(1, 13), 'month');
+  addSingleSeries(monthObjectList, 'month', 'Month');
+  // add year column
+  const year = [...Array(12)].fill(project.dataYear);
+  const yearObjectList = mapListToObjectList(year, 'year');
+  addSingleSeries(yearObjectList, 'year', 'Year');
+
   // Add all available monthly to CSV
   MONTHLY_FIELDS.forEach((ts) => {
-    console.log(ts);
     const tsClass = project[ts];
     if (tsClass) {
       const dataObjectList = mapListToObjectList(tsClass.data, ts);
       addSingleSeries(dataObjectList, ts, tsClass.columnHeaderName);
     }
   });
-
-  return objectToCsv(data, fields, headers);
+  const unzippedData = _.unzipWith(data, Object.assign);
+  return objectToCsv(unzippedData, fields, headers);
 };
 
 export const makeLoadShedCsv = () => {
@@ -885,7 +887,6 @@ export const makeTimeSeriesCsv = (project) => {
     const tsClass = project[ts];
     if (tsClass) {
       const dataObjectList = mapListToObjectList(tsClass.data, ts);
-      console.log(JSON.stringify(dataObjectList, null, 1));
       addSingleSeries(dataObjectList, ts, tsClass.columnHeaderName);
     }
   });

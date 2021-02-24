@@ -33,7 +33,7 @@
       <div class="col-md-4 buffer-bottom" v-for="financialItem in financial"  v-if="financialItem.show">
         <b-button block size="lg"
                   :to="financialItem.path"
-                  v-bind:class="{ 'incomplete-btn': isComplete(financialItem.pageKey, financialItem.pageName) }">
+                  v-bind:class="{ 'incomplete-btn': !financialItem.isComplete }">
           {{ financialItem.fullName }}
         </b-button>
       </div>
