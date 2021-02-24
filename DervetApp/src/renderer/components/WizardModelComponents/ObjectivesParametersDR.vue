@@ -134,6 +134,7 @@
     SET_DR_CAPACITY_AWARDS,
     SET_DR_ENERGY_AWARDS,
     SET_DR_GROWTH,
+    SET_DR_END_MODE,
   } from '@/store/actionTypes';
   import MonthlyDataUpload from '@/components/Shared/MonthlyDataUpload';
   import { isNotNullAndNotUndefined } from '@/util/logic';
@@ -256,6 +257,7 @@
         this.$store.dispatch(SET_DR_INCLUDE_WEEKENDS, this[c.DR_INCLUDE_WEEKENDS]);
         this.$store.dispatch(SET_DR_START_HOUR, this[c.DR_START_HOUR]);
         this.$store.dispatch(SET_DR_END_HOUR, this[c.DR_END_HOUR]);
+        this.$store.dispatch(SET_DR_END_MODE, this[c.DR_END_MODE]);
         this.$store.dispatch(SET_DR_EVENT_LENGTH, this[c.DR_EVENT_LENGTH]);
         this.$store.dispatch(SET_DR_PROGRAM_TYPE, this[c.DR_PROGRAM_TYPE]);
         this.$store.dispatch(SET_DR_GROWTH, this[c.DR_GROWTH]);

@@ -17,21 +17,8 @@ const getDefaultApplicationState = () => ({
       technologySpecs: NULL,
     },
     components: {
-      objectives: {
-        siteInformation: NULL,
-        deferral: NULL,
-        FR: NULL,
-        NSR: NULL,
-        resilience: NULL,
-        SR: NULL,
-        userDefined: NULL,
-        DA: NULL,
-      },
-      financial: {
-        inputs: NULL,
-        retailTariff: NULL,
-        // externalIncentives: NULL,
-      },
+      objectives: {},
+      financial: {},
     },
   },
   id: NULL,
@@ -75,15 +62,17 @@ const mutations = {
   SET_ID(state, newId) {
     state.id = newId;
   },
-  SET_RUN_IN_PROGRESS(state) {
+  [m.SET_RUN_IN_PROGRESS](state) {
     state.runInProgress = true;
   },
-  SET_RESULT_SUCCESS(state) {
-    state.resultsLoaded = true;
+  [m.SET_RUN_NOT_IN_PROGRESS](state) {
     state.runInProgress = false;
+  },
+  [m.SET_RESULT_SUCCESS](state) {
+    state.resultsLoaded = true;
     state.isError = false;
   },
-  SET_RESULT_ERROR(state) {
+  [m.SET_RESULT_ERROR](state) {
     state.isError = true;
     state.runInProgress = false;
   },
@@ -144,14 +133,16 @@ const actions = {
   setQuickStartCompleteness({ commit }) {
     commit('SET_NEW_COMPLETENESS', billReductionCompleteness);
   },
-  receiveError({ commit }) {
-    // TODO: handle parsing error
-    commit('SET_RESULT_ERROR');
+  [a.RECEIVE_ERROR]({ commit }) {
+    commit(m.SET_RESULT_ERROR);
+    // TODO: handle parsing error here
+    commit(m.SET_RUN_NOT_IN_PROGRESS);
   },
-  resultRecieved: {
+  [a.RESULTS_RECEIVED]: {
     root: true,
     handler({ commit }) {
-      commit('SET_RESULT_SUCCESS');
+      commit(m.SET_RESULT_SUCCESS);
+      commit(m.SET_RUN_NOT_IN_PROGRESS);
     },
   },
   resetApplicationToDefault({ commit }, newId) {
@@ -159,7 +150,7 @@ const actions = {
     commit('SET_ID', newId);
   },
   runDervet({ commit }, project) {
-    commit('SET_RUN_IN_PROGRESS');
+    commit(m.SET_RUN_IN_PROGRESS);
     const dervetInputs = makeDervetInputs(project);
     IpcService.sendProject(dervetInputs);
   },

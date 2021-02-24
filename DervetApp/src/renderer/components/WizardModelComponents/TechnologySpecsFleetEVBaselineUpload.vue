@@ -8,6 +8,7 @@
         units='kW'
         @uploaded="receiveTimeseriesData"
         :data-time-series="loadProfile"
+        :TimeSeriesModel="FleetEVBaselineLoadTimeSeries" 
         key="1"
       />
 

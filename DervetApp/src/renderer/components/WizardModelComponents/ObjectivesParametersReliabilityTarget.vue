@@ -147,8 +147,8 @@
         return this.save();
       },
       save() {
-        if (this.inputTimeseries !== null) {
-          this.$store.dispatch('setCriticalLoad', this.tsData);
+        if (this.inputTimeseries[this.loadName] !== undefined) {
+          this.$store.dispatch('setCriticalLoad', this.inputTimeseries[this.loadName]);
         }
         this.$store.dispatch('setReliabilityPostOptimizationOnly', this.reliabilityPostOptimizationOnly);
         this.$store.dispatch('setReliabilityTarget', this.reliabilityTarget);
