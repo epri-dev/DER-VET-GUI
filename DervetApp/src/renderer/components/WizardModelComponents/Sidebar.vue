@@ -51,7 +51,7 @@
                    v-for="financialItem in financial"  v-if="financialItem.show"
                    :key="financialItem.pageName" :to="financialItem.path"
                    v-bind:class="{ current: isCurrent(financialItem.path),
-                   incomplete: isComplete(financialItem.pageKey, financialItem.pageName) }">
+                   incomplete: !financialItem.isComplete }">
         {{ financialItem.fullName }}
       </router-link>
 

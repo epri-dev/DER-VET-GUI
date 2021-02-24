@@ -75,7 +75,7 @@
                   {{ service.fullName + notStartedText(service.isComplete) }}
                 </router-link>
                 <ul>
-                  <li v-for="error in service.errors">
+                  <li v-for="error in service.errorList">
                     <span v-html="error"></span>
                   </li>
                 </ul>
@@ -94,7 +94,7 @@
                   {{ finance.fullName + notStartedText(finance.complete) }}
                 </router-link>
                 <ul>
-                  <li v-for="error in finance.errors">
+                  <li v-for="error in finance.errorList">
                     <span v-html="error"></span>
                   </li>
                 </ul>
@@ -153,7 +153,7 @@
               :event="runDervetDisabled ? '' : 'click'"
               :to="this.$route.path"
               class="btn btn-lg btn-danger pull-left btn-summary">
-              {{ runInProgress() ? 'Running Analysis...' : 'Run Analysis' }}
+              {{ runInProgress() ? 'Running...' : 'Run Analysis' }}
             </router-link>
           </div>
         </div>
@@ -175,7 +175,6 @@
   import technologySpecsMixin from '@/mixins/technologySpecsMixin';
   import objectivesMixin from '@/mixins/objectivesMixin';
   import financeMixin from '@/mixins/financeMixin';
-  import { isObjectOfLengthZero } from '@/util/logic';
 
   const NOT_STARTED = ': Not Started';
 
@@ -186,7 +185,7 @@
         return this.filterActive(this.financial);
       },
       activeFinancialAndErrorsOnly() {
-        return this.errorsOnly(this.activeFinancesWithErrors);
+        return this.errorsOnly(this.activeFinancal);
       },
       doesActiveFinancialErrorExist() {
         return this.activeFinancialAndErrorsOnly.length > 0;
@@ -195,7 +194,7 @@
         return this.filterActive(this.objectives);
       },
       activeObjectivesAndErrorsOnly() {
-        return this.errorsOnly(this.activeObjectivesWithErrors);
+        return this.errorsOnly(this.activeObjectives);
       },
       doesActiveObjectivesErrorExist() {
         return this.activeObjectivesAndErrorsOnly.length > 0;
@@ -213,9 +212,6 @@
         return (this.overviewErrorExists() || this.activeTechErrorExists
           || this.doesActiveFinancialErrorExist || this.doesActiveObjectivesErrorExist);
       },
-      errorList() {
-        return this.$store.state.Application.errorList;
-      },
       techAll() {
         const techList = [];
         this.techSpecs.forEach((item) => {
@@ -226,21 +222,6 @@
       runDervetDisabled() {
         return this.anyErrorExists;
       },
-    },
-    components: {
-      FilePicker,
-    },
-    methods: {
-      filterActive(mixinObject) {
-        return _.filter(mixinObject, 'show');
-      },
-      errorsOnly(activeWithErrorsObject) {
-        const hasErrors = function hasErrors(o) {
-          return isObjectOfLengthZero(o.errorList);
-        };
-        const pageWithErrors = _.filter(activeWithErrorsObject, hasErrors);
-        return pageWithErrors;
-      },
       modeDescription() {
         const mode = this.$store.state.Project.analysisHorizonMode;
         return mode === null ? '' : _.find(ANALYSIS_HORIZON_MODE_ALLOWED_VALUES, { value: mode }).label;
@@ -249,13 +230,24 @@
         const horizon = this.$store.state.Project.analysisHorizon;
         return horizon ? `${horizon} years` : '';
       },
+    },
+    components: {
+      FilePicker,
+    },
+    methods: {
+      filterActive(listOfObjects) {
+        return _.filter(listOfObjects, 'show');
+      },
+      errorsOnly(listOfObjects) {
+        const pageWithErrors = _.filter(listOfObjects, ['isComplete', false]);
+        return pageWithErrors;
+      },
       getRateDisplay(rate) {
         if (rate === null) {
           return '';
         }
         return `${rate} %`;
       },
-  
       runInProgress() {
         return this.$store.state.Application.runInProgress;
       },
@@ -362,8 +354,8 @@
         setup: [
           ['Project Name', (this.$store.state.Project.name || '')],
           ['Start Year', this.$store.state.Project.startYear],
-          ['Analysis Horizon', this.getAnalysisHorizonDisplay()],
-          ['Analysis Horizon Mode', this.modeDescription()],
+          ['Analysis Horizon', this.getAnalysisHorizonDisplay],
+          ['Analysis Horizon Mode', this.modeDescription],
           ['Data year', this.$store.state.Project.dataYear],
           ['Grid Domain', this.$store.state.Project.gridLocation],
           ['Ownership', this.$store.state.Project.ownership],
@@ -381,9 +373,6 @@
           ['Federal tax rate', this.getRateDisplay(this.$store.state.Project.financeFederalTaxRate)],
           ['State tax rate', this.getRateDisplay(this.$store.state.Project.financeStateTaxRate)],
           ['Property tax rate', this.getRateDisplay(this.$store.state.Project.financePropertyTaxRate)],
-        ],
-        scenario: [
-          ['FIXME Number of Scenario Analysis Cases', 'Baseline'],
         ],
       };
     },

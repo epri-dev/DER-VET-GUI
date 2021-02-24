@@ -68,7 +68,7 @@ const TIMESERIES_FIELDS = [
 const MONTHLY_FIELDS = [
   'backupPrice',
   'backupEnergyReservation',
-  'drMonthsApplied',
+  // 'drMonthsApplied',
   'drCapacityReservation',
   'drCapacityAwards',
   'drEnergyAwards',
@@ -658,8 +658,8 @@ export const makeScenarioParameters = (project, inputsDirectory) => {
     kappa_ene_max: makeBaseKey('100000', FLOAT), // hardcoded
     kappa_ene_min: makeBaseKey('100000', FLOAT), // hardcoded
     location: makeBaseKey(project.gridLocation.toLowerCase(), STRING),
-    max_export: makeBaseKey(project.maxExport, FLOAT),
-    max_import: makeBaseKey(project.maxImport, FLOAT),
+    max_export: makeBaseKey(setUndefinedNullToZero(project.maxExport), FLOAT),
+    max_import: makeBaseKey(setUndefinedNullToZero(project.maxImport), FLOAT),
     monthly_data_filename: makeBaseKey(makeCsvFilePath(inputsDirectory, MONTHLY), STRING),
     n: makeBaseKey(n, STRING_INT),
     opt_years: makeBaseKey(project.dataYear, LIST_INT),
@@ -792,6 +792,7 @@ export const makeMonthlyCsv = (project) => {
 
   // Add all available monthly to CSV
   MONTHLY_FIELDS.forEach((ts) => {
+    console.log(ts);
     const tsClass = project[ts];
     if (tsClass) {
       const dataObjectList = mapListToObjectList(tsClass.data, ts);
@@ -884,6 +885,7 @@ export const makeTimeSeriesCsv = (project) => {
     const tsClass = project[ts];
     if (tsClass) {
       const dataObjectList = mapListToObjectList(tsClass.data, ts);
+      console.log(JSON.stringify(dataObjectList, null, 1));
       addSingleSeries(dataObjectList, ts, tsClass.columnHeaderName);
     }
   });
