@@ -49,6 +49,7 @@ export class ProjectMetadata {
       ...this.operateOnFieldList(c.LF_FIELDS, f => f.defaultValue),
       ...this.operateOnFieldList(c.RESOURCE_ADEQUACY_FIELDS, f => f.defaultValue),
       ...this.operateOnFieldList(c.DEMAND_RESPONSE_FIELDS, f => f.defaultValue),
+      ...this.operateOnFieldList(c.TS_ALL, f => f.defaultValue),
 
       // TIMESERIES ARRAYS
       criticalLoad: null,

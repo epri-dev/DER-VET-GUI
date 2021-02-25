@@ -4,6 +4,8 @@ import { isFinite } from 'lodash';
 
 export const isNotNullAndNotUndefined = value => value !== null && value !== undefined;
 
+export const isNullOrUndefined = value => value === null || value === undefined;
+
 export const isValueInRange = (value, lowValue, highValue) => (
   value >= lowValue && value <= highValue
 );
