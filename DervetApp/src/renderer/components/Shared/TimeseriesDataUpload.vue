@@ -41,22 +41,19 @@
       },
     },
     computed: {
-      disableUpload() {
-        return (this.timeseriesXAxis.length === 0);
-      },
       dataYear() {
         return this.$store.state.Project.dataYear;
       },
       dataYearValue() {
         if (['', null].includes(this.dataYear)) {
           return 'undefined';
-        } else if (!Number.isInteger(this.dataYear)) {
+        } if (!Number.isInteger(this.dataYear)) {
           return 'invalid';
         }
         return String(this.dataYear);
       },
-      timestep() {
-        return this.$store.state.Project.timestep;
+      disableUpload() {
+        return (this.timeseriesXAxis.length === 0);
       },
       numberOfEntriesRequired() {
         if (this.disableUpload) {
@@ -69,16 +66,14 @@
         //   to represent the period-ending value.
         return this.$store.getters.getTimeseriesXAxis;
       },
+      timestep() {
+        return this.$store.state.Project.timestep;
+      },
       timestepValue() {
         if (['', null].includes(this.timestep)) {
           return 'undefined';
         }
         return this.timestep;
-      },
-      timeseriesXAxis() {
-        // the first timestamp should be Jan 1 of dataYear at timestep minutes
-        //   to represent the period-ending value.
-        return this.$store.getters.getTimeseriesXAxis;
       },
     },
     props: {

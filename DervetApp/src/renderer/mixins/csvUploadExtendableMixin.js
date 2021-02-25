@@ -92,7 +92,7 @@ const csvUploadMixin = {
     },
     receiveMonthlyData(payload) {
       // TODO: AE: this is identical to receiveTimeseriesData; should it be?
-      const { dataArray, dataName } = payload;
+      const { dataArray, objectName } = payload;
       // TODO: AE: I do not think this filtering is needed, given LINE 164 of DataUpload
       // dataArray.data = _.filter(dataArray.data, x => (x !== null) && (x !== undefined));
       this[this.inputField(objectName)] = dataArray;

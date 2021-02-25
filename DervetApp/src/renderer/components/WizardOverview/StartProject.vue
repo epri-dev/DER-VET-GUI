@@ -206,9 +206,9 @@
         // track ts required lines changes
         console.log(
           'new:',
-          this.tsRequiredLines,
-          '---> old:',
           this.numberOfEntriesRequired,
+          '---> old:',
+          this.tsRequiredLines,
         );
         if (this.tsRequiredLines !== this.numberOfEntriesRequired) {
           console.log('!!! need to do a simple validation (length check) on all stored TS');
