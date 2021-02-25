@@ -9,6 +9,7 @@
         value: timestepValue,
         unit: 'minutes',
       }"
+      :DataModel="DataModel"
       :data-year="dataYearValue"
       :disable-upload="disableUpload"
       :error-message="errorMessage"
@@ -78,6 +79,7 @@
     props: {
       chartName: String,
       dataExists: Boolean,
+      DataModel: Function,
       dataName: String,
       dataTimeSeries: Object,
       errorMessage: String,

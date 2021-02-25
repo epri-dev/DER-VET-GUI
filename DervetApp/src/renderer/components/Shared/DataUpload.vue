@@ -92,7 +92,6 @@
   import { parseCsvFromEvent } from '@/util/file';
   import { isNumeric } from '@/util/logic';
   import { sharedDefaults, sharedValidation } from '@/models/Shared.js';
-  import TimeSeriesBase from '@/models/TimeSeries/TimeSeriesBase';
 
   export default {
     updated() {
@@ -128,6 +127,7 @@
     props: {
       chartName: String,
       dataExists: Boolean,
+      DataModel: Function,
       dataName: String,
       dataFrequency: Object,
       dataYear: String,
@@ -221,7 +221,7 @@
       },
       uploadPayload(dataResults) {
         return {
-          dataArray: new TimeSeriesBase(this.columnHeaderName, dataResults),
+          dataArray: new this.DataModel(this.columnHeaderName, dataResults),
           objectName: this.objectName,
         };
       },

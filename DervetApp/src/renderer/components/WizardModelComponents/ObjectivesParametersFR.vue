@@ -45,6 +45,7 @@
         chart-name="tsFrPricechartUploaded"
         @click="receiveRemove"
         :data-exists="tsData('tsFrPrice').data.length !== 0"
+        :DataModel="TimeSeriesBase"
         :data-name="metadata.tsFrPrice.displayName"
         :data-time-series="tsData('tsFrPrice')"
         :errorMessage="getErrorMsgTS('tsFrPrice')"
@@ -60,6 +61,7 @@
         chart-name="tsFrUpPriceChartUploaded"
         @click="receiveRemove"
         :data-exists="tsData('tsFrUpPrice').data.length !== 0"
+        :DataModel="TimeSeriesBase"
         :data-name="metadata.tsFrUpPrice.displayName"
         :data-time-series="tsData('tsFrUpPrice')"
         :errorMessage="getErrorMsgTS('tsFrUpPrice')"
@@ -75,6 +77,7 @@
         chart-name="tsFrDownPriceChartUploaded"
         @click="receiveRemove"
         :data-exists="tsData('tsFrDownPrice').data.length !== 0"
+        :DataModel="TimeSeriesBase"
         :data-name="metadata.tsFrDownPrice.displayName"
         :data-time-series="tsData('tsFrDownPrice')"
         :errorMessage="getErrorMsgTS('tsFrDownPrice')"
@@ -102,6 +105,7 @@
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import { projectMetadata } from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
+  import TimeSeriesBase from '@/models/TimeSeries/TimeSeriesBase';
 
   import { WIZARD_COMPONENT_PATH as DESTINATION_PATH } from '@/router/constants';
 
@@ -132,6 +136,7 @@
         ...this.getTSInputDefaultDataFromProject(TS_FIELDS),
         ...this.getChildKeys(TS_FIELDS),
         ...this.getUseExistingDefaults(TS_FIELDS),
+        TimeSeriesBase,
         CONSTANTS,
       };
     },

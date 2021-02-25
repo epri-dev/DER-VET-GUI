@@ -2,12 +2,18 @@
   <div id="monthly-data-upload">
     <data-upload
       :chart-name="chartName"
+      @click="onRemove"
+      :data-exists="dataExists"
       :data-name="dataName"
       :data-frequency="{ value: 'monthly', unit: '' }"
       :DataModel="DataModel"
+      :disable-upload="false"
+      :error-message="errorMessage"
+      :is-invalid="isInvalid"
       number-of-entries-required='12'
       @uploaded="onFileUpload"
-      :units="units"
+      @input="onChange"
+      :object-name="objectName"
       :uploaded-data="monthlyData"
       :x-axis="month"
     />
@@ -28,16 +34,25 @@
       };
     },
     methods: {
+      onChange(payload) {
+        this.$emit('input', payload);
+      },
       onFileUpload(payload) {
         this.$emit('uploaded', payload);
+      },
+      onRemove(payload) {
+        this.$emit('click', payload);
       },
     },
     props: {
       chartName: String,
-      dataName: String,
-      monthlyData: Object,
+      dataExists: Boolean,
       DataModel: Function,
-      units: String,
+      dataName: String,
+      dataTimeSeries: Object,
+      errorMessage: String,
+      isInvalid: Boolean,
+      objectName: String,
     },
   };
 </script>
