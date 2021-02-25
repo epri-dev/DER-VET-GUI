@@ -8,6 +8,7 @@ export const SET_RUN_IN_PROGRESS = 'SET_RUN_IN_PROGRESS';
 export const SET_RUN_NOT_IN_PROGRESS = 'SET_RUN_NOT_IN_PROGRESS';
 export const SET_RESULT_SUCCESS = 'SET_RESULT_SUCCESS';
 export const SET_RESULT_ERROR = 'SET_RESULT_ERROR';
+export const SET_NEW_ERROR_LIST = 'SET_NEW_ERROR_LIST';
 
 // Project mutations
 // index page

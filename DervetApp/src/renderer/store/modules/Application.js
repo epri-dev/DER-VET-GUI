@@ -3,10 +3,19 @@ import { makeDervetInputs } from '@/models/dto/ProjectDto';
 import * as m from '@/store/mutationTypes';
 import * as a from '@/store/actionTypes';
 
-import { billReductionCompleteness } from '@/assets/cases/billReduction/project';
+import { billReductionErrorList, billReductionCompleteness } from '@/assets/cases/billReduction/project';
+import { reliabilityErrorList } from '@/assets/cases/reliability/project';
+import { dummyMarketServiceErrorList } from '@/assets/cases/dummyMarketServiceHourly/project';
+import { ERCOTMarketServiceErrorList } from '@/assets/cases/ERCOTMarketService/project';
 
 const NULL = null;
 export const APPLICATION = 'application';
+const USECASE_ERROR_LIST_DB = { // its a sad excuse for a database, but serves as one.
+  billReductionProject: billReductionErrorList,
+  reliabilityProject: reliabilityErrorList,
+  dummyMarketServiceHourly: dummyMarketServiceErrorList,
+  ERCOTMarketService: ERCOTMarketServiceErrorList,
+};
 
 const getDefaultApplicationState = () => ({
   errorMessage: NULL,
@@ -18,12 +27,14 @@ const getDefaultApplicationState = () => ({
     },
     components: {
       objectives: {},
-      financial: {},
+      financial: {
+        externalIncentives: [],
+      },
     },
   },
   id: NULL,
   isError: NULL,
-  pageCompleteness: {
+  pageCompleteness: { // TODO remove use HN
     overview: {
       start: NULL,
       objectives: NULL,
@@ -109,6 +120,10 @@ const mutations = {
   SET_NEW_COMPLETENESS(state, completeness) {
     state.pageCompleteness = completeness;
   },
+  [m.SET_NEW_ERROR_LIST](state, errorList) {
+    console.log(JSON.stringify(errorList, null, 1));
+    state.errorList = errorList;
+  },
   SET_NEW_APPLICATION_STATE(state, application) {
     Object.assign(state, application);
   },
@@ -133,6 +148,11 @@ const actions = {
   setQuickStartCompleteness({ commit }) {
     commit('SET_NEW_COMPLETENESS', billReductionCompleteness);
   },
+  [a.SET_QUICK_START_ERROR_LIST]({ commit }, caseName) {
+    console.log(caseName);
+    const selectedUseCase = USECASE_ERROR_LIST_DB[caseName];
+    commit(m.SET_NEW_ERROR_LIST, selectedUseCase);
+  },
   [a.RECEIVE_ERROR]({ commit }) {
     commit(m.SET_RESULT_ERROR);
     // TODO: handle parsing error here
@@ -145,12 +165,13 @@ const actions = {
       commit(m.SET_RUN_NOT_IN_PROGRESS);
     },
   },
-  resetApplicationToDefault({ commit }, newId) {
+  [a.RESET_APPLICATION_TO_DEFAULT]({ commit }, newId) {
     commit('RESET_APPLICATION_TO_DEFAULT');
     commit('SET_ID', newId);
   },
   runDervet({ commit }, project) {
     commit(m.SET_RUN_IN_PROGRESS);
+    // TODO add try catch here HN
     const dervetInputs = makeDervetInputs(project);
     IpcService.sendProject(dervetInputs);
   },

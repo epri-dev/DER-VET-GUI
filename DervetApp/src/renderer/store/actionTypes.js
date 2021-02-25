@@ -6,6 +6,8 @@ export const SET_COMPLETENESS = 'setCompleteness';
 export const SET_ERROR_LIST = 'setErrorList';
 export const RECEIVE_ERROR = 'receiveError';
 export const RESULTS_RECEIVED = 'resultRecieved';
+export const SET_QUICK_START_ERROR_LIST = 'setQuickStartErrorList';
+export const RESET_APPLICATION_TO_DEFAULT = 'resetApplicationToDefault';
 
 // Project actions
 // index page

@@ -10,7 +10,7 @@ import * as m from '@/store/mutationTypes';
 import * as a from '@/store/actionTypes';
 import * as c from '@/models/Project/constants';
 
-const usecaseDatabase = { // its a sad excuse for a database, but serves as one.
+const USECASE_DB = { // its a sad excuse for a database, but serves as one.
   billReductionProject,
   reliabilityProject,
   dummyMarketServiceHourly,
@@ -708,7 +708,7 @@ const actions = {
     });
   },
   [a.LOAD_QUICK_START_PROJECT]({ commit }, caseName) {
-    const selectedUseCase = usecaseDatabase[caseName];
+    const selectedUseCase = USECASE_DB[caseName];
     return new Promise((resolve) => {
       commit(m.LOAD_NEW_PROJECT, merge(getDefaultState(), selectedUseCase));
       resolve();

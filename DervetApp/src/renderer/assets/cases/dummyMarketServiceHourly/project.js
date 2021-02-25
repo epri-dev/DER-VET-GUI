@@ -9,21 +9,22 @@ import {
 
 import { daPrice, marketPrice } from '@/assets/cases/dummyMarketServiceHourly/csvs';
 
-export const billReductionCompleteness = {
+export const dummyMarketServiceErrorList = {
   overview: {
-    start: true,
-    objectives: true,
-    technologySpecs: true,
+    start: [],
+    objectives: [],
+    technologySpecs: [],
   },
   components: {
     objectives: {
-      siteInformation: true,
-      resilience: true,
+      siteInformation: [],
+      FR: [],
+      SR: [],
+      DA: [],
     },
     financial: {
-      inputs: true,
-      retailTariff: true,
-      externalIncentives: true,
+      inputs: [],
+      externalIncentives: [],
     },
   },
 };
