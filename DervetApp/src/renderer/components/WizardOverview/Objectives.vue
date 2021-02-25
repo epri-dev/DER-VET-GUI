@@ -88,7 +88,7 @@
         <fieldset class="section-group">
           <legend>Wholesale Services</legend>
           <div class="col-md-12 tool-tip" v-if="sizingEquipment">
-            These serivces should only be choosen if each DER will have a size maximum, otherwise a solution will likely not be found.
+            These serivces should only be chosen if each DER will have a size maximum, otherwise a solution will likely not be found.
           </div>
           <div class="row form-group">
             <div class="col-md-6 checkboxes">
@@ -118,7 +118,7 @@
               <b-form-checkbox size='lg' v-model="listOfActiveServices" value="Deferral"><b>Deferral</b></b-form-checkbox>
             </div>
             <div class="col-md-6 tool-tip" v-if="sizingEquipment">
-              This serivce should only be choosen with storage. Sizing a mix of DERs for this service is in developement.
+              This serivce should only be chosen with storage. Sizing a mix of DERs for this service is in development.
             </div>
             <div class="col-md-6 checkboxes" v-if="(sizingEquipment === false)">
               <b-form-checkbox size='lg' v-model="listOfActiveServices" value="RA"><b>Resource Adequacy</b></b-form-checkbox>

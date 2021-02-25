@@ -81,7 +81,7 @@ export const ANALYSIS_HORIZON_MODE_ALLOWED_VALUES = [
 export const DR_PROGRAM_TYPE_ALLOWED_VALUES = makeAllowedValues(['Day of', 'Day ahead']);
 export const RA_DISPATCH_MODE_ALLOWED_VALUES = [
   { value: true, label: 'Constrain power' },
-  { value: false, label: 'Contrain energy' },
+  { value: false, label: 'Constrain energy' },
 ];
 export const ENERGY_PRICE_SOURCE_WHOLESALE_ALLOWED_VALUES = [
   {
