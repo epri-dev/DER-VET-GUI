@@ -268,6 +268,7 @@ export class ProjectMetadata {
         type: Boolean,
         description: 'Is this a combined regulation market? If it is combined, regulation up will be provided in the same quantity as regulation down always.',
         allowedValues: c.FR_COMBINED_MARKET_ALLOWED_VALUES,
+        actionSetName: a.SET_FR_COMBINED_MARKET,
       }),
       [c.FR_DURATION]: new ProjectFieldMetadata({
         displayName: 'Duration for Energy Reservation Requirements',
@@ -277,6 +278,7 @@ export class ProjectMetadata {
         type: Number,
         unit: 'hours',
         description: 'How much energy capability (kWh) should the DERs reserve for each kW of participation in Frequency Regulation? The DERs will not use this energy capability for other services to be ready for the worst-case scenario.',
+        actionSetName: a.SET_FR_DURATION,
       }),
       [c.FR_ENERGY_PRICE_GROWTH]: new ProjectFieldMetadata({
         displayName: 'Growth Rate of Frequency Regulation Energy Price',
@@ -286,6 +288,7 @@ export class ProjectMetadata {
         type: Number,
         unit: '% / year',
         description: 'Yearly growth rate to apply to the value of energy',
+        actionSetName: a.SET_FR_ENERGY_GROWTH,
       }),
       [c.FR_EOU]: new ProjectFieldMetadata({
         displayName: 'Energy Option Up',
@@ -295,6 +298,7 @@ export class ProjectMetadata {
         type: Number,
         unit: 'kWh / kW-hr',
         description: 'Energy content of the AGC signal in the up direction',
+        actionSetName: a.SET_FR_EOU,
       }),
       [c.FR_EOD]: new ProjectFieldMetadata({
         displayName: 'Energy Option Down',
@@ -304,6 +308,7 @@ export class ProjectMetadata {
         type: Number,
         unit: 'kWh / kW-hr',
         description: 'Energy content of the AGC signal in the down direction',
+        actionSetName: a.SET_FR_EOD,
       }),
       [c.FR_GROWTH]: new ProjectFieldMetadata({
         displayName: 'Growth Rate of Frequency Regulation Price',
@@ -313,6 +318,7 @@ export class ProjectMetadata {
         type: Number,
         unit: '% / year',
         description: 'Yearly growth rate to apply to regulation prices?',
+        actionSetName: a.SET_FR_GROWTH,
       }),
       [c.GRID_LOCATION]: new ProjectFieldMetadata({
         displayName: 'Grid Domain',
@@ -530,22 +536,19 @@ export class ProjectMetadata {
         allowedValues: c.TIMESTEP_ALLOWED_VALUES,
       }),
       [c.TS_FR_PRICE]: new ProjectFieldMetadata({
-        defaultValue: new TimeSeriesBase('FR Price ($/kW)', '$/kW', []),
+        defaultValue: new TimeSeriesBase('FR Price ($/kW)', []),
         displayName: 'frequency regulation price',
-        unit: '$/kW',
-        setActionName: a.SET_FR_PRICE,
+        actionSetName: a.SET_FR_PRICE,
       }),
       [c.TS_FR_UP_PRICE]: new ProjectFieldMetadata({
-        defaultValue: new TimeSeriesBase('Reg Up Price ($/kW)', '$/kW', []),
+        defaultValue: new TimeSeriesBase('Reg Up Price ($/kW)', []),
         displayName: 'frequency regulation up price',
-        unit: '$/kW',
-        setActionName: a.SET_FR_UP_PRICE,
+        actionSetName: a.SET_FR_UP_PRICE,
       }),
       [c.TS_FR_DOWN_PRICE]: new ProjectFieldMetadata({
-        defaultValue: new TimeSeriesBase('Reg Down Price ($/kW)', '$/kW', []),
+        defaultValue: new TimeSeriesBase('Reg Down Price ($/kW)', []),
         displayName: 'frequency regulation down price',
-        unit: '$/kW',
-        setActionName: a.SET_FR_DOWN_PRICE,
+        actionSetName: a.SET_FR_DOWN_PRICE,
       }),
       [c.USER_PRICE]: new ProjectFieldMetadata({
         displayName: 'Yearly Cost Avoided',

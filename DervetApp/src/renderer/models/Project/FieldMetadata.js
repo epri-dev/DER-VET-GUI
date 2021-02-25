@@ -13,7 +13,7 @@ export default class ProjectField {
     this.allowedValues = args.allowedValues;
     this.initDisplayName = args.initDisplayName;
     this.initUnit = args.initUnit;
-    this.setActionName = args.setActionName;
+    this.actionSetName = args.actionSetName;
   }
 
   toValidationSchema() {

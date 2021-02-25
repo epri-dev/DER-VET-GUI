@@ -57,7 +57,7 @@
           <label class="control-label capitalize">
             {{this.dataName}} data
           </label>
-          <span class="unit-label" v-html="this.units"></span>
+          <span class="unit-label" v-html="this.unit"></span>
         </div>
         <div class="col-md-7">
           <input
@@ -67,13 +67,16 @@
             @change="onFileUpload">
         </div>
       </div>
-      <div v-if="(importedFilePath !== null) || (importError)"
-        class="error-text-color">
-        <span v-html="importError"></span>
-      </div>
-      <div v-else-if="(importedFilePath === null) && isInvalid"
-        class="error-text-color">
-        <span v-html="errorMessage"></span>
+      <div class="form-group row">
+        <div class="col-md-1"></div>
+        <div v-if="(importedFilePath !== null) || (importError)"
+          class="error-text-color">
+          <span v-html="importError"></span>
+        </div>
+        <div v-else-if="(importedFilePath === null) && isInvalid"
+          class="error-text-color">
+          <span v-html="errorMessage"></span>
+        </div>
       </div>
     </div>
     <div v-if="showPlot">
@@ -103,6 +106,8 @@
         useExisting: sharedDefaults.useExistingTimeSeriesData,
         importError: undefined,
         importedFilePath: null,
+        unit: this.uploadedData.unit,
+        columnHeaderName: this.uploadedData.columnHeaderName,
         ...this.importErrorOnDisabledUpload(),
       };
     },
@@ -131,7 +136,6 @@
       isInvalid: Boolean,
       numberOfEntriesRequired: String,
       objectName: String,
-      units: String,
       uploadedData: Object,
       xAxis: Array,
     },
@@ -216,10 +220,8 @@
         // TODO: add these (e.g. solar data must be between 0 and 1)
       },
       uploadPayload(dataResults) {
-        // grab columnHeaderName from the uploadedData TimeSeriesBase object
-        const { columnHeaderName } = this.uploadedData;
         return {
-          dataArray: new TimeSeriesBase(columnHeaderName, this.units, dataResults),
+          dataArray: new TimeSeriesBase(this.columnHeaderName, dataResults),
           objectName: this.objectName,
         };
       },
@@ -228,10 +230,10 @@
         const uploadedTS = {
           x: this.xAxis,
           y: this.uploadedData.data,
-          unit: this.units,
+          unit: this.unit,
           mode: 'lines',
           name: '', // this.firstLetterCapitalized,
-          hovertemplate: `%{y} ${this.units}`,
+          hovertemplate: `%{y} ${this.unit}`,
         };
         const data = [uploadedTS];
         const layout = {
@@ -241,12 +243,12 @@
             x: 0,
             y: 1.12,
           },
-          height: 500,
+          height: 310,
           modebar: {
             orientation: 'v', // 'h' set how modebar will appear
           },
           title: {
-            text: this.uploadedData.columnHeaderName,
+            text: this.columnHeaderName,
             font: {
               size: 20,
             },
@@ -254,7 +256,7 @@
           },
           yaxis: {
             title: {
-              text: this.units,
+              text: this.unit,
               font: {
                 size: 12,
               },
@@ -291,6 +293,7 @@
             format: 'png', // 'jpeg',
             filename: `${this.dataName.replace(/ /g, '-')}-uploaded-data-plot`,
           },
+          modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'resetScale2d'],
         };
         return Plotly.newPlot(ctx, data, layout, config);
       },

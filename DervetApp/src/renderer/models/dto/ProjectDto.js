@@ -52,9 +52,6 @@ const TIMESERIES_FIELDS = [
   'lfPrice',
   'lfUpPrice',
   'lfDownPrice',
-  'frPrice',
-  'frUpPrice',
-  'frDownPrice',
   'nsrPrice',
   'siteLoad',
   'srPrice',
@@ -63,6 +60,7 @@ const TIMESERIES_FIELDS = [
   'userPowerMax',
   'userEnergyMin',
   'userEnergyMax',
+  ...c.TS_FR_FIELDS,
 ];
 
 const MONTHLY_FIELDS = [

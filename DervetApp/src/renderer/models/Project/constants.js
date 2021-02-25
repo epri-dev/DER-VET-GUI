@@ -168,7 +168,6 @@ export const FR_FIELDS = [
   FR_EOU,
   FR_EOD,
   FR_GROWTH,
-  ...TS_FR_FIELDS,
 ];
 export const LF_FIELDS = [
   LF_COMBINED_MARKET,

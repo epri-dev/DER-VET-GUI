@@ -2,7 +2,7 @@
   <div>
     <h3>Services: Frequency Regulation</h3>
     <hr>
-    <form class="form-horizontal form-buffer">
+    <div class="form-horizontal form-buffer">
 
       <text-input v-model="frGrowth"
                   v-bind:field="metadata.frGrowth"
@@ -52,7 +52,6 @@
         @input="receiveUseExisting"
         :key="childKey('tsFrPrice')"
         object-name="tsFrPrice"
-        :units="metadata.tsFrPrice.unit"
         @uploaded="receiveTimeseriesData"
         v-if="frCombinedMarket === true"
       />
@@ -68,7 +67,6 @@
         @input="receiveUseExisting"
         :key="childKey('tsFrUpPrice')"
         object-name="tsFrUpPrice"
-        :units="metadata.tsFrUpPrice.unit"
         @uploaded="receiveTimeseriesData"
         v-if="frCombinedMarket === false"
       />
@@ -84,50 +82,56 @@
         @input="receiveUseExisting"
         :key="childKey('tsFrDownPrice')"
         object-name="tsFrDownPrice"
-        :units="metadata.tsFrDownPrice.unit"
         @uploaded="receiveTimeseriesData"
         v-if="frCombinedMarket === false"
       />
       <hr>
 
-      <save-buttons
-        :continue-link="WIZARD_COMPONENT_PATH"
+      <save-and-save-continue
         :displayError="submitted && ($v.$anyError || isTSError)"
-        :save="validatedSave" />
+        :save="validatedSaveStay"
+        :save-continue="validatedSaveContinue"
+      />
 
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
-  import { projectMetadata as metadata } from '@/models/Project/ProjectMetadata';
+  import { projectMetadata } from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
 
-  const validations = metadata.getValidationSchema(c.FR_FIELDS);
+  import { WIZARD_COMPONENT_PATH as DESTINATION_PATH } from '@/router/constants';
+
   const PAGEGROUP = 'components';
   const PAGEKEY = 'objectives';
   const PAGE = 'FR';
+  const FIELDS = c.FR_FIELDS;
   const TS_FIELDS = c.TS_FR_FIELDS;
 
+  const ALL_FIELDS = [...FIELDS, ...TS_FIELDS];
+  const validations = projectMetadata.getValidationSchema(FIELDS);
+
   const CONSTANTS = {
+    DESTINATION_PATH,
     PAGEGROUP,
     PAGEKEY,
     PAGE,
+    FIELDS,
+    TS_FIELDS,
   };
 
   export default {
     mixins: [csvUploadMixin, wizardFormMixin],
     data() {
       return {
-        metadata,
-        ...this.getDataFromProject(c.FR_FIELDS),
+        metadata: this.getMetadata(projectMetadata, ALL_FIELDS),
+        ...this.getDataFromProject(ALL_FIELDS),
         ...this.getTSInputDefaultDataFromProject(TS_FIELDS),
         ...this.getChildKeys(TS_FIELDS),
         ...this.getUseExistingDefaults(TS_FIELDS),
-        WIZARD_COMPONENT_PATH,
         CONSTANTS,
       };
     },
@@ -135,14 +139,6 @@
       ...validations,
     },
     computed: {
-      complete() {
-        // TODO: AE: if this.complete is not being used except for when error list is null
-        //   before the first save, then it can be true otherwise.
-        //   - do we even need this?
-        return (this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE] === null)
-          ? null
-          : this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE] === 0;
-      },
       isTSError() {
         return this.getErrorListTS(false).length !== 0;
       },
@@ -151,17 +147,16 @@
       getErrorListTS(fromStore = true) {
         const errors = [];
         (TS_FIELDS).forEach((tsField) => {
-          const xx = this[tsField].unit;
-          console.log(tsField, xx);
           // skip non-required tsFields
           if ((this.frCombinedMarket && tsField !== 'tsFrPrice')
             || (!this.frCombinedMarket && tsField === 'tsFrPrice')) {
             return;
           }
+          const errorMsgTS = `A timeseries of ${this[tsField].columnHeaderName} is required`;
           if (fromStore) {
             // get ts from the store
             if (this.$store.state.Project[tsField].data.length === 0) {
-              errors.push(`A timeseries of ${this[tsField].columnHeaderName} is required`);
+              errors.push(errorMsgTS);
             }
           } else {
             // get ts from this page
@@ -170,9 +165,8 @@
             const tsInput = this[tsFieldInput];
             const tsFieldUseExisting = `${tsField}UseExisting`;
             const tsUseExisting = this[tsFieldUseExisting];
-            if ((ts.data.length === 0 && tsInput === null)
-              || (ts.data.length === 0 && !tsUseExisting)) {
-              errors.push(`A timeseries of ${this[tsField].columnHeaderName} is required`);
+            if (ts.data.length === 0 && (tsInput === null || !tsUseExisting)) {
+              errors.push(errorMsgTS);
             }
           }
         });
@@ -180,26 +174,6 @@
       },
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
-      },
-      validatedSave() {
-        // set completeness
-        // this.$store.dispatch('Application/setCompleteness',
-        // this.getCompletenessPayload(CONSTANTS));
-        this.submitted = true;
-        this.$v.$touch();
-        // save
-        this.tsSave(TS_FIELDS);
-        this.save();
-        // set errorList (important to do this AFTER tsSave())
-        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
-      },
-      save() {
-        this.$store.dispatch('setFReou', this.frEOU);
-        this.$store.dispatch('setFReod', this.frEOD);
-        this.$store.dispatch('setFRGrowth', this.frGrowth);
-        this.$store.dispatch('setFREnergyGrowth', this.frEnergyPriceGrowth);
-        this.$store.dispatch('setFRCombinedMarket', this.frCombinedMarket);
-        this.$store.dispatch('setFRDuration', this.frDuration);
       },
     },
   };

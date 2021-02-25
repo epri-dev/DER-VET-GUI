@@ -16,6 +16,16 @@ const csvUploadMixin = {
       this.$v.$touch();
     }
   },
+  computed: {
+    complete() {
+      // TODO: AE: if this.complete is not being used except for when error list is null
+      //   before the first save, then it can be true otherwise.
+      //   - do we even need this?
+      const errors = this.$store.state.Application
+        .errorList[this.CONSTANTS.PAGEGROUP][this.CONSTANTS.PAGEKEY][this.CONSTANTS.PAGE];
+      return errors === null ? null : errors.length === 0;
+    },
+  },
   methods: {
     capitalize(str) {
       return startCase(str);
@@ -36,16 +46,6 @@ const csvUploadMixin = {
       });
       return childKeys;
     },
-    /*
-    getCompletenessPayload(constants) {
-      return {
-        pageGroup: constants.PAGEGROUP,
-        pageKey: constants.PAGEKEY,
-        page: constants.PAGE,
-        completeness: !this.$v.$invalid && !this.isTSError,
-      };
-    },
-    */
     getDataFromProject(fields) {
       return operateOnKeysList(this.$store.state.Project, fields, f => f);
     },
@@ -68,6 +68,9 @@ const csvUploadMixin = {
     },
     getErrorMsgTS(tsField) {
       return `${this.capitalize(this.metadata[tsField].displayName)} Data is required`;
+    },
+    getMetadata(projectMetadata, fields) {
+      return operateOnKeysList(projectMetadata, fields, f => f);
     },
     getTSInputDefaultDataFromProject(tsFields) {
       const inputTS = {};
@@ -92,7 +95,7 @@ const csvUploadMixin = {
       // remove data by overwriting with an empty data object
       const emptyData = cloneDeep(this[objectName]);
       emptyData.data = [];
-      this.$store.dispatch(this.metadata[objectName].setActionName, emptyData);
+      this.$store.dispatch(this.metadata[objectName].actionSetName, emptyData);
       this[objectName] = cloneDeep(emptyData);
       // set input Data object to null
       this[this.inputField(objectName)] = null;
@@ -107,6 +110,14 @@ const csvUploadMixin = {
       const { dataArray, objectName } = payload;
       this[this.inputField(objectName)] = dataArray;
     },
+    save(fields) {
+      fields.forEach((field) => {
+        this.$store.dispatch(
+          this.metadata[field].actionSetName,
+          this[field],
+        );
+      });
+    },
     tsData(tsField) {
       const inputTSDataExists = (this[this.inputField(tsField)] !== null);
       return (inputTSDataExists) ? this[this.inputField(tsField)] : this[tsField];
@@ -116,7 +127,7 @@ const csvUploadMixin = {
       tsFields.forEach((tsField) => {
         if (this[this.inputField(tsField)] !== null && this[this.useExistingField(tsField)]) {
           this.$store.dispatch(
-            this.metadata[tsField].setActionName,
+            this.metadata[tsField].actionSetName,
             this[this.inputField(tsField)],
           );
         }
@@ -124,6 +135,22 @@ const csvUploadMixin = {
     },
     useExistingField(tsField) {
       return `${tsField}UseExisting`;
+    },
+    validatedSave() {
+      this.submitted = true;
+      this.$v.$touch();
+      // save
+      this.tsSave(this.CONSTANTS.TS_FIELDS);
+      this.save(this.CONSTANTS.FIELDS);
+      // set errorList (important to do this AFTER tsSave())
+      this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
+    },
+    validatedSaveContinue() {
+      this.validatedSave();
+      this.$router.push({ path: this.CONSTANTS.DESTINATION_PATH });
+    },
+    validatedSaveStay() {
+      this.validatedSave();
     },
   },
 };
