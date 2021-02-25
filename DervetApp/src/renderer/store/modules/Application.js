@@ -81,6 +81,7 @@ const mutations = {
   SET_RESULT_SUCCESS(state) {
     state.resultsLoaded = true;
     state.runInProgress = false;
+    state.isError = false;
   },
   SET_RESULT_ERROR(state) {
     state.isError = true;

@@ -6,14 +6,6 @@ export const isNotNullAndNotUndefined = value => value !== null && value !== und
 
 export const isNullOrUndefined = value => value === null || value === undefined;
 
-export const isValueInRange = (value, lowValue, highValue) => (
-  value >= lowValue && value <= highValue
-);
-
-export const isObjectOfLengthZero = value =>
-  // TODO: AE: fix this--it is backwards
-  isNotNullAndNotUndefined(value) && value.length !== 0;
-
 export const isNumeric = value =>
   // an empty string, null, or a string with trailing letters is not numeric
   // valid scientific notation ('1e3') should return true
@@ -21,3 +13,9 @@ export const isNumeric = value =>
   // - Number() returns 0 with empty string input, or null input
   // - parseFloat() returns a real number with trailing letters in input
   isFinite(parseFloat(value)) && isFinite(Number(value));
+
+export const isObjectOfLengthZero = value => isNotNullAndNotUndefined(value) && value.length === 0;
+
+export const isValueInRange = (value, lowValue, highValue) => (
+  value >= lowValue && value <= highValue
+);

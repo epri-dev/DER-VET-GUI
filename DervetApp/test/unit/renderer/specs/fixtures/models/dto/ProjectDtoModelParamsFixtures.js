@@ -83,6 +83,15 @@ export const makeModelParamsBattery = id => ({
       },
       type: 'string',
     },
+    cycle_life_table_eol_condition: {
+      opt_value: '80',
+      sensitivity: {
+        active: 'no',
+        coupled: 'None',
+        value: 'nan',
+      },
+      type: 'float',
+    },
     daily_cycle_limit: {
       opt_value: '0',
       sensitivity: {
@@ -568,7 +577,7 @@ export const makeModelParamsControllableLoad = id => ({
         type: 'bool',
       },
       replacement_construction_time: {
-        opt_value: '0',
+        opt_value: '1',
         sensitivity: {
           active: 'no',
           coupled: 'None',
@@ -845,7 +854,7 @@ export const makeModelParamsElectricVehicle1 = id => ({
         type: 'bool',
       },
       replacement_construction_time: {
-        opt_value: '0',
+        opt_value: '1',
         sensitivity: {
           active: 'no',
           coupled: 'None',
@@ -1024,7 +1033,7 @@ export const makeModelParamsElectricVehicle2 = id => ({
         type: 'bool',
       },
       replacement_construction_time: {
-        opt_value: '0',
+        opt_value: '1',
         sensitivity: {
           active: 'no',
           coupled: 'None',

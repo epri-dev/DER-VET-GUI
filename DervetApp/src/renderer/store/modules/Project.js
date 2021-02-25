@@ -2,6 +2,8 @@ import { cloneDeep, flatten, merge } from 'lodash';
 
 import { billReductionProject } from '@/assets/cases/billReduction/project';
 import { reliabilityProject } from '@/assets/cases/reliability/project';
+import { dummyMarketServiceHourly } from '@/assets/cases/dummyMarketServiceHourly/project';
+import { ERCOTMarketService } from '@/assets/cases/ERCOTMarketService/project';
 import { projectMetadata } from '@/models/Project/ProjectMetadata';
 import { makeDatetimeIndex } from '@/models/dto/ProjectDto';
 import * as m from '@/store/mutationTypes';
@@ -11,6 +13,8 @@ import * as c from '@/models/Project/constants';
 const usecaseDatabase = { // its a sad excuse for a database, but serves as one.
   billReductionProject,
   reliabilityProject,
+  dummyMarketServiceHourly,
+  ERCOTMarketService,
 };
 
 const metadataDefaultValues = projectMetadata.getDefaultValues();
@@ -166,8 +170,8 @@ const mutations = {
     const tmpBatterySpecs = getters.getBatterySpecsClone(state)();
     const indexMatchingId = getters.getIndexOfBatteryId(state)(payload.batteryId);
     tmpBatterySpecs[indexMatchingId].associatedInputsComplete = payload.batteryCycles.complete;
-    tmpBatterySpecs[indexMatchingId].complete
-      = payload.batteryCycles.complete && tmpBatterySpecs[indexMatchingId].componentSpecsComplete;
+    tmpBatterySpecs[indexMatchingId].complete = (payload.batteryCycles.complete
+      && tmpBatterySpecs[indexMatchingId].componentSpecsComplete);
     // this updates the object, while retaining untouched pieces
     Object.assign(tmpBatterySpecs[indexMatchingId].associatedInputs[0], payload.batteryCycles);
     state.technologySpecsBattery = tmpBatterySpecs;
@@ -358,13 +362,13 @@ const mutations = {
     state.lfUpPrice = newFRUpPrice;
   },
   // non-spinning reserve
-  SET_NSR_DURATION(state, newNSRDuration) {
+  [m.SET_NSR_DURATION](state, newNSRDuration) {
     state.nsrDuration = newNSRDuration;
   },
-  SET_NSR_GROWTH(state, newNSRGrowth) {
+  [m.SET_NSR_GROWTH](state, newNSRGrowth) {
     state.nsrGrowth = newNSRGrowth;
   },
-  SET_NSR_PRICE(state, newNSRPrice) {
+  [m.SET_NSR_PRICE](state, newNSRPrice) {
     state.nsrPrice = newNSRPrice;
   },
   // objectives
@@ -389,7 +393,6 @@ const mutations = {
   [m.SET_INCLUDE_SYSTEM_LOAD](state) {
     let gridDomainProject = state.objectivesDR;
     gridDomainProject = gridDomainProject || state.objectivesRA;
-    gridDomainProject = gridDomainProject || (state.ownership !== 'Customer');
     state.includeSystemLoad = gridDomainProject;
   },
   [m.SET_OPTIMIZATION_HORIZON](state, newOptimizataionHorizon) {
@@ -887,14 +890,14 @@ const actions = {
     commit(m.SET_LF_UP_PRICE, newLFGrowth);
   },
   // non spinning reserves
-  setNSRDuration({ commit }, newNSRDuration) {
-    commit('SET_NSR_DURATION', newNSRDuration);
+  [a.SET_NSR_DURATION]({ commit }, newNSRDuration) {
+    commit(m.SET_NSR_DURATION, newNSRDuration);
   },
-  setNSRGrowth({ commit }, newNSRGrowth) {
-    commit('SET_NSR_GROWTH', newNSRGrowth);
+  [a.SET_NSR_GROWTH]({ commit }, newNSRGrowth) {
+    commit(m.SET_NSR_GROWTH, newNSRGrowth);
   },
-  setNSRPrice({ commit }, newNSRPrice) {
-    commit('SET_NSR_PRICE', newNSRPrice);
+  [a.SET_NSR_PRICE]({ commit }, newNSRPrice) {
+    commit(m.SET_NSR_PRICE, newNSRPrice);
   },
   // objectives
   [a.CHOOSE_ENERGY_STRUCTURE]({ commit }, energyPriceStructure) {

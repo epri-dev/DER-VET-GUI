@@ -10,36 +10,34 @@
         <hr>
         <div class="form-group">
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
               <h4 class="result-summary-title">
                 <a>Financials Summary</a>
               </h4>
             </div>
-            <div class="col-md-6">
-              <h4 class="result-summary-title">
-                <a>Dispatch Summary</a>
-              </h4>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
               <div id="chartPlotlyCostBenefit">
               </div>
             </div>
-            <div class="col-md-6">
-              <div id="chartBatteryDispatchHeatMap">
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6 buffer-top text-center">
+            <div class="col-md-12 buffer-bottom text-center">
               <a class="btn btn-sm btn-default">
                 <router-link :to="paths.RESULTS_FINANCIAL_PATH">
                   View Detailed Financials Results...
                 </router-link>
               </a>
             </div>
-            <div class="col-md-6 buffer-top text-center">
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <h4 class="result-summary-title">
+                <a>Dispatch Summary</a>
+              </h4>
+            </div>
+            <div class="col-md-12">
+              <div id="chartBatteryDispatchHeatMap">
+              </div>
+            </div>
+            <div class="col-md-12 buffer-bottom text-center">
               <a class="btn btn-sm btn-default">
                 <router-link :to="paths.RESULTS_DISPATCH_PATH">
                   View Detailed Dispatch Results...
@@ -48,38 +46,22 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-6" v-if="summaryData.showDesign">
+            <div class="col-md-12" v-if="summaryData.showDesign">
               <h4 class="result-summary-title">
                 <a>Design Summary</a>
               </h4>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-6">
-              <canvas id="chartPeakLoadDay"
-                      class="chartjs-render-monitor"></canvas>
-            </div>
-            <div class="col-md-6">
-              <div class="buffer-top text-center" v-if="summaryData.showReliability">
-                <router-link :to="paths.RESULTS_RELIABILITY_PATH" class="btn btn-lg btn-info">
-                  View Reliability Results...
-                </router-link>
-              </div>
-              <div class="buffer-top text-center" v-if="summaryData.showDeferral">
-                <router-link :to="paths.RESULTS_DEFERRAL_PATH" class="btn btn-lg btn-info">
-                  View Deferral Results...
-                </router-link>
-              </div>
-            </div>
+          <div class="col-md-12">
+            <canvas id="chartPeakLoadDay"
+                    class="chartjs-render-monitor"></canvas>
           </div>
-          <div class="row">
-            <div class="col-md-6 buffer-top text-center">
-              <a class="btn btn-sm btn-default">
-                <router-link :to="paths.RESULTS_DESIGN_PATH">
-                  View Detailed Design Results...
-                </router-link>
-              </a>
-            </div>
+          <div class="col-md-12 buffer-bottom text-center">
+            <a class="btn btn-sm btn-default">
+              <router-link :to="paths.RESULTS_DESIGN_PATH">
+                View Detailed Design Results...
+              </router-link>
+            </a>
           </div>
         </div>
       </div>
@@ -150,7 +132,19 @@
           },
           showlegend: false,
         };
-        return Plotly.newPlot(ctx, data, layout);
+        const config = {
+          displaylogo: false, // hides the plotly logo from the modebar when false
+          staticPlot: false, // disable modebar options when true
+          responsive: true, // responsive to window size
+          toImageButtonOptions: {
+            // set defaults for saving plot image
+            format: 'png', // 'jpeg',
+            filename: 'peak-load-day',
+          },
+          displayModeBar: true,
+          modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d', 'toggleSpikelines'],
+        };
+        return Plotly.newPlot(ctx, data, layout, config);
       },
       createChartPeakLoadDay(chartId, chartData) {
         const ctx = document.getElementById(chartId);
@@ -286,15 +280,13 @@
         };
         const config = {
           displaylogo: false, // hides the plotly logo from the modebar when false
-          scrollZoom: true, // allows mouse wheel scroll when true
-          staticPlot: false, // disable modebar options when true
-          responsive: true, // responsive to window size
-          autosizeable: true,
           toImageButtonOptions: {
             // set defaults for saving plot image
             format: 'png', // 'jpeg',
             filename: 'battery-dispatch-heat-map',
           },
+          displayModeBar: true,
+          modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d', 'toggleSpikelines'],
         };
         return Plotly.newPlot(ctx, data, layout, config);
       },

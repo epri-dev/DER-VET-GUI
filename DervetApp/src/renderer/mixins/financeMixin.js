@@ -1,13 +1,13 @@
 import * as paths from '@/router/constants';
+import { isObjectOfLengthZero } from '@/util/logic';
 
 const FINANCE_PAGEKEY = 'financial';
 
-// allow for up to 4 sets of TS data on a single page (user-defined services)
 const financeMixin = {
   computed: {
     financial() {
       const p = this.$store.state.Project;
-      return [
+      const pages = [
         {
           show: true,
           fullName: 'Miscellaneous Inputs',
@@ -30,6 +30,17 @@ const financeMixin = {
           path: paths.FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
         },
       ];
+      const pagesWithIsComplete = [];
+      pages.forEach((page) => {
+        const { pageKey, pageName } = page;
+
+        const error = this.$store.state.Application.errorList.components[pageKey][pageName];
+        const complete = isObjectOfLengthZero(error);
+        page.isComplete = complete;
+        page.errorList = error;
+        pagesWithIsComplete.push(page);
+      });
+      return pagesWithIsComplete;
     },
   },
   methods: {

@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import fs from 'fs';
 import path from 'path';
 import Papa from 'papaparse';
@@ -22,15 +21,11 @@ export const getAppDataPath = () => {
 };
 
 export const createDirectory = (dirName) => {
-  try {
-    if (!fs.existsSync(dirName)) {
-      fs.mkdirSync(dirName);
-    }
-    return dirName;
-  } catch (err) {
-    // TODO handle error properly
-    throw err;
+  // TODO handle error properly and replace with fsPromise
+  if (!fs.existsSync(dirName)) {
+    fs.mkdirSync(dirName);
   }
+  return dirName;
 };
 
 export const papaParsePromise = file => new Promise((complete, error) => {
@@ -56,12 +51,13 @@ export const parseCsvFromFile = (file, successCallback) => {
 
 export const parseCsvFromEvent = (e, successCallback) => {
   const FILE_TYPE_CSV = 'text/csv';
+  const FILE_TYPE_XCEL = 'application/vnd.ms-excel';
   const file = getFileFromEvent(e);
   if (file) {
-    if (file.type !== FILE_TYPE_CSV) {
-      wrongFileType(file, FILE_TYPE_CSV, successCallback);
-    } else {
+    if (file.type === FILE_TYPE_CSV || file.type === FILE_TYPE_XCEL) {
       parseCsvFromFile(file, successCallback);
+    } else {
+      wrongFileType(file, FILE_TYPE_CSV, successCallback);
     }
     // TODO: AE: also check file.size and have an upper limit to avoid
     //   import attempts for huge files
@@ -128,10 +124,4 @@ export const findOverlap = (a, b) => {
   if (a.endsWith(b)) return b;
   if (a.indexOf(b) >= 0) return b;
   return findOverlap(a, b.substring(0, b.length - 1));
-};
-
-export const getRootDirectoryFromWebkitEvent = (file) => {
-  const full = file.path.split(path.sep);
-  const overlap = findOverlap(file.path, file.webkitRelativePath).split(path.sep);
-  return _.dropRight(full, overlap.length - 1).join(path.sep);
 };

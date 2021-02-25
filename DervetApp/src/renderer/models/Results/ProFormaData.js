@@ -6,6 +6,7 @@ export default class ProFormaData extends BaseTableData {
   constructor(data) {
     super('pro_forma.csv', data, true);
   }
+
   createTable() {
     // create fields
     const dataColumns = [];
@@ -16,7 +17,6 @@ export default class ProFormaData extends BaseTableData {
         keys.push(camelCol);
         const fieldTemplate = {
           key: camelCol,
-          sortable: true,
           label: colString,
           formatter: (camelCol === 'year') ? null : formatYAxisCurrency,
         };

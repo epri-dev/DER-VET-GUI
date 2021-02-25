@@ -44,7 +44,6 @@ const DYNAMIC_FIELDS = [
 
 const sharedHardcodedMetadata = createSharedHardcodedMetadata(PV);
 
-
 export default class TechnologySpecsSolarPVMetadata {
   constructor(arg) {
     Object.assign(this, arg);

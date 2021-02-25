@@ -52,18 +52,16 @@
       },
     },
     methods: {
-
       getColorFromTechnology(tech) {
         if (tech === 'pv') {
           return '#e2d06b';
-        } else if (tech === 'ess') {
+        } if (tech === 'ess') {
           return '#a2c7db';
-        } else if (tech === 'genSet') {
+        } if (tech === 'genSet') {
           return '#99999';
         }
         return '#666666';
       },
-
       createChartOutageContribution(chartId) {
         const ctx = document.getElementById(chartId);
         const rawData = this.chartData.outageContribution;
@@ -186,6 +184,7 @@
             format: 'png', // 'jpeg',
             filename: 'outage-contribution',
           },
+          modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d', 'toggleSpikelines'],
         };
         return Plotly.newPlot(ctx, data, layout, config);
       },
@@ -274,10 +273,10 @@
             format: 'png', // 'jpeg',
             filename: 'load-coverage-probability',
           },
+          modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d', 'toggleSpikelines'],
         };
         return Plotly.newPlot(ctx, data, layout, config);
       },
     },
   };
-
 </script>

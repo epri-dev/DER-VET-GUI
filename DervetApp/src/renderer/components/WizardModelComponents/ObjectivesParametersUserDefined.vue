@@ -12,42 +12,42 @@
 
       <timeseries-data-upload
         chart-name="chartUploadedTimeSeries"
-        data-name="maximum power"
+        :data-name="userPowerMaxName"
         units="kW"
         @uploaded="receiveTimeseriesData"
-        :data-exists="(tsData !== null)"
-        :data-time-series="tsData"
-        :key="childKey"
+        :data-time-series="userPowerMax"
+        key="1"
+        :TimeSeriesModel="UserPowerMaxTimeSeries"
       />
 
       <timeseries-data-upload
         chart-name="chartUploadedTimeSeries2"
-        data-name="minimum power"
+        :data-name="userPowerMinName"
         units="kW"
         @uploaded="receiveTimeseriesData2"
-        :data-exists="(tsData2 !== null)"
-        :data-time-series="tsData2"
-        :key="childKey2"
+        :data-time-series="userPowerMin"
+        :key="2"
+        :TimeSeriesModel="UserPowerMinTimeSeries"
       />
 
       <timeseries-data-upload
         chart-name="chartUploadedTimeSeries3"
-        data-name="maximum energy"
+        data-name="userEnergyMaxName"
         units="kWh"
         @uploaded="receiveTimeseriesData3"
-        :data-exists="(tsData3 !== null)"
-        :data-time-series="tsData3"
-        :key="childKey3"
+        :data-time-series="userEnergyMax"
+        key="3"
+        :TimeSeriesModel="UserEnergyMaxTimeSeries"
       />
 
       <timeseries-data-upload
         chart-name="chartUploadedTimeSeries4"
-        data-name="minimum energy"
+        data-name="userEnergyMinName"
         units="kWh"
         @uploaded="receiveTimeseriesData4"
-        :data-exists="(tsData4 !== null)"
-        :data-time-series="tsData4"
-        :key="childKey4"
+        :data-time-series="userEnergyMin"
+        key="4"
+        :TimeSeriesModel="UserEnergyMinTimeSeries"
       />
       <hr>
 
@@ -65,7 +65,8 @@
   import * as p from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
   import operateOnKeysList from '@/util/object';
-  import csvUploadMixin from '@/mixins/csvUploadMixin';
+  import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
+  import { isNotNullAndNotUndefined } from '@/util/logic';
   import UserPowerMaxTimeSeries from '@/models/TimeSeries/UserPowerMaxTimeSeries';
   import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
   import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
@@ -86,9 +87,17 @@
       const p = this.$store.state.Project;
       return {
         userPowerMax: p.userPowerMax,
+        userPowerMaxName: 'maximum power',
         userPowerMin: p.userPowerMin,
+        userPowerMinName: 'minimum power',
         userEnergyMax: p.userEnergyMax,
+        userEnergyMaxName: 'maximum energy',
         userEnergyMin: p.userEnergyMin,
+        userEnergyMinName: 'minimum energy',
+        UserPowerMaxTimeSeries,
+        UserPowerMinTimeSeries,
+        UserEnergyMaxTimeSeries,
+        UserEnergyMinTimeSeries,
         metadata,
         ...this.getDataFromProject(),
         WIZARD_COMPONENT_PATH,
@@ -98,39 +107,15 @@
       ...validations,
     },
     computed: {
-      tsData() {
-        if (this.inputTimeseries === null) {
-          return this.userPowerMax;
-        }
-        return new UserPowerMaxTimeSeries(this.inputTimeseries);
-      },
-      tsData2() {
-        if (this.inputTimeseries2 === null) {
-          return this.userPowerMin;
-        }
-        return new UserPowerMinTimeSeries(this.inputTimeseries2);
-      },
-      tsData3() {
-        if (this.inputTimeseries3 === null) {
-          return this.userEnergyMax;
-        }
-        return new UserEnergyMaxTimeSeries(this.inputTimeseries3);
-      },
-      tsData4() {
-        if (this.inputTimeseries4 === null) {
-          return this.userEnergyMin;
-        }
-        return new UserEnergyMinTimeSeries(this.inputTimeseries4);
-      },
-      complete() {
-        return this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGEKEY][PAGE];
+      errorList() {
+        return this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE];
       },
     },
     beforeMount() {
       // submitted is false initially; set it to true after the first save.
       // initially, complete is null; after saving, it is set to either true or false.
       // we want to show validation errors at any time after the first save, with submitted.
-      if (this.complete !== null && this.complete !== undefined) {
+      if (isNotNullAndNotUndefined(this.errorList)) {
         this.submitted = true;
         this.$v.$touch();
       }
@@ -141,14 +126,6 @@
       },
       getDataFromProject() {
         return operateOnKeysList(this.$store.state.Project, c.USER_DEFINED_FIELDS, f => f);
-      },
-      getCompletenessPayload() {
-        return {
-          pageGroup: PAGEGROUP,
-          pageKey: PAGEKEY,
-          page: PAGE,
-          completeness: !this.$v.$invalid,
-        };
       },
       getErrorListPayload() {
         const errors = [];
@@ -165,8 +142,6 @@
         };
       },
       validatedSave() {
-        // set completeness
-        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
         this.submitted = true;
         this.$v.$touch();
         // set errorList
@@ -174,17 +149,17 @@
         return this.save();
       },
       save() {
-        if (this.inputTimeseries !== null) {
-          this.$store.dispatch('setUserPowerMax', this.tsData);
+        if (this.inputTimeseries[this.userPowerMaxName] !== undefined) {
+          this.$store.dispatch('setUserPowerMax', this.inputTimeseries[this.userPowerMaxName]);
         }
-        if (this.inputTimeseries2 !== null) {
-          this.$store.dispatch('setUserPowerMin', this.tsData2);
+        if (this.inputTimeseries[this.userPowerMin] !== undefined) {
+          this.$store.dispatch('setUserPowerMin', this.inputTimeseries[this.userPowerMin]);
         }
-        if (this.inputTimeseries3 !== null) {
-          this.$store.dispatch('setUserEnergyMax', this.tsData3);
+        if (this.inputTimeseries[this.userEnergyMax] !== undefined) {
+          this.$store.dispatch('setUserEnergyMax', this.inputTimeseries[this.userEnergyMax]);
         }
-        if (this.inputTimeseries4 !== null) {
-          this.$store.dispatch('setUserEnergyMin', this.tsData4);
+        if (this.inputTimeseries[this.userEnergyMin] !== undefined) {
+          this.$store.dispatch('setUserEnergyMin', this.inputTimeseries[this.userEnergyMin]);
         }
         this.$store.dispatch('setUserPrice', this.userPrice);
       },

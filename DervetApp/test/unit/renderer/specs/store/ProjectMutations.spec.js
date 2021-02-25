@@ -1,8 +1,6 @@
 import project from '@/store/modules/Project';
 
-
 const { mutations } = project;
-
 
 describe('Project Mutations', () => {
   it('should replace additional data for battery cycle with proper completeness', () => {

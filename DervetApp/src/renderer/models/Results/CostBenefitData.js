@@ -15,6 +15,7 @@ export default class CostBenefitData extends BaseTableData {
     this.generatorBaseColor = tinycolor('grey');
     this.generatorUsedColors = [];
   }
+
   summaryData() {
     // look for row with 'Lieftime Present Value' in first index and return rest of row
     let rowNum = 0;
@@ -26,6 +27,7 @@ export default class CostBenefitData extends BaseTableData {
     }
     return [this.data[rowNum][1], this.data[rowNum][2]];
   }
+
   createBarChartTraces() {
     const traces = [];
     const traceX = [this.columnHeaders[1], this.columnHeaders[2]];

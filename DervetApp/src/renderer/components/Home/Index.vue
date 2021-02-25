@@ -3,7 +3,6 @@
 
     <div class="jumbotron dervet-title">
       <h1>DER-VET</h1>
-      
     </div>
 
     <div class="row buffer-bottom">
@@ -69,13 +68,14 @@
 
 </template>
 
-<script>
+<script language="ts">
   import { LOAD_QUICK_START_PROJECT } from '@/store/actionTypes';
   import { WIZARD_START_PATH } from '@/router/constants';
 
   const useCases = [
     { id: 1, value: 'billReductionProject', text: 'General DER Bill Reduction' },
     { id: 2, value: 'reliabilityProject', text: 'General DER Sizing for Reliability' },
+    { id: 3, value: 'ERCOTMarketService', text: 'ERCOT Market Case' },
   ];
 
   export default {

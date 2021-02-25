@@ -75,6 +75,11 @@
         }
         return this.timestep;
       },
+      timeseriesXAxis() {
+        // the first timestamp should be Jan 1 of dataYear at timestep minutes
+        //   to represent the period-ending value.
+        return this.$store.getters.getTimeseriesXAxis;
+      },
     },
     props: {
       chartName: String,

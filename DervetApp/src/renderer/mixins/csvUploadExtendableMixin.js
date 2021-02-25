@@ -90,6 +90,13 @@ const csvUploadMixin = {
     inputField(tsField) {
       return `${tsField}Input`;
     },
+    receiveMonthlyData(payload) {
+      // TODO: AE: this is identical to receiveTimeseriesData; should it be?
+      const { dataArray, dataName } = payload;
+      // TODO: AE: I do not think this filtering is needed, given LINE 164 of DataUpload
+      // dataArray.data = _.filter(dataArray.data, x => (x !== null) && (x !== undefined));
+      this[this.inputField(objectName)] = dataArray;
+    },
     receiveRemove(payload) {
       const { objectName } = payload;
       // remove data by overwriting with an empty data object
@@ -102,13 +109,15 @@ const csvUploadMixin = {
       // set errorList
       this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
     },
+    receiveTimeseriesData(payload) {
+      const { dataArray, objectName } = payload;
+      // TODO: AE: I do not think this filtering is needed, given LINE 164 of DataUpload
+      // dataArray.data = _.filter(dataArray.data, x => (x !== null) && (x !== undefined));
+      this[this.inputField(objectName)] = dataArray;
+    },
     receiveUseExisting(payload) {
       const { button, objectName } = payload;
       this[this.useExistingField(objectName)] = button;
-    },
-    receiveTimeseriesData(payload) {
-      const { dataArray, objectName } = payload;
-      this[this.inputField(objectName)] = dataArray;
     },
     save(fields) {
       fields.forEach((field) => {

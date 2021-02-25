@@ -71,49 +71,41 @@ export const proFormaTableData = [
 export const proFormaTableFields = [
   {
     key: 'year',
-    sortable: true,
     label: 'Year',
     formatter: null,
   },
   {
     key: 'storageCapitalCost',
-    sortable: true,
     label: 'Storage Capital Cost',
     formatter: formatYAxisCurrency,
   },
   {
     key: 'solarPVCapitalCost',
-    sortable: true,
     label: 'Solar PV Capital Cost',
     formatter: formatYAxisCurrency,
   },
   {
     key: 'storageFixedOMCost',
-    sortable: true,
     label: 'Storage Fixed O&M Cost',
     formatter: formatYAxisCurrency,
   },
   {
     key: 'storageVariableOMCost',
-    sortable: true,
     label: 'Storage Variable O&M Cost',
     formatter: formatYAxisCurrency,
   },
   {
     key: 'solarPVFixedOMCost',
-    sortable: true,
     label: 'Solar PV Fixed O&M Cost',
     formatter: formatYAxisCurrency,
   },
   {
     key: 'avoidedDemandCharge',
-    sortable: true,
     label: 'Avoided Demand Charge',
     formatter: formatYAxisCurrency,
   },
   {
     key: 'avoidedEnergyCharge',
-    sortable: true,
     label: 'Avoided Energy Charge',
     formatter: formatYAxisCurrency,
   },

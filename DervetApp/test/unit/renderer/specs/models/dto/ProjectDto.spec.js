@@ -169,7 +169,6 @@ describe('modelParametersDto', () => {
     expect(actual).to.have.string('Cycle Depth Upper Limit');
   });
 
-
   it('should create battery cycle life csv for each battery', () => {
     const project = {
       inputsDirectory: testInputsDirectory,

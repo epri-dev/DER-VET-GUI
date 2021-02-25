@@ -97,6 +97,7 @@
             format: 'png',
             filename: 'stacked-cost-benefit',
           },
+          modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d', 'toggleSpikelines'],
         };
         return Plotly.newPlot(ctx, chartData, layout, config);
       },
@@ -183,6 +184,7 @@
             format: 'png',
             filename: 'before-after-monthly-bill',
           },
+          modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d', 'toggleSpikelines'],
         };
         return Plotly.newPlot(ctx, chartData, layout, config);
       },
@@ -266,5 +268,4 @@
       },
     },
   };
-
 </script>

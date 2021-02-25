@@ -9,7 +9,7 @@
         @uploaded="receiveTimeseriesData"
         :data-exists="(tsData !== null)"
         :data-time-series="tsData"
-        :key="childKey"
+        :key="1"
         :TimeSeriesModel="PVGenerationTimeSeries"
       />
       <div v-if="(generationProfile === null)">
@@ -44,7 +44,7 @@
 <script>
   import '@/assets/samples/SamplePVgen-8760.csv';
   import '@/assets/samples/SamplePVgen-8784.csv';
-  import csvUploadMixin from '@/mixins/csvUploadMixin';
+  import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
   import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
   import SaveButtons from '@/components/Shared/SaveButtons';
@@ -59,6 +59,7 @@
       if (this.generationProfileExists()) {
         return {
           generationProfile: this.getGenerationProfile(),
+          generationProfileName: 'solar generation profile',
           WIZARD_COMPONENT_PATH,
           TECH_SPECS_PV_PATH,
           PVGenerationTimeSeries,
@@ -67,18 +68,11 @@
       const defaultValues = TechnologySpecsSolarPVMetadata.getHardcodedMetadata().getDefaultValues();
       return {
         generationProfile: defaultValues.generationProfile,
+        generationProfileName: 'solar generation profile',
         WIZARD_COMPONENT_PATH,
         TECH_SPECS_PV_PATH,
         PVGenerationTimeSeries,
       };
-    },
-    computed: {
-      tsData() {
-        if (this.inputTimeseries === null) {
-          return this.generationProfile;
-        }
-        return new PVGenerationTimeSeries(this.inputTimeseries);
-      },
     },
     methods: {
       generationProfileExists() {
@@ -90,7 +84,7 @@
         return solarPVSpecs.generationProfile;
       },
       save() {
-        if (this.inputTimeseries !== null) {
+        if (this.inputTimeseries[this.generationProfileName] !== undefined) {
           const payload = this.makeSavePayload();
           this.$store.dispatch('addGenerationProfileToTechnologySpecsPV', payload);
         }
@@ -107,7 +101,7 @@
       makeSavePayload() {
         return {
           solarId: this.solarId,
-          generationProfile: this.tsData,
+          generationProfile: this.inputTimeseries[this.generationProfileName],
         };
       },
     },

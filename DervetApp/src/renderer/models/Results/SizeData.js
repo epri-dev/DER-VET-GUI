@@ -131,7 +131,7 @@ export default class SizeData extends BaseTableData {
         },
         {
           subTotal: '=',
-          strEquation: `${powerCapacityKW.toLocaleString()}kW x $${cCostkW.toLocaleString()}/kWh`,
+          strEquation: `${powerCapacityKW.toLocaleString()}kW x $${cCostkW.toLocaleString()}/kW`,
         },
       ];
       costStructure = [...costPerkW, ...costStructure];
@@ -203,6 +203,7 @@ export default class SizeData extends BaseTableData {
     });
     return { essEnergy, essPower, essName };
   }
+
   getEssSizes() {
     // todo write test for this
     let i = 0;
@@ -220,6 +221,7 @@ export default class SizeData extends BaseTableData {
     }
     return { essEnergy, essPower, essName };
   }
+
   getTotalEnergyStorageCapacity() {
     // todo write test for this
     const essSizes = this.getEssSizes();

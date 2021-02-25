@@ -1,14 +1,14 @@
 // import _ from 'lodash';
 import * as paths from '@/router/constants';
+import { isObjectOfLengthZero } from '@/util/logic';
 
 const OBJECTIVES_PAGEKEY = 'objectives';
 
-// allow for up to 4 sets of TS data on a single page (user-defined services)
 const objectivesMixin = {
   computed: {
     objectives() {
       const p = this.$store.state.Project;
-      return [
+      const pages = [
         {
           show: true,
           fullName: 'Site Information',
@@ -101,11 +101,17 @@ const objectivesMixin = {
           path: paths.OBJECTIVES_DA_PATH,
         },
       ];
-    },
-  },
-  methods: {
-    isComplete(pageKey, page) {
-      return !this.$store.state.Application.pageCompleteness.components[pageKey][page];
+      const objectivesPagesWithIsComplete = [];
+      pages.forEach((page) => {
+        const { pageKey, pageName } = page;
+
+        const error = this.$store.state.Application.errorList.components[pageKey][pageName];
+        const complete = isObjectOfLengthZero(error);
+        page.isComplete = complete;
+        page.errorList = error;
+        objectivesPagesWithIsComplete.push(page);
+      });
+      return objectivesPagesWithIsComplete;
     },
   },
 };

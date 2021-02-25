@@ -11,7 +11,7 @@
     <div class="form-horizontal form-buffer">
       <file-picker
         label="Select Project"
-        :onFileSelect="setImportDirectory"
+        :callback="setImportDirectory"
         buttonAttributes="btn btn-primary"
         wrapperDivAttributes="col-md-2"
         :isDirectory="false"
@@ -20,6 +20,7 @@
       <div class=col-md-10>
         {{this.importDirectory}}
       </div>
+      <br/>
       <div class="col-md-offset-2 col-md-10">
         <router-link :to="$route.path"
                      class="btn btn-primary"
