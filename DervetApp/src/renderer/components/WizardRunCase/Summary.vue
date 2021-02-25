@@ -72,7 +72,7 @@
               <li>
                 <router-link class="text-decoration-none"
                              :to="service.path">
-                  {{ service.fullName + notStartedText(service.isComplete) }}
+                  {{ service.fullName + notStartedText(service.errorList) }}
                 </router-link>
                 <ul>
                   <li v-for="error in service.errorList">
@@ -91,7 +91,7 @@
               <li>
                 <router-link class="text-decoration-none"
                              :to="finance.path">
-                  {{ finance.fullName + notStartedText(finance.complete) }}
+                  {{ finance.fullName + notStartedText(finance.errorList) }}
                 </router-link>
                 <ul>
                   <li v-for="error in finance.errorList">

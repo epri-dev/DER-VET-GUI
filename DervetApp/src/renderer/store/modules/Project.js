@@ -364,6 +364,12 @@ const mutations = {
   [m.SET_LF_UP_PRICE](state, newFRUpPrice) {
     state.lfUpPrice = newFRUpPrice;
   },
+  [m.SET_LF_ENERGY_GROWTH](state, newFREnergyGrowth) {
+    state.lfEnergyPriceGrowth = newFREnergyGrowth;
+  },
+  [m.SET_LF_GROWTH](state, newFRGrowth) {
+    state.lfGrowth = newFRGrowth;
+  },
   // non-spinning reserve
   [m.SET_NSR_DURATION](state, newNSRDuration) {
     state.nsrDuration = newNSRDuration;
@@ -893,6 +899,12 @@ const actions = {
   },
   [a.SET_LF_UP_PRICE]({ commit }, newLFGrowth) {
     commit(m.SET_LF_UP_PRICE, newLFGrowth);
+  },
+  [a.SET_LF_ENERGY_GROWTH]({ commit }, newFREnergyGrowth) {
+    commit(m.SET_LF_ENERGY_GROWTH, newFREnergyGrowth);
+  },
+  [a.SET_LF_GROWTH]({ commit }, newFRGrowth) {
+    commit(m.SET_LF_GROWTH, newFRGrowth);
   },
   // non spinning reserves
   [a.SET_NSR_DURATION]({ commit }, newNSRDuration) {

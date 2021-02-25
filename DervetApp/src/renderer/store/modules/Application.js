@@ -121,7 +121,6 @@ const mutations = {
     state.pageCompleteness = completeness;
   },
   [m.SET_NEW_ERROR_LIST](state, errorList) {
-    console.log(JSON.stringify(errorList, null, 1));
     state.errorList = errorList;
   },
   SET_NEW_APPLICATION_STATE(state, application) {
@@ -149,7 +148,6 @@ const actions = {
     commit('SET_NEW_COMPLETENESS', billReductionCompleteness);
   },
   [a.SET_QUICK_START_ERROR_LIST]({ commit }, caseName) {
-    console.log(caseName);
     const selectedUseCase = USECASE_ERROR_LIST_DB[caseName];
     commit(m.SET_NEW_ERROR_LIST, selectedUseCase);
   },
