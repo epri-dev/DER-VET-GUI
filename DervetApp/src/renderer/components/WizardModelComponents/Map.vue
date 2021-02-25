@@ -39,16 +39,26 @@
       </div>
     </div>
 
+    <nav-button :continue-link="SUMMARY_PATH" continue-text="Done defining comonents" :save="this.save" />
+
   </div>
 </template>
 
 <script>
+  import { SUMMARY_PATH } from '@/router/constants';
+  import NavButton from '@/components/Shared/NavButton';
   import technologySpecsMixin from '@/mixins/technologySpecsMixin';
   import objectivesMixin from '@/mixins/objectivesMixin';
   import financeMixin from '@/mixins/financeMixin';
 
   export default {
+    components: { NavButton },
     mixins: [technologySpecsMixin, objectivesMixin, financeMixin],
+    data() {
+      return {
+        SUMMARY_PATH,
+      };
+    },
     methods: {
       save() {
       },

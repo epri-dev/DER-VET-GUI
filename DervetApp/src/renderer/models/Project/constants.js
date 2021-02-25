@@ -114,7 +114,7 @@ export const RELIABILITY_POST_OPTIMIZATION_ONLY_ALLOWED_VALUES = [
   },
 ];
 export const SIZING_EQUIPMENT_ALLOWED_VALUES = optionsYN;
-export const TIMESTEP_ALLOWED_VALUES = makeAllowedValuesWithNull(['1', '5', '15', '30', '60']);
+export const TIMESTEP_ALLOWED_VALUES = makeAllowedValuesWithNull(['60', '30', '15', '5', '1']);
 
 // Field groupings
 export const START_PROJECT_FIELDS = [
