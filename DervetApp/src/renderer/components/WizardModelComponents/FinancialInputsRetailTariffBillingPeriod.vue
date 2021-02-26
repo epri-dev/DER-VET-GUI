@@ -69,7 +69,7 @@
       <save-and-nav-buttons
         :displayError="submitted && $v.$anyError"
         :save="validatedSave"
-        :continue-link="FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
+        :continue-link="FINANCIAL_INPUTS_RETAIL_TARIFF"
         continue-text="Save and Back To Retail Tariff" />
 
     </form>
@@ -80,7 +80,7 @@
   import { requiredIf, minValue, maxValue } from 'vuelidate/lib/validators';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import RetailTariffBillingPeriodMetadata from '@/models/RetailTariffBillingPeriod';
-  import { FINANCIAL_INPUTS_RETAIL_TARIFF_PATH } from '@/router/constants';
+  import { FINANCIAL_INPUTS_RETAIL_TARIFF } from '@/router/constants';
   import { getSingleErrorMsg } from '@/util/validation';
 
   const metadata = RetailTariffBillingPeriodMetadata.getHardcodedMetadata();
@@ -99,13 +99,13 @@
         return {
           metadata,
           ...this.getDefaultData(),
-          FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
+          FINANCIAL_INPUTS_RETAIL_TARIFF,
         };
       }
       return {
         metadata,
         ...this.getDataFromProject(),
-        FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
+        FINANCIAL_INPUTS_RETAIL_TARIFF,
       };
     },
     validations() {

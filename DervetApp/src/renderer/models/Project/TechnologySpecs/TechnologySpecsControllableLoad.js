@@ -7,7 +7,7 @@ import {
   SHARED_DYNAMIC_FIELDS,
   createSharedHardcodedMetadata,
 } from '@/models/Project/TechnologySpecs/sharedConstants';
-import { TECH_SPECS_CONTROLLABLE_LOAD_PATH } from '@/router/constants';
+import { TECH_SPECS_CONTROLLABLE_LOAD } from '@/router/constants';
 
 const sharedHardcodedMetadata = createSharedHardcodedMetadata('controllable load');
 
@@ -38,7 +38,7 @@ export default class TechnologySpecsControllableLoadMetadata {
       complete: null,
       id: uuidv4(),
       load: null,
-      path: TECH_SPECS_CONTROLLABLE_LOAD_PATH,
+      path: TECH_SPECS_CONTROLLABLE_LOAD,
       errorList: [],
       tag: CONTROLLABLE_LOAD,
       technologyType: 'Controllable Load',

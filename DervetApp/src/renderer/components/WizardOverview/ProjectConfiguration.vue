@@ -8,14 +8,14 @@
 
       <text-input
         v-model="name"
-        v-bind:field="metadata.name"
+        :field="metadata.name"
         :isInvalid="submitted && $v.name.$error"
         :errorMessage="getErrorMsg('name')">
       </text-input>
 
       <text-input
         v-model="startYear"
-        v-bind:field="metadata.startYear"
+        :field="metadata.startYear"
         :isInvalid="submitted && $v.startYear.$error"
         :errorMessage="getErrorMsg('startYear')">
       </text-input>
@@ -25,7 +25,7 @@
 
         <radio-button-input
           v-model="analysisHorizonMode"
-          v-bind:field="metadata.analysisHorizonMode"
+          :field="metadata.analysisHorizonMode"
           :isInvalid="submitted && $v.analysisHorizonMode.$error"
           :errorMessage="getErrorMsg('analysisHorizonMode')">
         </radio-button-input>
@@ -33,7 +33,7 @@
         <div v-if="analysisHorizonMode === '1'">
           <text-input
             v-model="analysisHorizon"
-            v-bind:field="metadata.analysisHorizon"
+            :field="metadata.analysisHorizon"
             :isInvalid="submitted && $v.analysisHorizon.$error"
             :errorMessage="getErrorMsg('analysisHorizon')">
           </text-input>
@@ -44,14 +44,14 @@
         <legend>Time Series Data</legend>
           <text-input
             v-model="dataYear"
-            v-bind:field="metadata.dataYear"
+            :field="metadata.dataYear"
             :isInvalid="submitted && $v.dataYear.$error"
             :errorMessage="getErrorMsg('dataYear')">
           </text-input>
 
           <drop-down-input
             v-model="timestep"
-            v-bind:field="metadata.timestep"
+            :field="metadata.timestep"
             :isInvalid="submitted && $v.timestep.$error"
             :errorMessage="getErrorMsg('timestep')">
           </drop-down-input>
@@ -59,14 +59,14 @@
 
       <radio-button-input
         v-model="gridLocation"
-        v-bind:field="metadata.gridLocation"
+        :field="metadata.gridLocation"
         :isInvalid="submitted && $v.gridLocation.$error"
         :errorMessage="getErrorMsg('gridLocation')">
       </radio-button-input>
 
       <radio-button-input
         v-model="ownership"
-        v-bind:field="metadata.ownership"
+        :field="metadata.ownership"
         :isInvalid="submitted && $v.ownership.$error"
         :errorMessage="getErrorMsg('ownership')">
       </radio-button-input>
@@ -223,7 +223,7 @@
       validatedSaveContinue() {
         this.validatedSave();
         this.save();
-        this.$router.push({ path: this.paths.OBJECTIVES_PATH });
+        this.$router.push({ path: this.paths.OBJECTIVES });
       },
       validatedSaveStay() {
         this.validatedSave();

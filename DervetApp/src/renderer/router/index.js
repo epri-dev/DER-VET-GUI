@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import * as c from './constants';
+
+import * as c from '@/router/constants';
 
 Vue.use(Router);
 
@@ -8,7 +9,7 @@ export default new Router({
   mode: 'hash',
   routes: [
     {
-      path: c.INDEX_PATH,
+      path: c.INDEX,
       component: require('@/components/Home/Index').default,
     },
     {
@@ -16,16 +17,16 @@ export default new Router({
       component: require('@/components/Home/ImportProject').default,
     },
     {
-      path: c.WIZARD_START_PATH,
+      path: c.WIZARD_OVERVIEW,
       component: require('@/components/WizardOverview/Layout').default,
       children: [
         {
           path: '',
-          component: require('@/components/WizardOverview/StartProject').default,
+          component: require('@/components/WizardOverview/ProjectConfiguration').default,
         },
         {
-          path: 'start-project',
-          component: require('@/components/WizardOverview/StartProject').default,
+          path: 'project-configuration',
+          component: require('@/components/WizardOverview/ProjectConfiguration').default,
         },
         {
           path: 'technology-specs',
@@ -42,7 +43,7 @@ export default new Router({
       ],
     },
     {
-      path: c.WIZARD_COMPONENT_PATH,
+      path: c.WIZARD_COMPONENT,
       component: require('@/components/WizardModelComponents/Layout').default,
       children: [
         {
@@ -187,9 +188,14 @@ export default new Router({
           component: require('@/components/WizardModelComponents/FinancialInputsRetailTariffImport').default,
         },
         {
-          path: 'financial-inputs',
-          name: 'financialInputs',
-          component: require('@/components/WizardModelComponents/FinancialInputs').default,
+          path: 'financial-inputs-retail-tariff-open-ei',
+          name: 'financialInputsRetailTariffOpenEI',
+          component: require('@/components/WizardModelComponents/OpenEI/Layout').default,
+        },
+        {
+          path: 'financial-inputs-miscellaneous',
+          name: 'financialInputsMiscellaneous',
+          component: require('@/components/WizardModelComponents/FinancialInputsMiscellaneous').default,
         },
         {
           path: 'financial-inputs-external-incentives',
@@ -214,7 +220,7 @@ export default new Router({
       ],
     },
     {
-      path: c.WIZARD_RUN_CASE_PATH,
+      path: c.WIZARD_RUN_CASE,
       component: require('@/components/WizardRunCase/Layout').default,
       children: [
         {
@@ -235,7 +241,7 @@ export default new Router({
       ],
     },
     {
-      path: c.RESULTS_PATH,
+      path: c.RESULTS,
       component: require('@/components/Results/Layout').default,
       children: [
         {

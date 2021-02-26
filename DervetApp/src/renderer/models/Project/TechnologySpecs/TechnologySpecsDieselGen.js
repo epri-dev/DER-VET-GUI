@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 import { optionsYN } from '@/models/Project/constants';
 import { SHARED_DYNAMIC_FIELDS, createSharedHardcodedMetadata } from '@/models/Project/TechnologySpecs/sharedConstants';
-import { TECH_SPECS_DIESEL_PATH } from '@/router/constants';
+import { TECH_SPECS_DIESEL } from '@/router/constants';
 
 const DieselGen = 'DieselGen';
 
@@ -56,7 +56,7 @@ export default class TechnologySpecsDieselGenMetadata {
       complete: null,
       errorList: [],
       id: uuidv4(),
-      path: TECH_SPECS_DIESEL_PATH,
+      path: TECH_SPECS_DIESEL,
       tag: DieselGen,
       technologyType: 'Generator',
       ...this.operateOnDynamicFields(f => f.defaultValue),

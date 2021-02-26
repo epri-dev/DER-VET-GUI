@@ -17,7 +17,7 @@
 
       <hr>
 
-      <save-buttons :continue-link="WIZARD_COMPONENT_PATH"
+      <save-buttons :continue-link="WIZARD_COMPONENT"
                     :displayError="submitted"
                     :save="validatedSave" />
 
@@ -29,7 +29,7 @@
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import SystemLoadTimeSeries from '@/models/TimeSeries/SystemLoadTimeSeries';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT } from '@/router/constants';
   import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
 
   const PAGEGROUP = 'components';
@@ -45,7 +45,7 @@
         includeSystemLoad: p.includeSystemLoad,
         systemLoad: p.systemLoad,
         systemLoadName: 'system load',
-        WIZARD_COMPONENT_PATH,
+        WIZARD_COMPONENT,
         SystemLoadTimeSeries,
       };
     },

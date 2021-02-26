@@ -67,10 +67,10 @@
 
     <div class="form-group row">
       <div class="col-md-12">
-        <router-link :to="`${FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH}-year/null`" class="btn btn-secondary">
+        <router-link :to="`${FINANCIAL_INPUTS_EXTERNAL_INCENTIVES}-year/null`" class="btn btn-secondary">
           Add External Incentives
         </router-link>
-        <router-link :to="`${FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH}-import`" class="btn btn-secondary">
+        <router-link :to="`${FINANCIAL_INPUTS_EXTERNAL_INCENTIVES}-import`" class="btn btn-secondary">
           <i class="fas fa-upload"/> Import Incentives
         </router-link>
         <a
@@ -87,7 +87,7 @@
 
     <hr>
     <nav-button
-      :continue-link="WIZARD_COMPONENT_PATH"
+      :continue-link="WIZARD_COMPONENT"
       :displayError="!complete"
       :error-text="errorMessage"
       continue-text="Done Adding External Incentives" />
@@ -100,8 +100,8 @@
   import { formatCsvForHref } from '@/util/file';
   import NavButton from '@/components/Shared/NavButton';
   import {
-    WIZARD_COMPONENT_PATH,
-    FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
+    WIZARD_COMPONENT,
+    FINANCIAL_INPUTS_EXTERNAL_INCENTIVES,
   } from '@/router/constants';
   import { getSingleErrorMsg } from '@/util/validation';
 
@@ -136,8 +136,8 @@
     data() {
       return {
         INCENTIVES_HEADERS,
-        WIZARD_COMPONENT_PATH,
-        FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
+        WIZARD_COMPONENT,
+        FINANCIAL_INPUTS_EXTERNAL_INCENTIVES,
       };
     },
     methods: {

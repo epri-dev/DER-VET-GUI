@@ -59,7 +59,7 @@
       />
 
       <save-buttons
-        :continue-link="WIZARD_COMPONENT_PATH"
+        :continue-link="WIZARD_COMPONENT"
         :displayError="submitted && $v.$anyError"
         :save="validatedSave" />
 
@@ -75,7 +75,7 @@
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import RAActiveTimeSeries from '@/models/TimeSeries/RAActiveTimeSeries';
   import RACapacityAdwardsMonthly from '@/models/Monthly/RACapacityAdwardsMonthly';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT } from '@/router/constants';
   import {
     SET_RA_ACTIVE_TIMESTEP,
     SET_RA_CAPACITY_PRICE,
@@ -107,7 +107,7 @@
         activeName: 'if the resource adequacy event selection considers the load (1) or not (0) ',
         metadata,
         ...this.getDataFromProject(),
-        WIZARD_COMPONENT_PATH,
+        WIZARD_COMPONENT,
         RACapacityAdwardsMonthly,
         RAActiveTimeSeries,
       };

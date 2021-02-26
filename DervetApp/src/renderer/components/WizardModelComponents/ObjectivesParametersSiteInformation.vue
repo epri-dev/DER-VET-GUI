@@ -53,7 +53,7 @@
       </div>
       <hr>
 
-      <save-buttons :continue-link="WIZARD_COMPONENT_PATH"
+      <save-buttons :continue-link="WIZARD_COMPONENT"
                     :displayError="submitted && $v.$anyError"
                     :save="validatedSave" />
 
@@ -71,7 +71,7 @@
   import '@/assets/samples/SampleSiteLoad-8784.csv';
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT } from '@/router/constants';
   import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
 
   const metadata = p.projectMetadata;
@@ -91,7 +91,7 @@
         siteLoadName: 'site load',
         metadata,
         ...this.getDataFromProject(),
-        WIZARD_COMPONENT_PATH,
+        WIZARD_COMPONENT,
         SiteLoadTimeSeries,
       };
     },

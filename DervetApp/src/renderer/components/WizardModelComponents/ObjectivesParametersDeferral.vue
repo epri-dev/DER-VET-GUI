@@ -40,7 +40,7 @@
       <hr>
 
       <save-buttons
-        :continue-link="WIZARD_COMPONENT_PATH"
+        :continue-link="WIZARD_COMPONENT"
         :displayError="submitted && $v.$anyError"
         :save="validatedSave" />
 
@@ -56,7 +56,7 @@
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import { isNotNullAndNotUndefined } from '@/util/logic';
   import DeferralLoadTimeSeries from '@/models/TimeSeries/DeferralLoadTimeSeries';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT } from '@/router/constants';
   import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
 
   const metadata = p.projectMetadata;
@@ -75,7 +75,7 @@
         loadName: 'deferral load',
         metadata,
         ...this.getDataFromProject(),
-        WIZARD_COMPONENT_PATH,
+        WIZARD_COMPONENT,
         DeferralLoadTimeSeries,
       };
     },

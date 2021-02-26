@@ -374,7 +374,7 @@
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsBatteryMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsBattery';
-  import { WIZARD_COMPONENT_PATH }
+  import { WIZARD_COMPONENT }
     from '@/router/constants';
 
   const metadata = TechnologySpecsBatteryMetadata.getHardcodedMetadata();
@@ -390,7 +390,7 @@
       return {
         metadata,
         ...values,
-        WIZARD_COMPONENT_PATH,
+        WIZARD_COMPONENT,
       };
     },
     validations() {
@@ -562,7 +562,7 @@
         if (this.includeCycleDegradation) {
           return `${this.associatedInputs[0].path}/${this.id}`;
         }
-        return WIZARD_COMPONENT_PATH;
+        return WIZARD_COMPONENT;
       },
       getErrorMsg(fieldName) {
         this.metadata.energyCapacityMaximum.minValue = !(this.energyCapacityMinimum >= 0)

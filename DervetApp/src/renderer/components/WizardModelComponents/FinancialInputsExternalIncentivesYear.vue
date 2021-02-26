@@ -26,7 +26,7 @@
       <save-and-nav-buttons
         :displayError="submitted && $v.$anyError"
         :save="validatedSave"
-        :continue-link="FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH"
+        :continue-link="FINANCIAL_INPUTS_EXTERNAL_INCENTIVES"
         continue-text="Save and Back To External Incentives" />
 
     </form>
@@ -37,7 +37,7 @@
   import { minValue } from 'vuelidate/lib/validators';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import ExternalIncentivesMetadata from '@/models/ExternalIncentives';
-  import { FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH } from '@/router/constants';
+  import { FINANCIAL_INPUTS_EXTERNAL_INCENTIVES } from '@/router/constants';
   import { getSingleErrorMsg } from '@/util/validation';
 
   const metadata = ExternalIncentivesMetadata.getHardcodedMetadata();
@@ -56,13 +56,13 @@
         return {
           metadata,
           ...this.getDefaultData(),
-          FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
+          FINANCIAL_INPUTS_EXTERNAL_INCENTIVES,
         };
       }
       return {
         metadata,
         ...this.getDataFromProject(),
-        FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
+        FINANCIAL_INPUTS_EXTERNAL_INCENTIVES,
       };
     },
     validations() {

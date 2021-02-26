@@ -19,6 +19,9 @@
       if (this.$store.state.CalEnviroScreen.cesScores === null) {
         this.$store.dispatch('loadCesScores');
       }
+      if (this.$store.state.OpenEI.utilities === null) {
+        this.$store.dispatch('loadUtilities');
+      }
     },
   };
 </script>

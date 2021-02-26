@@ -37,7 +37,7 @@
       <hr>
 
       <save-buttons
-        :continue-link="WIZARD_COMPONENT_PATH"
+        :continue-link="WIZARD_COMPONENT"
         :displayError="submitted && $v.$anyError"
         :save="validatedSave" />
 
@@ -50,7 +50,7 @@
   import * as p from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
   import operateOnKeysList from '@/util/object';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT } from '@/router/constants';
 
   const metadata = p.projectMetadata;
   const validations = metadata.getValidationSchema(c.FINANCE_FIELDS);
@@ -64,7 +64,7 @@
       return {
         metadata,
         ...this.getDataFromProject(),
-        WIZARD_COMPONENT_PATH,
+        WIZARD_COMPONENT,
       };
     },
     validations: {

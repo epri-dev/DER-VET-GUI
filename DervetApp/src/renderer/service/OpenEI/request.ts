@@ -2,20 +2,36 @@ import axios from 'axios';
 
 import {
   Sector,
+  UtilityCompaniesResponse,
   UtilityRatesResponse,
 } from '@/service/OpenEI/response';
 
-const OPENEI_API_VERSION = 7;
 const OPENEI_API_URL = 'https://api.openei.org';
+const UTILITY_COMPANIES_API_VERSION = 3;
+const UTILITY_RATES_API_VERSION = 7;
 
 interface UtilityRateParams {
   apiKey: string;
   address: string;
   sector: Sector;
-  utility: string;
+  utility?: string;
   tariffId?: string;
 }
 
+// TODO handle error
+export const getUtilityCompanies = (apiKey: string): Promise<UtilityCompaniesResponse> => (
+  axios({
+    method: 'get',
+    url: `${OPENEI_API_URL}/utility_companies`,
+    params: {
+      api_key: apiKey,
+      format: 'json',
+      version: UTILITY_COMPANIES_API_VERSION,
+    },
+  })
+);
+
+// TODO handle error
 export const getUtilityRates = (params: UtilityRateParams): Promise<UtilityRatesResponse> => (
   axios({
     method: 'get',
@@ -27,22 +43,9 @@ export const getUtilityRates = (params: UtilityRateParams): Promise<UtilityRates
       detail: params.tariffId === undefined ? 'minimal' : 'full', // TODO enum
       format: 'json',
       ...(params.tariffId !== undefined && { getPage: params.tariffId }),
-      ratesforutility: params.utility,
+      ratesforutility: params.utility === undefined ? '' : params.utility,
       sector: params.sector,
-      version: OPENEI_API_VERSION,
-    },
-  })
-);
-
-// make utility companies response
-export const getUtilityCompanies = (apiKey: string) => (
-  axios({
-    method: 'get',
-    url: `${OPENEI_API_URL}/utility_companies`,
-    params: {
-      api_key: apiKey,
-      format: 'json',
-      version: OPENEI_API_VERSION,
+      version: UTILITY_RATES_API_VERSION,
     },
   })
 );

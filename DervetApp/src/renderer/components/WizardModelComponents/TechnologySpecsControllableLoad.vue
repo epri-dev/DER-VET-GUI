@@ -99,7 +99,7 @@
         </text-input>
 
         <save-buttons
-          :continue-link="`${TECH_SPECS_CONTROLLABLE_LOAD_DATA_UPLOAD_PATH}/${this.id}`"
+          :continue-link="`${TECH_SPECS_CONTROLLABLE_LOAD_DATA_UPLOAD}/${this.id}`"
           :displayError="submitted && $v.$anyError"
           :save="validatedSave"
         />
@@ -116,7 +116,7 @@
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsControllableLoadMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsControllableLoad';
-  import { WIZARD_COMPONENT_PATH, TECH_SPECS_CONTROLLABLE_LOAD_DATA_UPLOAD_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT, TECH_SPECS_CONTROLLABLE_LOAD_DATA_UPLOAD } from '@/router/constants';
   import {
     REPLACE_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD,
     MAKE_LIST_OF_ACTIVE_TECHNOLOGIES,
@@ -135,8 +135,8 @@
       return {
         metadata,
         ...valuesMinusId,
-        WIZARD_COMPONENT_PATH,
-        TECH_SPECS_CONTROLLABLE_LOAD_DATA_UPLOAD_PATH,
+        WIZARD_COMPONENT,
+        TECH_SPECS_CONTROLLABLE_LOAD_DATA_UPLOAD,
       };
     },
     validations: {

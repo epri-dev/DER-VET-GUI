@@ -33,7 +33,7 @@
       <hr>
 
       <save-buttons
-        :continue-link="WIZARD_COMPONENT_PATH"
+        :continue-link="WIZARD_COMPONENT"
         :save="this.save"
       />
 
@@ -48,7 +48,7 @@
   import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
   import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
   import SaveButtons from '@/components/Shared/SaveButtons';
-  import { WIZARD_COMPONENT_PATH, TECH_SPECS_PV_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT, TECH_SPECS_PV } from '@/router/constants';
   import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
 
   export default {
@@ -60,8 +60,8 @@
         return {
           generationProfile: this.getGenerationProfile(),
           generationProfileName: 'solar generation profile',
-          WIZARD_COMPONENT_PATH,
-          TECH_SPECS_PV_PATH,
+          WIZARD_COMPONENT,
+          TECH_SPECS_PV,
           PVGenerationTimeSeries,
         };
       }
@@ -69,8 +69,8 @@
       return {
         generationProfile: defaultValues.generationProfile,
         generationProfileName: 'solar generation profile',
-        WIZARD_COMPONENT_PATH,
-        TECH_SPECS_PV_PATH,
+        WIZARD_COMPONENT,
+        TECH_SPECS_PV,
         PVGenerationTimeSeries,
       };
     },

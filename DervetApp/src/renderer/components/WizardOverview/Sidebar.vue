@@ -3,31 +3,31 @@
     <b-nav vertical>
       <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
                    v-bind:class="{
-          current: isActive(this.paths.START_PROJECT_PATH),
+          current: isActive(this.paths.PROJECT_CONFIGURATION) || this.isActive(this.paths.WIZARD_OVERVIEW),
           incomplete: !isComplete('start') }"
-                   :to="this.paths.START_PROJECT_PATH">
+                   :to="this.paths.PROJECT_CONFIGURATION">
         Project Configuration
       </router-link>
 
       <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
                    v-bind:class="{
-          current: isActive(this.paths.OBJECTIVES_PATH),
+          current: isActive(this.paths.OBJECTIVES),
           incomplete: !isComplete('objectives') }"
-                   :to="this.paths.OBJECTIVES_PATH">
+                   :to="this.paths.OBJECTIVES">
         Services
       </router-link>
 
       <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
                    v-bind:class="{
-          current: isActive(this.paths.TECH_SPECS_PATH),
+          current: isActive(this.paths.TECH_SPECS),
           incomplete: !isComplete('technologySpecs') }"
-                   :to="this.paths.TECH_SPECS_PATH">
+                   :to="this.paths.TECH_SPECS">
         Technology Specifications
       </router-link>
 
       <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
-                   v-bind:class="{ current: isActive(this.paths.CAL_ENVIRO_SCREEN_PATH) }"
-                   :to="this.paths.CAL_ENVIRO_SCREEN_PATH">
+                   v-bind:class="{ current: isActive(this.paths.CAL_ENVIRO_SCREEN) }"
+                   :to="this.paths.CAL_ENVIRO_SCREEN">
         CalEnviroScreen
       </router-link>
 
@@ -47,7 +47,7 @@
     },
     methods: {
       isActive(path) {
-        return RegExp(path).test(this.$route.path);
+        return path === this.$route.path;
       },
       isComplete(page) {
         return this.$store.state.Application.pageCompleteness.overview[page];

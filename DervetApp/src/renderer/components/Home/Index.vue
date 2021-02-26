@@ -70,9 +70,9 @@
 
 <script language="ts">
   import { LOAD_QUICK_START_PROJECT } from '@/store/actionTypes';
-  import { WIZARD_START_PATH } from '@/router/constants';
+  import { WIZARD_OVERVIEW } from '@/router/constants';
   import * as a from '@/store/actionTypes';
-  
+
   const useCases = [
     { id: 1, value: 'billReductionProject', text: 'General DER Bill Reduction' },
     { id: 2, value: 'reliabilityProject', text: 'General DER Sizing for Reliability' },
@@ -83,7 +83,7 @@
     name: 'index',
     data() {
       return {
-        WIZARD_START_PATH,
+        WIZARD_OVERVIEW,
         selectedUseCase: null,
         useCases,
       };
@@ -102,14 +102,14 @@
           .then(this.$store.dispatch(LOAD_QUICK_START_PROJECT, selectedUseCase))
           .then(this.$store.dispatch('Application/setQuickStartCompleteness'))
           .then(this.$store.dispatch(`Application/${a.SET_QUICK_START_ERROR_LIST}`, selectedUseCase))
-          .then(this.$router.push({ path: WIZARD_START_PATH }));
+          .then(this.$router.push({ path: WIZARD_OVERVIEW }));
       },
       resetProjectToDefault() {
         this.$store.dispatch('resetProjectToDefault')
           .then(this.$store.dispatch('resetResultToDefault', this.$store.state.Project.id))
           .then(this.$store.dispatch(`Application/${a.RESET_APPLICATION_TO_DEFAULT}`, this.$store.state.Project.id))
           .then(this.$store.dispatch('resetZipCode'))
-          .then(this.$router.push({ path: WIZARD_START_PATH }));
+          .then(this.$router.push({ path: WIZARD_OVERVIEW }));
       },
     },
   };

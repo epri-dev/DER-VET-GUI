@@ -143,7 +143,7 @@
     </div>
     <hr />
     <save-buttons
-                 :continue-link="TECH_SPECS_PATH"
+                 :continue-link="TECH_SPECS"
                  :displayError="submitted && $v.$anyError"
                  :save="validatedSave" />
 
@@ -158,7 +158,7 @@
   import * as c from '@/models/Project/constants';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import operateOnKeysList from '@/util/object';
-  import { TECH_SPECS_PATH, START_PROJECT_PATH } from '@/router/constants';
+  import { TECH_SPECS, PROJECT_CONFIGURATION } from '@/router/constants';
   import {
     CHOOSE_ENERGY_STRUCTURE,
     SET_INCLUDE_SITE_LOAD,
@@ -182,8 +182,8 @@
         metadata,
         listOfActiveServices: p.listOfActiveServices,
         ...this.getDataFromProject(),
-        START_PROJECT_PATH,
-        TECH_SPECS_PATH,
+        PROJECT_CONFIGURATION,
+        TECH_SPECS,
       };
     },
     validations: {

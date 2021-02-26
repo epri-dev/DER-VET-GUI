@@ -23,7 +23,7 @@
       />
 
       <save-buttons
-        :continue-link="WIZARD_COMPONENT_PATH"
+        :continue-link="WIZARD_COMPONENT"
         :displayError="submitted && $v.$anyError"
         :save="validatedSave" />
 
@@ -36,7 +36,7 @@
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import BackupEnergyReservationMonthly from '@/models/Monthly/BackupEnergyReservationMonthly';
   import BackupEnergyAdwardsMonthly from '@/models/Monthly/BackupEnergyAdwardsMonthly';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT } from '@/router/constants';
   import {
     SET_BACKUP_PRICE,
     SET_BACKUP_ENERGY,
@@ -58,7 +58,7 @@
         priceName: 'award for reserving backup power',
         energyReservation: p.backupEnergyReservation,
         energyReservationName: 'amount of energy to constantly reserve',
-        WIZARD_COMPONENT_PATH,
+        WIZARD_COMPONENT,
         BackupEnergyReservationMonthly,
         BackupEnergyAdwardsMonthly,
       };

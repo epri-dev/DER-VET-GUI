@@ -107,7 +107,7 @@
   import * as c from '@/models/Project/constants';
   import TimeSeriesBase from '@/models/TimeSeries/TimeSeriesBase';
 
-  import { WIZARD_COMPONENT_PATH as DESTINATION_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
 
   const PAGEGROUP = 'components';
   const PAGEKEY = 'objectives';

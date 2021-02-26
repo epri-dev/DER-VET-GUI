@@ -101,7 +101,7 @@
       <hr>
 
       <save-buttons
-        :continue-link="WIZARD_COMPONENT_PATH"
+        :continue-link="WIZARD_COMPONENT"
         :displayError="submitted && $v.$anyError"
         :save="validatedSave" />
 
@@ -120,7 +120,7 @@
   import DREnergyAwardsMonthly from '@/models/Monthly/DREnergyAwardsMonthly';
   import DRCapacityAdwardsMonthly from '@/models/Monthly/DRCapacityAdwardsMonthly';
   import DRMonthsMonthly from '@/models/Monthly/DRMonthsMonthly';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT } from '@/router/constants';
   import {
     SET_DR_NUMBER_EVENTS,
     SET_DR_INCLUDE_WEEKENDS,
@@ -164,7 +164,7 @@
         energyAwardsName: 'award for reducing energy consumption during demand response events',
         metadata,
         ...this.getDataFromProject(),
-        WIZARD_COMPONENT_PATH,
+        WIZARD_COMPONENT,
         DRCapacityReservationMonthly,
         DREnergyAwardsMonthly,
         DRCapacityAdwardsMonthly,

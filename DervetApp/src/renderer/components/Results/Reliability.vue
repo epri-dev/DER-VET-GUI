@@ -27,7 +27,7 @@
 
 <script>
   import Plotly from 'plotly.js';
-  import { RESULTS_PATH } from '@/router/constants';
+  import { RESULTS } from '@/router/constants';
 
   export default {
     beforeMount() {
@@ -42,7 +42,7 @@
     data() {
       const p = this.$store.state.Project;
       return {
-        resultsPath: RESULTS_PATH,
+        resultsPath: RESULTS,
         reliabilityTarget: p.reliabilityTarget,
       };
     },

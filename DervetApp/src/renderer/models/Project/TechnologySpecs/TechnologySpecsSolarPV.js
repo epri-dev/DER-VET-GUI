@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 import { SHARED_DYNAMIC_FIELDS, createSharedHardcodedMetadata } from '@/models/Project/TechnologySpecs/sharedConstants';
 import { optionsYN, makeAllowedValuesWithNull } from '@/models/Project/constants';
-import { TECH_SPECS_PV_PATH } from '@/router/constants';
+import { TECH_SPECS_PV } from '@/router/constants';
 
 const PV = 'PV';
 
@@ -60,7 +60,7 @@ export default class TechnologySpecsSolarPVMetadata {
       errorList: [],
       generationProfile: null,
       id: uuidv4(),
-      path: TECH_SPECS_PV_PATH,
+      path: TECH_SPECS_PV,
       tag: PV,
       technologyType: 'Intermittent Resource',
       ...this.operateOnDynamicFields(f => f.defaultValue),

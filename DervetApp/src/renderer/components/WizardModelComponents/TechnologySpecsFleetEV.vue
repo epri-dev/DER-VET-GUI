@@ -136,7 +136,7 @@
         </drop-down-input>
 
         <save-buttons
-          :continue-link="`${TECH_SPECS_FLEET_EV_BASELINE_PATH}/${this.id}`"
+          :continue-link="`${TECH_SPECS_FLEET_EV_BASELINE}/${this.id}`"
           :displayError="submitted && $v.$anyError"
           :save="validatedSave"
         />
@@ -153,7 +153,7 @@
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsFleetEVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsFleetEV';
-  import { TECH_SPECS_FLEET_EV_BASELINE_PATH } from '@/router/constants';
+  import { TECH_SPECS_FLEET_EV_BASELINE } from '@/router/constants';
   import {
     REPLACE_TECHNOLOGY_SPECS_FLEET_EV,
     MAKE_LIST_OF_ACTIVE_TECHNOLOGIES,
@@ -172,7 +172,7 @@
       return {
         metadata,
         ...valuesMinusId,
-        TECH_SPECS_FLEET_EV_BASELINE_PATH,
+        TECH_SPECS_FLEET_EV_BASELINE,
       };
     },
     validations: {

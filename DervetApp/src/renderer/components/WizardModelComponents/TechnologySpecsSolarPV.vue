@@ -232,7 +232,7 @@
         </div>
 
         <save-buttons
-          :continue-link="`${TECH_SPECS_PV_DATA_GENERATION_PATH}/${this.solarId}`"
+          :continue-link="`${TECH_SPECS_PV_DATA_GENERATION}/${this.solarId}`"
           :displayError="submitted && $v.$anyError"
           :save="validatedSave"
         />
@@ -248,7 +248,7 @@
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
-  import { WIZARD_COMPONENT_PATH, TECH_SPECS_PV_DATA_GENERATION_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT, TECH_SPECS_PV_DATA_GENERATION } from '@/router/constants';
 
   const metadata = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
@@ -263,8 +263,8 @@
       return {
         metadata,
         ...values,
-        WIZARD_COMPONENT_PATH,
-        TECH_SPECS_PV_DATA_GENERATION_PATH,
+        WIZARD_COMPONENT,
+        TECH_SPECS_PV_DATA_GENERATION,
       };
     },
     validations() {
