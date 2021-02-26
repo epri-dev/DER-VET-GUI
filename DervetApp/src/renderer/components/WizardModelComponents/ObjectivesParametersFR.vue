@@ -154,7 +154,8 @@
         (TS_FIELDS).forEach((tsField) => {
           // skip non-required tsFields
           if ((this.frCombinedMarket && tsField !== 'tsFrPrice')
-            || (!this.frCombinedMarket && tsField === 'tsFrPrice')) {
+            || (!this.frCombinedMarket && tsField === 'tsFrPrice')
+            || this.frCombinedMarket === null) {
             return;
           }
           const errorMsgTS = `A timeseries of ${this[tsField].columnHeaderName} is required`;
