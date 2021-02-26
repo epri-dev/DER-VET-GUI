@@ -290,33 +290,33 @@ const mutations = {
   SET_STATE_TAX_RATE(state, newStateTaxRate) {
     state.financeStateTaxRate = newStateTaxRate;
   },
-  // frequency response
-  SET_FR_COMBINED_MARKET(state, newFRCombinedMarket) {
-    state.frCombinedMarket = newFRCombinedMarket;
+  // frequency regulation
+  [m.SET_FR_COMBINED_MARKET](state, newFRCombinedMarket) {
+    state[c.FR_COMBINED_MARKET] = newFRCombinedMarket;
   },
-  SET_FR_DOWN_PRICE(state, newFRDownPrice) {
-    state.frDownPrice = newFRDownPrice;
+  [m.SET_FR_DOWN_PRICE](state, newFRDownPrice) {
+    state[c.TS_FR_DOWN_PRICE] = newFRDownPrice;
   },
-  SET_FR_DURATION(state, newFRDuration) {
-    state.frDuration = newFRDuration;
+  [m.SET_FR_DURATION](state, newFRDuration) {
+    state[c.FR_DURATION] = newFRDuration;
   },
-  SET_FR_ENERGY_GROWTH(state, newFREnergyGrowth) {
-    state.frEnergyPriceGrowth = newFREnergyGrowth;
+  [m.SET_FR_ENERGY_GROWTH](state, newFREnergyGrowth) {
+    state[c.FR_ENERGY_PRICE_GROWTH] = newFREnergyGrowth;
   },
-  SET_FR_EOU(state, newFReou) {
-    state.frEOU = newFReou;
+  [m.SET_FR_EOU](state, newFReou) {
+    state[c.FR_EOU] = newFReou;
   },
-  SET_FR_EOD(state, newFReod) {
-    state.frEOD = newFReod;
+  [m.SET_FR_EOD](state, newFReod) {
+    state[c.FR_EOD] = newFReod;
   },
-  SET_FR_GROWTH(state, newFRGrowth) {
-    state.frGrowth = newFRGrowth;
+  [m.SET_FR_GROWTH](state, newFRGrowth) {
+    state[c.FR_GROWTH] = newFRGrowth;
   },
-  SET_FR_PRICE(state, newFRPrice) {
-    state.frPrice = newFRPrice;
+  [m.SET_FR_PRICE](state, newFRPrice) {
+    state[c.TS_FR_PRICE] = newFRPrice;
   },
-  SET_FR_UP_PRICE(state, newFRUpPrice) {
-    state.frUpPrice = newFRUpPrice;
+  [m.SET_FR_UP_PRICE](state, newFRUpPrice) {
+    state[c.TS_FR_UP_PRICE] = newFRUpPrice;
   },
   // Fleet EV
   [m.REPLACE_TECHNOLOGY_SPECS_FLEET_EV](state, payload) {
@@ -827,33 +827,33 @@ const actions = {
   setStateTaxRate({ commit }, newStateTaxRate) {
     commit('SET_STATE_TAX_RATE', newStateTaxRate);
   },
-  // frequency responce
-  setFRCombinedMarket({ commit }, newFRCombinedMarket) {
-    commit('SET_FR_COMBINED_MARKET', newFRCombinedMarket);
+  // frequency regulation
+  [a.SET_FR_COMBINED_MARKET]({ commit }, newFRCombinedMarket) {
+    commit(m.SET_FR_COMBINED_MARKET, newFRCombinedMarket);
   },
-  setFRDownPrice({ commit }, newFRDownPrice) {
-    commit('SET_FR_DOWN_PRICE', newFRDownPrice);
+  [a.SET_FR_DOWN_PRICE]({ commit }, newFRDownPrice) {
+    commit(m.SET_FR_DOWN_PRICE, newFRDownPrice);
   },
-  setFRDuration({ commit }, newFRDuration) {
-    commit('SET_FR_DURATION', newFRDuration);
+  [a.SET_FR_DURATION]({ commit }, newFRDuration) {
+    commit(m.SET_FR_DURATION, newFRDuration);
   },
-  setFREnergyGrowth({ commit }, newFREnergyGrowth) {
-    commit('SET_FR_ENERGY_GROWTH', newFREnergyGrowth);
+  [a.SET_FR_ENERGY_GROWTH]({ commit }, newFREnergyGrowth) {
+    commit(m.SET_FR_ENERGY_GROWTH, newFREnergyGrowth);
   },
-  setFReou({ commit }, newFReou) {
-    commit('SET_FR_EOU', newFReou);
+  [a.SET_FR_EOU]({ commit }, newFReou) {
+    commit(m.SET_FR_EOU, newFReou);
   },
-  setFReod({ commit }, newFReod) {
-    commit('SET_FR_EOD', newFReod);
+  [a.SET_FR_EOD]({ commit }, newFReod) {
+    commit(m.SET_FR_EOD, newFReod);
   },
-  setFRGrowth({ commit }, newFRGrowth) {
-    commit('SET_FR_GROWTH', newFRGrowth);
+  [a.SET_FR_GROWTH]({ commit }, newFRGrowth) {
+    commit(m.SET_FR_GROWTH, newFRGrowth);
   },
-  setFRPrice({ commit }, newFRPrice) {
-    commit('SET_FR_PRICE', newFRPrice);
+  [a.SET_FR_PRICE]({ commit }, newFRPrice) {
+    commit(m.SET_FR_PRICE, newFRPrice);
   },
-  setFRUpPrice({ commit }, newFRUpPrice) {
-    commit('SET_FR_UP_PRICE', newFRUpPrice);
+  [a.SET_FR_UP_PRICE]({ commit }, newFRUpPrice) {
+    commit(m.SET_FR_UP_PRICE, newFRUpPrice);
   },
   // Fleet EV
   replaceTechnologySpecsFleetEV({ commit }, payload) {

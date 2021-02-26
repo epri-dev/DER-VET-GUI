@@ -74,7 +74,7 @@ const objectivesMixin = {
         },
         {
           show: p.objectivesRA,
-          fullName: 'Resourse Adequacy',
+          fullName: 'Resource Adequacy',
           pageName: 'RA',
           pageKey: OBJECTIVES_PAGEKEY,
           path: paths.OBJECTIVES_RA_PATH,

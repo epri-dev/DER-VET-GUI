@@ -58,6 +58,14 @@ export const START_YEAR = 'startYear';
 export const TIMESTEP = 'timestep';
 export const USER_PRICE = 'userPrice';
 
+// Timeseries
+export const TS_FR_PRICE = 'tsFrPrice';
+export const TS_FR_UP_PRICE = 'tsFrUpPrice';
+export const TS_FR_DOWN_PRICE = 'tsFrDownPrice';
+export const TS_FR_FIELDS = [TS_FR_PRICE, TS_FR_UP_PRICE, TS_FR_DOWN_PRICE];
+
+export const TS_ALL = [...TS_FR_FIELDS];
+
 export const makeAllowedValues = lst => _.map(lst, x => ({ value: x, label: x }));
 
 export const makeAllowedValuesWithNull = (lst) => {

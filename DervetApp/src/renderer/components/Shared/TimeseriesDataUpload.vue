@@ -2,12 +2,22 @@
   <div id="timeseries-data-upload">
     <data-upload
       :chart-name="chartName"
+      @click="onRemove"
+      :data-exists="dataExists"
       :data-name="dataName"
-      :data-frequency="{ value: this.timestep, unit: 'minutes' }"
-      :DataModel="TimeSeriesModel"
+      :data-frequency="{
+        value: timestepValue,
+        unit: 'minutes',
+      }"
+      :DataModel="DataModel"
+      :data-year="dataYearValue"
+      :disable-upload="disableUpload"
+      :error-message="errorMessage"
+      :is-invalid="isInvalid"
       :number-of-entries-required="this.numberOfEntriesRequired"
       @uploaded="onFileUpload"
-      :units="units"
+      @input="onChange"
+      :object-name="objectName"
       :uploaded-data="dataTimeSeries"
       :x-axis="timeseriesXAxis"
     />
@@ -15,65 +25,66 @@
 </template>
 
 <script>
-  import { sharedDefaults, sharedValidation } from '@/models/Shared.js';
   import DataUpload from './DataUpload';
 
   export default {
-    data() {
-      return {
-        sharedValidation,
-        useExisting: sharedDefaults.useExistingTimeSeriesData,
-      };
-    },
     components: { DataUpload },
     methods: {
+      onChange(payload) {
+        this.$emit('input', payload);
+      },
       onFileUpload(payload) {
         this.$emit('uploaded', payload);
       },
+      onRemove(payload) {
+        this.$emit('click', payload);
+      },
     },
     computed: {
-      dataExists() {
-        const data = this.dataTimeSeries;
-        if (data === null || data === undefined) {
-          return false;
-        }
-        return data.data !== null || data.data !== undefined;
-      },
-      firstLetterCapitalized() {
-        return this.dataName.charAt(0).toUpperCase() + this.dataName.slice(1);
-      },
       dataYear() {
         return this.$store.state.Project.dataYear;
       },
-      timestep() {
-        return this.$store.state.Project.timestep;
+      dataYearValue() {
+        if (['', null].includes(this.dataYear)) {
+          return 'undefined';
+        } if (!Number.isInteger(this.dataYear)) {
+          return 'invalid';
+        }
+        return String(this.dataYear);
       },
-      isLeapYear() {
-        const conditionOne = (this.dataYear % 4 === 0);
-        const conditionTwo = (this.dataYear % 100 !== 0) || (this.dataYear % 400 === 0);
-        return conditionOne && conditionTwo;
+      disableUpload() {
+        return (this.timeseriesXAxis.length === 0);
       },
       numberOfEntriesRequired() {
-        if (this.timestep === null || this.timestep === undefined) {
+        if (this.disableUpload) {
           return 'TBD';
         }
-        if (this.isLeapYear) {
-          return String((8784 * 60) / this.timestep);
-        }
-        return String((8760 * 60) / this.timestep);
+        return String(this.timeseriesXAxis.length);
       },
       timeseriesXAxis() {
         // the first timestamp should be Jan 1 of dataYear at timestep minutes
         //   to represent the period-ending value.
         return this.$store.getters.getTimeseriesXAxis;
       },
+      timestep() {
+        return this.$store.state.Project.timestep;
+      },
+      timestepValue() {
+        if (['', null].includes(this.timestep)) {
+          return 'undefined';
+        }
+        return this.timestep;
+      },
     },
     props: {
       chartName: String,
+      dataExists: Boolean,
+      DataModel: Function,
       dataName: String,
       dataTimeSeries: Object,
-      TimeSeriesModel: Function,
-      units: String,
+      errorMessage: String,
+      isInvalid: Boolean,
+      objectName: String,
     },
   };
 </script>

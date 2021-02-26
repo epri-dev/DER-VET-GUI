@@ -1,17 +1,28 @@
 <template>
   <div id="data-upload">
     <hr />
-    <div v-if="this.dataExists" class="form-group">
+    <div v-if="this.validDataExists" class="form-group">
       <div class="col-md-12">
         <label for="UseExistingData" class="control-label"><b>{{this.firstLetterCapitalized}}</b> data have been uploaded for this project. Do you want to use these data?</label>
       </div>
-      <div class="col-md-12">
-        <b-form-group>
-          <b-form-radio-group
-            v-model="useExisting"
-            :options="sharedValidation.optionsYN.allowedValues"
-          ></b-form-radio-group>
-        </b-form-group>
+      <div class="row">
+        <div class="col-md-6">
+          <b-form-group>
+            <b-form-radio-group
+              v-model="useExisting"
+              :options="sharedValidation.optionsYN.allowedValues"
+              @input="onChange"
+            ></b-form-radio-group>
+          </b-form-group>
+        </div>
+        <div class="col-md-5">
+          <b-button
+            size="sm"
+            class="btn-xs btn-danger delete-data pull-right"
+            @click="removeData">
+            Remove Data
+          </b-button>
+        </div>
       </div>
     </div>
     <div id="DataFile-Form" v-if="!(useExisting)||!(this.dataExists)">
@@ -46,17 +57,29 @@
           <label class="control-label capitalize">
             {{this.dataName}} data
           </label>
-          <span class="unit-label" v-html="this.units"></span>
+          <span class="unit-label" v-html="this.unit"></span>
         </div>
         <div class="col-md-7">
           <input
             type="file"
             class="form-control"
+            :disabled="disableUpload"
             @change="onFileUpload">
         </div>
       </div>
+      <div class="form-group row">
+        <div class="col-md-1"></div>
+        <div v-if="(importedFilePath !== null) || (importError)"
+          class="error-text-color">
+          <span v-html="importError"></span>
+        </div>
+        <div v-else-if="(importedFilePath === null) && isInvalid"
+          class="error-text-color">
+          <span v-html="errorMessage"></span>
+        </div>
+      </div>
     </div>
-    <div v-if="this.dataExists">
+    <div v-if="showPlot">
       <div class="col-md-10" :id="this.chartName">
       </div>
     </div>
@@ -66,13 +89,13 @@
 <script>
   import Plotly from 'plotly.js';
   import { flatten } from 'lodash';
-  import { isNotNullAndNotUndefined } from '@/util/logic';
   import { parseCsvFromEvent } from '@/util/file';
+  import { isNumeric } from '@/util/logic';
   import { sharedDefaults, sharedValidation } from '@/models/Shared.js';
 
   export default {
-    mounted() {
-      if (this.dataExists) {
+    updated() {
+      if (this.showPlot) {
         this.createChartUploadedDataPlot(this.chartName);
       }
     },
@@ -80,49 +103,126 @@
       return {
         sharedValidation,
         useExisting: sharedDefaults.useExistingTimeSeriesData,
+        importError: undefined,
+        importedFilePath: null,
+        unit: this.uploadedData.unit,
+        columnHeaderName: this.uploadedData.columnHeaderName,
+        ...this.importErrorOnDisabledUpload(),
       };
     },
     computed: {
-      dataExists() {
-        const data = this.uploadedData;
-        if (!isNotNullAndNotUndefined(data)) {
-          // this.updloadedData is empty
-          return false;
-        }
-        // this.uploadedData is object, so check if data is empty
-        return isNotNullAndNotUndefined(data.data);
-      },
       firstLetterCapitalized() {
         return this.dataName.charAt(0).toUpperCase() + this.dataName.slice(1);
       },
-      dataYear() {
-        return this.$store.state.Project.dataYear;
-      },
       stringifyDataFrequency() {
-        return this.dataFrequency.value === 'monthly' ? 'monthly' : 'timestep';
+        return this.dataFrequency.value === 'monthly' ? 'month' : 'timestep';
+      },
+      validDataExists() {
+        return (this.dataExists && [undefined, ''].includes(this.importError));
+      },
+      showPlot() {
+        return (this.validDataExists && this.useExisting);
       },
     },
     props: {
       chartName: String,
+      dataExists: Boolean,
+      DataModel: Function,
       dataName: String,
       dataFrequency: Object,
-      DataModel: Function,
+      dataYear: String,
+      disableUpload: Boolean,
+      errorMessage: String,
+      isInvalid: Boolean,
       numberOfEntriesRequired: String,
-      units: String,
+      objectName: String,
       uploadedData: Object,
       xAxis: Array,
     },
     methods: {
+      arrayDisplayFirstFive(array) {
+        return (array.length <= 5) ? array : [array.slice(0, 5), '...'];
+      },
+      importErrorOnDisabledUpload() {
+        if (this.disableUpload) {
+          return { importError: 'Both <b>Data Year</b> and <b>Timestep</b> must be defined validly in Project Overview' };
+        }
+        return {};
+      },
+      onChange(e) {
+        this.importedFilePath = null;
+        const payload = {
+          button: e,
+          objectName: this.objectName,
+        };
+        this.$emit('input', payload);
+      },
       onFileUpload(e) {
-        const onSuccess = (results) => {
-          this.$emit('uploaded', this.uploadPayload(flatten(results)));
+        const onSuccess = (results, importedFilePath, errors) => {
+          // we must trim the last row off because it's always there as null
+          // TODO: AE: try this on other operating systems to make sure
+          results = results.slice(0, -1);
+          this.importError = errors;
+          this.importedFilePath = importedFilePath;
+          if (importedFilePath !== null && errors === undefined) {
+            this.validateUploadedData(results);
+          }
+          if (this.importError === undefined) {
+            // only emit back when there are no errors
+            //   thus preventing an invalid TS from being saved
+            this.$emit('uploaded', this.uploadPayload(flatten(results)));
+            this.useExisting = true;
+          }
         };
         parseCsvFromEvent(e, onSuccess);
       },
+      removeData() {
+        // emit a payload to:
+        // - reset the stored TS data with an empty TS
+        // - then set the associated errorList
+        // and set variables to not render existing upload
+        this.useExisting = false;
+        this.importError = null;
+        // emit back payload to initiate a reset of the errorlist
+        const payload = {
+          objectName: this.objectName,
+        };
+        this.$emit('click', payload);
+      },
+      validateUploadedData(dataArray) {
+        // this method sets the importError string with up to 3 lines,
+        //   before any field-specific validations
+        // 1. totalRowCount must equal numberOfEntriesRequired
+        const totalRowCount = String(dataArray.length);
+        if (totalRowCount !== this.numberOfEntriesRequired) {
+          this.importError = `<b>Invalid Data</b>: This file has <b>${totalRowCount}</b> entries. It must have ${this.numberOfEntriesRequired}.`;
+        }
+        const columnsPerRow = dataArray.map(row => row.length);
+        // 2. each row must have a single array of size 1
+        const invalidRowsSize = columnsPerRow.reduce((a, val, i) => {
+          if (val !== 1) a.push(i + 1);
+          return a;
+        }, []);
+        const invalidRowsSizeCount = invalidRowsSize.length;
+        if (invalidRowsSizeCount !== 0) {
+          this.importError += `<br><b>${invalidRowsSizeCount} Invalid Rows</b> with > 1 entry: [${this.arrayDisplayFirstFive(invalidRowsSize)}]`;
+        }
+        // 3. each row with a single array size of 1 must have a numeric value
+        const invalidRowsType = columnsPerRow.reduce((a, val, i) => {
+          if (val === 1 && !isNumeric(dataArray[i])) a.push(i + 1);
+          return a;
+        }, []);
+        const invalidRowsTypeCount = invalidRowsType.length;
+        if (invalidRowsTypeCount !== 0) {
+          this.importError += `<br><b>${invalidRowsTypeCount} Invalid Rows</b> with a non-numeric entry: [${this.arrayDisplayFirstFive(invalidRowsType)}]`;
+        }
+        // 4. add field-specific import-errors here as needed
+        // TODO: add these (e.g. solar data must be between 0 and 1)
+      },
       uploadPayload(dataResults) {
         return {
-          dataArray: new this.DataModel(dataResults),
-          dataName: this.dataName,
+          dataArray: new this.DataModel(this.columnHeaderName, dataResults),
+          objectName: this.objectName,
         };
       },
       createChartUploadedDataPlot(chartId) {
@@ -130,10 +230,10 @@
         const uploadedTS = {
           x: this.xAxis,
           y: this.uploadedData.data,
-          unit: this.units,
+          unit: this.unit,
           mode: 'lines',
           name: '', // this.firstLetterCapitalized,
-          hovertemplate: `%{y} ${this.units}`,
+          hovertemplate: `%{y} ${this.unit}`,
         };
         const data = [uploadedTS];
         const layout = {
@@ -143,12 +243,12 @@
             x: 0,
             y: 1.12,
           },
-          height: 500,
+          height: 310,
           modebar: {
             orientation: 'v', // 'h' set how modebar will appear
           },
           title: {
-            text: this.uploadedData.columnHeaderName,
+            text: this.columnHeaderName,
             font: {
               size: 20,
             },
@@ -156,7 +256,7 @@
           },
           yaxis: {
             title: {
-              text: this.units,
+              text: this.unit,
               font: {
                 size: 12,
               },
@@ -193,6 +293,7 @@
             format: 'png', // 'jpeg',
             filename: `${this.dataName.replace(/ /g, '-')}-uploaded-data-plot`,
           },
+          modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'resetScale2d'],
         };
         return Plotly.newPlot(ctx, data, layout, config);
       },

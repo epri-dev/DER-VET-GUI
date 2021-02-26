@@ -104,7 +104,7 @@
         capacityAwards: p.raCapacityAwards,
         capacityAwardsName: 'monthly value of resource adequacy',
         activeTimeSeries: p.raActive,
-        activeName: 'if the resourse adequacy event selection considers the load (1) or not (0) ',
+        activeName: 'if the resource adequacy event selection considers the load (1) or not (0) ',
         metadata,
         ...this.getDataFromProject(),
         WIZARD_COMPONENT_PATH,

@@ -7,8 +7,9 @@
         data-name="solar generation profile"
         units='(kW<sub>AC</sub> / rated kW)'
         @uploaded="receiveTimeseriesData"
-        :data-time-series="generationProfile"
-        key="1"
+        :data-exists="(tsData !== null)"
+        :data-time-series="tsData"
+        :key="1"
         :TimeSeriesModel="PVGenerationTimeSeries"
       />
       <div v-if="(generationProfile === null)">

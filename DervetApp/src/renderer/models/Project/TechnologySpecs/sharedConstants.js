@@ -99,7 +99,7 @@ export const createSharedHardcodedMetadata = derType => ({
     isRequired: true,
     type: String,
     unit: null,
-    description: 'Applies a financial benefit in the last year of the analysis window if the resourse is not beyond its end of life. <b>Sunk Cost</b> means that there is no end of analysis value (salvage value = 0), <b>Linear Salvage Value</b> which will calculate salvage value by multiplying the technology\'s capital cost by (remaining life/total life), or <b>User Defined</b> to specify the exact salvage value of the technology.',
+    description: 'Applies a financial benefit in the last year of the analysis window if the resource is not beyond its end of life. <b>Sunk Cost</b> means that there is no end of analysis value (salvage value = 0), <b>Linear Salvage Value</b> which will calculate salvage value by multiplying the technology\'s capital cost by (remaining life/total life), or <b>User Defined</b> to specify the exact salvage value of the technology.',
     allowedValues: SALVAGE_OPTION_ALLOWED_VALUES,
   }),
   [SALVAGE_VALUE]: new ProjectFieldMetadata({

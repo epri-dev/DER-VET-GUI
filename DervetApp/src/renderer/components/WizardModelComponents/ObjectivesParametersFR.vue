@@ -2,7 +2,7 @@
   <div>
     <h3>Services: Frequency Regulation</h3>
     <hr>
-    <form class="form-horizontal form-buffer">
+    <div class="form-horizontal form-buffer">
 
       <text-input v-model="frGrowth"
                   v-bind:field="metadata.frGrowth"
@@ -42,148 +42,143 @@
       </radio-button-input>
 
       <timeseries-data-upload
-        chart-name="chartUploadedTimeSeries"
-        :data-name="frPriceName"
-        units="$/kW"
+        chart-name="tsFrPricechartUploaded"
+        @click="receiveRemove"
+        :data-exists="tsData('tsFrPrice').data.length !== 0"
+        :DataModel="TimeSeriesBase"
+        :data-name="metadata.tsFrPrice.displayName"
+        :data-time-series="tsData('tsFrPrice')"
+        :errorMessage="getErrorMsgTS('tsFrPrice')"
+        :isInvalid="submitted && tsData('tsFrPrice').data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('tsFrPrice')"
+        object-name="tsFrPrice"
         @uploaded="receiveTimeseriesData"
-        :data-time-series="frPrice"
-        key="1"
         v-if="frCombinedMarket === true"
-        :TimeSeriesModel="FRPriceTimeSeries"
       />
 
       <timeseries-data-upload
-        chart-name="chartUploadedTimeSeries2"
-        :data-name="frUpPriceName"
-        units="$/kW"
+        chart-name="tsFrUpPriceChartUploaded"
+        @click="receiveRemove"
+        :data-exists="tsData('tsFrUpPrice').data.length !== 0"
+        :DataModel="TimeSeriesBase"
+        :data-name="metadata.tsFrUpPrice.displayName"
+        :data-time-series="tsData('tsFrUpPrice')"
+        :errorMessage="getErrorMsgTS('tsFrUpPrice')"
+        :isInvalid="submitted && tsData('tsFrUpPrice').data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('tsFrUpPrice')"
+        object-name="tsFrUpPrice"
         @uploaded="receiveTimeseriesData"
-        :TimeSeriesModel="FRUpPriceTimeSeries"
-        :data-time-series="frUpPrice"
-        key="2"
         v-if="frCombinedMarket === false"
       />
 
       <timeseries-data-upload
-        chart-name="chartUploadedTimeSeries3"
-        :data-name="frDownPriceName"
-        units="$/kW"
+        chart-name="tsFrDownPriceChartUploaded"
+        @click="receiveRemove"
+        :data-exists="tsData('tsFrDownPrice').data.length !== 0"
+        :DataModel="TimeSeriesBase"
+        :data-name="metadata.tsFrDownPrice.displayName"
+        :data-time-series="tsData('tsFrDownPrice')"
+        :errorMessage="getErrorMsgTS('tsFrDownPrice')"
+        :isInvalid="submitted && tsData('tsFrDownPrice').data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('tsFrDownPrice')"
+        object-name="tsFrDownPrice"
         @uploaded="receiveTimeseriesData"
-        :TimeSeriesModel="FRDownPriceTimeSeries"
-        :data-time-series="frDownPrice"
-        key="3"
         v-if="frCombinedMarket === false"
       />
       <hr>
 
-      <save-buttons
-        :continue-link="WIZARD_COMPONENT_PATH"
-        :displayError="submitted && $v.$anyError"
-        :save="validatedSave" />
+      <save-and-save-continue
+        :displayError="submitted && ($v.$anyError || isTSError)"
+        :save="validatedSaveStay"
+        :save-continue="validatedSaveContinue"
+      />
 
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import * as p from '@/models/Project/ProjectMetadata';
-  import * as c from '@/models/Project/constants';
-  import operateOnKeysList from '@/util/object';
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
-  import { isNotNullAndNotUndefined } from '@/util/logic';
-  import FRPriceTimeSeries from '@/models/TimeSeries/FRPriceTimeSeries';
-  import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
-  import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
-  import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
+  import { projectMetadata } from '@/models/Project/ProjectMetadata';
+  import * as c from '@/models/Project/constants';
+  import TimeSeriesBase from '@/models/TimeSeries/TimeSeriesBase';
 
-  const metadata = p.projectMetadata;
-  const validations = metadata.getValidationSchema(c.FR_FIELDS);
+  import { WIZARD_COMPONENT_PATH as DESTINATION_PATH } from '@/router/constants';
+
   const PAGEGROUP = 'components';
   const PAGEKEY = 'objectives';
   const PAGE = 'FR';
+  const FIELDS = c.FR_FIELDS;
+  const TS_FIELDS = c.TS_FR_FIELDS;
+
+  const ALL_FIELDS = [...FIELDS, ...TS_FIELDS];
+  const validations = projectMetadata.getValidationSchema(FIELDS);
+
+  const CONSTANTS = {
+    DESTINATION_PATH,
+    PAGEGROUP,
+    PAGEKEY,
+    PAGE,
+    FIELDS,
+    TS_FIELDS,
+  };
 
   export default {
-    components: { TimeseriesDataUpload },
     mixins: [csvUploadMixin, wizardFormMixin],
     data() {
-      const p = this.$store.state.Project;
       return {
-        frPrice: p.frPrice,
-        frPriceName: 'frequency regulation price',
-        frUpPrice: p.frUpPrice,
-        frUpPriceName: 'frequency regulation up price',
-        frDownPrice: p.frDownPrice,
-        frDownPriceName: 'frequency regulation down price',
-        metadata,
-        ...this.getDataFromProject(),
-        WIZARD_COMPONENT_PATH,
-        FRPriceTimeSeries,
-        FRUpPriceTimeSeries,
-        FRDownPriceTimeSeries,
+        metadata: this.getMetadata(projectMetadata, ALL_FIELDS),
+        ...this.getDataFromProject(ALL_FIELDS),
+        ...this.getTSInputDefaultDataFromProject(TS_FIELDS),
+        ...this.getChildKeys(TS_FIELDS),
+        ...this.getUseExistingDefaults(TS_FIELDS),
+        TimeSeriesBase,
+        CONSTANTS,
       };
     },
     validations: {
       ...validations,
     },
     computed: {
-      errorList() {
-        return this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE];
+      isTSError() {
+        return this.getErrorListTS(false).length !== 0;
       },
-    },
-    beforeMount() {
-      // submitted is false initially; set it to true after the first save.
-      // initially, complete is null; after saving, it is set to either true or false.
-      // we want to show validation errors at any time after the first save, with submitted.
-      if (isNotNullAndNotUndefined(this.errorList)) {
-        this.submitted = true;
-        this.$v.$touch();
-      }
     },
     methods: {
-      getErrorMsg(fieldName) {
-        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
-      },
-      getDataFromProject() {
-        return operateOnKeysList(this.$store.state.Project, c.FR_FIELDS, f => f);
-      },
-      getErrorListPayload() {
+      getErrorListTS(fromStore = true) {
         const errors = [];
-        Object.keys(this.$v).forEach((key) => {
-          if (key.charAt(0) !== '$' && this.$v[key].$invalid) {
-            errors.push(this.getErrorMsg(key));
+        (TS_FIELDS).forEach((tsField) => {
+          // skip non-required tsFields
+          if ((this.frCombinedMarket && tsField !== 'tsFrPrice')
+            || (!this.frCombinedMarket && tsField === 'tsFrPrice')) {
+            return;
+          }
+          const errorMsgTS = `A timeseries of ${this[tsField].columnHeaderName} is required`;
+          if (fromStore) {
+            // get ts from the store
+            if (this.$store.state.Project[tsField].data.length === 0) {
+              errors.push(errorMsgTS);
+            }
+          } else {
+            // get ts from this page
+            const ts = this[tsField];
+            const tsFieldInput = `${tsField}Input`;
+            const tsInput = this[tsFieldInput];
+            const tsFieldUseExisting = `${tsField}UseExisting`;
+            const tsUseExisting = this[tsFieldUseExisting];
+            if (ts.data.length === 0 && (tsInput === null || !tsUseExisting)) {
+              errors.push(errorMsgTS);
+            }
           }
         });
-        return {
-          pageGroup: PAGEGROUP,
-          pageKey: PAGEKEY,
-          page: PAGE,
-          errorList: errors,
-        };
+        return errors;
       },
-      validatedSave() {
-        this.submitted = true;
-        this.$v.$touch();
-        // set errorList
-        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
-        return this.save();
-      },
-      save() {
-        if (this.inputTimeseries[this.frPriceName] !== undefined) {
-          this.$store.dispatch('setFRPrice', this.inputTimeseries);
-        }
-        if (this.inputTimeseries[this.frUpPriceName] !== undefined) {
-          this.$store.dispatch('setFRUpPrice', this.inputTimeseries[this.frUpPriceName]);
-        }
-        if (this.inputTimeseries[this.frDownPriceName] !== undefined) {
-          this.$store.dispatch('setFRDownPrice', this.inputTimeseries[this.frDownPriceName]);
-        }
-        this.$store.dispatch('setFReou', this.frEOU);
-        this.$store.dispatch('setFReod', this.frEOD);
-        this.$store.dispatch('setFRGrowth', this.frGrowth);
-        this.$store.dispatch('setFREnergyGrowth', this.frEnergyPriceGrowth);
-        this.$store.dispatch('setFRCombinedMarket', this.frCombinedMarket);
-        this.$store.dispatch('setFRDuration', this.frDuration);
+      getErrorMsg(fieldName) {
+        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
     },
   };

@@ -38,7 +38,7 @@ const getFileFromEvent = e => e.target.files[0];
 export const wrongFileType = (file, desiredFileType, successCallback) => {
   // return empty results array
   // add error Text (3rd argument)
-  successCallback([], file.path, `Import Error: File type must be: <b>${desiredFileType}</b>`);
+  successCallback([], file.path, `<b>Import Error</b>: File type must be: <b>${desiredFileType}</b>`);
 };
 
 export const parseCsvFromFile = (file, successCallback) => {
@@ -53,13 +53,17 @@ export const parseCsvFromEvent = (e, successCallback) => {
   const FILE_TYPE_CSV = 'text/csv';
   const FILE_TYPE_XCEL = 'application/vnd.ms-excel';
   const file = getFileFromEvent(e);
-  if (file.type === FILE_TYPE_CSV || file.type === FILE_TYPE_XCEL) {
-    parseCsvFromFile(file, successCallback);
+  if (file) {
+    if (file.type === FILE_TYPE_CSV || file.type === FILE_TYPE_XCEL) {
+      parseCsvFromFile(file, successCallback);
+    } else {
+      wrongFileType(file, FILE_TYPE_CSV, successCallback);
+    }
+    // TODO: AE: also check file.size and have an upper limit to avoid
+    //   import attempts for huge files
   } else {
-    wrongFileType(file, FILE_TYPE_CSV, successCallback);
+    successCallback([], null, '');
   }
-  // TODO: also check file.size and have an upper limit to avoid
-  //   import attempts for huge files- AE
 };
 
 // TODO add test
