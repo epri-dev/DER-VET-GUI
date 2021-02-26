@@ -28,6 +28,25 @@ export const billReductionCompleteness = {
   },
 };
 
+export const billReductionErrorList = {
+  overview: {
+    start: [],
+    objectives: [],
+    technologySpecs: [],
+  },
+  components: {
+    objectives: {
+      siteInformation: [],
+      resilience: [],
+    },
+    financial: {
+      inputs: [],
+      retailTariff: [],
+      externalIncentives: [],
+    },
+  },
+};
+
 // TODO turn this into a function
 export const billReductionProject = {
   analysisHorizon: 20,

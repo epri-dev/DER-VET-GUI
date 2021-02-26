@@ -4,21 +4,21 @@ import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
 
 import { pvGen, criticalLoad, siteLoad } from '@/assets/cases/reliability/csvs';
 
-export const reliabilityCompleteness = {
+export const reliabilityErrorList = {
   overview: {
-    start: true,
-    objectives: true,
-    technologySpecs: true,
+    start: [],
+    objectives: [],
+    technologySpecs: [],
   },
   components: {
     objectives: {
-      siteInformation: true,
-      resilience: true,
+      siteInformation: [],
+      resilience: [],
     },
     financial: {
-      inputs: true,
-      retailTariff: true,
-      externalIncentives: true,
+      inputs: [],
+      retailTariff: [],
+      externalIncentives: [],
     },
   },
 };

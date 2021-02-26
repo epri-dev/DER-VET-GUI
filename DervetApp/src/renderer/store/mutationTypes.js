@@ -4,6 +4,11 @@
 export const APPLICATION = 'Application';
 export const SET_COMPLETENESS = 'SET_COMPLETENESS';
 export const SET_ERROR_LIST = 'SET_ERROR_LIST';
+export const SET_RUN_IN_PROGRESS = 'SET_RUN_IN_PROGRESS';
+export const SET_RUN_NOT_IN_PROGRESS = 'SET_RUN_NOT_IN_PROGRESS';
+export const SET_RESULT_SUCCESS = 'SET_RESULT_SUCCESS';
+export const SET_RESULT_ERROR = 'SET_RESULT_ERROR';
+export const SET_NEW_ERROR_LIST = 'SET_NEW_ERROR_LIST';
 
 // Project mutations
 // index page
@@ -29,6 +34,7 @@ export const SET_DR_NUMBER_EVENTS = 'SET_DR_NUMBER_EVENTS';
 export const SET_DR_INCLUDE_WEEKENDS = 'SET_DR_INCLUDE_WEEKENDS';
 export const SET_DR_START_HOUR = 'SET_DR_START_HOUR';
 export const SET_DR_END_HOUR = 'SET_DR_END_HOUR';
+export const SET_DR_END_MODE = 'SET_DR_END_MODE';
 export const SET_DR_EVENT_LENGTH = 'SET_DR_EVENT_LENGTH';
 export const SET_DR_PROGRAM_TYPE = 'SET_DR_PROGRAM_TYPE';
 export const SET_DR_APPLIED_MONTHS = 'SET_DR_APPLIED_MONTHS';

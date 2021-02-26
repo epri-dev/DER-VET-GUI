@@ -73,7 +73,7 @@
           :errorMessage="getErrorMsg('loc')">
         </drop-down-input>
 
-        <div v-if="loc === 'AC'">
+        <div v-if="(loc === 'AC') && essExists">
             <radio-button-input
               v-model="allowGridCharge"
               v-bind:field="metadata.allowGridCharge"
@@ -273,7 +273,7 @@
         allowGridCharge: {
           ...validations.allowGridCharge,
           required: requiredIf(function isAllowGridChargeRequired() {
-            return (this.loc === 'AC');
+            return (this.loc === 'AC') && this.essExists;
           }),
         },
         decomissioningCost: {
@@ -386,6 +386,9 @@
     computed: {
       reliabilitySelected() {
         return this.$store.state.Project.objectivesResilience;
+      },
+      essExists() {
+        return this.$store.state.Project.technologySpecsBattery.length > 0;
       },
     },
     methods: {

@@ -37,13 +37,22 @@
                   :errorMessage="getErrorMsg('drStartHour')">
       </text-input>
 
+      <radio-button-input
+        v-model="drEndMode"
+        v-bind:field="metadata.drEndMode"
+        :isInvalid="submitted && $v.drEndMode.$error"
+        :errorMessage="getErrorMsg('drEndMode')">
+      </radio-button-input>
+
       <text-input v-model="drEndHour"
+                  v-if="!drEndMode"
                   v-bind:field="metadata.drEndHour"
                   :isInvalid="submitted && $v.drEndHour.$error"
                   :errorMessage="getErrorMsg('drEndHour')">
       </text-input>
 
       <text-input v-model="drEventLength"
+                  v-if="drEndMode"
                   v-bind:field="metadata.drEventLength"
                   :isInvalid="submitted && $v.drEventLength.$error"
                   :errorMessage="getErrorMsg('drEventLength')">
@@ -101,6 +110,7 @@
 </template>
 
 <script>
+  import { requiredIf } from 'vuelidate/lib/validators';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import * as p from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
@@ -124,6 +134,7 @@
     SET_DR_CAPACITY_AWARDS,
     SET_DR_ENERGY_AWARDS,
     SET_DR_GROWTH,
+    SET_DR_END_MODE,
   } from '@/store/actionTypes';
   import MonthlyDataUpload from '@/components/Shared/MonthlyDataUpload';
   import { isNotNullAndNotUndefined } from '@/util/logic';
@@ -144,6 +155,7 @@
       const p = this.$store.state.Project;
       return {
         monthsAppliedLabels: p.drMonthsAppliedLabels,
+        monthsApplied: p.drMonthsApplied,
         capacityReservation: p.drCapacityReservation,
         capacityReservationName: 'power that will be commited to the demand response program',
         capacityAwards: p.drCapacityAwards,
@@ -162,13 +174,29 @@
     },
     validations: {
       ...validations,
+      drEndHour: {
+        ...validations.drEndHour,
+        required: requiredIf(function isRequired() {
+          return (!this.drEndMode);
+        }),
+      },
+      drEventLength: {
+        ...validations.drEventLength,
+        required: requiredIf(function isRequired() {
+          return (this.drEndMode);
+        }),
+      },
     },
     computed: {
       errorList() {
         return this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE];
       },
       monthsAppliedConvertedIntoOnesAndZeros() {
-        return this.monthsList.map(month => (this.monthsAppliedLabels.includes(month) ? 1 : 0));
+        if (this.monthsAppliedLabels.length > 0) {
+          const mon = this.monthsList.map(mon => (this.monthsAppliedLabels.includes(mon) ? 1 : 0));
+          return new DRMonthsMonthly(mon);
+        }
+        return null;
       },
     },
     beforeMount() {
@@ -229,6 +257,7 @@
         this.$store.dispatch(SET_DR_INCLUDE_WEEKENDS, this[c.DR_INCLUDE_WEEKENDS]);
         this.$store.dispatch(SET_DR_START_HOUR, this[c.DR_START_HOUR]);
         this.$store.dispatch(SET_DR_END_HOUR, this[c.DR_END_HOUR]);
+        this.$store.dispatch(SET_DR_END_MODE, this[c.DR_END_MODE]);
         this.$store.dispatch(SET_DR_EVENT_LENGTH, this[c.DR_EVENT_LENGTH]);
         this.$store.dispatch(SET_DR_PROGRAM_TYPE, this[c.DR_PROGRAM_TYPE]);
         this.$store.dispatch(SET_DR_GROWTH, this[c.DR_GROWTH]);

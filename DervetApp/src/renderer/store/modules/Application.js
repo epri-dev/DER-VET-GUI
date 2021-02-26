@@ -3,10 +3,19 @@ import { makeDervetInputs } from '@/models/dto/ProjectDto';
 import * as m from '@/store/mutationTypes';
 import * as a from '@/store/actionTypes';
 
-import { billReductionCompleteness } from '@/assets/cases/billReduction/project';
+import { billReductionErrorList, billReductionCompleteness } from '@/assets/cases/billReduction/project';
+import { reliabilityErrorList } from '@/assets/cases/reliability/project';
+import { dummyMarketServiceErrorList } from '@/assets/cases/dummyMarketServiceHourly/project';
+import { ERCOTMarketServiceErrorList } from '@/assets/cases/ERCOTMarketService/project';
 
 const NULL = null;
 export const APPLICATION = 'application';
+const USECASE_ERROR_LIST_DB = { // its a sad excuse for a database, but serves as one.
+  billReductionProject: billReductionErrorList,
+  reliabilityProject: reliabilityErrorList,
+  dummyMarketServiceHourly: dummyMarketServiceErrorList,
+  ERCOTMarketService: ERCOTMarketServiceErrorList,
+};
 
 const getDefaultApplicationState = () => ({
   errorMessage: NULL,
@@ -17,26 +26,15 @@ const getDefaultApplicationState = () => ({
       technologySpecs: NULL,
     },
     components: {
-      objectives: {
-        siteInformation: NULL,
-        deferral: NULL,
-        FR: NULL,
-        NSR: NULL,
-        resilience: NULL,
-        SR: NULL,
-        userDefined: NULL,
-        DA: NULL,
-      },
+      objectives: {},
       financial: {
-        inputs: NULL,
-        retailTariff: NULL,
-        // externalIncentives: NULL,
+        externalIncentives: [],
       },
     },
   },
   id: NULL,
   isError: NULL,
-  pageCompleteness: {
+  pageCompleteness: { // TODO remove use HN
     overview: {
       start: NULL,
       objectives: NULL,
@@ -75,15 +73,17 @@ const mutations = {
   SET_ID(state, newId) {
     state.id = newId;
   },
-  SET_RUN_IN_PROGRESS(state) {
+  [m.SET_RUN_IN_PROGRESS](state) {
     state.runInProgress = true;
   },
-  SET_RESULT_SUCCESS(state) {
-    state.resultsLoaded = true;
+  [m.SET_RUN_NOT_IN_PROGRESS](state) {
     state.runInProgress = false;
+  },
+  [m.SET_RESULT_SUCCESS](state) {
+    state.resultsLoaded = true;
     state.isError = false;
   },
-  SET_RESULT_ERROR(state) {
+  [m.SET_RESULT_ERROR](state) {
     state.isError = true;
     state.runInProgress = false;
   },
@@ -120,6 +120,9 @@ const mutations = {
   SET_NEW_COMPLETENESS(state, completeness) {
     state.pageCompleteness = completeness;
   },
+  [m.SET_NEW_ERROR_LIST](state, errorList) {
+    state.errorList = errorList;
+  },
   SET_NEW_APPLICATION_STATE(state, application) {
     Object.assign(state, application);
   },
@@ -144,22 +147,29 @@ const actions = {
   setQuickStartCompleteness({ commit }) {
     commit('SET_NEW_COMPLETENESS', billReductionCompleteness);
   },
-  receiveError({ commit }) {
-    // TODO: handle parsing error
-    commit('SET_RESULT_ERROR');
+  [a.SET_QUICK_START_ERROR_LIST]({ commit }, caseName) {
+    const selectedUseCase = USECASE_ERROR_LIST_DB[caseName];
+    commit(m.SET_NEW_ERROR_LIST, selectedUseCase);
   },
-  resultRecieved: {
+  [a.RECEIVE_ERROR]({ commit }) {
+    commit(m.SET_RESULT_ERROR);
+    // TODO: handle parsing error here
+    commit(m.SET_RUN_NOT_IN_PROGRESS);
+  },
+  [a.RESULTS_RECEIVED]: {
     root: true,
     handler({ commit }) {
-      commit('SET_RESULT_SUCCESS');
+      commit(m.SET_RESULT_SUCCESS);
+      commit(m.SET_RUN_NOT_IN_PROGRESS);
     },
   },
-  resetApplicationToDefault({ commit }, newId) {
+  [a.RESET_APPLICATION_TO_DEFAULT]({ commit }, newId) {
     commit('RESET_APPLICATION_TO_DEFAULT');
     commit('SET_ID', newId);
   },
   runDervet({ commit }, project) {
-    commit('SET_RUN_IN_PROGRESS');
+    commit(m.SET_RUN_IN_PROGRESS);
+    // TODO add try catch here HN
     const dervetInputs = makeDervetInputs(project);
     IpcService.sendProject(dervetInputs);
   },

@@ -55,7 +55,7 @@
         @uploaded="receiveTimeseriesData"
         :data-time-series="activeTimeSeries"
         key="2"
-        :v-if="raEventSelectionMethod === 'Peak by Month with Active Hours'"
+        v-if="raEventSelectionMethod === 'Peak by Month with Active Hours'"
       />
 
       <save-buttons

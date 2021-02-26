@@ -53,6 +53,7 @@ const TIMESERIES_FIELDS = [
   'lfUpPrice',
   'lfDownPrice',
   'nsrPrice',
+  'raActive',
   'siteLoad',
   'srPrice',
   'systemLoad',
@@ -66,7 +67,7 @@ const TIMESERIES_FIELDS = [
 const MONTHLY_FIELDS = [
   'backupPrice',
   'backupEnergyReservation',
-  // 'drMonthsApplied',
+  'drMonthsApplied',
   'drCapacityReservation',
   'drCapacityAwards',
   'drEnergyAwards',
@@ -125,10 +126,9 @@ export const checkNotNullOrEmpty = technologySpecs => (
   isNotNullAndNotUndefined(technologySpecs) && technologySpecs.length > 0
 );
 
-export const mapListToObjectList = (lst, fieldName) => {
-  console.log(fieldName);
-  return lst.map(d => ({ [fieldName]: d }));
-};
+export const mapListToObjectList = (lst, fieldName) => (
+  lst.map(d => ({ [fieldName]: d }))
+);
 
 export const makeTechnologyParameters = (technologySpecs, makeSingleTechFn) => {
   const includeTech = checkNotNullOrEmpty(technologySpecs);
@@ -583,7 +583,7 @@ export const makeReliabilityParameters = (project, inputsDirectory) => {
       'n-2': makeBaseKey(ZERO, BOOL), // hardcoded
       post_facto_initial_soc: makeBaseKey(100, FLOAT), // TODO new, hardcoded for now
       post_facto_only: makeBaseKey(convertToOneZero(project.reliabilityPostOptimizationOnly), BOOL),
-      target: makeBaseKey(project.reliabilityTarget, FLOAT),
+      target: makeBaseKey(setUndefinedNullToOne(project.reliabilityTarget), FLOAT),
       load_shed_percentage: makeBaseKey(convertToOneZero(false), BOOL), // hardcoded
       load_shed_perc_filename: makeBaseKey(makeCsvFilePath(inputsDirectory, LOAD_SHEAD), STRING),
     };
@@ -774,13 +774,9 @@ export const makeTariffCsv = project => billingPeriodsToCsv(project.retailTariff
 export const makeYearlyCsv = project => externalIncentivesToCsv(project.externalIncentives);
 
 export const makeMonthlyCsv = (project) => {
-  // initialize variables with monthly index
-  const data = _.map(_.range(1, 13), i => ({
-    year: project.dataYear,
-    month: i,
-  })); // List of lists of objects with format { 'field key': value }
-  const fields = ['year', 'month']; // List of field keys
-  const headers = ['Year', 'Month']; // TODO LL string constants - List of field headers
+  const data = []; // List of lists of objects with format { 'field key': value }
+  const fields = []; // List of field keys
+  const headers = []; // List of field headers
 
   function addSingleSeries(d, f, h) {
     data.push(d);
@@ -788,21 +784,28 @@ export const makeMonthlyCsv = (project) => {
     headers.push(h);
   }
 
+  // add month column
+  const monthObjectList = mapListToObjectList(_.range(1, 13), 'month');
+  addSingleSeries(monthObjectList, 'month', 'Month');
+  // add year column
+  const year = [...Array(12)].fill(project.dataYear);
+  const yearObjectList = mapListToObjectList(year, 'year');
+  addSingleSeries(yearObjectList, 'year', 'Year');
+
   // Add all available monthly to CSV
   MONTHLY_FIELDS.forEach((ts) => {
-    console.log(ts);
     const tsClass = project[ts];
     if (tsClass) {
       const dataObjectList = mapListToObjectList(tsClass.data, ts);
       addSingleSeries(dataObjectList, ts, tsClass.columnHeaderName);
     }
   });
-
-  return objectToCsv(data, fields, headers);
+  const unzippedData = _.unzipWith(data, Object.assign);
+  return objectToCsv(unzippedData, fields, headers);
 };
 
 export const makeLoadShedCsv = () => {
-  // TODO implement this
+  // placeholder for Load shed data - user cant seslect/define this mode
   const data = _.map(_.range(1, 13), i => ({
     length: i,
     loadShed: i,
@@ -812,6 +815,7 @@ export const makeLoadShedCsv = () => {
   return objectToCsv(data, fields, headers);
 };
 
+// TODO move timeseries handling into a class HN
 export const makeDatetimeIndex = (dataYear, minuteTimestep, reformat = true) => {
   if (['', null].includes(minuteTimestep) || !Number.isInteger(dataYear)) {
     return [];
@@ -832,37 +836,14 @@ export const makeEmptyCsvDataWithDatetimeIndex = (project) => {
   return datetimeIndex.map(d => ({ [TIMESERIES_DATETIME_INDEX]: d }));
 };
 
-export const addPvTimeSeries = (pv) => {
-  const tsClass = pv.generationProfile;
-  const pvData = mapListToObjectList(tsClass.data, 'pv');
-  const pvField = 'pv';
-  const pvHeader = `${tsClass.columnHeaderName}/${pv.id}`;
-  return { pvData, pvField, pvHeader };
+export const addTechnologyTimeSeries = (tsClass, technology) => {
+  console.log(JSON.stringify(tsClass, null, 1));
+  const field = technology.tag;
+  const data = mapListToObjectList(tsClass.data, field);
+  const header = `${tsClass.columnHeaderName}/${technology.id}`;
+  return { data, field, header };
 };
 
-/* TODO: new timeseries fields
-  - RA Active (y/n)  TODO HN forgot about this input
-  - LF Reg Up Max (kW)
-  - LF Reg Up Min (kW)
-  - LF Reg Down Max (kW)
-  - LF Reg Down Min (kW)
-  - Battery: Charge Min (kW)/1
-  - Battery: Charge Max (kW)/1
-  - Battery: Energy Max (kWh)/1
-  - Battery: Energy Min (kWh)/1
-  - Battery: Discharge Min (kW)/1
-  - Battery: Discharge Max (kW)/1
-  - FR Reg Up Max (kW)
-  - FR Reg Up Min (kW)
-  - FR Reg Down Max (kW)
-  - FR Reg Down Min (kW)
-  - SR Max (kW)
-  - SR Min (kW)
-  - NSR Max (kW)
-  - NSR Min (kW)
-
-  Also turn this whole function into its own class/module
-*/
 export const makeTimeSeriesCsv = (project) => {
   const data = []; // List of lists of objects with format { 'field key': value }
   const fields = []; // List of field keys
@@ -883,20 +864,30 @@ export const makeTimeSeriesCsv = (project) => {
     const tsClass = project[ts];
     if (tsClass) {
       const dataObjectList = mapListToObjectList(tsClass.data, ts);
-      console.log(JSON.stringify(dataObjectList, null, 1));
       addSingleSeries(dataObjectList, ts, tsClass.columnHeaderName);
     }
   });
 
   // Add PV timeseries
   _.forEach(project.technologySpecsSolarPV, (pv) => {
-    const { pvData, pvField, pvHeader } = addPvTimeSeries(pv);
-    addSingleSeries(pvData, pvField, pvHeader);
+    const { data, field, header } = addTechnologyTimeSeries(pv.generationProfile, pv);
+    addSingleSeries(data, field, header);
   });
 
-  // TODO HN Add fleet EV timeseries
+  // Add fleet EV timeseries
+  console.log('fleetEV');
+  _.forEach(project.technologySpecsFleetEV, (ev) => {
+    console.log(JSON.stringify(ev, null, 1));
+    const { data, field, header } = addTechnologyTimeSeries(ev.baselineLoad, ev);
+    addSingleSeries(data, field, header);
+  });
 
-  // TODO HN Add controllable load timeseries
+  // Add controllable load timeseries
+  console.log('controllableLoad');
+  _.forEach(project.technologySpecsControllableLoad, (load) => {
+    const { data, field, header } = addTechnologyTimeSeries(load.load, load);
+    addSingleSeries(data, field, header);
+  });
 
   // Convert to CSV
   const unzippedData = _.unzipWith(data, Object.assign);

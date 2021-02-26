@@ -4,6 +4,31 @@
     <h3>Services</h3>
     <hr />
     <div class="form-horizontal form-buffer">
+      <radio-button-input v-model="sizingEquipment"
+                          v-bind:field="metadata.sizingEquipment"
+                          :isInvalid="submitted && $v.sizingEquipment.$error"
+                          :errorMessage="getErrorMsg('sizingEquipment')">
+      </radio-button-input>
+      <div v-if="(sizingEquipment === false)">
+        <fieldset class="section-group">
+          <legend>Optimization Horizon</legend>
+          <div class="form-group">
+            <drop-down-input v-model="optimizationHorizon"
+                             v-bind:field="metadata.optimizationHorizon"
+                             :isInvalid="submitted && $v.optimizationHorizon.$error"
+                             :errorMessage="getErrorMsg('optimizationHorizon')">
+            </drop-down-input>
+
+            <div v-if="optimizationHorizon === 'Hours'">
+              <text-input v-model="optimizationHorizonNum"
+                          v-bind:field="metadata.optimizationHorizonNum"
+                          :isInvalid="submitted && $v.optimizationHorizonNum.$error"
+                          :errorMessage="getErrorMsg('optimizationHorizonNum')">
+              </text-input>
+            </div>
+          </div>
+        </fieldset>
+      </div>
 
       <fieldset class="section-group">
         <legend>Where do energy prices come from?</legend>
@@ -46,9 +71,11 @@
             </div>
           </div>
           <br>
-          <div class="row form-group">
+          <div class="row form-group" v-if="(sizingEquipment === false)">
             <div class="col-md-4 checkboxes">
-              <b-form-checkbox size='lg' v-model="listOfActiveServices" value="DR"><b>Demand Response Program</b></b-form-checkbox>
+              <b-form-checkbox size='lg' v-model="listOfActiveServices" value="DR">
+                <b>Demand Response Program</b>
+              </b-form-checkbox>
             </div>
             <div class="col-md-7">
               <p class="tool-tip">Will the assests be mindful of their energy consumption during certain hours of the year?</p>
@@ -60,6 +87,9 @@
       <div class="buffer-top-lg">
         <fieldset class="section-group">
           <legend>Wholesale Services</legend>
+          <div class="col-md-12 tool-tip" v-if="sizingEquipment">
+            These serivces should only be chosen if each DER will have a size maximum, otherwise a solution will likely not be found.
+          </div>
           <div class="row form-group">
             <div class="col-md-6 checkboxes">
               <b-form-checkbox size='lg' v-model="listOfActiveServices" value="SR"><b>Spinning Reserves</b></b-form-checkbox>
@@ -87,7 +117,10 @@
             <div class="col-md-6 checkboxes">
               <b-form-checkbox size='lg' v-model="listOfActiveServices" value="Deferral"><b>Deferral</b></b-form-checkbox>
             </div>
-            <div class="col-md-6 checkboxes">
+            <div class="col-md-6 tool-tip" v-if="sizingEquipment">
+              This serivce should only be chosen with storage. Sizing a mix of DERs for this service is in development.
+            </div>
+            <div class="col-md-6 checkboxes" v-if="(sizingEquipment === false)">
               <b-form-checkbox size='lg' v-model="listOfActiveServices" value="RA"><b>Resource Adequacy</b></b-form-checkbox>
             </div>
           </div>
@@ -106,33 +139,7 @@
             </div>
           </div>
         </fieldset>
-      </div>
-      <hr />
-      <radio-button-input v-model="sizingEquipment"
-                          v-bind:field="metadata.sizingEquipment"
-                          :isInvalid="submitted && $v.sizingEquipment.$error"
-                          :errorMessage="getErrorMsg('sizingEquipment')">
-      </radio-button-input>
-      <div v-if="(sizingEquipment === false)">
-        <fieldset class="section-group">
-          <legend>Optimization Horizon</legend>
-          <div class="form-group">
-            <drop-down-input v-model="optimizationHorizon"
-                             v-bind:field="metadata.optimizationHorizon"
-                             :isInvalid="submitted && $v.optimizationHorizon.$error"
-                             :errorMessage="getErrorMsg('optimizationHorizon')">
-            </drop-down-input>
-
-            <div v-if="optimizationHorizon === 'Hours'">
-              <text-input v-model="optimizationHorizonNum"
-                          v-bind:field="metadata.optimizationHorizonNum"
-                          :isInvalid="submitted && $v.optimizationHorizonNum.$error"
-                          :errorMessage="getErrorMsg('optimizationHorizonNum')">
-              </text-input>
-            </div>
-          </div>
-        </fieldset>
-      </div>
+      </div>      
     </div>
     <hr />
     <save-buttons
@@ -145,6 +152,7 @@
 </template>
 
 <script>
+  import _ from 'lodash';
   import { requiredIf } from 'vuelidate/lib/validators';
   import * as p from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
@@ -256,6 +264,11 @@
         return this.save();
       },
       save() {
+        // if sizing remove services that were hidden: RA and DR
+        if (this.sizingEquipment) {
+          this.listOfActiveServices = _.remove(this.listOfActiveServices, x => x !== 'RA');
+          this.listOfActiveServices = _.remove(this.listOfActiveServices, x => x !== 'DR');
+        }
         this.$store.dispatch(CHOOSE_ENERGY_STRUCTURE, this.energyPriceSourceWholesale);
         this.$store.dispatch(SELECT_OTHER_SERVICES, this.listOfActiveServices);
         this.$store.dispatch(SET_OPTIMIZATION_HORIZON, this.optimizationHorizon);

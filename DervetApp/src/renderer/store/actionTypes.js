@@ -4,6 +4,10 @@
 export const APPLICATION = 'Application';
 export const SET_COMPLETENESS = 'setCompleteness';
 export const SET_ERROR_LIST = 'setErrorList';
+export const RECEIVE_ERROR = 'receiveError';
+export const RESULTS_RECEIVED = 'resultRecieved';
+export const SET_QUICK_START_ERROR_LIST = 'setQuickStartErrorList';
+export const RESET_APPLICATION_TO_DEFAULT = 'resetApplicationToDefault';
 
 // Project actions
 // index page
@@ -29,6 +33,7 @@ export const SET_DR_NUMBER_EVENTS = 'setDRNumberEvents';
 export const SET_DR_INCLUDE_WEEKENDS = 'setDRIncludeWeekends';
 export const SET_DR_START_HOUR = 'setDRStartHour';
 export const SET_DR_END_HOUR = 'setDREndHour';
+export const SET_DR_END_MODE = 'setDREndMode';
 export const SET_DR_EVENT_LENGTH = 'setDREventLength';
 export const SET_DR_PROGRAM_TYPE = 'setDRProgramType';
 export const SET_DR_APPLIED_MONTHS = 'setDRAppliedMonths';

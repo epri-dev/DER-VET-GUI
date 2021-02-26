@@ -37,7 +37,7 @@ export default class TechnologySpecsFleetEVMetadata {
       complete: null,
       errorList: [],
       id: uuidv4(),
-      path: TECH_SPECS_FLEET_EV_PATH, // TODO remove
+      path: TECH_SPECS_FLEET_EV_PATH, // TODO remove - mixin makes this unnessary
       tag: ELECTRIC_VEHICLE2,
       technologyType: 'Electric Vehicle',
       ...this.operateOnDynamicFields(f => f.defaultValue),
@@ -51,7 +51,6 @@ export default class TechnologySpecsFleetEVMetadata {
   // to be removed in favor of getMetadataFromSchema
   static getHardcodedMetadata() {
     return new TechnologySpecsFleetEVMetadata({
-      // baselineLoad: null,
       capitalCost: new ProjectFieldMetadata({
         displayName: 'Capital Cost',
         isRequired: true,

@@ -7,21 +7,22 @@ import {
 
 import { daPrice, marketPrice } from '@/assets/cases/ERCOTMarketService/csvs';
 
-export const billReductionCompleteness = {
+export const ERCOTMarketServiceErrorList = {
   overview: {
-    start: true,
-    objectives: true,
-    technologySpecs: true,
+    start: [],
+    objectives: [],
+    technologySpecs: [],
   },
   components: {
     objectives: {
-      siteInformation: true,
-      resilience: true,
+      siteInformation: [],
+      DA: [],
+      SR: [],
     },
     financial: {
-      inputs: true,
-      retailTariff: true,
-      externalIncentives: true,
+      inputs: [],
+      retailTariff: [],
+      externalIncentives: [],
     },
   },
 };

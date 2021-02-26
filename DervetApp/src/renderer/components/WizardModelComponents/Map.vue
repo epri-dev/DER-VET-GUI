@@ -33,22 +33,32 @@
       <div class="col-md-4 buffer-bottom" v-for="financialItem in financial"  v-if="financialItem.show">
         <b-button block size="lg"
                   :to="financialItem.path"
-                  v-bind:class="{ 'incomplete-btn': isComplete(financialItem.pageKey, financialItem.pageName) }">
+                  v-bind:class="{ 'incomplete-btn': !financialItem.isComplete }">
           {{ financialItem.fullName }}
         </b-button>
       </div>
     </div>
 
+    <nav-button :continue-link="SUMMARY_PATH" continue-text="Done defining comonents" :save="this.save" />
+
   </div>
 </template>
 
 <script>
+  import { SUMMARY_PATH } from '@/router/constants';
+  import NavButton from '@/components/Shared/NavButton';
   import technologySpecsMixin from '@/mixins/technologySpecsMixin';
   import objectivesMixin from '@/mixins/objectivesMixin';
   import financeMixin from '@/mixins/financeMixin';
 
   export default {
+    components: { NavButton },
     mixins: [technologySpecsMixin, objectivesMixin, financeMixin],
+    data() {
+      return {
+        SUMMARY_PATH,
+      };
+    },
     methods: {
       save() {
       },
