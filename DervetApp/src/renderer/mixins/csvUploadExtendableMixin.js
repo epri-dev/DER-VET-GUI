@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { cloneDeep, flatten, startCase } from 'lodash';
 import operateOnKeysList from '@/util/object';
-import { isNotNullAndNotUndefined } from '@/util/logic';
+import { isNotNullAndNotUndefined, isNullOrUndefined } from '@/util/logic';
 import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
 
 const csvUploadMixin = {
@@ -23,7 +23,7 @@ const csvUploadMixin = {
       //   - do we even need this?
       const errors = this.$store.state.Application
         .errorList[this.CONSTANTS.PAGEGROUP][this.CONSTANTS.PAGEKEY][this.CONSTANTS.PAGE];
-      return errors === null ? null : errors.length === 0;
+      return isNullOrUndefined(errors) ? null : errors.length === 0;
     },
   },
   methods: {
