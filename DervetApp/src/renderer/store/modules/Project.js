@@ -428,8 +428,8 @@ const mutations = {
     state.objectivesRA = (listOfServices.indexOf('RA') > -1);
   },
   // resource adequacy
-  [m.SET_RA_CAPACITY](state, newValue) {
-    state[c.MTS_RA_CAPACITY] = newValue;
+  [m.SET_RA_CAPACITY_PRICE](state, newValue) {
+    state[c.MTS_RA_CAPACITY_PRICE] = newValue;
   },
   [m.SET_RA_ACTIVE](state, newValue) {
     state[c.TS_RA_ACTIVE] = newValue;
@@ -961,8 +961,8 @@ const actions = {
   [a.SET_RA_ACTIVE]({ commit }, newRAActive) {
     commit(m.SET_RA_ACTIVE, newRAActive);
   },
-  [a.SET_RA_CAPACITY]({ commit }, newRACapacityPrice) {
-    commit(m.SET_RA_CAPACITY, newRACapacityPrice);
+  [a.SET_RA_CAPACITY_PRICE]({ commit }, newRACapacityPrice) {
+    commit(m.SET_RA_CAPACITY_PRICE, newRACapacityPrice);
   },
   [a.SET_RA_DISPATCH_MODE]({ commit }, newRADispatchMode) {
     commit(m.SET_RA_DISPATCH_MODE, newRADispatchMode);

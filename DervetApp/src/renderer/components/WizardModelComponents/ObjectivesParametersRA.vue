@@ -37,17 +37,17 @@
       </text-input>
 
       <monthly-data-upload
-        chart-name="mtsRaCapacityAwardsChartUploaded"
+        chart-name="mtsRaCapacityPriceChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('mtsRaCapacityAwards').data.length !== 0"
+        :data-exists="tsData('mtsRaCapacityPrice').data.length !== 0"
         :DataModel="MonthlyBase"
-        :data-name="metadata.mtsRaCapacityAwards.displayName"
-        :monthly-data="tsData('mtsRaCapacityAwards')"
-        :errorMessage="getErrorMsgTS('mtsRaCapacityAwards')"
-        :isInvalid="submitted && tsData('mtsRaCapacityAwards').data.length === 0"
+        :data-name="metadata.mtsRaCapacityPrice.displayName"
+        :monthly-data="tsData('mtsRaCapacityPrice')"
+        :errorMessage="getErrorMsgTS('mtsRaCapacityPrice')"
+        :isInvalid="submitted && tsData('mtsRaCapacityPrice').data.length === 0"
         @input="receiveUseExisting"
-        :key="childKey('mtsRaCapacityAwards')"
-        object-name="mtsRaCapacityAwards"
+        :key="childKey('mtsRaCapacityPrice')"
+        object-name="mtsRaCapacityPrice"
         @uploaded="receiveTimeseriesData"
       />
 
@@ -92,7 +92,7 @@
   const PAGEKEY = 'objectives';
   const PAGE = 'RA';
   const FIELDS = c.RA_FIELDS;
-  const TS_FIELDS = c.TS_RA_FIELDS;
+  const TS_FIELDS = [...c.TS_RA_FIELDS, ...c.MTS_RA_FIELDS];
 
   const ALL_FIELDS = [...FIELDS, ...TS_FIELDS];
   const validations = projectMetadata.getValidationSchema(FIELDS);
@@ -137,22 +137,9 @@
             && tsField === 'tsRaActive') {
             return;
           }
-          const errorMsgTS = this.requiredDataLabel(tsField);
-          if (fromStore) {
-            // get ts from the store
-            if (this.$store.state.Project[tsField].data.length === 0) {
-              errors.push(errorMsgTS);
-            }
-          } else {
-            // get ts from this page
-            const ts = this[tsField];
-            const tsFieldInput = `${tsField}Input`;
-            const tsInput = this[tsFieldInput];
-            const tsFieldUseExisting = `${tsField}UseExisting`;
-            const tsUseExisting = this[tsFieldUseExisting];
-            if (ts.data.length === 0 && (tsInput === null || !tsUseExisting)) {
-              errors.push(errorMsgTS);
-            }
+          const errorMsgTS = this.getErrorMsgTSFromProject(tsField, fromStore);
+          if (errorMsgTS.length !== 0) {
+            errors.push(errorMsgTS);
           }
         });
         return errors;

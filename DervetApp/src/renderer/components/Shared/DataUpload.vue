@@ -37,7 +37,7 @@
           <label>Data Year:</label>
         </div>
         <div class="col-md-3">
-          <label>{{this.dataYear}}</label>
+          <label>{{this.dataYearLabel}}</label>
         </div>
         <div class="col-md-2 control-label">
           <label>Frequency of data:</label>
@@ -108,6 +108,7 @@
         unit: this.uploadedData.unit,
         columnHeaderName: this.uploadedData.columnHeaderName,
         ...this.importErrorOnDisabledUpload(),
+        dataYearLabel: this.dataYear || 'N/A',
       };
     },
     computed: {

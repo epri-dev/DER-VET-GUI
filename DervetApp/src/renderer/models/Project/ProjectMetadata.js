@@ -51,6 +51,7 @@ export class ProjectMetadata {
       ...this.operateOnFieldList(c.RESOURCE_ADEQUACY_FIELDS, f => f.defaultValue),
       ...this.operateOnFieldList(c.DEMAND_RESPONSE_FIELDS, f => f.defaultValue),
       ...this.operateOnFieldList(c.TS_ALL, f => f.defaultValue),
+      ...this.operateOnFieldList(c.MTS_ALL, f => f.defaultValue),
 
       // TIMESERIES ARRAYS
       criticalLoad: null,
@@ -448,6 +449,7 @@ export class ProjectMetadata {
         type: 'int',
         unit: 'days',
         description: 'How many times will a resource be called on to fulfill its resource adequacy obligation in one year?',
+        actionSetName: a.SET_RA_NUMBER_EVENTS,
       }),
       [c.RA_DISPATCH_MODE]: new ProjectFieldMetadata({
         displayName: 'Dispatch Mode',
@@ -455,6 +457,7 @@ export class ProjectMetadata {
         type: Boolean,
         description: 'How should the DERs dispatch in response to the program?',
         allowedValues: c.RA_DISPATCH_MODE_ALLOWED_VALUES,
+        actionSetName: a.SET_RA_DISPATCH_MODE,
       }),
       [c.RA_EVENT_SELECTION_METHOD]: new ProjectFieldMetadata({
         displayName: 'Event Selection Method',
@@ -462,6 +465,7 @@ export class ProjectMetadata {
         type: String,
         description: 'Based on the system load, how are resource adequacy events selected?',
         allowedValues: c.RA_EVENT_SELECTION_METHOD_ALLOWED_VALUES,
+        actionSetName: a.SET_RA_EVENT_SELECTION_METHOD,
       }),
       [c.RA_EVENT_LENGTH]: new ProjectFieldMetadata({
         displayName: 'Duration of Events',
@@ -471,6 +475,7 @@ export class ProjectMetadata {
         type: 'int',
         unit: 'hours',
         description: 'How long will a resource adequacy event last for?',
+        actionSetName: a.SET_RA_EVENT_LENGTH,
       }),
       [c.RA_GROWTH]: new ProjectFieldMetadata({
         displayName: 'Growth Rate of Resource Adequacy Awards',
@@ -480,6 +485,7 @@ export class ProjectMetadata {
         type: Number,
         unit: '% / year',
         description: 'Yearly growth rate to apply to awards?',
+        actionSetName: a.SET_RA_GROWTH,
       }),
       [c.RELIABILITY_MAX_OUTAGE_DURATION]: new ProjectFieldMetadata({
         displayName: 'Maximum Outage Duration to Plot',
@@ -565,10 +571,10 @@ export class ProjectMetadata {
         actionSetName: a.SET_RA_ACTIVE,
       }),
       // mts: monthly timeseries
-      [c.MTS_RA_CAPACITY_AWARDS]: new ProjectFieldMetadata({
+      [c.MTS_RA_CAPACITY_PRICE]: new ProjectFieldMetadata({
         defaultValue: new MonthlyBase('RA Capacity Price ($/kW)', []),
         displayName: 'resource adequacy capacity prices',
-        actionSetName: a.SET_RA_CAPACITY,
+        actionSetName: a.SET_RA_CAPACITY_PRICE,
       }),
       [c.USER_PRICE]: new ProjectFieldMetadata({
         displayName: 'Yearly Cost Avoided',

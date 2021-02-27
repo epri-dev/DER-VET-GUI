@@ -68,7 +68,21 @@ const csvUploadMixin = {
       };
     },
     getErrorMsgTS(tsField) {
-      return `${this.capitalize(this.metadata[tsField].displayName)} Data is required`;
+      return `${this.capitalize(this.metadata[tsField].displayName)} Data are required`;
+    },
+    getErrorMsgTSFromProject(tsField, fromStore = true) {
+      const errorMsgTS = this.requiredDataLabel(tsField);
+      // get ts from the store
+      if (fromStore) {
+        if (this.$store.state.Project[tsField].data.length === 0) {
+          return errorMsgTS;
+        }
+      // get ts from this page
+      } else if (this[tsField].data.length === 0
+          && (this[this.inputField(tsField)] === null || !this[this.useExistingField(tsField)])) {
+        return errorMsgTS;
+      }
+      return '';
     },
     getMetadata(projectMetadata, fields) {
       return operateOnKeysList(projectMetadata, fields, f => f);
@@ -76,8 +90,7 @@ const csvUploadMixin = {
     getTSInputDefaultDataFromProject(tsFields) {
       const inputTS = {};
       tsFields.forEach((tsField) => {
-        const inputTSField = `${tsField}Input`;
-        inputTS[inputTSField] = null;
+        inputTS[this.inputField(tsField)] = null;
       });
       return inputTS;
     },
@@ -95,10 +108,11 @@ const csvUploadMixin = {
       return `${tsField}Input`;
     },
     requiredDataLabel(tsField) {
+      const name = this[tsField].columnHeaderName;
       if (this.isMonthly(tsField)) {
-        return `Monthly values of ${this[tsField].columnHeaderName} are required`;
+        return `Monthly values of ${name} are required`;
       }
-      return `A timeseries of ${this[tsField].columnHeaderName} is required`;
+      return `A timeseries of ${name} is required`;
     },
     receiveMonthlyData(payload) {
       // TODO: AE: this is identical to receiveTimeseriesData; should it be?

@@ -61,7 +61,7 @@ const TIMESERIES_FIELDS = [
   'userPowerMax',
   'userEnergyMin',
   'userEnergyMax',
-  ...c.TS_FR_FIELDS,
+  ...c.TS_ALL,
 ];
 
 const MONTHLY_FIELDS = [
@@ -71,7 +71,7 @@ const MONTHLY_FIELDS = [
   'drCapacityReservation',
   'drCapacityAwards',
   'drEnergyAwards',
-  'raCapacityAwards',
+  ...c.MTS_ALL,
 ];
 
 export const convertToYesNo = condition => (condition ? YES : NO);

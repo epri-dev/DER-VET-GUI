@@ -158,22 +158,9 @@
             || this.frCombinedMarket === null) {
             return;
           }
-          const errorMsgTS = `A timeseries of ${this[tsField].columnHeaderName} is required`;
-          if (fromStore) {
-            // get ts from the store
-            if (this.$store.state.Project[tsField].data.length === 0) {
-              errors.push(errorMsgTS);
-            }
-          } else {
-            // get ts from this page
-            const ts = this[tsField];
-            const tsFieldInput = `${tsField}Input`;
-            const tsInput = this[tsFieldInput];
-            const tsFieldUseExisting = `${tsField}UseExisting`;
-            const tsUseExisting = this[tsFieldUseExisting];
-            if (ts.data.length === 0 && (tsInput === null || !tsUseExisting)) {
-              errors.push(errorMsgTS);
-            }
+          const errorMsgTS = this.getErrorMsgTSFromProject(tsField, fromStore);
+          if (errorMsgTS.length !== 0) {
+            errors.push(errorMsgTS);
           }
         });
         return errors;
