@@ -42,7 +42,7 @@
       </radio-button-input>
 
       <timeseries-data-upload
-        chart-name="tsFrPricechartUploaded"
+        chart-name="tsFrPriceChartUploaded"
         @click="receiveRemove"
         :data-exists="tsData('tsFrPrice').data.length !== 0"
         :DataModel="TimeSeriesBase"

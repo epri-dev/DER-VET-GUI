@@ -60,12 +60,16 @@ export const TIMESTEP = 'timestep';
 export const USER_PRICE = 'userPrice';
 
 // Timeseries
+export const TS_RA_ACTIVE = 'tsRaActive';
+export const MTS_RA_CAPACITY_AWARDS = 'mtsRaCapacityAwards';
+export const TS_RA_FIELDS = [TS_RA_ACTIVE, MTS_RA_CAPACITY_AWARDS];
+
 export const TS_FR_PRICE = 'tsFrPrice';
 export const TS_FR_UP_PRICE = 'tsFrUpPrice';
 export const TS_FR_DOWN_PRICE = 'tsFrDownPrice';
 export const TS_FR_FIELDS = [TS_FR_PRICE, TS_FR_UP_PRICE, TS_FR_DOWN_PRICE];
 
-export const TS_ALL = [...TS_FR_FIELDS];
+export const TS_ALL = [...TS_FR_FIELDS, ...TS_RA_FIELDS];
 
 export const makeAllowedValues = lst => _.map(lst, x => ({ value: x, label: x }));
 
@@ -188,7 +192,7 @@ export const NSR_FIELDS = [
   NSR_DURATION,
   NSR_GROWTH,
 ];
-export const RESOURCE_ADEQUACY_FIELDS = [
+export const RA_FIELDS = [
   RA_NUMBER_EVENTS,
   RA_EVENT_LENGTH,
   RA_DISPATCH_MODE,

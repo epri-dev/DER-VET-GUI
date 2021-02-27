@@ -6,6 +6,7 @@ import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 import operateOnKeysList from '@/util/object';
 
 import TimeSeriesBase from '@/models/TimeSeries/TimeSeriesBase';
+import MonthlyBase from '@/models/Monthly/MonthlyBase';
 
 export class ProjectMetadata {
   constructor(arg) {
@@ -61,7 +62,6 @@ export class ProjectMetadata {
       lfUpPrice: null,
       lfDownPrice: null,
       nsrPrice: null,
-      raActive: null,
       siteLoad: null,
       srPrice: null,
       systemLoad: null,
@@ -77,7 +77,6 @@ export class ProjectMetadata {
       drCapacityReservation: null,
       drCapacityAwards: null,
       drEnergyAwards: null,
-      raCapacityAwards: null,
     };
   }
 
@@ -544,6 +543,7 @@ export class ProjectMetadata {
         description: 'What timestep will the optimization will use?',
         allowedValues: c.TIMESTEP_ALLOWED_VALUES,
       }),
+      // ts: timeseries
       [c.TS_FR_PRICE]: new ProjectFieldMetadata({
         defaultValue: new TimeSeriesBase('FR Price ($/kW)', []),
         displayName: 'frequency regulation price',
@@ -558,6 +558,17 @@ export class ProjectMetadata {
         defaultValue: new TimeSeriesBase('Reg Down Price ($/kW)', []),
         displayName: 'frequency regulation down price',
         actionSetName: a.SET_FR_DOWN_PRICE,
+      }),
+      [c.TS_RA_ACTIVE]: new ProjectFieldMetadata({
+        defaultValue: new TimeSeriesBase('RA Active (y/n)', []),
+        displayName: 'if the resource adequacy event selection considers the load (1) or not (0)',
+        actionSetName: a.SET_RA_ACTIVE,
+      }),
+      // mts: monthly timeseries
+      [c.MTS_RA_CAPACITY_AWARDS]: new ProjectFieldMetadata({
+        defaultValue: new MonthlyBase('RA Capacity Price ($/kW)', []),
+        displayName: 'resource adequacy capacity prices',
+        actionSetName: a.SET_RA_CAPACITY,
       }),
       [c.USER_PRICE]: new ProjectFieldMetadata({
         displayName: 'Yearly Cost Avoided',

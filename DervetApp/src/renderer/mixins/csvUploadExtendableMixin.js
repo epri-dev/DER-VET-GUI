@@ -3,9 +3,10 @@ import { cloneDeep, flatten, startCase } from 'lodash';
 import operateOnKeysList from '@/util/object';
 import { isNotNullAndNotUndefined, isNullOrUndefined } from '@/util/logic';
 import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
+import MonthlyDataUpload from '@/components/Shared/MonthlyDataUpload';
 
 const csvUploadMixin = {
-  components: { TimeseriesDataUpload },
+  components: { TimeseriesDataUpload, MonthlyDataUpload },
   data() { },
   beforeMount() {
     // submitted is false initially; set it to true after the first save.
@@ -87,8 +88,17 @@ const csvUploadMixin = {
       });
       return useExistingDefaults;
     },
+    isMonthly(tsField) {
+      return tsField.charAt(0) === 'm';
+    },
     inputField(tsField) {
       return `${tsField}Input`;
+    },
+    requiredDataLabel(tsField) {
+      if (this.isMonthly(tsField)) {
+        return `Monthly values of ${this[tsField].columnHeaderName} are required`;
+      }
+      return `A timeseries of ${this[tsField].columnHeaderName} is required`;
     },
     receiveMonthlyData(payload) {
       // TODO: AE: this is identical to receiveTimeseriesData; should it be?
