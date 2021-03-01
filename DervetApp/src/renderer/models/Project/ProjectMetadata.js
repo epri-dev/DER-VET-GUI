@@ -5,8 +5,45 @@ import * as a from '@/store/actionTypes';
 import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 import operateOnKeysList from '@/util/object';
 
-import TimeSeriesBase from '@/models/TimeSeries/TimeSeriesBase';
-import MonthlyBase from '@/models/Monthly/MonthlyBase';
+/*
+import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
+import DAPriceTimeSeries from '@/models/TimeSeries/DAPriceTimeSeries';
+import DeferralLoadTimeSeries from '@/models/TimeSeries/DeferralLoadTimeSeries';
+import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
+import FRPriceTimeSeries from '@/models/TimeSeries/FRPriceTimeSeries';
+import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
+import FleetEVBaselineLoadTimeSeries from '@/models/TimeSeries/FleetEVBaselineLoadTimeSeries';
+import LFDownPriceTimeSeries from '@/models/TimeSeries/LFDownPriceTimeSeries';
+import LFEnergyOptionDownTimeSeries from '@/models/TimeSeries/LFEnergyOptionDownTimeSeries';
+import LFEnergyOptionUpTimeSeries from '@/models/TimeSeries/LFEnergyOptionUpTimeSeries';
+import LFPriceTimeSeries from '@/models/TimeSeries/LFPriceTimeSeries';
+import LFUpPriceTimeSeries from '@/models/TimeSeries/LFUpPriceTimeSeries';
+import NSRPriceTimeSeries from '@/models/TimeSeries/NSRPriceTimeSeries';
+import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
+import RAActiveTimeSeries from '@/models/TimeSeries/RAActiveTimeSeries';
+import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
+import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
+import SystemLoadTimeSeries from '@/models/TimeSeries/SystemLoadTimeSeries';
+import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
+import UserEnergyMinTimeSeries from '@/models/TimeSeries/UserEnergyMinTimeSeries';
+import UserPowerMaxTimeSeries from '@/models/TimeSeries/UserPowerMaxTimeSeries';
+import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
+
+import BackupEnergyAdwardsMonthly from '@/models/Monthly/BackupEnergyAdwardsMonthly';
+import BackupEnergyReservationMonthly from '@/models/Monthly/BackupEnergyReservationMonthly';
+import DRCapacityAdwardsMonthly from '@/models/Monthly/DRCapacityAdwardsMonthly';
+import DRCapacityReservationMonthly from '@/models/Monthly/DRCapacityReservationMonthly';
+import DREnergyAwardsMonthly from '@/models/Monthly/DREnergyAwardsMonthly';
+import DRMonthsMonthly from '@/models/Monthly/DRMonthsMonthly';
+import RACapacityPriceMonthly from '@/models/Monthly/RACapacityPriceMonthly';
+*/
+
+import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
+import FRPriceTimeSeries from '@/models/TimeSeries/FRPriceTimeSeries';
+import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
+import RAActiveTimeSeries from '@/models/TimeSeries/RAActiveTimeSeries';
+
+import RACapacityPriceMonthly from '@/models/Monthly/RACapacityPriceMonthly';
 
 export class ProjectMetadata {
   constructor(arg) {
@@ -50,8 +87,8 @@ export class ProjectMetadata {
       ...this.operateOnFieldList(c.LF_FIELDS, f => f.defaultValue),
       ...this.operateOnFieldList(c.RESOURCE_ADEQUACY_FIELDS, f => f.defaultValue),
       ...this.operateOnFieldList(c.DEMAND_RESPONSE_FIELDS, f => f.defaultValue),
-      ...this.operateOnFieldList(c.TS_ALL, f => f.defaultValue),
-      ...this.operateOnFieldList(c.MTS_ALL, f => f.defaultValue),
+      ...this.operateOnFieldList(c.TS_ALL, f => new f.DataModel([])),
+      ...this.operateOnFieldList(c.MTS_ALL, f => new f.DataModel([])),
 
       // TIMESERIES ARRAYS
       criticalLoad: null,
@@ -551,28 +588,28 @@ export class ProjectMetadata {
       }),
       // ts: timeseries
       [c.TS_FR_PRICE]: new ProjectFieldMetadata({
-        defaultValue: new TimeSeriesBase('FR Price ($/kW)', []),
+        DataModel: FRPriceTimeSeries,
         displayName: 'frequency regulation price',
         actionSetName: a.SET_FR_PRICE,
       }),
       [c.TS_FR_UP_PRICE]: new ProjectFieldMetadata({
-        defaultValue: new TimeSeriesBase('Reg Up Price ($/kW)', []),
+        DataModel: FRUpPriceTimeSeries,
         displayName: 'frequency regulation up price',
         actionSetName: a.SET_FR_UP_PRICE,
       }),
       [c.TS_FR_DOWN_PRICE]: new ProjectFieldMetadata({
-        defaultValue: new TimeSeriesBase('Reg Down Price ($/kW)', []),
+        DataModel: FRDownPriceTimeSeries,
         displayName: 'frequency regulation down price',
         actionSetName: a.SET_FR_DOWN_PRICE,
       }),
       [c.TS_RA_ACTIVE]: new ProjectFieldMetadata({
-        defaultValue: new TimeSeriesBase('RA Active (y/n)', []),
+        DataModel: RAActiveTimeSeries,
         displayName: 'if the resource adequacy event selection considers the load (1) or not (0)',
         actionSetName: a.SET_RA_ACTIVE,
       }),
       // mts: monthly timeseries
       [c.MTS_RA_CAPACITY_PRICE]: new ProjectFieldMetadata({
-        defaultValue: new MonthlyBase('RA Capacity Price ($/kW)', []),
+        DataModel: RACapacityPriceMonthly,
         displayName: 'resource adequacy capacity prices',
         actionSetName: a.SET_RA_CAPACITY_PRICE,
       }),

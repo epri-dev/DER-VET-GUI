@@ -88,9 +88,7 @@
 
 <script>
   import Plotly from 'plotly.js';
-  import { flatten } from 'lodash';
   import { parseCsvFromEvent } from '@/util/file';
-  import { isNumeric } from '@/util/logic';
   import { sharedDefaults, sharedValidation } from '@/models/Shared.js';
 
   export default {
@@ -141,8 +139,9 @@
       xAxis: Array,
     },
     methods: {
-      arrayDisplayFirstFive(array) {
-        return (array.length <= 5) ? array : [array.slice(0, 5), '...'];
+      arrayDisplayFirstFifteen(array) {
+        const num = 15;
+        return (array.length <= num) ? array : [array.slice(0, num), '...'];
       },
       importErrorOnDisabledUpload() {
         if (this.disableUpload) {
@@ -166,13 +165,16 @@
           this.importError = errors;
           this.importedFilePath = importedFilePath;
           if (importedFilePath !== null && errors === undefined) {
-            this.validateUploadedData(results);
-          }
-          if (this.importError === undefined) {
-            // only emit back when there are no errors
-            //   thus preventing an invalid TS from being saved
-            this.$emit('uploaded', this.uploadPayload(flatten(results)));
-            this.useExisting = true;
+            const newData = new this.DataModel(results);
+            const validationResult = newData.validate(this.numberOfEntriesRequired);
+            if (validationResult.length !== 0) this.importError = validationResult;
+            if (this.importError === undefined) {
+              // only emit back when there are no errors
+              //   thus preventing an invalid TS from being saved
+              this.$emit('uploaded', this.uploadPayload(newData));
+              // this.$emit('uploaded', this.uploadPayload(flatten(results)));
+              this.useExisting = true;
+            }
           }
         };
         parseCsvFromEvent(e, onSuccess);
@@ -190,39 +192,9 @@
         };
         this.$emit('click', payload);
       },
-      validateUploadedData(dataArray) {
-        // this method sets the importError string with up to 3 lines,
-        //   before any field-specific validations
-        // 1. totalRowCount must equal numberOfEntriesRequired
-        const totalRowCount = String(dataArray.length);
-        if (totalRowCount !== this.numberOfEntriesRequired) {
-          this.importError = `<b>Invalid Data</b>: This file has <b>${totalRowCount}</b> entries. It must have ${this.numberOfEntriesRequired}.`;
-        }
-        const columnsPerRow = dataArray.map(row => row.length);
-        // 2. each row must have a single array of size 1
-        const invalidRowsSize = columnsPerRow.reduce((a, val, i) => {
-          if (val !== 1) a.push(i + 1);
-          return a;
-        }, []);
-        const invalidRowsSizeCount = invalidRowsSize.length;
-        if (invalidRowsSizeCount !== 0) {
-          this.importError += `<br><b>${invalidRowsSizeCount} Invalid Rows</b> with > 1 entry: [${this.arrayDisplayFirstFive(invalidRowsSize)}]`;
-        }
-        // 3. each row with a single array size of 1 must have a numeric value
-        const invalidRowsType = columnsPerRow.reduce((a, val, i) => {
-          if (val === 1 && !isNumeric(dataArray[i])) a.push(i + 1);
-          return a;
-        }, []);
-        const invalidRowsTypeCount = invalidRowsType.length;
-        if (invalidRowsTypeCount !== 0) {
-          this.importError += `<br><b>${invalidRowsTypeCount} Invalid Rows</b> with a non-numeric entry: [${this.arrayDisplayFirstFive(invalidRowsType)}]`;
-        }
-        // 4. add field-specific import-errors here as needed
-        // TODO: add these (e.g. solar data must be between 0 and 1)
-      },
       uploadPayload(dataResults) {
         return {
-          dataArray: new this.DataModel(this.columnHeaderName, dataResults),
+          dataArray: dataResults,
           objectName: this.objectName,
         };
       },

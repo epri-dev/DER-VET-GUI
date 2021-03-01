@@ -2,7 +2,13 @@ import TimeSeriesBase from './TimeSeriesBase';
 
 class RAActiveTimeSeries extends TimeSeriesBase {
   constructor(data) {
-    super('RA Acitve (y/n)', data);
+    super('RA Active (y/n)', data);
+  }
+
+  validate(expectedRowCount) {
+    const errorMsgArray = [super.validate(expectedRowCount)];
+    errorMsgArray.push(this.dataArray.invalidCheckValuesInExclusiveList([0, 1]).errorMsg);
+    return errorMsgArray.filter((item) => item !== null).join('<br>');
   }
 }
 

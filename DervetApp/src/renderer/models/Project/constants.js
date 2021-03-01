@@ -197,7 +197,7 @@ export const NSR_FIELDS = [
   NSR_DURATION,
   NSR_GROWTH,
 ];
-export const RA_FIELDS = [
+export const RESOURCE_ADEQUACY_FIELDS = [
   RA_NUMBER_EVENTS,
   RA_EVENT_LENGTH,
   RA_DISPATCH_MODE,

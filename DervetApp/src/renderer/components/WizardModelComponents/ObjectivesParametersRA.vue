@@ -40,7 +40,7 @@
         chart-name="mtsRaCapacityPriceChartUploaded"
         @click="receiveRemove"
         :data-exists="tsData('mtsRaCapacityPrice').data.length !== 0"
-        :DataModel="MonthlyBase"
+        :DataModel="metadata.mtsRaCapacityPrice.DataModel"
         :data-name="metadata.mtsRaCapacityPrice.displayName"
         :monthly-data="tsData('mtsRaCapacityPrice')"
         :errorMessage="getErrorMsgTS('mtsRaCapacityPrice')"
@@ -55,7 +55,7 @@
         chart-name="tsRaActiveChartUploaded"
         @click="receiveRemove"
         :data-exists="tsData('tsRaActive').data.length !== 0"
-        :DataModel="TimeSeriesBase"
+        :DataModel="metadata.tsRaActive.DataModel"
         :data-name="metadata.tsRaActive.displayName"
         :data-time-series="tsData('tsRaActive')"
         :errorMessage="getErrorMsgTS('tsRaActive')"
@@ -83,15 +83,13 @@
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import { projectMetadata } from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
-  import TimeSeriesBase from '@/models/TimeSeries/TimeSeriesBase';
-  import MonthlyBase from '@/models/Monthly/MonthlyBase';
 
   import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
 
   const PAGEGROUP = 'components';
   const PAGEKEY = 'objectives';
   const PAGE = 'RA';
-  const FIELDS = c.RA_FIELDS;
+  const FIELDS = c.RESOURCE_ADEQUACY_FIELDS;
   const TS_FIELDS = [...c.TS_RA_FIELDS, ...c.MTS_RA_FIELDS];
 
   const ALL_FIELDS = [...FIELDS, ...TS_FIELDS];
@@ -115,8 +113,6 @@
         ...this.getTSInputDefaultDataFromProject(TS_FIELDS),
         ...this.getChildKeys(TS_FIELDS),
         ...this.getUseExistingDefaults(TS_FIELDS),
-        TimeSeriesBase,
-        MonthlyBase,
         CONSTANTS,
       };
     },
