@@ -1,7 +1,7 @@
 <template>
   <div id="data-upload">
     <hr />
-    <div v-if="this.validDataExists" class="form-group">
+    <div v-if="(validDataExists)||(tsFrequencyHasChanged)" class="form-group">
       <div class="col-md-12">
         <label for="UseExistingData" class="control-label"><b>{{this.firstLetterCapitalized}}</b> data have been uploaded for this project. Do you want to use these data?</label>
       </div>
@@ -124,6 +124,9 @@
       },
       showPlot() {
         return (this.validDataExists && this.useExisting);
+      },
+      tsFrequencyHasChanged() {
+        return (!this.validDataExists && this.uploadedData.data.length !== 0);
       },
     },
     props: {

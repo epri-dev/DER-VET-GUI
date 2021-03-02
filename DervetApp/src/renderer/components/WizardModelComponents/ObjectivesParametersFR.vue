@@ -141,13 +141,8 @@
     validations: {
       ...validations,
     },
-    computed: {
-      isTSError() {
-        return this.getErrorListTS(false).length !== 0;
-      },
-    },
     methods: {
-      getErrorListTS(fromStore = true) {
+      getErrorListTS() {
         const errors = [];
         (TS_FIELDS).forEach((tsField) => {
           // skip non-required tsFields
@@ -156,7 +151,7 @@
             || this.frCombinedMarket === null) {
             return;
           }
-          const errorMsgTS = this.getErrorMsgTSFromProject(tsField, fromStore);
+          const errorMsgTS = this.getErrorMsgTSFromProject(tsField);
           if (errorMsgTS.length !== 0) {
             errors.push(errorMsgTS);
           }

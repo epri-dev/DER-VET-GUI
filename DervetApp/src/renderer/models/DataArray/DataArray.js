@@ -34,7 +34,6 @@ class DataArray {
   // NOTE: row numbers start with 1
   invalidCheckRowsCount(x) {
     const actualRowsCount = this.length();
-    console.log(x, actualRowsCount);
     // if (actualRowsCount === 0 || actualRowsCount === parseFloat(x)) return noErrorObject;
     if (actualRowsCount === parseFloat(x)
       && ![actualRowsCount, parseFloat(x)].includes(0)) return noErrorObject;
@@ -48,7 +47,6 @@ class DataArray {
       if (!validValuesList.includes(val)) a.push(i + 1);
       return a;
     }, []);
-    console.log(this.length());
     if (invalidRows.length === 0) return noErrorObject;
     const violationName = `each value must be ${this.listToString(validValuesList)}`;
     return {

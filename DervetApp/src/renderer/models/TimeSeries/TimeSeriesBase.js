@@ -6,7 +6,6 @@ class TimeSeriesBase extends DataArray {
     this.columnHeaderName = columnHeaderName;
     this.unit = this.getUnit();
     this.required = false;
-    // this.errors = '';
   }
 
   getUnit() {

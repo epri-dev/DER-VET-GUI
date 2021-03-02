@@ -32,6 +32,11 @@ const csvUploadMixin = {
       }
       return this.timeseriesXAxis.length;
     },
+    // this property is triggered when there are no non-TS errors to the inputs on the page,
+    //   and submitted is true
+    isTSError() {
+      return this.getErrorListTS().length !== 0;
+    },
     timeseriesXAxis() {
       // the first timestamp should be Jan 1 of dataYear at timestep minutes
       //   to represent the period-ending value.
@@ -82,8 +87,8 @@ const csvUploadMixin = {
       return `${this.capitalize(this.metadata[tsField].displayName)} Data are required`;
     },
     getErrorMsgTSFromProject(tsField) {
+      // this method also revalidates the TS to reset the errors
       const errorMsgTS = this.requiredDataLabel(tsField);
-      console.log(this.tsData(tsField));
       if (this.tsData(tsField).data.length === 0
         || (!this.isMonthly(tsField)
         && this.tsData(tsField).revalidate(this.expectedRowCount).length !== 0)
