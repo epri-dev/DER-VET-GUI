@@ -28,7 +28,7 @@ import DRCapacityAdwardsMonthly from '@/models/Monthly/DRCapacityAdwardsMonthly'
 import DRCapacityReservationMonthly from '@/models/Monthly/DRCapacityReservationMonthly';
 import DREnergyAwardsMonthly from '@/models/Monthly/DREnergyAwardsMonthly';
 import DRMonthsMonthly from '@/models/Monthly/DRMonthsMonthly';
-import RACapacityAdwardsMonthly from '@/models/Monthly/RACapacityAdwardsMonthly';
+import RACapacityPriceMonthly from '@/models/Monthly/RACapacityPriceMonthly';
 
 import csvs from './csvs';
 
@@ -123,7 +123,7 @@ export const projectFixtureAllActive = {
   ownership: 'Customer',
   propertyTaxRate: 3,
   raActive: new RAActiveTimeSeries(new Array(8760).fill(0)),
-  raCapacityAwards: new RACapacityAdwardsMonthly(new Array(12).fill(350)),
+  raCapacityAwards: new RACapacityPriceMonthly(new Array(12).fill(350)),
   raNumberEvents: 24,
   raEventLength: 6,
   raDispatchMode: 'Constrain power',
