@@ -26,6 +26,17 @@ const csvUploadMixin = {
         .errorList[this.CONSTANTS.PAGEGROUP][this.CONSTANTS.PAGEKEY][this.CONSTANTS.PAGE];
       return isNullOrUndefined(errors) ? null : errors.length === 0;
     },
+    expectedRowCount() {
+      if (this.timeseriesXAxis.length === 0) {
+        return 'TBD';
+      }
+      return this.timeseriesXAxis.length;
+    },
+    timeseriesXAxis() {
+      // the first timestamp should be Jan 1 of dataYear at timestep minutes
+      //   to represent the period-ending value.
+      return this.$store.getters.getTimeseriesXAxis;
+    },
   },
   methods: {
     capitalize(str) {
@@ -70,16 +81,13 @@ const csvUploadMixin = {
     getErrorMsgTS(tsField) {
       return `${this.capitalize(this.metadata[tsField].displayName)} Data are required`;
     },
-    getErrorMsgTSFromProject(tsField, fromStore = true) {
+    getErrorMsgTSFromProject(tsField) {
       const errorMsgTS = this.requiredDataLabel(tsField);
-      // get ts from the store
-      if (fromStore) {
-        if (this.$store.state.Project[tsField].data.length === 0) {
-          return errorMsgTS;
-        }
-      // get ts from this page
-      } else if (this[tsField].data.length === 0
-          && (this[this.inputField(tsField)] === null || !this[this.useExistingField(tsField)])) {
+      console.log(this.tsData(tsField));
+      if (this.tsData(tsField).data.length === 0
+        || (!this.isMonthly(tsField)
+        && this.tsData(tsField).revalidate(this.expectedRowCount).length !== 0)
+        || (this[tsField].data.length === 0 && !this[this.useExistingField(tsField)])) {
         return errorMsgTS;
       }
       return '';
@@ -110,9 +118,9 @@ const csvUploadMixin = {
     requiredDataLabel(tsField) {
       const name = this[tsField].columnHeaderName;
       if (this.isMonthly(tsField)) {
-        return `Monthly values of ${name} are required`;
+        return `Monthly (12 values) of ${name} are required`;
       }
-      return `A timeseries of ${name} is required`;
+      return `A timeseries (${this.expectedRowCount} values) of ${name} is required`;
     },
     receiveMonthlyData(payload) {
       // TODO: AE: this is identical to receiveTimeseriesData; should it be?

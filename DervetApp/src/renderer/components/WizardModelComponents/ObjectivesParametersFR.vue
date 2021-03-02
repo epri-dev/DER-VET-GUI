@@ -45,7 +45,7 @@
         chart-name="tsFrPriceChartUploaded"
         @click="receiveRemove"
         :data-exists="tsData('tsFrPrice').data.length !== 0"
-        :DataModel="metadata.tsFRPrice.DataModel"
+        :DataModel="metadata.tsFrPrice.DataModel"
         :data-name="metadata.tsFrPrice.displayName"
         :data-time-series="tsData('tsFrPrice')"
         :errorMessage="getErrorMsgTS('tsFrPrice')"

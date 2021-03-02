@@ -120,20 +120,27 @@
       ...validations,
     },
     computed: {
+      // TODO: AE: move these computed methods to mixin
+      // this property is triggered when there are no errors to the inputs on the page,
+      // and submitted is true
       isTSError() {
+        console.log(this.getErrorListTS());
         return this.getErrorListTS(false).length !== 0;
       },
     },
     methods: {
-      getErrorListTS(fromStore = true) {
+      getErrorListTS() {
         const errors = [];
         (TS_FIELDS).forEach((tsField) => {
+          console.log(tsField, this.expectedRowCount);
           // skip non-required tsFields
           if (this.raEventSelectionMethod !== 'Peak by Month with Active Hours'
             && tsField === 'tsRaActive') {
             return;
           }
-          const errorMsgTS = this.getErrorMsgTSFromProject(tsField, fromStore);
+          const errorMsgTS = this.getErrorMsgTSFromProject(
+            tsField,
+          );
           if (errorMsgTS.length !== 0) {
             errors.push(errorMsgTS);
           }

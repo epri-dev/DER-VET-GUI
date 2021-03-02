@@ -1,11 +1,9 @@
 import DataArray from '@/models/DataArray/DataArray.js';
 
-class MonthlyBase {
+class MonthlyBase extends DataArray {
   constructor(columnHeaderName, data) {
+    super(data);
     this.columnHeaderName = columnHeaderName;
-    // this.data = data;
-    this.dataArray = new DataArray(data);
-    this.data = this.dataArray.dataValues;
     this.unit = this.getUnit();
   }
 
@@ -19,15 +17,9 @@ class MonthlyBase {
   validate(expectedRowCount) {
     // returns a String with any/all error messages, or an empty String
     const errorMsgArray = [];
-    errorMsgArray.push(this.dataArray.invalidCheckRowsCount(expectedRowCount).errorMsg);
-    errorMsgArray.push(this.dataArray.invalidCheckRowSize(1).errorMsg);
-    errorMsgArray.push(this.dataArray.invalidCheckSingleValueIsNumeric().errorMsg);
-    return errorMsgArray.filter((item) => item !== null).join('<br>');
-  }
-
-  revalidate(expectedRowCount) {
-    const errorMsgArray = [];
-    errorMsgArray.push(this.dataArray.invalidCheckRowsCount(expectedRowCount).errorMsg);
+    errorMsgArray.push(this.invalidCheckRowsCount(expectedRowCount).errorMsg);
+    errorMsgArray.push(this.invalidCheckRowSize(1).errorMsg);
+    errorMsgArray.push(this.invalidCheckSingleValueIsNumeric().errorMsg);
     return errorMsgArray.filter((item) => item !== null).join('<br>');
   }
 }

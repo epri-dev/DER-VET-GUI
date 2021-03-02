@@ -1,12 +1,12 @@
 import DataArray from '@/models/DataArray/DataArray.js';
 
-class TimeSeriesBase {
+class TimeSeriesBase extends DataArray {
   constructor(columnHeaderName, data) {
+    super(data);
     this.columnHeaderName = columnHeaderName;
-    // this.data = data;
-    this.dataArray = new DataArray(data);
-    this.data = this.dataArray.dataValues;
     this.unit = this.getUnit();
+    this.required = false;
+    // this.errors = '';
   }
 
   getUnit() {
@@ -19,16 +19,19 @@ class TimeSeriesBase {
   validate(expectedRowCount) {
     // returns a String with any/all error messages, or an empty String
     const errorMsgArray = [];
-    errorMsgArray.push(this.dataArray.invalidCheckRowsCount(expectedRowCount).errorMsg);
-    errorMsgArray.push(this.dataArray.invalidCheckRowSize(1).errorMsg);
-    errorMsgArray.push(this.dataArray.invalidCheckSingleValueIsNumeric().errorMsg);
+    errorMsgArray.push(this.invalidCheckRowsCount(expectedRowCount).errorMsg);
+    errorMsgArray.push(this.invalidCheckRowSize(1).errorMsg);
+    errorMsgArray.push(this.invalidCheckSingleValueIsNumeric().errorMsg);
     return errorMsgArray.filter((item) => item !== null).join('<br>');
   }
 
   revalidate(expectedRowCount) {
+    // adds errors property (a String) to the class, and also returns that string
+    // with no errors, this will be an empty string
     const errorMsgArray = [];
-    errorMsgArray.push(this.dataArray.invalidCheckRowsCount(expectedRowCount).errorMsg);
-    return errorMsgArray.filter((item) => item !== null).join('<br>');
+    errorMsgArray.push(this.invalidCheckRowsCount(expectedRowCount).errorMsg);
+    this.errors = errorMsgArray.filter((item) => item !== null).join('<br>');
+    return this.errors;
   }
 }
 export default TimeSeriesBase;

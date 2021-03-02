@@ -202,7 +202,7 @@
           errorList: errors,
         };
       },
-      revalidateTS() {
+      revalidateData() {
         // track ts required lines changes
         console.log(
           'new:',
@@ -210,7 +210,7 @@
           '---> old:',
           this.tsRequiredLines,
         );
-        if (this.tsRequiredLines !== this.numberOfEntriesRequired) {
+        if (this.tsRequiredLines !== this.numberOfEntriesRequired && this.tsRequiredLines !== 'TBD') {
           console.log('!!! need to do a simple validation (length check) on all stored TS');
         } else {
           console.log('no TS re-validation needed');
@@ -218,7 +218,17 @@
         // reset the value in case of 'saveStay'
         this.tsRequiredLines = this.numberOfEntriesRequired;
 
-        // TODO: AE: re-validate all saved TS here
+        // TODO: AE: move this up into the if block
+        // re-validate all saved TS data here
+        // NOTE: Monthly Data is not affected here
+        const dataObjects = operateOnKeysList(this.$store.state.Project, c.TS_ALL, f => f);
+        Object.entries(dataObjects).forEach(([key, dataObject]) => {
+          console.log(key);
+          console.log(dataObject);
+          dataObject.revalidate(this.numberOfEntriesRequired);
+          console.log(dataObject);
+          console.log('------------');
+        });
       },
       validatedSaveContinue() {
         this.validatedSave();
@@ -243,7 +253,7 @@
         // handle a change in numberOfEntriesRequired
         this.$store.dispatch('setDataYear', this.dataYear);
         this.$store.dispatch('setTimestep', this.timestep);
-        this.revalidateTS();
+        this.revalidateData();
       },
       save() {
         this.$store.dispatch('setName', this.name);

@@ -6,7 +6,7 @@
         <label for="UseExistingData" class="control-label"><b>{{this.firstLetterCapitalized}}</b> data have been uploaded for this project. Do you want to use these data?</label>
       </div>
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-3">
           <b-form-group>
             <b-form-radio-group
               v-model="useExisting"
@@ -15,7 +15,10 @@
             ></b-form-radio-group>
           </b-form-group>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-5 error-text-color">
+          <span v-html="uploadedData.errors"></span>
+        </div>
+        <div class="col-md-3">
           <b-button
             size="sm"
             class="btn-xs btn-danger delete-data pull-right"
@@ -172,7 +175,6 @@
               // only emit back when there are no errors
               //   thus preventing an invalid TS from being saved
               this.$emit('uploaded', this.uploadPayload(newData));
-              // this.$emit('uploaded', this.uploadPayload(flatten(results)));
               this.useExisting = true;
             }
           }
