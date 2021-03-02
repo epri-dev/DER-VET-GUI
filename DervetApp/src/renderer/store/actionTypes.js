@@ -108,3 +108,10 @@ export const DEACTIVATE_TECH = 'deactivateTech';
 export const MAKE_LIST_OF_ACTIVE_TECHNOLOGIES = 'makeListOfActiveTechnologies';
 export const REPLACE_LIST_FIELD = 'replaceListField';
 export const REMOVE_TECH = 'removeTech';
+// financial
+export const ADD_RETAIL_TARIFF_BILLING_PERIOD = 'addRetailTariffBillingPeriod';
+export const ADD_MANY_RETAIL_TARIFF_BILLING_PERIODS = 'addManyRetailTariffBillingPeriods';
+export const REPLACE_RETAIL_TARIFF_BILLING_PERIODS = 'replaceRetailTariffBillingPeriods';
+export const REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES = 'replaceRetailTariffFileImportNotes';
+export const REMOVE_RETAIL_TARIFF_BILLING_PERIOD = 'removeRetailTariffBillingPeriod';
+export const REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS = 'removeAllRetailTariffBillingPeriods';
