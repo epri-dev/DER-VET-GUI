@@ -49,7 +49,6 @@ describe('DataArray model', () => {
   const fakeDataB = new DataArray(
     [3, 22, 'aa', 2e1, 44, 'z'],
   );
-  const defaultDataB = new DataArray();
 
   it('should return invalidCheckRowsCount on array properly', () => {
     let actual = fakeDataB.invalidCheckRowsCount(6);
@@ -62,10 +61,6 @@ describe('DataArray model', () => {
 
     actual = fakeDataB.invalidCheckRowsCount(16);
     expected = { errorMsg: '<b>Invalid Data:</b> This file has <b>6</b> entries. It must have 16' };
-    expect(actual).to.eql(expected);
-
-    actual = defaultDataB.invalidCheckRowsCount('0');
-    expected = { errorMsg: null };
     expect(actual).to.eql(expected);
   });
 

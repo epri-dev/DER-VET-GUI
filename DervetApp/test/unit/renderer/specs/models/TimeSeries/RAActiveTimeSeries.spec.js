@@ -4,7 +4,7 @@ import RAActiveTimeSeries from '@/models/TimeSeries/RAActiveTimeSeries.js';
 describe('RAActiveTimeSeries model', () => {
   it('should validate properly', () => {
     const threeValidRows = new RAActiveTimeSeries(
-      [[0], [1], [1]],
+      [0, 1, [1]],
     );
     const threeValidRowsOrig = cloneDeep(threeValidRows);
     let actual = threeValidRows.validate(3);

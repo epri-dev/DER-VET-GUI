@@ -7,7 +7,7 @@ class DataArray {
   // must also handle when data is an array
   constructor(data) {
     this.rowSizes = data.map(row => ((typeof row === 'object') ? row.length : 1));
-    this.data = data.map(row => (row[0] || row)); // this is the first value of each row
+    this.data = data.map(row => ((typeof row === 'object') ? row[0] : row)); // this is the first value of each row
   }
 
   length() {
