@@ -211,7 +211,6 @@
           Object.values(dataObjects).forEach((dataObject) => {
             // only need this when the TS already exists in the store
             if (dataObject.length() !== 0) {
-              console.log(dataObject);
               dataObject.revalidate(this.numberOfEntriesRequired);
               // append a line to the accompanying errorList
               const { pageGroup, pageKey, page } = dataObject.pageAttributes;

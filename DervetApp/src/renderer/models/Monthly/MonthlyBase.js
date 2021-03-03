@@ -19,7 +19,7 @@ class MonthlyBase extends DataArray {
     const errorMsgArray = [];
     errorMsgArray.push(this.invalidCheckRowsCount(expectedRowCount).errorMsg);
     errorMsgArray.push(this.invalidCheckRowSize(1).errorMsg);
-    errorMsgArray.push(this.invalidCheckSingleValueIsNumeric().errorMsg);
+    errorMsgArray.push(this.invalidCheckSingleValueNumeric().errorMsg);
     return errorMsgArray.filter((item) => item !== null).join('<br>');
   }
 }

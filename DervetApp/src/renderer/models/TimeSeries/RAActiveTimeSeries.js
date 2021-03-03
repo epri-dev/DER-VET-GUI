@@ -16,8 +16,8 @@ class RAActiveTimeSeries extends TimeSeriesBase {
 
   validate(expectedRowCount) {
     const errorMsgArray = [super.validate(expectedRowCount)];
-    errorMsgArray.push(this.invalidCheckValuesInExclusiveList([0, 1]).errorMsg);
-    return errorMsgArray.filter((item) => item !== null).join('<br>');
+    errorMsgArray.push(this.invalidCheckSingleValueInclusiveList([0, 1]).errorMsg);
+    return errorMsgArray.filter((item) => ![null, ''].includes(item)).join('<br>');
   }
 }
 

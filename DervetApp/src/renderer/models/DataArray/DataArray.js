@@ -29,52 +29,17 @@ class DataArray {
   }
 
   // invalidCheck methods return noErrorObject when no violations are found
-  //   otherwise, they return an object with 1) an array with row numbers of every violation
-  //   and 2) a string containing the error message
+  //   otherwise, they return an object that contains an errorMsg describing
+  //   the error along with an array with row numbers for each violation
   // NOTE: row numbers start with 1
+  // NOTE: these methods may need to be reconsidered if they hamper performance
+
+  // these first 3 checks are performed for all TimeSeries and Monthly uploads
   invalidCheckRowsCount(x) {
     const actualRowsCount = this.length();
-    // if (actualRowsCount === 0 || actualRowsCount === parseFloat(x)) return noErrorObject;
-    if (actualRowsCount === parseFloat(x)
-      && ![actualRowsCount, parseFloat(x)].includes(0)) return noErrorObject;
+    if (actualRowsCount === parseFloat(x)) return noErrorObject;
     return {
       errorMsg: this.errorMsgInvalidData(actualRowsCount, x),
-    };
-  }
-
-  invalidCheckValuesInExclusiveList(validValuesList) {
-    const invalidRows = this.data.reduce((a, val, i) => {
-      if (!validValuesList.includes(val)) a.push(i + 1);
-      return a;
-    }, []);
-    if (invalidRows.length === 0) return noErrorObject;
-    const violationName = `each value must be ${this.listToString(validValuesList)}`;
-    return {
-      errorMsg: this.errorMsgInvalidRows(violationName, invalidRows),
-    };
-  }
-
-  invalidCheckValuesBetweenXAndY(x, y) {
-    const invalidRows = this.data.reduce((a, val, i) => {
-      if (val < x || val > y) a.push(i + 1);
-      return a;
-    }, []);
-    if (invalidRows.length === 0) return noErrorObject;
-    const violationName = `each value must be between ${x} and ${y}`;
-    return {
-      errorMsg: this.errorMsgInvalidRows(violationName, invalidRows),
-    };
-  }
-
-  invalidCheckValuesAtLeastX(x) {
-    const invalidRows = this.data.reduce((a, val, i) => {
-      if (val < x) a.push(i + 1);
-      return a;
-    }, []);
-    if (invalidRows.length === 0) return noErrorObject;
-    const violationName = `each value must be greater than or equal to ${x}`;
-    return {
-      errorMsg: this.errorMsgInvalidRows(violationName, invalidRows),
     };
   }
 
@@ -90,7 +55,7 @@ class DataArray {
     };
   }
 
-  invalidCheckSingleValueIsNumeric() {
+  invalidCheckSingleValueNumeric() {
     const x = 1;
     // checks for numeric value in rows where row size is 1
     const invalidRows = this.rowSizes.reduce((a, val, i) => {
@@ -99,6 +64,43 @@ class DataArray {
     }, []);
     if (invalidRows.length === 0) return noErrorObject;
     const violationName = 'each value must be numeric';
+    return {
+      errorMsg: this.errorMsgInvalidRows(violationName, invalidRows),
+    };
+  }
+
+  // these other checks can be performed for specific types of uploads
+  invalidCheckSingleValueInclusiveList(validValuesList) {
+    const invalidRows = this.data.reduce((a, val, i) => {
+      if (!validValuesList.includes(val)) a.push(i + 1);
+      return a;
+    }, []);
+    if (invalidRows.length === 0) return noErrorObject;
+    const violationName = `each value must be ${this.listToString(validValuesList)}`;
+    return {
+      errorMsg: this.errorMsgInvalidRows(violationName, invalidRows),
+    };
+  }
+
+  invalidCheckSingleValueBetweenXAndY(x, y) {
+    const invalidRows = this.data.reduce((a, val, i) => {
+      if (val < x || val > y) a.push(i + 1);
+      return a;
+    }, []);
+    if (invalidRows.length === 0) return noErrorObject;
+    const violationName = `each value must be between ${x} and ${y}`;
+    return {
+      errorMsg: this.errorMsgInvalidRows(violationName, invalidRows),
+    };
+  }
+
+  invalidCheckSingleValueAtLeastX(x) {
+    const invalidRows = this.data.reduce((a, val, i) => {
+      if (val < x) a.push(i + 1);
+      return a;
+    }, []);
+    if (invalidRows.length === 0) return noErrorObject;
+    const violationName = `each value must be greater than or equal to ${x}`;
     return {
       errorMsg: this.errorMsgInvalidRows(violationName, invalidRows),
     };
