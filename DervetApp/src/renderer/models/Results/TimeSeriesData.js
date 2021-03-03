@@ -46,6 +46,39 @@ export default class TimeSeriesData extends BaseTableData {
       'Frequency Regulation Up (Discharging) (kW)',
       'Load Following Up (Discharging) (kW)',
     ];
+    this.reservationColumnsNames = [
+      // {dischargingColumnName, chargingColumnName, traceName}
+      {
+        dischargingColumnName: 'Spinning Reserve Down (Disharging) (kW)',
+        chargingColumnName: 'Spinning Reserve Down (Charging) (kW)',
+        traceName: 'Spinning Reserve (kW)',
+      },
+      {
+        dischargingColumnName: 'Non-spinning Reserve Down (Disharging) (kW)',
+        chargingColumnName: 'Non-spinning Reserve Down (Charging) (kW)',
+        traceName: 'Non-Spinning Reserve (kW)',
+      },
+      {
+        dischargingColumnName: 'Frequency Regulation Down (Discharging) (kW)',
+        chargingColumnName: 'Frequency Regulation Down (Charging) (kW)',
+        traceName: 'Frequency Regulation Down (kW)',
+      },
+      {
+        dischargingColumnName: 'Frequency Regulation Up (Discharging) (kW)',
+        chargingColumnName: 'Frequency Regulation Up (Charging) (kW)',
+        traceName: 'Frequency Regulation Up (kW)',
+      },
+      {
+        dischargingColumnName: 'Load Following Up (Discharging) (kW)',
+        chargingColumnName: 'Load Following Up (Charging) (kW)',
+        traceName: 'Load Following Up (kW)',
+      },
+      {
+        dischargingColumnName: 'Load Following Up (Discharging) (kW)',
+        chargingColumnName: 'Load Following Up (Charging) (kW)',
+        traceName: 'Load Following Up (kW)',
+      },
+    ];
     /* Other columns that could be plotted:
     'Deferral: Energy Requirement (kWh)'
     'Backup Energy Reserved (kWh)'
@@ -106,16 +139,10 @@ export default class TimeSeriesData extends BaseTableData {
       aggregatedStateOfCharge = aggregatedStateOfEnergy.map(i => i / totalEnergyStorageCap);
     }
 
-    const otherPower = this.grabDataColumns(this.internalPowerColumnNames, yearIndex, 5);
-    const poiPower = this.grabDataColumns(this.abovePoiPowerColumnNames, yearIndex, 5);
-    const reservations = [
-      ...this.grabDataColumns(this.reservationUpDischargingColumnNames, yearIndex, 19, true),
-      ...this.grabDataColumns(this.reservationDownDischaringColumnNames, yearIndex, 19, true),
-      ...this.grabDataColumns(this.reservationUpChargingColumnNames, yearIndex, 16),
-      ...this.grabDataColumns(this.reservationDownChargingColumnNames, yearIndex, 16),
-    ];
-    const marketPrices = this.grabDataColumns(this.marketPriceColumnNames, yearIndex, 7);
-    const hasReservations = Boolean(marketPrices.length);
+    const otherPower = this.grabDataColumns(tsData, this.internalPowerColumnNames, 5);
+    const poiPower = this.grabDataColumns(tsData, this.abovePoiPowerColumnNames, 5, true);
+    const reservations = this.grabReservationColumnData(tsData);
+    const marketPrices = this.grabDataColumns(tsData, this.marketPriceColumnNames, 7);
     return {
       aggregatedSOC: {
         data: aggregatedStateOfCharge,
@@ -129,7 +156,6 @@ export default class TimeSeriesData extends BaseTableData {
         label: 'Energy Price',
       },
       marketPrices,
-      hasReservations,
       reservations,
     };
   }
@@ -161,9 +187,31 @@ export default class TimeSeriesData extends BaseTableData {
     return data;
   }
 
-  grabDataColumns(originalColumnNameList, yearIndex, dropLength = 0, makeNegative = false) {
+  static subtractDataArrays(arr1, arr2) {
+    return arr1.map((el, i) => el - arr2[i]);
+  }
+
+  grabReservationColumnData(tsData) {
     const columnData = [];
-    const tsData = this.columnDataByYear[yearIndex];
+    _.forEach(this.reservationColumnsNames, (payload) => {
+      const { dischargingColumnName, chargingColumnName, traceName } = payload;
+      console.log(traceName);
+      // check if the reservation exists - grab "discharging" amount
+      const dischargeDataName = BaseTableData.toCamelCaseString(dischargingColumnName);
+      const dischargeData = tsData[dischargeDataName];
+      if (dischargeData !== undefined) {
+        // grab "charging" amount
+        const chargeDataName = BaseTableData.toCamelCaseString(chargingColumnName);
+        const chargeData = tsData[chargeDataName];
+        const data = this.subtractDataArrays(dischargeData, chargeData);
+        columnData.push(this.dataLabel(data, traceName));
+      }
+    });
+    return columnData;
+  }
+
+  grabDataColumns(tsData, originalColumnNameList, dropLength = 0, makeNegative = false) {
+    const columnData = [];
     _.forEach(originalColumnNameList, (col) => {
       const dataName = BaseTableData.toCamelCaseString(col);
       const data = tsData[dataName];
@@ -171,12 +219,16 @@ export default class TimeSeriesData extends BaseTableData {
         const label = dropLength ? col.slice(0, -dropLength) : col;
         if (makeNegative) {
           const negativeData = _.map(data, val => (val * -1));
-          columnData.push({ data: negativeData, label });
+          columnData.push(this.dataLabel(negativeData, label));
         } else {
-          columnData.push({ data, label });
+          columnData.push(this.dataLabel(data, label));
         }
       }
     });
     return columnData;
+  }
+
+  static dataLabel(data, label) {
+    return { data, label };
   }
 }
