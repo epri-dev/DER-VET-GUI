@@ -2,7 +2,6 @@ import cloneDeep from 'lodash/cloneDeep';
 import RAActiveTimeSeries from '@/models/TimeSeries/RAActiveTimeSeries.js';
 
 describe('RAActiveTimeSeries model', () => {
-
   it('should validate properly', () => {
     const threeValidRows = new RAActiveTimeSeries(
       [[0], [1], [1]],
@@ -39,8 +38,8 @@ describe('RAActiveTimeSeries model', () => {
     const expectedError = '';
 
     threeRowsExpected.errors = expectedError;
-    let actual = threeRows.revalidate(3);
-    let expected = expectedError;
+    const actual = threeRows.revalidate(3);
+    const expected = expectedError;
     expect(actual).to.eql(expected);
     expect(threeRows).to.eql(threeRowsExpected);
     expect(threeRows).to.not.eql(threeRowsOrig);
@@ -55,13 +54,10 @@ describe('RAActiveTimeSeries model', () => {
     const expectedError = '<b>Invalid Data:</b> This file has <b>3</b> entries. It must have 8760';
 
     threeRowsExpected.errors = expectedError;
-    let actual = threeRows.revalidate(8760);
-    let expected = expectedError;
+    const actual = threeRows.revalidate(8760);
+    const expected = expectedError;
     expect(actual).to.eql(expected);
     expect(threeRows).to.eql(threeRowsExpected);
     expect(threeRows).to.not.eql(threeRowsOrig);
   });
-
 });
-
-
