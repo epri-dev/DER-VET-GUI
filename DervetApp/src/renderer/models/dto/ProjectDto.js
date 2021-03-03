@@ -795,7 +795,7 @@ export const makeMonthlyCsv = (project) => {
   // Add all available monthly to CSV
   MONTHLY_FIELDS.forEach((ts) => {
     const tsClass = project[ts];
-    if (tsClass) {
+    if (tsClass && tsClass.data.length !== 0) {
       const dataObjectList = mapListToObjectList(tsClass.data, ts);
       addSingleSeries(dataObjectList, ts, tsClass.columnHeaderName);
     }
@@ -862,7 +862,7 @@ export const makeTimeSeriesCsv = (project) => {
   // Add all available timeseries to CSV
   TIMESERIES_FIELDS.forEach((ts) => {
     const tsClass = project[ts];
-    if (tsClass) {
+    if (tsClass && tsClass.data.length !== 0) {
       const dataObjectList = mapListToObjectList(tsClass.data, ts);
       addSingleSeries(dataObjectList, ts, tsClass.columnHeaderName);
     }
