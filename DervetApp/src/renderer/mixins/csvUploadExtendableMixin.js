@@ -3,9 +3,10 @@ import { cloneDeep, flatten, startCase } from 'lodash';
 import operateOnKeysList from '@/util/object';
 import { isNotNullAndNotUndefined, isNullOrUndefined } from '@/util/logic';
 import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
+import MonthlyDataUpload from '@/components/Shared/MonthlyDataUpload';
 
 const csvUploadMixin = {
-  components: { TimeseriesDataUpload },
+  components: { TimeseriesDataUpload, MonthlyDataUpload },
   data() { },
   beforeMount() {
     // submitted is false initially; set it to true after the first save.
@@ -24,6 +25,22 @@ const csvUploadMixin = {
       const errors = this.$store.state.Application
         .errorList[this.CONSTANTS.PAGEGROUP][this.CONSTANTS.PAGEKEY][this.CONSTANTS.PAGE];
       return isNullOrUndefined(errors) ? null : errors.length === 0;
+    },
+    expectedRowCount() {
+      if (this.timeseriesXAxis.length === 0) {
+        return 'TBD';
+      }
+      return this.timeseriesXAxis.length;
+    },
+    // this property is triggered when there are no non-TS errors to the inputs on the page,
+    //   and submitted is true
+    isTSError() {
+      return this.getErrorListTS().length !== 0;
+    },
+    timeseriesXAxis() {
+      // the first timestamp should be Jan 1 of dataYear at timestep minutes
+      //   to represent the period-ending value.
+      return this.$store.getters.getTimeseriesXAxis;
     },
   },
   methods: {
@@ -67,7 +84,18 @@ const csvUploadMixin = {
       };
     },
     getErrorMsgTS(tsField) {
-      return `${this.capitalize(this.metadata[tsField].displayName)} Data is required`;
+      return `${this.capitalize(this.metadata[tsField].displayName)} Data are required`;
+    },
+    getErrorMsgTSFromProject(tsField) {
+      // this method also revalidates the TS to reset the errors
+      const errorMsgTS = this.requiredDataLabel(tsField);
+      if (this.tsData(tsField).data.length === 0
+        || (!this.isMonthly(tsField)
+        && this.tsData(tsField).revalidate(this.expectedRowCount).length !== 0)
+        || (this[tsField].data.length === 0 && !this[this.useExistingField(tsField)])) {
+        return errorMsgTS;
+      }
+      return '';
     },
     getMetadata(projectMetadata, fields) {
       return operateOnKeysList(projectMetadata, fields, f => f);
@@ -75,8 +103,7 @@ const csvUploadMixin = {
     getTSInputDefaultDataFromProject(tsFields) {
       const inputTS = {};
       tsFields.forEach((tsField) => {
-        const inputTSField = `${tsField}Input`;
-        inputTS[inputTSField] = null;
+        inputTS[this.inputField(tsField)] = null;
       });
       return inputTS;
     },
@@ -87,8 +114,18 @@ const csvUploadMixin = {
       });
       return useExistingDefaults;
     },
+    isMonthly(tsField) {
+      return tsField.charAt(0) === 'm';
+    },
     inputField(tsField) {
       return `${tsField}Input`;
+    },
+    requiredDataLabel(tsField) {
+      const name = this[tsField].columnHeaderName;
+      if (this.isMonthly(tsField)) {
+        return `Monthly (12 values) of ${name} are required`;
+      }
+      return `A timeseries (${this.expectedRowCount} values) of ${name} is required`;
     },
     receiveMonthlyData(payload) {
       // TODO: AE: this is identical to receiveTimeseriesData; should it be?

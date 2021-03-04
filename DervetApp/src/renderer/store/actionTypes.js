@@ -90,7 +90,7 @@ export const SET_OPTIMIZATION_HORIZON_NUM = 'setOptimizationHorizonNum';
 export const SET_SIZING_EQUIPMENT = 'setSizingEquipment';
 export const SELECT_OTHER_SERVICES = 'selectOtherServices';
 // resource adequacy
-export const SET_RA_ACTIVE_TIMESTEP = 'setRAActiveTimestep';
+export const SET_RA_ACTIVE = 'setRAActive';
 export const SET_RA_CAPACITY_PRICE = 'setRACapacityPrice';
 export const SET_RA_DISPATCH_MODE = 'setRADispatchMode';
 export const SET_RA_EVENT_LENGTH = 'setRAEventLength';
