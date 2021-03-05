@@ -8,6 +8,92 @@
           </div>
         </div>
         <hr>
+        <div id="dispatch-container" class="results-dis-graph" style="position: static; zoom: 1;">
+          <div class="form-group">
+            <div class="col-md-12 text-right">
+              <span class="pull-left result-date" id="dispatch-range" v-html="dataRange"></span>
+
+              <select v-model="dispatchType" class="form-control form-control-inline form-control-width-auto buffer-right">
+                  <option value="days">Day</option>
+                  <option value="weeks">Week</option>
+                  <option value="months">Month</option>
+                  <option value="years">Year</option>
+                  <option value="custom">Custom</option>
+              </select>
+
+              <button type="button" id="dispatch-prev" class="btn btn-default"><i class="fas fa-chevron-left"></i></button>
+              <button type="button" id="dispatch-next" class="btn btn-default"><i class="fas fa-chevron-right"></i></button>
+            </div>
+          </div>
+          <div class="form-group text-center">
+            <b-form-group>
+              <b-form-checkbox-group buttons class="col-md-10" v-model="displayData">
+                <b-form-checkbox value='SOC'>
+                  SOC
+                </b-form-checkbox>
+                <b-form-checkbox value='Battery'>
+                  Battery
+                </b-form-checkbox>
+                <b-form-checkbox value='PV'>
+                  PV
+                </b-form-checkbox>
+                <b-form-checkbox value='Distributed Generation'>
+                  Distributed Generation
+                </b-form-checkbox>
+                <b-form-checkbox value='Load'>
+                  Load
+                </b-form-checkbox>
+                <b-form-checkbox value='Net Load'>
+                  Net Load
+                </b-form-checkbox>
+              </b-form-checkbox-group>
+              <b-form-checkbox-group buttons v-model="displayData" class="col-md-10">
+                <b-form-checkbox value='Day Ahead'>
+                  Day Ahead
+                </b-form-checkbox>
+                <b-form-checkbox value='Spinning Reserves'>
+                  Spinning Reserves
+                </b-form-checkbox>
+                <b-form-checkbox value='Non-Spinning Reserves'>
+                  Non-Spinning Reserves
+                </b-form-checkbox>
+                <b-form-checkbox value='Regulation'>
+                  Regulation
+                </b-form-checkbox>
+                <b-form-checkbox value='Load Following'>
+                  Load Following
+                </b-form-checkbox>
+              </b-form-checkbox-group>
+            </b-form-group>
+          </div>
+          <div class="form-group row buffer-top text-center">
+              <div class="col-md-1">
+                <label>From:</label>
+              </div>
+              <div class="col-md-4">
+                <b-form-datepicker v-model="dispatchFrom" :min="min" close-button placeholder="MM/DD/YYYY"
+                  :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                  :max="dispatchTo ? dispatchTo : max" locale="en">
+                </b-form-datepicker>
+              </div>
+            
+              <div class="col-md-1">
+                <label>To:</label>
+              </div>
+              <div class="col-md-4">
+                <b-form-datepicker v-model="dispatchTo" :min="dispatchFrom ? dispatchFrom : min"
+                  :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                  placeholder="MM/DD/YYYY" close-button :max="max" locale="en">
+                </b-form-datepicker>
+              </div>
+          </div>
+
+          <!-- <div class="form-group">
+            <div class="col-md-12">
+              <div id="energy-dispatch-graph"></div>
+            </div>
+          </div> -->
+        </div>
         <div class="form-group">
           <div class="col-md-12">
             <div id="chartDispatchTimeSeriesPlots">
@@ -27,6 +113,7 @@
 </template>
 
 <script>
+  import * as d3 from 'd3';
   import _ from 'lodash';
   import Plotly from 'plotly.js';
   import { RESULTS } from '@/router/constants';
@@ -40,17 +127,57 @@
       this.createChartEnergyPriceHeatMap('chartEnergyPriceHeatMap');
     },
     data() {
+      // TODO fixme
+      const minDate = new Date(2017, 0, 1);
+      const maxDate = new Date(2017, 11, 31);
+      const dataDate = new Date('2017/01/01');
+
       return {
         resultsPath: RESULTS,
+        displayData: [],
+        width: 500,
+        height: 270,
+        padding: 60,
+        dataRange: dataDate.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }),
+        dispatchType: null,
+        dispatchTo: dataDate,
+        dispatchFrom: dataDate,
+        min: minDate,
+        max: maxDate,
       };
     },
     computed: {
       chartData() {
         return this.$store.state.Results.dispatchVueObjects;
       },
+      rangeX() {
+        const width = this.width - this.padding;
+        return [0, width];
+      },
+      rangeY() {
+        const height = this.height - this.padding;
+        return [0, height];
+      },
+      viewBox() {
+        return `0 0 ${this.width} ${this.height}`;
+      },
     },
     methods: {
       save() {
+      },
+      path(data) {
+        const x = d3.scaleLinear().range(this.rangeX);
+        const y = d3.scaleLinear().range(this.rangeY);
+        d3.axisLeft().scale(x);
+        d3.axisTop().scale(y);
+        x.domain(d3.extent(data, (d, i) => i));
+        y.domain([0, d3.max(data, d => d)]);
+        return d3.line()
+          .x((d, i) => x(i))
+          .y(d => y(d));
+      },
+      line(data) {
+        return this.path(data);
       },
       getColorFromTechnology(tech) {
         if (tech === 'pv') {
