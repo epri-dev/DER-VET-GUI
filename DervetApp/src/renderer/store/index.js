@@ -7,10 +7,10 @@ import modules from './modules';
 
 Vue.use(Vuex);
 
+const isDev = process.env.NODE_ENV !== 'production';
+
 export default new Vuex.Store({
   modules,
-  plugins: [
-    createPersistedState(),
-  ],
-  strict: process.env.NODE_ENV !== 'production',
+  ...(isDev && { plugins: [createPersistedState()] }),
+  strict: isDev,
 });
