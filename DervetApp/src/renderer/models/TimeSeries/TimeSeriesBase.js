@@ -11,7 +11,7 @@ class TimeSeriesBase extends DataArray {
   getUnit() {
     // find unit inside the ending parentheses from header
     // return empty string if undefined in header
-    const unitMatchObject = this.columnHeaderName.match(/([^(]*?)\)$/);
+    const unitMatchObject = this.columnHeaderName.match(/\(([^(]*?)\)$/);
     return (unitMatchObject) ? (unitMatchObject[1] || '') : '';
   }
 

@@ -183,6 +183,7 @@ describe('modelParametersDto', () => {
 
   it('should create a CSV containing timeseries data', () => {
     const actual = makeTimeSeriesCsv(projectFixture);
+    // console.log(JSON.stringify(actual.split('\r\n')[0]));
     expect(actual).to.have.string('Datetime (he)');
   });
 
@@ -204,6 +205,7 @@ describe('modelParametersDto', () => {
 
   it('should generate a CVS containing monthly data', () => {
     const actual = makeMonthlyCsv(projectFixtureAllActive);
+    // console.log(JSON.stringify(actual.split('\r\n')[0]));
     expect(actual).to.have.string('Year');
   });
 
@@ -341,6 +343,7 @@ describe('modelParametersDto', () => {
 
   it('should make NSR parameters', () => {
     const actual = makeNSRParameters(projectFixtureAllActive);
+    // console.log(Object.keys(actual[''].keys));
     expect(Object.keys(actual[''].keys).length).to.eql(3);
   });
 

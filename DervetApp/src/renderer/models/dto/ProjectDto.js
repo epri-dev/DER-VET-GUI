@@ -859,6 +859,7 @@ export const makeTimeSeriesCsv = (project) => {
   addSingleSeries(dtIndex, TIMESERIES_DATETIME_INDEX, TIMESERIES_DATETIME_HEADER);
 
   // Add all available timeseries to CSV
+  // TODO: limit to active and required?
   TIMESERIES_FIELDS.forEach((ts) => {
     const tsClass = project[ts];
     if (tsClass && tsClass.data.length !== 0) {
@@ -868,8 +869,14 @@ export const makeTimeSeriesCsv = (project) => {
   });
 
   // Add PV timeseries
+  console.log('solarPV');
   _.forEach(project.technologySpecsSolarPV, (pv) => {
+    console.log(pv);
+    console.log(pv.generationProfile);
     const { data, field, header } = addTechnologyTimeSeries(pv.generationProfile, pv);
+    console.log(data);
+    console.log(field);
+    console.log(header);
     addSingleSeries(data, field, header);
   });
 
