@@ -38,7 +38,6 @@
 </template>
 
 <script lang="ts">
-  import map from 'lodash/map';
   import { integer, maxLength, minLength, required } from 'vuelidate/lib/validators';
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
@@ -82,7 +81,6 @@
       },
     },
     data(): Data {
-      const ut = map(this.$store.state.OpenEI.utilities, u => u.label);
       return {
         zipCode: null,
         sector: null,
@@ -97,7 +95,7 @@
             displayName: 'Sector',
           },
           utility: {
-            allowedValues: arrayToAllowedValues(ut),
+            allowedValues: arrayToAllowedValues(this.$store.state.OpenEI.utilities),
             displayName: 'Utility',
           },
         },

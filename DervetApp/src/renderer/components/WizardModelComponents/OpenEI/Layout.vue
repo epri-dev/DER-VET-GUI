@@ -39,6 +39,7 @@
   import { FINANCIAL_INPUTS_RETAIL_TARIFF } from '@/router/constants';
   import { getUtilityRates } from '@/service/OpenEI/request';
   import { Sector, UtilityRate } from '@/service/OpenEI/response';
+  import { convertUtilityRateToTariffList } from '@/service/OpenEI/dto';
 
   interface Data {
     FINANCIAL_INPUTS_RETAIL_TARIFF: string;
@@ -68,9 +69,16 @@
         return this.selectedTariff === null;
       },
       addTariffToProject() {
-        console.log(this.selectedTariff);
-        // TODO convert OpenEI utility to tariff
-        // TODO dispatch event to add to project
+        getUtilityRates({
+          // TODO api key will come from user
+          apiKey: 'NDaTseTlWcxclr9jN2c0xxMKgn9aNJ55G0zGhmVb',
+          tariffId: this.selectedTariff,
+        }).then((response) => {
+          // TODO validate that length of items === 1;
+          // TODO error handling of conversion function + API request
+          const pds = convertUtilityRateToTariffList(response.data.items[0]);
+          this.$store.dispatch('addManyRetailTariffBillingPeriods', pds);
+        });
       },
       onClickSearch(address: string, sector: Sector, utility: string) {
         getUtilityRates({

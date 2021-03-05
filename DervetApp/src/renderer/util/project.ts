@@ -1,9 +1,9 @@
 import map from 'lodash/map';
 
-// TODO just use enum in
 export interface AllowedValue {
   value: any;
   label: string;
+  unit?: string;
 }
 
 export const arrayToAllowedValues = (lst: Array<any>): Array<AllowedValue> => (
