@@ -10,6 +10,7 @@
 </template>
 
 <script>
+  import isEmpty from 'lodash/isEmpty';
   import TopNavBar from '@/components/Shared/TopNavBar';
 
   export default {
@@ -19,8 +20,9 @@
       if (this.$store.state.CalEnviroScreen.cesScores === null) {
         this.$store.dispatch('loadCesScores');
       }
-      if (this.$store.state.OpenEI.utilities === null) {
-        this.$store.dispatch('loadUtilities');
+      if (isEmpty(this.$store.state.OpenEI.utilities)) {
+        this.$store.dispatch('loadUtilities', this.$store.state.OpenEI.apiKey)
+          .catch(() => null);
       }
     },
   };

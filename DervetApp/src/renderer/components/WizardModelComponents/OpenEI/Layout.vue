@@ -4,25 +4,36 @@
     <h3>Open EI</h3>
     <hr/>
 
-    <div class="form-horizontal form-butter">
-
-    <!--
-    <div class="row">
-      <div class="col-md-12">API Token Input</div>
-    </div>
-    <br/>
-    -->
-
+    <div class="form-horizontal form-buffer">
       <search-filters @searchClicked="onClickSearch" />
     </div>
-
     <hr/>
-    <tariffs-table v-if="tariffs.length > 0" v-model="selectedTariff" :tariffs="tariffs" />
+
+    <!-- Center spinner -->
+    <div v-if="this.fetchingTariffs"
+         class="spinner-border text-center"
+         role="status">
+      <span class="sr-only text-center"/>
+    </div>
+
+    <div v-if="tariffs.length > 0" class="row">
+      <div class="col-md-12 text-center center">
+        <input v-model="searchText" class="form-control valid"/>
+      </div>
+    </div>
+    <br/>
+    <tariffs-table v-if="tariffs.length > 0" v-model="selectedTariff" :tariffs="filteredTariffs" />
+
+    <div v-if="errorMessage !== null" class="row">
+      <div class="col-md-12 error-text-color text-center">
+        {{ errorMessage }}
+      </div>
+    </div>
 
     <cancel-and-save-buttons
       :backLink="FINANCIAL_INPUTS_RETAIL_TARIFF"
       :disabled="noTariffSelected()"
-      :continueLink="FINANCIAL_INPUTS_RETAIL_TARIFF"
+      :continueLink="this.$route.path"
       continueText="Add Tariff"
       :save="addTariffToProject"
     />
@@ -31,7 +42,9 @@
 </template>
 
 <script lang="ts">
+  import Fuse from 'fuse.js';
   import filter from 'lodash/filter';
+  import map from 'lodash/map';
 
   import SearchFilters from '@/components/WizardModelComponents/OpenEI/SearchFilters';
   import TariffsTable from '@/components/WizardModelComponents/OpenEI/TariffsTable';
@@ -44,9 +57,12 @@
   interface Data {
     FINANCIAL_INPUTS_RETAIL_TARIFF: string;
     address?: string;
+    errorMessage?: string;
+    fetchingTariffs: boolean;
+    searchText: string;
     sector?: Sector;
     selectedTariff?: UtilityRate;
-    tariffs: Array<UtilityRate>;
+    tariffs: UtilityRate[];
     utility?: string;
   }
 
@@ -56,9 +72,23 @@
       SearchFilters,
       TariffsTable,
     },
+    computed: {
+      apiKey() {
+        return this.$store.state.OpenEI.apiKey;
+      },
+      fuse() {
+        return new Fuse(this.tariffs, { keys: ['name'] });
+      },
+      filteredTariffs() {
+        return this.searchText ? map(this.fuse.search(this.searchText), 'item') : this.tariffs;
+      },
+    },
     data: (): Data => ({
       FINANCIAL_INPUTS_RETAIL_TARIFF,
       address: null,
+      errorMessage: null,
+      fetchingTariffs: false,
+      searchText: '',
       sector: null,
       selectedTariff: null,
       utility: null,
@@ -70,24 +100,42 @@
       },
       addTariffToProject() {
         getUtilityRates({
-          // TODO api key will come from user
-          apiKey: 'NDaTseTlWcxclr9jN2c0xxMKgn9aNJ55G0zGhmVb',
+          apiKey: this.apiKey,
           tariffId: this.selectedTariff,
-        }).then((response) => {
-          // TODO validate that length of items === 1;
-          // TODO error handling of conversion function + API request
-          const pds = convertUtilityRateToTariffList(response.data.items[0]);
-          this.$store.dispatch('addManyRetailTariffBillingPeriods', pds);
+        }).then((response) => (
+          new Promise((resolve, reject) => {
+            try {
+              const pds = convertUtilityRateToTariffList(response.data.items[0]);
+              resolve(pds);
+            } catch (err) {
+              reject(err);
+            }
+          })
+        )).then((pds) => {
+          this.$store.dispatch('addManyRetailTariffBillingPeriods', pds)
+            .then(this.$router.push({ path: FINANCIAL_INPUTS_RETAIL_TARIFF }));
+        }).catch((err) => {
+          this.errorMessage = `${err}: unable to add tariff to project.`;
         });
       },
       onClickSearch(address: string, sector: Sector, utility: string) {
+        this.fetchingTariffs = true;
+        this.tariffs = [];
         getUtilityRates({
-          // TODO use API key from user input / local storage
-          apiKey: 'NDaTseTlWcxclr9jN2c0xxMKgn9aNJ55G0zGhmVb',
+          apiKey: this.apiKey,
           address,
           sector,
         }).then((response) => {
           this.tariffs = filter(response.data.items, i => i.utility === utility);
+          this.errorMessage = null;
+        }).catch((err) => {
+          if (err.message === 'Request failed with status code 403') {
+            this.errorMessage = 'Unable to fetch tariffs: please check that you have an internet connection and valid API key';
+          } else {
+            this.errorMessage = `${err}: unable to fetch tariffs.`;
+          }
+        }).finally(() => {
+          this.fetchingTariffs = false;
         });
       },
     },

@@ -23,6 +23,7 @@ export const getUtilityCompanies = (apiKey: string): Promise<UtilityCompaniesRes
   axios({
     method: 'get',
     url: `${OPENEI_API_URL}/utility_companies`,
+    timeout: 5000,
     params: {
       api_key: apiKey,
       format: 'json',
@@ -36,6 +37,7 @@ export const getUtilityRates = (params: UtilityRateParams): Promise<UtilityRates
   axios({
     method: 'get',
     url: `${OPENEI_API_URL}/utility_rates`,
+    timeout: 5000,
     params: {
       api_key: params.apiKey,
       version: UTILITY_RATES_API_VERSION,

@@ -8,7 +8,7 @@
 
       <div class="row">
         <div class="col-md-12">
-          CalEnviroScreen is a mapping tool that helps identify California communities that are most affected by many sources of pollution, and where people are often especially vulnerable to pollution’s effects. It uses environmental, health, and socioeconomic information to produce scores for every census tract in the state. To find the approximate impact of your project, enter your zip code below. For more information, please visit <a class="text-decoration-none" @click="e => openCesWebsiteInBrowser(e)" href=''>CalEnviroScreen homepage</a>.
+          CalEnviroScreen is a mapping tool that helps identify California communities that are most affected by many sources of pollution, and where people are often especially vulnerable to pollution’s effects. It uses environmental, health, and socioeconomic information to produce scores for every census tract in the state. To find the approximate impact of your project, enter your zip code below. For more information, please visit the <open-external-link :link="CES_HOMEPAGE_URL" text="CalEnviroScreen homepage."/>
         </div>
       </div>
 
@@ -45,18 +45,20 @@
 </template>
 
 <script>
-  import { shell } from 'electron'; // eslint-disable-line
-
   import CesMap from '@/assets/CalEnviroScreen/CesMap.png';
+  import OpenExternalLink from '@/components/Shared/OpenExternalLink';
   import CesScoresTable from '@/components/WizardOverview/CalEnviroScreen/CesScoresTable';
   import ZipCodeFilter from '@/components/WizardOverview/CalEnviroScreen/ZipCodeFilter';
   import InnerImageZoom from 'vue-inner-image-zoom';
+
+  const CES_HOMEPAGE_URL = 'https://oehha.ca.gov/calenviroscreen/report/calenviroscreen-30';
 
   export default {
     name: 'CalEnviroScreen',
     components: {
       CesScoresTable,
       InnerImageZoom,
+      OpenExternalLink,
       ZipCodeFilter,
     },
     computed: {
@@ -76,6 +78,7 @@
     data() {
       return {
         CesMap,
+        CES_HOMEPAGE_URL,
         errorMessage: null,
         zipCode: this.$store.state.CalEnviroScreen.zipCode,
       };
@@ -91,10 +94,6 @@
               this.errorMessage = null;
             }
           });
-      },
-      openCesWebsiteInBrowser(e) {
-        e.preventDefault();
-        shell.openExternal('https://oehha.ca.gov/calenviroscreen/report/calenviroscreen-30');
       },
       setErrorMessage(message) {
         this.zipCode = null;

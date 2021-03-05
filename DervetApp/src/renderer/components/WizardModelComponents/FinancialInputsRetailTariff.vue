@@ -3,7 +3,7 @@
     <h3>Retail Tariff</h3>
     <div class="row">
       <div class="col-md-12">
-        Build a retail tariff definition by entering each billing period one at a time, or by importing a tariff from an export file.
+        Build a retail tariff definition by entering each billing period one at a time, by importing a tariff from an export file, or by selecting one from OpenEI's utility rate database.
       </div>
     </div>
 
@@ -26,8 +26,8 @@
         <div class="col-md-12">
           <table class="table table-bordered">
             <thead>
-              <tr class="table-align-center" >
-                <th v-for="label in RETAIL_TARIFF_HEADERS">
+              <tr class="table-align-center">
+                <th v-for="label in tariffTableHeaders">
                   {{label}}
                 </th>
                 <th class="table-align-center">
@@ -39,7 +39,6 @@
               <tr class="table-align-center"
                   v-for="pd in billingPeriods"
                   v-bind:class="{ incomplete: !pd.complete }">
-                <td>{{pd.id}}</td>
                 <td>{{pd.startMonth}}</td>
                 <td>{{pd.endMonth}}</td>
                 <td>{{pd.startTime}}</td>
@@ -111,6 +110,9 @@
   const PAGE = 'retailTariff';
   const TABLE_ITEM_NAME = 'billing periods';
 
+  const tariffTableHeaders = [...RETAIL_TARIFF_HEADERS];
+  tariffTableHeaders.shift();
+
   export default {
     mounted() {
       this.setRetailTariffData();
@@ -133,7 +135,7 @@
     data() {
       return {
         paths,
-        RETAIL_TARIFF_HEADERS,
+        tariffTableHeaders,
       };
     },
     methods: {

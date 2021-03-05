@@ -6,10 +6,10 @@ export interface AllowedValue {
   unit?: string;
 }
 
-export const arrayToAllowedValues = (lst: Array<any>): Array<AllowedValue> => (
+export const arrayToAllowedValues = (lst: any[]): AllowedValue[] => (
   map(lst, x => ({ value: x, label: x }))
 );
 
-export const enumToAllowedValues = (enm: any): Array<AllowedValue> => (
+export const enumToAllowedValues = (enm: any): AllowedValue[] => (
   arrayToAllowedValues(Object.values(enm))
 );

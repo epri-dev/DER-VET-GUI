@@ -14,13 +14,13 @@
           type="radio"
           v-model="$attrs.value"
           :value="data.item.label"
-          @change="selectTariff">
+          @change="selectTariff"/>
         <span>
           {{data.item.name}}
         </span>
       </template>
       <template #cell(link)="data">
-        <a class="text-decoration-none" @click="e => openOpenEIInBrowser(e, data.item.label)" href=''>View</a>
+        <open-external-link :link="makeTariffUrl(data.item.label)" text="View"/>
       </template>
     </b-table>
     <b-pagination
@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-  import { shell } from 'electron'; // eslint-disable-line
+  import OpenExternalLink from '@/components/Shared/OpenExternalLink';
 
   export default {
     props: {
@@ -44,6 +44,7 @@
         type: Array,
       },
     },
+    components: { OpenExternalLink },
     computed: {
       rows() {
         return this.tariffs.length;
@@ -53,6 +54,7 @@
       return {
         currentPage: 1,
         perPage: 10,
+        searchText: '',
         fields: [
           {
             key: 'nameAndLabel',
@@ -70,9 +72,8 @@
       };
     },
     methods: {
-      openOpenEIInBrowser(e: any, tariffLabel: string) {
-        e.preventDefault();
-        shell.openExternal(`https://openei.org/apps/IURDB/rate/view/${tariffLabel}`);
+      makeTariffUrl(tariffLabel: string) {
+        return `https://openei.org/apps/IURDB/rate/view/${tariffLabel}`;
       },
       selectTariff(e: any) {
         this.$emit('input', e.target.value);

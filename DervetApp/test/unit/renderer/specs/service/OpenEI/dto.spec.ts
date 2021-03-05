@@ -68,6 +68,7 @@ describe('openEI dto', () => {
 
   it('should add weekend, chargetype, id details to periods', () => {
     const actualWithDetails = addTariffDetails(res, rates, ChargeType.Energy, WeekDay.Weekdays);
+    delete actualWithDetails[0].id; // id is a random uuid, will be different every time
     expect(actualWithDetails[0]).to.eql({
       startMonth: 1,
       endMonth: 4,
@@ -76,7 +77,6 @@ describe('openEI dto', () => {
       value: 0.07152,
       chargeType: ChargeType.Energy,
       weekday: 1,
-      id: 0,
       complete: true,
     });
     expect(actualWithDetails.length).to.eql(11);

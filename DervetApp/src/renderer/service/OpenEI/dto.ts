@@ -7,6 +7,7 @@ import last from 'lodash/last';
 import map from 'lodash/map';
 import mapValues from 'lodash/mapValues';
 import uniqWith from 'lodash/uniqWith';
+import { v4 as uuidv4 } from 'uuid';
 
 import {
   RateStructureItem,
@@ -141,14 +142,14 @@ export const addTariffDetails = (
   res: PeriodsNoDetails[], rates: RateStructureItem[][], chargeType: ChargeType, weekday: WeekDay,
 ): TariffBillingPeriod[] => {
   const weekdayValue = WEEKDAY_ALLOWED_VALUES.get(weekday).value;
-  return map(res, (val, idx) => {
+  return map(res, (val) => {
     const value = rates[val.valueId][0].rate;
     delete val.valueId;
     return {
       ...val,
       weekday: weekdayValue,
       chargeType,
-      id: idx,
+      id: uuidv4(),
       complete: true,
       value,
     };
@@ -165,6 +166,16 @@ export const convertScheduleToTariffList = (
   return addTariffDetails(periodsNoDetails, rates, chargeType, weekday);
 };
 
+export const checkForTieredRates = (
+  rates: RateStructureItem[][],
+): void => {
+  each(rates, (rate: RateStructureItem[]) => {
+    if (rate.length > 1) {
+      throw new Error('Error: unable to process tiered tariff rates');
+    }
+  });
+};
+
 export const convertUtilityRateToTariffList = (rate: UtilityRate): TariffBillingPeriod[] => {
   const pds: TariffBillingPeriod[] = [];
 
@@ -172,6 +183,7 @@ export const convertUtilityRateToTariffList = (rate: UtilityRate): TariffBilling
     schedule: number[][], rates: RateStructureItem[][], ct: ChargeType, w: WeekDay,
   ): void => {
     if (schedule !== undefined) {
+      checkForTieredRates(rates);
       pds.push(...convertScheduleToTariffList(schedule, rates, ct, w));
     }
   };
