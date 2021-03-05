@@ -2,7 +2,7 @@
   <div class="container body-content">
 
     <div class="jumbotron dervet-title">
-      <h1>DER-VET</h1>
+      <h2>Distributed Energy Resource - Value Estimation Tool</h2>
     </div>
 
     <div class="row buffer-bottom">
@@ -33,17 +33,12 @@
     <div class="row">
       <div class="col-md-4">
         <p>
-          To start an analysis, click the <b>Start a New Analysis</b> button above. You will
-          then be prompted to specify the type of analysis to run and to enter all relevant input data.
-          Once you've entered all the needed data, the DER-VET analysis will begin. This can take several
-          minutes to complete.
+          Create a custom case.
         </p>
       </div>
       <div class="col-md-4">
         <p>
-          You can load a previously exported project by clicking the <b>Import Existing Project</b> button above.
-          You will then be prompted to select the ZIP file that contains the project data and accompanying time series
-          data.
+          Load a previously exported project.
         </p>
       </div>
       <div class="col-md-4">
@@ -70,7 +65,7 @@
 
 <script language="ts">
   import { LOAD_QUICK_START_PROJECT } from '@/store/actionTypes';
-  import { WIZARD_OVERVIEW } from '@/router/constants';
+  import { WIZARD_OVERVIEW, SUMMARY } from '@/router/constants';
   import * as a from '@/store/actionTypes';
 
   const useCases = [
@@ -102,7 +97,7 @@
           .then(this.$store.dispatch(LOAD_QUICK_START_PROJECT, selectedUseCase))
           .then(this.$store.dispatch('Application/setQuickStartCompleteness'))
           .then(this.$store.dispatch(`Application/${a.SET_QUICK_START_ERROR_LIST}`, selectedUseCase))
-          .then(this.$router.push({ path: WIZARD_OVERVIEW }));
+          .then(this.$router.push({ path: SUMMARY }));
       },
       resetProjectToDefault() {
         this.$store.dispatch('resetProjectToDefault')

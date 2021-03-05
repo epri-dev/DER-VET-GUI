@@ -41,6 +41,8 @@
       </div>
     </div>
 
+    <nav-button :continue-link="WIZARD_COMPONENT" continue-text="Done" :save="this.save" />
+
   </div>
 </template>
 
@@ -50,6 +52,8 @@
   import CesMap from '@/assets/CalEnviroScreen/CesMap.png';
   import CesScoresTable from '@/components/WizardOverview/CalEnviroScreen/CesScoresTable';
   import ZipCodeFilter from '@/components/WizardOverview/CalEnviroScreen/ZipCodeFilter';
+  import { WIZARD_COMPONENT } from '@/router/constants';
+  import NavButton from '@/components/Shared/NavButton';
   import InnerImageZoom from 'vue-inner-image-zoom';
 
   export default {
@@ -58,6 +62,7 @@
       CesScoresTable,
       InnerImageZoom,
       ZipCodeFilter,
+      NavButton,
     },
     computed: {
       cesScores() {
@@ -75,6 +80,7 @@
     },
     data() {
       return {
+        WIZARD_COMPONENT,
         CesMap,
         errorMessage: null,
         zipCode: this.$store.state.CalEnviroScreen.zipCode,
@@ -99,6 +105,8 @@
       setErrorMessage(message) {
         this.zipCode = null;
         this.errorMessage = message;
+      },
+      save() {
       },
     },
   };

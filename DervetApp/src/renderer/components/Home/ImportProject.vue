@@ -34,7 +34,7 @@
 
 <script>
   import FilePicker from '@/components/Shared/FilePicker.vue';
-  import { WIZARD_OVERVIEW } from '@/router/constants';
+  import { SUMMARY } from '@/router/constants';
   import { importProject } from '@/service/ProjectFileManager';
   import store from '@/store';
   import { APPLICATION } from '@/store/modules/Application';
@@ -66,7 +66,7 @@
               store.dispatch(LOAD_NEW_PROJECT, project);
             })
             .then(() => store.dispatch('Application/setNewApplicationState', this.applicationState))
-            .then(() => this.$router.push({ path: WIZARD_OVERVIEW }));
+            .then(() => this.$router.push({ path: SUMMARY }));
         }
       },
     },
