@@ -378,7 +378,7 @@ const mutations = {
     state.nsrGrowth = newNSRGrowth;
   },
   [m.SET_NSR_PRICE](state, newNSRPrice) {
-    state.nsrPrice = newNSRPrice;
+    state[c.TS_NSR_PRICE] = newNSRPrice;
   },
   // objectives
   [m.CHOOSE_ENERGY_STRUCTURE](state, wholesaleEnergyPrices) {

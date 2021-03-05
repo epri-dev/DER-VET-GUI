@@ -9,18 +9,13 @@ import operateOnKeysList from '@/util/object';
 import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
 import DAPriceTimeSeries from '@/models/TimeSeries/DAPriceTimeSeries';
 import DeferralLoadTimeSeries from '@/models/TimeSeries/DeferralLoadTimeSeries';
-import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
-import FRPriceTimeSeries from '@/models/TimeSeries/FRPriceTimeSeries';
-import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
 import FleetEVBaselineLoadTimeSeries from '@/models/TimeSeries/FleetEVBaselineLoadTimeSeries';
 import LFDownPriceTimeSeries from '@/models/TimeSeries/LFDownPriceTimeSeries';
 import LFEnergyOptionDownTimeSeries from '@/models/TimeSeries/LFEnergyOptionDownTimeSeries';
 import LFEnergyOptionUpTimeSeries from '@/models/TimeSeries/LFEnergyOptionUpTimeSeries';
 import LFPriceTimeSeries from '@/models/TimeSeries/LFPriceTimeSeries';
 import LFUpPriceTimeSeries from '@/models/TimeSeries/LFUpPriceTimeSeries';
-import NSRPriceTimeSeries from '@/models/TimeSeries/NSRPriceTimeSeries';
 import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
-import RAActiveTimeSeries from '@/models/TimeSeries/RAActiveTimeSeries';
 import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
 import SystemLoadTimeSeries from '@/models/TimeSeries/SystemLoadTimeSeries';
 import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
@@ -40,6 +35,7 @@ import RACapacityPriceMonthly from '@/models/Monthly/RACapacityPriceMonthly';
 import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
 import FRPriceTimeSeries from '@/models/TimeSeries/FRPriceTimeSeries';
 import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
+import NSRPriceTimeSeries from '@/models/TimeSeries/NSRPriceTimeSeries';
 import RAActiveTimeSeries from '@/models/TimeSeries/RAActiveTimeSeries';
 import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
 
@@ -441,6 +437,7 @@ export class ProjectMetadata {
         type: Number,
         unit: 'hours',
         description: 'How much energy capability (kWh) should the DERs reserve for each kW of participation in Non-Spinning Reserve? The DERs will not use this energy capability for other services to be ready for the worst-case scenario.',
+        actionSetName: a.SET_NSR_DURATION,
       }),
       [c.NSR_GROWTH]: new ProjectFieldMetadata({
         displayName: 'Growth Rate of Non-Spinning Reserve Prices',
@@ -450,6 +447,7 @@ export class ProjectMetadata {
         type: Number,
         unit: '% / year',
         description: 'What is the growth rate of Non-Spinning Reserve Price?',
+        actionSetName: a.SET_NSR_GROWTH,
       }),
       [c.OPTIMIZATION_HORIZON]: new ProjectFieldMetadata({
         displayName: 'Optimization Window',
@@ -602,6 +600,11 @@ export class ProjectMetadata {
         DataModel: FRDownPriceTimeSeries,
         displayName: 'frequency regulation down price',
         actionSetName: a.SET_FR_DOWN_PRICE,
+      }),
+      [c.TS_NSR_PRICE]: new ProjectFieldMetadata({
+        DataModel: NSRPriceTimeSeries,
+        displayName: 'non-spinning reserve price',
+        actionSetName: a.SET_NSR_PRICE,
       }),
       [c.TS_RA_ACTIVE]: new ProjectFieldMetadata({
         DataModel: RAActiveTimeSeries,

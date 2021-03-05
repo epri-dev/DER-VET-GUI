@@ -68,9 +68,12 @@ export const TS_RA_ACTIVE = 'tsRaActive';
 export const TS_RA_FIELDS = [TS_RA_ACTIVE];
 export const TS_SR_PRICE = 'tsSrPrice';
 export const TS_SR_FIELDS = [TS_SR_PRICE];
+export const TS_NSR_PRICE = 'tsNsrPrice';
+export const TS_NSR_FIELDS = [TS_NSR_PRICE];
 
 export const TS_ALL = [
   ...TS_FR_FIELDS,
+  ...TS_NSR_FIELDS,
   ...TS_RA_FIELDS,
   ...TS_SR_FIELDS,
 ];

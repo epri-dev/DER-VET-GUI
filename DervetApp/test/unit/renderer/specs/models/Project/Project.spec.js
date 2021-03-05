@@ -16,18 +16,26 @@ describe('Project model', () => {
       const page = ts.pageAttributes.page;
       const pageKey = ts.pageAttributes.pageKey;
       const pageGroup = ts.pageAttributes.pageGroup;
-      const f2 = f.slice(0, 2);
-      const f4 = (f.slice(2, 4)).toUpperCase();
-      const expected_a = 'set' + f4 + f.slice(4);
-      const expected_name = f4 + f.slice(4) + 'TimeSeries';
+      const f0 = f.slice(0, 2);
+      let pageIndexEnd = null;
+      switch (f) {
+        case 'tsNsrPrice':
+          pageIndexEnd = 5;
+          break;
+        default:
+          pageIndexEnd = 4;
+
+      }
+      const f1 = (f.slice(2, pageIndexEnd)).toUpperCase();
+      const expected_a = 'set' + f1 + f.slice(pageIndexEnd);
+      const expected_name = f1 + f.slice(pageIndexEnd) + 'TimeSeries';
 
       expect(a).to.not.eql(undefined);
-      expect(f2).to.eql('ts');
+      expect(f0).to.eql('ts');
       expect(a).to.eql(expected_a);
 
-      // objectives
       expect(dm).to.not.eql(undefined);
-      expect(page).to.eql(f4);
+      expect(page).to.eql(f1);
       expect(pageKey).to.eql('objectives');
       expect(pageGroup).to.eql('components');
       expect(dm.name).to.eql(expected_name);
@@ -35,9 +43,9 @@ describe('Project model', () => {
       expect(ts.unit.length).to.be.above(0);
       expect(ts.columnHeaderName.length).to.be.above(0);
 
-      // skip tsFrUpPrice & tsFrDownPrice as they do not contain FR in their columhHeaderName
+      // skip tsFrUpPrice & tsFrDownPrice as they do not contain FR in their columnHeaderName
       if (!['tsFrUpPrice', 'tsFrDownPrice'].includes(f)) {
-        expect(ts.columnHeaderName).to.have.string(f4);
+        expect(ts.columnHeaderName).to.have.string(f1);
       }
     });
   });

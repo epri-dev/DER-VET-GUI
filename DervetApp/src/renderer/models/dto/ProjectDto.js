@@ -52,8 +52,6 @@ const TIMESERIES_FIELDS = [
   'lfPrice',
   'lfUpPrice',
   'lfDownPrice',
-  'nsrPrice',
-  'raActive',
   'siteLoad',
   'systemLoad',
   'userPowerMin',
@@ -501,8 +499,8 @@ export const makeNSRParameters = (project) => {
   if (project.objectivesNSR) {
     const isActive = convertToYesNo(project.objectivesNSR);
     const keys = {
-      duration: makeBaseKey(project.nsrDuration, FLOAT),
-      growth: makeBaseKey(project.nsrGrowth, FLOAT),
+      duration: makeBaseKey(project[c.NSR_DURATION], FLOAT),
+      growth: makeBaseKey(project[c.NSR_GROWTH], FLOAT),
       ts_constraints: makeBaseKey(ZERO, BOOL), // hardcoded
     };
     return makeGroup('', isActive, keys);
@@ -708,8 +706,8 @@ export const makeSRParameters = (project) => {
   if (project.objectivesSR) {
     const isActive = convertToYesNo(project.objectivesSR);
     const keys = {
-      duration: makeBaseKey(project.srDuration, FLOAT),
-      growth: makeBaseKey(project.srGrowth, FLOAT),
+      duration: makeBaseKey(project[c.SR_DURATION], FLOAT),
+      growth: makeBaseKey(project[c.SR_GROWTH], FLOAT),
       ts_constraints: makeBaseKey(ZERO, BOOL), // hardcoded
     };
     return makeGroup('', isActive, keys);
