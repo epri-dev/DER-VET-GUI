@@ -136,7 +136,7 @@ export const ERCOTMarketService = {
   timestep: 60,
   srGrowth: 0,
   srDuration: 0,
-  srPrice: new SRPriceTimeSeries(marketPrice),
+  tsSrPrice: new SRPriceTimeSeries(marketPrice),
 };
 
 export default ERCOTMarketService;

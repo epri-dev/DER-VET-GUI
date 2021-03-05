@@ -98,6 +98,10 @@ export const SET_RA_EVENT_LENGTH = 'SET_RA_EVENT_LENGTH';
 export const SET_RA_EVENT_SELECTION_METHOD = 'SET_RA_EVENT_SELECTION_METHOD';
 export const SET_RA_NUMBER_EVENTS = 'SET_RA_NUMBER_EVENTS';
 export const SET_RA_GROWTH = 'SET_RA_GROWTH';
+// sr page
+export const SET_SR_DURATION = 'SET_SR_DURATION';
+export const SET_SR_GROWTH = 'SET_SR_GROWTH';
+export const SET_SR_PRICE = 'SET_SR_PRICE';
 // system load
 export const SET_SYSTEM_LOAD = 'SET_SYSTEM_LOAD';
 // technology spec page

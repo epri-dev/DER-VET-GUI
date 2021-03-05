@@ -520,14 +520,14 @@ const mutations = {
     state.technologySpecsSolarPV = tmpSolarPVSpecs;
   },
   // spinning reserve
-  SET_SR_DURATION(state, newSRDuration) {
-    state.srDuration = newSRDuration;
+  [m.SET_SR_DURATION](state, newSRDuration) {
+    state[c.SR_DURATION] = newSRDuration;
   },
-  SET_SR_GROWTH(state, newSRGrowth) {
-    state.srGrowth = newSRGrowth;
+  [m.SET_SR_GROWTH](state, newSRGrowth) {
+    state[c.SR_GROWTH] = newSRGrowth;
   },
-  SET_SR_PRICE(state, newSRPrice) {
-    state.srPrice = newSRPrice;
+  [m.SET_SR_PRICE](state, newSRPrice) {
+    state[c.TS_SR_PRICE] = newSRPrice;
   },
   // start page
   SET_ANALYSIS_HORIZON_MODE(state, newAnalysisHorizonMode) {
@@ -1016,14 +1016,14 @@ const actions = {
     commit('SET_SITE_LOAD', newSiteLoad);
   },
   // spinning reserves
-  setSRDuration({ commit }, newSRDuration) {
-    commit('SET_SR_DURATION', newSRDuration);
+  [a.SET_SR_DURATION]({ commit }, newSRDuration) {
+    commit(m.SET_SR_DURATION, newSRDuration);
   },
-  setSRGrowth({ commit }, newSRGrowth) {
-    commit('SET_SR_GROWTH', newSRGrowth);
+  [a.SET_SR_GROWTH]({ commit }, newSRGrowth) {
+    commit(m.SET_SR_GROWTH, newSRGrowth);
   },
-  setSRPrice({ commit }, newSRPrice) {
-    commit('SET_SR_PRICE', newSRPrice);
+  [a.SET_SR_PRICE]({ commit }, newSRPrice) {
+    commit(m.SET_SR_PRICE, newSRPrice);
   },
   // solar pv
   replaceTechnologySpecsSolarPV({ commit }, payload) {

@@ -99,6 +99,10 @@ export const SET_RA_NUMBER_EVENTS = 'setRANumberEvents';
 export const SET_RA_GROWTH = 'setRAGrowth';
 // single EV
 export const REPLACE_TECHNOLOGY_SPECS_SINGLE_EV = 'replaceTechnologySpecsSingleEV';
+// sr page
+export const SET_SR_DURATION = 'setSRDuration';
+export const SET_SR_GROWTH = 'setSRGrowth';
+export const SET_SR_PRICE = 'setSRPrice';
 // system load
 export const SET_SYSTEM_LOAD = 'setSystemLoad';
 // technology spec page

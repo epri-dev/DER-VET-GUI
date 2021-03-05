@@ -148,12 +148,12 @@ export const dummyMarketServiceHourly = {
   frEnergyPriceGrowth: 5,
   frCombinedMarket: false,
   frDuration: 0,
-  frPrice: null,
-  frUpPrice: new FRUpPriceTimeSeries(marketPrice),
-  frDownPrice: new FRDownPriceTimeSeries(marketPrice),
+  tsFrPrice: null,
+  tsFrUpPrice: new FRUpPriceTimeSeries(marketPrice),
+  tsFrDownPrice: new FRDownPriceTimeSeries(marketPrice),
   srGrowth: 2,
   srDuration: 0,
-  srPrice: new SRPriceTimeSeries(marketPrice),
+  tsSrPrice: new SRPriceTimeSeries(marketPrice),
 };
 
 export default dummyMarketServiceHourly;

@@ -21,7 +21,6 @@ import LFUpPriceTimeSeries from '@/models/TimeSeries/LFUpPriceTimeSeries';
 import NSRPriceTimeSeries from '@/models/TimeSeries/NSRPriceTimeSeries';
 import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
 import RAActiveTimeSeries from '@/models/TimeSeries/RAActiveTimeSeries';
-import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
 import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
 import SystemLoadTimeSeries from '@/models/TimeSeries/SystemLoadTimeSeries';
 import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
@@ -42,6 +41,7 @@ import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
 import FRPriceTimeSeries from '@/models/TimeSeries/FRPriceTimeSeries';
 import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
 import RAActiveTimeSeries from '@/models/TimeSeries/RAActiveTimeSeries';
+import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
 
 import RACapacityPriceMonthly from '@/models/Monthly/RACapacityPriceMonthly';
 
@@ -101,7 +101,6 @@ export class ProjectMetadata {
       lfDownPrice: null,
       nsrPrice: null,
       siteLoad: null,
-      srPrice: null,
       systemLoad: null,
       userPowerMin: null,
       userPowerMax: null,
@@ -562,6 +561,7 @@ export class ProjectMetadata {
         type: Number,
         unit: 'hours',
         description: 'How much energy capability (kWh) should the DERs reserve for each kW of participation in Spinning Reserve? The DERs will not use this energy capability for other services to be ready for the worst-case scenario.',
+        actionSetName: a.SET_SR_DURATION,
       }),
       [c.SR_GROWTH]: new ProjectFieldMetadata({
         displayName: 'Growth Rate of Spinning Reserve Prices',
@@ -571,6 +571,7 @@ export class ProjectMetadata {
         type: Number,
         unit: '% / year',
         description: 'What is the growth rate of Spinning Reserve Price?',
+        actionSetName: a.SET_SR_GROWTH,
       }),
       [c.START_YEAR]: new ProjectFieldMetadata({
         displayName: 'Start Year',
@@ -606,6 +607,11 @@ export class ProjectMetadata {
         DataModel: RAActiveTimeSeries,
         displayName: 'if the resource adequacy event selection considers the load (1) or not (0)',
         actionSetName: a.SET_RA_ACTIVE,
+      }),
+      [c.TS_SR_PRICE]: new ProjectFieldMetadata({
+        DataModel: SRPriceTimeSeries,
+        displayName: 'spinning reserve price',
+        actionSetName: a.SET_SR_PRICE,
       }),
       // mts: monthly timeseries
       [c.MTS_RA_CAPACITY_PRICE]: new ProjectFieldMetadata({

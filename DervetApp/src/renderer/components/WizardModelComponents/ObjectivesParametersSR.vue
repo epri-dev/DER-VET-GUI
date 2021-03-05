@@ -2,7 +2,7 @@
   <div>
     <h3>Services: Spinning Reserve Price</h3>
     <hr>
-    <form class="form-horizontal form-buffer">
+    <div class="form-horizontal form-buffer">
 
       <text-input v-model="srGrowth"
                   v-bind:field="metadata.srGrowth"
@@ -17,107 +17,85 @@
       </text-input>
 
       <timeseries-data-upload
-        chart-name="chartUploadedTimeSeries"
-        :data-name="priceName"
-        units="$/kW"
+        chart-name="tsSrPriceChartUploaded"
+        @click="receiveRemove"
+        :data-exists="tsData('tsSrPrice').data.length !== 0"
+        :DataModel="metadata.tsSrPrice.DataModel"
+        :data-name="metadata.tsSrPrice.displayName"
+        :data-time-series="tsData('tsSrPrice')"
+        :errorMessage="getErrorMsgTS('tsSrPrice')"
+        :isInvalid="submitted && tsData('tsSrPrice').data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('tsSrPrice')"
+        object-name="tsSrPrice"
         @uploaded="receiveTimeseriesData"
-        :data-time-series="price"
-        key="1"
-        :TimeSeriesModel="SRPriceTimeSeries"
       />
       <hr>
 
-      <save-buttons
-        :continue-link="WIZARD_COMPONENT"
-        :displayError="submitted && $v.$anyError"
-        :save="validatedSave" />
+      <save-and-save-continue
+        :displayError="submitted && ($v.$anyError || isTSError)"
+        :save="validatedSaveStay"
+        :save-continue="validatedSaveContinue"
+      />
 
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import * as p from '@/models/Project/ProjectMetadata';
-  import * as c from '@/models/Project/constants';
-  import operateOnKeysList from '@/util/object';
-  import { isNotNullAndNotUndefined } from '@/util/logic';
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
-  import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
-  import { WIZARD_COMPONENT } from '@/router/constants';
-  import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
+  import { projectMetadata } from '@/models/Project/ProjectMetadata';
+  import * as c from '@/models/Project/constants';
 
-  const metadata = p.projectMetadata;
-  const validations = metadata.getValidationSchema(c.SR_FIELDS);
+  import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
+
   const PAGEGROUP = 'components';
   const PAGEKEY = 'objectives';
   const PAGE = 'SR';
+  const FIELDS = c.SR_FIELDS;
+  const TS_FIELDS = c.TS_SR_FIELDS;
+
+  const ALL_FIELDS = [...FIELDS, ...TS_FIELDS];
+  const validations = projectMetadata.getValidationSchema(FIELDS);
+
+  const CONSTANTS = {
+    DESTINATION_PATH,
+    PAGEGROUP,
+    PAGEKEY,
+    PAGE,
+    FIELDS,
+    TS_FIELDS,
+  };
 
   export default {
-    components: { TimeseriesDataUpload },
     mixins: [csvUploadMixin, wizardFormMixin],
     data() {
-      const p = this.$store.state.Project;
       return {
-        price: p.srPrice,
-        priceName: 'spinning reserve price',
-        metadata,
-        ...this.getDataFromProject(),
-        WIZARD_COMPONENT,
-        SRPriceTimeSeries,
+        metadata: this.getMetadata(projectMetadata, ALL_FIELDS),
+        ...this.getDataFromProject(ALL_FIELDS),
+        ...this.getTSInputDefaultDataFromProject(TS_FIELDS),
+        ...this.getChildKeys(TS_FIELDS),
+        ...this.getUseExistingDefaults(TS_FIELDS),
+        CONSTANTS,
       };
     },
     validations: {
       ...validations,
     },
-    computed: {
-      errorList() {
-        return this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE];
-      },
-    },
-    beforeMount() {
-      // submitted is false initially; set it to true after the first save.
-      // initially, complete is null; after saving, it is set to either true or false.
-      // we want to show validation errors at any time after the first save, with submitted.
-      if (isNotNullAndNotUndefined(this.errorList)) {
-        this.submitted = true;
-        this.$v.$touch();
-      }
-    },
     methods: {
-      getErrorMsg(fieldName) {
-        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
-      },
-      getDataFromProject() {
-        return operateOnKeysList(this.$store.state.Project, c.SR_FIELDS, f => f);
-      },
-      getErrorListPayload() {
+      getErrorListTS() {
         const errors = [];
-        Object.keys(this.$v).forEach((key) => {
-          if (key.charAt(0) !== '$' && this.$v[key].$invalid) {
-            errors.push(this.getErrorMsg(key));
+        (TS_FIELDS).forEach((tsField) => {
+          const errorMsgTS = this.getErrorMsgTSFromProject(tsField);
+          if (errorMsgTS.length !== 0) {
+            errors.push(errorMsgTS);
           }
         });
-        return {
-          pageGroup: PAGEGROUP,
-          pageKey: PAGEKEY,
-          page: PAGE,
-          errorList: errors,
-        };
+        return errors;
       },
-      validatedSave() {
-        this.submitted = true;
-        this.$v.$touch();
-        // set errorList
-        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
-        return this.save();
-      },
-      save() {
-        if (this.inputTimeseries[this.priceName] !== undefined) {
-          this.$store.dispatch('setSRPrice', this.inputTimeseries[this.priceName]);
-        }
-        this.$store.dispatch('setSRGrowth', this.srGrowth);
-        this.$store.dispatch('setSRDuration', this.srDuration);
+      getErrorMsg(fieldName) {
+        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
     },
   };

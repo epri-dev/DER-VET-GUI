@@ -55,7 +55,6 @@ const TIMESERIES_FIELDS = [
   'nsrPrice',
   'raActive',
   'siteLoad',
-  'srPrice',
   'systemLoad',
   'userPowerMin',
   'userPowerMax',

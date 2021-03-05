@@ -3,8 +3,8 @@ import { isNumeric } from '@/util/logic';
 const noErrorObject = { errorMsg: null };
 
 class DataArray {
-  // class that describes an array of arrays
-  // must also handle when data is an array
+  // class that describes a 2-D data structure (an array of arrays)
+  // must also handle 1-D data (an array of values)
   constructor(data) {
     this.rowSizes = data.map(row => ((typeof row === 'object') ? row.length : 1));
     this.data = data.map(row => ((typeof row === 'object') ? row[0] : row)); // this is the first value of each row
