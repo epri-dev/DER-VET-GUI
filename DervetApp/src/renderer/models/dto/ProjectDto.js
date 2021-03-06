@@ -45,8 +45,6 @@ export const LOG_FILE = 'dervet_log.log';
 
 const TIMESERIES_FIELDS = [
   'criticalLoad',
-  'deferralLoad',
-  'daPrice',
   'lfEOU',
   'lfEOD',
   'lfPrice',
@@ -274,7 +272,7 @@ export const makeControllableLoadParameters = (project) => {
 export const makeDAParameters = (project) => {
   if (project.objectivesDA) {
     const isActive = convertToYesNo(project.objectivesDA);
-    const keys = { growth: makeBaseKey(project.daGrowth, FLOAT) };
+    const keys = { growth: makeBaseKey(project[c.DA_GROWTH], FLOAT) };
     return makeGroup('', isActive, keys);
   }
   return makeEmptyGroup();

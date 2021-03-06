@@ -1,6 +1,6 @@
 ﻿<template>
   <div>
-    <h3>Services: Spinning Reserve Price</h3>
+    <h3>Services: Non-Spinning Reserve Price</h3>
     <hr>
     <div class="form-horizontal form-buffer">
 

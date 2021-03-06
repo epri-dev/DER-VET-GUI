@@ -192,26 +192,26 @@ const mutations = {
   },
   // da page
   [m.SET_DA_GROWTH](state, newDAGrowth) {
-    state.daGrowth = newDAGrowth;
+    state[c.DA_GROWTH] = newDAGrowth;
   },
   [m.SET_DA_PRICE](state, newDAPrice) {
-    state.daPrice = newDAPrice;
+    state[c.TS_DA_PRICE] = newDAPrice;
   },
   // deferral page
   [m.SET_DEFERRAL_GROWTH](state, newDeferralGrowth) {
-    state.deferralGrowth = newDeferralGrowth;
+    state[c.DEFERRAL_GROWTH] = newDeferralGrowth;
   },
   [m.SET_DEFERRAL_PRICE](state, newDeferralPrice) {
-    state.deferralPrice = newDeferralPrice;
+    state[c.DEFERRAL_PRICE] = newDeferralPrice;
   },
   [m.SET_DEFERRAL_PLANNED_LOAD_LIMIT](state, newDeferralPlannedLoadLimit) {
-    state.deferralPlannedLoadLimit = newDeferralPlannedLoadLimit;
+    state[c.DEFERRAL_PLANNED_LOAD_LIMIT] = newDeferralPlannedLoadLimit;
   },
   [m.SET_DEFERRAL_LOAD](state, newDeferralLoad) {
-    state.deferralLoad = newDeferralLoad;
+    state[c.TS_DEFERRAL_LOAD] = newDeferralLoad;
   },
   [m.SET_DEFERRAL_REVERSE_POWER_FLOW_LIMIT](state, newDeferralReversePowerFlowLimit) {
-    state.deferralReversePowerFlowLimit = newDeferralReversePowerFlowLimit;
+    state[c.DEFERRAL_REVERSE_POWER_FLOW_LIMIT] = newDeferralReversePowerFlowLimit;
   },
   // Diesel
   [m.REPLACE_TECHNOLOGY_SPECS_DIESEL_GEN](state, payload) {

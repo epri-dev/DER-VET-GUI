@@ -42,7 +42,7 @@ export const projectFixtureAllActive = {
   backupEnergyReservation: new BackupEnergyReservationMonthly(new Array(12).fill(30)),
   criticalLoad: new CriticalLoadTimeSeries(csvs.siteLoad), // note: using hardcoded site load
   daGrowth: 0,
-  daPrice: new DAPriceTimeSeries(csvs.daPrice),
+  tsDaPrice: new DAPriceTimeSeries(csvs.daPrice),
   dataYear: 2017,
   dcmGrowth: 5,
   discountRate: 7,
@@ -50,7 +50,7 @@ export const projectFixtureAllActive = {
   deferralReversePowerFlowLimit: -11000,
   deferralGrowth: 0,
   deferralPrice: 10000,
-  deferralLoad: new DeferralLoadTimeSeries(csvs.deferralLoad),
+  tsDeferralLoad: new DeferralLoadTimeSeries(csvs.deferralLoad),
   drCapacityReservation: new DRCapacityReservationMonthly(new Array(12).fill(100)),
   drCapacityAwards: new DRCapacityAdwardsMonthly(new Array(12).fill(50)),
   drEndHour: 24,

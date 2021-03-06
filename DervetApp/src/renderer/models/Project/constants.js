@@ -60,6 +60,10 @@ export const TIMESTEP = 'timestep';
 export const USER_PRICE = 'userPrice';
 
 // Timeseries
+export const TS_DA_PRICE = 'tsDaPrice';
+export const TS_DA_FIELDS = [TS_DA_PRICE];
+export const TS_DEFERRAL_LOAD = 'tsDeferralLoad';
+export const TS_DEFERRAL_FIELDS = [TS_DEFERRAL_LOAD];
 export const TS_FR_PRICE = 'tsFrPrice';
 export const TS_FR_UP_PRICE = 'tsFrUpPrice';
 export const TS_FR_DOWN_PRICE = 'tsFrDownPrice';
@@ -72,6 +76,8 @@ export const TS_NSR_PRICE = 'tsNsrPrice';
 export const TS_NSR_FIELDS = [TS_NSR_PRICE];
 
 export const TS_ALL = [
+  ...TS_DA_FIELDS,
+  ...TS_DEFERRAL_FIELDS,
   ...TS_FR_FIELDS,
   ...TS_NSR_FIELDS,
   ...TS_RA_FIELDS,

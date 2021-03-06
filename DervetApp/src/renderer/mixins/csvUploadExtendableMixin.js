@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
-import { cloneDeep, flatten, startCase } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import flatten from 'lodash/flatten';
+import startCase from 'lodash/startCase';
 import operateOnKeysList from '@/util/object';
 import { isNotNullAndNotUndefined, isNullOrUndefined } from '@/util/logic';
 import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';

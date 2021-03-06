@@ -7,8 +7,6 @@ import operateOnKeysList from '@/util/object';
 
 /*
 import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
-import DAPriceTimeSeries from '@/models/TimeSeries/DAPriceTimeSeries';
-import DeferralLoadTimeSeries from '@/models/TimeSeries/DeferralLoadTimeSeries';
 import FleetEVBaselineLoadTimeSeries from '@/models/TimeSeries/FleetEVBaselineLoadTimeSeries';
 import LFDownPriceTimeSeries from '@/models/TimeSeries/LFDownPriceTimeSeries';
 import LFEnergyOptionDownTimeSeries from '@/models/TimeSeries/LFEnergyOptionDownTimeSeries';
@@ -32,6 +30,8 @@ import DRMonthsMonthly from '@/models/Monthly/DRMonthsMonthly';
 import RACapacityPriceMonthly from '@/models/Monthly/RACapacityPriceMonthly';
 */
 
+import DAPriceTimeSeries from '@/models/TimeSeries/DAPriceTimeSeries';
+import DeferralLoadTimeSeries from '@/models/TimeSeries/DeferralLoadTimeSeries';
 import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
 import FRPriceTimeSeries from '@/models/TimeSeries/FRPriceTimeSeries';
 import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
@@ -88,14 +88,11 @@ export class ProjectMetadata {
 
       // TIMESERIES ARRAYS
       criticalLoad: null,
-      deferralLoad: null,
-      daPrice: null,
       lfEOU: null,
       lfEOD: null,
       lfPrice: null,
       lfUpPrice: null,
       lfDownPrice: null,
-      nsrPrice: null,
       siteLoad: null,
       systemLoad: null,
       userPowerMin: null,
@@ -145,6 +142,7 @@ export class ProjectMetadata {
         type: Number,
         unit: '% / year',
         description: 'What is the growth rate of Day Ahead Energy Price?',
+        actionSetName: a.SET_DA_GROWTH,
       }),
       [c.DATA_YEAR]: new ProjectFieldMetadata({
         displayName: 'Data Year',
@@ -160,6 +158,7 @@ export class ProjectMetadata {
         type: Number,
         unit: '% / year',
         description: 'What is the growth rate of the deferral load?',
+        actionSetName: a.SET_DEFERRAL_GROWTH,
       }),
       [c.DEFERRAL_PLANNED_LOAD_LIMIT]: new ProjectFieldMetadata({
         displayName: 'Planned Load Limit',
@@ -168,6 +167,7 @@ export class ProjectMetadata {
         type: Number,
         unit: 'kW',
         description: 'Max net import power flow to grid',
+        actionSetName: a.SET_DEFERRAL_PLANNED_LOAD_LIMIT,
       }),
       [c.DEFERRAL_PRICE]: new ProjectFieldMetadata({
         displayName: 'Yearly Cost Avoided',
@@ -176,6 +176,7 @@ export class ProjectMetadata {
         type: Number,
         unit: '$ / year',
         description: 'Yearly Cost Avoided for deferring a T and D asset upgrade',
+        actionSetName: a.SET_DEFERRAL_PRICE,
       }),
       [c.DEFERRAL_REVERSE_POWER_FLOW_LIMIT]: new ProjectFieldMetadata({
         displayName: 'Reverse Power Flow Limit',
@@ -184,6 +185,7 @@ export class ProjectMetadata {
         type: Number,
         unit: 'kW',
         description: 'Max net export power flow to grid',
+        actionSetName: a.SET_DEFERRAL_REVERSE_POWER_FLOW_LIMIT,
       }),
       [c.DR_END_HOUR]: new ProjectFieldMetadata({
         displayName: 'End Hour',
@@ -586,6 +588,16 @@ export class ProjectMetadata {
         allowedValues: c.TIMESTEP_ALLOWED_VALUES,
       }),
       // ts: timeseries
+      [c.TS_DA_PRICE]: new ProjectFieldMetadata({
+        DataModel: DAPriceTimeSeries,
+        displayName: 'day ahead price',
+        actionSetName: a.SET_DA_PRICE,
+      }),
+      [c.TS_DEFERRAL_LOAD]: new ProjectFieldMetadata({
+        DataModel: DeferralLoadTimeSeries,
+        displayName: 'deferral load',
+        actionSetName: a.SET_DEFERRAL_LOAD,
+      }),
       [c.TS_FR_PRICE]: new ProjectFieldMetadata({
         DataModel: FRPriceTimeSeries,
         displayName: 'frequency regulation price',

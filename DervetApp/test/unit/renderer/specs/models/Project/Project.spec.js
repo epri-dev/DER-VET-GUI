@@ -1,3 +1,4 @@
+import startCase from 'lodash/startCase';
 import { projectMetadata } from '@/models/Project/ProjectMetadata';
 import * as c from '@/models/Project/constants';
 
@@ -17,16 +18,25 @@ describe('Project model', () => {
       const pageKey = ts.pageAttributes.pageKey;
       const pageGroup = ts.pageAttributes.pageGroup;
       const f0 = f.slice(0, 2);
+      let f1 = null;
+      let f1page = null;
       let pageIndexEnd = null;
       switch (f) {
         case 'tsNsrPrice':
           pageIndexEnd = 5;
+          f1 = (f.slice(2, 5)).toUpperCase();
+          f1page = f1;
+          break;
+        case 'tsDeferralLoad':
+          pageIndexEnd = 10;
+          f1 = startCase(f.slice(2, 10));
+          f1page = f1.toLowerCase();
           break;
         default:
           pageIndexEnd = 4;
-
+          f1 = (f.slice(2, 4)).toUpperCase();
+          f1page = f1;
       }
-      const f1 = (f.slice(2, pageIndexEnd)).toUpperCase();
       const expected_a = 'set' + f1 + f.slice(pageIndexEnd);
       const expected_name = f1 + f.slice(pageIndexEnd) + 'TimeSeries';
 
@@ -35,7 +45,7 @@ describe('Project model', () => {
       expect(a).to.eql(expected_a);
 
       expect(dm).to.not.eql(undefined);
-      expect(page).to.eql(f1);
+      expect(page).to.eql(f1page);
       expect(pageKey).to.eql('objectives');
       expect(pageGroup).to.eql('components');
       expect(dm.name).to.eql(expected_name);
