@@ -1,4 +1,3 @@
-import cloneDeep from 'lodash/cloneDeep';
 import TimeSeriesBase from '@/models/TimeSeries/TimeSeriesBase.js';
 
 describe('TimeSeriesBase model', () => {

@@ -151,7 +151,7 @@
       },
       importErrorOnDisabledUpload() {
         if (this.disableUpload) {
-          return { importError: 'Both <b>Data Year</b> and <b>Timestep</b> must be defined validly in Project Configuration' };
+          return { importError: 'Both <b>Data Year</b> and <b>Timestep</b> must be defined in Project Configuration' };
         }
         return {};
       },

@@ -99,6 +99,11 @@ export const SET_RA_NUMBER_EVENTS = 'setRANumberEvents';
 export const SET_RA_GROWTH = 'setRAGrowth';
 // single EV
 export const REPLACE_TECHNOLOGY_SPECS_SINGLE_EV = 'replaceTechnologySpecsSingleEV';
+// site information
+export const SET_INCLUDE_POI_CONSTRAINTS = 'setIncludePOIConstraints';
+export const SET_MAX_IMPORT_FROM_GRID = 'setMaxImportFromGrid';
+export const SET_MAX_EXPORT_TO_GRID = 'setMaxExportToGrid';
+export const SET_SITE_LOAD = 'setSiteLoad';
 // sr page
 export const SET_SR_DURATION = 'setSRDuration';
 export const SET_SR_GROWTH = 'setSRGrowth';

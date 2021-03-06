@@ -14,7 +14,6 @@ import LFEnergyOptionUpTimeSeries from '@/models/TimeSeries/LFEnergyOptionUpTime
 import LFPriceTimeSeries from '@/models/TimeSeries/LFPriceTimeSeries';
 import LFUpPriceTimeSeries from '@/models/TimeSeries/LFUpPriceTimeSeries';
 import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
-import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
 import SystemLoadTimeSeries from '@/models/TimeSeries/SystemLoadTimeSeries';
 import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
 import UserEnergyMinTimeSeries from '@/models/TimeSeries/UserEnergyMinTimeSeries';
@@ -37,6 +36,7 @@ import FRPriceTimeSeries from '@/models/TimeSeries/FRPriceTimeSeries';
 import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
 import NSRPriceTimeSeries from '@/models/TimeSeries/NSRPriceTimeSeries';
 import RAActiveTimeSeries from '@/models/TimeSeries/RAActiveTimeSeries';
+import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
 import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
 
 import RACapacityPriceMonthly from '@/models/Monthly/RACapacityPriceMonthly';
@@ -93,7 +93,6 @@ export class ProjectMetadata {
       lfPrice: null,
       lfUpPrice: null,
       lfDownPrice: null,
-      siteLoad: null,
       systemLoad: null,
       userPowerMin: null,
       userPowerMax: null,
@@ -375,6 +374,7 @@ export class ProjectMetadata {
         isRequired: true,
         type: Boolean,
         allowedValues: c.INCLUDE_INTERCONNECTION_CONSTRAINTS_ALLOWED_VALUES,
+        actionSetName: a.SET_INCLUDE_POI_CONSTRAINTS,
       }),
       [c.LF_COMBINED_MARKET]: new ProjectFieldMetadata({
         displayName: 'Combined Market Requirement',
@@ -416,7 +416,8 @@ export class ProjectMetadata {
         minValue: 0,
         type: Number,
         unit: 'kW',
-        description: 'Maximum magnitude that can flow from grid to microgrid through the point of interconnection',
+        description: 'Maximum magnitude that can flow from microgrid to grid through the point of interconnection',
+        actionSetName: a.SET_MAX_EXPORT_TO_GRID,
       }),
       [c.MAX_IMPORT]: new ProjectFieldMetadata({
         displayName: 'Maximum Power Imported',
@@ -424,7 +425,8 @@ export class ProjectMetadata {
         maxValue: 0,
         type: Number,
         unit: 'kW',
-        description: 'Maximum magnitude that can flow from microgrid to grid through the point of interconnection',
+        description: 'Maximum magnitude that can flow from grid to microgrid through the point of interconnection',
+        actionSetName: a.SET_MAX_IMPORT_FROM_GRID,
       }),
       [c.NAME]: new ProjectFieldMetadata({
         displayName: 'Name',
@@ -622,6 +624,11 @@ export class ProjectMetadata {
         DataModel: RAActiveTimeSeries,
         displayName: 'if the resource adequacy event selection considers the load (1) or not (0)',
         actionSetName: a.SET_RA_ACTIVE,
+      }),
+      [c.TS_SITE_LOAD]: new ProjectFieldMetadata({
+        DataModel: SiteLoadTimeSeries,
+        displayName: 'site load',
+        actionSetName: a.SET_SITE_LOAD,
       }),
       [c.TS_SR_PRICE]: new ProjectFieldMetadata({
         DataModel: SRPriceTimeSeries,

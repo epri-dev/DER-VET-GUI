@@ -493,17 +493,17 @@ const mutations = {
     state.technologySpecsSingleEV = tmpSpecs;
   },
   // site information
-  SET_INCLUDE_POI_CONTRAINTS(state, newIncludePOIConstraints) {
-    state.includeInterconnectionConstraints = newIncludePOIConstraints;
+  [m.SET_INCLUDE_POI_CONSTRAINTS](state, payload) {
+    state[c.INCLUDE_INTERCONNECTION_CONSTRAINTS] = payload;
   },
-  SET_MAX_IMPORT_FROM_GRID(state, newChargingFromGridLimit) {
-    state.maxImport = newChargingFromGridLimit;
+  [m.SET_MAX_IMPORT_FROM_GRID](state, payload) {
+    state[c.MAX_IMPORT] = payload;
   },
-  SET_MAX_EXPORT_TO_GRID(state, newDischargingToGridLimit) {
-    state.maxExport = newDischargingToGridLimit;
+  [m.SET_MAX_EXPORT_TO_GRID](state, payload) {
+    state[c.MAX_EXPORT] = payload;
   },
-  SET_SITE_LOAD(state, newSiteLoad) {
-    state.siteLoad = newSiteLoad;
+  [m.SET_SITE_LOAD](state, payload) {
+    state[c.TS_SITE_LOAD] = payload;
   },
   // Solar PV
   REPLACE_TECHNOLOGY_SPECS_SOLAR_PV(state, payload) {
@@ -1003,17 +1003,17 @@ const actions = {
     commit('REPLACE_TECHNOLOGY_SPECS_SINGLE_EV', payload);
   },
   // site information
-  setIncludePOIConstraints({ commit }, newIncludePOIConstraints) {
-    commit('SET_INCLUDE_POI_CONTRAINTS', newIncludePOIConstraints);
+  [a.SET_INCLUDE_POI_CONSTRAINTS]({ commit }, newIncludePOIConstraints) {
+    commit(m.SET_INCLUDE_POI_CONSTRAINTS, newIncludePOIConstraints);
   },
-  setMaxImportFromGrid({ commit }, newChargingFromGridLimit) {
-    commit('SET_MAX_IMPORT_FROM_GRID', newChargingFromGridLimit);
+  [a.SET_MAX_IMPORT_FROM_GRID]({ commit }, newChargingFromGridLimit) {
+    commit(m.SET_MAX_IMPORT_FROM_GRID, newChargingFromGridLimit);
   },
-  setMaxExportToGrid({ commit }, newDischargingToGridLimit) {
-    commit('SET_MAX_EXPORT_TO_GRID', newDischargingToGridLimit);
+  [a.SET_MAX_EXPORT_TO_GRID]({ commit }, newDischargingToGridLimit) {
+    commit(m.SET_MAX_EXPORT_TO_GRID, newDischargingToGridLimit);
   },
-  setSiteLoad({ commit }, newSiteLoad) {
-    commit('SET_SITE_LOAD', newSiteLoad);
+  [a.SET_SITE_LOAD]({ commit }, newSiteLoad) {
+    commit(m.SET_SITE_LOAD, newSiteLoad);
   },
   // spinning reserves
   [a.SET_SR_DURATION]({ commit }, newSRDuration) {
@@ -1065,8 +1065,8 @@ const actions = {
     commit('SET_TIMESTEP', newTimestep);
   },
   // system load
-  [a.SET_SYSTEM_LOAD]({ commit }, newSiteLoad) {
-    commit(m.SET_SYSTEM_LOAD, newSiteLoad);
+  [a.SET_SYSTEM_LOAD]({ commit }, payload) {
+    commit(m.SET_SYSTEM_LOAD, payload);
   },
   // technology specs
   [a.ACTIVATE_TECH]({ commit }, payload) {

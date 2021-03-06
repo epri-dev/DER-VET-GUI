@@ -70,6 +70,8 @@ export const TS_FR_DOWN_PRICE = 'tsFrDownPrice';
 export const TS_FR_FIELDS = [TS_FR_PRICE, TS_FR_UP_PRICE, TS_FR_DOWN_PRICE];
 export const TS_RA_ACTIVE = 'tsRaActive';
 export const TS_RA_FIELDS = [TS_RA_ACTIVE];
+export const TS_SITE_LOAD = 'tsSiteLoad';
+export const TS_SITE_FIELDS = [TS_SITE_LOAD];
 export const TS_SR_PRICE = 'tsSrPrice';
 export const TS_SR_FIELDS = [TS_SR_PRICE];
 export const TS_NSR_PRICE = 'tsNsrPrice';
@@ -81,6 +83,7 @@ export const TS_ALL = [
   ...TS_FR_FIELDS,
   ...TS_NSR_FIELDS,
   ...TS_RA_FIELDS,
+  ...TS_SITE_FIELDS,
   ...TS_SR_FIELDS,
 ];
 

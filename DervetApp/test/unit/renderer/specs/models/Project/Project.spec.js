@@ -12,43 +12,48 @@ describe('Project model', () => {
       console.log(f);
       const pm = projectMetadata[f];
       const a = pm.actionSetName;
-      const dm = pm.DataModel;
-      const ts = new dm([]);
-      const page = ts.pageAttributes.page;
-      const pageKey = ts.pageAttributes.pageKey;
-      const pageGroup = ts.pageAttributes.pageGroup;
+      const Dm = pm.DataModel;
+      const ts = new Dm([]);
+      const { page } = ts.pageAttributes;
+      const { pageKey } = ts.pageAttributes;
+      const { pageGroup } = ts.pageAttributes;
       const f0 = f.slice(0, 2);
       let f1 = null;
       let f1page = null;
       let pageIndexEnd = null;
       switch (f) {
+        case 'tsDeferralLoad':
+          pageIndexEnd = 10;
+          f1 = startCase(f.slice(2, 10));
+          f1page = f1.toLowerCase();
+          break;
         case 'tsNsrPrice':
           pageIndexEnd = 5;
           f1 = (f.slice(2, 5)).toUpperCase();
           f1page = f1;
           break;
-        case 'tsDeferralLoad':
-          pageIndexEnd = 10;
-          f1 = startCase(f.slice(2, 10));
-          f1page = f1.toLowerCase();
+        case 'tsSiteLoad':
+          pageIndexEnd = 6;
+          f1 = startCase(f.slice(2, 6));
+          f1page = `${f1.toLowerCase()}Information`;
           break;
         default:
           pageIndexEnd = 4;
           f1 = (f.slice(2, 4)).toUpperCase();
           f1page = f1;
       }
-      const expected_a = 'set' + f1 + f.slice(pageIndexEnd);
-      const expected_name = f1 + f.slice(pageIndexEnd) + 'TimeSeries';
+      const expectedA = `set${f1}${f.slice(pageIndexEnd)}`;
+      const expectedName = `${f1}${f.slice(pageIndexEnd)}TimeSeries`;
 
       expect(a).to.not.eql(undefined);
       expect(f0).to.eql('ts');
-      expect(a).to.eql(expected_a);
+      expect(a).to.eql(expectedA);
 
-      expect(dm).to.not.eql(undefined);
+      expect(Dm).to.not.eql(undefined);
       expect(page).to.eql(f1page);
       expect(pageKey).to.eql('objectives');
       expect(pageGroup).to.eql('components');
-      expect(dm.name).to.eql(expected_name);
+      expect(Dm.name).to.eql(expectedName);
 
       expect(ts.unit.length).to.be.above(0);
       expect(ts.columnHeaderName.length).to.be.above(0);
