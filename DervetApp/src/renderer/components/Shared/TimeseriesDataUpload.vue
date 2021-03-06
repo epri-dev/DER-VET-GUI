@@ -18,6 +18,9 @@
       @uploaded="onFileUpload"
       @input="onChange"
       :object-name="objectName"
+      :sample-data-year="sampleDataYear"
+      :sample-data-leapyear="sampleDataLeapyear"
+      :show-sample-data="showSampleData"
       :uploaded-data="dataTimeSeries"
       :x-axis="timeseriesXAxis"
     />
@@ -85,6 +88,9 @@
       errorMessage: String,
       isInvalid: Boolean,
       objectName: String,
+      sampleDataYear: String,
+      sampleDataLeapyear: String,
+      showSampleData: Boolean,
     },
   };
 </script>

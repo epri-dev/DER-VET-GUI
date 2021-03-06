@@ -81,11 +81,25 @@
           <span v-html="errorMessage"></span>
         </div>
       </div>
+      <div v-if="showSampleData">
+        <hr>
+        <div class="form-group row">
+          <div class="col-md-12">
+            <i><a :href="sampleDataYear" download class="important-link text-decoration-none"> Download a sample <b>{{this.dataName}}</b><code>.csv</code> file</a> with a 60-minute timestep for a year with 365 days (8,760 entries)</i>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-md-12">
+            <i><a :href="sampleDataLeapyear" download class="important-link text-decoration-none">Download a sample <b>{{this.dataName}}</b><code>.csv</code> file</a> with a 60-minute timestep <b>for a leap year with 366 days</b> (8,784 entries)</i>
+          </div>
+        </div>
+      </div>
     </div>
     <div v-if="showPlot">
       <div class="col-md-10" :id="this.chartName">
       </div>
     </div>
+
   </div>
 </template>
 
@@ -141,6 +155,9 @@
       isInvalid: Boolean,
       numberOfEntriesRequired: String,
       objectName: String,
+      sampleDataYear: String,
+      sampleDataLeapyear: String,
+      showSampleData: Boolean,
       uploadedData: Object,
       xAxis: Array,
     },

@@ -37,26 +37,10 @@
         object-name="tsSiteLoad"
         @uploaded="receiveTimeseriesData"
         v-if="includeSiteLoad === true"
+        sample-data-year="files/SampleSiteLoad-8760.csv"
+        sample-data-leapyear="files/SampleSiteLoad-8784.csv"
+        :show-sample-data="isTSError"
       />
-
-        <div v-if="isTSError">
-          <hr>
-          <div class="form-group row">
-            <div class="col-md-12">
-              <i><a href="files/SampleSiteLoad-8760.csv"
-                  download class="important-link text-decoration-none">
-                  Download a sample <b>{{this.metadata.tsSiteLoad.displayName}}</b><code>.csv</code> file</a> with a 60-minute timestep for a year with 365 days (8,760 entries)</i>
-            </div>
-          </div>
-          <div class="form-group row">
-            <div class="col-md-12">
-              <i><a href="files/SampleSiteLoad-8784.csv" download class="important-link text-decoration-none">Download a sample <b>{{this.metadata.tsSiteLoad.displayName}}</b><code>.csv</code> file</a> with a 60-minute timestep <b>for a leap year with 366 days</b> (8,784 entries)
-              </i>
-            </div>
-          </div>
-        </div>
-
-      </div>
       <hr>
 
       <save-and-save-continue
@@ -71,9 +55,6 @@
 
 <script>
   import { requiredIf } from 'vuelidate/lib/validators';
-  import '@/assets/samples/SampleSiteLoad-8760.csv';
-  import '@/assets/samples/SampleSiteLoad-8784.csv';
-
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import { projectMetadata } from '@/models/Project/ProjectMetadata';
