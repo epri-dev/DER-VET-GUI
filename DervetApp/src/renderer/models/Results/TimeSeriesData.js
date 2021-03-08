@@ -4,22 +4,32 @@ import BaseTableData from './BaseTableData';
 
 export default TRACE_NAMES = {
   // reservations
-  spinningReserve: 'Spinning Reserve (kW)',
-  nonSpinningReserve: 'Non-Spinning Reserve (kW)',
-  frequencyRegulationDown: 'Frequency Regulation Down (kW)',
-  frequencyRegulationUp: 'Frequency Regulation Up (kW)',
-  loadFollowingDown: 'Load Following Down (kW)',
-  loadFollowingUp: 'Load Following Up (kW)',
+  spinningReserve: 'Spinning Reserve',
+  nonSpinningReserve: 'Non-Spinning Reserve',
+  frequencyRegulationDown: 'Frequency Regulation Down',
+  frequencyRegulationUp: 'Frequency Regulation Up',
+  loadFollowingDown: 'Load Following Down',
+  loadFollowingUp: 'Load Following Up',
   // power flows
   totalEssPower: 'Total Storage Power',
   totalGeneration: 'Total Generation',
   totalOriginalLoad: 'Total Original Load',
   totalLoad: 'Total Load',
   netLoad: 'Net Load',
+  systemLoad: 'System Load',
+  deferralLoad: 'Deferral Load',
+  critialLoad: 'Critical Load',
+  deferralRequirement: 'Deferral Power Requirement',
   // state of energy in system/state of charge
-  essStateOfCharge: 'Aggregated ESS State of Charge',
+  aggregateEssStateOfCharge: 'Aggregated ESS State of Charge',
   // prices
   energyPrice: 'Energy Price',
+  frequencyRegulationUpPrice: 'FR Up Price',
+  frequencyRegulationDownPrice: 'FR Down Price',
+  loadFollowingUpPrice: 'LF Up Price',
+  loadFollowingDownPrice: 'LF Down Price',
+  spinningReservePrice: 'SR Price',
+  nonSpinningReservePrice: 'NSR Price',
   // timeseries axis
   timeSeries: 'Datetime (hb)'
 }
@@ -28,29 +38,68 @@ export default class TimeSeriesData extends BaseTableData {
   constructor(data) {
     super('timeseries_results.csv', data, true, true, null, ['Start Datetime (hb)', 'Demand Charge Billing Periods']);
     this.heatMapLabels = this.createHeatMapXAxisLabels(0);
-    this.abovePoiPowerColumnNames = [
-      'System Load (kW)',
-      'Net Load (kW)',
-      'Deferral: Load (kW)',
-    ];
-    this.internalPowerColumnNames = [
-      'Total Original Load (kW)',
-      'Total Load (kW)',
-      'Total Generation (kW)',
-      'Total Storage Power (kW)',
-      'Critical Load (kW)',
-      'Deferral: Power Requirement (kW)',
-    ];
-    this.marketPriceColumnNames = [
-      'FR Up Price ($/kW)',
-      'FR Down Price ($/kW)',
-      'LF Up Price ($/kW)',
-      'LF Down Price ($/kW)',
-      'SR Price ($/kW)',
-      'NSR Price ($/kW)',
-    ];
-    this.reservationColumnsNames = [
+    this.columnsNames = [
       // {minuendColumnName, subtrahendColumnName, traceName}
+      {
+        subtrahendColumnName: 'Net Load (kW)',
+        traceName: TRACE_NAMES.netLoad,
+      },
+      {
+        minuendColumnName: 'System Load (kW)',
+        traceName: TRACE_NAMES.systemLoad,
+      },
+      {
+        minuendColumnName: 'Deferral: Load (kW)',
+        traceName: TRACE_NAMES.deferralLoad,
+      },
+      {
+        minuendColumnName: 'Total Original Load (kW)',
+        traceName: TRACE_NAMES.totalOriginalLoad,
+      },
+      {
+        minuendColumnName: 'Total Load (kW)',
+        traceName: TRACE_NAMES.totalLoad,
+      },
+      {
+        minuendColumnName: 'Total Generation (kW)',
+        traceName: TRACE_NAMES.totalGeneration,
+      },
+      {
+        minuendColumnName: 'Total Storage Power (kW)',
+        traceName: TRACE_NAMES.totalEssPower,
+      },
+      {
+        minuendColumnName: 'Critical Load (kW)',
+        traceName: TRACE_NAMES.critialLoad,
+      },
+      {
+        minuendColumnName: 'Deferral: Power Requirement (kW)',
+        traceName: TRACE_NAMES.deferralRequirement,
+      },
+      {
+        minuendColumnName: 'FR Up Price ($/kW)',
+        traceName: TRACE_NAMES.frequencyRegulationUpPrice,
+      },
+      {
+        minuendColumnName: 'FR Down Price ($/kW)',
+        traceName: TRACE_NAMES.frequencyRegulationDownPrice,
+      },
+      {
+        minuendColumnName: 'LF Up Price ($/kW)',
+        traceName: TRACE_NAMES.loadFollowingUpPrice,
+      },
+      {
+        minuendColumnName: 'LF Down Price ($/kW)',
+        traceName: TRACE_NAMES.loadFollowingDownPrice,
+      },
+      {
+        minuendColumnName: 'SR Price ($/kW)',
+        traceName: TRACE_NAMES.spinningReservePrice,
+      },
+      {
+        minuendColumnName: 'NSR Price ($/kW)',
+        traceName: TRACE_NAMES.nonSpinningReservePrice,
+      },
       {
         minuendColumnName: 'Spinning Reserve Down (Disharging) (kW)',
         subtrahendColumnName: 'Spinning Reserve Down (Charging) (kW)',
@@ -143,24 +192,12 @@ export default class TimeSeriesData extends BaseTableData {
       aggregatedStateOfCharge = aggregatedStateOfEnergy.map(i => i / totalEnergyStorageCap);
     }
 
-    const otherPower = this.grabDataColumns(tsData, this.internalPowerColumnNames, 5);
-    const poiPower = this.grabDataColumns(tsData, this.abovePoiPowerColumnNames, 5, true);
-    const reservations = this.grabReservationColumnData(tsData);
-    const marketPrices = this.grabDataColumns(tsData, this.marketPriceColumnNames, 13);
     return [
       {
         data: aggregatedStateOfCharge,
-        label: 'Aggregate ESS SOC',
+        label: TRACE_NAMES.aggregatedStateOfCharge,
       },
-      ...otherPower,
-      ...poiPower,
-      TimeSeriesData.dataLabel(this.timeSeriesDateAxis(0), TRACE_NAMES.timeSeries),
-      {
-        data: this.energyPriceTimeSeriesData(0),
-        label: 'Energy Price',
-      },
-      ...marketPrices,
-      ...reservations,
+      ...this.grabDataColumns(tsData),
     ];
   }
 
@@ -183,48 +220,45 @@ export default class TimeSeriesData extends BaseTableData {
     return data;
   }
 
-  static subtractDataArrays(arr1, arr2) {
-    return arr1.map((el, i) => el - arr2[i]);
+  static subtractDataArrays(minuend, substrahend) {
+    return minuend.map((el, i) => el - substrahend[i]);
+  }
+  static negateDataArray(data) {
+    return _.map(data, val => (val * -1));
+  }
+  static dataLabel(data, label) {
+    return { data, label };
   }
 
-  grabReservationColumnData(tsData) {
+  grabColumnData(tsData) {
     const columnData = [];
-    _.forEach(this.reservationColumnsNames, (payload) => {
+    _.forEach(this.columnsNames, (payload) => {
       const { minuendColumnName, subtrahendColumnName, traceName } = payload;
       console.log(traceName);
-      // check if the reservation exists - grab "minuend" amount
-      const dischargeDataName = BaseTableData.toCamelCaseString(minuendColumnName);
-      const dischargeData = tsData[dischargeDataName];
-      if (dischargeData !== undefined) {
-        // grab "substrahend" amount
+      if (minuendColumnName !== undefined && substrahend !== undefined) {
+        const dischargeDataName = BaseTableData.toCamelCaseString(minuendColumnName);
+        const dischargeData = tsData[dischargeDataName];
         const chargeDataName = BaseTableData.toCamelCaseString(subtrahendColumnName);
         const chargeData = tsData[chargeDataName];
-        const data = TimeSeriesData.subtractDataArrays(dischargeData, chargeData);
-        columnData.push(TimeSeriesData.dataLabel(data, traceName));
-      }
-    });
-    return columnData;
-  }
-
-  grabDataColumns(tsData, originalColumnNameList, dropLength = 0, makeNegative = false) {
-    const columnData = [];
-    _.forEach(originalColumnNameList, (col) => {
-      const dataName = BaseTableData.toCamelCaseString(col);
-      const data = tsData[dataName];
-      if (data !== undefined) {
-        const label = dropLength ? col.slice(0, -dropLength) : col;
-        if (makeNegative) {
-          const negativeData = _.map(data, val => (val * -1));
-          columnData.push(TimeSeriesData.dataLabel(negativeData, label));
-        } else {
-          columnData.push(TimeSeriesData.dataLabel(data, label));
+        if (dischargeData !== undefined && chargeData !== undefined) {
+          const data = TimeSeriesData.subtractDataArrays(dischargeData, chargeData);
+          columnData.push(TimeSeriesData.dataLabel(data, traceName));
+        }
+      } else if (minuendColumnName !== undefined) {
+        const dischargeDataName = BaseTableData.toCamelCaseString(minuendColumnName);
+        const dischargeData = tsData[dischargeDataName];
+        if (dischargeData !== undefined) {
+          columnData.push(TimeSeriesData.dataLabel(dischargeData, traceName));
+        }
+      } else if (substrahend !== undefined) {
+        const chargeDataName = BaseTableData.toCamelCaseString(subtrahendColumnName);
+        const chargeData = tsData[chargeDataName];
+        if (chargeData !== undefined) {
+          const data = TimeSeriesData.negateDataArray(chargeData);
+          columnData.push(TimeSeriesData.dataLabel(data, traceName));
         }
       }
     });
     return columnData;
-  }
-
-  static dataLabel(data, label) {
-    return { data, label };
   }
 }
