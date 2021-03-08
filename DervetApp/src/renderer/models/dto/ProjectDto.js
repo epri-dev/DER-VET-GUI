@@ -44,10 +44,6 @@ const RESULTS = 'results';
 export const LOG_FILE = 'dervet_log.log';
 
 const TIMESERIES_FIELDS = [
-  'userPowerMin',
-  'userPowerMax',
-  'userEnergyMin',
-  'userEnergyMax',
   ...c.TS_ALL,
 ];
 

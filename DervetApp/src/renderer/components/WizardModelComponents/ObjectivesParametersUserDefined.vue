@@ -2,7 +2,7 @@
   <div>
     <h3>Services: User-Defined Settings</h3>
     <hr>
-    <form class="form-horizontal form-buffer">
+    <div class="form-horizontal form-buffer">
 
       <text-input v-model="userPrice"
                   v-bind:field="metadata.userPrice"
@@ -11,157 +11,130 @@
       </text-input>
 
       <timeseries-data-upload
-        chart-name="chartUploadedTimeSeries"
-        :data-name="userPowerMaxName"
-        units="kW"
+        chart-name="tsUserPowerMaxChartUploaded"
+        @click="receiveRemove"
+        :data-exists="tsData('tsUserPowerMax').data.length !== 0"
+        :DataModel="metadata.tsUserPowerMax.DataModel"
+        :data-name="metadata.tsUserPowerMax.displayName"
+        :data-time-series="tsData('tsUserPowerMax')"
+        :errorMessage="getErrorMsgTS('tsUserPowerMax')"
+        :isInvalid="submitted && tsData('tsUserPowerMax').data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('tsUserPowerMax')"
+        object-name="tsUserPowerMax"
         @uploaded="receiveTimeseriesData"
-        :data-time-series="userPowerMax"
-        key="1"
-        :TimeSeriesModel="UserPowerMaxTimeSeries"
       />
 
       <timeseries-data-upload
-        chart-name="chartUploadedTimeSeries2"
-        :data-name="userPowerMinName"
-        units="kW"
-        @uploaded="receiveTimeseriesData2"
-        :data-time-series="userPowerMin"
-        :key="2"
-        :TimeSeriesModel="UserPowerMinTimeSeries"
+        chart-name="tsUserPowerMinChartUploaded"
+        @click="receiveRemove"
+        :data-exists="tsData('tsUserPowerMin').data.length !== 0"
+        :DataModel="metadata.tsUserPowerMin.DataModel"
+        :data-name="metadata.tsUserPowerMin.displayName"
+        :data-time-series="tsData('tsUserPowerMin')"
+        :errorMessage="getErrorMsgTS('tsUserPowerMin')"
+        :isInvalid="submitted && tsData('tsUserPowerMin').data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('tsUserPowerMin')"
+        object-name="tsUserPowerMin"
+        @uploaded="receiveTimeseriesData"
       />
 
       <timeseries-data-upload
-        chart-name="chartUploadedTimeSeries3"
-        data-name="userEnergyMaxName"
-        units="kWh"
-        @uploaded="receiveTimeseriesData3"
-        :data-time-series="userEnergyMax"
-        key="3"
-        :TimeSeriesModel="UserEnergyMaxTimeSeries"
+        chart-name="tsUserEnergyMaxChartUploaded"
+        @click="receiveRemove"
+        :data-exists="tsData('tsUserEnergyMax').data.length !== 0"
+        :DataModel="metadata.tsUserEnergyMax.DataModel"
+        :data-name="metadata.tsUserEnergyMax.displayName"
+        :data-time-series="tsData('tsUserEnergyMax')"
+        :errorMessage="getErrorMsgTS('tsUserEnergyMax')"
+        :isInvalid="submitted && tsData('tsUserEnergyMax').data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('tsUserEnergyMax')"
+        object-name="tsUserEnergyMax"
+        @uploaded="receiveTimeseriesData"
       />
 
       <timeseries-data-upload
-        chart-name="chartUploadedTimeSeries4"
-        data-name="userEnergyMinName"
-        units="kWh"
-        @uploaded="receiveTimeseriesData4"
-        :data-time-series="userEnergyMin"
-        key="4"
-        :TimeSeriesModel="UserEnergyMinTimeSeries"
+        chart-name="tsUserEnergyMinChartUploaded"
+        @click="receiveRemove"
+        :data-exists="tsData('tsUserEnergyMin').data.length !== 0"
+        :DataModel="metadata.tsUserEnergyMin.DataModel"
+        :data-name="metadata.tsUserEnergyMin.displayName"
+        :data-time-series="tsData('tsUserEnergyMin')"
+        :errorMessage="getErrorMsgTS('tsUserEnergyMin')"
+        :isInvalid="submitted && tsData('tsUserEnergyMin').data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('tsUserEnergyMin')"
+        object-name="tsUserEnergyMin"
+        @uploaded="receiveTimeseriesData"
       />
       <hr>
 
-      <save-buttons
-        :continue-link="WIZARD_COMPONENT"
-        :displayError="submitted && $v.$anyError"
-        :save="validatedSave" />
+      <save-and-save-continue
+        :displayError="submitted && ($v.$anyError || isTSError)"
+        :save="validatedSaveStay"
+        :save-continue="validatedSaveContinue"
+      />
 
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import * as p from '@/models/Project/ProjectMetadata';
-  import * as c from '@/models/Project/constants';
-  import operateOnKeysList from '@/util/object';
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
-  import { isNotNullAndNotUndefined } from '@/util/logic';
-  import UserPowerMaxTimeSeries from '@/models/TimeSeries/UserPowerMaxTimeSeries';
-  import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
-  import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
-  import UserEnergyMinTimeSeries from '@/models/TimeSeries/UserEnergyMinTimeSeries';
-  import { WIZARD_COMPONENT } from '@/router/constants';
-  import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
+  import { projectMetadata } from '@/models/Project/ProjectMetadata';
+  import * as c from '@/models/Project/constants';
 
-  const metadata = p.projectMetadata;
-  const validations = metadata.getValidationSchema(c.USER_DEFINED_FIELDS);
+  import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
+
   const PAGEGROUP = 'components';
   const PAGEKEY = 'objectives';
   const PAGE = 'userDefined';
+  const FIELDS = c.USER_DEFINED_FIELDS;
+  const TS_FIELDS = c.TS_USER_DEFINED_FIELDS;
+
+  const ALL_FIELDS = [...FIELDS, ...TS_FIELDS];
+  const validations = projectMetadata.getValidationSchema(FIELDS);
+
+  const CONSTANTS = {
+    DESTINATION_PATH,
+    PAGEGROUP,
+    PAGEKEY,
+    PAGE,
+    FIELDS,
+    TS_FIELDS,
+  };
 
   export default {
-    components: { TimeseriesDataUpload },
     mixins: [csvUploadMixin, wizardFormMixin],
     data() {
-      const p = this.$store.state.Project;
       return {
-        userPowerMax: p.userPowerMax,
-        userPowerMaxName: 'maximum power',
-        userPowerMin: p.userPowerMin,
-        userPowerMinName: 'minimum power',
-        userEnergyMax: p.userEnergyMax,
-        userEnergyMaxName: 'maximum energy',
-        userEnergyMin: p.userEnergyMin,
-        userEnergyMinName: 'minimum energy',
-        UserPowerMaxTimeSeries,
-        UserPowerMinTimeSeries,
-        UserEnergyMaxTimeSeries,
-        UserEnergyMinTimeSeries,
-        metadata,
-        ...this.getDataFromProject(),
-        WIZARD_COMPONENT,
+        metadata: this.getMetadata(projectMetadata, ALL_FIELDS),
+        ...this.getDataFromProject(ALL_FIELDS),
+        ...this.getTSInputDefaultDataFromProject(TS_FIELDS),
+        ...this.getChildKeys(TS_FIELDS),
+        ...this.getUseExistingDefaults(TS_FIELDS),
+        CONSTANTS,
       };
     },
     validations: {
       ...validations,
     },
-    computed: {
-      errorList() {
-        return this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE];
-      },
-    },
-    beforeMount() {
-      // submitted is false initially; set it to true after the first save.
-      // initially, complete is null; after saving, it is set to either true or false.
-      // we want to show validation errors at any time after the first save, with submitted.
-      if (isNotNullAndNotUndefined(this.errorList)) {
-        this.submitted = true;
-        this.$v.$touch();
-      }
-    },
     methods: {
-      getErrorMsg(fieldName) {
-        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
-      },
-      getDataFromProject() {
-        return operateOnKeysList(this.$store.state.Project, c.USER_DEFINED_FIELDS, f => f);
-      },
-      getErrorListPayload() {
+      getErrorListTS() {
         const errors = [];
-        Object.keys(this.$v).forEach((key) => {
-          if (key.charAt(0) !== '$' && this.$v[key].$invalid) {
-            errors.push(this.getErrorMsg(key));
+        (TS_FIELDS).forEach((tsField) => {
+          const errorMsgTS = this.getErrorMsgTSFromProject(tsField);
+          if (errorMsgTS.length !== 0) {
+            errors.push(errorMsgTS);
           }
         });
-        return {
-          pageGroup: PAGEGROUP,
-          pageKey: PAGEKEY,
-          page: PAGE,
-          errorList: errors,
-        };
+        return errors;
       },
-      validatedSave() {
-        this.submitted = true;
-        this.$v.$touch();
-        // set errorList
-        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
-        return this.save();
-      },
-      save() {
-        if (this.inputTimeseries[this.userPowerMaxName] !== undefined) {
-          this.$store.dispatch('setUserPowerMax', this.inputTimeseries[this.userPowerMaxName]);
-        }
-        if (this.inputTimeseries[this.userPowerMin] !== undefined) {
-          this.$store.dispatch('setUserPowerMin', this.inputTimeseries[this.userPowerMin]);
-        }
-        if (this.inputTimeseries[this.userEnergyMax] !== undefined) {
-          this.$store.dispatch('setUserEnergyMax', this.inputTimeseries[this.userEnergyMax]);
-        }
-        if (this.inputTimeseries[this.userEnergyMin] !== undefined) {
-          this.$store.dispatch('setUserEnergyMin', this.inputTimeseries[this.userEnergyMin]);
-        }
-        this.$store.dispatch('setUserPrice', this.userPrice);
+      getErrorMsg(fieldName) {
+        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
     },
   };

@@ -8,10 +8,6 @@ import operateOnKeysList from '@/util/object';
 /*
 import FleetEVBaselineLoadTimeSeries from '@/models/TimeSeries/FleetEVBaselineLoadTimeSeries';
 import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
-import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
-import UserEnergyMinTimeSeries from '@/models/TimeSeries/UserEnergyMinTimeSeries';
-import UserPowerMaxTimeSeries from '@/models/TimeSeries/UserPowerMaxTimeSeries';
-import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
 
 import BackupEnergyAdwardsMonthly from '@/models/Monthly/BackupEnergyAdwardsMonthly';
 import BackupEnergyReservationMonthly from '@/models/Monthly/BackupEnergyReservationMonthly';
@@ -38,6 +34,10 @@ import RAActiveTimeSeries from '@/models/TimeSeries/RAActiveTimeSeries';
 import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
 import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
 import SystemLoadTimeSeries from '@/models/TimeSeries/SystemLoadTimeSeries';
+import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
+import UserEnergyMinTimeSeries from '@/models/TimeSeries/UserEnergyMinTimeSeries';
+import UserPowerMaxTimeSeries from '@/models/TimeSeries/UserPowerMaxTimeSeries';
+import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
 
 import RACapacityPriceMonthly from '@/models/Monthly/RACapacityPriceMonthly';
 
@@ -85,12 +85,6 @@ export class ProjectMetadata {
       ...this.operateOnFieldList(c.DEMAND_RESPONSE_FIELDS, f => f.defaultValue),
       ...this.operateOnFieldList(c.TS_ALL, f => new f.DataModel([])),
       ...this.operateOnFieldList(c.MTS_ALL, f => new f.DataModel([])),
-
-      // TIMESERIES ARRAYS
-      userPowerMin: null,
-      userPowerMax: null,
-      userEnergyMin: null,
-      userEnergyMax: null,
 
       // MONTHLY ARRAYS
       backupPrice: null,
@@ -589,6 +583,15 @@ export class ProjectMetadata {
         description: 'What timestep will the optimization will use?',
         allowedValues: c.TIMESTEP_ALLOWED_VALUES,
       }),
+      [c.USER_PRICE]: new ProjectFieldMetadata({
+        displayName: 'Yearly Cost Avoided',
+        isRequired: true,
+        minValue: 0,
+        type: Number,
+        unit: '$ / year',
+        description: 'Yearly Cost Avoided for meeting the user-defined constraints',
+        actionSetName: a.SET_USER_PRICE,
+      }),
       // ts: timeseries
       [c.TS_CRITICAL_LOAD]: new ProjectFieldMetadata({
         DataModel: CriticalLoadTimeSeries,
@@ -670,19 +673,31 @@ export class ProjectMetadata {
         displayName: 'system load',
         actionSetName: a.SET_SYSTEM_LOAD,
       }),
+      [c.TS_USER_ENERGY_MAX]: new ProjectFieldMetadata({
+        DataModel: UserEnergyMaxTimeSeries,
+        displayName: 'maximum energy',
+        actionSetName: a.SET_USER_ENERGY_MAX,
+      }),
+      [c.TS_USER_ENERGY_MIN]: new ProjectFieldMetadata({
+        DataModel: UserEnergyMinTimeSeries,
+        displayName: 'minimum energy',
+        actionSetName: a.SET_USER_ENERGY_MIN,
+      }),
+      [c.TS_USER_POWER_MAX]: new ProjectFieldMetadata({
+        DataModel: UserPowerMaxTimeSeries,
+        displayName: 'maximum power',
+        actionSetName: a.SET_USER_POWER_MAX,
+      }),
+      [c.TS_USER_POWER_MIN]: new ProjectFieldMetadata({
+        DataModel: UserPowerMinTimeSeries,
+        displayName: 'minimum power',
+        actionSetName: a.SET_USER_POWER_MIN,
+      }),
       // mts: monthly timeseries
       [c.MTS_RA_CAPACITY_PRICE]: new ProjectFieldMetadata({
         DataModel: RACapacityPriceMonthly,
         displayName: 'resource adequacy capacity prices',
         actionSetName: a.SET_RA_CAPACITY_PRICE,
-      }),
-      [c.USER_PRICE]: new ProjectFieldMetadata({
-        displayName: 'Yearly Cost Avoided',
-        isRequired: true,
-        minValue: 0,
-        type: Number,
-        unit: '$ / year',
-        description: 'Yearly Cost Avoided for meeting the user-defined constraints',
       }),
     });
   }

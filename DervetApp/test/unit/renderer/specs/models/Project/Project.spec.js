@@ -9,7 +9,7 @@ describe('Project model', () => {
 
   it('should initialize each TS field properly', () => {
     c.TS_ALL.forEach((f) => {
-      console.log(f);
+      // console.log(f);
       const pm = projectMetadata[f];
       const a = pm.actionSetName;
       const Dm = pm.DataModel;
@@ -49,11 +49,32 @@ describe('Project model', () => {
           f1 = startCase(f.slice(2, pageIndexEnd));
           f1page = `${f1.toLowerCase()}Information`;
           break;
+        case 'tsUserEnergyMax':
+          pageIndexEnd = 6;
+          f1 = startCase(f.slice(2, pageIndexEnd));
+          f1page = `${f1.toLowerCase()}Defined`;
+          break;
+        case 'tsUserEnergyMin':
+          pageIndexEnd = 6;
+          f1 = startCase(f.slice(2, pageIndexEnd));
+          f1page = `${f1.toLowerCase()}Defined`;
+          break;
+        case 'tsUserPowerMax':
+          pageIndexEnd = 6;
+          f1 = startCase(f.slice(2, pageIndexEnd));
+          f1page = `${f1.toLowerCase()}Defined`;
+          break;
+        case 'tsUserPowerMin':
+          pageIndexEnd = 6;
+          f1 = startCase(f.slice(2, pageIndexEnd));
+          f1page = `${f1.toLowerCase()}Defined`;
+          break;
         default:
           pageIndexEnd = 4;
           f1 = (f.slice(2, pageIndexEnd)).toUpperCase();
           f1page = f1;
       }
+      // console.log(f1, f1page);
       if (['tsLfEOU', 'tsLfEOD'].includes(f)) {
         expectedA = `set${f1}${f.slice(pageIndexEnd).toLowerCase()}`;
         const upOrDown = (f === 'tsLfEOU') ? 'Up' : 'Down';
@@ -76,8 +97,9 @@ describe('Project model', () => {
       expect(ts.unit.length).to.be.above(0);
       expect(ts.columnHeaderName.length).to.be.above(0);
 
-      // skip tsFrUpPrice & tsFrDownPrice as they do not contain FR in their columnHeaderName
-      if (!['tsFrUpPrice', 'tsFrDownPrice'].includes(f)) {
+      // skip ts with more complex columnHeaderNames
+      if (!['tsFrUpPrice', 'tsFrDownPrice', 'tsUserEnergyMax', 'tsUserEnergyMin',
+        'tsUserPowerMax', 'tsUserPowerMin'].includes(f)) {
         expect(ts.columnHeaderName).to.have.string(f1);
       }
     });

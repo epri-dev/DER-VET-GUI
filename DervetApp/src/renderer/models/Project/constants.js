@@ -76,6 +76,8 @@ export const TS_LF_PRICE = 'tsLfPrice';
 export const TS_LF_UP_PRICE = 'tsLfUpPrice';
 export const TS_LF_DOWN_PRICE = 'tsLfDownPrice';
 export const TS_LF_FIELDS = [TS_LF_EOU, TS_LF_EOD, TS_LF_PRICE, TS_LF_UP_PRICE, TS_LF_DOWN_PRICE];
+export const TS_NSR_PRICE = 'tsNsrPrice';
+export const TS_NSR_FIELDS = [TS_NSR_PRICE];
 export const TS_RA_ACTIVE = 'tsRaActive';
 export const TS_RA_FIELDS = [TS_RA_ACTIVE];
 export const TS_CRITICAL_LOAD = 'tsCriticalLoad';
@@ -86,8 +88,12 @@ export const TS_SR_PRICE = 'tsSrPrice';
 export const TS_SR_FIELDS = [TS_SR_PRICE];
 export const TS_SYSTEM_LOAD = 'tsSystemLoad';
 export const TS_SYSTEM_FIELDS = [TS_SYSTEM_LOAD];
-export const TS_NSR_PRICE = 'tsNsrPrice';
-export const TS_NSR_FIELDS = [TS_NSR_PRICE];
+export const TS_USER_ENERGY_MAX = 'tsUserEnergyMax';
+export const TS_USER_ENERGY_MIN = 'tsUserEnergyMin';
+export const TS_USER_POWER_MAX = 'tsUserPowerMax';
+export const TS_USER_POWER_MIN = 'tsUserPowerMin';
+export const TS_USER_DEFINED_FIELDS = [TS_USER_ENERGY_MAX, TS_USER_ENERGY_MIN,
+  TS_USER_POWER_MAX, TS_USER_POWER_MIN];
 
 export const TS_ALL = [
   ...TS_DA_FIELDS,
@@ -100,6 +106,7 @@ export const TS_ALL = [
   ...TS_SITE_FIELDS,
   ...TS_SR_FIELDS,
   ...TS_SYSTEM_FIELDS,
+  ...TS_USER_DEFINED_FIELDS,
 ];
 
 // Monthly

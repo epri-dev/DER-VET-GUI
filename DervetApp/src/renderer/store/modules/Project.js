@@ -686,20 +686,20 @@ const mutations = {
     state.listOfActiveTechnologies = getDefaultState().listOfActiveTechnologies;
   },
   // user defined service
-  SET_USER_ENERGY_MAX(state, newUserEnergyMax) {
-    state.userEnergyMax = newUserEnergyMax;
+  [m.SET_USER_ENERGY_MAX](state, payload) {
+    state[c.TS_USER_ENERGY_MAX] = payload;
   },
-  SET_USER_ENERGY_MIN(state, newUserEnergyMin) {
-    state.userEnergyMin = newUserEnergyMin;
+  [m.SET_USER_ENERGY_MIN](state, payload) {
+    state[c.TS_USER_ENERGY_MIN] = payload;
   },
-  SET_USER_POWER_MAX(state, newUserPowerMax) {
-    state.userPowerMax = newUserPowerMax;
+  [m.SET_USER_POWER_MAX](state, payload) {
+    state[c.TS_USER_POWER_MAX] = payload;
   },
-  SET_USER_POWER_MIN(state, newUserPowerMin) {
-    state.userPowerMin = newUserPowerMin;
+  [m.SET_USER_POWER_MIN](state, payload) {
+    state[c.TS_USER_POWER_MIN] = payload;
   },
-  SET_USER_PRICE(state, newUserPrice) {
-    state.userPrice = newUserPrice;
+  [m.SET_USER_PRICE](state, payload) {
+    state[c.USER_PRICE] = payload;
   },
 };
 
@@ -1176,20 +1176,20 @@ const actions = {
     }
   },
   // user defined
-  setUserEnergyMax({ commit }, newUserEnergyMax) {
-    commit('SET_USER_ENERGY_MAX', newUserEnergyMax);
+  [a.SET_USER_ENERGY_MAX]({ commit }, payload) {
+    commit(m.SET_USER_ENERGY_MAX, payload);
   },
-  setUserEnergyMin({ commit }, newUserEnergyMin) {
-    commit('SET_USER_ENERGY_Min', newUserEnergyMin);
+  [a.SET_USER_ENERGY_MIN]({ commit }, payload) {
+    commit(m.SET_USER_ENERGY_MIN, payload);
   },
-  setUserPowerMax({ commit }, newUserPowerMax) {
-    commit('SET_USER_POWER_MAX', newUserPowerMax);
+  [a.SET_USER_POWER_MAX]({ commit }, payload) {
+    commit(m.SET_USER_POWER_MAX, payload);
   },
-  setUserPowerMin({ commit }, newUserPowerMin) {
-    commit('SET_USER_POWER_Min', newUserPowerMin);
+  [a.SET_USER_POWER_MIN]({ commit }, payload) {
+    commit(m.SET_USER_POWER_MIN, payload);
   },
-  setUserPrice({ commit }, newUserPrice) {
-    commit('SET_USER_PRICE', newUserPrice);
+  [a.SET_USER_PRICE]({ commit }, payload) {
+    commit(m.SET_USER_PRICE, payload);
   },
 };
 

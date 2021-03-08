@@ -124,3 +124,9 @@ export const DEACTIVATE_TECH = 'deactivateTech';
 export const MAKE_LIST_OF_ACTIVE_TECHNOLOGIES = 'makeListOfActiveTechnologies';
 export const REPLACE_LIST_FIELD = 'replaceListField';
 export const REMOVE_TECH = 'removeTech';
+// user defined service
+export const SET_USER_ENERGY_MAX = 'setUserEnergyMax';
+export const SET_USER_ENERGY_MIN = 'setUserEnergyMin';
+export const SET_USER_POWER_MAX = 'setUserPowerMax';
+export const SET_USER_POWER_MIN = 'setUserPowerMin';
+export const SET_USER_PRICE = 'SET_USER_PRICE';

@@ -389,10 +389,10 @@ export const projectFixtureAllActive = {
   technologySpecsSingleEV: [],
   timestep: 1,
   userPrice: 347,
-  userEnergyMax: new UserEnergyMaxTimeSeries(_.fill(Array(8760), 9000)),
-  userEnergyMin: new UserEnergyMinTimeSeries(_.fill(Array(8760), 0)),
-  userPowerMax: new UserPowerMaxTimeSeries(_.fill(Array(8760), 1900)),
-  userPowerMin: new UserPowerMinTimeSeries(_.fill(Array(8760), -1900)),
+  tsUserEnergyMax: new UserEnergyMaxTimeSeries(_.fill(Array(8760), 9000)),
+  tsUserEnergyMin: new UserEnergyMinTimeSeries(_.fill(Array(8760), 0)),
+  tsUserPowerMax: new UserPowerMaxTimeSeries(_.fill(Array(8760), 1900)),
+  tsUserPowerMin: new UserPowerMinTimeSeries(_.fill(Array(8760), -1900)),
 };
 
 export const getProjectFixture = (inputsDir, resultsDir) => {
