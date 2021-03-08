@@ -1,6 +1,28 @@
 <template>
   <div class="form-horizontal form-buffer">
 
+    <fieldset class="section-group">
+      <legend>OpenEI Connection</legend>
+
+      <div>
+        To use this tool, you must sign up for an API key on the <open-external-link :link="OPEN_EI_SIGNUP_URL" text="OpenEI website."/> Please enter the key below and click 'Save'.
+      </div>
+
+      <br/>
+
+      <text-input
+        v-model="apiKey"
+        v-bind:field="metadata.apiKey"
+        :isInvalid="$v.$dirty && $v.apiKey.$invalid"
+        :errorMessage="getErrorMessage('apiKey')"
+        :includeButton="true"
+        :disableButton="$v.$dirty && $v.apiKey.$invalid"
+        :buttonCallback="saveApiKey"
+        buttonText="Save">
+      </text-input>
+
+    </fieldset>
+
     <radio-button-input v-model="sector"
                         v-bind:field="metadata.sector"
                         :isInvalid="$v.$dirty && $v.sector.$error"
@@ -16,7 +38,7 @@
 
     <drop-down-input
       v-model="utility"
-      v-bind:field="metadata.utility"
+      v-bind:field="utilityMetadata"
       :isLargeBox="true"
       :isInvalid="$v.$dirty && $v.utility.$error"
       :errorMessage="getErrorMessage('utility')">
@@ -38,65 +60,83 @@
 </template>
 
 <script lang="ts">
+  import isEmpty from 'lodash/isEmpty';
   import { integer, maxLength, minLength, required } from 'vuelidate/lib/validators';
 
+  import OpenExternalLink from '@/components/Shared/OpenExternalLink';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import { Sector } from '@/service/OpenEI/response';
   import { arrayToAllowedValues, enumToAllowedValues, AllowedValue } from '@/util/project';
 
+  const OPEN_EI_SIGNUP_URL = 'https://openei.org/services/api/signup/';
+
   interface ProjectField {
-    allowedValues?: Array<AllowedValue>;
+    allowedValues?: AllowedValue[];
     displayName: string;
     type?: any;
+    description?: string;
   }
 
   // TODO validation
   interface Data {
-    zipCode: string;
+    OPEN_EI_SIGNUP_URL: string;
+    apiKey: string;
     sector: Sector;
     utility: string;
+    zipCode: string;
     metadata: {
-      zipCode: ProjectField,
+      apiKey: ProjectField,
       sector: ProjectField,
-      utility: ProjectField,
+      zipCode: ProjectField,
     }
   }
 
   const validations = {
+    apiKey: { required },
     zipCode: {
       required,
       integer,
       maxLength: maxLength(5),
       minLength: minLength(5),
     },
-    utility: { required },
     sector: { required },
+    utility: { required },
   };
 
   export default {
     mixins: [wizardFormMixin],
+    components: { OpenExternalLink },
     computed: {
       isInvalid() {
         return this.$v.$dirty && this.$v.$invalid;
       },
+      utilityMetadata() {
+        return {
+          allowedValues: arrayToAllowedValues(this.$store.state.OpenEI.utilities),
+          displayName: 'Utility',
+        };
+      },
     },
     data(): Data {
       return {
-        zipCode: null,
+        OPEN_EI_SIGNUP_URL,
+        apiKey: this.$store.state.OpenEI.apiKey,
         sector: null,
         utility: null,
+        zipCode: null,
         metadata: {
+          apiKey: {
+            displayName: 'API Key',
+            type: String,
+          },
           zipCode: {
             displayName: 'Zip Code',
             type: String,
+            description: 'Note: Tariffs displayed will be all those provided by the utilities serving this zip code.',
           },
           sector: {
             allowedValues: enumToAllowedValues(Sector),
             displayName: 'Sector',
-          },
-          utility: {
-            allowedValues: arrayToAllowedValues(this.$store.state.OpenEI.utilities),
-            displayName: 'Utility',
           },
         },
       };
@@ -109,11 +149,21 @@
           this.submitSuccess();
         }
       },
+      saveApiKey() {
+        this.$store.dispatch('setApiKey', this.apiKey)
+          .then(() => {
+            if (isEmpty(this.$store.state.OpenEI.utilities)) {
+              this.$store.dispatch('loadUtilities', this.apiKey)
+                .catch((err: any) => console.log(err));
+            }
+          });
+      },
       submitSuccess() {
         this.$emit('searchClicked', this.zipCode, this.sector, this.utility);
       },
       getErrorMessage(fieldName: string) {
-        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
+        const metadata = { ...this.metadata, ...{ utility: this.utilityMetadata } };
+        return this.getErrorMsgWrapped(validations, this.$v, metadata, fieldName);
       },
     },
   };

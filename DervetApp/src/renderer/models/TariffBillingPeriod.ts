@@ -24,7 +24,7 @@ export const WEEKDAY_ALLOWED_VALUES: Map<WeekDay, AllowedValue> = new Map([
 ]);
 
 export interface TariffBillingPeriod {
-  id: number;
+  id: string;
   startMonth: number;
   endMonth: number;
   startTime: number;
