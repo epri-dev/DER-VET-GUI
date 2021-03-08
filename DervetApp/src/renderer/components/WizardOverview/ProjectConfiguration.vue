@@ -210,9 +210,7 @@
           const dataObjects = operateOnKeysList(this.$store.state.Project, c.TS_ALL, f => f);
           Object.values(dataObjects).forEach((dataObject) => {
             // only need this when the TS already exists in the store
-            console.log(dataObject);
             if (dataObject.length() !== 0) {
-              console.log('pasta');
               dataObject.revalidate(this.numberOfEntriesRequired);
               // append a line to the accompanying errorList
               const { pageGroup, pageKey, page } = dataObject.pageAttributes;
