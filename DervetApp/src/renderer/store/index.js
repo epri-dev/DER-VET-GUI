@@ -7,10 +7,15 @@ import modules from './modules';
 
 Vue.use(Vuex);
 
+const isDev = process.env.NODE_ENV !== 'production';
+
+const persistedStateSubset = createPersistedState({
+  whitelist: ['SET_API_KEY', 'SET_UTILITIES'],
+});
+const fullPersistedState = createPersistedState();
+
 export default new Vuex.Store({
   modules,
-  plugins: [
-    createPersistedState(),
-  ],
-  strict: process.env.NODE_ENV !== 'production',
+  ...({ plugins: isDev ? [fullPersistedState] : [persistedStateSubset] }),
+  strict: isDev,
 });

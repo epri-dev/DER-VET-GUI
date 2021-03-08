@@ -2,10 +2,9 @@
   <div>
     <form>
       <div class="form-horizontal form-buffer">
-        <div class="row">
-          <div class="col-md-6">
-            <h3>Results</h3>
-          </div>
+        <h3>Results</h3>
+        <div class="row" v-if="outputDirectory !== null">
+          <p>Saved at: {{ timestampsOutputDirectory }}</p>
         </div>      
         <hr>
         <div class="form-group">
@@ -100,6 +99,12 @@
       },
       summaryData() {
         return this.$store.state.Results.summaryVueObjects;
+      },
+      outputDirectory() {
+        return this.$store.state.Project.outputDirectory;
+      },
+      timestampsOutputDirectory() {
+        return this.$store.state.Results.path;
       },
     },
     methods: {

@@ -5,30 +5,34 @@ export enum Sector {
   Lighting = 'Lighting',
 }
 
-interface EnergyRateStructureItem {
-  adj: number;
+export interface RateStructureItem {
+  adj?: number;
   max?: number;
   rate: number;
-  unit: string;
+  unit?: string;
 }
 
 // Optional fields are returned when query parameter "detail" is set to "full"
 export interface UtilityRate {
   approved: boolean;
   country: string;
+  demandratestructure?: RateStructureItem[][];
+  demandweekdayschedule?: number[][];
+  demandweekendschedule?: number[][];
   demandrateunit?: string;
   demandunits?: string;
   description: string;
   eiaid: number;
   enddate: number;
+  energyattrs?: any[]; // TODO LL what to do when object keys are variable?
   energycomments?: string;
-  energyratestructure?: Array<Array<EnergyRateStructureItem>>;
-  energyweekendschedule?: Array<Array<number>>;
-  energyweekdayschedule?: Array<Array<number>>;
+  energyratestructure?: RateStructureItem[][];
+  energyweekdayschedule?: number[][];
+  energyweekendschedule?: number[][];
   flatdemandunit?: string;
   label: string;
   name: string;
-  revisions: Array<number>;
+  revisions: number[];
   source: string;
   sector: Sector;
   sourceparent: string;
@@ -38,7 +42,7 @@ export interface UtilityRate {
 }
 
 export interface UtilityRatesData {
-  items: Array<UtilityRate>;
+  items: UtilityRate[];
 }
 
 export interface UtilityRatesResponse {
@@ -53,7 +57,7 @@ export interface UtilityCompanyItem {
 }
 
 export interface UtilityCompaniesData {
-  items: Array<UtilityCompanyItem>
+  items: UtilityCompanyItem[];
   properties: object;
 }
 

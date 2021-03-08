@@ -1,15 +1,15 @@
 import map from 'lodash/map';
 
-// TODO just use enum in
 export interface AllowedValue {
   value: any;
   label: string;
+  unit?: string;
 }
 
-export const arrayToAllowedValues = (lst: Array<any>): Array<AllowedValue> => (
+export const arrayToAllowedValues = (lst: any[]): AllowedValue[] => (
   map(lst, x => ({ value: x, label: x }))
 );
 
-export const enumToAllowedValues = (enm: any): Array<AllowedValue> => (
+export const enumToAllowedValues = (enm: any): AllowedValue[] => (
   arrayToAllowedValues(Object.values(enm))
 );

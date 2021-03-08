@@ -129,4 +129,11 @@ export const SET_USER_ENERGY_MAX = 'setUserEnergyMax';
 export const SET_USER_ENERGY_MIN = 'setUserEnergyMin';
 export const SET_USER_POWER_MAX = 'setUserPowerMax';
 export const SET_USER_POWER_MIN = 'setUserPowerMin';
-export const SET_USER_PRICE = 'SET_USER_PRICE';
+export const SET_USER_PRICE = 'setUserPrice';
+// financial
+export const ADD_RETAIL_TARIFF_BILLING_PERIOD = 'addRetailTariffBillingPeriod';
+export const ADD_MANY_RETAIL_TARIFF_BILLING_PERIODS = 'addManyRetailTariffBillingPeriods';
+export const REPLACE_RETAIL_TARIFF_BILLING_PERIODS = 'replaceRetailTariffBillingPeriods';
+export const REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES = 'replaceRetailTariffFileImportNotes';
+export const REMOVE_RETAIL_TARIFF_BILLING_PERIOD = 'removeRetailTariffBillingPeriod';
+export const REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS = 'removeAllRetailTariffBillingPeriods';

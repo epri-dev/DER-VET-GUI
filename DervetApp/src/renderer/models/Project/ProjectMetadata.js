@@ -353,7 +353,7 @@ export class ProjectMetadata {
         displayName: 'Grid Domain',
         isRequired: true,
         type: String,
-        description: 'Which grid domain the project will be connected to. This limits which services are available.',
+        description: 'Which grid domain or location the project will be connected to. This determines which services are available.',
         allowedValues: c.GRID_LOCATION_ALLOWED_VALUES,
       }),
       [c.INCLUDE_INTERCONNECTION_CONSTRAINTS]: new ProjectFieldMetadata({
@@ -457,7 +457,7 @@ export class ProjectMetadata {
         minValue: 2,
         type: Number,
         unit: 'hours',
-        description: 'What is the number of hours of the optimization window?',
+        description: 'Range: 2-8760 (or 8784 in a leap year)',
       }),
       [c.OUTPUT_DIRECTORY]: new ProjectFieldMetadata({
         displayName: 'Outputs Directory',
@@ -526,10 +526,10 @@ export class ProjectMetadata {
         actionSetName: a.SET_RELIABILITY_MAX_OUTAGE_DURATION,
       }),
       [c.RELIABILITY_POST_OPTIMIZATION_ONLY]: new ProjectFieldMetadata({
-        displayName: 'Reliability Sizing',
+        displayName: 'Objective',
         isRequired: true,
         type: Boolean,
-        description: '',
+        description: 'How should we consider reliability in our analysis?',
         allowedValues: c.RELIABILITY_POST_OPTIMIZATION_ONLY_ALLOWED_VALUES,
         actionSetName: a.SET_RELIABILITY_POST_OPTIMIZATION_ONLY,
       }),
@@ -544,7 +544,7 @@ export class ProjectMetadata {
       }),
       [c.SIZING_EQUIPMENT]: new ProjectFieldMetadata({
         displayName: 'Size equipment in microgrid',
-        description: 'Are there any pieces of equipment that you want DER-VET to optimally size for?',
+        description: 'Are there any microgrid components that you want DER-VET to optimally size for?',
         isRequired: true,
         type: Boolean,
         allowedValues: c.SIZING_EQUIPMENT_ALLOWED_VALUES,

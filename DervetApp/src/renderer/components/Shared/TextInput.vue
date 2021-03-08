@@ -31,15 +31,29 @@
         <span v-html="errorMessage"></span>
       </div>
     </div>
-    <div class="col-md-5">
+    <div v-if="includeButton" class="col-md-5">
+      <div class="btn btn-primary" @click="buttonCallback">
+        {{ buttonText }}
+      </div>
+    </div>
+    <div v-else class="col-md-5">
       <p class="tool-tip tool-tip-col" v-html="field.description"></p>
     </div>
+
   </div>
 </template>
 
 <script>
   export default {
-    props: ['field', 'isInvalid', 'isLargeBox', 'errorMessage'],
+    props: [
+      'field',
+      'isInvalid',
+      'isLargeBox',
+      'errorMessage',
+      'includeButton',
+      'buttonText',
+      'buttonCallback',
+    ],
     methods: {
       isNumeric(field) {
         return field.type === Number || field.type === 'float' || field.type === 'int';

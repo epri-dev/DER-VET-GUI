@@ -469,20 +469,24 @@ const mutations = {
     state[c.RELIABILITY_TARGET] = newReliabilityTarget;
   },
   // retail tariff file
-  ADD_RETAIL_TARIFF_BILLING_PERIOD(state, newBillingPeriod) {
+  [m.ADD_RETAIL_TARIFF_BILLING_PERIOD](state, newBillingPeriod) {
     state.retailTariffBillingPeriods.push(newBillingPeriod);
   },
-  REPLACE_RETAIL_TARIFF_BILLING_PERIODS(state, newBillingPeriods) {
+  [m.ADD_MANY_RETAIL_TARIFF_BILLING_PERIODS](state, newBillingPeriods) {
+    const combinedBillingPeriods = [...state.retailTariffBillingPeriods, ...newBillingPeriods];
+    state.retailTariffBillingPeriods = combinedBillingPeriods;
+  },
+  [m.REPLACE_RETAIL_TARIFF_BILLING_PERIODS](state, newBillingPeriods) {
     state.retailTariffBillingPeriods = newBillingPeriods;
   },
-  REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES(state, newImportNotes) {
+  [m.REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES](state, newImportNotes) {
     state.retailTariffFileImportNotes = newImportNotes;
   },
-  REMOVE_RETAIL_TARIFF_BILLING_PERIOD(state, id) {
+  [m.REMOVE_RETAIL_TARIFF_BILLING_PERIOD](state, id) {
     const index = getters.getIndexOfBillingPeriodId(state)(id);
     state.retailTariffBillingPeriods.splice(index, 1);
   },
-  REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS(state) {
+  [m.REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS](state) {
     state.retailTariffBillingPeriods = [];
   },
   // Single EV
@@ -980,23 +984,27 @@ const actions = {
     commit(m.SET_RA_GROWTH, newRAGrowth);
   },
   // retail tariff billing period
-  addRetailTariffBillingPeriod({ commit }, newBillingPeriod) {
-    commit('ADD_RETAIL_TARIFF_BILLING_PERIOD', newBillingPeriod);
-    commit('REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES', []);
+  [a.ADD_RETAIL_TARIFF_BILLING_PERIOD]({ commit }, newBillingPeriod) {
+    commit(m.ADD_RETAIL_TARIFF_BILLING_PERIOD, newBillingPeriod);
+    commit(m.REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES, []);
   },
-  replaceRetailTariffBillingPeriods({ commit }, newBillingPeriods) {
-    commit('REPLACE_RETAIL_TARIFF_BILLING_PERIODS', newBillingPeriods);
+  [a.ADD_MANY_RETAIL_TARIFF_BILLING_PERIODS]({ commit }, newBillingPeriod) {
+    commit(m.ADD_MANY_RETAIL_TARIFF_BILLING_PERIODS, newBillingPeriod);
+    commit(m.REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES, []);
   },
-  replaceRetailTariffFileImportNotes({ commit }, newImportNotes) {
-    commit('REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES', newImportNotes);
+  [a.REPLACE_RETAIL_TARIFF_BILLING_PERIODS]({ commit }, newBillingPeriods) {
+    commit(m.REPLACE_RETAIL_TARIFF_BILLING_PERIODS, newBillingPeriods);
   },
-  removeAllRetailTariffBillingPeriods({ commit }) {
-    commit('REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS');
-    commit('REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES', []);
+  [a.REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES]({ commit }, newImportNotes) {
+    commit(m.REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES, newImportNotes);
   },
-  removeRetailTariffBillingPeriod({ commit }, id) {
-    commit('REMOVE_RETAIL_TARIFF_BILLING_PERIOD', id);
-    commit('REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES', []);
+  [a.REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS]({ commit }) {
+    commit(m.REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS);
+    commit(m.REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES, []);
+  },
+  [a.REMOVE_RETAIL_TARIFF_BILLING_PERIOD]({ commit }, id) {
+    commit(m.REMOVE_RETAIL_TARIFF_BILLING_PERIOD, id);
+    commit(m.REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES, []);
   },
   // Single EV
   replaceTechnologySpecsSingleEV({ commit }, payload) {

@@ -1,6 +1,6 @@
 ﻿<template>
   <div>
-    <h3>Services: Reliability Targets</h3>
+    <h3>Services: Reliability</h3>
     <hr>
     <div class="form-horizontal form-buffer">
 
