@@ -303,8 +303,8 @@ const mutations = {
   [m.SET_FR_DURATION](state, newFRDuration) {
     state[c.FR_DURATION] = newFRDuration;
   },
-  [m.SET_FR_ENERGY_GROWTH](state, newFREnergyGrowth) {
-    state[c.FR_ENERGY_PRICE_GROWTH] = newFREnergyGrowth;
+  [m.SET_FR_ENERGY_PRICE_GROWTH](state, payload) {
+    state[c.FR_ENERGY_PRICE_GROWTH] = payload;
   },
   [m.SET_FR_EOU](state, newFReou) {
     state[c.FR_EOU] = newFReou;
@@ -344,38 +344,38 @@ const mutations = {
   },
   // load following
   [m.SET_LF_COMBINED_MARKET](state, newFRCombinedMarket) {
-    state.lfCombinedMarket = newFRCombinedMarket;
+    state[c.LF_COMBINED_MARKET] = newFRCombinedMarket;
   },
   [m.SET_LF_DOWN_PRICE](state, newFRDownPrice) {
-    state.lfDownPrice = newFRDownPrice;
+    state[c.TS_LF_DOWN_PRICE] = newFRDownPrice;
   },
   [m.SET_LF_DURATION](state, newFRDuration) {
-    state.lfDuration = newFRDuration;
+    state[c.LF_DURATION] = newFRDuration;
   },
   [m.SET_LF_EOU](state, newFReou) {
-    state.lfEOU = newFReou;
+    state[c.TS_LF_EOU] = newFReou;
   },
   [m.SET_LF_EOD](state, newFReod) {
-    state.lfEOD = newFReod;
+    state[c.TS_LF_EOD] = newFReod;
   },
   [m.SET_LF_PRICE](state, newFRPrice) {
-    state.lfPrice = newFRPrice;
+    state[c.TS_LF_PRICE] = newFRPrice;
   },
   [m.SET_LF_UP_PRICE](state, newFRUpPrice) {
-    state.lfUpPrice = newFRUpPrice;
+    state[c.TS_LF_UP_PRICE] = newFRUpPrice;
   },
-  [m.SET_LF_ENERGY_GROWTH](state, newFREnergyGrowth) {
-    state.lfEnergyPriceGrowth = newFREnergyGrowth;
+  [m.SET_LF_ENERGY_PRICE_GROWTH](state, payload) {
+    state[c.LF_ENERGY_PRICE_GROWTH] = payload;
   },
   [m.SET_LF_GROWTH](state, newFRGrowth) {
-    state.lfGrowth = newFRGrowth;
+    state[c.LF_GROWTH] = newFRGrowth;
   },
   // non-spinning reserve
   [m.SET_NSR_DURATION](state, newNSRDuration) {
-    state.nsrDuration = newNSRDuration;
+    state[c.NSR_DURATION] = newNSRDuration;
   },
   [m.SET_NSR_GROWTH](state, newNSRGrowth) {
-    state.nsrGrowth = newNSRGrowth;
+    state[c.NSR_GROWTH] = newNSRGrowth;
   },
   [m.SET_NSR_PRICE](state, newNSRPrice) {
     state[c.TS_NSR_PRICE] = newNSRPrice;
@@ -848,8 +848,8 @@ const actions = {
   [a.SET_FR_DURATION]({ commit }, newFRDuration) {
     commit(m.SET_FR_DURATION, newFRDuration);
   },
-  [a.SET_FR_ENERGY_GROWTH]({ commit }, newFREnergyGrowth) {
-    commit(m.SET_FR_ENERGY_GROWTH, newFREnergyGrowth);
+  [a.SET_FR_ENERGY_PRICE_GROWTH]({ commit }, payload) {
+    commit(m.SET_FR_ENERGY_PRICE_GROWTH, payload);
   },
   [a.SET_FR_EOU]({ commit }, newFReou) {
     commit(m.SET_FR_EOU, newFReou);
@@ -888,8 +888,8 @@ const actions = {
   [a.SET_LF_DURATION]({ commit }, newLFDuration) {
     commit(m.SET_LF_DURATION, newLFDuration);
   },
-  [a.SET_LF_EOU]({ commit }, newLFEnergyGrowth) {
-    commit(m.SET_LF_EOU, newLFEnergyGrowth);
+  [a.SET_LF_EOU]({ commit }, payload) {
+    commit(m.SET_LF_EOU, payload);
   },
   [a.SET_LF_EOD]({ commit }, newLFeou) {
     commit(m.SET_LF_EOD, newLFeou);
@@ -900,8 +900,8 @@ const actions = {
   [a.SET_LF_UP_PRICE]({ commit }, newLFGrowth) {
     commit(m.SET_LF_UP_PRICE, newLFGrowth);
   },
-  [a.SET_LF_ENERGY_GROWTH]({ commit }, newFREnergyGrowth) {
-    commit(m.SET_LF_ENERGY_GROWTH, newFREnergyGrowth);
+  [a.SET_LF_ENERGY_PRICE_GROWTH]({ commit }, payload) {
+    commit(m.SET_LF_ENERGY_PRICE_GROWTH, payload);
   },
   [a.SET_LF_GROWTH]({ commit }, newFRGrowth) {
     commit(m.SET_LF_GROWTH, newFRGrowth);

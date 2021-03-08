@@ -21,6 +21,8 @@ describe('Project model', () => {
       let f1 = null;
       let f1page = null;
       let pageIndexEnd = null;
+      let expectedA = null;
+      let expectedName = null;
       switch (f) {
         case 'tsCriticalLoad':
           pageIndexEnd = 8;
@@ -52,8 +54,14 @@ describe('Project model', () => {
           f1 = (f.slice(2, pageIndexEnd)).toUpperCase();
           f1page = f1;
       }
-      const expectedA = `set${f1}${f.slice(pageIndexEnd)}`;
-      const expectedName = `${f1}${f.slice(pageIndexEnd)}TimeSeries`;
+      if (['tsLfEOU', 'tsLfEOD'].includes(f)) {
+        expectedA = `set${f1}${f.slice(pageIndexEnd).toLowerCase()}`;
+        const upOrDown = (f === 'tsLfEOU') ? 'Up' : 'Down';
+        expectedName = `${f1}EnergyOption${upOrDown}TimeSeries`;
+      } else {
+        expectedA = `set${f1}${f.slice(pageIndexEnd)}`;
+        expectedName = `${f1}${f.slice(pageIndexEnd)}TimeSeries`;
+      }
 
       expect(a).to.not.eql(undefined);
       expect(f0).to.eql('ts');

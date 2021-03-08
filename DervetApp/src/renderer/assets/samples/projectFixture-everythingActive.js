@@ -91,15 +91,15 @@ export const projectFixtureAllActive = {
   includeInterconnectionConstraints: TRUE,
   includeSystemLoad: TRUE,
   inflationRate: 3,
-  lfDownPrice: new LFDownPriceTimeSeries(csvs.price),
+  tsLfDownPrice: new LFDownPriceTimeSeries(csvs.price),
   lfDuration: 0,
   lfCombinedMarket: TRUE,
   lfGrowth: 2,
   lfEnergyPriceGrowth: 1.5,
-  lfEOU: new LFEnergyOptionUpTimeSeries(csvs.deferralLoad), // TODO fix this
-  lfEOD: new LFEnergyOptionDownTimeSeries(csvs.deferralLoad), // TODO fix this
-  lfPrice: new LFPriceTimeSeries(csvs.price),
-  lfUpPrice: new LFUpPriceTimeSeries(csvs.price),
+  tsLfEOU: new LFEnergyOptionUpTimeSeries(csvs.deferralLoad), // TODO fix this
+  tsLfEOD: new LFEnergyOptionDownTimeSeries(csvs.deferralLoad), // TODO fix this
+  tsLfPrice: new LFPriceTimeSeries(csvs.price),
+  tsLfUpPrice: new LFUpPriceTimeSeries(csvs.price),
   maxImport: -10000,
   maxExport: 40000,
   nsrGrowth: 2,

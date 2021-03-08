@@ -44,11 +44,6 @@ const RESULTS = 'results';
 export const LOG_FILE = 'dervet_log.log';
 
 const TIMESERIES_FIELDS = [
-  'lfEOU',
-  'lfEOD',
-  'lfPrice',
-  'lfUpPrice',
-  'lfDownPrice',
   'userPowerMin',
   'userPowerMax',
   'userEnergyMin',

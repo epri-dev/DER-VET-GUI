@@ -70,6 +70,12 @@ export const TS_FR_PRICE = 'tsFrPrice';
 export const TS_FR_UP_PRICE = 'tsFrUpPrice';
 export const TS_FR_DOWN_PRICE = 'tsFrDownPrice';
 export const TS_FR_FIELDS = [TS_FR_PRICE, TS_FR_UP_PRICE, TS_FR_DOWN_PRICE];
+export const TS_LF_EOU = 'tsLfEOU';
+export const TS_LF_EOD = 'tsLfEOD';
+export const TS_LF_PRICE = 'tsLfPrice';
+export const TS_LF_UP_PRICE = 'tsLfUpPrice';
+export const TS_LF_DOWN_PRICE = 'tsLfDownPrice';
+export const TS_LF_FIELDS = [TS_LF_EOU, TS_LF_EOD, TS_LF_PRICE, TS_LF_UP_PRICE, TS_LF_DOWN_PRICE];
 export const TS_RA_ACTIVE = 'tsRaActive';
 export const TS_RA_FIELDS = [TS_RA_ACTIVE];
 export const TS_CRITICAL_LOAD = 'tsCriticalLoad';
@@ -87,6 +93,7 @@ export const TS_ALL = [
   ...TS_DA_FIELDS,
   ...TS_DEFERRAL_FIELDS,
   ...TS_FR_FIELDS,
+  ...TS_LF_FIELDS,
   ...TS_NSR_FIELDS,
   ...TS_RA_FIELDS,
   ...TS_RESILIENCE_FIELDS,

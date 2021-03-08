@@ -61,7 +61,7 @@ export const REPLACE_EXTERNAL_INCENTIVES = 'replaceExternalIncentives';
 export const SET_FR_COMBINED_MARKET = 'setFRCombinedMarket';
 export const SET_FR_DOWN_PRICE = 'setFRDownPrice';
 export const SET_FR_DURATION = 'setFRDuration';
-export const SET_FR_ENERGY_GROWTH = 'setFREnergyGrowth';
+export const SET_FR_ENERGY_PRICE_GROWTH = 'setFREnergyPriceGrowth';
 export const SET_FR_EOU = 'setFReou';
 export const SET_FR_EOD = 'setFReod';
 export const SET_FR_GROWTH = 'setFRGrowth';
@@ -76,7 +76,7 @@ export const SET_LF_EOD = 'setLFeod';
 export const SET_LF_PRICE = 'setLFPrice';
 export const SET_LF_UP_PRICE = 'setLFUpPrice';
 export const SET_LF_GROWTH = 'setLFGrowth';
-export const SET_LF_ENERGY_GROWTH = 'setLFEnergyGrowth';
+export const SET_LF_ENERGY_PRICE_GROWTH = 'setLFEnergyPriceGrowth';
 // nsr page
 export const SET_NSR_DURATION = 'setNSRDuration';
 export const SET_NSR_GROWTH = 'setNSRGrowth';
