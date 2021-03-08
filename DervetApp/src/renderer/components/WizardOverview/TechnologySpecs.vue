@@ -42,7 +42,7 @@
       </div>
     </div>
     <hr>
-    <nav-button :continue-link="WIZARD_COMPONENT"
+    <nav-button :continue-link="CAL_ENVIRO_SCREEN"
                  continue-text="Done Adding Technologies"
                  :displayError="!complete"
                  :error-text="this.getSingleErrorMsg()"
@@ -52,7 +52,7 @@
 <script>
   import _ from 'lodash';
   import {
-    WIZARD_COMPONENT,
+    CAL_ENVIRO_SCREEN,
     OBJECTIVES,
     TECH_SPECS,
   } from '@/router/constants';
@@ -84,7 +84,7 @@
             label: '',
           },
         ],
-        WIZARD_COMPONENT,
+        CAL_ENVIRO_SCREEN,
         OBJECTIVES,
         TECH_SPECS,
       };

@@ -54,8 +54,8 @@ function createWindow() {
   });
 }
 
-function sendResults(event, results) {
-  event.sender.send('dervet-results', Object.assign(...results));
+function sendResults(event, results, resultsPath) {
+  event.sender.send('dervet-results', Object.assign(...results, { resultsPath }));
 }
 
 function registerIpcChannels() {
@@ -66,7 +66,7 @@ function registerIpcChannels() {
     Promise.all(writeDervetInputs(dervetInputs, modelParametersPath))
       .then(() => callDervet(modelParametersPath))
       .then(() => readDervetResults(resultsPath, dervetInputs.expectedResultCsvs))
-      .then(results => sendResults(event, results))
+      .then(results => sendResults(event, results, resultsPath))
       .catch((err) => {
         const errMessage = JSON.stringify(err);
         log.error(errMessage);

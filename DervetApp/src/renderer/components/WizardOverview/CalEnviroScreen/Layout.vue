@@ -41,6 +41,8 @@
       </div>
     </div>
 
+    <nav-button :continue-link="WIZARD_COMPONENT" continue-text="Done" :save="this.save" />
+
   </div>
 </template>
 
@@ -49,6 +51,8 @@
   import OpenExternalLink from '@/components/Shared/OpenExternalLink';
   import CesScoresTable from '@/components/WizardOverview/CalEnviroScreen/CesScoresTable';
   import ZipCodeFilter from '@/components/WizardOverview/CalEnviroScreen/ZipCodeFilter';
+  import { WIZARD_COMPONENT } from '@/router/constants';
+  import NavButton from '@/components/Shared/NavButton';
   import InnerImageZoom from 'vue-inner-image-zoom';
 
   const CES_HOMEPAGE_URL = 'https://oehha.ca.gov/calenviroscreen/report/calenviroscreen-30';
@@ -60,6 +64,7 @@
       InnerImageZoom,
       OpenExternalLink,
       ZipCodeFilter,
+      NavButton,
     },
     computed: {
       cesScores() {
@@ -77,6 +82,7 @@
     },
     data() {
       return {
+        WIZARD_COMPONENT,
         CesMap,
         CES_HOMEPAGE_URL,
         errorMessage: null,
@@ -98,6 +104,8 @@
       setErrorMessage(message) {
         this.zipCode = null;
         this.errorMessage = message;
+      },
+      save() {
       },
     },
   };

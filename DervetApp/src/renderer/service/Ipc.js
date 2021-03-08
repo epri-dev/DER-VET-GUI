@@ -8,6 +8,7 @@ const DERVET_RESULTS = 'dervet-results';
 export default class IpcService {
   static registerChannels() {
     ipcRenderer.on(DERVET_RESULTS, (event, results) => {
+      console.log(results.resultsPath);
       store.dispatch('receiveResults', results);
     });
 

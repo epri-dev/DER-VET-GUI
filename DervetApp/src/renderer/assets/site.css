@@ -41,6 +41,16 @@ body {
     height: auto;
 }
 
+.logo-img {
+    max-width: 80%;
+    height: auto;
+}
+
+.epri-logo-img {
+    max-width: 30%;
+    height: auto;
+}
+
 .btn-quick-start {
     background-color: #ff9999 !important;
     color: white !important;
