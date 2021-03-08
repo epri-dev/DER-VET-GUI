@@ -20,15 +20,15 @@ const OUTPUT_DIRECTORY = '/path/to/output';
 export const projectFixture = {
   analysisHorizon: 0,
   analysisHorizonMode: '1',
-  criticalLoad: new CriticalLoadTimeSeries(csvs.siteLoad), // note: using hardcoded site load
+  tsCriticalLoad: new CriticalLoadTimeSeries(csvs.siteLoad), // note: using hardcoded site load
   daGrowth: 0,
-  daPrice: new DAPriceTimeSeries(csvs.daPrice),
+  tsDaPrice: new DAPriceTimeSeries(csvs.daPrice),
   dataYear: 2017,
   deferralPlannedLoadLimit: 4000,
   deferralReversePowerFlowLimit: -1000,
   deferralGrowth: 2,
   deferralPrice: 0,
-  deferralLoad: new DeferralLoadTimeSeries(csvs.deferralLoad),
+  tsDeferralLoad: new DeferralLoadTimeSeries(csvs.deferralLoad),
   externalIncentives: [
     {
       id: '1',
@@ -54,7 +54,7 @@ export const projectFixture = {
   gridLocation: 'Customer',
   outputDirectory: OUTPUT_DIRECTORY,
   name: 'None',
-  nsrPrice: new NSRPriceTimeSeries(csvs.price),
+  tsNsrPrice: new NSRPriceTimeSeries(csvs.price),
   objectivesDA: true,
   siteLoad: null,
   includeSiteLoad: false,

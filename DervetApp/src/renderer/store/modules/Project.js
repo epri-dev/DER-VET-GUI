@@ -450,23 +450,23 @@ const mutations = {
     state[c.RA_GROWTH] = newRAGrowth;
   },
   // reliability page
-  SET_CRITICAL_LOAD(state, newCriticalLoad) {
-    state.criticalLoad = newCriticalLoad;
+  [m.SET_CRITICAL_LOAD](state, newCriticalLoad) {
+    state[c.TS_CRITICAL_LOAD] = newCriticalLoad;
   },
-  SET_RELIABILITY_GAMMA(state, newReliabilityGamma) {
-    state.reliabilityGamma = newReliabilityGamma;
+  [m.SET_RELIABILITY_GAMMA](state, newReliabilityGamma) {
+    state[c.RELIABILITY_GAMMA] = newReliabilityGamma;
   },
-  SET_RELIABILITY_MAX_OUTAGE_DURATION(state, newReliabilityMaxOutageDuration) {
-    state.reliabilityMaxOutageDuration = newReliabilityMaxOutageDuration;
+  [m.SET_RELIABILITY_MAX_OUTAGE_DURATION](state, newReliabilityMaxOutageDuration) {
+    state[c.RELIABILITY_MAX_OUTAGE_DURATION] = newReliabilityMaxOutageDuration;
   },
-  SET_RELIABILITY_NU(state, newReliabilityNu) {
-    state.reliabilityNu = newReliabilityNu;
+  [m.SET_RELIABILITY_NU](state, newReliabilityNu) {
+    state[c.RELIABILITY_NU] = newReliabilityNu;
   },
-  SET_RELIABILITY_POST_OPTIMIZATION_ONLY(state, newPostOptimizationOnly) {
-    state.reliabilityPostOptimizationOnly = newPostOptimizationOnly;
+  [m.SET_RELIABILITY_POST_OPTIMIZATION_ONLY](state, newPostOptimizationOnly) {
+    state[c.RELIABILITY_POST_OPTIMIZATION_ONLY] = newPostOptimizationOnly;
   },
-  SET_RELIABILITY_TARGET(state, newReliabilityTarget) {
-    state.reliabilityTarget = newReliabilityTarget;
+  [m.SET_RELIABILITY_TARGET](state, newReliabilityTarget) {
+    state[c.RELIABILITY_TARGET] = newReliabilityTarget;
   },
   // retail tariff file
   ADD_RETAIL_TARIFF_BILLING_PERIOD(state, newBillingPeriod) {
@@ -939,23 +939,23 @@ const actions = {
     commit(m.SET_SIZING_EQUIPMENT, newSizingEquipment);
   },
   // reliability
-  setCriticalLoad({ commit }, newCriticalLoad) {
-    commit('SET_CRITICAL_LOAD', newCriticalLoad);
+  [a.SET_CRITICAL_LOAD]({ commit }, newCriticalLoad) {
+    commit(m.SET_CRITICAL_LOAD, newCriticalLoad);
   },
-  setReliabilityGamma({ commit }, newReliabilityGamma) {
-    commit('SET_RELIABILITY_GAMMA', newReliabilityGamma);
+  [a.SET_RELIABILITY_GAMMA]({ commit }, newReliabilityGamma) {
+    commit(m.SET_RELIABILITY_GAMMA, newReliabilityGamma);
   },
-  setReliabilityMaxOutageDuration({ commit }, newReliabilityMaxOutageDuration) {
-    commit('SET_RELIABILITY_MAX_OUTAGE_DURATION', newReliabilityMaxOutageDuration);
+  [a.SET_RELIABILITY_MAX_OUTAGE_DURATION]({ commit }, newReliabilityMaxOutageDuration) {
+    commit(m.SET_RELIABILITY_MAX_OUTAGE_DURATION, newReliabilityMaxOutageDuration);
   },
-  setReliabilityNu({ commit }, newReliabilityNu) {
-    commit('SET_RELIABILITY_NU', newReliabilityNu);
+  [a.SET_RELIABILITY_NU]({ commit }, newReliabilityNu) {
+    commit(m.SET_RELIABILITY_NU, newReliabilityNu);
   },
-  setReliabilityPostOptimizationOnly({ commit }, newPostOptimizationOnly) {
-    commit('SET_RELIABILITY_POST_OPTIMIZATION_ONLY', newPostOptimizationOnly);
+  [a.SET_RELIABILITY_POST_OPTIMIZATION_ONLY]({ commit }, newPostOptimizationOnly) {
+    commit(m.SET_RELIABILITY_POST_OPTIMIZATION_ONLY, newPostOptimizationOnly);
   },
-  setReliabilityTarget({ commit }, newReliabilityTarget) {
-    commit('SET_RELIABILITY_TARGET', newReliabilityTarget);
+  [a.SET_RELIABILITY_TARGET]({ commit }, newReliabilityTarget) {
+    commit(m.SET_RELIABILITY_TARGET, newReliabilityTarget);
   },
   // resource adequacy
   [a.SET_RA_ACTIVE]({ commit }, newRAActive) {

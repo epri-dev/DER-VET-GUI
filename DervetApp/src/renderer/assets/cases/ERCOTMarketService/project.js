@@ -31,7 +31,7 @@ export const ERCOTMarketService = {
   analysisHorizon: 10,
   analysisHorizonMode: '1',
   daGrowth: 0,
-  daPrice: new DAPriceTimeSeries(daPrice),
+  tsDaPrice: new DAPriceTimeSeries(daPrice),
   dataYear: 2021,
   financeDiscountRate: 6,
   energyPriceSourceWholesale: true,

@@ -44,7 +44,6 @@ const RESULTS = 'results';
 export const LOG_FILE = 'dervet_log.log';
 
 const TIMESERIES_FIELDS = [
-  'criticalLoad',
   'lfEOU',
   'lfEOD',
   'lfPrice',

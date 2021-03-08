@@ -49,7 +49,9 @@ export const RA_EVENT_LENGTH = 'raEventLength';
 export const RA_DISPATCH_MODE = 'raDispatchMode';
 export const RA_EVENT_SELECTION_METHOD = 'raEventSelectionMethod';
 export const RA_GROWTH = 'raGrowth';
+export const RELIABILITY_GAMMA = 'reliabilityGamma';
 export const RELIABILITY_MAX_OUTAGE_DURATION = 'reliabilityMaxOutageDuration';
+export const RELIABILITY_NU = 'reliabilityNu';
 export const RELIABILITY_POST_OPTIMIZATION_ONLY = 'reliabilityPostOptimizationOnly';
 export const RELIABILITY_TARGET = 'reliabilityTarget';
 export const SIZING_EQUIPMENT = 'sizingEquipment';
@@ -70,6 +72,8 @@ export const TS_FR_DOWN_PRICE = 'tsFrDownPrice';
 export const TS_FR_FIELDS = [TS_FR_PRICE, TS_FR_UP_PRICE, TS_FR_DOWN_PRICE];
 export const TS_RA_ACTIVE = 'tsRaActive';
 export const TS_RA_FIELDS = [TS_RA_ACTIVE];
+export const TS_CRITICAL_LOAD = 'tsCriticalLoad';
+export const TS_RESILIENCE_FIELDS = [TS_CRITICAL_LOAD];
 export const TS_SITE_LOAD = 'tsSiteLoad';
 export const TS_SITE_FIELDS = [TS_SITE_LOAD];
 export const TS_SR_PRICE = 'tsSrPrice';
@@ -85,6 +89,7 @@ export const TS_ALL = [
   ...TS_FR_FIELDS,
   ...TS_NSR_FIELDS,
   ...TS_RA_FIELDS,
+  ...TS_RESILIENCE_FIELDS,
   ...TS_SITE_FIELDS,
   ...TS_SR_FIELDS,
   ...TS_SYSTEM_FIELDS,
@@ -225,7 +230,9 @@ export const RESOURCE_ADEQUACY_FIELDS = [
   RA_GROWTH,
 ];
 export const RESILIENCE_FIELDS = [
+  // RELIABILITY_GAMMA,
   RELIABILITY_MAX_OUTAGE_DURATION,
+  // RELIABILITY_NU,
   RELIABILITY_POST_OPTIMIZATION_ONLY,
   RELIABILITY_TARGET,
 ];

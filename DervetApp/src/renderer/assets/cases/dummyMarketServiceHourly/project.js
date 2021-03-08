@@ -33,9 +33,9 @@ export const dummyMarketServiceErrorList = {
 export const dummyMarketServiceHourly = {
   analysisHorizon: 20,
   analysisHorizonMode: '1',
-  criticalLoad: null,
+  tsCriticalLoad: null,
   daGrowth: 0,
-  daPrice: new DAPriceTimeSeries(daPrice),
+  tsDaPrice: new DAPriceTimeSeries(daPrice),
   dataYear: 2017,
   financeDiscountRate: 6,
   energyPriceSourceWholesale: true,

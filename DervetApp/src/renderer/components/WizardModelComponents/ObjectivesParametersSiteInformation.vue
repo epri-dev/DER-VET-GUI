@@ -127,6 +127,13 @@
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
+      validatedSave() {
+        // reset all non-required inputs to their defaults prior to saving
+        if (this.includeInterconnectionConstraints !== true) {
+          this.resetNonRequired(['maxExport', 'maxImport']);
+        }
+        csvUploadMixin.methods.validatedSave.bind(this)();
+      },
     },
   };
 </script>

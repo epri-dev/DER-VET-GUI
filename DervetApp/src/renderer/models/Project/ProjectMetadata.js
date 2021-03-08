@@ -6,7 +6,6 @@ import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 import operateOnKeysList from '@/util/object';
 
 /*
-import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
 import FleetEVBaselineLoadTimeSeries from '@/models/TimeSeries/FleetEVBaselineLoadTimeSeries';
 import LFDownPriceTimeSeries from '@/models/TimeSeries/LFDownPriceTimeSeries';
 import LFEnergyOptionDownTimeSeries from '@/models/TimeSeries/LFEnergyOptionDownTimeSeries';
@@ -28,6 +27,7 @@ import DRMonthsMonthly from '@/models/Monthly/DRMonthsMonthly';
 import RACapacityPriceMonthly from '@/models/Monthly/RACapacityPriceMonthly';
 */
 
+import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
 import DAPriceTimeSeries from '@/models/TimeSeries/DAPriceTimeSeries';
 import DeferralLoadTimeSeries from '@/models/TimeSeries/DeferralLoadTimeSeries';
 import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
@@ -532,6 +532,7 @@ export class ProjectMetadata {
         type: 'int',
         unit: 'hours',
         description: 'Calculate the post-facto reliability for an outage that can last up to this many hours',
+        actionSetName: a.SET_RELIABILITY_MAX_OUTAGE_DURATION,
       }),
       [c.RELIABILITY_POST_OPTIMIZATION_ONLY]: new ProjectFieldMetadata({
         displayName: 'Reliability Sizing',
@@ -539,6 +540,7 @@ export class ProjectMetadata {
         type: Boolean,
         description: '',
         allowedValues: c.RELIABILITY_POST_OPTIMIZATION_ONLY_ALLOWED_VALUES,
+        actionSetName: a.SET_RELIABILITY_POST_OPTIMIZATION_ONLY,
       }),
       [c.RELIABILITY_TARGET]: new ProjectFieldMetadata({
         displayName: 'Hours of guaranteed outage coverage',
@@ -547,6 +549,7 @@ export class ProjectMetadata {
         type: Number,
         unit: 'hours',
         description: 'How many hours of guaranteed outage coverage does the project need to supply based on the load?',
+        actionSetName: a.SET_RELIABILITY_TARGET,
       }),
       [c.SIZING_EQUIPMENT]: new ProjectFieldMetadata({
         displayName: 'Size equipment in microgrid',
@@ -624,6 +627,11 @@ export class ProjectMetadata {
         DataModel: RAActiveTimeSeries,
         displayName: 'if the resource adequacy event selection considers the load (1) or not (0)',
         actionSetName: a.SET_RA_ACTIVE,
+      }),
+      [c.TS_CRITICAL_LOAD]: new ProjectFieldMetadata({
+        DataModel: CriticalLoadTimeSeries,
+        displayName: 'critical load',
+        actionSetName: a.SET_CRITICAL_LOAD,
       }),
       [c.TS_SITE_LOAD]: new ProjectFieldMetadata({
         DataModel: SiteLoadTimeSeries,

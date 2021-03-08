@@ -158,6 +158,12 @@ const csvUploadMixin = {
       const { button, objectName } = payload;
       this[this.useExistingField(objectName)] = button;
     },
+    resetNonRequired(list) {
+      list.forEach((item) => {
+        this[item] = this.metadata[item].defaultValue;
+      });
+      return true;
+    },
     save(fields) {
       fields.forEach((field) => {
         this.$store.dispatch(

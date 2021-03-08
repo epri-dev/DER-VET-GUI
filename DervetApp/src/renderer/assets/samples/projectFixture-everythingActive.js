@@ -40,7 +40,7 @@ export const projectFixtureAllActive = {
   analysisHorizonMode: '1',
   backupPrice: new BackupEnergyAdwardsMonthly(new Array(12).fill(100)),
   backupEnergyReservation: new BackupEnergyReservationMonthly(new Array(12).fill(30)),
-  criticalLoad: new CriticalLoadTimeSeries(csvs.siteLoad), // note: using hardcoded site load
+  tsCriticalLoad: new CriticalLoadTimeSeries(csvs.siteLoad), // note: using hardcoded site load
   daGrowth: 0,
   tsDaPrice: new DAPriceTimeSeries(csvs.daPrice),
   dataYear: 2017,

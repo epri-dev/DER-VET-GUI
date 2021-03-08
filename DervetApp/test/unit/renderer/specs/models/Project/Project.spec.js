@@ -22,6 +22,11 @@ describe('Project model', () => {
       let f1page = null;
       let pageIndexEnd = null;
       switch (f) {
+        case 'tsCriticalLoad':
+          pageIndexEnd = 8;
+          f1 = startCase(f.slice(2, pageIndexEnd));
+          f1page = 'resilience';
+          break;
         case 'tsDeferralLoad':
           pageIndexEnd = 10;
           f1 = startCase(f.slice(2, pageIndexEnd));
