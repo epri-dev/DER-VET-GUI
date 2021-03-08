@@ -98,7 +98,7 @@
       if (this.isNewBillingPeriod()) {
         return {
           metadata,
-          ...this.getDefaultData(),
+          ...metadata.getDefaultValues(),
           FINANCIAL_INPUTS_RETAIL_TARIFF,
         };
       }
@@ -160,14 +160,9 @@
       },
     },
     methods: {
-      getDefaultData() {
-        const defaultValues = metadata.getDefaultValues();
-        defaultValues.id = this.$store.getters.getNewRetailTariffBillingPeriodId;
-        return defaultValues;
-      },
       getDataFromProject() {
         // the prop can become a string, but needs to be a number for this to work here
-        const pd = this.$store.getters.getListFieldById('retailTariffBillingPeriods', parseInt(this.billingPeriodId, 10));
+        const pd = this.$store.getters.getListFieldById('retailTariffBillingPeriods', this.billingPeriodId);
         return this.unpackData(pd);
       },
       getDynamicExcludingEndTimeMinValue() {
@@ -296,9 +291,6 @@
       valueInMonthRange(value) {
         return this.valueInRange(value, 1, 12);
       },
-      // saveAndAdd() {
-      // reload page ? (reset form)
-      // },
       buildBillingPeriod() {
         return new RetailTariffBillingPeriodMetadata({
           startMonth: this.startMonth,

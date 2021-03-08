@@ -34,6 +34,7 @@ module.exports = {
     'no-multi-assign': 0,
     'no-param-reassign': 0,
     'no-shadow': 0,
+    'no-return-assign': 0,
     'object-curly-newline': 0,
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,

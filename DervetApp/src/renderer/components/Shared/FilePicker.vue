@@ -17,8 +17,6 @@
 
   /* TODO
     - Use typescript in script
-    - Validate that directory is received using accepted answer here:
-      https://stackoverflow.com/questions/52667995/how-to-check-if-selected-file-is-a-directory-or-regular-file
   */
   export default {
     props: {

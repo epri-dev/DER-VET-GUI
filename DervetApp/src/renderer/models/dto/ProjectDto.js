@@ -61,7 +61,7 @@ const TIMESERIES_FIELDS = [
   'userPowerMax',
   'userEnergyMin',
   'userEnergyMax',
-  ...c.TS_FR_FIELDS,
+  ...c.TS_ALL,
 ];
 
 const MONTHLY_FIELDS = [
@@ -71,7 +71,7 @@ const MONTHLY_FIELDS = [
   'drCapacityReservation',
   'drCapacityAwards',
   'drEnergyAwards',
-  'raCapacityAwards',
+  ...c.MTS_ALL,
 ];
 
 export const convertToYesNo = condition => (condition ? YES : NO);
@@ -795,7 +795,7 @@ export const makeMonthlyCsv = (project) => {
   // Add all available monthly to CSV
   MONTHLY_FIELDS.forEach((ts) => {
     const tsClass = project[ts];
-    if (tsClass) {
+    if (tsClass && tsClass.data.length !== 0) {
       const dataObjectList = mapListToObjectList(tsClass.data, ts);
       addSingleSeries(dataObjectList, ts, tsClass.columnHeaderName);
     }
@@ -862,7 +862,7 @@ export const makeTimeSeriesCsv = (project) => {
   // Add all available timeseries to CSV
   TIMESERIES_FIELDS.forEach((ts) => {
     const tsClass = project[ts];
-    if (tsClass) {
+    if (tsClass && tsClass.data.length !== 0) {
       const dataObjectList = mapListToObjectList(tsClass.data, ts);
       addSingleSeries(dataObjectList, ts, tsClass.columnHeaderName);
     }

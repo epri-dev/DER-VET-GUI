@@ -5,7 +5,45 @@ import * as a from '@/store/actionTypes';
 import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 import operateOnKeysList from '@/util/object';
 
-import TimeSeriesBase from '@/models/TimeSeries/TimeSeriesBase';
+/*
+import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
+import DAPriceTimeSeries from '@/models/TimeSeries/DAPriceTimeSeries';
+import DeferralLoadTimeSeries from '@/models/TimeSeries/DeferralLoadTimeSeries';
+import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
+import FRPriceTimeSeries from '@/models/TimeSeries/FRPriceTimeSeries';
+import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
+import FleetEVBaselineLoadTimeSeries from '@/models/TimeSeries/FleetEVBaselineLoadTimeSeries';
+import LFDownPriceTimeSeries from '@/models/TimeSeries/LFDownPriceTimeSeries';
+import LFEnergyOptionDownTimeSeries from '@/models/TimeSeries/LFEnergyOptionDownTimeSeries';
+import LFEnergyOptionUpTimeSeries from '@/models/TimeSeries/LFEnergyOptionUpTimeSeries';
+import LFPriceTimeSeries from '@/models/TimeSeries/LFPriceTimeSeries';
+import LFUpPriceTimeSeries from '@/models/TimeSeries/LFUpPriceTimeSeries';
+import NSRPriceTimeSeries from '@/models/TimeSeries/NSRPriceTimeSeries';
+import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
+import RAActiveTimeSeries from '@/models/TimeSeries/RAActiveTimeSeries';
+import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
+import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
+import SystemLoadTimeSeries from '@/models/TimeSeries/SystemLoadTimeSeries';
+import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
+import UserEnergyMinTimeSeries from '@/models/TimeSeries/UserEnergyMinTimeSeries';
+import UserPowerMaxTimeSeries from '@/models/TimeSeries/UserPowerMaxTimeSeries';
+import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
+
+import BackupEnergyAdwardsMonthly from '@/models/Monthly/BackupEnergyAdwardsMonthly';
+import BackupEnergyReservationMonthly from '@/models/Monthly/BackupEnergyReservationMonthly';
+import DRCapacityAdwardsMonthly from '@/models/Monthly/DRCapacityAdwardsMonthly';
+import DRCapacityReservationMonthly from '@/models/Monthly/DRCapacityReservationMonthly';
+import DREnergyAwardsMonthly from '@/models/Monthly/DREnergyAwardsMonthly';
+import DRMonthsMonthly from '@/models/Monthly/DRMonthsMonthly';
+import RACapacityPriceMonthly from '@/models/Monthly/RACapacityPriceMonthly';
+*/
+
+import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
+import FRPriceTimeSeries from '@/models/TimeSeries/FRPriceTimeSeries';
+import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
+import RAActiveTimeSeries from '@/models/TimeSeries/RAActiveTimeSeries';
+
+import RACapacityPriceMonthly from '@/models/Monthly/RACapacityPriceMonthly';
 
 export class ProjectMetadata {
   constructor(arg) {
@@ -49,7 +87,8 @@ export class ProjectMetadata {
       ...this.operateOnFieldList(c.LF_FIELDS, f => f.defaultValue),
       ...this.operateOnFieldList(c.RESOURCE_ADEQUACY_FIELDS, f => f.defaultValue),
       ...this.operateOnFieldList(c.DEMAND_RESPONSE_FIELDS, f => f.defaultValue),
-      ...this.operateOnFieldList(c.TS_ALL, f => f.defaultValue),
+      ...this.operateOnFieldList(c.TS_ALL, f => new f.DataModel([])),
+      ...this.operateOnFieldList(c.MTS_ALL, f => new f.DataModel([])),
 
       // TIMESERIES ARRAYS
       criticalLoad: null,
@@ -61,7 +100,6 @@ export class ProjectMetadata {
       lfUpPrice: null,
       lfDownPrice: null,
       nsrPrice: null,
-      raActive: null,
       siteLoad: null,
       srPrice: null,
       systemLoad: null,
@@ -77,7 +115,6 @@ export class ProjectMetadata {
       drCapacityReservation: null,
       drCapacityAwards: null,
       drEnergyAwards: null,
-      raCapacityAwards: null,
     };
   }
 
@@ -333,7 +370,7 @@ export class ProjectMetadata {
         displayName: 'Grid Domain',
         isRequired: true,
         type: String,
-        description: 'Which grid domain the project will be connected to. This limits which services are available.',
+        description: 'Which grid domain or location the project will be connected to. This determines which services are available.',
         allowedValues: c.GRID_LOCATION_ALLOWED_VALUES,
       }),
       [c.INCLUDE_INTERCONNECTION_CONSTRAINTS]: new ProjectFieldMetadata({
@@ -428,7 +465,7 @@ export class ProjectMetadata {
         minValue: 2,
         type: Number,
         unit: 'hours',
-        description: 'What is the number of hours of the optimization window?',
+        description: 'Range: 2-8760 (or 8784 in a leap year)',
       }),
       [c.OUTPUT_DIRECTORY]: new ProjectFieldMetadata({
         displayName: 'Outputs Directory',
@@ -449,6 +486,7 @@ export class ProjectMetadata {
         type: 'int',
         unit: 'days',
         description: 'How many times will a resource be called on to fulfill its resource adequacy obligation in one year?',
+        actionSetName: a.SET_RA_NUMBER_EVENTS,
       }),
       [c.RA_DISPATCH_MODE]: new ProjectFieldMetadata({
         displayName: 'Dispatch Mode',
@@ -456,6 +494,7 @@ export class ProjectMetadata {
         type: Boolean,
         description: 'How should the DERs dispatch in response to the program?',
         allowedValues: c.RA_DISPATCH_MODE_ALLOWED_VALUES,
+        actionSetName: a.SET_RA_DISPATCH_MODE,
       }),
       [c.RA_EVENT_SELECTION_METHOD]: new ProjectFieldMetadata({
         displayName: 'Event Selection Method',
@@ -463,6 +502,7 @@ export class ProjectMetadata {
         type: String,
         description: 'Based on the system load, how are resource adequacy events selected?',
         allowedValues: c.RA_EVENT_SELECTION_METHOD_ALLOWED_VALUES,
+        actionSetName: a.SET_RA_EVENT_SELECTION_METHOD,
       }),
       [c.RA_EVENT_LENGTH]: new ProjectFieldMetadata({
         displayName: 'Duration of Events',
@@ -472,6 +512,7 @@ export class ProjectMetadata {
         type: 'int',
         unit: 'hours',
         description: 'How long will a resource adequacy event last for?',
+        actionSetName: a.SET_RA_EVENT_LENGTH,
       }),
       [c.RA_GROWTH]: new ProjectFieldMetadata({
         displayName: 'Growth Rate of Resource Adequacy Awards',
@@ -481,6 +522,7 @@ export class ProjectMetadata {
         type: Number,
         unit: '% / year',
         description: 'Yearly growth rate to apply to awards?',
+        actionSetName: a.SET_RA_GROWTH,
       }),
       [c.RELIABILITY_MAX_OUTAGE_DURATION]: new ProjectFieldMetadata({
         displayName: 'Maximum Outage Duration to Plot',
@@ -491,10 +533,10 @@ export class ProjectMetadata {
         description: 'Calculate the post-facto reliability for an outage that can last up to this many hours',
       }),
       [c.RELIABILITY_POST_OPTIMIZATION_ONLY]: new ProjectFieldMetadata({
-        displayName: 'Reliability Sizing',
+        displayName: 'Objective',
         isRequired: true,
         type: Boolean,
-        description: '',
+        description: 'How should we consider reliability in our analysis?',
         allowedValues: c.RELIABILITY_POST_OPTIMIZATION_ONLY_ALLOWED_VALUES,
       }),
       [c.RELIABILITY_TARGET]: new ProjectFieldMetadata({
@@ -507,7 +549,7 @@ export class ProjectMetadata {
       }),
       [c.SIZING_EQUIPMENT]: new ProjectFieldMetadata({
         displayName: 'Size equipment in microgrid',
-        description: 'Are there any pieces of equipment that you want DER-VET to optimally size for?',
+        description: 'Are there any microgrid components that you want DER-VET to optimally size for?',
         isRequired: true,
         type: Boolean,
         allowedValues: c.SIZING_EQUIPMENT_ALLOWED_VALUES,
@@ -544,20 +586,32 @@ export class ProjectMetadata {
         description: 'What timestep will the optimization will use?',
         allowedValues: c.TIMESTEP_ALLOWED_VALUES,
       }),
+      // ts: timeseries
       [c.TS_FR_PRICE]: new ProjectFieldMetadata({
-        defaultValue: new TimeSeriesBase('FR Price ($/kW)', []),
+        DataModel: FRPriceTimeSeries,
         displayName: 'frequency regulation price',
         actionSetName: a.SET_FR_PRICE,
       }),
       [c.TS_FR_UP_PRICE]: new ProjectFieldMetadata({
-        defaultValue: new TimeSeriesBase('Reg Up Price ($/kW)', []),
+        DataModel: FRUpPriceTimeSeries,
         displayName: 'frequency regulation up price',
         actionSetName: a.SET_FR_UP_PRICE,
       }),
       [c.TS_FR_DOWN_PRICE]: new ProjectFieldMetadata({
-        defaultValue: new TimeSeriesBase('Reg Down Price ($/kW)', []),
+        DataModel: FRDownPriceTimeSeries,
         displayName: 'frequency regulation down price',
         actionSetName: a.SET_FR_DOWN_PRICE,
+      }),
+      [c.TS_RA_ACTIVE]: new ProjectFieldMetadata({
+        DataModel: RAActiveTimeSeries,
+        displayName: 'if the resource adequacy event selection considers the load (1) or not (0)',
+        actionSetName: a.SET_RA_ACTIVE,
+      }),
+      // mts: monthly timeseries
+      [c.MTS_RA_CAPACITY_PRICE]: new ProjectFieldMetadata({
+        DataModel: RACapacityPriceMonthly,
+        displayName: 'resource adequacy capacity prices',
+        actionSetName: a.SET_RA_CAPACITY_PRICE,
       }),
       [c.USER_PRICE]: new ProjectFieldMetadata({
         displayName: 'Yearly Cost Avoided',

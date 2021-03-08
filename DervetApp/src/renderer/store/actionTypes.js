@@ -90,7 +90,7 @@ export const SET_OPTIMIZATION_HORIZON_NUM = 'setOptimizationHorizonNum';
 export const SET_SIZING_EQUIPMENT = 'setSizingEquipment';
 export const SELECT_OTHER_SERVICES = 'selectOtherServices';
 // resource adequacy
-export const SET_RA_ACTIVE_TIMESTEP = 'setRAActiveTimestep';
+export const SET_RA_ACTIVE = 'setRAActive';
 export const SET_RA_CAPACITY_PRICE = 'setRACapacityPrice';
 export const SET_RA_DISPATCH_MODE = 'setRADispatchMode';
 export const SET_RA_EVENT_LENGTH = 'setRAEventLength';
@@ -108,3 +108,10 @@ export const DEACTIVATE_TECH = 'deactivateTech';
 export const MAKE_LIST_OF_ACTIVE_TECHNOLOGIES = 'makeListOfActiveTechnologies';
 export const REPLACE_LIST_FIELD = 'replaceListField';
 export const REMOVE_TECH = 'removeTech';
+// financial
+export const ADD_RETAIL_TARIFF_BILLING_PERIOD = 'addRetailTariffBillingPeriod';
+export const ADD_MANY_RETAIL_TARIFF_BILLING_PERIODS = 'addManyRetailTariffBillingPeriods';
+export const REPLACE_RETAIL_TARIFF_BILLING_PERIODS = 'replaceRetailTariffBillingPeriods';
+export const REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES = 'replaceRetailTariffFileImportNotes';
+export const REMOVE_RETAIL_TARIFF_BILLING_PERIOD = 'removeRetailTariffBillingPeriod';
+export const REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS = 'removeAllRetailTariffBillingPeriods';

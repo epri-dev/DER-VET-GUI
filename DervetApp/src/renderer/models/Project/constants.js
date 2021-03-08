@@ -60,12 +60,21 @@ export const TIMESTEP = 'timestep';
 export const USER_PRICE = 'userPrice';
 
 // Timeseries
+export const TS_RA_ACTIVE = 'tsRaActive';
+export const TS_RA_FIELDS = [TS_RA_ACTIVE];
+
 export const TS_FR_PRICE = 'tsFrPrice';
 export const TS_FR_UP_PRICE = 'tsFrUpPrice';
 export const TS_FR_DOWN_PRICE = 'tsFrDownPrice';
 export const TS_FR_FIELDS = [TS_FR_PRICE, TS_FR_UP_PRICE, TS_FR_DOWN_PRICE];
 
-export const TS_ALL = [...TS_FR_FIELDS];
+export const TS_ALL = [...TS_FR_FIELDS, ...TS_RA_FIELDS];
+
+// Monthly
+export const MTS_RA_CAPACITY_PRICE = 'mtsRaCapacityPrice';
+export const MTS_RA_FIELDS = [MTS_RA_CAPACITY_PRICE];
+
+export const MTS_ALL = [...MTS_RA_FIELDS];
 
 export const makeAllowedValues = lst => _.map(lst, x => ({ value: x, label: x }));
 
@@ -104,7 +113,7 @@ export const ENERGY_PRICE_SOURCE_WHOLESALE_ALLOWED_VALUES = [
 export const FR_COMBINED_MARKET_ALLOWED_VALUES = optionsYN;
 export const GRID_LOCATION_ALLOWED_VALUES = makeAllowedValues(['Generation', 'Transmission', 'Distribution', 'Customer']);
 export const INCLUDE_INTERCONNECTION_CONSTRAINTS_ALLOWED_VALUES = optionsYN;
-export const OPTIMIZATION_HORIZON_ALLOWED_VALUES = makeAllowedValues(['Year', 'Month', 'Hours']);
+export const OPTIMIZATION_HORIZON_ALLOWED_VALUES = makeAllowedValues(['Year', 'Months', 'Hours']);
 export const OWNERSHIP_ALLOWED_VALUES = makeAllowedValues(['Customer', 'Utility', '3rd Party']);
 export const DR_END_MODE_ALLOWED_VALUES = [
   { value: true, label: 'Event Length' },

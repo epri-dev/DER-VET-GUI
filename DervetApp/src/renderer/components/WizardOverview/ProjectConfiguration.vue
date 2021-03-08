@@ -183,7 +183,7 @@
         return {
           pageGroup: PAGEGROUP,
           page: PAGE,
-          completeness: !this.$v.$invalid,
+          completeness: !this.$v.$invalid && !this.isTSError,
         };
       },
       onOutputDirectorySelection(path) {
@@ -202,23 +202,33 @@
           errorList: errors,
         };
       },
-      revalidateTS() {
-        // track ts required lines changes
-        console.log(
-          'new:',
-          this.numberOfEntriesRequired,
-          '---> old:',
-          this.tsRequiredLines,
-        );
+      revalidateData() {
+        // add to appropriate errorList for all saved TS
+        // NOTE: Monthly Data is not affected here
         if (this.tsRequiredLines !== this.numberOfEntriesRequired) {
-          console.log('!!! need to do a simple validation (length check) on all stored TS');
-        } else {
-          console.log('no TS re-validation needed');
+          // re-validate all saved TS data here
+          const dataObjects = operateOnKeysList(this.$store.state.Project, c.TS_ALL, f => f);
+          Object.values(dataObjects).forEach((dataObject) => {
+            // only need this when the TS already exists in the store
+            if (dataObject.length() !== 0) {
+              dataObject.revalidate(this.numberOfEntriesRequired);
+              // append a line to the accompanying errorList
+              const { pageGroup, pageKey, page } = dataObject.pageAttributes;
+              const errorList = this.$store.state.Application.errorList[pageGroup][pageKey][page];
+              const tsError = `The timeseries of ${dataObject.columnHeaderName} has the the wrong number of values`;
+              errorList.push(tsError);
+              const payload = {
+                pageGroup,
+                pageKey,
+                page,
+                errorList,
+              };
+              this.$store.dispatch('Application/setErrorList', payload);
+            }
+          });
         }
         // reset the value in case of 'saveStay'
         this.tsRequiredLines = this.numberOfEntriesRequired;
-
-        // TODO: AE: re-validate all saved TS here
       },
       validatedSaveContinue() {
         this.validatedSave();
@@ -243,7 +253,7 @@
         // handle a change in numberOfEntriesRequired
         this.$store.dispatch('setDataYear', this.dataYear);
         this.$store.dispatch('setTimestep', this.timestep);
-        this.revalidateTS();
+        this.revalidateData();
       },
       save() {
         this.$store.dispatch('setName', this.name);

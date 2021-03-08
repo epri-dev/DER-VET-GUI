@@ -1,9 +1,9 @@
 import MonthlyBase from './MonthlyBase';
 
-class RACapacityAwardsMonthly extends MonthlyBase {
+class RACapacityPriceMonthly extends MonthlyBase {
   constructor(data) {
     super('RA Capacity Price ($/kW)', data);
   }
 }
 
-export default RACapacityAwardsMonthly;
+export default RACapacityPriceMonthly;

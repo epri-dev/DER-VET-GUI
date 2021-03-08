@@ -2,31 +2,44 @@ import map from 'lodash/map';
 
 import { getUtilityCompanies } from '@/service/OpenEI/request';
 
-const getDefaultApplicationState = () => ({
-  utilities: null,
+const getDefaultOpenEIState = () => ({
+  utilities: [],
+  apiKey: null,
 });
 
-const state = getDefaultApplicationState();
+const state = getDefaultOpenEIState();
 
 const mutations = {
   SET_UTILITIES(state, utilities) {
     state.utilities = utilities;
   },
+  SET_API_KEY(state, apiKey) {
+    state.apiKey = apiKey;
+  },
 };
 
 const actions = {
   resetUtilities({ commit }) {
-    commit('SET_UTILITIES', null);
+    commit('SET_UTILITIES', []);
   },
-  loadUtilities({ commit }) {
-    getUtilityCompanies('NDaTseTlWcxclr9jN2c0xxMKgn9aNJ55G0zGhmVb')
-      .then((response) => {
-        const values = map(response.data.items, v => v.label);
-        commit('SET_UTILITIES', values);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  loadUtilities({ commit }, apiKey) {
+    return new Promise((resolve, reject) => {
+      if (apiKey) {
+        getUtilityCompanies(apiKey)
+          .then((response) => {
+            const values = map(response.data.items, v => v.label);
+            commit('SET_UTILITIES', values);
+          });
+      } else {
+        reject(new Error('Unable to load utilities: must provide an API key.'));
+      }
+    });
+  },
+  setApiKey({ commit }, newApiKey) {
+    return new Promise((resolve) => {
+      commit('SET_API_KEY', newApiKey);
+      resolve();
+    });
   },
 };
 

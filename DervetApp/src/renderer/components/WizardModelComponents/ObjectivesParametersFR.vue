@@ -42,10 +42,10 @@
       </radio-button-input>
 
       <timeseries-data-upload
-        chart-name="tsFrPricechartUploaded"
+        chart-name="tsFrPriceChartUploaded"
         @click="receiveRemove"
         :data-exists="tsData('tsFrPrice').data.length !== 0"
-        :DataModel="TimeSeriesBase"
+        :DataModel="metadata.tsFrPrice.DataModel"
         :data-name="metadata.tsFrPrice.displayName"
         :data-time-series="tsData('tsFrPrice')"
         :errorMessage="getErrorMsgTS('tsFrPrice')"
@@ -61,7 +61,7 @@
         chart-name="tsFrUpPriceChartUploaded"
         @click="receiveRemove"
         :data-exists="tsData('tsFrUpPrice').data.length !== 0"
-        :DataModel="TimeSeriesBase"
+        :DataModel="metadata.tsFrUpPrice.DataModel"
         :data-name="metadata.tsFrUpPrice.displayName"
         :data-time-series="tsData('tsFrUpPrice')"
         :errorMessage="getErrorMsgTS('tsFrUpPrice')"
@@ -77,7 +77,7 @@
         chart-name="tsFrDownPriceChartUploaded"
         @click="receiveRemove"
         :data-exists="tsData('tsFrDownPrice').data.length !== 0"
-        :DataModel="TimeSeriesBase"
+        :DataModel="metadata.tsFrDownPrice.DataModel"
         :data-name="metadata.tsFrDownPrice.displayName"
         :data-time-series="tsData('tsFrDownPrice')"
         :errorMessage="getErrorMsgTS('tsFrDownPrice')"
@@ -105,7 +105,6 @@
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import { projectMetadata } from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
-  import TimeSeriesBase from '@/models/TimeSeries/TimeSeriesBase';
 
   import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
 
@@ -136,20 +135,14 @@
         ...this.getTSInputDefaultDataFromProject(TS_FIELDS),
         ...this.getChildKeys(TS_FIELDS),
         ...this.getUseExistingDefaults(TS_FIELDS),
-        TimeSeriesBase,
         CONSTANTS,
       };
     },
     validations: {
       ...validations,
     },
-    computed: {
-      isTSError() {
-        return this.getErrorListTS(false).length !== 0;
-      },
-    },
     methods: {
-      getErrorListTS(fromStore = true) {
+      getErrorListTS() {
         const errors = [];
         (TS_FIELDS).forEach((tsField) => {
           // skip non-required tsFields
@@ -158,22 +151,9 @@
             || this.frCombinedMarket === null) {
             return;
           }
-          const errorMsgTS = `A timeseries of ${this[tsField].columnHeaderName} is required`;
-          if (fromStore) {
-            // get ts from the store
-            if (this.$store.state.Project[tsField].data.length === 0) {
-              errors.push(errorMsgTS);
-            }
-          } else {
-            // get ts from this page
-            const ts = this[tsField];
-            const tsFieldInput = `${tsField}Input`;
-            const tsInput = this[tsFieldInput];
-            const tsFieldUseExisting = `${tsField}UseExisting`;
-            const tsUseExisting = this[tsFieldUseExisting];
-            if (ts.data.length === 0 && (tsInput === null || !tsUseExisting)) {
-              errors.push(errorMsgTS);
-            }
+          const errorMsgTS = this.getErrorMsgTSFromProject(tsField);
+          if (errorMsgTS.length !== 0) {
+            errors.push(errorMsgTS);
           }
         });
         return errors;

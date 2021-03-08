@@ -2,7 +2,9 @@
   <div class="container body-content">
 
     <div class="jumbotron dervet-title">
-      <h1>DER-VET</h1>
+      <img class="logo-img" :src="FullLogo" />
+      <img class="epri-logo-img" :src="EPRILogo" />
+      <h5>EPRI's Distributed Energy Resource Value Estimation Tool (DER-VET<sup>TM</sup>)</h5>
     </div>
 
     <div class="row buffer-bottom">
@@ -16,11 +18,11 @@
       <div class="col-md-4 text-center">
         <router-link to="/import-project"
                      class="btn btn-lg btn-info btn-index-page">
-          Import Existing Project
+          Use Existing Analysis
         </router-link>
       </div>
       <div class="col-md-4 text-center">
-        <b-dropdown text="Quick Start"
+        <b-dropdown text="Pre-defined Analyses"
                     toggle-class="btn btn-lg btn-light btn-quick-start btn-index-page">
           <b-dropdown-item v-for="option in useCases" v-bind:key="option.id"
                            v-on:click.native="loadQuickStartProject(option.value)">
@@ -33,22 +35,17 @@
     <div class="row">
       <div class="col-md-4">
         <p>
-          To start an analysis, click the <b>Start a New Analysis</b> button above. You will
-          then be prompted to specify the type of analysis to run and to enter all relevant input data.
-          Once you've entered all the needed data, the DER-VET analysis will begin. This can take several
-          minutes to complete.
+          Create a new custom case analysis.
         </p>
       </div>
       <div class="col-md-4">
         <p>
-          You can load a previously exported project by clicking the <b>Import Existing Project</b> button above.
-          You will then be prompted to select the ZIP file that contains the project data and accompanying time series
-          data.
+          Load a previously created case analysis.
         </p>
       </div>
       <div class="col-md-4">
         <p>
-          Load a pre-defined case.
+          Load a pre-defined case analysis.
         </p>
       </div>
     </div>
@@ -56,10 +53,10 @@
     <div class="row">
       <div class="col-md-12">
         <p>
-          DER-VET<sup>TM</sup> is a modeling tool that provides a platform for the calculation and understanding of the value of energy storage, other distributed energy resources (DER), and microgrids based on their technical merits and constraints. It uses load and other data to determine the optimal size, duration, and technical characteristics for energy storage and/or solar systems, demand response application, etc. to maximize benefits based on the building's electric tariff and the value that can be extracted from the use cases.
+          DER-VET<sup>TM</sup> provides a free, publicly accessible, open-source platform for calculating, understanding, and optimizing the value of distributed energy resources (DER) based on their technical merits and constraints. An extension of EPRI's StorageVET<span>&#174;</span> tool, DER-VET supports site-specific assessments of energy storage and additional DER technologies—including solar, wind, demand response, electric vehicle charging, internal combustion engines, and combined heat and power—in different configurations, such as microgrids. It uses load and other data to determine optimal size, duration, and other characteristics for maximizing benefits based on site conditions and the value that can be extracted from targeted use cases. Customers, developers, utilities, and regulators across the industry can apply this tool to inform project-level decisions based on sound technical understanding and unbiased cost-performance data.
         </p>
         <p>
-          Made possible through funding support from the California Energy Commission.
+          DER-VET was developed with funding from the California Energy Commission. EPRI plans to support continuing updates and enhancements.
         </p>
       </div>
     </div>
@@ -69,13 +66,15 @@
 </template>
 
 <script language="ts">
+  import FullLogo from '@/assets/FullLogo.png';
+  import EPRILogo from '@/assets/EPRILogo.png';
   import { LOAD_QUICK_START_PROJECT } from '@/store/actionTypes';
-  import { WIZARD_OVERVIEW } from '@/router/constants';
+  import { WIZARD_OVERVIEW, SUMMARY } from '@/router/constants';
   import * as a from '@/store/actionTypes';
 
   const useCases = [
-    { id: 1, value: 'billReductionProject', text: 'General DER Bill Reduction' },
-    { id: 2, value: 'reliabilityProject', text: 'General DER Sizing for Reliability' },
+    { id: 1, value: 'billReductionProject', text: 'DER for Bill Reduction' },
+    { id: 2, value: 'reliabilityProject', text: 'DER for Reliability' },
     { id: 3, value: 'ERCOTMarketService', text: 'ERCOT Market Case' },
     { id: 4, value: 'dummyMarketServiceHourly', text: 'Dummy Market Case' },
   ];
@@ -87,6 +86,8 @@
         WIZARD_OVERVIEW,
         selectedUseCase: null,
         useCases,
+        EPRILogo,
+        FullLogo,
       };
     },
     computed: {
@@ -103,7 +104,7 @@
           .then(this.$store.dispatch(LOAD_QUICK_START_PROJECT, selectedUseCase))
           .then(this.$store.dispatch('Application/setQuickStartCompleteness'))
           .then(this.$store.dispatch(`Application/${a.SET_QUICK_START_ERROR_LIST}`, selectedUseCase))
-          .then(this.$router.push({ path: WIZARD_OVERVIEW }));
+          .then(this.$router.push({ path: SUMMARY }));
       },
       resetProjectToDefault() {
         this.$store.dispatch('resetProjectToDefault')

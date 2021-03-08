@@ -5,7 +5,10 @@
       @click="onRemove"
       :data-exists="dataExists"
       :data-name="dataName"
-      :data-frequency="{ value: 'monthly', unit: '' }"
+      :data-frequency="{
+        value: 'monthly',
+        unit: '',
+      }"
       :DataModel="DataModel"
       :disable-upload="false"
       :error-message="errorMessage"
@@ -49,7 +52,7 @@
       dataExists: Boolean,
       DataModel: Function,
       dataName: String,
-      dataTimeSeries: Object,
+      monthlyData: Object,
       errorMessage: String,
       isInvalid: Boolean,
       objectName: String,

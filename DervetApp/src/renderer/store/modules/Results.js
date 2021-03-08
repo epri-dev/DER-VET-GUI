@@ -2,6 +2,7 @@ import ResultsData from '@/models/Results/Results';
 
 const getDefaultResultState = () => ({
   id: null,
+  path: null,
   sensitivityAnalysisCase: null,
   data: null, // save result models here
   sensitivitySummary: null,
@@ -72,6 +73,9 @@ const mutations = {
   SET_ID(state, newId) {
     state.id = newId;
   },
+  SET_PATH(state, newPath) {
+    state.path = newPath;
+  },
   SET_RUN_IN_PROGRESS(state) {
     state.data = null;
     state.runInProgress = true;
@@ -108,6 +112,7 @@ const actions = {
     try {
       const resultDataObject = new ResultsData(0, results);
       commit('SET_RESULT', resultDataObject);
+      commit('SET_PATH', results.resultsPath);
       commit('Application/SET_RESULT_SUCCESS');
     } catch (error) {
       commit('Application/SET_RESULT_ERROR');
