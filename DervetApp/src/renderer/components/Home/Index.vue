@@ -45,7 +45,7 @@
       </div>
       <div class="col-md-4">
         <p>
-          Load a pre-defined analysis.
+          Load a pre-defined case analysis.
         </p>
       </div>
     </div>

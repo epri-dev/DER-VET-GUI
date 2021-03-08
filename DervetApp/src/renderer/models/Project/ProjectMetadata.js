@@ -533,10 +533,10 @@ export class ProjectMetadata {
         description: 'Calculate the post-facto reliability for an outage that can last up to this many hours',
       }),
       [c.RELIABILITY_POST_OPTIMIZATION_ONLY]: new ProjectFieldMetadata({
-        displayName: 'Reliability Sizing',
+        displayName: 'Objective',
         isRequired: true,
         type: Boolean,
-        description: '',
+        description: 'How should we consider reliability in our analysis?',
         allowedValues: c.RELIABILITY_POST_OPTIMIZATION_ONLY_ALLOWED_VALUES,
       }),
       [c.RELIABILITY_TARGET]: new ProjectFieldMetadata({
@@ -549,7 +549,7 @@ export class ProjectMetadata {
       }),
       [c.SIZING_EQUIPMENT]: new ProjectFieldMetadata({
         displayName: 'Size equipment in microgrid',
-        description: 'Are there any microgrid components that you want DER-VET to optimally size for? If yes, then the optimzation',
+        description: 'Are there any microgrid components that you want DER-VET to optimally size for?',
         isRequired: true,
         type: Boolean,
         allowedValues: c.SIZING_EQUIPMENT_ALLOWED_VALUES,
