@@ -14,7 +14,6 @@ import LFEnergyOptionUpTimeSeries from '@/models/TimeSeries/LFEnergyOptionUpTime
 import LFPriceTimeSeries from '@/models/TimeSeries/LFPriceTimeSeries';
 import LFUpPriceTimeSeries from '@/models/TimeSeries/LFUpPriceTimeSeries';
 import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
-import SystemLoadTimeSeries from '@/models/TimeSeries/SystemLoadTimeSeries';
 import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
 import UserEnergyMinTimeSeries from '@/models/TimeSeries/UserEnergyMinTimeSeries';
 import UserPowerMaxTimeSeries from '@/models/TimeSeries/UserPowerMaxTimeSeries';
@@ -38,6 +37,7 @@ import NSRPriceTimeSeries from '@/models/TimeSeries/NSRPriceTimeSeries';
 import RAActiveTimeSeries from '@/models/TimeSeries/RAActiveTimeSeries';
 import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
 import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
+import SystemLoadTimeSeries from '@/models/TimeSeries/SystemLoadTimeSeries';
 
 import RACapacityPriceMonthly from '@/models/Monthly/RACapacityPriceMonthly';
 
@@ -634,6 +634,11 @@ export class ProjectMetadata {
         DataModel: SRPriceTimeSeries,
         displayName: 'spinning reserve price',
         actionSetName: a.SET_SR_PRICE,
+      }),
+      [c.TS_SYSTEM_LOAD]: new ProjectFieldMetadata({
+        DataModel: SystemLoadTimeSeries,
+        displayName: 'system load',
+        actionSetName: a.SET_SYSTEM_LOAD,
       }),
       // mts: monthly timeseries
       [c.MTS_RA_CAPACITY_PRICE]: new ProjectFieldMetadata({

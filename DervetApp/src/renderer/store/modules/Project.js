@@ -565,7 +565,7 @@ const mutations = {
   },
   // system load
   [m.SET_SYSTEM_LOAD](state, newSystemLoad) {
-    state.systemLoad = newSystemLoad;
+    state[c.TS_SYSTEM_LOAD] = newSystemLoad;
   },
   // technology specs
   [m.ACTIVATE_TECH_BATTERY](state, payload) {

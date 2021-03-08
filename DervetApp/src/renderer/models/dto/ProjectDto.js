@@ -50,7 +50,6 @@ const TIMESERIES_FIELDS = [
   'lfPrice',
   'lfUpPrice',
   'lfDownPrice',
-  'systemLoad',
   'userPowerMin',
   'userPowerMax',
   'userEnergyMin',

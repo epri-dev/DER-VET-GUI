@@ -13,7 +13,6 @@ class SiteLoadTimeSeries extends TimeSeriesBase {
       page: 'siteInformation',
     };
   }
-
   // TODO: can a SiteLoadTimeSeries have negative values?
 }
 

@@ -24,22 +24,27 @@ describe('Project model', () => {
       switch (f) {
         case 'tsDeferralLoad':
           pageIndexEnd = 10;
-          f1 = startCase(f.slice(2, 10));
+          f1 = startCase(f.slice(2, pageIndexEnd));
           f1page = f1.toLowerCase();
           break;
         case 'tsNsrPrice':
           pageIndexEnd = 5;
-          f1 = (f.slice(2, 5)).toUpperCase();
+          f1 = (f.slice(2, pageIndexEnd)).toUpperCase();
           f1page = f1;
           break;
         case 'tsSiteLoad':
           pageIndexEnd = 6;
-          f1 = startCase(f.slice(2, 6));
+          f1 = startCase(f.slice(2, pageIndexEnd));
+          f1page = `${f1.toLowerCase()}Information`;
+          break;
+        case 'tsSystemLoad':
+          pageIndexEnd = 8;
+          f1 = startCase(f.slice(2, pageIndexEnd));
           f1page = `${f1.toLowerCase()}Information`;
           break;
         default:
           pageIndexEnd = 4;
-          f1 = (f.slice(2, 4)).toUpperCase();
+          f1 = (f.slice(2, pageIndexEnd)).toUpperCase();
           f1page = f1;
       }
       const expectedA = `set${f1}${f.slice(pageIndexEnd)}`;

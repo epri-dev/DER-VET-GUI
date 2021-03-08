@@ -74,6 +74,8 @@ export const TS_SITE_LOAD = 'tsSiteLoad';
 export const TS_SITE_FIELDS = [TS_SITE_LOAD];
 export const TS_SR_PRICE = 'tsSrPrice';
 export const TS_SR_FIELDS = [TS_SR_PRICE];
+export const TS_SYSTEM_LOAD = 'tsSystemLoad';
+export const TS_SYSTEM_FIELDS = [TS_SYSTEM_LOAD];
 export const TS_NSR_PRICE = 'tsNsrPrice';
 export const TS_NSR_FIELDS = [TS_NSR_PRICE];
 
@@ -85,6 +87,7 @@ export const TS_ALL = [
   ...TS_RA_FIELDS,
   ...TS_SITE_FIELDS,
   ...TS_SR_FIELDS,
+  ...TS_SYSTEM_FIELDS,
 ];
 
 // Monthly
