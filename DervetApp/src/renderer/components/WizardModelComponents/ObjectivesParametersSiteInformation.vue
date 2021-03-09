@@ -35,11 +35,9 @@
         @input="receiveUseExisting"
         :key="childKey('tsSiteLoad')"
         object-name="tsSiteLoad"
+        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
         v-if="includeSiteLoad === true"
-        sample-data-year="files/SampleSiteLoad-8760.csv"
-        sample-data-leapyear="files/SampleSiteLoad-8784.csv"
-        :show-sample-data="isTSError"
       />
       <hr>
 
@@ -59,6 +57,8 @@
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import { projectMetadata } from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
+  import '@/assets/samples/Sample_SiteLoad_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_SiteLoad_TimeSeries_8784.csv';
 
   import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
 

@@ -81,16 +81,10 @@
           <span v-html="errorMessage"></span>
         </div>
       </div>
-      <div v-if="showSampleData">
-        <hr>
+      <div v-if="showSampleData && isSampleDataAvailable">
         <div class="form-group row">
           <div class="col-md-12">
-            <i><a :href="sampleDataYear" download class="important-link text-decoration-none"> Download a sample <b>{{this.dataName}}</b><code>.csv</code> file</a> with a 60-minute timestep for a year with 365 days (8,760 entries)</i>
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-md-12">
-            <i><a :href="sampleDataLeapyear" download class="important-link text-decoration-none">Download a sample <b>{{this.dataName}}</b><code>.csv</code> file</a> with a 60-minute timestep <b>for a leap year with 366 days</b> (8,784 entries)</i>
+            <i><a :href="getSampleDataFileName()" download class="important-link text-decoration-none"> Download a sample <b>{{dataName}}</b><code>.csv</code> file</a>{{getSampleDataText()}}</i>
           </div>
         </div>
       </div>
@@ -130,17 +124,20 @@
       firstLetterCapitalized() {
         return this.dataName.charAt(0).toUpperCase() + this.dataName.slice(1);
       },
-      stringifyDataFrequency() {
-        return this.dataFrequency.value === 'monthly' ? 'month' : 'timestep';
-      },
-      validDataExists() {
-        return (this.dataExists && [undefined, ''].includes(this.importError));
+      isSampleDataAvailable() {
+        return ['12', '8760', '8784'].includes(this.numberOfEntriesRequired);
       },
       showPlot() {
         return (this.validDataExists && this.useExisting);
       },
+      stringifyDataFrequency() {
+        return this.dataFrequency.value === 'monthly' ? 'month' : 'timestep';
+      },
       tsFrequencyHasChanged() {
         return (!this.validDataExists && this.uploadedData.data.length !== 0);
+      },
+      validDataExists() {
+        return (this.dataExists && [undefined, ''].includes(this.importError));
       },
     },
     props: {
@@ -155,8 +152,6 @@
       isInvalid: Boolean,
       numberOfEntriesRequired: String,
       objectName: String,
-      sampleDataYear: String,
-      sampleDataLeapyear: String,
       showSampleData: Boolean,
       uploadedData: Object,
       xAxis: Array,
@@ -165,6 +160,42 @@
       arrayDisplayFirstFifteen(array) {
         const num = 15;
         return (array.length <= num) ? array : [array.slice(0, num), '...'];
+      },
+      getSampleDataFileName() {
+        const dataModelName = (new this.DataModel([])).constructor.name;
+        switch (this.numberOfEntriesRequired) {
+          case '12': {
+            const name = dataModelName.replace(/(Monthly)$/, '_$1');
+            return `files/Sample_${name}_${this.numberOfEntriesRequired}.csv`;
+          }
+          case '8760': {
+            const name = dataModelName.replace(/(TimeSeries)$/, '_$1');
+            return `files/Sample_${name}_${this.numberOfEntriesRequired}.csv`;
+          }
+          case '8784': {
+            const name = dataModelName.replace(/(TimeSeries)$/, '_$1');
+            return `files/Sample_${name}_${this.numberOfEntriesRequired}.csv`;
+          }
+          default: {
+            return undefined;
+          }
+        }
+      },
+      getSampleDataText() {
+        switch (this.numberOfEntriesRequired) {
+          case '12': {
+            return ' with 12 values representing each calendar month';
+          }
+          case '8760': {
+            return ' with a 60-minute timestep for a year with 365 days (8,760 entries)';
+          }
+          case '8784': {
+            return ' with a 60-minute timestep for a leap year with 366 days (8,784 entries)';
+          }
+          default: {
+            return undefined;
+          }
+        }
       },
       importErrorOnDisabledUpload() {
         if (this.disableUpload) {

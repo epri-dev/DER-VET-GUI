@@ -106,8 +106,7 @@ export const readJsonFromFile = filePath => (
 
 export const filterRowsByColumnCount = (rows, validRowLength) => {
   let importNotes = null;
-  // subtracting 1 is necessary here
-  const origLinesCount = rows.length - 1;
+  const origLinesCount = rows.length;
   rows = rows.filter(row => row.length === validRowLength);
   const postLinesCount = rows.length;
   const removedLinesCount = origLinesCount - postLinesCount;

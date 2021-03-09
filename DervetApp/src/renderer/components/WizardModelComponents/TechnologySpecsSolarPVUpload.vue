@@ -17,14 +17,14 @@
         <div class="form-group row">
           <div class="col-md-12">
             <i>
-              <a href="files/SamplePVgen-8760.csv" download class="important-link text-decoration-none">Click here to download a sample <code>.csv</code> file</a> with a 60-minute timestep for a year with 365 days (8,760 readings)
+              <a href="files/Sample_PVGeneration_TimeSeries_8760.csv" download class="important-link text-decoration-none">Click here to download a sample <code>.csv</code> file</a> with a 60-minute timestep for a year with 365 days (8,760 readings)
             </i>
           </div>
         </div>
         <div class="form-group row">
           <div class="col-md-12">
             <i>
-              <a href="files/SamplePVgen-8784.csv" download class="important-link text-decoration-none">Click here to download a sample <code>.csv</code> file</a> with a 60-minute timestep <b>for a leap year with 366 days</b> (8,784 readings)
+              <a href="files/Sample_PVGeneration_TimeSeries_8784.csv" download class="important-link text-decoration-none">Click here to download a sample <code>.csv</code> file</a> with a 60-minute timestep <b>for a leap year with 366 days</b> (8,784 readings)
             </i>
           </div>
         </div>
@@ -42,8 +42,8 @@
 </template>
 
 <script>
-  import '@/assets/samples/SamplePVgen-8760.csv';
-  import '@/assets/samples/SamplePVgen-8784.csv';
+  import '@/assets/samples/Sample_PVGeneration_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_PVGeneration_TimeSeries_8784.csv';
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
   import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';

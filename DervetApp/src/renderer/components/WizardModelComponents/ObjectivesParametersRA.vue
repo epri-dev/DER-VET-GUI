@@ -48,6 +48,7 @@
         @input="receiveUseExisting"
         :key="childKey('mtsRaCapacityPrice')"
         object-name="mtsRaCapacityPrice"
+        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
       />
 
@@ -63,6 +64,7 @@
         @input="receiveUseExisting"
         :key="childKey('tsRaActive')"
         object-name="tsRaActive"
+        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
         v-if="raEventSelectionMethod === 'Peak by Month with Active Hours'"
       />
@@ -83,6 +85,8 @@
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import { projectMetadata } from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
+  import '@/assets/samples/Sample_RAActive_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_RAActive_TimeSeries_8784.csv';
 
   import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
 

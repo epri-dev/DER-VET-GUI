@@ -22,6 +22,7 @@
         @input="receiveUseExisting"
         :key="childKey('tsUserPowerMax')"
         object-name="tsUserPowerMax"
+        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
       />
 
@@ -37,6 +38,7 @@
         @input="receiveUseExisting"
         :key="childKey('tsUserPowerMin')"
         object-name="tsUserPowerMin"
+        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
       />
 
@@ -52,6 +54,7 @@
         @input="receiveUseExisting"
         :key="childKey('tsUserEnergyMax')"
         object-name="tsUserEnergyMax"
+        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
       />
 
@@ -67,6 +70,7 @@
         @input="receiveUseExisting"
         :key="childKey('tsUserEnergyMin')"
         object-name="tsUserEnergyMin"
+        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
       />
       <hr>
@@ -86,6 +90,14 @@
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import { projectMetadata } from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
+  import '@/assets/samples/Sample_UserEnergyMax_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_UserEnergyMax_TimeSeries_8784.csv';
+  import '@/assets/samples/Sample_UserEnergyMin_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_UserEnergyMin_TimeSeries_8784.csv';
+  import '@/assets/samples/Sample_UserPowerMax_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_UserPowerMax_TimeSeries_8784.csv';
+  import '@/assets/samples/Sample_UserPowerMin_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_UserPowerMin_TimeSeries_8784.csv';
 
   import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
 

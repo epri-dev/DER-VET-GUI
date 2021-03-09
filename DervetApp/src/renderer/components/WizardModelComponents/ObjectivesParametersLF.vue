@@ -41,6 +41,7 @@
         @input="receiveUseExisting"
         :key="childKey('tsLfEOU')"
         object-name="tsLfEOU"
+        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
       />
 
@@ -56,6 +57,7 @@
         @input="receiveUseExisting"
         :key="childKey('tsLfEOD')"
         object-name="tsLfEOD"
+        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
       />
 
@@ -71,6 +73,7 @@
         @input="receiveUseExisting"
         :key="childKey('tsLfPrice')"
         object-name="tsLfPrice"
+        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
         v-if="lfCombinedMarket === true"
       />
@@ -87,6 +90,7 @@
         @input="receiveUseExisting"
         :key="childKey('tsLfUpPrice')"
         object-name="tsLfUpPrice"
+        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
         v-if="lfCombinedMarket === false"
       />
@@ -103,6 +107,7 @@
         @input="receiveUseExisting"
         :key="childKey('tsLfDownPrice')"
         object-name="tsLfDownPrice"
+        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
         v-if="lfCombinedMarket === false"
       />
@@ -123,6 +128,16 @@
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import { projectMetadata } from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
+  import '@/assets/samples/Sample_LFDownPrice_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_LFDownPrice_TimeSeries_8784.csv';
+  import '@/assets/samples/Sample_LFEnergyOptionDown_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_LFEnergyOptionDown_TimeSeries_8784.csv';
+  import '@/assets/samples/Sample_LFEnergyOptionUp_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_LFEnergyOptionUp_TimeSeries_8784.csv';
+  import '@/assets/samples/Sample_LFUpPrice_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_LFUpPrice_TimeSeries_8784.csv';
+  import '@/assets/samples/Sample_LFPrice_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_LFPrice_TimeSeries_8784.csv';
 
   import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
 

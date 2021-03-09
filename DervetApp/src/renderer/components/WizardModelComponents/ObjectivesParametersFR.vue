@@ -53,6 +53,7 @@
         @input="receiveUseExisting"
         :key="childKey('tsFrPrice')"
         object-name="tsFrPrice"
+        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
         v-if="frCombinedMarket === true"
       />
@@ -69,6 +70,7 @@
         @input="receiveUseExisting"
         :key="childKey('tsFrUpPrice')"
         object-name="tsFrUpPrice"
+        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
         v-if="frCombinedMarket === false"
       />
@@ -85,6 +87,7 @@
         @input="receiveUseExisting"
         :key="childKey('tsFrDownPrice')"
         object-name="tsFrDownPrice"
+        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
         v-if="frCombinedMarket === false"
       />
@@ -105,6 +108,12 @@
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import { projectMetadata } from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
+  import '@/assets/samples/Sample_FRDownPrice_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_FRDownPrice_TimeSeries_8784.csv';
+  import '@/assets/samples/Sample_FRPrice_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_FRPrice_TimeSeries_8784.csv';
+  import '@/assets/samples/Sample_FRUpPrice_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_FRUpPrice_TimeSeries_8784.csv';
 
   import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
 
