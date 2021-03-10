@@ -29,6 +29,14 @@ class DataArray {
     return `<b>${invalidRows.length} Invalid Rows:</b> ${violationName} : [${this.arrayDisplayFirstFifteen(invalidRows)}]`;
   }
 
+  getPageAttributes(pageGroup, pageKey, page) {
+    return {
+      pageGroup,
+      pageKey,
+      page,
+    };
+  }
+
   // invalidCheck methods return noErrorObject when no violations are found
   //   otherwise, they return an object that contains an errorMsg describing
   //   the error along with an array with row numbers for each violation
