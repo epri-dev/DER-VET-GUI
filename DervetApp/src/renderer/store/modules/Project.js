@@ -453,14 +453,8 @@ const mutations = {
   [m.SET_CRITICAL_LOAD](state, newCriticalLoad) {
     state[c.TS_CRITICAL_LOAD] = newCriticalLoad;
   },
-  [m.SET_RELIABILITY_GAMMA](state, newReliabilityGamma) {
-    state[c.RELIABILITY_GAMMA] = newReliabilityGamma;
-  },
   [m.SET_RELIABILITY_MAX_OUTAGE_DURATION](state, newReliabilityMaxOutageDuration) {
     state[c.RELIABILITY_MAX_OUTAGE_DURATION] = newReliabilityMaxOutageDuration;
-  },
-  [m.SET_RELIABILITY_NU](state, newReliabilityNu) {
-    state[c.RELIABILITY_NU] = newReliabilityNu;
   },
   [m.SET_RELIABILITY_POST_OPTIMIZATION_ONLY](state, newPostOptimizationOnly) {
     state[c.RELIABILITY_POST_OPTIMIZATION_ONLY] = newPostOptimizationOnly;
@@ -946,14 +940,8 @@ const actions = {
   [a.SET_CRITICAL_LOAD]({ commit }, newCriticalLoad) {
     commit(m.SET_CRITICAL_LOAD, newCriticalLoad);
   },
-  [a.SET_RELIABILITY_GAMMA]({ commit }, newReliabilityGamma) {
-    commit(m.SET_RELIABILITY_GAMMA, newReliabilityGamma);
-  },
   [a.SET_RELIABILITY_MAX_OUTAGE_DURATION]({ commit }, newReliabilityMaxOutageDuration) {
     commit(m.SET_RELIABILITY_MAX_OUTAGE_DURATION, newReliabilityMaxOutageDuration);
-  },
-  [a.SET_RELIABILITY_NU]({ commit }, newReliabilityNu) {
-    commit(m.SET_RELIABILITY_NU, newReliabilityNu);
   },
   [a.SET_RELIABILITY_POST_OPTIMIZATION_ONLY]({ commit }, newPostOptimizationOnly) {
     commit(m.SET_RELIABILITY_POST_OPTIMIZATION_ONLY, newPostOptimizationOnly);

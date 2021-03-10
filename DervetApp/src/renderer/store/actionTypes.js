@@ -91,9 +91,7 @@ export const SET_SIZING_EQUIPMENT = 'setSizingEquipment';
 export const SELECT_OTHER_SERVICES = 'selectOtherServices';
 // reliability page
 export const SET_CRITICAL_LOAD = 'setCriticalLoad';
-// export const SET_RELIABILITY_GAMMA= 'setReliabilityGamma';
 export const SET_RELIABILITY_MAX_OUTAGE_DURATION = 'setReliabilityMaxOutageDuration';
-// export const SET_RELIABILITY_NU = 'setReliabilityNu';
 export const SET_RELIABILITY_POST_OPTIMIZATION_ONLY = 'setReliabilityPostOptimizationOnly';
 export const SET_RELIABILITY_TARGET = 'setReliabilityTarget';
 // resource adequacy
