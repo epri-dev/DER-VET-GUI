@@ -5,13 +5,13 @@ class TimeSeriesBase extends DataArray {
     super(data);
     this.columnHeaderName = columnHeaderName;
     this.unit = this.getUnit();
-    this.required = false;
+    // this.required = false;
   }
 
   getUnit() {
     // find unit inside the ending parentheses from header
     // return empty string if undefined in header
-    const unitMatchObject = this.columnHeaderName.match(/([^(]*?)\)$/);
+    const unitMatchObject = this.columnHeaderName.match(/\(([^(]*?)\)$/);
     return (unitMatchObject) ? (unitMatchObject[1] || '') : '';
   }
 

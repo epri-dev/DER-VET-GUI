@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
-import { cloneDeep, flatten, startCase } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import flatten from 'lodash/flatten';
+import startCase from 'lodash/startCase';
 import operateOnKeysList from '@/util/object';
 import { isNotNullAndNotUndefined, isNullOrUndefined } from '@/util/logic';
 import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
@@ -130,7 +132,8 @@ const csvUploadMixin = {
     receiveMonthlyData(payload) {
       // TODO: AE: this is identical to receiveTimeseriesData; should it be?
       const { dataArray, objectName } = payload;
-      // TODO: AE: I do not think this filtering is needed, given LINE 164 of DataUpload
+      // TODO: AE: I do not think this filtering is needed,
+      //   given that we trim the last row off in onFileUpload() in DataUpload
       // dataArray.data = _.filter(dataArray.data, x => (x !== null) && (x !== undefined));
       this[this.inputField(objectName)] = dataArray;
     },
@@ -148,13 +151,20 @@ const csvUploadMixin = {
     },
     receiveTimeseriesData(payload) {
       const { dataArray, objectName } = payload;
-      // TODO: AE: I do not think this filtering is needed, given LINE 164 of DataUpload
+      // TODO: AE: I do not think this filtering is needed,
+      //   given that we trim the last row off in onFileUpload() in DataUpload
       // dataArray.data = _.filter(dataArray.data, x => (x !== null) && (x !== undefined));
       this[this.inputField(objectName)] = dataArray;
     },
     receiveUseExisting(payload) {
       const { button, objectName } = payload;
       this[this.useExistingField(objectName)] = button;
+    },
+    resetNonRequired(list) {
+      list.forEach((item) => {
+        this[item] = this.metadata[item].defaultValue;
+      });
+      return true;
     },
     save(fields) {
       fields.forEach((field) => {

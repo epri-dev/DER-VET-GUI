@@ -44,23 +44,6 @@ const RESULTS = 'results';
 export const LOG_FILE = 'dervet_log.log';
 
 const TIMESERIES_FIELDS = [
-  'criticalLoad',
-  'deferralLoad',
-  'daPrice',
-  'lfEOU',
-  'lfEOD',
-  'lfPrice',
-  'lfUpPrice',
-  'lfDownPrice',
-  'nsrPrice',
-  'raActive',
-  'siteLoad',
-  'srPrice',
-  'systemLoad',
-  'userPowerMin',
-  'userPowerMax',
-  'userEnergyMin',
-  'userEnergyMax',
   ...c.TS_ALL,
 ];
 
@@ -277,7 +260,7 @@ export const makeControllableLoadParameters = (project) => {
 export const makeDAParameters = (project) => {
   if (project.objectivesDA) {
     const isActive = convertToYesNo(project.objectivesDA);
-    const keys = { growth: makeBaseKey(project.daGrowth, FLOAT) };
+    const keys = { growth: makeBaseKey(project[c.DA_GROWTH], FLOAT) };
     return makeGroup('', isActive, keys);
   }
   return makeEmptyGroup();
@@ -502,8 +485,8 @@ export const makeNSRParameters = (project) => {
   if (project.objectivesNSR) {
     const isActive = convertToYesNo(project.objectivesNSR);
     const keys = {
-      duration: makeBaseKey(project.nsrDuration, FLOAT),
-      growth: makeBaseKey(project.nsrGrowth, FLOAT),
+      duration: makeBaseKey(project[c.NSR_DURATION], FLOAT),
+      growth: makeBaseKey(project[c.NSR_GROWTH], FLOAT),
       ts_constraints: makeBaseKey(ZERO, BOOL), // hardcoded
     };
     return makeGroup('', isActive, keys);
@@ -709,8 +692,8 @@ export const makeSRParameters = (project) => {
   if (project.objectivesSR) {
     const isActive = convertToYesNo(project.objectivesSR);
     const keys = {
-      duration: makeBaseKey(project.srDuration, FLOAT),
-      growth: makeBaseKey(project.srGrowth, FLOAT),
+      duration: makeBaseKey(project[c.SR_DURATION], FLOAT),
+      growth: makeBaseKey(project[c.SR_GROWTH], FLOAT),
       ts_constraints: makeBaseKey(ZERO, BOOL), // hardcoded
     };
     return makeGroup('', isActive, keys);
@@ -860,6 +843,7 @@ export const makeTimeSeriesCsv = (project) => {
   addSingleSeries(dtIndex, TIMESERIES_DATETIME_INDEX, TIMESERIES_DATETIME_HEADER);
 
   // Add all available timeseries to CSV
+  // TODO: limit to active and required?
   TIMESERIES_FIELDS.forEach((ts) => {
     const tsClass = project[ts];
     if (tsClass && tsClass.data.length !== 0) {
@@ -869,8 +853,14 @@ export const makeTimeSeriesCsv = (project) => {
   });
 
   // Add PV timeseries
+  console.log('solarPV');
   _.forEach(project.technologySpecsSolarPV, (pv) => {
+    console.log(pv);
+    console.log(pv.generationProfile);
     const { data, field, header } = addTechnologyTimeSeries(pv.generationProfile, pv);
+    console.log(data);
+    console.log(field);
+    console.log(header);
     addSingleSeries(data, field, header);
   });
 

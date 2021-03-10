@@ -91,7 +91,7 @@ const objectivesMixin = {
           fullName: 'Custom Service',
           pageName: 'userDefined',
           pageKey: OBJECTIVES_PAGEKEY,
-          path: paths.OBJECTIVES_RESILIENCE,
+          path: paths.OBJECTIVES_USER_DEFINED,
         },
         {
           show: p.objectivesDA,

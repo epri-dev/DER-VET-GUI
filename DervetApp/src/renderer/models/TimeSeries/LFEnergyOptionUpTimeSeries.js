@@ -1,9 +1,10 @@
 import TimeSeriesBase from './TimeSeriesBase';
 
-class EnergyOptionUpTimeSeries extends TimeSeriesBase {
+class LFEnergyOptionUpTimeSeries extends TimeSeriesBase {
   constructor(data) {
     super('LF Energy Option Up (kWh/kW-hr)', data);
+    this.pageAttributes = this.getPageAttributes('components', 'objectives', 'LF');
   }
 }
 
-export default EnergyOptionUpTimeSeries;
+export default LFEnergyOptionUpTimeSeries;

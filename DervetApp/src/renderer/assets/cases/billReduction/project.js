@@ -51,7 +51,7 @@ export const billReductionErrorList = {
 export const billReductionProject = {
   analysisHorizon: 20,
   analysisHorizonMode: '1',
-  criticalLoad: new CriticalLoadTimeSeries(criticalLoad),
+  tsCriticalLoad: new CriticalLoadTimeSeries(criticalLoad),
   dataYear: 2017,
   financeDiscountRate: 6,
   energyPriceSourceWholesale: false,
@@ -262,7 +262,7 @@ export const billReductionProject = {
       complete: true,
     },
   ],
-  siteLoad: new SiteLoadTimeSeries(siteLoad),
+  tsSiteLoad: new SiteLoadTimeSeries(siteLoad),
   sizingEquipment: true,
   startYear: 2017,
   financeStateTaxRate: 0,
