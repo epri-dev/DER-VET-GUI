@@ -95,10 +95,10 @@
           </div> -->
         </div>
         <div class="form-group">
-          <div class="col-md-12">
+          <!-- <div class="col-md-12">
             <div id="chartDispatchTimeSeriesPlots">
             </div>
-          </div>
+          </div> -->
         </div>
         <hr>
         <div class="form-group">
@@ -113,6 +113,7 @@
 </template>
 
 <script>
+  import moment from 'moment';
   import * as d3 from 'd3';
   import _ from 'lodash';
   import Plotly from 'plotly.js';
@@ -123,7 +124,7 @@
       this.$store.dispatch('createDispatchPlots');
     },
     mounted() {
-      this.createChartDispatchTimeSeriesPlots('chartDispatchTimeSeriesPlots');
+      // this.createChartDispatchTimeSeriesPlots('chartDispatchTimeSeriesPlots');
       this.createChartEnergyPriceHeatMap('chartEnergyPriceHeatMap');
     },
     data() {
@@ -138,7 +139,7 @@
         width: 500,
         height: 270,
         padding: 60,
-        dataRange: dataDate.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }),
+        dataRange: moment(dataDate).format('MMMM DD, YYYY'),
         dispatchType: null,
         dispatchTo: dataDate,
         dispatchFrom: dataDate,

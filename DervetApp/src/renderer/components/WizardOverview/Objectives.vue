@@ -12,33 +12,29 @@
       <div v-if="(sizingEquipment === false)">
         <fieldset class="section-group">
           <legend>Optimization Horizon</legend>
-          <div class="form-group">
-            <drop-down-input v-model="optimizationHorizon"
-                             v-bind:field="metadata.optimizationHorizon"
-                             :isInvalid="submitted && $v.optimizationHorizon.$error"
-                             :errorMessage="getErrorMsg('optimizationHorizon')">
-            </drop-down-input>
+          <drop-down-input v-model="optimizationHorizon"
+                           v-bind:field="metadata.optimizationHorizon"
+                           :isInvalid="submitted && $v.optimizationHorizon.$error"
+                           :errorMessage="getErrorMsg('optimizationHorizon')">
+          </drop-down-input>
 
-            <div v-if="optimizationHorizon === 'Hours'">
-              <text-input v-model="optimizationHorizonNum"
-                          v-bind:field="metadata.optimizationHorizonNum"
-                          :isInvalid="submitted && $v.optimizationHorizonNum.$error"
-                          :errorMessage="getErrorMsg('optimizationHorizonNum')">
-              </text-input>
-            </div>
+          <div v-if="optimizationHorizon === 'Hours'">
+            <text-input v-model="optimizationHorizonNum"
+                        v-bind:field="metadata.optimizationHorizonNum"
+                        :isInvalid="submitted && $v.optimizationHorizonNum.$error"
+                        :errorMessage="getErrorMsg('optimizationHorizonNum')">
+            </text-input>
           </div>
         </fieldset>
       </div>
 
       <fieldset class="section-group">
         <legend>Where do energy prices come from?</legend>
-          <div class="form-group">
-            <radio-button-input v-model="energyPriceSourceWholesale"
-                                v-bind:field="metadata.energyPriceSourceWholesale"
-                                :isInvalid="submitted && $v.energyPriceSourceWholesale.$error"
-                                :errorMessage="getErrorMsg('energyPriceSourceWholesale')">
-            </radio-button-input>
-          </div>
+          <radio-button-input v-model="energyPriceSourceWholesale"
+                              v-bind:field="metadata.energyPriceSourceWholesale"
+                              :isInvalid="submitted && $v.energyPriceSourceWholesale.$error"
+                              :errorMessage="getErrorMsg('energyPriceSourceWholesale')">
+          </radio-button-input>
       </fieldset>
 
       <div class="buffer-top-lg">

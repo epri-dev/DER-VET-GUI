@@ -1,8 +1,9 @@
-import _ from 'lodash';
-import pullDateFromDateTime from '@/util/time';
+import map from 'lodash/map';
+import forEach from 'lodash/forEach';
+import { pullDateFromDateTime } from '@/util/time';
 import BaseTableData from './BaseTableData';
 
-export default TRACE_NAMES = {
+export const TRACE_NAMES = {
   // reservations
   spinningReserve: 'Spinning Reserve',
   nonSpinningReserve: 'Non-Spinning Reserve',
@@ -31,10 +32,10 @@ export default TRACE_NAMES = {
   spinningReservePrice: 'SR Price',
   nonSpinningReservePrice: 'NSR Price',
   // timeseries axis
-  timeSeries: 'Datetime (hb)'
-}
+  timeSeries: 'Datetime (hb)',
+};
 
-export default class TimeSeriesData extends BaseTableData {
+export class TimeSeriesData extends BaseTableData {
   constructor(data) {
     super('timeseries_results.csv', data, true, true, null, ['Start Datetime (hb)', 'Demand Charge Billing Periods']);
     this.heatMapLabels = this.createHeatMapXAxisLabels(0);
@@ -185,19 +186,19 @@ export default class TimeSeriesData extends BaseTableData {
 
   dispatchData(yearIndex, totalEnergyStorageCap) {
     const tsData = this.columnDataByYear[yearIndex];
-    const dataLabelList = [];
-    let aggregatedStateOfCharge = null;
+    const dataLabelList = [
+      TimeSeriesData.dataLabel(this.timeSeriesDateAxis(0), TRACE_NAMES.timeSeries),
+    ];
     if (totalEnergyStorageCap) {
       const aggregatedStateOfEnergy = tsData.aggregatedStateOfEnergyKWh;
-      aggregatedStateOfCharge = aggregatedStateOfEnergy.map(i => i / totalEnergyStorageCap);
+      const aggregatedSOC = aggregatedStateOfEnergy.map(i => i / totalEnergyStorageCap);
+      const soc = TimeSeriesData.dataLabel(aggregatedSOC, TRACE_NAMES.aggregateEssStateOfCharge);
+      dataLabelList.push(soc);
     }
 
     return [
-      {
-        data: aggregatedStateOfCharge,
-        label: TRACE_NAMES.aggregatedStateOfCharge,
-      },
-      ...this.grabDataColumns(tsData),
+      ...dataLabelList,
+      ...this.grabColumnData(tsData),
     ];
   }
 
@@ -210,7 +211,7 @@ export default class TimeSeriesData extends BaseTableData {
     const data = [[], [], [], [], [], [], [], [], [], [], [], [],
       [], [], [], [], [], [], [], [], [], [], [], []];
     let hourOfDay = 0;
-    _.forEach(list, (item) => {
+    forEach(list, (item) => {
       if (hourOfDay === 24) {
         hourOfDay = 0;
       }
@@ -223,19 +224,21 @@ export default class TimeSeriesData extends BaseTableData {
   static subtractDataArrays(minuend, substrahend) {
     return minuend.map((el, i) => el - substrahend[i]);
   }
+
   static negateDataArray(data) {
-    return _.map(data, val => (val * -1));
+    return map(data, val => (val * -1));
   }
+
   static dataLabel(data, label) {
+    console.log(label);
     return { data, label };
   }
 
   grabColumnData(tsData) {
     const columnData = [];
-    _.forEach(this.columnsNames, (payload) => {
+    forEach(this.columnsNames, (payload) => {
       const { minuendColumnName, subtrahendColumnName, traceName } = payload;
-      console.log(traceName);
-      if (minuendColumnName !== undefined && substrahend !== undefined) {
+      if (minuendColumnName !== undefined && subtrahendColumnName !== undefined) {
         const dischargeDataName = BaseTableData.toCamelCaseString(minuendColumnName);
         const dischargeData = tsData[dischargeDataName];
         const chargeDataName = BaseTableData.toCamelCaseString(subtrahendColumnName);
@@ -250,7 +253,7 @@ export default class TimeSeriesData extends BaseTableData {
         if (dischargeData !== undefined) {
           columnData.push(TimeSeriesData.dataLabel(dischargeData, traceName));
         }
-      } else if (substrahend !== undefined) {
+      } else if (subtrahendColumnName !== undefined) {
         const chargeDataName = BaseTableData.toCamelCaseString(subtrahendColumnName);
         const chargeData = tsData[chargeDataName];
         if (chargeData !== undefined) {
