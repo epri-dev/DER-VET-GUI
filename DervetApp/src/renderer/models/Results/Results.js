@@ -7,7 +7,7 @@ import OutageEnergyContributionData from './OutageEnergyContributionData';
 import PeakLoadDayData from './PeakLoadDayData';
 import ProFormaData from './ProFormaData';
 import SizeData from './SizeData';
-import { TimeSeriesData } from './TimeSeriesData';
+import TimeSeriesData from './TimeSeriesData';
 
 export class ResultsData {
   constructor(id, data) {

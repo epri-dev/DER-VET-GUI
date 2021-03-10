@@ -837,7 +837,6 @@ export const makeEmptyCsvDataWithDatetimeIndex = (project) => {
 };
 
 export const addTechnologyTimeSeries = (tsClass, technology) => {
-  console.log(JSON.stringify(tsClass, null, 1));
   const field = technology.tag;
   const data = mapListToObjectList(tsClass.data, field);
   const header = `${tsClass.columnHeaderName}/${technology.id}`;
