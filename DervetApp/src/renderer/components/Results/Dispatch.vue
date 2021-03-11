@@ -21,8 +21,12 @@
                   <option value="custom">Custom</option>
               </select>
 
-              <button type="button" id="dispatch-prev" class="btn btn-default"><i class="fas fa-chevron-left"></i></button>
-              <button type="button" id="dispatch-next" class="btn btn-default"><i class="fas fa-chevron-right"></i></button>
+              <button type="button" id="dispatch-prev" class="btn btn-default" @click="previousDispatchData">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <button type="button" id="dispatch-next" class="btn btn-default"  @click="nextDispatchData">
+                <i class="fas fa-chevron-right"></i>
+              </button>
             </div>
           </div>
           <div class="form-group text-center">
@@ -95,10 +99,10 @@
           </div> -->
         </div>
         <div class="form-group">
-          <!-- <div class="col-md-12">
+          <div class="col-md-12">
             <div id="chartDispatchTimeSeriesPlots">
             </div>
-          </div> -->
+          </div>
         </div>
         <hr>
         <div class="form-group">
@@ -115,17 +119,15 @@
 <script>
   import moment from 'moment';
   import * as d3 from 'd3';
-  import _ from 'lodash';
+  import forEach from 'lodash/forEach';
   import Plotly from 'plotly.js';
   import { RESULTS } from '@/router/constants';
 
   export default {
-    beforeMount() {
-      this.$store.dispatch('createDispatchPlots');
-    },
     mounted() {
-      // this.createChartDispatchTimeSeriesPlots('chartDispatchTimeSeriesPlots');
       this.createChartEnergyPriceHeatMap('chartEnergyPriceHeatMap');
+      this.$store.dispatch('setCurrentDispatchData', this.dispatchType);
+      this.createChartDispatchTimeSeriesPlots('chartDispatchTimeSeriesPlots');
     },
     data() {
       // TODO fixme
@@ -140,7 +142,7 @@
         height: 270,
         padding: 60,
         dataRange: moment(dataDate).format('MMMM DD, YYYY'),
-        dispatchType: null,
+        dispatchType: 'days',
         dispatchTo: dataDate,
         dispatchFrom: dataDate,
         min: minDate,
@@ -148,8 +150,11 @@
       };
     },
     computed: {
-      chartData() {
-        return this.$store.state.Results.dispatchVueObjects;
+      energyPriceMapData() {
+        return this.$store.state.Results.dispatchEnergyPriceMapData;
+      },
+      dispatchDataIteratorValue() {
+        return this.$store.state.Results.dispatchDataIterator.value;
       },
       rangeX() {
         const width = this.width - this.padding;
@@ -162,9 +167,23 @@
       viewBox() {
         return `0 0 ${this.width} ${this.height}`;
       },
+      dispatchDataPayload() {
+        return {
+          currStartDate: this.dispatchFrom,
+          currEndDate: this.dispatchTo,
+          windowSize: this.dispatchType,
+        };
+      },
+      // dipatchPlotData() {
+      //   return this.chartData.stackedLineData.current(this.dispatchType);
+      // },
     },
     methods: {
-      save() {
+      nextDispatchData() {
+        this.$store.dispatch('setNextDispatchData', this.dispatchDataPayload);
+      },
+      previousDispatchData() {
+        this.$store.dispatch('setPreviousDispatchData', this.dispatchDataPayload);
       },
       path(data) {
         const x = d3.scaleLinear().range(this.rangeX);
@@ -194,8 +213,10 @@
       },
       createChartDispatchTimeSeriesPlots(chartId) {
         const ctx = document.getElementById(chartId);
+        console.log('start calculating data');
+        const rawData = this.dispatchDataIteratorValue;
+        console.log('rawData done');
         const data = [];
-        const rawData = this.chartData.stackedLineData;
         const xx = rawData.timeSeriesDateAxis;
 
         const selectorOptions = {
@@ -278,7 +299,7 @@
         let lastPlotHeight = 0;
 
         // 1) Net load
-        _.forEach(rawData.poiPower, (value) => {
+        forEach(rawData.poiPower, (value) => {
           trace = {
             legendgroup: 'poiPower',
             x: xx,
@@ -296,7 +317,7 @@
           data.push(trace);
         });
         // add reservations on top (if included in data)
-        _.forEach(rawData.reservations, (value) => {
+        forEach(rawData.reservations, (value) => {
           trace = {
             legendgroup: 'reservations',
             x: xx,
@@ -352,7 +373,7 @@
 
         // 3) Market/Capacity Prices
         if (rawData.hasReservations) {
-          _.forEach(rawData.marketPrices, (value) => {
+          forEach(rawData.marketPrices, (value) => {
             trace = {
               legendgroup: 'marketPrices',
               x: xx,
@@ -384,7 +405,7 @@
         }
 
         // 4) All other power flows
-        _.forEach(rawData.internalPower, (value) => {
+        forEach(rawData.internalPower, (value) => {
           trace = {
             legendgroup: 'internalPower',
             x: xx,
@@ -455,7 +476,7 @@
         const ctx = document.getElementById(chartId);
         const trace1 = {
           type: 'heatmap',
-          ...this.chartData.heatMapData,
+          ...this.energyPriceMapData,
           colorscale: 'Viridis', // ''YlGnBu',
           colorbar: {
             thickness: 10,

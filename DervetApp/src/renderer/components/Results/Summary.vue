@@ -80,9 +80,6 @@
         paths,
       };
     },
-    beforeMount() {
-      this.$store.dispatch('createSummaryPlots');
-    },
     mounted() {
       this.createPlotlyCostBenefit('chartPlotlyCostBenefit', this.summaryData.financial);
       if (this.summaryData.showDesign) {

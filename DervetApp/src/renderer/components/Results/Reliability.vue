@@ -30,9 +30,6 @@
   import { RESULTS } from '@/router/constants';
 
   export default {
-    beforeMount() {
-      this.$store.dispatch('createReliabilityPlots');
-    },
     mounted() {
       this.createChartLoadCoverageProbability('chartLoadCoverageProbability');
       if (this.chartData.showOutageContribution) {

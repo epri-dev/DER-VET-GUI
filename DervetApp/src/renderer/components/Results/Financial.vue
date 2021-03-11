@@ -48,9 +48,6 @@
   import { RESULTS } from '@/router/constants';
 
   export default {
-    beforeMount() {
-      this.$store.dispatch('createFinancialPlots');
-    },
     mounted() {
       this.createStackedCostBenefit('chartStackedCostBenefit', this.chartData.costBenefit);
       if (this.chartData.showMonthlyData) {

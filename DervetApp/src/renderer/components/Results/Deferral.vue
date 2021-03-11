@@ -21,9 +21,6 @@
   import { RESULTS } from '@/router/constants';
 
   export default {
-    beforeMount() {
-      this.$store.dispatch('createDeferralPlots');
-    },
     mounted() {
       this.createChartCapacityVsTime('chartCapacityVsTime', this.chartData);
     },

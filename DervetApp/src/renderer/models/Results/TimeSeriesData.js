@@ -1,7 +1,7 @@
 import forEach from 'lodash/forEach';
 import { pullDateFromDateTime } from '@/util/time';
 import BaseTableData from './BaseTableData';
-import DispatchPlotData from './DispatchPlot';
+import DispatchData from './DispatchData';
 
 export default class TimeSeriesData extends BaseTableData {
   constructor(data) {
@@ -46,7 +46,7 @@ export default class TimeSeriesData extends BaseTableData {
   }
 
   dispatchData(totalEnergyStorageCap) {
-    const dispatchPlotIterator = new DispatchPlotData(this.columnDataByYear, totalEnergyStorageCap);
+    const dispatchPlotIterator = new DispatchData(this.columnDataByYear, totalEnergyStorageCap);
     return dispatchPlotIterator;
   }
 

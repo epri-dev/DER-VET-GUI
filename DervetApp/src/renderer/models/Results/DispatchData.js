@@ -1,5 +1,5 @@
 import moment from 'moment';
-import filter from 'lodash/filter';
+// import filter from 'lodash/filter';
 import forEach from 'lodash/forEach';
 import map from 'lodash/map';
 import { isArrayAllZeros } from '@/util/logic';
@@ -152,12 +152,12 @@ export default class DispatchData {
   constructor(dataByYear, totalEnergyStorageCap) {
     this.data = this.initializeDataLabelList(dataByYear, totalEnergyStorageCap);
 
-    this.currentData = null;
-    this.currentStartIndex = 0;
-    this.currentEndIndex = -1;
-    this.windowSize = 'years';
     this.dateTime = this.findDataLabel(TRACE_NAMES.timeSeries);
-    console.log(this.dateTime[0]); // TODO remove
+    this.value = null;
+    this.currentStartIndex = 0;
+    this.currentEndIndex = 23;
+    this.windowSize = 'years';
+    // console.log(this.dateTime[0]); // TODO remove
     // booleans that indicate which charts/data traces will be included
     this.netLoadIncluded = true;
     this.energyPriceIncluded = true;
@@ -243,7 +243,8 @@ export default class DispatchData {
     return map(data, val => (val * -1));
   }
 
-  current(windowSize) {
+  setCurrentValue(windowSize) {
+    console.log(windowSize);
     // if windowSize is different, then reset start and end indices to match
     if (this.windowSize === windowSize) {
       this.windowSize = windowSize;
@@ -254,11 +255,12 @@ export default class DispatchData {
     }
     // split data
     const splitData = this.sliceDataOfDataLabel();
-    // TODO put in correct structure
-    return splitData;
+    // put in correct structure
+    this.value = DispatchData.iterDataStructure(splitData);
   }
 
-  previous(currStartDate, currEndDate) {
+  previous(currStartDate, currEndDate, windowSize) {
+    console.log(`prev - ${[currStartDate, currEndDate]}`);
     const endMoment = moment(currStartDate);
     // find start moment
     // increment nackward from current end date (js date type) according to window size
@@ -274,9 +276,11 @@ export default class DispatchData {
     console.log(`start: ${startMoment}`);
     console.log(`end: ${endMoment}`);
     this.setCurrentIndices(startMoment, endMoment);
+    this.setCurrentValue(windowSize);
   }
 
-  next(currStartDate, currEndDate) {
+  next(currStartDate, currEndDate, windowSize) {
+    console.log(`next - ${[currStartDate, currEndDate]}`);
     const startMoment = moment(currEndDate);
     // find end moment
     // increment current start date (js date type) according to window size
@@ -292,6 +296,7 @@ export default class DispatchData {
     console.log(`start: ${startMoment}`);
     console.log(`end: ${endMoment}`);
     this.setCurrentIndices(startMoment, endMoment);
+    this.setCurrentValue(windowSize);
   }
 
   setCurrentIndices(startMoment, endMoment) {
@@ -323,15 +328,12 @@ export default class DispatchData {
     return this.indexToMoment(this.currentEndIndex);
   }
 
-  sliceDataOfDataLabel() {
-    const slicedItems = [];
-    forEach(this.data, (item) => {
-      const { label, data } = item;
-      const newItem = {
-        data: data.slice(this.currentStartIndex, this.currentEndIndex + 1),
-        label,
-      };
-      slicedItems.push(newItem);
+  sliceDataOfDataLabel(yearIndex = 0) {
+    const slicedItems = new Map();
+    this.data[yearIndex].forEach((data, traceName) => {
+      const slicedDate = data.slice(this.currentStartIndex, this.currentEndIndex + 1);
+      console.log(slicedDate);
+      slicedItems.set(traceName, slicedDate);
     });
     return slicedItems;
   }
@@ -360,14 +362,15 @@ export default class DispatchData {
     return (dataLabel && !isArrayAllZeros(this.findDataLabel(traceName)));
   }
 
-  getDataLabelsFromList(traceNameList) {
-    return filter(this.data, (value) => traceNameList.includes(value));
+  static mapToListFilter(data, traceNameList) {
+    return [...data].filter((value, key) => traceNameList.includes(key));
   }
 
-  static iterDataStructure() {
-    const timeSeriesDateAxis = this.findDataLabel(TRACE_NAMES.timeSeries);
-    const energyPrice = this.findDataLabel(TRACE_NAMES.energyPrice);
-    const aggregatedSOC = this.findDataLabel(TRACE_NAMES.aggregateEssStateOfCharge);
+  static iterDataStructure(splitData) {
+    console.log(splitData);
+    const timeSeriesDateAxis = splitData.get(TRACE_NAMES.timeSeries);
+    const energyPrice = splitData.get(TRACE_NAMES.energyPrice);
+    const aggregatedSOC = splitData.get(TRACE_NAMES.aggregateEssStateOfCharge);
 
     const internalPowerTraceList = [
       TRACE_NAMES.totalOriginalLoad,
@@ -377,14 +380,14 @@ export default class DispatchData {
       TRACE_NAMES.critialLoad,
       TRACE_NAMES.deferralRequirement,
     ];
-    const internalPower = this.getDataLabelsFromList(internalPowerTraceList);
+    const internalPower = DispatchData.mapToListFilter(splitData, internalPowerTraceList);
 
     const poiPowerTraceList = [
       TRACE_NAMES.systemLoad,
       TRACE_NAMES.netLoad,
       TRACE_NAMES.deferralLoad,
     ];
-    const poiPower = this.getDataLabelsFromList(poiPowerTraceList);
+    const poiPower = DispatchData.mapToListFilter(splitData, poiPowerTraceList);
 
     const marketPricesTraceList = [
       TRACE_NAMES.frequencyRegulationUpPrice,
@@ -394,7 +397,7 @@ export default class DispatchData {
       TRACE_NAMES.spinningReservePrice,
       TRACE_NAMES.nonSpinningReservePrice,
     ];
-    const marketPrices = this.getDataLabelsFromList(marketPricesTraceList);
+    const marketPrices = DispatchData.mapToListFilter(splitData, marketPricesTraceList);
 
     const reservationsTraceList = [
       TRACE_NAMES.spinningReserve,
@@ -404,7 +407,7 @@ export default class DispatchData {
       TRACE_NAMES.loadFollowingDown,
       TRACE_NAMES.loadFollowingUp,
     ];
-    const reservations = this.getDataLabelsFromList(reservationsTraceList);
+    const reservations = DispatchData.mapToListFilter(splitData, reservationsTraceList);
     return {
       timeSeriesDateAxis, // object
       energyPrice, // object
