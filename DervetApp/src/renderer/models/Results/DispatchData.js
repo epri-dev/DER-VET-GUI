@@ -154,6 +154,7 @@ export default class DispatchData {
 
     this.dateTime = this.findDataLabel(TRACE_NAMES.timeSeries);
     this.value = null;
+    this.selectedData = null;
     this.currentStartIndex = 0;
     this.currentEndIndex = 23;
     this.windowSize = 'years';
@@ -170,6 +171,36 @@ export default class DispatchData {
     this.frIncluded = this.isExisting(TRACE_NAMES.frequencyRegulationUpPrice);
     this.nsrIncluded = this.isExisting(TRACE_NAMES.nonSpinningReservePrice);
     this.lfIncluded = this.isExisting(TRACE_NAMES.loadFollowingUpPrice);
+
+    this.internalPowerTraceList = [
+      TRACE_NAMES.totalOriginalLoad,
+      TRACE_NAMES.totalLoad,
+      TRACE_NAMES.totalGeneration,
+      TRACE_NAMES.totalEssPower,
+      TRACE_NAMES.critialLoad,
+      TRACE_NAMES.deferralRequirement,
+    ];
+    this.poiPowerTraceList = [
+      TRACE_NAMES.systemLoad,
+      TRACE_NAMES.netLoad,
+      TRACE_NAMES.deferralLoad,
+    ];
+    this.marketPricesTraceList = [
+      TRACE_NAMES.frequencyRegulationUpPrice,
+      TRACE_NAMES.frequencyRegulationDownPrice,
+      TRACE_NAMES.loadFollowingUpPrice,
+      TRACE_NAMES.loadFollowingDownPrice,
+      TRACE_NAMES.spinningReservePrice,
+      TRACE_NAMES.nonSpinningReservePrice,
+    ];
+    this.reservationsTraceList = [
+      TRACE_NAMES.spinningReserve,
+      TRACE_NAMES.nonSpinningReserve,
+      TRACE_NAMES.frequencyRegulationDown,
+      TRACE_NAMES.frequencyRegulationUp,
+      TRACE_NAMES.loadFollowingDown,
+      TRACE_NAMES.loadFollowingUp,
+    ];
   }
 
   initializeDataLabelList(dataByYear, totalEnergyStorageCap) {
@@ -254,9 +285,9 @@ export default class DispatchData {
       this.setCurrentIndices(startMoment, endMoment);
     }
     // split data
-    const splitData = this.sliceDataOfDataLabel();
+    this.selectedData = this.sliceDataOfDataLabel();
     // put in correct structure
-    this.value = DispatchData.iterDataStructure(splitData);
+    this.value = this.iterDataStructure();
   }
 
   previous(currStartDate, currEndDate, windowSize) {
@@ -273,8 +304,8 @@ export default class DispatchData {
     } else {
       startMoment = moment(endMoment).subtract(1, this.windowSize);
     }
-    console.log(`start: ${startMoment}`);
-    console.log(`end: ${endMoment}`);
+    console.log(`start: ${startMoment.format()}`);
+    console.log(`end: ${endMoment.format()}`);
     this.setCurrentIndices(startMoment, endMoment);
     this.setCurrentValue(windowSize);
   }
@@ -293,8 +324,8 @@ export default class DispatchData {
     } else {
       endMoment = moment(startMoment).add(1, this.windowSize);
     }
-    console.log(`start: ${startMoment}`);
-    console.log(`end: ${endMoment}`);
+    console.log(`start: ${startMoment.format()}`);
+    console.log(`end: ${endMoment.format()}`);
     this.setCurrentIndices(startMoment, endMoment);
     this.setCurrentValue(windowSize);
   }
@@ -362,52 +393,27 @@ export default class DispatchData {
     return (dataLabel && !isArrayAllZeros(this.findDataLabel(traceName)));
   }
 
-  static mapToListFilter(data, traceNameList) {
-    return [...data].filter((value, key) => traceNameList.includes(key));
+  mapToListFilter(traceNameList) {
+    return [...this.selectedData].filter((value, key) => traceNameList.includes(key));
   }
 
-  static iterDataStructure(splitData) {
-    console.log(splitData);
-    const timeSeriesDateAxis = splitData.get(TRACE_NAMES.timeSeries);
-    const energyPrice = splitData.get(TRACE_NAMES.energyPrice);
-    const aggregatedSOC = splitData.get(TRACE_NAMES.aggregateEssStateOfCharge);
+  selectedDataLabel(traceName) {
+    const data = this.selectedData.get(traceName);
+    return { data, label: traceName };
+  }
 
-    const internalPowerTraceList = [
-      TRACE_NAMES.totalOriginalLoad,
-      TRACE_NAMES.totalLoad,
-      TRACE_NAMES.totalGeneration,
-      TRACE_NAMES.totalEssPower,
-      TRACE_NAMES.critialLoad,
-      TRACE_NAMES.deferralRequirement,
-    ];
-    const internalPower = DispatchData.mapToListFilter(splitData, internalPowerTraceList);
+  iterDataStructure() {
+    const timeSeriesDateAxis = this.selectedDataLabel(TRACE_NAMES.timeseries);
+    const energyPrice = this.selectedDataLabel(TRACE_NAMES.energyPrice);
+    const aggregatedSOC = this.selectedDataLabel(TRACE_NAMES.aggregateEssStateOfCharge);
 
-    const poiPowerTraceList = [
-      TRACE_NAMES.systemLoad,
-      TRACE_NAMES.netLoad,
-      TRACE_NAMES.deferralLoad,
-    ];
-    const poiPower = DispatchData.mapToListFilter(splitData, poiPowerTraceList);
+    const internalPower = this.mapToListFilter(this.internalPowerTraceList);
 
-    const marketPricesTraceList = [
-      TRACE_NAMES.frequencyRegulationUpPrice,
-      TRACE_NAMES.frequencyRegulationDownPrice,
-      TRACE_NAMES.loadFollowingUpPrice,
-      TRACE_NAMES.loadFollowingDownPrice,
-      TRACE_NAMES.spinningReservePrice,
-      TRACE_NAMES.nonSpinningReservePrice,
-    ];
-    const marketPrices = DispatchData.mapToListFilter(splitData, marketPricesTraceList);
+    const poiPower = this.mapToListFilter(this.poiPowerTraceList);
 
-    const reservationsTraceList = [
-      TRACE_NAMES.spinningReserve,
-      TRACE_NAMES.nonSpinningReserve,
-      TRACE_NAMES.frequencyRegulationDown,
-      TRACE_NAMES.frequencyRegulationUp,
-      TRACE_NAMES.loadFollowingDown,
-      TRACE_NAMES.loadFollowingUp,
-    ];
-    const reservations = DispatchData.mapToListFilter(splitData, reservationsTraceList);
+    const marketPrices = this.mapToListFilter(this.marketPricesTraceList);
+
+    const reservations = this.mapToListFilter(this.reservationsTraceList);
     return {
       timeSeriesDateAxis, // object
       energyPrice, // object
