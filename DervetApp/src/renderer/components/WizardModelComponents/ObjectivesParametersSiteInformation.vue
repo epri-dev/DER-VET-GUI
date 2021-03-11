@@ -35,7 +35,6 @@
         @input="receiveUseExisting"
         :key="childKey('tsSiteLoad')"
         object-name="tsSiteLoad"
-        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
         v-if="includeSiteLoad === true"
       />

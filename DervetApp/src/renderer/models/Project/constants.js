@@ -92,6 +92,8 @@ export const TS_USER_POWER_MAX = 'tsUserPowerMax';
 export const TS_USER_POWER_MIN = 'tsUserPowerMin';
 export const TS_USER_DEFINED_FIELDS = [TS_USER_ENERGY_MAX, TS_USER_ENERGY_MIN,
   TS_USER_POWER_MAX, TS_USER_POWER_MIN];
+// technology timeseries
+export const TS_SOLARPV_GENERATION_PROFILE = 'tsSolarPVGenerationProfile';
 
 export const TS_ALL = [
   ...TS_DA_FIELDS,

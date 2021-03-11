@@ -511,10 +511,20 @@ const mutations = {
     state.technologySpecsSolarPV = tmpSolarPVSpecs;
   },
   // solar pv generation
-  ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV(state, payload) {
+  [m.ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV](state, payload) {
     const tmpSolarPVSpecs = getters.getSolarPVSpecsClone(state)();
-    const indexMatchingId = getters.getIndexOfSolarId(state)(payload.solarId);
-    tmpSolarPVSpecs[indexMatchingId].generationProfile = payload.generationProfile;
+    const { id, index, errorsString, data } = payload;
+    const indexMatchingId = getters.getIndexOfSolarId(state)(id);
+    tmpSolarPVSpecs[indexMatchingId]
+      .associatedInputsComplete = data.complete;
+    tmpSolarPVSpecs[indexMatchingId].complete = (data.complete
+      && tmpSolarPVSpecs[indexMatchingId].componentSpecsComplete);
+    // this updates the object, while retaining untouched pieces
+    Object.assign(tmpSolarPVSpecs[indexMatchingId].associatedInputs[index], data);
+    // add errorsString to ts.errors
+    if (errorsString !== undefined) {
+      tmpSolarPVSpecs[indexMatchingId].associatedInputs[index].ts.errors = errorsString;
+    }
     state.technologySpecsSolarPV = tmpSolarPVSpecs;
   },
   // spinning reserve
@@ -1025,9 +1035,9 @@ const actions = {
   replaceTechnologySpecsSolarPV({ commit }, payload) {
     commit('REPLACE_TECHNOLOGY_SPECS_SOLAR_PV', payload);
   },
-  // solar pv generataion
-  addGenerationProfileToTechnologySpecsPV({ commit }, payload) {
-    commit('ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV', payload);
+  // solar pv generation
+  [a.ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV]({ commit }, payload) {
+    commit(m.ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV, payload);
   },
   // start project
   setAnalysisHorizon({ commit }, newAnalysisHorizon) {

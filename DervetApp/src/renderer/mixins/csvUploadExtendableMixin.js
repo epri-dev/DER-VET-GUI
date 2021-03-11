@@ -12,16 +12,16 @@ const csvUploadMixin = {
   data() { },
   beforeMount() {
     // submitted is false initially; set it to true after the first save.
-    // initially, complete is null; after saving, it is set to either true or false.
+    // initially, isComplete is null; after saving, it is set to either true or false.
     // we want to show validation errors at any time after the first save, with submitted.
-    if (isNotNullAndNotUndefined(this.complete)) {
+    if (isNotNullAndNotUndefined(this.isComplete)) {
       this.submitted = true;
       this.$v.$touch();
     }
   },
   computed: {
-    complete() {
-      // TODO: AE: if this.complete is not being used except for when error list is null
+    isComplete() {
+      // TODO: AE: if isComplete is not being used except for when error list is empty
       //   before the first save, then it can be true otherwise.
       //   - do we even need this?
       const errors = this.$store.state.Application

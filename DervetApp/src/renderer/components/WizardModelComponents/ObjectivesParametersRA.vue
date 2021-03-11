@@ -48,7 +48,6 @@
         @input="receiveUseExisting"
         :key="childKey('mtsRaCapacityPrice')"
         object-name="mtsRaCapacityPrice"
-        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
       />
 
@@ -64,7 +63,6 @@
         @input="receiveUseExisting"
         :key="childKey('tsRaActive')"
         object-name="tsRaActive"
-        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
         v-if="raEventSelectionMethod === 'Peak by Month with Active Hours'"
       />

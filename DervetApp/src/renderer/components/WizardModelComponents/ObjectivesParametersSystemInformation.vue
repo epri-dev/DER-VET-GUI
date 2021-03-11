@@ -16,7 +16,6 @@
         @input="receiveUseExisting"
         :key="childKey('tsSystemLoad')"
         object-name="tsSystemLoad"
-        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
       />
       <hr>

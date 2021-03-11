@@ -7,7 +7,6 @@ import operateOnKeysList from '@/util/object';
 
 /*
 import FleetEVBaselineLoadTimeSeries from '@/models/TimeSeries/FleetEVBaselineLoadTimeSeries';
-import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
 
 import BackupEnergyAdwardsMonthly from '@/models/Monthly/BackupEnergyAdwardsMonthly';
 import BackupEnergyReservationMonthly from '@/models/Monthly/BackupEnergyReservationMonthly';

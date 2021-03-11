@@ -41,7 +41,6 @@
         @input="receiveUseExisting"
         :key="childKey('tsLfEOU')"
         object-name="tsLfEOU"
-        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
       />
 
@@ -57,7 +56,6 @@
         @input="receiveUseExisting"
         :key="childKey('tsLfEOD')"
         object-name="tsLfEOD"
-        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
       />
 
@@ -73,7 +71,6 @@
         @input="receiveUseExisting"
         :key="childKey('tsLfPrice')"
         object-name="tsLfPrice"
-        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
         v-if="lfCombinedMarket === true"
       />
@@ -90,7 +87,6 @@
         @input="receiveUseExisting"
         :key="childKey('tsLfUpPrice')"
         object-name="tsLfUpPrice"
-        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
         v-if="lfCombinedMarket === false"
       />
@@ -107,7 +103,6 @@
         @input="receiveUseExisting"
         :key="childKey('tsLfDownPrice')"
         object-name="tsLfDownPrice"
-        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
         v-if="lfCombinedMarket === false"
       />

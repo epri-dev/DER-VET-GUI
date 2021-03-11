@@ -81,7 +81,7 @@
           <span v-html="errorMessage"></span>
         </div>
       </div>
-      <div v-if="showSampleData && isSampleDataAvailable">
+      <div v-if="!dataExists && isSampleDataAvailable">
         <div class="form-group row">
           <div class="col-md-12">
             <i><a :href="getSampleDataFileName()" download class="important-link text-decoration-none"> Download a sample <b>{{dataName}}</b><code>.csv</code> file</a>{{getSampleDataText()}}</i>
@@ -152,7 +152,6 @@
       isInvalid: Boolean,
       numberOfEntriesRequired: String,
       objectName: String,
-      showSampleData: Boolean,
       uploadedData: Object,
       xAxis: Array,
     },

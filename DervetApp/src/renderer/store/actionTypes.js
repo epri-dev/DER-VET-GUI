@@ -122,6 +122,8 @@ export const DEACTIVATE_TECH = 'deactivateTech';
 export const MAKE_LIST_OF_ACTIVE_TECHNOLOGIES = 'makeListOfActiveTechnologies';
 export const REPLACE_LIST_FIELD = 'replaceListField';
 export const REMOVE_TECH = 'removeTech';
+// technology timeseries
+export const ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV = 'addGenerationProfileToTechnologySpecsPV';
 // user defined service
 export const SET_USER_ENERGY_MAX = 'setUserEnergyMax';
 export const SET_USER_ENERGY_MIN = 'setUserEnergyMin';
