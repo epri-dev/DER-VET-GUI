@@ -5,6 +5,7 @@ class TimeSeriesBase extends DataArray {
     super(data);
     this.columnHeaderName = columnHeaderName;
     this.unit = this.getUnit();
+    this.errors = '';
     // this.required = false;
   }
 
@@ -29,8 +30,9 @@ class TimeSeriesBase extends DataArray {
     // with no errors, this will be an empty string
     const errorMsgArray = [];
     errorMsgArray.push(this.invalidCheckRowsCount(expectedRowCount).errorMsg);
-    this.errors = errorMsgArray.filter((item) => item !== null).join('<br>');
-    return this.errors;
+    // this.errors = errorMsgArray.filter((item) => item !== null).join('<br>');
+    const errors = errorMsgArray.filter((item) => item !== null).join('<br>');
+    return errors;
   }
 }
 export default TimeSeriesBase;

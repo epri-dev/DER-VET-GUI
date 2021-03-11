@@ -85,6 +85,9 @@ const technologySpecsMixin = {
     },
   },
   methods: {
+    hasAssociatedInputs(listOfTech) {
+      return _.filter(listOfTech, 'associatedInputs');
+    },
     filterNonActives(listOfTech) {
       return _.filter(listOfTech, 'active');
     },

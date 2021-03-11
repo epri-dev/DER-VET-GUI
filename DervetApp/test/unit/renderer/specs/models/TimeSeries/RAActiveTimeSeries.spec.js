@@ -34,15 +34,12 @@ describe('RAActiveTimeSeries model', () => {
       [[0], [-1], [1]],
     );
     const threeRows = cloneDeep(threeRowsOrig);
-    const threeRowsExpected = cloneDeep(threeRowsOrig);
     const expectedError = '';
 
-    threeRowsExpected.errors = expectedError;
     const actual = threeRows.revalidate(3);
     const expected = expectedError;
     expect(actual).to.eql(expected);
-    expect(threeRows).to.eql(threeRowsExpected);
-    expect(threeRows).to.not.eql(threeRowsOrig);
+    expect(threeRows).to.eql(threeRowsOrig);
   });
 
   it('should revalidate with failure properly', () => {
@@ -50,14 +47,11 @@ describe('RAActiveTimeSeries model', () => {
       [[0], [-1], [1]],
     );
     const threeRows = cloneDeep(threeRowsOrig);
-    const threeRowsExpected = cloneDeep(threeRowsOrig);
     const expectedError = '<b>Invalid Data:</b> This file has <b>3</b> entries. It must have 8760';
 
-    threeRowsExpected.errors = expectedError;
     const actual = threeRows.revalidate(8760);
     const expected = expectedError;
     expect(actual).to.eql(expected);
-    expect(threeRows).to.eql(threeRowsExpected);
-    expect(threeRows).to.not.eql(threeRowsOrig);
+    expect(threeRows).to.eql(threeRowsOrig);
   });
 });

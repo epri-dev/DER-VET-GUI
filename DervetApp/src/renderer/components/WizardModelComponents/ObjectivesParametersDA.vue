@@ -22,7 +22,6 @@
         @input="receiveUseExisting"
         :key="childKey('tsDaPrice')"
         object-name="tsDaPrice"
-        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
       />
       <hr>

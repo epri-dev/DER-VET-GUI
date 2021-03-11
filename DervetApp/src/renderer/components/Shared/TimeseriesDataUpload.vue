@@ -18,7 +18,6 @@
       @uploaded="onFileUpload"
       @input="onChange"
       :object-name="objectName"
-      :show-sample-data="showSampleData"
       :uploaded-data="dataTimeSeries"
       :x-axis="timeseriesXAxis"
     />
@@ -86,7 +85,6 @@
       errorMessage: String,
       isInvalid: Boolean,
       objectName: String,
-      showSampleData: Boolean,
     },
   };
 </script>

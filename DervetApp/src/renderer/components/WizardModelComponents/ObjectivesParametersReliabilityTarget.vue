@@ -35,7 +35,6 @@
         @input="receiveUseExisting"
         :key="childKey('tsCriticalLoad')"
         object-name="tsCriticalLoad"
-        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
       />
       <hr>

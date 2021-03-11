@@ -22,7 +22,6 @@
         @input="receiveUseExisting"
         :key="childKey('tsUserPowerMax')"
         object-name="tsUserPowerMax"
-        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
       />
 
@@ -38,7 +37,6 @@
         @input="receiveUseExisting"
         :key="childKey('tsUserPowerMin')"
         object-name="tsUserPowerMin"
-        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
       />
 
@@ -54,7 +52,6 @@
         @input="receiveUseExisting"
         :key="childKey('tsUserEnergyMax')"
         object-name="tsUserEnergyMax"
-        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
       />
 
@@ -70,7 +67,6 @@
         @input="receiveUseExisting"
         :key="childKey('tsUserEnergyMin')"
         object-name="tsUserEnergyMin"
-        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
       />
       <hr>

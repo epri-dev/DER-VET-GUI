@@ -401,6 +401,13 @@
       isNewSolar() {
         return this.solarId === 'null';
       },
+      getAssociatedInputsCompleteness() {
+        // loop through associatedInputs array and check complete param
+        if (this.associatedInputs[0]) {
+          return this.associatedInputs[0].complete;
+        }
+        return false;
+      },
       getSolarFromStore() {
         return this.$store.getters.getSolarPVById(this.solarId);
       },
@@ -411,8 +418,8 @@
       },
       makeErrorList() {
         const errors = [];
-        Object.keys(this.metadata).forEach((key) => {
-          if (this.$v[key].$invalid) {
+        Object.keys(this.$v).forEach((key) => {
+          if (key.charAt(0) !== '$' && this.$v[key].$invalid) {
             errors.push(this.getErrorMsg(key));
           }
         });
@@ -447,7 +454,9 @@
         this.submitted = true;
         this.$v.$touch();
         // set complete to true or false
-        this.complete = !this.$v.$invalid;
+        this.componentSpecsComplete = !this.$v.$invalid;
+        this.associatedInputsComplete = this.getAssociatedInputsCompleteness();
+        this.complete = this.componentSpecsComplete && this.associatedInputsComplete;
         // populate errorList for this technology
         if (this.complete !== true) {
           this.errorList = this.makeErrorList();
@@ -468,7 +477,10 @@
         return {
           active: this.active,
           allowGridCharge: this.allowGridCharge,
+          associatedInputs: this.associatedInputs,
+          associatedInputsComplete: this.associatedInputsComplete,
           complete: this.complete,
+          componentSpecsComplete: this.componentSpecsComplete,
           constructionYear: this.constructionYear,
           cost: this.cost,
           decomissioningCost: this.decomissioningCost,
@@ -476,7 +488,6 @@
           expectedLifetime: this.expectedLifetime,
           fixedOMCosts: this.fixedOMCosts,
           gamma: this.gamma,
-          generationProfile: this.generationProfile,
           id: this.id,
           includeCurtailment: this.includeCurtailment,
           includePPA: this.includePPA,

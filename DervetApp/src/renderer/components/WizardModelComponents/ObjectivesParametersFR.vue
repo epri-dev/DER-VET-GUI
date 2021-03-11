@@ -53,7 +53,6 @@
         @input="receiveUseExisting"
         :key="childKey('tsFrPrice')"
         object-name="tsFrPrice"
-        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
         v-if="frCombinedMarket === true"
       />
@@ -70,7 +69,6 @@
         @input="receiveUseExisting"
         :key="childKey('tsFrUpPrice')"
         object-name="tsFrUpPrice"
-        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
         v-if="frCombinedMarket === false"
       />
@@ -87,7 +85,6 @@
         @input="receiveUseExisting"
         :key="childKey('tsFrDownPrice')"
         object-name="tsFrDownPrice"
-        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
         v-if="frCombinedMarket === false"
       />

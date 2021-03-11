@@ -40,7 +40,6 @@
         @input="receiveUseExisting"
         :key="childKey('tsDeferralLoad')"
         object-name="tsDeferralLoad"
-        :show-sample-data="isTSError"
         @uploaded="receiveTimeseriesData"
       />
       <hr>
