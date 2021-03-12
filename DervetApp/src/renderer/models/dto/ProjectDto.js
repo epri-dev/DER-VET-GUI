@@ -820,7 +820,6 @@ export const makeEmptyCsvDataWithDatetimeIndex = (project) => {
 };
 
 export const addTechnologyTimeSeries = (tsClass, technology) => {
-  console.log(JSON.stringify(tsClass, null, 1));
   const field = technology.tag;
   const data = mapListToObjectList(tsClass.data, field);
   const header = `${tsClass.columnHeaderName}/${technology.id}`;
@@ -853,29 +852,20 @@ export const makeTimeSeriesCsv = (project) => {
   });
 
   // Add PV timeseries
-  console.log('solarPV');
   _.forEach(project.technologySpecsSolarPV, (pv) => {
-    console.log(pv);
-    console.log(pv.generationProfile);
-    const { data, field, header } = addTechnologyTimeSeries(pv.generationProfile, pv);
-    console.log(data);
-    console.log(field);
-    console.log(header);
+    const { data, field, header } = addTechnologyTimeSeries(pv.associatedInputs[0].ts, pv);
     addSingleSeries(data, field, header);
   });
 
   // Add fleet EV timeseries
-  console.log('fleetEV');
   _.forEach(project.technologySpecsFleetEV, (ev) => {
-    console.log(JSON.stringify(ev, null, 1));
-    const { data, field, header } = addTechnologyTimeSeries(ev.baselineLoad, ev);
+    const { data, field, header } = addTechnologyTimeSeries(ev.associatedInputs[0].ts, ev);
     addSingleSeries(data, field, header);
   });
 
   // Add controllable load timeseries
-  console.log('controllableLoad');
   _.forEach(project.technologySpecsControllableLoad, (load) => {
-    const { data, field, header } = addTechnologyTimeSeries(load.load, load);
+    const { data, field, header } = addTechnologyTimeSeries(load.associatedInputs[0].ts, load);
     addSingleSeries(data, field, header);
   });
 
