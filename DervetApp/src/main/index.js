@@ -1,7 +1,8 @@
 import log from 'electron-log';
 import { callDervet, readDervetResults, writeDervetInputs } from './service/dervet';
+import menuConfig from './util/menu';
 require('dotenv').config();
-import { app, BrowserWindow, ipcMain } from 'electron' // eslint-disable-line
+import { app, BrowserWindow, ipcMain, Menu } from 'electron'; // eslint-disable-line
 
 /**
  * Set `__static` path to static files in production
@@ -24,6 +25,12 @@ let mainWindow;
 const winURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`;
+
+/**
+ * Configure application menu
+ */
+const menu = Menu.buildFromTemplate(menuConfig);
+Menu.setApplicationMenu(menu);
 
 function createWindow() {
   /**

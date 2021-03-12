@@ -7,14 +7,13 @@
 </template>
 
 <script lang="ts">
-  import { shell } from 'electron'; // eslint-disable-line
+  import openWebsiteInBrowser from '@/util/browser';
 
   export default {
     props: ['link', 'text'],
     methods: {
       openWebsiteInBrowser(e: any) {
-        e.preventDefault();
-        shell.openExternal(this.link);
+        openWebsiteInBrowser(e, this.link);
       },
     },
   };
