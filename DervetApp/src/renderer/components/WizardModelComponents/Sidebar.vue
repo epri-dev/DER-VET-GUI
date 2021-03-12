@@ -29,7 +29,7 @@
 
       <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
                    v-bind:class="{
-          current: isCurrent(this.paths.OBJECTIVES),
+          current: isCurrent(`${this.paths.WIZARD_COMPONENT}/objectives`),
           incomplete: isCompleteOverview('objectives') }"
                    :to="this.paths.OBJECTIVES">
         Services
@@ -81,10 +81,19 @@
     },
     methods: {
       isCompleteOverview(page) {
+        // console.log(page);
+        // console.log(this.$store.state.Application.errorList.overview[page]);
+        // console.log(!this.$store.state.Application.pageCompleteness.overview[page]);
         return !this.$store.state.Application.pageCompleteness.overview[page];
       },
       isCurrent(path) {
-        return RegExp(path).test(this.$route.path);
+        const splitPath = this.$route.path.split('/');
+        let uniqueId = null;
+        if (splitPath.length > 2) {
+          uniqueId = splitPath.pop();
+        }
+        return RegExp(path).test(this.$route.path)
+          || (uniqueId && RegExp(uniqueId).test(path));
       },
       isActual(path) {
         return path === this.$route.path;

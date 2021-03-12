@@ -180,6 +180,13 @@
         });
         return true;
       },
+      getAssociatedInputsCompleteness() {
+        // loop through associatedInputs array and check complete param
+        if (this.associatedInputs[0]) {
+          return this.associatedInputs[0].complete;
+        }
+        return false;
+      },
       getControllableLoadFromStore() {
         return this.$store.getters.getControllableLoadById(this.id);
       },
@@ -188,8 +195,8 @@
       },
       makeErrorList() {
         const errors = [];
-        Object.keys(this.metadata).forEach((key) => {
-          if (this.$v[key].$invalid) {
+        Object.keys(this.$v).forEach((key) => {
+          if (key.charAt(0) !== '$' && this.$v[key].$invalid) {
             errors.push(this.getErrorMsg(key));
           }
         });
@@ -206,7 +213,9 @@
         this.submitted = true;
         this.$v.$touch();
         // set complete to true or false
-        this.complete = !this.$v.$invalid;
+        this.componentSpecsComplete = !this.$v.$invalid;
+        this.associatedInputsComplete = this.getAssociatedInputsCompleteness();
+        this.complete = this.componentSpecsComplete && this.associatedInputsComplete;
         // populate errorList for this technology
         if (this.complete !== true) {
           this.errorList = this.makeErrorList();
@@ -222,7 +231,10 @@
       buildControllableLoad() {
         return {
           active: this.active,
+          associatedInputs: this.associatedInputs,
+          associatedInputsComplete: this.associatedInputsComplete,
           complete: this.complete,
+          componentSpecsComplete: this.componentSpecsComplete,
           constructionYear: this.constructionYear,
           decomissioningCost: this.decomissioningCost,
           duration: this.duration,

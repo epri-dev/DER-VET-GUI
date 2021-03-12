@@ -186,8 +186,17 @@ const mutations = {
   // Controllable Load upload
   [m.ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD](state, payload) {
     const tmpSpecs = getters.getControllableLoadSpecsClone(state)();
-    const indexMatchingId = getters.getIndexOfControllableLoadId(state)(payload.id);
-    tmpSpecs[indexMatchingId].load = payload.loadProfile;
+    const { id, index, errorsString, data } = payload;
+    const indexMatchingId = getters.getIndexOfControllableLoadId(state)(id);
+    tmpSpecs[indexMatchingId].associatedInputsComplete = data.complete;
+    tmpSpecs[indexMatchingId].complete = (data.complete
+      && tmpSpecs[indexMatchingId].componentSpecsComplete);
+    // this updates the object, while retaining untouched pieces
+    Object.assign(tmpSpecs[indexMatchingId].associatedInputs[index], data);
+    // add errorsString to ts.errors
+    if (errorsString !== undefined) {
+      tmpSpecs[indexMatchingId].associatedInputs[index].ts.errors = errorsString;
+    }
     state.technologySpecsControllableLoad = tmpSpecs;
   },
   // da page
@@ -331,8 +340,17 @@ const mutations = {
   // fleet ev upload
   [m.ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_FLEET_EV](state, payload) {
     const tmpSpecs = getters.getFleetEVSpecsClone(state)();
-    const indexMatchingId = getters.getIndexOfFleetEVId(state)(payload.id);
-    tmpSpecs[indexMatchingId].baselineLoad = payload.loadProfile;
+    const { id, index, errorsString, data } = payload;
+    const indexMatchingId = getters.getIndexOfFleetEVId(state)(id);
+    tmpSpecs[indexMatchingId].associatedInputsComplete = data.complete;
+    tmpSpecs[indexMatchingId].complete = (data.complete
+      && tmpSpecs[indexMatchingId].componentSpecsComplete);
+    // this updates the object, while retaining untouched pieces
+    Object.assign(tmpSpecs[indexMatchingId].associatedInputs[index], data);
+    // add errorsString to ts.errors
+    if (errorsString !== undefined) {
+      tmpSpecs[indexMatchingId].associatedInputs[index].ts.errors = errorsString;
+    }
     state.technologySpecsFleetEV = tmpSpecs;
   },
   // ICE
@@ -512,20 +530,19 @@ const mutations = {
   },
   // solar pv generation
   [m.ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV](state, payload) {
-    const tmpSolarPVSpecs = getters.getSolarPVSpecsClone(state)();
+    const tmpSpecs = getters.getSolarPVSpecsClone(state)();
     const { id, index, errorsString, data } = payload;
     const indexMatchingId = getters.getIndexOfSolarId(state)(id);
-    tmpSolarPVSpecs[indexMatchingId]
-      .associatedInputsComplete = data.complete;
-    tmpSolarPVSpecs[indexMatchingId].complete = (data.complete
-      && tmpSolarPVSpecs[indexMatchingId].componentSpecsComplete);
+    tmpSpecs[indexMatchingId].associatedInputsComplete = data.complete;
+    tmpSpecs[indexMatchingId].complete = (data.complete
+      && tmpSpecs[indexMatchingId].componentSpecsComplete);
     // this updates the object, while retaining untouched pieces
-    Object.assign(tmpSolarPVSpecs[indexMatchingId].associatedInputs[index], data);
+    Object.assign(tmpSpecs[indexMatchingId].associatedInputs[index], data);
     // add errorsString to ts.errors
     if (errorsString !== undefined) {
-      tmpSolarPVSpecs[indexMatchingId].associatedInputs[index].ts.errors = errorsString;
+      tmpSpecs[indexMatchingId].associatedInputs[index].ts.errors = errorsString;
     }
-    state.technologySpecsSolarPV = tmpSolarPVSpecs;
+    state.technologySpecsSolarPV = tmpSpecs;
   },
   // spinning reserve
   [m.SET_SR_DURATION](state, newSRDuration) {
