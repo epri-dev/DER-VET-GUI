@@ -297,12 +297,13 @@ export default class DispatchData {
     // increment nackward from current end date (js date type) according to window size
     // convert Date into moment (moment will do things such as wrapping into the next month)
     let startMoment = null;
-    if (this.windowSize === 'custom') {
+    if (windowSize === 'custom') {
       // determine previous window size and increment
       const daysDiff = moment(currStartDate).diff(moment(currEndDate), 'days');
       startMoment = moment(endMoment).subtract(daysDiff, 'd');
     } else {
-      startMoment = moment(endMoment).subtract(1, this.windowSize);
+      console.log(`windowSize: ${windowSize}`);
+      startMoment = moment(endMoment).subtract(1, windowSize);
     }
     console.log(`start: ${startMoment.format()}`);
     console.log(`end: ${endMoment.format()}`);
@@ -317,12 +318,13 @@ export default class DispatchData {
     // increment current start date (js date type) according to window size
     // convert Date into moment (moment will do things such as wrapping into the next month)
     let endMoment = null;
-    if (this.windowSize === 'custom') {
+    if (windowSize === 'custom') {
       // determine previous window size and increment
       const daysDiff = moment(currStartDate).diff(moment(currEndDate), 'days');
       endMoment = moment(startMoment).add(daysDiff, 'd');
     } else {
-      endMoment = moment(startMoment).add(1, this.windowSize);
+      console.log(windowSize);
+      endMoment = moment(startMoment).add(1, windowSize);
     }
     console.log(`start: ${startMoment.format()}`);
     console.log(`end: ${endMoment.format()}`);
@@ -363,7 +365,6 @@ export default class DispatchData {
     const slicedItems = new Map();
     this.data[yearIndex].forEach((data, traceName) => {
       const slicedDate = data.slice(this.currentStartIndex, this.currentEndIndex + 1);
-      console.log(slicedDate);
       slicedItems.set(traceName, slicedDate);
     });
     return slicedItems;
@@ -394,7 +395,13 @@ export default class DispatchData {
   }
 
   mapToListFilter(traceNameList) {
-    return [...this.selectedData].filter((value, key) => traceNameList.includes(key));
+    const dataLabelTraceList = [];
+    this.selectedData.forEach((value, key) => {
+      if (traceNameList.includes(key)) {
+        dataLabelTraceList.push({ data: value, label: key });
+      }
+    });
+    return dataLabelTraceList;
   }
 
   selectedDataLabel(traceName) {

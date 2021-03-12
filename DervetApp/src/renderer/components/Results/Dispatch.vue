@@ -153,8 +153,8 @@
       energyPriceMapData() {
         return this.$store.state.Results.dispatchEnergyPriceMapData;
       },
-      dispatchDataIteratorValue() {
-        return this.$store.state.Results.dispatchDataIterator.value;
+      dispatchDataIterator() {
+        return this.$store.state.Results.dispatchDataIterator;
       },
       rangeX() {
         const width = this.width - this.padding;
@@ -213,12 +213,10 @@
       },
       createChartDispatchTimeSeriesPlots(chartId) {
         const ctx = document.getElementById(chartId);
-        console.log('start calculating data');
-        const rawData = this.dispatchDataIteratorValue;
-        console.log('rawData done');
+        const rawData = this.dispatchDataIterator.value;
         const data = [];
         const xx = rawData.timeSeriesDateAxis;
-
+        console.log(xx);
         const selectorOptions = {
           buttons: [
             {

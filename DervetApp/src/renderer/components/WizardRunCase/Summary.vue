@@ -137,14 +137,15 @@
         </br>
 
         <div class="form-group form-buffer row">
-          <file-picker
-            label="Export Project"
-            :callback="exportProject"
-            :isAsync="true"
-            :isDirectory="true"
-            buttonAttributes="btn btn-lg btn-info pull-right btn-summary"
-            wrapperDivAttributes="col-md-5"/>
-
+          <div class="col-md-5">
+            <file-picker
+              label="Export Project"
+              :callback="exportProject"
+              :isAsync="true"
+              :isDirectory="true"
+              buttonAttributes="btn btn-lg btn-info  btn-summary"
+              wrapperDivAttributes="col-md-5"/>
+          </div>
           <div class="col-md-2"/>
 
           <div class="col-md-5">

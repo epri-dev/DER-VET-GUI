@@ -46,11 +46,11 @@ const mutations = {
   },
   SET_NEXT_DISPATCH_DATA(state, payload) {
     const { currStartDate, currEndDate, windowSize } = payload;
-    state.dispatchDataIterator.previous(currStartDate, currEndDate, windowSize);
+    state.dispatchDataIterator.next(currStartDate, currEndDate, windowSize);
   },
   SET_PREVIOUS_DISPATCH_DATA(state, payload) {
     const { currStartDate, currEndDate, windowSize } = payload;
-    state.dispatchDataIterator.next(currStartDate, currEndDate, windowSize);
+    state.dispatchDataIterator.previous(currStartDate, currEndDate, windowSize);
   },
   CREATE_FINANCIAL_PLOTS(state) {
     const runData = state.data;
