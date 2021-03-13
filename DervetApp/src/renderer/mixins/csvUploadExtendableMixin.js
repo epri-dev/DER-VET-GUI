@@ -127,7 +127,7 @@ const csvUploadMixin = {
       if (this.isMonthly(tsField)) {
         return `Monthly (12 values) of ${name} are required`;
       }
-      return `A timeseries (${this.expectedRowCount} values) of ${name} is required`;
+      return `A timeseries of ${name} is required`;
     },
     receiveMonthlyData(payload) {
       // TODO: AE: this is identical to receiveTimeseriesData; should it be?

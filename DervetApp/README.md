@@ -98,3 +98,7 @@ The built installer will be saved to:
 Log files from running the packaged application will be written here:
 - mac:`{user profile}/Library/Logs/dervetapp/main.log`
 - win: `{user profile}\AppData\Roaming\dervetapp\logs\main.log`
+
+#### Icon Updating
+
+Save a 256x256 (pixels) to the `build/icons` directory. To convert PNG to ICO and ICNS formats required by Windows and Mac, use a tool like https://hnet.com/png-to-ico/ and https://cloudconvert.com/png-to-icns. Then commit both files to the same `build/icons` folder with the names icon.ico and icon.icns respectively.

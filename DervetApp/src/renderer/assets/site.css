@@ -98,6 +98,10 @@ body {
     border: 0;
 }
 
+.navbar-top-svg-item {
+    padding-left: 15px !important;
+}
+
 /*
  * Sidebar
  */
