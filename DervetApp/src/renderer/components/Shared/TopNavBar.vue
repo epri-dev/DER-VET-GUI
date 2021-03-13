@@ -27,6 +27,14 @@
             Results
           </b-nav-item>
         </b-navbar-nav>
+        <b-navbar-nav class="ml-auto">
+          <b-nav-item align="right" link-classes="navbar-top-svg-item">
+            <span @click="(e) => openWebsiteInBrowser(e, FORUM_LINK)" class="fas fa-comment-alt"/>
+          </b-nav-item>
+          <b-nav-item align="right" link-classes="navbar-top-svg-item">
+            <span @click="(e) => openWebsiteInBrowser(e, USER_GUIDE_LINK)" class="fas fa-question-circle"/>
+          </b-nav-item>
+        </b-navbar-nav>
       </b-collapse>
     </b-navbar>
   </div>
@@ -41,14 +49,22 @@
     WIZARD_RUN_CASE,
   } from '@/router/constants';
 
+  import openWebsiteInBrowser from '@/util/browser';
+
+  const FORUM_LINK = 'https://www.der-vet.com/forum/';
+  const USER_GUIDE_LINK = 'https://storagewikidev.epri.com/index.php/DER_VET_User_Guide#Index';
+
   export default {
     data() {
       return {
         INDEX,
+        FORUM_LINK,
+        USER_GUIDE_LINK,
         WIZARD_OVERVIEW,
         WIZARD_COMPONENT,
         RESULTS,
         WIZARD_RUN_CASE,
+        openWebsiteInBrowser,
       };
     },
     computed: {
