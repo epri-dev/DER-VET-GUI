@@ -6,29 +6,6 @@ import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 import operateOnKeysList from '@/util/object';
 
 /*
-import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
-import DAPriceTimeSeries from '@/models/TimeSeries/DAPriceTimeSeries';
-import DeferralLoadTimeSeries from '@/models/TimeSeries/DeferralLoadTimeSeries';
-import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
-import FRPriceTimeSeries from '@/models/TimeSeries/FRPriceTimeSeries';
-import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
-import FleetEVBaselineLoadTimeSeries from '@/models/TimeSeries/FleetEVBaselineLoadTimeSeries';
-import LFDownPriceTimeSeries from '@/models/TimeSeries/LFDownPriceTimeSeries';
-import LFEnergyOptionDownTimeSeries from '@/models/TimeSeries/LFEnergyOptionDownTimeSeries';
-import LFEnergyOptionUpTimeSeries from '@/models/TimeSeries/LFEnergyOptionUpTimeSeries';
-import LFPriceTimeSeries from '@/models/TimeSeries/LFPriceTimeSeries';
-import LFUpPriceTimeSeries from '@/models/TimeSeries/LFUpPriceTimeSeries';
-import NSRPriceTimeSeries from '@/models/TimeSeries/NSRPriceTimeSeries';
-import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
-import RAActiveTimeSeries from '@/models/TimeSeries/RAActiveTimeSeries';
-import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
-import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
-import SystemLoadTimeSeries from '@/models/TimeSeries/SystemLoadTimeSeries';
-import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
-import UserEnergyMinTimeSeries from '@/models/TimeSeries/UserEnergyMinTimeSeries';
-import UserPowerMaxTimeSeries from '@/models/TimeSeries/UserPowerMaxTimeSeries';
-import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
-
 import BackupEnergyAdwardsMonthly from '@/models/Monthly/BackupEnergyAdwardsMonthly';
 import BackupEnergyReservationMonthly from '@/models/Monthly/BackupEnergyReservationMonthly';
 import DRCapacityAdwardsMonthly from '@/models/Monthly/DRCapacityAdwardsMonthly';
@@ -38,10 +15,26 @@ import DRMonthsMonthly from '@/models/Monthly/DRMonthsMonthly';
 import RACapacityPriceMonthly from '@/models/Monthly/RACapacityPriceMonthly';
 */
 
+import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
+import DAPriceTimeSeries from '@/models/TimeSeries/DAPriceTimeSeries';
+import DeferralLoadTimeSeries from '@/models/TimeSeries/DeferralLoadTimeSeries';
 import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
 import FRPriceTimeSeries from '@/models/TimeSeries/FRPriceTimeSeries';
 import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
+import LFDownPriceTimeSeries from '@/models/TimeSeries/LFDownPriceTimeSeries';
+import LFEnergyOptionDownTimeSeries from '@/models/TimeSeries/LFEnergyOptionDownTimeSeries';
+import LFEnergyOptionUpTimeSeries from '@/models/TimeSeries/LFEnergyOptionUpTimeSeries';
+import LFPriceTimeSeries from '@/models/TimeSeries/LFPriceTimeSeries';
+import LFUpPriceTimeSeries from '@/models/TimeSeries/LFUpPriceTimeSeries';
+import NSRPriceTimeSeries from '@/models/TimeSeries/NSRPriceTimeSeries';
 import RAActiveTimeSeries from '@/models/TimeSeries/RAActiveTimeSeries';
+import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
+import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
+import SystemLoadTimeSeries from '@/models/TimeSeries/SystemLoadTimeSeries';
+import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
+import UserEnergyMinTimeSeries from '@/models/TimeSeries/UserEnergyMinTimeSeries';
+import UserPowerMaxTimeSeries from '@/models/TimeSeries/UserPowerMaxTimeSeries';
+import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
 
 import RACapacityPriceMonthly from '@/models/Monthly/RACapacityPriceMonthly';
 
@@ -90,24 +83,6 @@ export class ProjectMetadata {
       ...this.operateOnFieldList(c.TS_ALL, f => new f.DataModel([])),
       ...this.operateOnFieldList(c.MTS_ALL, f => new f.DataModel([])),
 
-      // TIMESERIES ARRAYS
-      criticalLoad: null,
-      deferralLoad: null,
-      daPrice: null,
-      lfEOU: null,
-      lfEOD: null,
-      lfPrice: null,
-      lfUpPrice: null,
-      lfDownPrice: null,
-      nsrPrice: null,
-      siteLoad: null,
-      srPrice: null,
-      systemLoad: null,
-      userPowerMin: null,
-      userPowerMax: null,
-      userEnergyMin: null,
-      userEnergyMax: null,
-
       // MONTHLY ARRAYS
       backupPrice: null,
       backupEnergyReservation: null,
@@ -150,6 +125,7 @@ export class ProjectMetadata {
         type: Number,
         unit: '% / year',
         description: 'What is the growth rate of Day Ahead Energy Price?',
+        actionSetName: a.SET_DA_GROWTH,
       }),
       [c.DATA_YEAR]: new ProjectFieldMetadata({
         displayName: 'Data Year',
@@ -165,6 +141,7 @@ export class ProjectMetadata {
         type: Number,
         unit: '% / year',
         description: 'What is the growth rate of the deferral load?',
+        actionSetName: a.SET_DEFERRAL_GROWTH,
       }),
       [c.DEFERRAL_PLANNED_LOAD_LIMIT]: new ProjectFieldMetadata({
         displayName: 'Planned Load Limit',
@@ -173,6 +150,7 @@ export class ProjectMetadata {
         type: Number,
         unit: 'kW',
         description: 'Max net import power flow to grid',
+        actionSetName: a.SET_DEFERRAL_PLANNED_LOAD_LIMIT,
       }),
       [c.DEFERRAL_PRICE]: new ProjectFieldMetadata({
         displayName: 'Yearly Cost Avoided',
@@ -181,6 +159,7 @@ export class ProjectMetadata {
         type: Number,
         unit: '$ / year',
         description: 'Yearly Cost Avoided for deferring a T and D asset upgrade',
+        actionSetName: a.SET_DEFERRAL_PRICE,
       }),
       [c.DEFERRAL_REVERSE_POWER_FLOW_LIMIT]: new ProjectFieldMetadata({
         displayName: 'Reverse Power Flow Limit',
@@ -189,6 +168,7 @@ export class ProjectMetadata {
         type: Number,
         unit: 'kW',
         description: 'Max net export power flow to grid',
+        actionSetName: a.SET_DEFERRAL_REVERSE_POWER_FLOW_LIMIT,
       }),
       [c.DR_END_HOUR]: new ProjectFieldMetadata({
         displayName: 'End Hour',
@@ -334,7 +314,7 @@ export class ProjectMetadata {
         type: Number,
         unit: '% / year',
         description: 'Yearly growth rate to apply to the value of energy',
-        actionSetName: a.SET_FR_ENERGY_GROWTH,
+        actionSetName: a.SET_FR_ENERGY_PRICE_GROWTH,
       }),
       [c.FR_EOU]: new ProjectFieldMetadata({
         displayName: 'Energy Option Up',
@@ -378,6 +358,7 @@ export class ProjectMetadata {
         isRequired: true,
         type: Boolean,
         allowedValues: c.INCLUDE_INTERCONNECTION_CONSTRAINTS_ALLOWED_VALUES,
+        actionSetName: a.SET_INCLUDE_POI_CONSTRAINTS,
       }),
       [c.LF_COMBINED_MARKET]: new ProjectFieldMetadata({
         displayName: 'Combined Market Requirement',
@@ -385,6 +366,7 @@ export class ProjectMetadata {
         type: Boolean,
         description: 'Is this a combined regulation market? If it is combined, regulation up will be provided in the same quantity as regulation down always.',
         allowedValues: c.FR_COMBINED_MARKET_ALLOWED_VALUES,
+        actionSetName: a.SET_LF_COMBINED_MARKET,
       }),
       [c.LF_DURATION]: new ProjectFieldMetadata({
         displayName: 'Duration for Energy Reservation Requirements',
@@ -394,6 +376,7 @@ export class ProjectMetadata {
         type: Number,
         unit: 'hours',
         description: 'How much energy capability (kWh) should the DERs reserve for each kW of participation in Load Following? The DERs will not use this energy capability for other services to be ready for the worst-case scenario.',
+        actionSetName: a.SET_LF_DURATION,
       }),
       [c.LF_ENERGY_PRICE_GROWTH]: new ProjectFieldMetadata({
         displayName: 'Growth Rate of Load Following Energy Price',
@@ -403,6 +386,7 @@ export class ProjectMetadata {
         type: Number,
         unit: '% / year',
         description: 'Yearly growth rate to apply to the value of energy',
+        actionSetName: a.SET_LF_ENERGY_PRICE_GROWTH,
       }),
       [c.LF_GROWTH]: new ProjectFieldMetadata({
         displayName: 'Growth Rate of Load Following Price',
@@ -412,6 +396,7 @@ export class ProjectMetadata {
         type: Number,
         unit: '% / year',
         description: 'Yearly growth rate to apply to regulation prices?',
+        actionSetName: a.SET_LF_GROWTH,
       }),
       [c.MAX_EXPORT]: new ProjectFieldMetadata({
         displayName: 'Maximum Power Exported',
@@ -419,7 +404,8 @@ export class ProjectMetadata {
         minValue: 0,
         type: Number,
         unit: 'kW',
-        description: 'Maximum magnitude that can flow from grid to microgrid through the point of interconnection',
+        description: 'Maximum magnitude that can flow from microgrid to grid through the point of interconnection',
+        actionSetName: a.SET_MAX_EXPORT_TO_GRID,
       }),
       [c.MAX_IMPORT]: new ProjectFieldMetadata({
         displayName: 'Maximum Power Imported',
@@ -427,7 +413,8 @@ export class ProjectMetadata {
         maxValue: 0,
         type: Number,
         unit: 'kW',
-        description: 'Maximum magnitude that can flow from microgrid to grid through the point of interconnection',
+        description: 'Maximum magnitude that can flow from grid to microgrid through the point of interconnection',
+        actionSetName: a.SET_MAX_IMPORT_FROM_GRID,
       }),
       [c.NAME]: new ProjectFieldMetadata({
         displayName: 'Name',
@@ -442,6 +429,7 @@ export class ProjectMetadata {
         type: Number,
         unit: 'hours',
         description: 'How much energy capability (kWh) should the DERs reserve for each kW of participation in Non-Spinning Reserve? The DERs will not use this energy capability for other services to be ready for the worst-case scenario.',
+        actionSetName: a.SET_NSR_DURATION,
       }),
       [c.NSR_GROWTH]: new ProjectFieldMetadata({
         displayName: 'Growth Rate of Non-Spinning Reserve Prices',
@@ -451,6 +439,7 @@ export class ProjectMetadata {
         type: Number,
         unit: '% / year',
         description: 'What is the growth rate of Non-Spinning Reserve Price?',
+        actionSetName: a.SET_NSR_GROWTH,
       }),
       [c.OPTIMIZATION_HORIZON]: new ProjectFieldMetadata({
         displayName: 'Optimization Window',
@@ -531,6 +520,7 @@ export class ProjectMetadata {
         type: 'int',
         unit: 'hours',
         description: 'Calculate the post-facto reliability for an outage that can last up to this many hours',
+        actionSetName: a.SET_RELIABILITY_MAX_OUTAGE_DURATION,
       }),
       [c.RELIABILITY_POST_OPTIMIZATION_ONLY]: new ProjectFieldMetadata({
         displayName: 'Objective',
@@ -538,6 +528,7 @@ export class ProjectMetadata {
         type: Boolean,
         description: 'How should we consider reliability in our analysis?',
         allowedValues: c.RELIABILITY_POST_OPTIMIZATION_ONLY_ALLOWED_VALUES,
+        actionSetName: a.SET_RELIABILITY_POST_OPTIMIZATION_ONLY,
       }),
       [c.RELIABILITY_TARGET]: new ProjectFieldMetadata({
         displayName: 'Hours of guaranteed outage coverage',
@@ -546,6 +537,7 @@ export class ProjectMetadata {
         type: Number,
         unit: 'hours',
         description: 'How many hours of guaranteed outage coverage does the project need to supply based on the load?',
+        actionSetName: a.SET_RELIABILITY_TARGET,
       }),
       [c.SIZING_EQUIPMENT]: new ProjectFieldMetadata({
         displayName: 'Size equipment in microgrid',
@@ -562,6 +554,7 @@ export class ProjectMetadata {
         type: Number,
         unit: 'hours',
         description: 'How much energy capability (kWh) should the DERs reserve for each kW of participation in Spinning Reserve? The DERs will not use this energy capability for other services to be ready for the worst-case scenario.',
+        actionSetName: a.SET_SR_DURATION,
       }),
       [c.SR_GROWTH]: new ProjectFieldMetadata({
         displayName: 'Growth Rate of Spinning Reserve Prices',
@@ -571,6 +564,7 @@ export class ProjectMetadata {
         type: Number,
         unit: '% / year',
         description: 'What is the growth rate of Spinning Reserve Price?',
+        actionSetName: a.SET_SR_GROWTH,
       }),
       [c.START_YEAR]: new ProjectFieldMetadata({
         displayName: 'Start Year',
@@ -586,7 +580,36 @@ export class ProjectMetadata {
         description: 'What timestep will the optimization will use?',
         allowedValues: c.TIMESTEP_ALLOWED_VALUES,
       }),
+      [c.USER_PRICE]: new ProjectFieldMetadata({
+        displayName: 'Yearly Cost Avoided',
+        isRequired: true,
+        minValue: 0,
+        type: Number,
+        unit: '$ / year',
+        description: 'Yearly Cost Avoided for meeting the user-defined constraints',
+        actionSetName: a.SET_USER_PRICE,
+      }),
       // ts: timeseries
+      [c.TS_CRITICAL_LOAD]: new ProjectFieldMetadata({
+        DataModel: CriticalLoadTimeSeries,
+        displayName: 'critical load',
+        actionSetName: a.SET_CRITICAL_LOAD,
+      }),
+      [c.TS_DA_PRICE]: new ProjectFieldMetadata({
+        DataModel: DAPriceTimeSeries,
+        displayName: 'day ahead price',
+        actionSetName: a.SET_DA_PRICE,
+      }),
+      [c.TS_DEFERRAL_LOAD]: new ProjectFieldMetadata({
+        DataModel: DeferralLoadTimeSeries,
+        displayName: 'deferral load',
+        actionSetName: a.SET_DEFERRAL_LOAD,
+      }),
+      [c.TS_FR_DOWN_PRICE]: new ProjectFieldMetadata({
+        DataModel: FRDownPriceTimeSeries,
+        displayName: 'frequency regulation down price',
+        actionSetName: a.SET_FR_DOWN_PRICE,
+      }),
       [c.TS_FR_PRICE]: new ProjectFieldMetadata({
         DataModel: FRPriceTimeSeries,
         displayName: 'frequency regulation price',
@@ -597,29 +620,81 @@ export class ProjectMetadata {
         displayName: 'frequency regulation up price',
         actionSetName: a.SET_FR_UP_PRICE,
       }),
-      [c.TS_FR_DOWN_PRICE]: new ProjectFieldMetadata({
-        DataModel: FRDownPriceTimeSeries,
-        displayName: 'frequency regulation down price',
-        actionSetName: a.SET_FR_DOWN_PRICE,
+      [c.TS_LF_DOWN_PRICE]: new ProjectFieldMetadata({
+        DataModel: LFDownPriceTimeSeries,
+        displayName: 'load following down price',
+        actionSetName: a.SET_LF_DOWN_PRICE,
+      }),
+      [c.TS_LF_EOU]: new ProjectFieldMetadata({
+        DataModel: LFEnergyOptionUpTimeSeries,
+        displayName: 'energy option up',
+        actionSetName: a.SET_LF_EOU,
+      }),
+      [c.TS_LF_EOD]: new ProjectFieldMetadata({
+        DataModel: LFEnergyOptionDownTimeSeries,
+        displayName: 'energy option down',
+        actionSetName: a.SET_LF_EOD,
+      }),
+      [c.TS_LF_PRICE]: new ProjectFieldMetadata({
+        DataModel: LFPriceTimeSeries,
+        displayName: 'load following price',
+        actionSetName: a.SET_LF_PRICE,
+      }),
+      [c.TS_LF_UP_PRICE]: new ProjectFieldMetadata({
+        DataModel: LFUpPriceTimeSeries,
+        displayName: 'load following up price',
+        actionSetName: a.SET_LF_UP_PRICE,
+      }),
+      [c.TS_NSR_PRICE]: new ProjectFieldMetadata({
+        DataModel: NSRPriceTimeSeries,
+        displayName: 'non-spinning reserve price',
+        actionSetName: a.SET_NSR_PRICE,
       }),
       [c.TS_RA_ACTIVE]: new ProjectFieldMetadata({
         DataModel: RAActiveTimeSeries,
         displayName: 'if the resource adequacy event selection considers the load (1) or not (0)',
         actionSetName: a.SET_RA_ACTIVE,
       }),
+      [c.TS_SITE_LOAD]: new ProjectFieldMetadata({
+        DataModel: SiteLoadTimeSeries,
+        displayName: 'site load',
+        actionSetName: a.SET_SITE_LOAD,
+      }),
+      [c.TS_SR_PRICE]: new ProjectFieldMetadata({
+        DataModel: SRPriceTimeSeries,
+        displayName: 'spinning reserve price',
+        actionSetName: a.SET_SR_PRICE,
+      }),
+      [c.TS_SYSTEM_LOAD]: new ProjectFieldMetadata({
+        DataModel: SystemLoadTimeSeries,
+        displayName: 'system load',
+        actionSetName: a.SET_SYSTEM_LOAD,
+      }),
+      [c.TS_USER_ENERGY_MAX]: new ProjectFieldMetadata({
+        DataModel: UserEnergyMaxTimeSeries,
+        displayName: 'maximum energy',
+        actionSetName: a.SET_USER_ENERGY_MAX,
+      }),
+      [c.TS_USER_ENERGY_MIN]: new ProjectFieldMetadata({
+        DataModel: UserEnergyMinTimeSeries,
+        displayName: 'minimum energy',
+        actionSetName: a.SET_USER_ENERGY_MIN,
+      }),
+      [c.TS_USER_POWER_MAX]: new ProjectFieldMetadata({
+        DataModel: UserPowerMaxTimeSeries,
+        displayName: 'maximum power',
+        actionSetName: a.SET_USER_POWER_MAX,
+      }),
+      [c.TS_USER_POWER_MIN]: new ProjectFieldMetadata({
+        DataModel: UserPowerMinTimeSeries,
+        displayName: 'minimum power',
+        actionSetName: a.SET_USER_POWER_MIN,
+      }),
       // mts: monthly timeseries
       [c.MTS_RA_CAPACITY_PRICE]: new ProjectFieldMetadata({
         DataModel: RACapacityPriceMonthly,
         displayName: 'resource adequacy capacity prices',
         actionSetName: a.SET_RA_CAPACITY_PRICE,
-      }),
-      [c.USER_PRICE]: new ProjectFieldMetadata({
-        displayName: 'Yearly Cost Avoided',
-        isRequired: true,
-        minValue: 0,
-        type: Number,
-        unit: '$ / year',
-        description: 'Yearly Cost Avoided for meeting the user-defined constraints',
       }),
     });
   }

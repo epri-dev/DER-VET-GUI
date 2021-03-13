@@ -2,7 +2,7 @@
   <div>
     <h3>Services: Site Information</h3>
     <hr>
-    <form class="form-horizontal form-buffer">
+    <div class="form-horizontal form-buffer">
       <radio-button-input v-model="includeInterconnectionConstraints"
                           v-bind:field="metadata.includeInterconnectionConstraints"
                           :isInvalid="submitted && $v.includeInterconnectionConstraints.$error"
@@ -21,78 +21,75 @@
                     :isInvalid="submitted && $v.maxImport.$error"
                     :errorMessage="getErrorMsg('maxImport')">
         </text-input>
-
       </div>
 
-      <div class="form-group" v-if="includeSiteLoad === true">
-        <timeseries-data-upload chart-name="chartUploadedTimeSeries"
-                                :data-name="siteLoadName"
-                                units="kW"
-                                @uploaded="receiveTimeseriesData"
-                                :data-time-series="siteLoad"
-                                key="1"
-                                :TimeSeriesModel="SiteLoadTimeSeries" />
-        <div v-if="(siteLoad === null)">
-          <hr>
-          <div class="form-group row">
-            <div class="col-md-12">
-              <i>
-                <a href="files/SampleSiteLoad-8760.csv" download class="important-link text-decoration-none">Click here to download a sample <code>.csv</code> file</a> with a 60-minute timestep for a year with 365 days (8,760 readings)
-              </i>
-            </div>
-          </div>
-          <div class="form-group row">
-            <div class="col-md-12">
-              <i>
-                <a href="files/SampleSiteLoad-8784.csv" download class="important-link text-decoration-none">Click here to download a sample <code>.csv</code> file</a> with a 60-minute timestep <b>for a leap year with 366 days</b> (8,784 readings)
-              </i>
-            </div>
-          </div>
-        </div>
-
-      </div>
+      <timeseries-data-upload
+        chart-name="tsSiteLoadChartUploaded"
+        @click="receiveRemove"
+        :data-exists="tsData('tsSiteLoad').data.length !== 0"
+        :DataModel="metadata.tsSiteLoad.DataModel"
+        :data-name="metadata.tsSiteLoad.displayName"
+        :data-time-series="tsData('tsSiteLoad')"
+        :errorMessage="getErrorMsgTS('tsSiteLoad')"
+        :isInvalid="submitted && tsData('tsSiteLoad').data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('tsSiteLoad')"
+        object-name="tsSiteLoad"
+        @uploaded="receiveTimeseriesData"
+        v-if="includeSiteLoad === true"
+      />
       <hr>
 
-      <save-buttons :continue-link="WIZARD_COMPONENT"
-                    :displayError="submitted && $v.$anyError"
-                    :save="validatedSave" />
+      <save-and-save-continue
+        :displayError="submitted && ($v.$anyError || isTSError)"
+        :save="validatedSaveStay"
+        :save-continue="validatedSaveContinue"
+      />
 
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
   import { requiredIf } from 'vuelidate/lib/validators';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import * as p from '@/models/Project/ProjectMetadata';
-  import * as c from '@/models/Project/constants';
-  import operateOnKeysList from '@/util/object';
-  import '@/assets/samples/SampleSiteLoad-8760.csv';
-  import '@/assets/samples/SampleSiteLoad-8784.csv';
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
-  import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
-  import { WIZARD_COMPONENT } from '@/router/constants';
-  import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
+  import { projectMetadata } from '@/models/Project/ProjectMetadata';
+  import * as c from '@/models/Project/constants';
+  import '@/assets/samples/Sample_SiteLoad_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_SiteLoad_TimeSeries_8784.csv';
 
-  const metadata = p.projectMetadata;
-  const validations = metadata.getValidationSchema(c.SITE_INFORMATION_FIELDS);
+  import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
+
   const PAGEGROUP = 'components';
   const PAGEKEY = 'objectives';
   const PAGE = 'siteInformation';
+  const FIELDS = c.SITE_INFORMATION_FIELDS;
+  const TS_FIELDS = [...c.TS_SITE_FIELDS];
+
+  const ALL_FIELDS = [...FIELDS, ...TS_FIELDS];
+  const validations = projectMetadata.getValidationSchema(FIELDS);
+
+  const CONSTANTS = {
+    DESTINATION_PATH,
+    PAGEGROUP,
+    PAGEKEY,
+    PAGE,
+    FIELDS,
+    TS_FIELDS,
+  };
 
   export default {
-    components: { TimeseriesDataUpload },
     mixins: [csvUploadMixin, wizardFormMixin],
     data() {
-      const p = this.$store.state.Project;
       return {
-        includeSiteLoad: p.includeSiteLoad,
-        siteLoad: p.siteLoad,
-        siteLoadName: 'site load',
-        metadata,
-        ...this.getDataFromProject(),
-        WIZARD_COMPONENT,
-        SiteLoadTimeSeries,
+        metadata: this.getMetadata(projectMetadata, ALL_FIELDS),
+        includeSiteLoad: this.$store.state.Project.includeSiteLoad,
+        ...this.getDataFromProject(ALL_FIELDS),
+        ...this.getTSInputDefaultDataFromProject(TS_FIELDS),
+        ...this.getChildKeys(TS_FIELDS),
+        ...this.getUseExistingDefaults(TS_FIELDS),
+        CONSTANTS,
       };
     },
     validations: {
@@ -110,76 +107,31 @@
         }),
       },
     },
-    computed: {
-
-      complete() {
-        return this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGEKEY][PAGE];
-      },
-    },
-    beforeMount() {
-      // submitted is false initially; set it to true after the first save.
-      // initially, complete is null; after saving, it is set to either true or false.
-      // we want to show validation errors at any time after the first save, with submitted.
-      if (this.complete !== null && this.complete !== undefined) {
-        this.submitted = true;
-        this.$v.$touch();
-      }
-    },
     methods: {
-      resetNonRequired(list) {
-        list.forEach((item) => {
-          this[item] = this.metadata.getDefaultValues()[item];
+      getErrorListTS() {
+        const errors = [];
+        (TS_FIELDS).forEach((tsField) => {
+          // skip non-required tsFields
+          if (this.includeSiteLoad !== true
+            && tsField === 'tsSiteLoad') {
+            return;
+          }
+          const errorMsgTS = this.getErrorMsgTSFromProject(tsField);
+          if (errorMsgTS.length !== 0) {
+            errors.push(errorMsgTS);
+          }
         });
-        return true;
+        return errors;
       },
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
-      getDataFromProject() {
-        return operateOnKeysList(this.$store.state.Project, c.SITE_INFORMATION_FIELDS, f => f);
-      },
-      getCompletenessPayload() {
-        return {
-          pageGroup: PAGEGROUP,
-          pageKey: PAGEKEY,
-          page: PAGE,
-          completeness: !this.$v.$invalid,
-        };
-      },
-      getErrorListPayload() {
-        const errors = [];
-        Object.keys(this.$v).forEach((key) => {
-          if (key.charAt(0) !== '$' && this.$v[key].$invalid) {
-            errors.push(this.getErrorMsg(key));
-          }
-        });
-        return {
-          pageGroup: PAGEGROUP,
-          pageKey: PAGEKEY,
-          page: PAGE,
-          errorList: errors,
-        };
-      },
       validatedSave() {
         // reset all non-required inputs to their defaults prior to saving
-        if (this.includeInterconnectionConstraints === false) {
+        if (this.includeInterconnectionConstraints !== true) {
           this.resetNonRequired(['maxExport', 'maxImport']);
         }
-        // set completeness
-        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
-        this.submitted = true;
-        this.$v.$touch();
-        // set errorList
-        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
-        return this.save();
-      },
-      save() {
-        if (this.inputTimeseries[this.siteLoadName] !== undefined) {
-          this.$store.dispatch('setSiteLoad', this.inputTimeseries[this.siteLoadName]);
-        }
-        this.$store.dispatch('setIncludePOIConstraints', this.includeInterconnectionConstraints);
-        this.$store.dispatch('setMaxImportFromGrid', this.maxImport);
-        this.$store.dispatch('setMaxExportToGrid', this.maxExport);
+        csvUploadMixin.methods.validatedSave.bind(this)();
       },
     },
   };

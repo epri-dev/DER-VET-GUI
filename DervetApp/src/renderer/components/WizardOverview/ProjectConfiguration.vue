@@ -105,11 +105,13 @@
 
 <script>
   import { requiredIf } from 'vuelidate/lib/validators';
+  import flatten from 'lodash/flatten';
 
   import FilePicker from '@/components/Shared/FilePicker';
   import * as p from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
+  import technologySpecsMixin from '@/mixins/technologySpecsMixin';
   import * as paths from '@/router/constants';
   import operateOnKeysList from '@/util/object';
 
@@ -119,7 +121,7 @@
   const PAGE = 'start';
 
   export default {
-    mixins: [wizardFormMixin],
+    mixins: [wizardFormMixin, technologySpecsMixin],
     components: {
       FilePicker,
     },
@@ -202,21 +204,58 @@
           errorList: errors,
         };
       },
+      revalidateAssociatedInputsData() {
+        // add to appropriate errorList for all saved TS from Technologies
+        // NOTE: Monthly Data is not affected here
+        if (this.tsRequiredLines !== this.numberOfEntriesRequired) {
+          // re-validate all saved Associated Inputs TS data here
+          const techTSList = [];
+          this.techSpecs.forEach((item) => {
+            techTSList.push(this.hasAssociatedInputs(item.items));
+          });
+          flatten(techTSList).forEach((item) => {
+            const { id } = item;
+            (item.associatedInputs).forEach((ai, index) => {
+              const { ts, actionSetName } = ai;
+              if (ts && ts.data.length !== 0) {
+                const errorsString = ts.revalidate(this.numberOfEntriesRequired);
+                // update the associated errorList
+                const tsError = `The timeseries of ${ts.columnHeaderName} has the the wrong number of values`;
+                const payload = {
+                  id,
+                  index,
+                  errorsString,
+                  data: {
+                    complete: (errorsString === ''),
+                    errorList: (errorsString === '') ? [] : [tsError],
+                  },
+                };
+                this.$store.dispatch(actionSetName, payload);
+              }
+            });
+          });
+        }
+      },
       revalidateData() {
-        // add to appropriate errorList for all saved TS
+        // add to appropriate errorList for all saved TS from Services
         // NOTE: Monthly Data is not affected here
         if (this.tsRequiredLines !== this.numberOfEntriesRequired) {
           // re-validate all saved TS data here
           const dataObjects = operateOnKeysList(this.$store.state.Project, c.TS_ALL, f => f);
           Object.values(dataObjects).forEach((dataObject) => {
             // only need this when the TS already exists in the store
-            if (dataObject.length() !== 0) {
-              dataObject.revalidate(this.numberOfEntriesRequired);
+            if (dataObject.data.length !== 0) {
+              // TODO: AE: attach errorsString to the stored ts.errors
+              const errorsString = dataObject.revalidate(this.numberOfEntriesRequired);
               // append a line to the accompanying errorList
               const { pageGroup, pageKey, page } = dataObject.pageAttributes;
-              const errorList = this.$store.state.Application.errorList[pageGroup][pageKey][page];
+              let errorList = this.$store.state.Application.errorList[pageGroup][pageKey][page];
               const tsError = `The timeseries of ${dataObject.columnHeaderName} has the the wrong number of values`;
-              errorList.push(tsError);
+              if (errorsString === '') {
+                errorList = errorList.filter(item => item !== tsError);
+              } else {
+                errorList.push(tsError);
+              }
               const payload = {
                 pageGroup,
                 pageKey,
@@ -227,8 +266,6 @@
             }
           });
         }
-        // reset the value in case of 'saveStay'
-        this.tsRequiredLines = this.numberOfEntriesRequired;
       },
       validatedSaveContinue() {
         this.validatedSave();
@@ -254,6 +291,9 @@
         this.$store.dispatch('setDataYear', this.dataYear);
         this.$store.dispatch('setTimestep', this.timestep);
         this.revalidateData();
+        this.revalidateAssociatedInputsData();
+        // reset the value in case of 'saveStay'
+        this.tsRequiredLines = this.numberOfEntriesRequired;
       },
       save() {
         this.$store.dispatch('setName', this.name);

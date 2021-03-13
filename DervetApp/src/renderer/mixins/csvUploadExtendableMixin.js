@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
-import { cloneDeep, flatten, startCase } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import flatten from 'lodash/flatten';
+import startCase from 'lodash/startCase';
 import operateOnKeysList from '@/util/object';
 import { isNotNullAndNotUndefined, isNullOrUndefined } from '@/util/logic';
 import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
@@ -10,16 +12,16 @@ const csvUploadMixin = {
   data() { },
   beforeMount() {
     // submitted is false initially; set it to true after the first save.
-    // initially, complete is null; after saving, it is set to either true or false.
+    // initially, isComplete is null; after saving, it is set to either true or false.
     // we want to show validation errors at any time after the first save, with submitted.
-    if (isNotNullAndNotUndefined(this.complete)) {
+    if (isNotNullAndNotUndefined(this.isComplete)) {
       this.submitted = true;
       this.$v.$touch();
     }
   },
   computed: {
-    complete() {
-      // TODO: AE: if this.complete is not being used except for when error list is null
+    isComplete() {
+      // TODO: AE: if isComplete is not being used except for when error list is empty
       //   before the first save, then it can be true otherwise.
       //   - do we even need this?
       const errors = this.$store.state.Application
@@ -125,12 +127,13 @@ const csvUploadMixin = {
       if (this.isMonthly(tsField)) {
         return `Monthly (12 values) of ${name} are required`;
       }
-      return `A timeseries (${this.expectedRowCount} values) of ${name} is required`;
+      return `A timeseries of ${name} is required`;
     },
     receiveMonthlyData(payload) {
       // TODO: AE: this is identical to receiveTimeseriesData; should it be?
       const { dataArray, objectName } = payload;
-      // TODO: AE: I do not think this filtering is needed, given LINE 164 of DataUpload
+      // TODO: AE: I do not think this filtering is needed,
+      //   given that we trim the last row off in onFileUpload() in DataUpload
       // dataArray.data = _.filter(dataArray.data, x => (x !== null) && (x !== undefined));
       this[this.inputField(objectName)] = dataArray;
     },
@@ -148,13 +151,20 @@ const csvUploadMixin = {
     },
     receiveTimeseriesData(payload) {
       const { dataArray, objectName } = payload;
-      // TODO: AE: I do not think this filtering is needed, given LINE 164 of DataUpload
+      // TODO: AE: I do not think this filtering is needed,
+      //   given that we trim the last row off in onFileUpload() in DataUpload
       // dataArray.data = _.filter(dataArray.data, x => (x !== null) && (x !== undefined));
       this[this.inputField(objectName)] = dataArray;
     },
     receiveUseExisting(payload) {
       const { button, objectName } = payload;
       this[this.useExistingField(objectName)] = button;
+    },
+    resetNonRequired(list) {
+      list.forEach((item) => {
+        this[item] = this.metadata[item].defaultValue;
+      });
+      return true;
     },
     save(fields) {
       fields.forEach((field) => {

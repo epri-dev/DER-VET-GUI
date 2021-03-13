@@ -31,7 +31,7 @@ export const ERCOTMarketService = {
   analysisHorizon: 10,
   analysisHorizonMode: '1',
   daGrowth: 0,
-  daPrice: new DAPriceTimeSeries(daPrice),
+  tsDaPrice: new DAPriceTimeSeries(daPrice),
   dataYear: 2021,
   financeDiscountRate: 6,
   energyPriceSourceWholesale: true,
@@ -84,6 +84,7 @@ export const ERCOTMarketService = {
     chargingCapacityMaximum: null,
     chargingCapacityMinimum: null,
     complete: true,
+    componentSpecsComplete: true,
     constructionYear: 2021,
     dailyCycleLimit: 0,
     dischargingCapacity: 200,
@@ -124,7 +125,6 @@ export const ERCOTMarketService = {
     shouldLimitDailyCycling: false,
     shouldMaxDuration: false,
     shouldPowerSize: false,
-    componentSpecsComplete: true,
     stateOfHealth: 0,
     tag: 'Battery',
     targetSOC: 50,
@@ -136,7 +136,7 @@ export const ERCOTMarketService = {
   timestep: 60,
   srGrowth: 0,
   srDuration: 0,
-  srPrice: new SRPriceTimeSeries(marketPrice),
+  tsSrPrice: new SRPriceTimeSeries(marketPrice),
 };
 
 export default ERCOTMarketService;

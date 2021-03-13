@@ -1,10 +1,13 @@
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
+import { ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV } from '@/store/actionTypes';
 import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 import { SHARED_DYNAMIC_FIELDS, createSharedHardcodedMetadata } from '@/models/Project/TechnologySpecs/sharedConstants';
-import { optionsYN, makeAllowedValuesWithNull } from '@/models/Project/constants';
-import { TECH_SPECS_PV } from '@/router/constants';
+import { TS_SOLARPV_GENERATION_PROFILE, optionsYN, makeAllowedValuesWithNull } from '@/models/Project/constants';
+import { TECH_SPECS_PV, TECH_SPECS_PV_DATA_GENERATION } from '@/router/constants';
+
+import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
 
 const PV = 'PV';
 
@@ -56,9 +59,18 @@ export default class TechnologySpecsSolarPVMetadata {
   getDefaultValues() {
     return {
       active: true,
+      associatedInputs: [{
+        complete: false,
+        ts: new PVGenerationTimeSeries([]),
+        displayName: 'Solar Generation Profile',
+        errorList: ['Not Started'],
+        path: TECH_SPECS_PV_DATA_GENERATION,
+        actionSetName: ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV,
+      }],
+      associatedInputsComplete: null,
       complete: null,
+      componentSpecsComplete: null,
       errorList: [],
-      generationProfile: null,
       id: uuidv4(),
       path: TECH_SPECS_PV,
       tag: PV,
@@ -222,6 +234,13 @@ export default class TechnologySpecsSolarPVMetadata {
         unit: null,
         description: null,
         allowedValues: SIZING_ALLOWED_VALUES,
+      }),
+      // ts: timeseies
+      [TS_SOLARPV_GENERATION_PROFILE]: new ProjectFieldMetadata({
+        DataModel: PVGenerationTimeSeries,
+        defaultValue: new PVGenerationTimeSeries([]),
+        displayName: 'solar generation profile',
+        actionSetName: ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV,
       }),
       ...sharedHardcodedMetadata,
     });

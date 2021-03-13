@@ -1,78 +1,76 @@
 <template>
   <div>
-    <form class="form-horizontal form-buffer">
-      <h3>Technology Specs: Fleet EV Baseline Load Profile Upload</h3>
-      <timeseries-data-upload
-        chart-name="chartUploadedTimeSeries"
-        :data-name="loadName"
-        units='kW'
-        @uploaded="receiveTimeseriesData"
-        :data-time-series="loadProfile"
-        :TimeSeriesModel="FleetEVBaselineLoadTimeSeries" 
-        key="1"
-      />
+    <h3>Technology Specs: Fleet EV Baseline Load Profile Upload</h3>
+    <hr>
+    <div class="form-horizontal form-buffer">
 
-      <hr>
+    <timeseries-data-upload
+      chart-name="tsFleetEVBaselineLoadProfileChartUploaded"
+      @click="receiveRemove"
+      :data-exists="tsData('tsFleetEVBaselineLoadProfile').data.length !== 0"
+      :DataModel="metadata.tsFleetEVBaselineLoadProfile.DataModel"
+      :data-name="metadata.tsFleetEVBaselineLoadProfile.displayName"
+      :data-time-series="tsData('tsFleetEVBaselineLoadProfile')"
+      :errorMessage="getErrorMsgTS('tsFleetEVBaselineLoadProfile')"
+      :isInvalid="submitted && tsData('tsFleetEVBaselineLoadProfile').data.length === 0"
+      @input="receiveUseExisting"
+      :key="childKey('tsFleetEVBaselineLoadProfile')"
+      object-name="tsFleetEVBaselineLoadProfile"
+      @uploaded="receiveTimeseriesData"
+    />
+    <hr>
 
-      <save-buttons
-        :continue-link="WIZARD_COMPONENT"
-        :save="this.save"
-      />
+    <save-and-save-continue
+      :displayError="submitted && ($v.$anyError || isTSError)"
+      :save="validatedSaveStay"
+      :save-continue="validatedSaveContinue"
+    />
 
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
+  import wizardFormMixin from '@/mixins/wizardFormMixin';
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
-  import FleetEVBaselineLoadTimeSeries from '@/models/TimeSeries/FleetEVBaselineLoadTimeSeries';
-  import SaveButtons from '@/components/Shared/SaveButtons';
-  import { WIZARD_COMPONENT } from '@/router/constants';
-  import {
-    ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_FLEET_EV,
-    ACTIVATE_TECH,
-    MAKE_LIST_OF_ACTIVE_TECHNOLOGIES,
-  } from '@/store/actionTypes';
-  import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
+  import associatedInputsMixin from '@/mixins/associatedInputsMixin';
+  import TechnologyMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsFleetEV';
+  import { TS_FLEETEV_BASELINE_LOAD_PROFILE as TS } from '@/models/Project/constants';
+  import '@/assets/samples/Sample_FleetEVBaselineLoad_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_FleetEVBaselineLoad_TimeSeries_8784.csv';
+
+  import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
+
+  const FIELDS = [];
+  const TS_FIELDS = [TS];
+  const ALL_FIELDS = [...FIELDS, ...TS_FIELDS];
+  const validations = [];
+
+  const CONSTANTS = {
+    DESTINATION_PATH,
+    FIELDS,
+    TS_FIELDS,
+  };
 
   export default {
-    components: { SaveButtons, TimeseriesDataUpload },
-    mixins: [csvUploadMixin],
+    // NOTE: the ordering of mixins below is intentional here; associatedInputs should be last
+    mixins: [csvUploadMixin, wizardFormMixin, associatedInputsMixin],
     props: ['id'],
     data() {
       return {
-        loadProfile: this.getloadProfile(),
-        loadName: 'baseline load profile',
-        WIZARD_COMPONENT,
-        FleetEVBaselineLoadTimeSeries,
+        metadata: this.getMetadata(TechnologyMetadata.getHardcodedMetadata(), ALL_FIELDS),
+        ...this.getAssociatedInputs(
+          TS_FIELDS,
+          this.$store.getters.getFleetEVById(this.id).associatedInputs,
+        ),
+        ...this.getTSInputDefaultDataFromProject(TS_FIELDS),
+        ...this.getChildKeys(TS_FIELDS),
+        ...this.getUseExistingDefaults(TS_FIELDS),
+        CONSTANTS,
       };
     },
-    methods: {
-      getloadProfile() {
-        const fleetEVItem = this.$store.getters.getIndexOfFleetEVId(this.id);
-        return fleetEVItem.baselineLoad;
-      },
-      save() {
-        if (this.inputTimeseries[this.loadName] !== undefined) {
-          const payload = this.makeSavePayload();
-          this.$store.dispatch(ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_FLEET_EV, payload);
-        }
-        const activePayload = this.makeSaveActivePayload();
-        this.$store.dispatch(ACTIVATE_TECH, activePayload);
-        this.$store.dispatch(MAKE_LIST_OF_ACTIVE_TECHNOLOGIES, this.$store.state.Project);
-      },
-      makeSaveActivePayload() {
-        return {
-          id: this.id,
-          tag: 'ElectricVehicle2',
-        };
-      },
-      makeSavePayload() {
-        return {
-          id: this.id,
-          loadProfile: this.inputTimeseries[this.loadName],
-        };
-      },
+    validations: {
+      ...validations,
     },
   };
 </script>

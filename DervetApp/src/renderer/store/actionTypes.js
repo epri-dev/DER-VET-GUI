@@ -61,7 +61,7 @@ export const REPLACE_EXTERNAL_INCENTIVES = 'replaceExternalIncentives';
 export const SET_FR_COMBINED_MARKET = 'setFRCombinedMarket';
 export const SET_FR_DOWN_PRICE = 'setFRDownPrice';
 export const SET_FR_DURATION = 'setFRDuration';
-export const SET_FR_ENERGY_GROWTH = 'setFREnergyGrowth';
+export const SET_FR_ENERGY_PRICE_GROWTH = 'setFREnergyPriceGrowth';
 export const SET_FR_EOU = 'setFReou';
 export const SET_FR_EOD = 'setFReod';
 export const SET_FR_GROWTH = 'setFRGrowth';
@@ -76,7 +76,7 @@ export const SET_LF_EOD = 'setLFeod';
 export const SET_LF_PRICE = 'setLFPrice';
 export const SET_LF_UP_PRICE = 'setLFUpPrice';
 export const SET_LF_GROWTH = 'setLFGrowth';
-export const SET_LF_ENERGY_GROWTH = 'setLFEnergyGrowth';
+export const SET_LF_ENERGY_PRICE_GROWTH = 'setLFEnergyPriceGrowth';
 // nsr page
 export const SET_NSR_DURATION = 'setNSRDuration';
 export const SET_NSR_GROWTH = 'setNSRGrowth';
@@ -89,6 +89,11 @@ export const SET_OPTIMIZATION_HORIZON = 'setOptimizationHorizon';
 export const SET_OPTIMIZATION_HORIZON_NUM = 'setOptimizationHorizonNum';
 export const SET_SIZING_EQUIPMENT = 'setSizingEquipment';
 export const SELECT_OTHER_SERVICES = 'selectOtherServices';
+// reliability page
+export const SET_CRITICAL_LOAD = 'setCriticalLoad';
+export const SET_RELIABILITY_MAX_OUTAGE_DURATION = 'setReliabilityMaxOutageDuration';
+export const SET_RELIABILITY_POST_OPTIMIZATION_ONLY = 'setReliabilityPostOptimizationOnly';
+export const SET_RELIABILITY_TARGET = 'setReliabilityTarget';
 // resource adequacy
 export const SET_RA_ACTIVE = 'setRAActive';
 export const SET_RA_CAPACITY_PRICE = 'setRACapacityPrice';
@@ -99,6 +104,15 @@ export const SET_RA_NUMBER_EVENTS = 'setRANumberEvents';
 export const SET_RA_GROWTH = 'setRAGrowth';
 // single EV
 export const REPLACE_TECHNOLOGY_SPECS_SINGLE_EV = 'replaceTechnologySpecsSingleEV';
+// site information
+export const SET_INCLUDE_POI_CONSTRAINTS = 'setIncludePOIConstraints';
+export const SET_MAX_IMPORT_FROM_GRID = 'setMaxImportFromGrid';
+export const SET_MAX_EXPORT_TO_GRID = 'setMaxExportToGrid';
+export const SET_SITE_LOAD = 'setSiteLoad';
+// sr page
+export const SET_SR_DURATION = 'setSRDuration';
+export const SET_SR_GROWTH = 'setSRGrowth';
+export const SET_SR_PRICE = 'setSRPrice';
 // system load
 export const SET_SYSTEM_LOAD = 'setSystemLoad';
 // technology spec page
@@ -108,6 +122,14 @@ export const DEACTIVATE_TECH = 'deactivateTech';
 export const MAKE_LIST_OF_ACTIVE_TECHNOLOGIES = 'makeListOfActiveTechnologies';
 export const REPLACE_LIST_FIELD = 'replaceListField';
 export const REMOVE_TECH = 'removeTech';
+// technology timeseries
+export const ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV = 'addGenerationProfileToTechnologySpecsPV';
+// user defined service
+export const SET_USER_ENERGY_MAX = 'setUserEnergyMax';
+export const SET_USER_ENERGY_MIN = 'setUserEnergyMin';
+export const SET_USER_POWER_MAX = 'setUserPowerMax';
+export const SET_USER_POWER_MIN = 'setUserPowerMin';
+export const SET_USER_PRICE = 'setUserPrice';
 // financial
 export const ADD_RETAIL_TARIFF_BILLING_PERIOD = 'addRetailTariffBillingPeriod';
 export const ADD_MANY_RETAIL_TARIFF_BILLING_PERIODS = 'addManyRetailTariffBillingPeriods';

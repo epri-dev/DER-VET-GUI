@@ -20,15 +20,15 @@ const OUTPUT_DIRECTORY = '/path/to/output';
 export const projectFixture = {
   analysisHorizon: 0,
   analysisHorizonMode: '1',
-  criticalLoad: new CriticalLoadTimeSeries(csvs.siteLoad), // note: using hardcoded site load
+  tsCriticalLoad: new CriticalLoadTimeSeries(csvs.siteLoad), // note: using hardcoded site load
   daGrowth: 0,
-  daPrice: new DAPriceTimeSeries(csvs.daPrice),
+  tsDaPrice: new DAPriceTimeSeries(csvs.daPrice),
   dataYear: 2017,
   deferralPlannedLoadLimit: 4000,
   deferralReversePowerFlowLimit: -1000,
   deferralGrowth: 2,
   deferralPrice: 0,
-  deferralLoad: new DeferralLoadTimeSeries(csvs.deferralLoad),
+  tsDeferralLoad: new DeferralLoadTimeSeries(csvs.deferralLoad),
   externalIncentives: [
     {
       id: '1',
@@ -48,13 +48,13 @@ export const projectFixture = {
   financeInflationRate: 3,
   financePropertyTaxRate: 3,
   financeStateTaxRate: 3,
-  frPrice: new FRPriceTimeSeries(csvs.price),
-  frUpPrice: new FRUpPriceTimeSeries(csvs.price),
-  frDownPrice: new FRDownPriceTimeSeries(csvs.price),
+  tsFrPrice: new FRPriceTimeSeries(csvs.price),
+  tsFrUpPrice: new FRUpPriceTimeSeries(csvs.price),
+  tsFrDownPrice: new FRDownPriceTimeSeries(csvs.price),
   gridLocation: 'Customer',
   outputDirectory: OUTPUT_DIRECTORY,
   name: 'None',
-  nsrPrice: new NSRPriceTimeSeries(csvs.price),
+  tsNsrPrice: new NSRPriceTimeSeries(csvs.price),
   objectivesDA: true,
   siteLoad: null,
   includeSiteLoad: false,
@@ -143,7 +143,7 @@ export const projectFixture = {
       name: '',
     },
   ],
-  srPrice: new SRPriceTimeSeries(csvs.price),
+  tsSrPrice: new SRPriceTimeSeries(csvs.price),
   startYear: '2017',
   technologySpecsSolarPV: [],
   technologySpecsICE: [],
@@ -219,10 +219,10 @@ export const projectFixture = {
   }],
   technologySpecsDieselGen: [],
   timestep: 60,
-  userEnergyMax: new UserEnergyMaxTimeSeries(_.fill(Array(8760), 9000)),
-  userEnergyMin: new UserEnergyMinTimeSeries(_.fill(Array(8760), 0)),
-  userPowerMax: new UserPowerMaxTimeSeries(_.fill(Array(8760), 1900)),
-  userPowerMin: new UserPowerMinTimeSeries(_.fill(Array(8760), -1900)),
+  tsUserEnergyMax: new UserEnergyMaxTimeSeries(_.fill(Array(8760), 9000)),
+  tsUserEnergyMin: new UserEnergyMinTimeSeries(_.fill(Array(8760), 0)),
+  tsUserPowerMax: new UserPowerMaxTimeSeries(_.fill(Array(8760), 1900)),
+  tsUserPowerMin: new UserPowerMinTimeSeries(_.fill(Array(8760), -1900)),
 };
 
 export const getProjectFixture = (inputsDir, resultsDir) => {

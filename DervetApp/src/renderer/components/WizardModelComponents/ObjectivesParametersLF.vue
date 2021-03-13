@@ -2,7 +2,7 @@
   <div>
     <h3>Services: Load Following</h3>
     <hr>
-    <form class="form-horizontal form-buffer">
+    <div class="form-horizontal form-buffer">
 
       <text-input v-model="lfGrowth"
                   v-bind:field="metadata.lfGrowth"
@@ -30,186 +30,172 @@
       </radio-button-input>
 
       <timeseries-data-upload
-        chart-name="chartUploadedEOUTimeSeries"
-        data-name="energy option up"
-        units="$/kW"
-        :TimeSeriesModel="LFEnergyOptionUpTimeSeries"
+        chart-name="tsLfEOUChartUploaded"
+        @click="receiveRemove"
+        :data-exists="tsData('tsLfEOU').data.length !== 0"
+        :DataModel="metadata.tsLfEOU.DataModel"
+        :data-name="metadata.tsLfEOU.displayName"
+        :data-time-series="tsData('tsLfEOU')"
+        :errorMessage="getErrorMsgTS('tsLfEOU')"
+        :isInvalid="submitted && tsData('tsLfEOU').data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('tsLfEOU')"
+        object-name="tsLfEOU"
         @uploaded="receiveTimeseriesData"
-        :data-time-series="energyOptionUp"
-        key="1"
-      />
-      <timeseries-data-upload
-        chart-name="chartUploadedEODTimeSeries"
-        data-name="energy option down"
-        units="$/kW"
-        :TimeSeriesModel="LFEnergyOptionDownTimeSeries"
-        @uploaded="receiveTimeseriesData"
-        :data-time-series="energyOptionDown"
-        key="2"
       />
 
       <timeseries-data-upload
-        chart-name="chartUploadedPriceTimeSeries"
-        data-name="load following price"
-        units="$/kW"
-        :TimeSeriesModel="LFPriceTimeSeries"
+        chart-name="tsLfEODChartUploaded"
+        @click="receiveRemove"
+        :data-exists="tsData('tsLfEOD').data.length !== 0"
+        :DataModel="metadata.tsLfEOD.DataModel"
+        :data-name="metadata.tsLfEOD.displayName"
+        :data-time-series="tsData('tsLfEOD')"
+        :errorMessage="getErrorMsgTS('tsLfEOD')"
+        :isInvalid="submitted && tsData('tsLfEOD').data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('tsLfEOD')"
+        object-name="tsLfEOD"
         @uploaded="receiveTimeseriesData"
-        :data-time-series="price"
-        key="3"
+      />
+
+      <timeseries-data-upload
+        chart-name="tsLfPriceChartUploaded"
+        @click="receiveRemove"
+        :data-exists="tsData('tsLfPrice').data.length !== 0"
+        :DataModel="metadata.tsLfPrice.DataModel"
+        :data-name="metadata.tsLfPrice.displayName"
+        :data-time-series="tsData('tsLfPrice')"
+        :errorMessage="getErrorMsgTS('tsLfPrice')"
+        :isInvalid="submitted && tsData('tsLfPrice').data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('tsLfPrice')"
+        object-name="tsLfPrice"
+        @uploaded="receiveTimeseriesData"
         v-if="lfCombinedMarket === true"
       />
 
       <timeseries-data-upload
-        chart-name="chartUploadedUpPriceTimeSeries2"
-        data-name="load following up price"
-        units="$/kW"
-        :TimeSeriesModel="LFUpPriceTimeSeries"
+        chart-name="tsLfUpPriceChartUploaded"
+        @click="receiveRemove"
+        :data-exists="tsData('tsLfUpPrice').data.length !== 0"
+        :DataModel="metadata.tsLfUpPrice.DataModel"
+        :data-name="metadata.tsLfUpPrice.displayName"
+        :data-time-series="tsData('tsLfUpPrice')"
+        :errorMessage="getErrorMsgTS('tsLfUpPrice')"
+        :isInvalid="submitted && tsData('tsLfUpPrice').data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('tsLfUpPrice')"
+        object-name="tsLfUpPrice"
         @uploaded="receiveTimeseriesData"
-        :data-time-series="upPrice"
-        key="4"
         v-if="lfCombinedMarket === false"
       />
 
       <timeseries-data-upload
-        chart-name="chartUploadedDownPriceTimeSeries3"
-        data-name="load following down price"
-        units="$/kW"
-        :TimeSeriesModel="LFDownPriceTimeSeries"
+        chart-name="tsLfDownPriceChartUploaded"
+        @click="receiveRemove"
+        :data-exists="tsData('tsLfDownPrice').data.length !== 0"
+        :DataModel="metadata.tsLfDownPrice.DataModel"
+        :data-name="metadata.tsLfDownPrice.displayName"
+        :data-time-series="tsData('tsLfDownPrice')"
+        :errorMessage="getErrorMsgTS('tsLfDownPrice')"
+        :isInvalid="submitted && tsData('tsLfDownPrice').data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('tsLfDownPrice')"
+        object-name="tsLfDownPrice"
         @uploaded="receiveTimeseriesData"
-        :data-time-series="downPrice"
-        key="5"
         v-if="lfCombinedMarket === false"
       />
       <hr>
 
-      <save-buttons
-        :continue-link="WIZARD_COMPONENT"
-        :displayError="submitted && $v.$anyError"
-        :save="validatedSave" />
+      <save-and-save-continue
+        :displayError="submitted && ($v.$anyError || isTSError)"
+        :save="validatedSaveStay"
+        :save-continue="validatedSaveContinue"
+      />
 
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import * as p from '@/models/Project/ProjectMetadata';
-  import * as c from '@/models/Project/constants';
-  import operateOnKeysList from '@/util/object';
-  import { isNotNullAndNotUndefined } from '@/util/logic';
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
-  import LFPriceTimeSeries from '@/models/TimeSeries/LFPriceTimeSeries';
-  import LFUpPriceTimeSeries from '@/models/TimeSeries/LFUpPriceTimeSeries';
-  import LFDownPriceTimeSeries from '@/models/TimeSeries/LFDownPriceTimeSeries';
-  import LFEnergyOptionDownTimeSeries from '@/models/TimeSeries/LFEnergyOptionDownTimeSeries';
-  import LFEnergyOptionUpTimeSeries from '@/models/TimeSeries/LFEnergyOptionUpTimeSeries';
-  import { WIZARD_COMPONENT } from '@/router/constants';
-  import {
-    SET_LF_COMBINED_MARKET,
-    SET_LF_DOWN_PRICE,
-    SET_LF_DURATION,
-    SET_LF_EOU,
-    SET_LF_EOD,
-    SET_LF_PRICE,
-    SET_LF_UP_PRICE,
-    SET_LF_GROWTH,
-    SET_LF_ENERGY_GROWTH,
-  } from '@/store/actionTypes';
-  import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
+  import { projectMetadata } from '@/models/Project/ProjectMetadata';
+  import * as c from '@/models/Project/constants';
+  import '@/assets/samples/Sample_LFDownPrice_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_LFDownPrice_TimeSeries_8784.csv';
+  import '@/assets/samples/Sample_LFEnergyOptionDown_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_LFEnergyOptionDown_TimeSeries_8784.csv';
+  import '@/assets/samples/Sample_LFEnergyOptionUp_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_LFEnergyOptionUp_TimeSeries_8784.csv';
+  import '@/assets/samples/Sample_LFUpPrice_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_LFUpPrice_TimeSeries_8784.csv';
+  import '@/assets/samples/Sample_LFPrice_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_LFPrice_TimeSeries_8784.csv';
 
-  const metadata = p.projectMetadata;
-  const validations = metadata.getValidationSchema(c.LF_FIELDS);
+  import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
+
   const PAGEGROUP = 'components';
   const PAGEKEY = 'objectives';
   const PAGE = 'LF';
+  const FIELDS = c.LF_FIELDS;
+  const TS_FIELDS = [...c.TS_LF_FIELDS];
+
+  const ALL_FIELDS = [...FIELDS, ...TS_FIELDS];
+  const validations = projectMetadata.getValidationSchema(FIELDS);
+
+  const CONSTANTS = {
+    DESTINATION_PATH,
+    PAGEGROUP,
+    PAGEKEY,
+    PAGE,
+    FIELDS,
+    TS_FIELDS,
+  };
 
   export default {
-    components: { TimeseriesDataUpload },
     mixins: [csvUploadMixin, wizardFormMixin],
     data() {
-      const projState = this.$store.state.Project;
       return {
-        price: projState.lfPrice,
-        upPrice: projState.lfUpPrice,
-        downPrice: projState.lfDownPrice,
-        energyOptionUp: projState.lfEOU,
-        energyOptionDown: projState.lfEOD,
-        metadata,
-        ...this.getDataFromProject(),
-        WIZARD_COMPONENT,
-        LFPriceTimeSeries,
-        LFUpPriceTimeSeries,
-        LFDownPriceTimeSeries,
-        LFEnergyOptionUpTimeSeries,
-        LFEnergyOptionDownTimeSeries,
+        metadata: this.getMetadata(projectMetadata, ALL_FIELDS),
+        ...this.getDataFromProject(ALL_FIELDS),
+        ...this.getTSInputDefaultDataFromProject(TS_FIELDS),
+        ...this.getChildKeys(TS_FIELDS),
+        ...this.getUseExistingDefaults(TS_FIELDS),
+        CONSTANTS,
       };
     },
     validations: {
       ...validations,
     },
-    computed: {
-      errorList() {
-        return this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE];
-      },
-    },
-    beforeMount() {
-      // submitted is false initially; set it to true after the first save.
-      // initially, errorList is null/undefined
-      // we want to show validation errors at any time after the first save, with submitted.
-      if (isNotNullAndNotUndefined(this.errorList)) {
-        this.submitted = true;
-        this.$v.$touch();
-      }
-    },
     methods: {
-      getErrorMsg(fieldName) {
-        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
-      },
-      getDataFromProject() {
-        return operateOnKeysList(this.$store.state.Project, c.LF_FIELDS, f => f);
-      },
-      getErrorListPayload() {
+      getErrorListTS() {
         const errors = [];
-        Object.keys(this.$v).forEach((key) => {
-          if (key.charAt(0) !== '$' && this.$v[key].$invalid) {
-            errors.push(this.getErrorMsg(key));
+        (TS_FIELDS).forEach((tsField) => {
+          // skip non-required tsFields
+          switch (this.lfCombinedMarket) {
+            case 'false': {
+              if (tsField === 'tsLfPrice') return;
+              break;
+            }
+            case 'true': {
+              if (['tsLfUpPrice', 'tsLfDownPrice'].includes(tsField)) return;
+              break;
+            }
+            default: {
+              if (['tsLfUpPrice', 'tsLfDownPrice', 'tsLfPrice'].includes(tsField)) return;
+            }
+          }
+          const errorMsgTS = this.getErrorMsgTSFromProject(tsField);
+          if (errorMsgTS.length !== 0) {
+            errors.push(errorMsgTS);
           }
         });
-        return {
-          pageGroup: PAGEGROUP,
-          pageKey: PAGEKEY,
-          page: PAGE,
-          errorList: errors,
-        };
+        return errors;
       },
-      validatedSave() {
-        this.submitted = true;
-        this.$v.$touch();
-        // set errorList
-        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
-        return this.save();
-      },
-      save() {
-        if (this.inputTimeseries['load following price'] !== undefined) {
-          this.$store.dispatch(SET_LF_PRICE, this.inputTimeseries['load following price']);
-        }
-        if (this.inputTimeseries['load following up price'] !== undefined) {
-          this.$store.dispatch(SET_LF_UP_PRICE, this.inputTimeseries['load following up price']);
-        }
-        if (this.inputTimeseries['load following down price'] !== undefined) {
-          this.$store.dispatch(SET_LF_DOWN_PRICE, this.inputTimeseries['load following down price']);
-        }
-        if (this.inputTimeseries['energy option up'] !== undefined) {
-          this.$store.dispatch(SET_LF_EOU, this.inputTimeseries['energy option up']);
-        }
-        if (this.inputTimeseries['energy option down'] !== undefined) {
-          this.$store.dispatch(SET_LF_EOD, this.inputTimeseries['energy option down']);
-        }
-
-        this.$store.dispatch(SET_LF_COMBINED_MARKET, this.lfCombinedMarket);
-        this.$store.dispatch(SET_LF_DURATION, this.lfDuration);
-        this.$store.dispatch(SET_LF_GROWTH, this.lfGrowth);
-        this.$store.dispatch(SET_LF_ENERGY_GROWTH, this.lfEnergyPriceGrowth);
+      getErrorMsg(fieldName) {
+        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
     },
   };

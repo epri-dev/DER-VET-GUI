@@ -2,7 +2,7 @@
   <div>
     <h3>Services: Non-Spinning Reserve Price</h3>
     <hr>
-    <form class="form-horizontal form-buffer">
+    <div class="form-horizontal form-buffer">
 
       <text-input v-model="nsrGrowth"
                   v-bind:field="metadata.nsrGrowth"
@@ -17,109 +17,87 @@
       </text-input>
 
       <timeseries-data-upload
-        chart-name="chartUploadedTimeSeries"
-        :data-name="priceName"
-        units="$/kW"
+        chart-name="tsNsrPriceChartUploaded"
+        @click="receiveRemove"
+        :data-exists="tsData('tsNsrPrice').data.length !== 0"
+        :DataModel="metadata.tsNsrPrice.DataModel"
+        :data-name="metadata.tsNsrPrice.displayName"
+        :data-time-series="tsData('tsNsrPrice')"
+        :errorMessage="getErrorMsgTS('tsNsrPrice')"
+        :isInvalid="submitted && tsData('tsNsrPrice').data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('tsNsrPrice')"
+        object-name="tsNsrPrice"
         @uploaded="receiveTimeseriesData"
-        :data-time-series="price"
-        :TimeSeriesModel="NSRPriceTimeSeries"
-        :key="1"
       />
       <hr>
 
-      <save-buttons
-        :continue-link="WIZARD_COMPONENT"
-        :displayError="submitted && $v.$anyError"
-        :save="validatedSave" />
+      <save-and-save-continue
+        :displayError="submitted && ($v.$anyError || isTSError)"
+        :save="validatedSaveStay"
+        :save-continue="validatedSaveContinue"
+      />
 
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import * as p from '@/models/Project/ProjectMetadata';
-  import * as c from '@/models/Project/constants';
-  import * as a from '@/store/actionTypes';
-  import operateOnKeysList from '@/util/object';
-  import { isNotNullAndNotUndefined } from '@/util/logic';
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
-  import NSRPriceTimeSeries from '@/models/TimeSeries/NSRPriceTimeSeries';
-  import { WIZARD_COMPONENT } from '@/router/constants';
-  import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
+  import { projectMetadata } from '@/models/Project/ProjectMetadata';
+  import * as c from '@/models/Project/constants';
+  import '@/assets/samples/Sample_NSRPrice_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_NSRPrice_TimeSeries_8784.csv';
 
-  const metadata = p.projectMetadata;
-  const validations = metadata.getValidationSchema(c.NSR_FIELDS);
+  import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
+
   const PAGEGROUP = 'components';
   const PAGEKEY = 'objectives';
   const PAGE = 'NSR';
+  const FIELDS = c.NSR_FIELDS;
+  const TS_FIELDS = c.TS_NSR_FIELDS;
+
+  const ALL_FIELDS = [...FIELDS, ...TS_FIELDS];
+  const validations = projectMetadata.getValidationSchema(FIELDS);
+
+  const CONSTANTS = {
+    DESTINATION_PATH,
+    PAGEGROUP,
+    PAGEKEY,
+    PAGE,
+    FIELDS,
+    TS_FIELDS,
+  };
 
   export default {
-    components: { TimeseriesDataUpload },
     mixins: [csvUploadMixin, wizardFormMixin],
     data() {
-      const p = this.$store.state.Project;
       return {
-        price: p.nsrPrice,
-        priceName: 'non-spinning reserve price',
-        dataYear: p.dataYear,
-        metadata,
-        ...this.getDataFromProject(),
-        WIZARD_COMPONENT,
-        NSRPriceTimeSeries,
+        metadata: this.getMetadata(projectMetadata, ALL_FIELDS),
+        ...this.getDataFromProject(ALL_FIELDS),
+        ...this.getTSInputDefaultDataFromProject(TS_FIELDS),
+        ...this.getChildKeys(TS_FIELDS),
+        ...this.getUseExistingDefaults(TS_FIELDS),
+        CONSTANTS,
       };
     },
     validations: {
       ...validations,
     },
-    computed: {
-      errorList() {
-        return this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE];
-      },
-    },
-    beforeMount() {
-      // submitted is false initially; set it to true after the first save.
-      // initially, complete is null; after saving, it is set to either true or false.
-      // we want to show validation errors at any time after the first save, with submitted.
-      if (isNotNullAndNotUndefined(this.errorList)) {
-        this.submitted = true;
-        this.$v.$touch();
-      }
-    },
     methods: {
-      getErrorMsg(fieldName) {
-        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
-      },
-      getDataFromProject() {
-        return operateOnKeysList(this.$store.state.Project, c.NSR_FIELDS, f => f);
-      },
-      getErrorListPayload() {
+      getErrorListTS() {
         const errors = [];
-        Object.keys(this.$v).forEach((key) => {
-          if (key.charAt(0) !== '$' && this.$v[key].$invalid) {
-            errors.push(this.getErrorMsg(key));
+        (TS_FIELDS).forEach((tsField) => {
+          const errorMsgTS = this.getErrorMsgTSFromProject(tsField);
+          if (errorMsgTS.length !== 0) {
+            errors.push(errorMsgTS);
           }
         });
-        return {
-          pageGroup: PAGEGROUP,
-          pageKey: PAGEKEY,
-          page: PAGE,
-          errorList: errors,
-        };
+        return errors;
       },
-      validatedSave() {
-        this.submitted = true;
-        this.$v.$touch();
-        // set errorList
-        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
-        return this.save();
-      },
-      save() {
-        if (this.inputTimeseries[this.priceName] !== undefined) {
-          this.$store.dispatch(a.SET_NSR_PRICE, this.inputTimeseries[this.priceName]);
-        }
-        this.$store.dispatch('setNSRGrowth', this.nsrGrowth);
-        this.$store.dispatch('setNSRDuration', this.nsrDuration);
+      getErrorMsg(fieldName) {
+        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
     },
   };
