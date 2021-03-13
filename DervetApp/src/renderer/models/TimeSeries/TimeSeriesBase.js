@@ -26,11 +26,10 @@ class TimeSeriesBase extends DataArray {
   }
 
   revalidate(expectedRowCount) {
-    // adds errors property (a String) to the class, and also returns that string
+    // returns errors (a String)
     // with no errors, this will be an empty string
     const errorMsgArray = [];
     errorMsgArray.push(this.invalidCheckRowsCount(expectedRowCount).errorMsg);
-    // this.errors = errorMsgArray.filter((item) => item !== null).join('<br>');
     const errors = errorMsgArray.filter((item) => item !== null).join('<br>');
     return errors;
   }

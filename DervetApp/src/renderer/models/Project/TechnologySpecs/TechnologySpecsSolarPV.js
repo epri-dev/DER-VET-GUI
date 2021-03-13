@@ -43,7 +43,6 @@ const DYNAMIC_FIELDS = [
   'ratedCapacityMinimum',
   'replacementCost',
   'shouldSize',
-  // 'tsSolarPVGenerationProfile',
 ];
 
 const sharedHardcodedMetadata = createSharedHardcodedMetadata(PV);
