@@ -184,15 +184,27 @@ const mutations = {
     state.technologySpecsControllableLoad = tmpSpecs;
   },
   // Controllable Load upload
-  [m.ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD](state, payload) {
+  [m.ADD_DATA_TO_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD](state, payload) {
     const tmpSpecs = getters.getControllableLoadSpecsClone(state)();
-    const { id, index, errorsString, data } = payload;
+    const { id, index, data } = payload;
+    const indexMatchingId = getters.getIndexOfControllableLoadId(state)(id);
+    // this updates the object, while retaining untouched pieces
+    Object.assign(tmpSpecs[indexMatchingId].associatedInputs[index], data);
+    state.technologySpecsControllableLoad = tmpSpecs;
+  },
+  [m.SET_COMPLETENESS_OF_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD](state, payload) {
+    const tmpSpecs = getters.getControllableLoadSpecsClone(state)();
+    const { id, data } = payload;
     const indexMatchingId = getters.getIndexOfControllableLoadId(state)(id);
     tmpSpecs[indexMatchingId].associatedInputsComplete = data.complete;
     tmpSpecs[indexMatchingId].complete = (data.complete
       && tmpSpecs[indexMatchingId].componentSpecsComplete);
-    // this updates the object, while retaining untouched pieces
-    Object.assign(tmpSpecs[indexMatchingId].associatedInputs[index], data);
+    state.technologySpecsControllableLoad = tmpSpecs;
+  },
+  [m.ADD_ERRORS_STRING_TO_DATA_IN_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD](state, payload) {
+    const tmpSpecs = getters.getControllableLoadSpecsClone(state)();
+    const { id, index, errorsString } = payload;
+    const indexMatchingId = getters.getIndexOfControllableLoadId(state)(id);
     // add errorsString to ts.errors
     if (errorsString !== undefined) {
       tmpSpecs[indexMatchingId].associatedInputs[index].ts.errors = errorsString;
@@ -338,15 +350,27 @@ const mutations = {
     state.technologySpecsFleetEV = tmpSpecs;
   },
   // fleet ev upload
-  [m.ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_FLEET_EV](state, payload) {
+  [m.ADD_DATA_TO_TECHNOLOGY_SPECS_FLEET_EV](state, payload) {
     const tmpSpecs = getters.getFleetEVSpecsClone(state)();
-    const { id, index, errorsString, data } = payload;
+    const { id, index, data } = payload;
+    const indexMatchingId = getters.getIndexOfFleetEVId(state)(id);
+    // this updates the object, while retaining untouched pieces
+    Object.assign(tmpSpecs[indexMatchingId].associatedInputs[index], data);
+    state.technologySpecsFleetEV = tmpSpecs;
+  },
+  [m.SET_COMPLETENESS_OF_TECHNOLOGY_SPECS_FLEET_EV](state, payload) {
+    const tmpSpecs = getters.getFleetEVSpecsClone(state)();
+    const { id, data } = payload;
     const indexMatchingId = getters.getIndexOfFleetEVId(state)(id);
     tmpSpecs[indexMatchingId].associatedInputsComplete = data.complete;
     tmpSpecs[indexMatchingId].complete = (data.complete
       && tmpSpecs[indexMatchingId].componentSpecsComplete);
-    // this updates the object, while retaining untouched pieces
-    Object.assign(tmpSpecs[indexMatchingId].associatedInputs[index], data);
+    state.technologySpecsFleetEV = tmpSpecs;
+  },
+  [m.ADD_ERRORS_STRING_TO_DATA_IN_TECHNOLOGY_SPECS_FLEET_EV](state, payload) {
+    const tmpSpecs = getters.getFleetEVSpecsClone(state)();
+    const { id, index, errorsString } = payload;
+    const indexMatchingId = getters.getIndexOfFleetEVId(state)(id);
     // add errorsString to ts.errors
     if (errorsString !== undefined) {
       tmpSpecs[indexMatchingId].associatedInputs[index].ts.errors = errorsString;
@@ -528,16 +552,28 @@ const mutations = {
     tmpSolarPVSpecs[indexMatchingId] = payload.newSolar;
     state.technologySpecsSolarPV = tmpSolarPVSpecs;
   },
-  // solar pv generation
-  [m.ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV](state, payload) {
+  // solar pv upload
+  [m.ADD_DATA_TO_TECHNOLOGY_SPECS_PV](state, payload) {
     const tmpSpecs = getters.getSolarPVSpecsClone(state)();
-    const { id, index, errorsString, data } = payload;
+    const { id, index, data } = payload;
+    const indexMatchingId = getters.getIndexOfSolarId(state)(id);
+    // this updates the object, while retaining untouched pieces
+    Object.assign(tmpSpecs[indexMatchingId].associatedInputs[index], data);
+    state.technologySpecsSolarPV = tmpSpecs;
+  },
+  [m.SET_COMPLETENESS_OF_TECHNOLOGY_SPECS_PV](state, payload) {
+    const tmpSpecs = getters.getSolarPVSpecsClone(state)();
+    const { id, data } = payload;
     const indexMatchingId = getters.getIndexOfSolarId(state)(id);
     tmpSpecs[indexMatchingId].associatedInputsComplete = data.complete;
     tmpSpecs[indexMatchingId].complete = (data.complete
       && tmpSpecs[indexMatchingId].componentSpecsComplete);
-    // this updates the object, while retaining untouched pieces
-    Object.assign(tmpSpecs[indexMatchingId].associatedInputs[index], data);
+    state.technologySpecsSolarPV = tmpSpecs;
+  },
+  [m.ADD_ERRORS_STRING_TO_DATA_IN_TECHNOLOGY_SPECS_PV](state, payload) {
+    const tmpSpecs = getters.getSolarPVSpecsClone(state)();
+    const { id, index, errorsString } = payload;
+    const indexMatchingId = getters.getIndexOfSolarId(state)(id);
     // add errorsString to ts.errors
     if (errorsString !== undefined) {
       tmpSpecs[indexMatchingId].associatedInputs[index].ts.errors = errorsString;
@@ -755,7 +791,9 @@ const actions = {
   },
   // Controllable Load upload page
   [a.ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD]({ commit }, payload) {
-    commit(m.ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD, payload);
+    commit(m.ADD_DATA_TO_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD, payload);
+    commit(m.SET_COMPLETENESS_OF_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD, payload);
+    commit(m.ADD_ERRORS_STRING_TO_DATA_IN_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD, payload);
   },
   // battery cycle file
   [a.ADD_BATTERY_CYCLES_TO_TECHNOLOGY_SPECS_BATTERY]({ commit }, payload) {
@@ -897,7 +935,9 @@ const actions = {
   },
   // fleet ev upload page
   [a.ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_FLEET_EV]({ commit }, payload) {
-    commit(m.ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_FLEET_EV, payload);
+    commit(m.ADD_DATA_TO_TECHNOLOGY_SPECS_FLEET_EV, payload);
+    commit(m.SET_COMPLETENESS_OF_TECHNOLOGY_SPECS_FLEET_EV, payload);
+    commit(m.ADD_ERRORS_STRING_TO_DATA_IN_TECHNOLOGY_SPECS_FLEET_EV, payload);
   },
   // ice
   replaceTechnologySpecsICE({ commit }, payload) {
@@ -1052,9 +1092,11 @@ const actions = {
   replaceTechnologySpecsSolarPV({ commit }, payload) {
     commit('REPLACE_TECHNOLOGY_SPECS_SOLAR_PV', payload);
   },
-  // solar pv generation
+  // solar pv upload
   [a.ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV]({ commit }, payload) {
-    commit(m.ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV, payload);
+    commit(m.ADD_DATA_TO_TECHNOLOGY_SPECS_PV, payload);
+    commit(m.SET_COMPLETENESS_OF_TECHNOLOGY_SPECS_PV, payload);
+    commit(m.ADD_ERRORS_STRING_TO_DATA_IN_TECHNOLOGY_SPECS_PV, payload);
   },
   // start project
   setAnalysisHorizon({ commit }, newAnalysisHorizon) {
