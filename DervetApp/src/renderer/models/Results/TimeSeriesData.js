@@ -22,7 +22,7 @@ export const TRACE_NAMES = {
   critialLoad: 'Critical Load',
   deferralRequirement: 'Deferral Power Requirement',
   // state of energy in system/state of charge
-  aggregateEssStateOfCharge: 'Aggregated ESS State of Charge',
+  aggregateEssStateOfCharge: 'Aggregated SOE / total ESS Energy Capacity',
   // prices
   energyPrice: 'Energy Price',
   frequencyRegulationUpPrice: 'FR Up Price',
