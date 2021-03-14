@@ -33,10 +33,4 @@ describe('TimeSeriesData model', () => {
     const actualDataArr = TimeSeriesData.listToMap(testArray);
     expect(actualDataArr).to.eql(expectedDataArr);
   });
-  it('(2) sucessfull parse the day from a date time stamp of form: "2017-01-01 1:00:00 AM" ', () => {
-    const testString = '2017-01-01 1:00:00 AM';
-    const expectedString = '2017-01-01';
-    const actualString = TimeSeriesData.getFullDate(testString);
-    expect(actualString).to.eql(expectedString);
-  });
 });

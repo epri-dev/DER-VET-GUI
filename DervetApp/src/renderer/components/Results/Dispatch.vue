@@ -10,17 +10,18 @@
         <hr>
         <div id="dispatch-container" class="results-dis-graph" style="position: static; zoom: 1;">
           <div class="form-group">
-            <div class="col-md-12 text-right">
-              <span class="pull-left result-date" id="dispatch-range" v-html="dataRange"></span>
-
-              <select v-model="dispatchType" class="form-control form-control-inline form-control-width-auto buffer-right">
-                  <option value="days">Day</option>
-                  <option value="weeks">Week</option>
-                  <option value="months">Month</option>
-                  <option value="years">Year</option>
-                  <option value="custom">Custom</option>
-              </select>
-
+            <div class="col-md-6" v-if="dataRange() !== null">
+              <h5>{{ dataRange() }}</h5>
+            </div>
+            <div class="col-md-6 text-right">
+              <b-dropdown :text="windowSizeText" 
+                          toggle-class="form-control form-control-inline form-control-width-auto buffer-right">
+                <b-dropdown-item v-for="option in sizes" v-bind:key="option.id"
+                                 v-on:click.native="setCurrentDispatchData(option.value)">
+                  {{option.text}}
+                </b-dropdown-item>
+              </b-dropdown>
+            
               <button type="button" id="dispatch-prev" class="btn btn-default" @click="previousDispatchData">
                 <i class="fas fa-chevron-left"></i>
               </button>
@@ -29,6 +30,7 @@
               </button>
             </div>
           </div>
+          <!-- TODO keep for d3 plot 
           <div class="form-group text-center">
             <b-form-group>
               <b-form-checkbox-group buttons class="col-md-10" v-model="displayData">
@@ -69,7 +71,7 @@
                 </b-form-checkbox>
               </b-form-checkbox-group>
             </b-form-group>
-          </div>
+          </div> -->
           <div class="form-group row buffer-top text-center">
               <div class="col-md-1">
                 <label>From:</label>
@@ -91,12 +93,6 @@
                 </b-form-datepicker>
               </div>
           </div>
-
-          <!-- <div class="form-group">
-            <div class="col-md-12">
-              <div id="energy-dispatch-graph"></div>
-            </div>
-          </div> -->
         </div>
         <div class="form-group">
           <div class="col-md-12">
@@ -120,20 +116,22 @@
   import moment from 'moment';
   import * as d3 from 'd3';
   import forEach from 'lodash/forEach';
+  import find from 'lodash/find';
   import Plotly from 'plotly.js';
   import { RESULTS } from '@/router/constants';
+  import DispatchData from '@/models/Results/DispatchData';
+  import { TRACE_NAMES } from '@/models/Results/TimeSeriesData';
 
   export default {
     mounted() {
       this.createChartEnergyPriceHeatMap('chartEnergyPriceHeatMap');
-      this.$store.dispatch('setCurrentDispatchData', this.dispatchType);
+      this.setCurrentDispatchData('weeks');
       this.createChartDispatchTimeSeriesPlots('chartDispatchTimeSeriesPlots');
     },
     data() {
       // TODO fixme
       const minDate = new Date(2017, 0, 1);
       const maxDate = new Date(2017, 11, 31);
-      const dataDate = new Date('2017/01/01');
 
       return {
         resultsPath: RESULTS,
@@ -141,21 +139,47 @@
         width: 500,
         height: 270,
         padding: 60,
-        dataRange: moment(dataDate).format('MMMM DD, YYYY'),
         dispatchType: 'days',
-        dispatchTo: dataDate,
-        dispatchFrom: dataDate,
         min: minDate,
         max: maxDate,
+        sizes: [
+          { value: 'days', text: 'Day' },
+          { value: 'weeks', text: 'Week' },
+          { value: 'months', text: 'Month' },
+          { value: 'years', text: 'Year' },
+          { value: 'custom', text: 'Custom' },
+        ],
       };
     },
     computed: {
+      windowSizeText() {
+        return find(this.sizes, { value: this.dispatchType }).text;
+      },
       energyPriceMapData() {
         return this.$store.state.Results.dispatchEnergyPriceMapData;
       },
-      dispatchDataIterator() {
-        return this.$store.state.Results.dispatchDataIterator;
+      dispatchData() {
+        return this.$store.state.Results.dispatchData;
       },
+      dispatchDataIterator() {
+        if (this.dispatchData !== null) {
+          return new DispatchData(this.dispatchData, TRACE_NAMES);
+        }
+        return null;
+      },
+      dispatchTo() {
+        if (this.dispatchData !== null) {
+          return this.dispatchDataIterator.currStartDate().toDate();
+        }
+        return null;
+      },
+      dispatchFrom() {
+        if (this.dispatchData !== null) {
+          return this.dispatchDataIterator.currEndDate().toDate();
+        }
+        return null;
+      },
+
       rangeX() {
         const width = this.width - this.padding;
         return [0, width];
@@ -179,11 +203,28 @@
       // },
     },
     methods: {
+      dataRange() {
+        const momentTo = moment(this.dispatchTo).startOf('day');
+        const momentFrom = moment(this.dispatchFrom).startOf('day');
+        if (momentTo.isSame(momentFrom)) {
+          return momentFrom.format('MMMM DD, YYYY');
+        }
+        const startStr = momentFrom.format('MMMM DD, YYYY');
+        const endStr = momentTo.format('MMMM DD, YYYY');
+        return `${startStr} - ${endStr}`;
+      },
+      setCurrentDispatchData(windowSize) {
+        this.dispatchDataIterator.setCurrentWindow(windowSize);
+        this.dispatchType = windowSize;
+        this.createChartDispatchTimeSeriesPlots('chartDispatchTimeSeriesPlots');
+      },
       nextDispatchData() {
-        this.$store.dispatch('setNextDispatchData', this.dispatchDataPayload);
+        const { currStartDate, currEndDate, windowSize } = this.dispatchDataPayload;
+        this.dispatchDataIterator.next(currStartDate, currEndDate, windowSize);
       },
       previousDispatchData() {
-        this.$store.dispatch('setPreviousDispatchData', this.dispatchDataPayload);
+        const { currStartDate, currEndDate, windowSize } = this.dispatchDataPayload;
+        this.dispatchDataIterator.previous(currStartDate, currEndDate, windowSize);
       },
       path(data) {
         const x = d3.scaleLinear().range(this.rangeX);
@@ -215,22 +256,7 @@
         const ctx = document.getElementById(chartId);
         const rawData = this.dispatchDataIterator.value;
         const data = [];
-        const xx = rawData.timeSeriesDateAxis;
-        console.log(xx);
-        const selectorOptions = {
-          buttons: [
-            {
-              step: 'month',
-              stepmode: 'backward', // 'todate',
-              count: 1,
-              label: '1m',
-              visible: false,
-            },
-            {
-              step: 'all',
-            },
-          ],
-        };
+        const xx = rawData.timeSeriesDateAxis.data;
         const layout = {
           // showlegend: false,
           // legend: {
@@ -246,9 +272,9 @@
             pattern: 'dependent',
             roworder: 'top to bottom',
           },
-          modebar: {
-            orientation: 'h', // 'h' set how modebar will appear
-          },
+          // modebar: {
+          //   orientation: 'h', // 'h' set how modebar will appear
+          // },
           title: {
             text: '',
             font: {
@@ -257,11 +283,6 @@
             yanchor: 'top',
           },
           xaxis: {
-            rangeslider: {
-              thickness: 0.03,
-            },
-            rangeselector: selectorOptions,
-            range: [xx[0], xx[23]],
             title: {
               text: '',
               font: {
@@ -276,7 +297,7 @@
         const config = {
           displaylogo: false, // hides the plotly logo from the modebar when false
           scrollZoom: false, // allows mouse wheel scroll when true
-          staticPlot: false, // disable modebar options when true
+          staticPlot: true, // disable modebar options when true
           responsive: true, // responsive to window size
           autosizeable: true,
           toImageButtonOptions: {
@@ -292,7 +313,6 @@
         const buffer = 0.02;
         let totalNumPlots = 5 - (rawData.hasReservations ? 0 : 1);
         totalNumPlots -= (rawData.aggregatedSOC.data !== null ? 0 : 1);
-        console.log(`total number of plots ${totalNumPlots}`);
         const subPlotHeight = (1 / totalNumPlots) - buffer;
         let lastPlotHeight = 0;
 
@@ -326,7 +346,6 @@
           };
           data.push(trace);
         });
-        // console.log([lastPlotHeight, lastPlotHeight + subPlotHeight]);
         layout.yaxis5 = {
           domain: [lastPlotHeight, lastPlotHeight + subPlotHeight],
           title: {
@@ -355,7 +374,6 @@
           yaxis: 'y4',
         };
         data.push(trace);
-        console.log([lastPlotHeight, lastPlotHeight + subPlotHeight]);
         layout.yaxis4 = {
           domain: [lastPlotHeight, lastPlotHeight + subPlotHeight],
           title: {
@@ -387,7 +405,6 @@
             };
             data.push(trace);
           });
-          console.log([lastPlotHeight, lastPlotHeight + subPlotHeight]);
           layout.yaxis3 = {
             domain: [lastPlotHeight, lastPlotHeight + subPlotHeight],
             title: {
@@ -419,7 +436,6 @@
           };
           data.push(trace);
         });
-        console.log([lastPlotHeight, lastPlotHeight + subPlotHeight]);
         layout.yaxis2 = {
           domain: [lastPlotHeight, lastPlotHeight + subPlotHeight],
           title: {
@@ -451,7 +467,6 @@
               color: this.getColorFromTechnology('ess'),
             },
           };
-          console.log([lastPlotHeight, lastPlotHeight + subPlotHeight]);
           data.push(trace);
           layout.yaxis = {
             domain: [lastPlotHeight, lastPlotHeight + subPlotHeight],

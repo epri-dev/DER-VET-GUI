@@ -11,7 +11,7 @@ const getDefaultResultState = () => ({
   deferralVueObjects: null,
   designVueObjects: null,
   // dispatchVueObjects: null,
-  dispatchDataIterator: null,
+  dispatchData: null,
   dispatchEnergyPriceMapData: null,
   financialVueObjects: null,
   reliabilityVueObjects: null,
@@ -39,19 +39,19 @@ const mutations = {
   CREATE_DISPATCH_PLOTS(state) { // TODO put in mutation constants
     const runData = state.data;
     state.dispatchEnergyPriceMapData = runData.dispatchEnergyPriceMapData;
-    state.dispatchDataIterator = runData.dispatchDataIterator;
+    state.dispatchData = runData.dispatchData;
   },
-  SET_CURRENT_DISPATCH_DATA(state, windowSize) {
-    state.dispatchDataIterator.setCurrentValue(windowSize);
-  },
-  SET_NEXT_DISPATCH_DATA(state, payload) {
-    const { currStartDate, currEndDate, windowSize } = payload;
-    state.dispatchDataIterator.next(currStartDate, currEndDate, windowSize);
-  },
-  SET_PREVIOUS_DISPATCH_DATA(state, payload) {
-    const { currStartDate, currEndDate, windowSize } = payload;
-    state.dispatchDataIterator.previous(currStartDate, currEndDate, windowSize);
-  },
+  // SET_CURRENT_DISPATCH_DATA(state, windowSize) {
+  //   state.dispatchDataIterator.setCurrentValue(windowSize);
+  // },
+  // SET_NEXT_DISPATCH_DATA(state, payload) {
+  //   const { currStartDate, currEndDate, windowSize } = payload;
+  //   state.dispatchDataIterator.next(currStartDate, currEndDate, windowSize);
+  // },
+  // SET_PREVIOUS_DISPATCH_DATA(state, payload) {
+  //   const { currStartDate, currEndDate, windowSize } = payload;
+  //   state.dispatchDataIterator.previous(currStartDate, currEndDate, windowSize);
+  // },
   CREATE_FINANCIAL_PLOTS(state) {
     const runData = state.data;
     state.financialVueObjects = {
@@ -100,19 +100,19 @@ const mutations = {
 };
 
 const actions = {
-  setCurrentDispatchData({ commit }, windowSize) {
-    commit('SET_CURRENT_DISPATCH_DATA', windowSize);
-  },
-  setNextDispatchData({ commit }, payload) {
-    commit('SET_NEXT_DISPATCH_DATA', payload);
-  },
-  setPreviousDispatchData({ commit }, payload) {
-    commit('SET_PREVIOUS_DISPATCH_DATA', payload);
-  },
+  // setCurrentDispatchData({ commit }, windowSize) {
+  //   commit('SET_CURRENT_DISPATCH_DATA', windowSize);
+  // },
+  // setNextDispatchData({ commit }, payload) {
+  //   commit('SET_NEXT_DISPATCH_DATA', payload);
+  // },
+  // setPreviousDispatchData({ commit }, payload) {
+  //   commit('SET_PREVIOUS_DISPATCH_DATA', payload);
+  // },
   receiveResults({ commit }, results) {
     // TODO: handle parsing error
     try {
-      const resultDataObject = new ResultsData(0, results);
+      const resultDataObject = new ResultsData(results);
       commit('SET_RESULT', resultDataObject);
       commit('SET_PATH', results.resultsPath);
       commit('Application/SET_RESULT_SUCCESS');

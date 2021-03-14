@@ -7,11 +7,10 @@ import OutageEnergyContributionData from './OutageEnergyContributionData';
 import PeakLoadDayData from './PeakLoadDayData';
 import ProFormaData from './ProFormaData';
 import SizeData from './SizeData';
-import TimeSeriesData from './TimeSeriesData';
+import { TimeSeriesData } from './TimeSeriesData';
 
 export class ResultsData {
-  constructor(id, data) {
-    this.id = id;
+  constructor(data) {
     // booleans that tell if the raw data are NULL or not
     this.showBeforeAfterMonthlyEnergyBill = false;
     this.showPeakLoadDay = false;
@@ -25,7 +24,7 @@ export class ResultsData {
     this.financialProformaTable = null;
     this.financialBeforeAfterBarChart = null;
     this.dispatchSummaryMapData = null;
-    this.dispatchDataIterator = null;
+    this.dispatchData = null;
     this.dispatchEnergyPriceMapData = null;
     this.designSummaryBarChart = null;
     this.designSizeResultsTable = null;
@@ -127,7 +126,7 @@ export class ResultsData {
 
     // dispatch page charts
     const totalEnergyStorageCapacity = this.size.getTotalEnergyStorageCapacity();
-    this.dispatchDataIterator = this.timeSeries.dispatchData(totalEnergyStorageCapacity);
+    this.dispatchData = this.timeSeries.dispatchData(totalEnergyStorageCapacity);
     this.dispatchEnergyPriceMapData = this.timeSeries.energyPriceHeatMapTraceData(0);
 
     // design page charts
