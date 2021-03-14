@@ -99,18 +99,18 @@
         }),
       },
     },
-    methods: {
-      getErrorListTS() {
-        const errors = [];
+    computed: {
+      isRequiredTSFields() {
+        // return an object of booleans for every TS_FIELD,
+        //   indicating if each is required
+        const isRequiredObject = {};
         (TS_FIELDS).forEach((tsField) => {
-          // skip non-required tsFields
-          const errorMsgTS = this.getErrorMsgTSFromProject(tsField);
-          if (errorMsgTS.length !== 0) {
-            errors.push(errorMsgTS);
-          }
+          isRequiredObject[tsField] = true;
         });
-        return errors;
+        return isRequiredObject;
       },
+    },
+    methods: {
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },

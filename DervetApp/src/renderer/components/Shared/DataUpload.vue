@@ -16,7 +16,7 @@
           </b-form-group>
         </div>
         <div class="col-md-5 error-text-color">
-          <span v-html="uploadedData.errors"></span>
+          <span v-html="uploadedData.error"></span>
         </div>
         <div class="col-md-3">
           <b-button

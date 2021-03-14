@@ -205,9 +205,9 @@ const mutations = {
     const tmpSpecs = getters.getControllableLoadSpecsClone(state)();
     const { id, index, errorsString } = payload;
     const indexMatchingId = getters.getIndexOfControllableLoadId(state)(id);
-    // add errorsString to ts.errors
+    // add errorsString to ts.error
     if (errorsString !== undefined) {
-      tmpSpecs[indexMatchingId].associatedInputs[index].ts.errors = errorsString;
+      tmpSpecs[indexMatchingId].associatedInputs[index].ts.error = errorsString;
     }
     state.technologySpecsControllableLoad = tmpSpecs;
   },
@@ -371,9 +371,9 @@ const mutations = {
     const tmpSpecs = getters.getFleetEVSpecsClone(state)();
     const { id, index, errorsString } = payload;
     const indexMatchingId = getters.getIndexOfFleetEVId(state)(id);
-    // add errorsString to ts.errors
+    // add errorsString to ts.error
     if (errorsString !== undefined) {
-      tmpSpecs[indexMatchingId].associatedInputs[index].ts.errors = errorsString;
+      tmpSpecs[indexMatchingId].associatedInputs[index].ts.error = errorsString;
     }
     state.technologySpecsFleetEV = tmpSpecs;
   },
@@ -437,13 +437,17 @@ const mutations = {
   },
   [m.SET_INCLUDE_SITE_LOAD](state) {
     let customerSited = state.objectivesRetailEnergyChargeReduction;
-    customerSited = customerSited || state.objectivesRetailEnergyChargeReduction;
+    customerSited = customerSited || state.objectivesRetailDemandChargeReduction;
     state.includeSiteLoad = customerSited;
+    // also set TS boolean attribute
+    state[c.TS_SITE_LOAD].required = customerSited;
   },
   [m.SET_INCLUDE_SYSTEM_LOAD](state) {
     let gridDomainProject = state.objectivesDR;
     gridDomainProject = gridDomainProject || state.objectivesRA;
     state.includeSystemLoad = gridDomainProject;
+    // also set TS boolean attribute
+    state[c.TS_SYSTEM_LOAD].required = gridDomainProject;
   },
   [m.SET_OPTIMIZATION_HORIZON](state, newOptimizataionHorizon) {
     state.optimizationHorizon = newOptimizataionHorizon;
@@ -574,9 +578,9 @@ const mutations = {
     const tmpSpecs = getters.getSolarPVSpecsClone(state)();
     const { id, index, errorsString } = payload;
     const indexMatchingId = getters.getIndexOfSolarId(state)(id);
-    // add errorsString to ts.errors
+    // add errorsString to ts.error
     if (errorsString !== undefined) {
-      tmpSpecs[indexMatchingId].associatedInputs[index].ts.errors = errorsString;
+      tmpSpecs[indexMatchingId].associatedInputs[index].ts.error = errorsString;
     }
     state.technologySpecsSolarPV = tmpSpecs;
   },
@@ -745,6 +749,15 @@ const mutations = {
   },
   [m.RESET_LIST_OF_ACTIVE_TECHNOLOGIES](state) {
     state.listOfActiveTechnologies = getDefaultState().listOfActiveTechnologies;
+  },
+  // timeseries uploads
+  [m.SET_TS_ERROR](state, payload) {
+    const { tsName, error } = payload;
+    state[tsName].error = error;
+  },
+  [m.SET_TS_REQUIRED](state, payload) {
+    const { tsName, required } = payload;
+    state[tsName].required = required;
   },
   // user defined service
   [m.SET_USER_ENERGY_MAX](state, payload) {
@@ -1239,6 +1252,13 @@ const actions = {
     } else if (payload.tag === 'ElectricVehicle2') {
       commit(m.REMOVE_TECH_FLEET_EV, payload);
     }
+  },
+  // timeseries uploads
+  [a.SET_TS_ERROR]({ commit }, payload) {
+    commit(m.SET_TS_ERROR, payload);
+  },
+  [a.SET_TS_REQUIRED]({ commit }, payload) {
+    commit(m.SET_TS_REQUIRED, payload);
   },
   // user defined
   [a.SET_USER_ENERGY_MAX]({ commit }, payload) {

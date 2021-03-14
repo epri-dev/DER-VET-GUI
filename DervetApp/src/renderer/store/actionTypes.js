@@ -124,6 +124,9 @@ export const REPLACE_LIST_FIELD = 'replaceListField';
 export const REMOVE_TECH = 'removeTech';
 // technology timeseries
 export const ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV = 'addGenerationProfileToTechnologySpecsPV';
+// timeseries uploads
+export const SET_TS_ERROR = 'setTSError';
+export const SET_TS_REQUIRED = 'setTSRequired';
 // user defined service
 export const SET_USER_ENERGY_MAX = 'setUserEnergyMax';
 export const SET_USER_ENERGY_MIN = 'setUserEnergyMin';

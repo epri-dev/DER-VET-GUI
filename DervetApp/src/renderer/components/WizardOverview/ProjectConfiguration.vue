@@ -110,6 +110,7 @@
   import FilePicker from '@/components/Shared/FilePicker';
   import * as p from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
+  import { SET_TS_ERROR } from '@/store/actionTypes';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import technologySpecsMixin from '@/mixins/technologySpecsMixin';
   import * as paths from '@/router/constants';
@@ -161,6 +162,9 @@
           return 'TBD';
         }
         return String(this.timeseriesXAxis.length);
+      },
+      isTBD() {
+        return this.numberOfEntriesRequired === 'TBD';
       },
       timeseriesXAxis() {
         // the first timestamp should be Jan 1 of dataYear at timestep minutes
@@ -218,16 +222,24 @@
             (item.associatedInputs).forEach((ai, index) => {
               const { ts, actionSetName } = ai;
               if (ts && ts.data.length !== 0) {
+                // update the associatedInputs object
                 const errorsString = ts.revalidate(this.numberOfEntriesRequired);
-                // update the associated errorList
-                const tsError = `The timeseries of ${ts.columnHeaderName} has the the wrong number of values`;
+                const tsError = `The timeseries of ${ts.columnHeaderName} has the wrong number of values`;
+                const tsError2 = `A timeseries of ${ts.columnHeaderName} is required`;
+                const tsError3 = '<b>Invalid data:</b> The frequency is TBD';
+                const errorList = [];
+                if (this.isTBD) {
+                  errorList.push(tsError2);
+                } else if (errorsString !== '') {
+                  errorList.push(tsError);
+                }
                 const payload = {
                   id,
                   index,
-                  errorsString,
+                  errorsString: this.isTBD ? tsError3 : errorsString,
                   data: {
-                    complete: (errorsString === ''),
-                    errorList: (errorsString === '') ? [] : [tsError],
+                    complete: (!this.isTBD && errorsString === ''),
+                    errorList,
                   },
                 };
                 this.$store.dispatch(actionSetName, payload);
@@ -245,16 +257,28 @@
           Object.values(dataObjects).forEach((dataObject) => {
             // only need this when the TS already exists in the store
             if (dataObject.data.length !== 0) {
-              // TODO: AE: attach errorsString to the stored ts.errors
               const errorsString = dataObject.revalidate(this.numberOfEntriesRequired);
-              // append a line to the accompanying errorList
+              const tsError = `The timeseries of ${dataObject.columnHeaderName} has the wrong number of values`;
+              const tsError2 = `A timeseries of ${dataObject.columnHeaderName} is required`;
+              const tsError3 = '<b>Invalid data:</b> The frequency is TBD';
+              // attach errorsString to the stored ts.error
+              const errorPayload = {
+                tsName: dataObject.tsName,
+                error: this.isTBD ? tsError3 : errorsString,
+              };
+              this.$store.dispatch(SET_TS_ERROR, errorPayload);
               const { pageGroup, pageKey, page } = dataObject.pageAttributes;
               let errorList = this.$store.state.Application.errorList[pageGroup][pageKey][page];
-              const tsError = `The timeseries of ${dataObject.columnHeaderName} has the the wrong number of values`;
-              if (errorsString === '') {
-                errorList = errorList.filter(item => item !== tsError);
-              } else {
-                errorList.push(tsError);
+              const tsErrorMatch = `timeseries of ${dataObject.columnHeaderName}`;
+              // reset errorList
+              errorList = errorList.filter(item => !item.includes(tsErrorMatch));
+              // set error with this TS only if it is required
+              if (dataObject.required) {
+                if (this.isTBD) {
+                  errorList.push(tsError2);
+                } else if (errorsString !== '') {
+                  errorList.push(tsError);
+                }
               }
               const payload = {
                 pageGroup,

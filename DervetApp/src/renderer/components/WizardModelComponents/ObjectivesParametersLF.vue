@@ -169,31 +169,36 @@
     validations: {
       ...validations,
     },
-    methods: {
-      getErrorListTS() {
-        const errors = [];
+    computed: {
+      isRequiredTSFields() {
+        // return an object of booleans for every TS_FIELD,
+        //   indicating if each is required
+        const isRequiredObject = {};
         (TS_FIELDS).forEach((tsField) => {
-          // skip non-required tsFields
-          switch (this.lfCombinedMarket) {
-            case 'false': {
-              if (tsField === 'tsLfPrice') return;
-              break;
+          if (this.lfCombinedMarket === false) {
+            if (tsField === 'tsLfPrice') {
+              isRequiredObject[tsField] = false;
+            } else {
+              isRequiredObject[tsField] = true;
             }
-            case 'true': {
-              if (['tsLfUpPrice', 'tsLfDownPrice'].includes(tsField)) return;
-              break;
+          } else if (this.lfCombinedMarket === true) {
+            if (['tsLfUpPrice', 'tsLfDownPrice'].includes(tsField)) {
+              isRequiredObject[tsField] = false;
+            } else {
+              isRequiredObject[tsField] = true;
             }
-            default: {
-              if (['tsLfUpPrice', 'tsLfDownPrice', 'tsLfPrice'].includes(tsField)) return;
+          } else if (this.lfCombinedMarket === null) {
+            if (['tsLfPrice', 'tsLfUpPrice', 'tsLfDownPrice'].includes(tsField)) {
+              isRequiredObject[tsField] = false;
+            } else {
+              isRequiredObject[tsField] = true;
             }
-          }
-          const errorMsgTS = this.getErrorMsgTSFromProject(tsField);
-          if (errorMsgTS.length !== 0) {
-            errors.push(errorMsgTS);
           }
         });
-        return errors;
+        return isRequiredObject;
       },
+    },
+    methods: {
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
