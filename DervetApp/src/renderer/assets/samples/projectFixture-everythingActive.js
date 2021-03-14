@@ -24,10 +24,10 @@ import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
 
 import BackupEnergyPriceMonthly from '@/models/Monthly/BackupEnergyPriceMonthly';
 import BackupEnergyReservationMonthly from '@/models/Monthly/BackupEnergyReservationMonthly';
-import DRCapacityAdwardsMonthly from '@/models/Monthly/DRCapacityAdwardsMonthly';
+import DRCapacityPriceMonthly from '@/models/Monthly/DRCapacityPriceMonthly';
 import DRCapacityReservationMonthly from '@/models/Monthly/DRCapacityReservationMonthly';
-import DREnergyAwardsMonthly from '@/models/Monthly/DREnergyAwardsMonthly';
-import DRMonthsMonthly from '@/models/Monthly/DRMonthsMonthly';
+import DREnergyPriceMonthly from '@/models/Monthly/DREnergyPriceMonthly';
+import DRMonthsAppliedMonthly from '@/models/Monthly/DRMonthsAppliedMonthly';
 import RACapacityPriceMonthly from '@/models/Monthly/RACapacityPriceMonthly';
 
 import csvs from './csvs';
@@ -51,15 +51,15 @@ export const projectFixtureAllActive = {
   deferralGrowth: 0,
   deferralPrice: 10000,
   tsDeferralLoad: new DeferralLoadTimeSeries(csvs.deferralLoad),
-  drCapacityReservation: new DRCapacityReservationMonthly(new Array(12).fill(100)),
-  drCapacityAwards: new DRCapacityAdwardsMonthly(new Array(12).fill(50)),
+  mtsDrCapacityReservation: new DRCapacityReservationMonthly(new Array(12).fill(100)),
+  mtsDrCapacityPrice: new DRCapacityPriceMonthly(new Array(12).fill(50)),
   drEndHour: 24,
   drEventLength: null,
-  drEnergyAwards: new DREnergyAwardsMonthly(new Array(12).fill(68)),
+  mtsDrEnergyPrice: new DREnergyPriceMonthly(new Array(12).fill(68)),
   drGrowth: 1.47,
   drIncludeWeekends: true,
   drNumberEvents: 8,
-  drMonthsApplied: new DRMonthsMonthly([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]),
+  mtsDrMonthsApplied: new DRMonthsAppliedMonthly([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]),
   drProgramType: 'Day of',
   drStartHour: 10,
   externalIncentives: [

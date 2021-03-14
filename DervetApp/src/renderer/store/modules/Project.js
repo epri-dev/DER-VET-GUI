@@ -267,19 +267,19 @@ const mutations = {
     state[c.DR_GROWTH] = newDRGrowth;
   },
   [m.SET_DR_APPLIED_MONTHS](state, newValue) {
-    state.drMonthsApplied = newValue;
+    state[c.MTS_DR_MONTHS_APPLIED] = newValue;
   },
   [m.SET_DR_APPLIED_MONTHS_LABELS](state, newValue) {
-    state.drMonthsAppliedLabels = newValue;
+    state[c.DR_APPLIED_MONTHS_LABELS] = newValue;
   },
   [m.SET_DR_CAPACITY_RESERVATION](state, newValue) {
-    state.drCapacityReservation = newValue;
+    state[c.MTS_DR_CAPACITY_RESERVATION] = newValue;
   },
-  [m.SET_DR_CAPACITY_AWARDS](state, newValue) {
-    state.drCapacityAwards = newValue;
+  [m.SET_DR_CAPACITY_PRICE](state, newValue) {
+    state[c.MTS_DR_CAPACITY_PRICE] = newValue;
   },
-  [m.SET_DR_ENERGY_AWARDS](state, newValue) {
-    state.drEnergyAwards = newValue;
+  [m.SET_DR_ENERGY_PRICE](state, newValue) {
+    state[c.MTS_DR_ENERGY_PRICE] = newValue;
   },
   // External incentives file
   [m.ADD_EXTERNAL_INCENTIVE](state, newExternalIncentive) {
@@ -873,11 +873,11 @@ const actions = {
   [a.SET_DR_CAPACITY_RESERVATION]({ commit }, newValue) {
     commit(m.SET_DR_CAPACITY_RESERVATION, newValue);
   },
-  [a.SET_DR_CAPACITY_AWARDS]({ commit }, newValue) {
-    commit(m.SET_DR_CAPACITY_AWARDS, newValue);
+  [a.SET_DR_CAPACITY_PRICE]({ commit }, newValue) {
+    commit(m.SET_DR_CAPACITY_PRICE, newValue);
   },
-  [a.SET_DR_ENERGY_AWARDS]({ commit }, newValue) {
-    commit(m.SET_DR_ENERGY_AWARDS, newValue);
+  [a.SET_DR_ENERGY_PRICE]({ commit }, newValue) {
+    commit(m.SET_DR_ENERGY_PRICE, newValue);
   },
   [a.SET_DR_GROWTH]({ commit }, newDRGrowth) {
     commit(m.SET_DR_GROWTH, newDRGrowth);

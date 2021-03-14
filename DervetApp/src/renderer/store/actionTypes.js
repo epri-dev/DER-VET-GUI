@@ -39,8 +39,8 @@ export const SET_DR_PROGRAM_TYPE = 'setDRProgramType';
 export const SET_DR_APPLIED_MONTHS = 'setDRAppliedMonths';
 export const SET_DR_APPLIED_MONTHS_LABELS = 'setDRAppliedMonthsLabels';
 export const SET_DR_CAPACITY_RESERVATION = 'setDRCapacityReservation';
-export const SET_DR_CAPACITY_AWARDS = 'setDRCapacityAwards';
-export const SET_DR_ENERGY_AWARDS = 'setDREnergyAwards';
+export const SET_DR_CAPACITY_PRICE = 'setDRCapacityPrice';
+export const SET_DR_ENERGY_PRICE = 'setDREnergyPrice';
 export const SET_DR_GROWTH = 'setDRGrowth';
 // deferral page
 export const SET_DEFERRAL_GROWTH = 'setDeferralGrowth';

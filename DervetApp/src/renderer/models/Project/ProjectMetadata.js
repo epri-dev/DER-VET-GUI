@@ -5,13 +5,6 @@ import * as a from '@/store/actionTypes';
 import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 import operateOnKeysList from '@/util/object';
 
-/*
-import DRCapacityAdwardsMonthly from '@/models/Monthly/DRCapacityAdwardsMonthly';
-import DRCapacityReservationMonthly from '@/models/Monthly/DRCapacityReservationMonthly';
-import DREnergyAwardsMonthly from '@/models/Monthly/DREnergyAwardsMonthly';
-import DRMonthsMonthly from '@/models/Monthly/DRMonthsMonthly';
-*/
-
 import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
 import DAPriceTimeSeries from '@/models/TimeSeries/DAPriceTimeSeries';
 import DeferralLoadTimeSeries from '@/models/TimeSeries/DeferralLoadTimeSeries';
@@ -33,9 +26,13 @@ import UserEnergyMinTimeSeries from '@/models/TimeSeries/UserEnergyMinTimeSeries
 import UserPowerMaxTimeSeries from '@/models/TimeSeries/UserPowerMaxTimeSeries';
 import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
 
-import RACapacityPriceMonthly from '@/models/Monthly/RACapacityPriceMonthly';
 import BackupEnergyPriceMonthly from '@/models/Monthly/BackupEnergyPriceMonthly';
 import BackupEnergyReservationMonthly from '@/models/Monthly/BackupEnergyReservationMonthly';
+import DRCapacityPriceMonthly from '@/models/Monthly/DRCapacityPriceMonthly';
+import DRCapacityReservationMonthly from '@/models/Monthly/DRCapacityReservationMonthly';
+import DREnergyPriceMonthly from '@/models/Monthly/DREnergyPriceMonthly';
+// import DRMonthsAppliedMonthly from '@/models/Monthly/DRMonthsAppliedMonthly';
+import RACapacityPriceMonthly from '@/models/Monthly/RACapacityPriceMonthly';
 
 export class ProjectMetadata {
   constructor(arg) {
@@ -81,12 +78,6 @@ export class ProjectMetadata {
       ...this.operateOnFieldList(c.DEMAND_RESPONSE_FIELDS, f => f.defaultValue),
       ...this.operateOnFieldList(c.TS_ALL, f => new f.DataModel([])),
       ...this.operateOnFieldList(c.MTS_ALL, f => new f.DataModel([])),
-
-      // MONTHLY ARRAYS
-      drMonthsApplied: null,
-      drCapacityReservation: null,
-      drCapacityAwards: null,
-      drEnergyAwards: null,
     };
   }
 
@@ -175,6 +166,7 @@ export class ProjectMetadata {
         type: 'int',
         unit: 'he',
         description: 'Last hour of the Demand Response period.',
+        actionSetName: a.SET_DR_END_HOUR,
       }),
       [c.DR_END_MODE]: new ProjectFieldMetadata({
         displayName: 'How long will the event last?',
@@ -183,6 +175,7 @@ export class ProjectMetadata {
         defaultValue: true,
         description: 'Define the last hour of the event or the length of the event.',
         allowedValues: c.DR_END_MODE_ALLOWED_VALUES,
+        actionSetName: a.SET_DR_END_MODE,
       }),
       [c.DR_GROWTH]: new ProjectFieldMetadata({
         displayName: 'Growth Rate of Demand Response Awards',
@@ -192,6 +185,7 @@ export class ProjectMetadata {
         type: Number,
         unit: '% / year',
         description: 'Yearly growth rate to apply to awards?',
+        actionSetName: a.SET_DR_GROWTH,
       }),
       [c.DR_NUMBER_EVENTS]: new ProjectFieldMetadata({
         displayName: 'Number of Events',
@@ -200,6 +194,7 @@ export class ProjectMetadata {
         type: 'int',
         unit: 'days',
         description: 'How many demand response events are expected in one year?',
+        actionSetName: a.SET_DR_NUMBER_EVENTS,
       }),
       [c.DR_PROGRAM_TYPE]: new ProjectFieldMetadata({
         displayName: 'Program Type',
@@ -207,6 +202,7 @@ export class ProjectMetadata {
         type: String,
         description: 'Is the program participant notified of an event on the day of or a day in advance (day ahead)?',
         allowedValues: c.DR_PROGRAM_TYPE_ALLOWED_VALUES,
+        actionSetName: a.SET_DR_PROGRAM_TYPE,
       }),
       [c.DR_INCLUDE_WEEKENDS]: new ProjectFieldMetadata({
         displayName: 'Weekends?',
@@ -214,6 +210,7 @@ export class ProjectMetadata {
         type: Boolean,
         description: 'Is the program active on weekends?',
         allowedValues: c.optionsYN,
+        actionSetName: a.SET_DR_INCLUDE_WEEKENDS,
       }),
       [c.DR_EVENT_LENGTH]: new ProjectFieldMetadata({
         displayName: 'Length of an event',
@@ -223,6 +220,7 @@ export class ProjectMetadata {
         type: 'int',
         unit: 'hours',
         description: 'How long is the event promised to last?',
+        actionSetName: a.SET_DR_EVENT_LENGTH,
       }),
       [c.DR_START_HOUR]: new ProjectFieldMetadata({
         displayName: 'Start Hour',
@@ -232,6 +230,10 @@ export class ProjectMetadata {
         type: 'int',
         unit: 'he',
         description: 'Start hour of the Demand Response period',
+        actionSetName: a.SET_DR_START_HOUR,
+      }),
+      [c.DR_APPLIED_MONTHS_LABELS]: new ProjectFieldMetadata({
+        actionSetName: a.SET_DR_APPLIED_MONTHS_LABELS,
       }),
       [c.ENERGY_PRICE_SOURCE_WHOLESALE]: new ProjectFieldMetadata({
         displayName: 'Energy Price Source',
@@ -688,11 +690,6 @@ export class ProjectMetadata {
         actionSetName: a.SET_USER_POWER_MIN,
       }),
       // mts: monthly timeseries
-      [c.MTS_RA_CAPACITY_PRICE]: new ProjectFieldMetadata({
-        DataModel: RACapacityPriceMonthly,
-        displayName: 'resource adequacy capacity prices',
-        actionSetName: a.SET_RA_CAPACITY_PRICE,
-      }),
       [c.MTS_BACKUP_ENERGY_PRICE]: new ProjectFieldMetadata({
         DataModel: BackupEnergyPriceMonthly,
         displayName: 'award for reserving backup power',
@@ -702,6 +699,33 @@ export class ProjectMetadata {
         DataModel: BackupEnergyReservationMonthly,
         displayName: 'amount of energy to constantly reserve',
         actionSetName: a.SET_BACKUP_ENERGY_RESERVATION,
+      }),
+      [c.MTS_DR_CAPACITY_RESERVATION]: new ProjectFieldMetadata({
+        DataModel: DRCapacityReservationMonthly,
+        displayName: 'power that will be committed to the demand response program',
+        actionSetName: a.SET_DR_CAPACITY_RESERVATION,
+      }),
+      [c.MTS_DR_CAPACITY_PRICE]: new ProjectFieldMetadata({
+        DataModel: DRCapacityPriceMonthly,
+        displayName: 'award for reducing demand during demand response events',
+        actionSetName: a.SET_DR_CAPACITY_PRICE,
+      }),
+      [c.MTS_DR_ENERGY_PRICE]: new ProjectFieldMetadata({
+        DataModel: DREnergyPriceMonthly,
+        displayName: 'award for reducing energy consumption during demand response events',
+        actionSetName: a.SET_DR_ENERGY_PRICE,
+      }),
+      /*
+      [c.MTS_DR_MONTHS_APPLIED]: new ProjectFieldMetadata({
+        DataModel: DRMonthsAppliedMonthly,
+        displayName: '',
+        actionSetName: a.SET_DR_MONTHS_APPLIED,
+      }),
+      */
+      [c.MTS_RA_CAPACITY_PRICE]: new ProjectFieldMetadata({
+        DataModel: RACapacityPriceMonthly,
+        displayName: 'resource adequacy capacity prices',
+        actionSetName: a.SET_RA_CAPACITY_PRICE,
       }),
     });
   }

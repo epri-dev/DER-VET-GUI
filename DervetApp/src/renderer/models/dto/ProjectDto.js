@@ -48,10 +48,6 @@ const TIMESERIES_FIELDS = [
 ];
 
 const MONTHLY_FIELDS = [
-  'drMonthsApplied',
-  'drCapacityReservation',
-  'drCapacityAwards',
-  'drEnergyAwards',
   ...c.MTS_ALL,
 ];
 

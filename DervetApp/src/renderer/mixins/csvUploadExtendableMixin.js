@@ -210,7 +210,6 @@ const csvUploadMixin = {
           tsName: this[tsField].tsName,
           required: this.isRequiredTSFields[tsField],
         };
-        console.log(payload);
         this.$store.dispatch('setTSRequired', payload);
       });
     },
