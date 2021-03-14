@@ -72,13 +72,13 @@
               </b-form-checkbox-group>
             </b-form-group>
           </div> -->
-          <div class="form-group row buffer-top text-center">
+          <div class="form-group row text-center">
               <div class="col-md-1">
                 <label>From:</label>
               </div>
               <div class="col-md-4">
                 <b-form-datepicker v-model="dispatchFrom" :min="minDate" close-button placeholder="MM/DD/YYYY"
-                  :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                  size="sm" :readonly="true" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
                   :max="dispatchTo ? dispatchTo : maxDate" locale="en" @onChange="setCustomDispatchData">
                 </b-form-datepicker>
               </div>
@@ -88,16 +88,14 @@
               </div>
               <div class="col-md-4">
                 <b-form-datepicker v-model="dispatchTo" :min="dispatchFrom ? dispatchFrom : minDate"
-                  :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                  size="sm" :readonly="true" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
                   placeholder="MM/DD/YYYY" close-button :max="maxDate" locale="en"  @onChange="setCustomDispatchData">
                 </b-form-datepicker>
               </div>
           </div>
         </div>
-        <div class="form-group">
-          <div class="col-md-12">
-            <div id="chartDispatchTimeSeriesPlots">
-            </div>
+        <div class="col-md-12">
+          <div id="chartDispatchTimeSeriesPlots">
           </div>
         </div>
         <hr>
@@ -148,8 +146,8 @@
           { value: 'days', text: 'Day' },
           { value: 'weeks', text: 'Week' },
           { value: 'months', text: 'Month' },
-          { value: 'years', text: 'Year' },
-          { value: 'custom', text: 'Custom' },
+          // { value: 'years', text: 'Year' },
+          // { value: 'custom', text: 'Custom' },
         ],
       };
     },
@@ -268,12 +266,13 @@
         const data = [];
         const xx = rawData.timeSeriesDateAxis.data;
         const layout = {
-          // showlegend: false,
-          // legend: {
-          //   orientation: 'h', // 'v'
-          //   x: 0,
-          //   y: 1.12,
-          // },
+          showlegend: true,
+          legend: {
+            orientation: 'h', // 'v'
+            traceorder: 'normal',
+            x: 0,
+            y: 1.12,
+          },
           barmode: 'relative',
           height: 900,
           grid: {
@@ -285,13 +284,6 @@
           // modebar: {
           //   orientation: 'h', // 'h' set how modebar will appear
           // },
-          title: {
-            text: '',
-            font: {
-              size: 25,
-            },
-            yanchor: 'top',
-          },
           xaxis: {
             title: {
               text: '',
