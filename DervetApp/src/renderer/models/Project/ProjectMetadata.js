@@ -114,7 +114,7 @@ export class ProjectMetadata {
         displayName: 'Analysis Horizon Mode',
         isRequired: true,
         type: String,
-        description: 'Defines when/how to end CBA analysis.',
+        description: 'Define when to end cost benefit analysis. Choose it yourself, or by the lifetimes of your equipment',
         allowedValues: c.ANALYSIS_HORIZON_MODE_ALLOWED_VALUES,
       }),
       [c.DA_GROWTH]: new ProjectFieldMetadata({
@@ -124,14 +124,14 @@ export class ProjectMetadata {
         maxValue: 100,
         type: Number,
         unit: '% / year',
-        description: 'What is the growth rate of Day Ahead Energy Price?',
+        description: c.GROWTH_RATE_DESCRIPTION,
         actionSetName: a.SET_DA_GROWTH,
       }),
       [c.DATA_YEAR]: new ProjectFieldMetadata({
-        displayName: 'Data Year',
+        displayName: 'Data Year (Baseline)',
         isRequired: true,
         type: 'int',
-        description: 'Wizard mode only allows one year of data. If the year this data comes from is different from the year the optimization is run against, it will be escalated from the data year to the optimization year.',
+        description: 'Commonly the project start year. Data for additional years will be escalated from this value.',
       }),
       [c.DEFERRAL_GROWTH]: new ProjectFieldMetadata({
         displayName: 'Growth Rate of Deferral Load',
@@ -140,7 +140,7 @@ export class ProjectMetadata {
         maxValue: 100,
         type: Number,
         unit: '% / year',
-        description: 'What is the growth rate of the deferral load?',
+        description: c.GROWTH_RATE_DESCRIPTION,
         actionSetName: a.SET_DEFERRAL_GROWTH,
       }),
       [c.DEFERRAL_PLANNED_LOAD_LIMIT]: new ProjectFieldMetadata({
@@ -149,7 +149,7 @@ export class ProjectMetadata {
         minValue: 0,
         type: Number,
         unit: 'kW',
-        description: 'Max net import power flow to grid',
+        description: 'Maximum net import power flow from grid. Range: greater than or equal to 0',
         actionSetName: a.SET_DEFERRAL_PLANNED_LOAD_LIMIT,
       }),
       [c.DEFERRAL_PRICE]: new ProjectFieldMetadata({
@@ -158,7 +158,7 @@ export class ProjectMetadata {
         minValue: 0,
         type: Number,
         unit: '$ / year',
-        description: 'Yearly Cost Avoided for deferring a T and D asset upgrade',
+        description: 'Yearly Cost Avoided for deferring a transmission and distribution asset upgrade',
         actionSetName: a.SET_DEFERRAL_PRICE,
       }),
       [c.DEFERRAL_REVERSE_POWER_FLOW_LIMIT]: new ProjectFieldMetadata({
@@ -167,7 +167,7 @@ export class ProjectMetadata {
         maxValue: 0,
         type: Number,
         unit: 'kW',
-        description: 'Max net export power flow to grid',
+        description: 'Maximum net export power flow to grid Range: less than or equal to 0',
         actionSetName: a.SET_DEFERRAL_REVERSE_POWER_FLOW_LIMIT,
       }),
       [c.DR_END_HOUR]: new ProjectFieldMetadata({
@@ -176,7 +176,7 @@ export class ProjectMetadata {
         minValue: 2,
         maxValue: 24,
         type: 'int',
-        unit: 'he',
+        unit: 'hour ending',
         description: 'Last hour of the Demand Response period.',
       }),
       [c.DR_END_MODE]: new ProjectFieldMetadata({
@@ -194,7 +194,7 @@ export class ProjectMetadata {
         maxValue: 100,
         type: Number,
         unit: '% / year',
-        description: 'Yearly growth rate to apply to awards?',
+        description: c.GROWTH_RATE_DESCRIPTION,
       }),
       [c.DR_NUMBER_EVENTS]: new ProjectFieldMetadata({
         displayName: 'Number of Events',
@@ -233,8 +233,8 @@ export class ProjectMetadata {
         minValue: 1,
         maxValue: 23,
         type: 'int',
-        unit: 'he',
-        description: 'Start hour of the Demand Response period',
+        unit: 'hour ending',
+        description: 'Start hour of the Demand Response event',
       }),
       [c.ENERGY_PRICE_SOURCE_WHOLESALE]: new ProjectFieldMetadata({
         displayName: 'Energy Price Source',
@@ -250,7 +250,7 @@ export class ProjectMetadata {
         maxValue: 100,
         type: Number,
         unit: '%',
-        description: 'What is the discount rate to be used in the financial analysis? (Note: in the future, we will build calculators for this based on loan terms, return on equity, etc.)',
+        description: '(Note: in the future, we will build calculators for this based on loan terms, return on equity, etc.)',
       }),
       [c.FINANCE_FEDERAL_TAX_RATE]: new ProjectFieldMetadata({
         displayName: 'Federal Tax Rate',
@@ -268,7 +268,7 @@ export class ProjectMetadata {
         maxValue: 100,
         type: Number,
         unit: '%',
-        description: 'What is the inflation rate to be used in the financial analysis?',
+        description: '',
       }),
       [c.FINANCE_PROPERTY_TAX_RATE]: new ProjectFieldMetadata({
         displayName: 'Property Tax Rate',
@@ -292,7 +292,7 @@ export class ProjectMetadata {
         displayName: 'Combined Market Requirement',
         isRequired: true,
         type: Boolean,
-        description: 'Is this a combined regulation market? If it is combined, regulation up will be provided in the same quantity as regulation down always.',
+        description: 'If it is combined, regulation up will be provided in the same quantity as regulation down always.',
         allowedValues: c.FR_COMBINED_MARKET_ALLOWED_VALUES,
         actionSetName: a.SET_FR_COMBINED_MARKET,
       }),
@@ -303,7 +303,7 @@ export class ProjectMetadata {
         maxValue: 24,
         type: Number,
         unit: 'hours',
-        description: 'How much energy capability (kWh) should the DERs reserve for each kW of participation in Frequency Regulation? The DERs will not use this energy capability for other services to be ready for the worst-case scenario.',
+        description: 'How much energy capability (kWh) should the DER mix reserve for each kW of participation in Frequency Regulation? The DERs will not use this energy capability for other services to be ready for the worst-case scenario.',
         actionSetName: a.SET_FR_DURATION,
       }),
       [c.FR_ENERGY_PRICE_GROWTH]: new ProjectFieldMetadata({
@@ -313,7 +313,7 @@ export class ProjectMetadata {
         maxValue: 100,
         type: Number,
         unit: '% / year',
-        description: 'Yearly growth rate to apply to the value of energy',
+        description: c.GROWTH_RATE_DESCRIPTION,
         actionSetName: a.SET_FR_ENERGY_PRICE_GROWTH,
       }),
       [c.FR_EOU]: new ProjectFieldMetadata({
@@ -323,7 +323,7 @@ export class ProjectMetadata {
         maxValue: 1,
         type: Number,
         unit: 'kWh / kW-hr',
-        description: 'Energy content of the AGC signal in the up direction',
+        description: 'Energy content of the automatic generation control (AGC) signal in the up direction',
         actionSetName: a.SET_FR_EOU,
       }),
       [c.FR_EOD]: new ProjectFieldMetadata({
@@ -333,7 +333,7 @@ export class ProjectMetadata {
         maxValue: 1,
         type: Number,
         unit: 'kWh / kW-hr',
-        description: 'Energy content of the AGC signal in the down direction',
+        description: 'Energy content of the automatic generation control (AGC) signal in the down direction',
         actionSetName: a.SET_FR_EOD,
       }),
       [c.FR_GROWTH]: new ProjectFieldMetadata({
@@ -343,14 +343,14 @@ export class ProjectMetadata {
         maxValue: 100,
         type: Number,
         unit: '% / year',
-        description: 'Yearly growth rate to apply to regulation prices?',
+        description: c.GROWTH_RATE_DESCRIPTION,
         actionSetName: a.SET_FR_GROWTH,
       }),
       [c.GRID_LOCATION]: new ProjectFieldMetadata({
         displayName: 'Grid Domain',
         isRequired: true,
         type: String,
-        description: 'Which grid domain or location the project will be connected to. This determines which services are available.',
+        description: 'Which grid domain or location the project will be connected to. Please refer to documentation for further guidance on which services are available in your selected domain.',
         allowedValues: c.GRID_LOCATION_ALLOWED_VALUES,
       }),
       [c.INCLUDE_INTERCONNECTION_CONSTRAINTS]: new ProjectFieldMetadata({
@@ -385,7 +385,7 @@ export class ProjectMetadata {
         maxValue: 100,
         type: Number,
         unit: '% / year',
-        description: 'Yearly growth rate to apply to the value of energy',
+        description: c.GROWTH_RATE_DESCRIPTION,
         actionSetName: a.SET_LF_ENERGY_PRICE_GROWTH,
       }),
       [c.LF_GROWTH]: new ProjectFieldMetadata({
@@ -395,7 +395,7 @@ export class ProjectMetadata {
         maxValue: 100,
         type: Number,
         unit: '% / year',
-        description: 'Yearly growth rate to apply to regulation prices?',
+        description: c.GROWTH_RATE_DESCRIPTION,
         actionSetName: a.SET_LF_GROWTH,
       }),
       [c.MAX_EXPORT]: new ProjectFieldMetadata({
@@ -438,18 +438,18 @@ export class ProjectMetadata {
         maxValue: 100,
         type: Number,
         unit: '% / year',
-        description: 'What is the growth rate of Non-Spinning Reserve Price?',
+        description: c.GROWTH_RATE_DESCRIPTION,
         actionSetName: a.SET_NSR_GROWTH,
       }),
       [c.OPTIMIZATION_HORIZON]: new ProjectFieldMetadata({
         displayName: 'Optimization Window',
         isRequired: true,
         type: String,
-        description: 'A month-long optimization window is recommended for Customer Services. A specific number of hours is recommended for Wholesale Services.',
+        description: 'We recommend:<br>- Month for Customer Services.<br>- Hours for Wholesale Services.<br>- Year to assume perfect forsight of an entire year.',
         allowedValues: c.OPTIMIZATION_HORIZON_ALLOWED_VALUES,
       }),
       [c.OPTIMIZATION_HORIZON_NUM]: new ProjectFieldMetadata({
-        displayName: 'Optimization Hours',
+        displayName: 'How many hours per window?',
         isRequired: true,
         minValue: 2,
         type: Number,
@@ -465,7 +465,7 @@ export class ProjectMetadata {
         displayName: 'Ownership',
         isRequired: true,
         type: String,
-        description: 'Who owns the assets.',
+        description: 'Who owns the assets?',
         allowedValues: c.OWNERSHIP_ALLOWED_VALUES,
       }),
       [c.RA_NUMBER_EVENTS]: new ProjectFieldMetadata({
@@ -510,7 +510,7 @@ export class ProjectMetadata {
         maxValue: 100,
         type: Number,
         unit: '% / year',
-        description: 'Yearly growth rate to apply to awards?',
+        description: c.GROWTH_RATE_DESCRIPTION,
         actionSetName: a.SET_RA_GROWTH,
       }),
       [c.RELIABILITY_MAX_OUTAGE_DURATION]: new ProjectFieldMetadata({
@@ -541,7 +541,7 @@ export class ProjectMetadata {
       }),
       [c.SIZING_EQUIPMENT]: new ProjectFieldMetadata({
         displayName: 'Size equipment in microgrid',
-        description: 'Are there any microgrid components that you want DER-VET to optimally size for?',
+        description: 'Are there any microgrid components that you want to optimally size for?',
         isRequired: true,
         type: Boolean,
         allowedValues: c.SIZING_EQUIPMENT_ALLOWED_VALUES,
@@ -563,7 +563,7 @@ export class ProjectMetadata {
         maxValue: 100,
         type: Number,
         unit: '% / year',
-        description: 'What is the growth rate of Spinning Reserve Price?',
+        description: c.GROWTH_RATE_DESCRIPTION,
         actionSetName: a.SET_SR_GROWTH,
       }),
       [c.START_YEAR]: new ProjectFieldMetadata({
@@ -577,7 +577,7 @@ export class ProjectMetadata {
         isRequired: true,
         type: String,
         unit: 'minutes',
-        description: 'What timestep will the optimization will use?',
+        description: 'What is the frequency of the time-series data?',
         allowedValues: c.TIMESTEP_ALLOWED_VALUES,
       }),
       [c.USER_PRICE]: new ProjectFieldMetadata({
@@ -586,7 +586,7 @@ export class ProjectMetadata {
         minValue: 0,
         type: Number,
         unit: '$ / year',
-        description: 'Yearly Cost Avoided for meeting the user-defined constraints',
+        description: 'What is the value for meeting the user-defined constraints?',
         actionSetName: a.SET_USER_PRICE,
       }),
       // ts: timeseries

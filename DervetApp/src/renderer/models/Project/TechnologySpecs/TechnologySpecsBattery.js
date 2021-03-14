@@ -141,7 +141,7 @@ export default class TechnologySpecsBatteryMetadata {
         minValue: 0,
         type: Number,
         unit: '$',
-        description: 'What is the capital cost for the storage system?',
+        description: '',
         allowedValues: null,
       }),
       capitalCostPerkW: new ProjectFieldMetadata({

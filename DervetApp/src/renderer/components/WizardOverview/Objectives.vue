@@ -30,18 +30,18 @@
 
       <fieldset class="section-group">
         <legend>Where do energy prices come from?</legend>
-          <radio-button-input v-model="energyPriceSourceWholesale"
-                              v-bind:field="metadata.energyPriceSourceWholesale"
-                              :isInvalid="submitted && $v.energyPriceSourceWholesale.$error"
-                              :errorMessage="getErrorMsg('energyPriceSourceWholesale')">
-          </radio-button-input>
+        <radio-button-input v-model="energyPriceSourceWholesale"
+                            v-bind:field="metadata.energyPriceSourceWholesale"
+                            :isInvalid="submitted && $v.energyPriceSourceWholesale.$error"
+                            :errorMessage="getErrorMsg('energyPriceSourceWholesale')">
+        </radio-button-input>
       </fieldset>
 
       <div class="buffer-top-lg">
         <fieldset class="section-group">
           <legend>Customer Services</legend>
-          <div class="row form-group">
-            <div class="col-md-4 checkboxes">
+          <div class="row">
+            <div class="col-md-5 checkboxes">
               <b-form-checkbox size='lg' v-model="listOfActiveServices" value="Resilience"><b>Reliability</b></b-form-checkbox>
             </div>
             <div class="col-md-7">
@@ -49,8 +49,8 @@
             </div>
           </div>
 
-          <div class="row form-group">
-            <div class="col-md-4 checkboxes">
+          <div class="row">
+            <div class="col-md-5 checkboxes">
               <b-form-checkbox size='lg' v-model="listOfActiveServices" value="RetailDemandChargeReduction"><b>Demand Charge Reduction</b></b-form-checkbox>
             </div>
             <div class="col-md-7">
@@ -58,8 +58,8 @@
             </div>
           </div>
           <br>
-          <div class="row form-group">
-            <div class="col-md-4 checkboxes">
+          <div class="row">
+            <div class="col-md-5 checkboxes">
               <b-form-checkbox size='lg' v-model="listOfActiveServices" value="BackupPower"><b>Backup</b></b-form-checkbox>
             </div>
             <div class="col-md-7">
@@ -67,8 +67,8 @@
             </div>
           </div>
           <br>
-          <div class="row form-group" v-if="(sizingEquipment === false)">
-            <div class="col-md-4 checkboxes">
+          <div class="row" v-if="(sizingEquipment === false)">
+            <div class="col-md-5 checkboxes">
               <b-form-checkbox size='lg' v-model="listOfActiveServices" value="DR">
                 <b>Demand Response Program</b>
               </b-form-checkbox>
@@ -86,7 +86,7 @@
           <div class="col-md-12 tool-tip" v-if="sizingEquipment">
             These serivces should only be chosen if each DER will have a size maximum, otherwise a solution will likely not be found.
           </div>
-          <div class="row form-group">
+          <div class="row">
             <div class="col-md-6 checkboxes">
               <b-form-checkbox size='lg' v-model="listOfActiveServices" value="SR"><b>Spinning Reserves</b></b-form-checkbox>
             </div>
@@ -95,7 +95,7 @@
             </div>
           </div>
           <br>
-          <div class="row form-group">
+          <div class="row">
             <div class="col-md-6 checkboxes">
               <b-form-checkbox size='lg' v-model="listOfActiveServices" value="FR"><b>Frequency regulation</b></b-form-checkbox>
             </div>
@@ -109,7 +109,7 @@
       <div class="buffer-top-lg">
         <fieldset class="section-group">
           <legend>Grid Support</legend>
-          <div class="row form-group">
+          <div class="row">
             <div class="col-md-6 checkboxes">
               <b-form-checkbox size='lg' v-model="listOfActiveServices" value="Deferral"><b>Deferral</b></b-form-checkbox>
             </div>
@@ -126,8 +126,8 @@
       <div class="buffer-top-lg">
         <fieldset class="section-group">
           <legend>Other</legend>
-          <div class="row form-group">
-            <div class="col-md-4 checkboxes">
+          <div class="row">
+            <div class="col-md-5 checkboxes">
               <b-form-checkbox size='lg' v-model="listOfActiveServices" value="UserDefined"><b>User-Defined Storage Technology Settings</b></b-form-checkbox>
             </div>
             <div class="col-md-7">
