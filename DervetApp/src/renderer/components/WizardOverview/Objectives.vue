@@ -18,7 +18,7 @@
                            :errorMessage="getErrorMsg('optimizationHorizon')">
           </drop-down-input>
 
-          <div v-if="optimizationHorizon === 'Hours'">
+          <div v-if="optimizationHorizon === 'Hour'">
             <text-input v-model="optimizationHorizonNum"
                         v-bind:field="metadata.optimizationHorizonNum"
                         :isInvalid="submitted && $v.optimizationHorizonNum.$error"

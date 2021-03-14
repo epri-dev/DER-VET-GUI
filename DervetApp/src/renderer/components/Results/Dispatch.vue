@@ -123,7 +123,7 @@
   export default {
     mounted() {
       this.createChartEnergyPriceHeatMap('chartEnergyPriceHeatMap');
-      this.setCurrentDispatchData('weeks');
+      this.setCurrentDispatchData('days');
       this.createChartDispatchTimeSeriesPlots('chartDispatchTimeSeriesPlots');
     },
     data() {
@@ -269,9 +269,12 @@
           showlegend: true,
           legend: {
             orientation: 'h', // 'v'
-            traceorder: 'normal',
-            x: 0,
-            y: 1.12,
+            traceorder: 'group',
+            xanchor: 'center',
+            yanchor: 'top',
+          },
+          margin: {
+            t: 0,
           },
           barmode: 'relative',
           height: 900,
@@ -281,18 +284,13 @@
             pattern: 'dependent',
             roworder: 'top to bottom',
           },
-          // modebar: {
-          //   orientation: 'h', // 'h' set how modebar will appear
-          // },
           xaxis: {
             title: {
-              text: '',
+              text: rawData.timeSeriesDateAxis.label,
               font: {
                 size: 12,
               },
-              standoff: 30, // create gap between axis and title
             },
-            // layer: 'below traces',
           },
         };
   

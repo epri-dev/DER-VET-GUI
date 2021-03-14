@@ -55,7 +55,7 @@ export const dummyMarketServiceHourly = {
   objectivesRetailEnergyChargeReduction: false,
   objectivesSR: true,
   objectivesUserDefined: false,
-  optimizationHorizon: 'Hours',
+  optimizationHorizon: 'Hour',
   optimizationHorizonNum: 12,
   includeSiteLoad: false,
   includeInterconnectionConstraints: false,
