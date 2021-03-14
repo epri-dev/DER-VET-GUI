@@ -77,9 +77,9 @@
                 <label>From:</label>
               </div>
               <div class="col-md-4">
-                <b-form-datepicker v-model="dispatchFrom" :min="min" close-button placeholder="MM/DD/YYYY"
+                <b-form-datepicker v-model="dispatchFrom" :min="minDate" close-button placeholder="MM/DD/YYYY"
                   :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
-                  :max="dispatchTo ? dispatchTo : max" locale="en">
+                  :max="dispatchTo ? dispatchTo : maxDate" locale="en" @onChange="setCustomDispatchData">
                 </b-form-datepicker>
               </div>
             
@@ -87,9 +87,9 @@
                 <label>To:</label>
               </div>
               <div class="col-md-4">
-                <b-form-datepicker v-model="dispatchTo" :min="dispatchFrom ? dispatchFrom : min"
+                <b-form-datepicker v-model="dispatchTo" :min="dispatchFrom ? dispatchFrom : minDate"
                   :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
-                  placeholder="MM/DD/YYYY" close-button :max="max" locale="en">
+                  placeholder="MM/DD/YYYY" close-button :max="maxDate" locale="en"  @onChange="setCustomDispatchData">
                 </b-form-datepicker>
               </div>
           </div>
@@ -142,8 +142,8 @@
         dispatchType: 'days',
         dispatchTo: null,
         dispatchFrom: null,
-        min: minDate,
-        max: maxDate,
+        minDate,
+        maxDate,
         sizes: [
           { value: 'days', text: 'Day' },
           { value: 'weeks', text: 'Week' },
@@ -165,7 +165,10 @@
       },
       dispatchDataIterator() {
         if (this.dispatchData !== null) {
-          return new DispatchData(this.dispatchData, TRACE_NAMES);
+          const dispatchIter = new DispatchData(this.dispatchData, TRACE_NAMES);
+          this.maxDate = dispatchIter.maxDate;
+          this.minDate = dispatchIter.minDate;
+          return dispatchIter;
         }
         return null;
       },
@@ -216,6 +219,11 @@
       setCurrentDispatchData(windowSize) {
         this.dispatchDataIterator.setCurrentWindow(windowSize);
         this.dispatchType = windowSize;
+        this.redrawDispatchItems();
+      },
+      setCustomDispatchData() {
+        this.dispatchDataIterator.setCurrentWindow('custom', this.dispatchFrom, this.dispatchTo);
+        this.dispatchType = 'custom';
         this.redrawDispatchItems();
       },
       nextDispatchData() {

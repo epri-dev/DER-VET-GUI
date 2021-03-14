@@ -21,7 +21,8 @@ export default class DispatchData {
     this.frIncluded = this.isExisting(this.traceNames.frequencyRegulationUpPrice);
     this.nsrIncluded = this.isExisting(this.traceNames.nonSpinningReservePrice);
     this.lfIncluded = this.isExisting(this.traceNames.loadFollowingUpPrice);
-
+    this.maxDate = this.dateTime[this.dateTime.length - 1];
+    [this.minDate] = this.dateTime;
     this.internalPowerTraceList = [
       this.traceNames.totalOriginalLoad,
       this.traceNames.totalLoad,
@@ -59,14 +60,21 @@ export default class DispatchData {
     this.windowSize = 'days';
   }
 
-  setCurrentWindow(windowSize) {
+  setCurrentWindow(windowSize, newStart = null, newEnd = null) {
     console.log(windowSize);
     // if windowSize is different, then reset start and end indices to match
     if (this.windowSize !== windowSize) {
-      this.windowSize = windowSize;
-      const windowSizeDroppedEnd = windowSize.slice(0, -1);
-      const startMoment = this.currStartDate().startOf(windowSizeDroppedEnd);
-      const endMoment = moment(startMoment).add(1, windowSize);
+      let startMoment;
+      let endMoment;
+      if (windowSize === 'custom') {
+        startMoment = moment(newStart);
+        endMoment = moment(newEnd);
+      } else {
+        this.windowSize = windowSize;
+        const windowSizeDroppedEnd = windowSize.slice(0, -1);
+        startMoment = this.currStartDate().startOf(windowSizeDroppedEnd);
+        endMoment = moment(startMoment).add(1, windowSize);
+      }
       this.setCurrentIndices(startMoment, endMoment);
     }
     // split data

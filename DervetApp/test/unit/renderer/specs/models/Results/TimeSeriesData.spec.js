@@ -1,4 +1,4 @@
-import TimeSeriesData from '@/models/Results/TimeSeriesData';
+import { TimeSeriesData } from '@/models/Results/TimeSeriesData';
 
 describe('TimeSeriesData model', () => {
   it('(1) sucessfull convert an array into a 24x10 matrix', () => {
