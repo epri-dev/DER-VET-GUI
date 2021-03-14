@@ -22,7 +22,7 @@ import UserEnergyMinTimeSeries from '@/models/TimeSeries/UserEnergyMinTimeSeries
 import UserPowerMaxTimeSeries from '@/models/TimeSeries/UserPowerMaxTimeSeries';
 import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
 
-import BackupEnergyAdwardsMonthly from '@/models/Monthly/BackupEnergyAdwardsMonthly';
+import BackupEnergyPriceMonthly from '@/models/Monthly/BackupEnergyPriceMonthly';
 import BackupEnergyReservationMonthly from '@/models/Monthly/BackupEnergyReservationMonthly';
 import DRCapacityAdwardsMonthly from '@/models/Monthly/DRCapacityAdwardsMonthly';
 import DRCapacityReservationMonthly from '@/models/Monthly/DRCapacityReservationMonthly';
@@ -38,8 +38,8 @@ const TRUE = true;
 export const projectFixtureAllActive = {
   analysisHorizon: 0,
   analysisHorizonMode: '1',
-  backupPrice: new BackupEnergyAdwardsMonthly(new Array(12).fill(100)),
-  backupEnergyReservation: new BackupEnergyReservationMonthly(new Array(12).fill(30)),
+  mtsBackupEnergyPrice: new BackupEnergyPriceMonthly(new Array(12).fill(100)),
+  mtsBackupEnergyReservation: new BackupEnergyReservationMonthly(new Array(12).fill(30)),
   tsCriticalLoad: new CriticalLoadTimeSeries(csvs.siteLoad), // note: using hardcoded site load
   daGrowth: 0,
   tsDaPrice: new DAPriceTimeSeries(csvs.daPrice),

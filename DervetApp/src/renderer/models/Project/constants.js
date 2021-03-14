@@ -112,10 +112,13 @@ export const TS_ALL = [
 ];
 
 // Monthly
+export const MTS_BACKUP_ENERGY_PRICE = 'mtsBackupEnergyPrice';
+export const MTS_BACKUP_ENERGY_RESERVATION = 'mtsBackupEnergyReservation';
+export const MTS_BACKUP_FIELDS = [MTS_BACKUP_ENERGY_PRICE, MTS_BACKUP_ENERGY_RESERVATION];
 export const MTS_RA_CAPACITY_PRICE = 'mtsRaCapacityPrice';
 export const MTS_RA_FIELDS = [MTS_RA_CAPACITY_PRICE];
 
-export const MTS_ALL = [...MTS_RA_FIELDS];
+export const MTS_ALL = [...MTS_RA_FIELDS, ...MTS_BACKUP_FIELDS];
 
 export const makeAllowedValues = lst => _.map(lst, x => ({ value: x, label: x }));
 

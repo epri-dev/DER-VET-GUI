@@ -85,6 +85,7 @@
   import * as c from '@/models/Project/constants';
   import '@/assets/samples/Sample_RAActive_TimeSeries_8760.csv';
   import '@/assets/samples/Sample_RAActive_TimeSeries_8784.csv';
+  import '@/assets/samples/Sample_RACapacityPrice_Monthly_12.csv';
 
   import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
 

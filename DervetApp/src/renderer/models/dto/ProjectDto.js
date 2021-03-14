@@ -48,8 +48,6 @@ const TIMESERIES_FIELDS = [
 ];
 
 const MONTHLY_FIELDS = [
-  'backupPrice',
-  'backupEnergyReservation',
   'drMonthsApplied',
   'drCapacityReservation',
   'drCapacityAwards',

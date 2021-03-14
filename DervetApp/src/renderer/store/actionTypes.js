@@ -15,8 +15,8 @@ export const RESET_PROJECT_TO_DEFAULT = 'resetProjectToDefault';
 export const LOAD_QUICK_START_PROJECT = 'loadQuickStartProject';
 export const LOAD_NEW_PROJECT = 'loadNewProject';
 // back up
-export const SET_BACKUP_PRICE = 'setBackupPrice';
-export const SET_BACKUP_ENERGY = 'setBackupEnergy';
+export const SET_BACKUP_ENERGY_PRICE = 'setBackupPrice';
+export const SET_BACKUP_ENERGY_RESERVATION = 'setBackupEnergy';
 // battery page
 export const REPLACE_TECHNOLOGY_SPECS_BATTERY = 'replaceTechnologySpecsBattery';
 // battery cycle page

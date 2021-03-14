@@ -152,11 +152,11 @@ const mutations = {
     Object.assign(state, project);
   },
   // Backup
-  [m.SET_BACKUP_PRICE](state, newValue) {
-    state.backupPrice = newValue;
+  [m.SET_BACKUP_ENERGY_PRICE](state, newValue) {
+    state[c.MTS_BACKUP_ENERGY_PRICE] = newValue;
   },
-  [m.SET_BACKUP_ENERGY](state, newValue) {
-    state.backupEnergyReservation = newValue;
+  [m.SET_BACKUP_ENERGY_RESERVATION](state, newValue) {
+    state[c.MTS_BACKUP_ENERGY_RESERVATION] = newValue;
   },
   // Battery
   [m.REPLACE_TECHNOLOGY_SPECS_BATTERY](state, payload) {
@@ -793,6 +793,13 @@ const actions = {
       commit(m.LOAD_NEW_PROJECT, merge(getDefaultState(), selectedUseCase));
       resolve();
     });
+  },
+  // backup
+  [a.SET_BACKUP_ENERGY_PRICE]({ commit }, payload) {
+    commit(m.SET_BACKUP_ENERGY_PRICE, payload);
+  },
+  [a.SET_BACKUP_ENERGY_RESERVATION]({ commit }, payload) {
+    commit(m.SET_BACKUP_ENERGY_RESERVATION, payload);
   },
   // battery
   [a.REPLACE_TECHNOLOGY_SPECS_BATTERY]({ commit }, payload) {

@@ -6,13 +6,10 @@ import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 import operateOnKeysList from '@/util/object';
 
 /*
-import BackupEnergyAdwardsMonthly from '@/models/Monthly/BackupEnergyAdwardsMonthly';
-import BackupEnergyReservationMonthly from '@/models/Monthly/BackupEnergyReservationMonthly';
 import DRCapacityAdwardsMonthly from '@/models/Monthly/DRCapacityAdwardsMonthly';
 import DRCapacityReservationMonthly from '@/models/Monthly/DRCapacityReservationMonthly';
 import DREnergyAwardsMonthly from '@/models/Monthly/DREnergyAwardsMonthly';
 import DRMonthsMonthly from '@/models/Monthly/DRMonthsMonthly';
-import RACapacityPriceMonthly from '@/models/Monthly/RACapacityPriceMonthly';
 */
 
 import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
@@ -37,6 +34,8 @@ import UserPowerMaxTimeSeries from '@/models/TimeSeries/UserPowerMaxTimeSeries';
 import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
 
 import RACapacityPriceMonthly from '@/models/Monthly/RACapacityPriceMonthly';
+import BackupEnergyPriceMonthly from '@/models/Monthly/BackupEnergyPriceMonthly';
+import BackupEnergyReservationMonthly from '@/models/Monthly/BackupEnergyReservationMonthly';
 
 export class ProjectMetadata {
   constructor(arg) {
@@ -84,8 +83,6 @@ export class ProjectMetadata {
       ...this.operateOnFieldList(c.MTS_ALL, f => new f.DataModel([])),
 
       // MONTHLY ARRAYS
-      backupPrice: null,
-      backupEnergyReservation: null,
       drMonthsApplied: null,
       drCapacityReservation: null,
       drCapacityAwards: null,
@@ -695,6 +692,16 @@ export class ProjectMetadata {
         DataModel: RACapacityPriceMonthly,
         displayName: 'resource adequacy capacity prices',
         actionSetName: a.SET_RA_CAPACITY_PRICE,
+      }),
+      [c.MTS_BACKUP_ENERGY_PRICE]: new ProjectFieldMetadata({
+        DataModel: BackupEnergyPriceMonthly,
+        displayName: 'award for reserving backup power',
+        actionSetName: a.SET_BACKUP_ENERGY_PRICE,
+      }),
+      [c.MTS_BACKUP_ENERGY_RESERVATION]: new ProjectFieldMetadata({
+        DataModel: BackupEnergyReservationMonthly,
+        displayName: 'amount of energy to constantly reserve',
+        actionSetName: a.SET_BACKUP_ENERGY_RESERVATION,
       }),
     });
   }
