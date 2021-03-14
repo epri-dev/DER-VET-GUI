@@ -9,7 +9,7 @@
         </div>
         <hr>
         <div id="dispatch-container" class="results-dis-graph" style="position: static; zoom: 1;">
-          <div class="form-group">
+          <div class="form-group row">
             <div class="col-md-6" v-if="dataRange() !== null">
               <h5>{{ dataRange() }}</h5>
             </div>
@@ -140,6 +140,8 @@
         height: 270,
         padding: 60,
         dispatchType: 'days',
+        dispatchTo: null,
+        dispatchFrom: null,
         min: minDate,
         max: maxDate,
         sizes: [
@@ -167,19 +169,6 @@
         }
         return null;
       },
-      dispatchTo() {
-        if (this.dispatchData !== null) {
-          return this.dispatchDataIterator.currStartDate().toDate();
-        }
-        return null;
-      },
-      dispatchFrom() {
-        if (this.dispatchData !== null) {
-          return this.dispatchDataIterator.currEndDate().toDate();
-        }
-        return null;
-      },
-
       rangeX() {
         const width = this.width - this.padding;
         return [0, width];
@@ -204,8 +193,14 @@
     },
     methods: {
       dataRange() {
-        const momentTo = moment(this.dispatchTo).startOf('day');
         const momentFrom = moment(this.dispatchFrom).startOf('day');
+        if (this.dispatchType === 'days') {
+          return momentFrom.format('MMMM DD, YYYY');
+        }
+        if (this.dispatchType === 'months') {
+          return momentFrom.format('MMMM YYYY');
+        }
+        const momentTo = moment(this.dispatchTo).startOf('day');
         if (momentTo.isSame(momentFrom)) {
           return momentFrom.format('MMMM DD, YYYY');
         }
@@ -213,18 +208,25 @@
         const endStr = momentTo.format('MMMM DD, YYYY');
         return `${startStr} - ${endStr}`;
       },
+      redrawDispatchItems() {
+        this.dispatchFrom = this.dispatchDataIterator.currStartDate().toDate();
+        this.dispatchTo = this.dispatchDataIterator.currEndDate().toDate();
+        this.createChartDispatchTimeSeriesPlots('chartDispatchTimeSeriesPlots');
+      },
       setCurrentDispatchData(windowSize) {
         this.dispatchDataIterator.setCurrentWindow(windowSize);
         this.dispatchType = windowSize;
-        this.createChartDispatchTimeSeriesPlots('chartDispatchTimeSeriesPlots');
+        this.redrawDispatchItems();
       },
       nextDispatchData() {
         const { currStartDate, currEndDate, windowSize } = this.dispatchDataPayload;
         this.dispatchDataIterator.next(currStartDate, currEndDate, windowSize);
+        this.redrawDispatchItems();
       },
       previousDispatchData() {
         const { currStartDate, currEndDate, windowSize } = this.dispatchDataPayload;
         this.dispatchDataIterator.previous(currStartDate, currEndDate, windowSize);
+        this.redrawDispatchItems();
       },
       path(data) {
         const x = d3.scaleLinear().range(this.rangeX);
