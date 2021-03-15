@@ -7,23 +7,32 @@ const makeHelpItem = (label, link) => ({
   },
 });
 
+const makeViewSubMenu = () => {
+  const menu = [
+    { role: 'reload' },
+    { role: 'forceReload' },
+    { type: 'separator' },
+    { role: 'resetZoom' },
+    { role: 'zoomIn' },
+    { role: 'zoomOut' },
+    { type: 'separator' },
+    { role: 'togglefullscreen' },
+  ];
+
+  if (process.env.NODE_ENV === 'development') {
+    menu.push({ role: 'toggleDevTools' });
+  }
+
+  return menu;
+};
+
 const menuConfig = [
   { role: 'appMenu' },
   { role: 'fileMenu' },
   { role: 'editMenu' },
   {
     label: 'View',
-    submenu: [
-      { role: 'reload' },
-      { role: 'forceReload' },
-      { type: 'separator' },
-      { role: 'resetZoom' },
-      { role: 'zoomIn' },
-      ((process.env.NODE_ENV === 'development') && { role: 'toggleDevTools' }),
-      { role: 'zoomOut' },
-      { type: 'separator' },
-      { role: 'togglefullscreen' },
-    ],
+    submenu: makeViewSubMenu(),
   },
   { role: 'windowMenu' },
   {

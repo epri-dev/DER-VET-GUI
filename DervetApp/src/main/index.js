@@ -26,12 +26,6 @@ const winURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`;
 
-/**
- * Configure application menu
- */
-const menu = Menu.buildFromTemplate(menuConfig);
-Menu.setApplicationMenu(menu);
-
 function createWindow() {
   /**
    * Initial window options
@@ -48,6 +42,10 @@ function createWindow() {
   });
 
   mainWindow.loadURL(winURL);
+
+  // Configure application menu
+  const menu = Menu.buildFromTemplate(menuConfig);
+  Menu.setApplicationMenu(menu);
 
   // Open dev tools initially when in development mode
   if (process.env.NODE_ENV === 'development') {
