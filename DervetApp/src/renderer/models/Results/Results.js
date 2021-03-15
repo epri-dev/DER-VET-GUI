@@ -7,11 +7,10 @@ import OutageEnergyContributionData from './OutageEnergyContributionData';
 import PeakLoadDayData from './PeakLoadDayData';
 import ProFormaData from './ProFormaData';
 import SizeData from './SizeData';
-import TimeSeriesData from './TimeSeriesData';
+import { TimeSeriesData } from './TimeSeriesData';
 
 export class ResultsData {
-  constructor(id, data) {
-    this.id = id;
+  constructor(data) {
     // booleans that tell if the raw data are NULL or not
     this.showBeforeAfterMonthlyEnergyBill = false;
     this.showPeakLoadDay = false;
@@ -25,7 +24,7 @@ export class ResultsData {
     this.financialProformaTable = null;
     this.financialBeforeAfterBarChart = null;
     this.dispatchSummaryMapData = null;
-    this.dispatchStackedLineChart = null;
+    this.dispatchData = null;
     this.dispatchEnergyPriceMapData = null;
     this.designSummaryBarChart = null;
     this.designSizeResultsTable = null;
@@ -36,7 +35,7 @@ export class ResultsData {
 
     // RAW DATA - these will NEVER be NULL
     this.size = this.initializeSize(data.size);
-    this.dispatch = this.initializeDistpatch(data.timeSeries);
+    this.timeSeries = this.initializeDistpatch(data.timeSeries);
     this.proForma = this.initializeProForma(data.proForma);
     this.costBenefit = this.initializeCostBenefit(data.costBenefit);
 
@@ -120,15 +119,15 @@ export class ResultsData {
   createCharts() {
     // summary page charts
     this.financialSummaryBarChart = this.costBenefit.summaryData();
-    this.dispatchSummaryMapData = this.dispatch.essDispatchHeatMapTraceData(0);
+    this.dispatchSummaryMapData = this.timeSeries.essDispatchHeatMapTraceData(0);
     if (this.showPeakLoadDay) {
       this.designSummaryBarChart = this.peakLoadDay.getFirstYearChartData();
     }
 
     // dispatch page charts
     const totalEnergyStorageCapacity = this.size.getTotalEnergyStorageCapacity();
-    this.dispatchStackedLineChart = this.dispatch.dispatchData(0, totalEnergyStorageCapacity);
-    this.dispatchEnergyPriceMapData = this.dispatch.energyPriceHeatMapTraceData(0);
+    this.dispatchData = this.timeSeries.dispatchData(totalEnergyStorageCapacity);
+    this.dispatchEnergyPriceMapData = this.timeSeries.energyPriceHeatMapTraceData(0);
 
     // design page charts
     this.designSizeResultsTable = this.size.createSizeTable();

@@ -18,3 +18,5 @@ export const isObjectOfLengthZero = value => isNotNullAndNotUndefined(value) && 
 export const isValueInRange = (value, lowValue, highValue) => (
   value >= lowValue && value <= highValue
 );
+
+export const isArrayAllZeros = arr => arr.every(item => item === 0);

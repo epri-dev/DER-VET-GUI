@@ -54,9 +54,6 @@
   import { RESULTS } from '@/router/constants';
 
   export default {
-    beforeMount() {
-      this.$store.dispatch('createDesignPlots');
-    },
     data() {
       return {
         RESULTS,

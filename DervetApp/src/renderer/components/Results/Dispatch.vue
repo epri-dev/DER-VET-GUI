@@ -8,10 +8,96 @@
           </div>
         </div>
         <hr>
-        <div class="form-group">
-          <div class="col-md-12">
-            <div id="chartDispatchTimeSeriesPlots">
+        <div id="dispatch-container" class="results-dis-graph" style="position: static; zoom: 1;">
+          <div class="form-group row">
+            <div class="col-md-6" v-if="dataRange() !== null">
+              <h5>{{ dataRange() }}</h5>
             </div>
+            <div class="col-md-6 text-right">
+              <b-dropdown :text="windowSizeText" 
+                          toggle-class="form-control form-control-inline form-control-width-auto buffer-right">
+                <b-dropdown-item v-for="option in sizes" v-bind:key="option.id"
+                                 v-on:click.native="setCurrentDispatchData(option.value)">
+                  {{option.text}}
+                </b-dropdown-item>
+              </b-dropdown>
+            
+              <button type="button" id="dispatch-prev" class="btn btn-default" @click="previousDispatchData"
+                :disabled="disablePrev">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <button type="button" id="dispatch-next" class="btn btn-default"  @click="nextDispatchData"
+                :disabled="disableNext">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+          <!-- TODO keep for d3 plot 
+          <div class="form-group text-center">
+            <b-form-group>
+              <b-form-checkbox-group buttons class="col-md-10" v-model="displayData">
+                <b-form-checkbox value='SOC'>
+                  SOC
+                </b-form-checkbox>
+                <b-form-checkbox value='Battery'>
+                  Battery
+                </b-form-checkbox>
+                <b-form-checkbox value='PV'>
+                  PV
+                </b-form-checkbox>
+                <b-form-checkbox value='Distributed Generation'>
+                  Distributed Generation
+                </b-form-checkbox>
+                <b-form-checkbox value='Load'>
+                  Load
+                </b-form-checkbox>
+                <b-form-checkbox value='Net Load'>
+                  Net Load
+                </b-form-checkbox>
+              </b-form-checkbox-group>
+              <b-form-checkbox-group buttons v-model="displayData" class="col-md-10">
+                <b-form-checkbox value='Day Ahead'>
+                  Day Ahead
+                </b-form-checkbox>
+                <b-form-checkbox value='Spinning Reserves'>
+                  Spinning Reserves
+                </b-form-checkbox>
+                <b-form-checkbox value='Non-Spinning Reserves'>
+                  Non-Spinning Reserves
+                </b-form-checkbox>
+                <b-form-checkbox value='Regulation'>
+                  Regulation
+                </b-form-checkbox>
+                <b-form-checkbox value='Load Following'>
+                  Load Following
+                </b-form-checkbox>
+              </b-form-checkbox-group>
+            </b-form-group>
+          </div> -->
+          <div class="form-group row text-center">
+              <div class="col-md-1">
+                <label>From:</label>
+              </div>
+              <div class="col-md-4">
+                <b-form-datepicker v-model="dispatchFrom" :min="minDate" close-button placeholder="MM/DD/YYYY"
+                  size="sm" :readonly="true" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                  :max="dispatchTo ? dispatchTo : maxDate" locale="en" @onChange="setCustomDispatchData">
+                </b-form-datepicker>
+              </div>
+            
+              <div class="col-md-1">
+                <label>To:</label>
+              </div>
+              <div class="col-md-4">
+                <b-form-datepicker v-model="dispatchTo" :min="dispatchFrom ? dispatchFrom : minDate"
+                  size="sm" :readonly="true" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                  placeholder="MM/DD/YYYY" close-button :max="maxDate" locale="en"  @onChange="setCustomDispatchData">
+                </b-form-datepicker>
+              </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div id="chartDispatchTimeSeriesPlots">
           </div>
         </div>
         <hr>
@@ -27,30 +113,148 @@
 </template>
 
 <script>
-  import _ from 'lodash';
+  import moment from 'moment';
+  import * as d3 from 'd3';
+  import forEach from 'lodash/forEach';
+  import find from 'lodash/find';
   import Plotly from 'plotly.js';
   import { RESULTS } from '@/router/constants';
+  import DispatchData from '@/models/Results/DispatchData';
+  import { TRACE_NAMES } from '@/models/Results/TimeSeriesData';
 
   export default {
-    beforeMount() {
-      this.$store.dispatch('createDispatchPlots');
-    },
     mounted() {
-      this.createChartDispatchTimeSeriesPlots('chartDispatchTimeSeriesPlots');
       this.createChartEnergyPriceHeatMap('chartEnergyPriceHeatMap');
+      this.setCurrentDispatchData('days');
+      this.createChartDispatchTimeSeriesPlots('chartDispatchTimeSeriesPlots');
     },
     data() {
+      // TODO fixme
+      const minDate = new Date(2017, 0, 1);
+      const maxDate = new Date(2017, 11, 31);
+
       return {
         resultsPath: RESULTS,
+        displayData: [],
+        width: 500,
+        height: 270,
+        padding: 60,
+        dispatchType: 'days',
+        dispatchTo: null,
+        dispatchFrom: null,
+        minDate,
+        maxDate,
+        sizes: [
+          { value: 'days', text: 'Day' },
+          { value: 'weeks', text: 'Week' },
+          { value: 'months', text: 'Month' },
+          // { value: 'years', text: 'Year' },
+          // { value: 'custom', text: 'Custom' },
+        ],
       };
     },
     computed: {
-      chartData() {
-        return this.$store.state.Results.dispatchVueObjects;
+      windowSizeText() {
+        return find(this.sizes, { value: this.dispatchType }).text;
+      },
+      energyPriceMapData() {
+        return this.$store.state.Results.dispatchEnergyPriceMapData;
+      },
+      dispatchData() {
+        return this.$store.state.Results.dispatchData;
+      },
+      dispatchDataIterator() {
+        if (this.dispatchData !== null) {
+          const dispatchIter = new DispatchData(this.dispatchData, TRACE_NAMES);
+          this.maxDate = dispatchIter.maxDate;
+          this.minDate = dispatchIter.minDate;
+          return dispatchIter;
+        }
+        return null;
+      },
+      rangeX() {
+        const width = this.width - this.padding;
+        return [0, width];
+      },
+      rangeY() {
+        const height = this.height - this.padding;
+        return [0, height];
+      },
+      viewBox() {
+        return `0 0 ${this.width} ${this.height}`;
+      },
+      dispatchDataPayload() {
+        return {
+          currStartDate: this.dispatchFrom,
+          currEndDate: this.dispatchTo,
+          windowSize: this.dispatchType,
+        };
+      },
+      // dipatchPlotData() {
+      //   return this.chartData.stackedLineData.current(this.dispatchType);
+      // },
+      disableNext() {
+        return moment(this.dispatchTo).isSameOrAfter(this.maxDate, 'day');
+      },
+      disablePrev() {
+        return moment(this.dispatchFrom).isSameOrBefore(this.minDate, 'day');
       },
     },
     methods: {
-      save() {
+      dataRange() {
+        const momentFrom = moment(this.dispatchFrom).startOf('day');
+        if (this.dispatchType === 'days') {
+          return momentFrom.format('MMMM DD, YYYY');
+        }
+        if (this.dispatchType === 'months') {
+          return momentFrom.format('MMMM YYYY');
+        }
+        const momentTo = moment(this.dispatchTo).startOf('day');
+        if (momentTo.isSame(momentFrom)) {
+          return momentFrom.format('MMMM DD, YYYY');
+        }
+        const startStr = momentFrom.format('MMMM DD, YYYY');
+        const endStr = momentTo.format('MMMM DD, YYYY');
+        return `${startStr} - ${endStr}`;
+      },
+      redrawDispatchItems() {
+        this.dispatchFrom = this.dispatchDataIterator.currStartDate().toDate();
+        this.dispatchTo = this.dispatchDataIterator.currEndDate().toDate();
+        this.createChartDispatchTimeSeriesPlots('chartDispatchTimeSeriesPlots');
+      },
+      setCurrentDispatchData(windowSize) {
+        this.dispatchDataIterator.setCurrentWindow(windowSize);
+        this.dispatchType = windowSize;
+        this.redrawDispatchItems();
+      },
+      setCustomDispatchData() {
+        this.dispatchDataIterator.setCurrentWindow('custom', this.dispatchFrom, this.dispatchTo);
+        this.dispatchType = 'custom';
+        this.redrawDispatchItems();
+      },
+      nextDispatchData() {
+        const { currStartDate, currEndDate, windowSize } = this.dispatchDataPayload;
+        this.dispatchDataIterator.next(currStartDate, currEndDate, windowSize);
+        this.redrawDispatchItems();
+      },
+      previousDispatchData() {
+        const { currStartDate, currEndDate, windowSize } = this.dispatchDataPayload;
+        this.dispatchDataIterator.previous(currStartDate, currEndDate, windowSize);
+        this.redrawDispatchItems();
+      },
+      path(data) {
+        const x = d3.scaleLinear().range(this.rangeX);
+        const y = d3.scaleLinear().range(this.rangeY);
+        d3.axisLeft().scale(x);
+        d3.axisTop().scale(y);
+        x.domain(d3.extent(data, (d, i) => i));
+        y.domain([0, d3.max(data, d => d)]);
+        return d3.line()
+          .x((d, i) => x(i))
+          .y(d => y(d));
+      },
+      line(data) {
+        return this.path(data);
       },
       getColorFromTechnology(tech) {
         if (tech === 'pv') {
@@ -66,31 +270,20 @@
       },
       createChartDispatchTimeSeriesPlots(chartId) {
         const ctx = document.getElementById(chartId);
+        const rawData = this.dispatchDataIterator.value;
         const data = [];
-        const rawData = this.chartData.stackedLineData;
-        const xx = rawData.timeSeriesDateAxis;
-
-        const selectorOptions = {
-          buttons: [
-            {
-              step: 'month',
-              stepmode: 'backward', // 'todate',
-              count: 1,
-              label: '1m',
-              visible: false,
-            },
-            {
-              step: 'all',
-            },
-          ],
-        };
+        const xx = rawData.timeSeriesDateAxis.data;
         const layout = {
-          // showlegend: false,
-          // legend: {
-          //   orientation: 'h', // 'v'
-          //   x: 0,
-          //   y: 1.12,
-          // },
+          showlegend: true,
+          legend: {
+            orientation: 'h', // 'v'
+            traceorder: 'group',
+            xanchor: 'center',
+            yanchor: 'top',
+          },
+          margin: {
+            t: 0,
+          },
           barmode: 'relative',
           height: 900,
           grid: {
@@ -99,37 +292,20 @@
             pattern: 'dependent',
             roworder: 'top to bottom',
           },
-          modebar: {
-            orientation: 'h', // 'h' set how modebar will appear
-          },
-          title: {
-            text: '',
-            font: {
-              size: 25,
-            },
-            yanchor: 'top',
-          },
           xaxis: {
-            rangeslider: {
-              thickness: 0.03,
-            },
-            rangeselector: selectorOptions,
-            range: [xx[0], xx[23]],
             title: {
-              text: '',
+              text: rawData.timeSeriesDateAxis.label,
               font: {
                 size: 12,
               },
-              standoff: 30, // create gap between axis and title
             },
-            // layer: 'below traces',
           },
         };
   
         const config = {
           displaylogo: false, // hides the plotly logo from the modebar when false
           scrollZoom: false, // allows mouse wheel scroll when true
-          staticPlot: false, // disable modebar options when true
+          staticPlot: true, // disable modebar options when true
           responsive: true, // responsive to window size
           autosizeable: true,
           toImageButtonOptions: {
@@ -145,12 +321,11 @@
         const buffer = 0.02;
         let totalNumPlots = 5 - (rawData.hasReservations ? 0 : 1);
         totalNumPlots -= (rawData.aggregatedSOC.data !== null ? 0 : 1);
-        console.log(`total number of plots ${totalNumPlots}`);
         const subPlotHeight = (1 / totalNumPlots) - buffer;
         let lastPlotHeight = 0;
 
         // 1) Net load
-        _.forEach(rawData.poiPower, (value) => {
+        forEach(rawData.poiPower, (value) => {
           trace = {
             legendgroup: 'poiPower',
             x: xx,
@@ -168,7 +343,7 @@
           data.push(trace);
         });
         // add reservations on top (if included in data)
-        _.forEach(rawData.reservations, (value) => {
+        forEach(rawData.reservations, (value) => {
           trace = {
             legendgroup: 'reservations',
             x: xx,
@@ -179,7 +354,6 @@
           };
           data.push(trace);
         });
-        // console.log([lastPlotHeight, lastPlotHeight + subPlotHeight]);
         layout.yaxis5 = {
           domain: [lastPlotHeight, lastPlotHeight + subPlotHeight],
           title: {
@@ -208,7 +382,6 @@
           yaxis: 'y4',
         };
         data.push(trace);
-        console.log([lastPlotHeight, lastPlotHeight + subPlotHeight]);
         layout.yaxis4 = {
           domain: [lastPlotHeight, lastPlotHeight + subPlotHeight],
           title: {
@@ -224,7 +397,7 @@
 
         // 3) Market/Capacity Prices
         if (rawData.hasReservations) {
-          _.forEach(rawData.marketPrices, (value) => {
+          forEach(rawData.marketPrices, (value) => {
             trace = {
               legendgroup: 'marketPrices',
               x: xx,
@@ -240,7 +413,6 @@
             };
             data.push(trace);
           });
-          console.log([lastPlotHeight, lastPlotHeight + subPlotHeight]);
           layout.yaxis3 = {
             domain: [lastPlotHeight, lastPlotHeight + subPlotHeight],
             title: {
@@ -256,7 +428,7 @@
         }
 
         // 4) All other power flows
-        _.forEach(rawData.internalPower, (value) => {
+        forEach(rawData.internalPower, (value) => {
           trace = {
             legendgroup: 'internalPower',
             x: xx,
@@ -272,7 +444,6 @@
           };
           data.push(trace);
         });
-        console.log([lastPlotHeight, lastPlotHeight + subPlotHeight]);
         layout.yaxis2 = {
           domain: [lastPlotHeight, lastPlotHeight + subPlotHeight],
           title: {
@@ -304,7 +475,6 @@
               color: this.getColorFromTechnology('ess'),
             },
           };
-          console.log([lastPlotHeight, lastPlotHeight + subPlotHeight]);
           data.push(trace);
           layout.yaxis = {
             domain: [lastPlotHeight, lastPlotHeight + subPlotHeight],
@@ -327,7 +497,7 @@
         const ctx = document.getElementById(chartId);
         const trace1 = {
           type: 'heatmap',
-          ...this.chartData.heatMapData,
+          ...this.energyPriceMapData,
           colorscale: 'Viridis', // ''YlGnBu',
           colorbar: {
             thickness: 10,

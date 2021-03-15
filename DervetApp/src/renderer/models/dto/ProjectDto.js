@@ -613,7 +613,7 @@ export const makeScenarioParameters = (project, inputsDirectory) => {
   } else {
     n = project.optimizationHorizon;
   }
-  if (n === 'Hours') {
+  if (n === 'Hour') {
     n = project.optimizationHorizonNum;
   }
 

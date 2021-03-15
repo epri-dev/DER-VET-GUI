@@ -164,7 +164,11 @@ export const ENERGY_PRICE_SOURCE_WHOLESALE_ALLOWED_VALUES = [
 export const FR_COMBINED_MARKET_ALLOWED_VALUES = optionsYN;
 export const GRID_LOCATION_ALLOWED_VALUES = makeAllowedValues(['Generation', 'Transmission', 'Distribution', 'Customer']);
 export const INCLUDE_INTERCONNECTION_CONSTRAINTS_ALLOWED_VALUES = optionsYN;
-export const OPTIMIZATION_HORIZON_ALLOWED_VALUES = makeAllowedValues(['Year', 'Months', 'Hours']);
+export const OPTIMIZATION_HORIZON_ALLOWED_VALUES = [
+  { value: 'Year', label: 'Years' },
+  { value: 'Month', label: 'Months' },
+  { value: 'Hour', label: 'Hours' },
+];
 export const OWNERSHIP_ALLOWED_VALUES = makeAllowedValues(['Customer', 'Utility', '3rd Party']);
 export const DR_END_MODE_ALLOWED_VALUES = [
   { value: true, label: 'Event Length' },

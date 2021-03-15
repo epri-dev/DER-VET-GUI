@@ -1,4 +1,4 @@
-import TimeSeriesData from '@/models/Results/TimeSeriesData';
+import { TimeSeriesData } from '@/models/Results/TimeSeriesData';
 
 describe('TimeSeriesData model', () => {
   it('(1) sucessfull convert an array into a 24x10 matrix', () => {
@@ -32,11 +32,5 @@ describe('TimeSeriesData model', () => {
     ];
     const actualDataArr = TimeSeriesData.listToMap(testArray);
     expect(actualDataArr).to.eql(expectedDataArr);
-  });
-  it('(2) sucessfull parse the day from a date time stamp of form: "2017-01-01 1:00:00 AM" ', () => {
-    const testString = '2017-01-01 1:00:00 AM';
-    const expectedString = '2017-01-01';
-    const actualString = TimeSeriesData.getFullDate(testString);
-    expect(actualString).to.eql(expectedString);
   });
 });

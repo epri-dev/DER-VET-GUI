@@ -68,6 +68,7 @@
     { id: 1, value: 'billReductionProject', text: 'DER for Bill Reduction' },
     { id: 2, value: 'reliabilityProject', text: 'DER for Reliability' },
     { id: 3, value: 'ERCOTMarketService', text: 'ERCOT Market Case' },
+    { id: 4, value: 'dummyMarketServiceHourly', text: 'Dummy Market Case' },
   ];
 
   export default {

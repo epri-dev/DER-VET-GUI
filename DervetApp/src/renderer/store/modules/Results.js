@@ -11,7 +11,9 @@ const getDefaultResultState = () => ({
   // PLOTS - null if the charts dont exist
   deferralVueObjects: null,
   designVueObjects: null,
-  dispatchVueObjects: null,
+  // dispatchVueObjects: null,
+  dispatchData: null,
+  dispatchEnergyPriceMapData: null,
   financialVueObjects: null,
   reliabilityVueObjects: null,
   summaryVueObjects: null,
@@ -35,13 +37,22 @@ const mutations = {
       numEnergyCol: runData.size.numEnergyCols,
     };
   },
-  CREATE_DISPATCH_PLOTS(state) {
+  CREATE_DISPATCH_PLOTS(state) { // TODO put in mutation constants
     const runData = state.data;
-    state.dispatchVueObjects = {
-      stackedLineData: runData.dispatchStackedLineChart,
-      heatMapData: runData.dispatchEnergyPriceMapData,
-    };
+    state.dispatchEnergyPriceMapData = runData.dispatchEnergyPriceMapData;
+    state.dispatchData = runData.dispatchData;
   },
+  // SET_CURRENT_DISPATCH_DATA(state, windowSize) {
+  //   state.dispatchDataIterator.setCurrentValue(windowSize);
+  // },
+  // SET_NEXT_DISPATCH_DATA(state, payload) {
+  //   const { currStartDate, currEndDate, windowSize } = payload;
+  //   state.dispatchDataIterator.next(currStartDate, currEndDate, windowSize);
+  // },
+  // SET_PREVIOUS_DISPATCH_DATA(state, payload) {
+  //   const { currStartDate, currEndDate, windowSize } = payload;
+  //   state.dispatchDataIterator.previous(currStartDate, currEndDate, windowSize);
+  // },
   CREATE_FINANCIAL_PLOTS(state) {
     const runData = state.data;
     state.financialVueObjects = {
@@ -90,32 +101,29 @@ const mutations = {
 };
 
 const actions = {
-  createDeferralPlots({ commit }) {
-    commit('CREATE_DEFERRAL_PLOTS');
-  },
-  createDesignPlots({ commit }) {
-    commit('CREATE_DESIGN_PLOTS');
-  },
-  createDispatchPlots({ commit }) {
-    commit('CREATE_DISPATCH_PLOTS');
-  },
-  createFinancialPlots({ commit }) {
-    commit('CREATE_FINANCIAL_PLOTS');
-  },
-  createReliabilityPlots({ commit }) {
-    commit('CREATE_RELIABILITY_PLOTS');
-  },
-  createSummaryPlots({ commit }) {
-    commit('CREATE_SUMMARY_PLOTS');
-  },
+  // setCurrentDispatchData({ commit }, windowSize) {
+  //   commit('SET_CURRENT_DISPATCH_DATA', windowSize);
+  // },
+  // setNextDispatchData({ commit }, payload) {
+  //   commit('SET_NEXT_DISPATCH_DATA', payload);
+  // },
+  // setPreviousDispatchData({ commit }, payload) {
+  //   commit('SET_PREVIOUS_DISPATCH_DATA', payload);
+  // },
   receiveResults({ commit }, results) {
     // TODO: handle parsing error
     commit(`Application/${m.SET_RUN_NOT_IN_PROGRESS}`);
     try {
-      const resultDataObject = new ResultsData(0, results);
+      const resultDataObject = new ResultsData(results);
       commit('SET_RESULT', resultDataObject);
       commit('SET_PATH', results.resultsPath);
       commit('Application/SET_RESULT_SUCCESS');
+      commit('CREATE_SUMMARY_PLOTS');
+      commit('CREATE_FINANCIAL_PLOTS');
+      commit('CREATE_DISPATCH_PLOTS');
+      commit('CREATE_DESIGN_PLOTS');
+      commit('CREATE_RELIABILITY_PLOTS');
+      commit('CREATE_DEFERRAL_PLOTS');
     } catch (error) {
       commit('Application/SET_RESULT_ERROR');
       throw error;
