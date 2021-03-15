@@ -102,6 +102,28 @@ body {
     padding-left: 15px !important;
 }
 
+.nav-logo-img {
+    max-width: 100%;
+    height: auto;
+    opacity: 0.6;
+}
+
+.nav-logo-img:hover {
+    opacity: 1;
+}
+
+.no-padding {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.navbar-btn {
+    padding-left: 30px !important;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-right: 30px !important;
+}
+
 /*
  * Sidebar
  */
