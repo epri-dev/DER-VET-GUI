@@ -28,7 +28,7 @@
                       v-if="resultsExist">
             Results
           </b-nav-item>
-          
+
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto">
           <b-button-group class="navbar-btn">
@@ -73,7 +73,7 @@
   import financeMixin from '@/mixins/financeMixin';
 
   const FORUM_LINK = 'https://www.der-vet.com/forum/';
-  const USER_GUIDE_LINK = 'https://storagewikidev.epri.com/index.php/DER_VET_User_Guide#Index';
+  const USER_GUIDE_LINK = 'https://storagewiki.epri.com/index.php/DER_VET_User_Guide#Index';
 
   export default {
     mixins: [technologySpecsMixin, objectivesMixin, financeMixin],
