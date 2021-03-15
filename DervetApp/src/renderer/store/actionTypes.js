@@ -15,8 +15,8 @@ export const RESET_PROJECT_TO_DEFAULT = 'resetProjectToDefault';
 export const LOAD_QUICK_START_PROJECT = 'loadQuickStartProject';
 export const LOAD_NEW_PROJECT = 'loadNewProject';
 // back up
-export const SET_BACKUP_PRICE = 'setBackupPrice';
-export const SET_BACKUP_ENERGY = 'setBackupEnergy';
+export const SET_BACKUP_ENERGY_PRICE = 'setBackupPrice';
+export const SET_BACKUP_ENERGY_RESERVATION = 'setBackupEnergy';
 // battery page
 export const REPLACE_TECHNOLOGY_SPECS_BATTERY = 'replaceTechnologySpecsBattery';
 // battery cycle page
@@ -39,8 +39,8 @@ export const SET_DR_PROGRAM_TYPE = 'setDRProgramType';
 export const SET_DR_APPLIED_MONTHS = 'setDRAppliedMonths';
 export const SET_DR_APPLIED_MONTHS_LABELS = 'setDRAppliedMonthsLabels';
 export const SET_DR_CAPACITY_RESERVATION = 'setDRCapacityReservation';
-export const SET_DR_CAPACITY_AWARDS = 'setDRCapacityAwards';
-export const SET_DR_ENERGY_AWARDS = 'setDREnergyAwards';
+export const SET_DR_CAPACITY_PRICE = 'setDRCapacityPrice';
+export const SET_DR_ENERGY_PRICE = 'setDREnergyPrice';
 export const SET_DR_GROWTH = 'setDRGrowth';
 // deferral page
 export const SET_DEFERRAL_GROWTH = 'setDeferralGrowth';
@@ -124,6 +124,9 @@ export const REPLACE_LIST_FIELD = 'replaceListField';
 export const REMOVE_TECH = 'removeTech';
 // technology timeseries
 export const ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV = 'addGenerationProfileToTechnologySpecsPV';
+// timeseries uploads
+export const SET_TS_ERROR = 'setTSError';
+export const SET_TS_REQUIRED = 'setTSRequired';
 // user defined service
 export const SET_USER_ENERGY_MAX = 'setUserEnergyMax';
 export const SET_USER_ENERGY_MIN = 'setUserEnergyMin';

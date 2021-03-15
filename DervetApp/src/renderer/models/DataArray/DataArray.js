@@ -21,12 +21,14 @@ class DataArray {
 
   errorMsgInvalidData(actualRowsCount, expectedRowsCount) {
     // return a String containing the error message
-    return `<b>Invalid Data:</b> This file has <b>${actualRowsCount}</b> entries. It must have ${expectedRowsCount}`;
+    const entries = (actualRowsCount === 1) ? 'entry' : 'entries';
+    return `<b>Invalid Data:</b> This file has <b>${actualRowsCount}</b> ${entries}. It must have ${expectedRowsCount}`;
   }
 
   errorMsgInvalidRows(violationName, invalidRows) {
     // return a String containing the error message
-    return `<b>${invalidRows.length} Invalid Rows:</b> ${violationName} : [${this.arrayDisplayFirstFifteen(invalidRows)}]`;
+    const rows = (invalidRows.length === 1) ? 'Row' : 'Rows';
+    return `<b>${invalidRows.length} Invalid ${rows}:</b> ${violationName} : [${this.arrayDisplayFirstFifteen(invalidRows)}]`;
   }
 
   getPageAttributes(pageGroup, pageKey, page) {
@@ -47,18 +49,20 @@ class DataArray {
   invalidCheckRowsCount(x) {
     const actualRowsCount = this.length();
     if (actualRowsCount === parseFloat(x)) return noErrorObject;
+    if (x === 'TBD') return noErrorObject;
     return {
       errorMsg: this.errorMsgInvalidData(actualRowsCount, x),
     };
   }
 
   invalidCheckRowSize(x) {
+    const values = (parseFloat(x) === 1) ? 'value' : 'values';
     const invalidRows = this.rowSizes.reduce((a, val, i) => {
       if (val !== x) a.push(i + 1);
       return a;
     }, []);
     if (invalidRows.length === 0) return noErrorObject;
-    const violationName = `each row must have ${x} value`;
+    const violationName = `each row must have ${x} ${values}`;
     return {
       errorMsg: this.errorMsgInvalidRows(violationName, invalidRows),
     };

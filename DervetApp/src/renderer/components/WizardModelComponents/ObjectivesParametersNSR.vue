@@ -19,7 +19,6 @@
       <timeseries-data-upload
         chart-name="tsNsrPriceChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsNsrPrice').data.length !== 0"
         :DataModel="metadata.tsNsrPrice.DataModel"
         :data-name="metadata.tsNsrPrice.displayName"
         :data-time-series="tsData('tsNsrPrice')"
@@ -85,17 +84,18 @@
     validations: {
       ...validations,
     },
-    methods: {
-      getErrorListTS() {
-        const errors = [];
+    computed: {
+      isRequiredTSFields() {
+        // return an object of booleans for every TS_FIELD,
+        //   indicating if each is required
+        const isRequiredObject = {};
         (TS_FIELDS).forEach((tsField) => {
-          const errorMsgTS = this.getErrorMsgTSFromProject(tsField);
-          if (errorMsgTS.length !== 0) {
-            errors.push(errorMsgTS);
-          }
+          isRequiredObject[tsField] = true;
         });
-        return errors;
+        return isRequiredObject;
       },
+    },
+    methods: {
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },

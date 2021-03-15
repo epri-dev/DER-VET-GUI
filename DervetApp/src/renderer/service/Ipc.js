@@ -20,4 +20,8 @@ export default class IpcService {
   static sendProject(project) {
     ipcRenderer.send(DERVET_INPUTS, project);
   }
+
+  static stopPython() {
+    ipcRenderer.send('kill-dervet');
+  }
 }

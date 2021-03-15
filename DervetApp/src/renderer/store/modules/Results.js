@@ -1,4 +1,5 @@
 import ResultsData from '@/models/Results/Results';
+import * as m from '@/store/mutationTypes';
 
 const getDefaultResultState = () => ({
   id: null,
@@ -111,6 +112,7 @@ const actions = {
   // },
   receiveResults({ commit }, results) {
     // TODO: handle parsing error
+    commit(`Application/${m.SET_RUN_NOT_IN_PROGRESS}`);
     try {
       const resultDataObject = new ResultsData(results);
       commit('SET_RESULT', resultDataObject);

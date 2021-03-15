@@ -136,27 +136,14 @@
         </template>
         </br>
 
-        <div class="form-group form-buffer row">
-          <div class="col-md-5">
-            <file-picker
-              label="Export Project"
-              :callback="exportProject"
-              :isAsync="true"
-              :isDirectory="true"
-              buttonAttributes="btn btn-lg btn-info  btn-summary"
-              wrapperDivAttributes="col-md-5"/>
-          </div>
-          <div class="col-md-2"/>
-
-          <div class="col-md-5">
-            <router-link
-              v-on:click.native="(runDervetDisabled) ? () => null : runDervet()"
-              :event="runDervetDisabled ? '' : 'click'"
-              :to="this.$route.path"
-              class="btn btn-lg btn-danger pull-left btn-summary">
-              {{ runInProgress() ? 'Running...' : 'Run Analysis' }}
-            </router-link>
-          </div>
+        <div class="form-group form-buffer text-center">
+          <file-picker
+            label="Export Project"
+            :callback="exportProject"
+            :isAsync="true"
+            :isDirectory="true"
+            buttonAttributes="btn btn-lg btn-info btn-summary"
+            wrapperDivAttributes="col-md-12"/>
         </div>
 
       </div>
@@ -168,7 +155,6 @@
 <script>
   import _ from 'lodash';
   import * as paths from '@/router/constants';
-  import { RUN_ANALYSIS } from '@/router/constants';
   import { ANALYSIS_HORIZON_MODE_ALLOWED_VALUES } from '@/models/Project/constants';
   import * as techLabels from '@/models/Project/TechnologySpecs/labelConstants';
   import { exportProject } from '@/service/ProjectFileManager';
@@ -209,19 +195,12 @@
         });
         return errorsTF;
       },
-      anyErrorExists() {
-        return (this.overviewErrorExists() || this.activeTechErrorExists
-          || this.doesActiveFinancialErrorExist || this.doesActiveObjectivesErrorExist);
-      },
       techAll() {
         const techList = [];
         this.techSpecs.forEach((item) => {
           techList.push(this.filterNonActives(item.items));
         });
         return _.flatten(techList);
-      },
-      runDervetDisabled() {
-        return this.anyErrorExists;
       },
       modeDescription() {
         const mode = this.$store.state.Project.analysisHorizonMode;
@@ -249,17 +228,9 @@
         }
         return `${rate} %`;
       },
-      runInProgress() {
-        return this.$store.state.Application.runInProgress;
-      },
+
       exportProject(selectedPath) {
         return exportProject(selectedPath, this.$store.state.Project, this.$store.state.Application);
-      },
-      runDervet() {
-        // TODO: note that there is currently no validation, so calling this with an
-        // incomplete Project object will likely result in an unhandled exception
-        this.$store.dispatch('Application/runDervet', this.$store.state.Project)
-          .then(this.$router.push({ path: RUN_ANALYSIS }));
       },
 
       // components

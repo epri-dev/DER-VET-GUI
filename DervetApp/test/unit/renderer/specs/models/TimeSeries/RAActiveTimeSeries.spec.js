@@ -24,7 +24,7 @@ describe('RAActiveTimeSeries model', () => {
     );
     const threeInvalidRowsOrig = cloneDeep(threeInvalidRows);
     actual = threeInvalidRows.validate(3);
-    expected = '<b>1 Invalid Rows:</b> each value must be 0 or 1 : [2]';
+    expected = '<b>1 Invalid Row:</b> each value must be 0 or 1 : [2]';
     expect(actual).to.eql(expected);
     expect(threeInvalidRows).to.eql(threeInvalidRowsOrig);
   });

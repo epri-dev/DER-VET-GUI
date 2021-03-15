@@ -68,6 +68,20 @@ const csvUploadMixin = {
     getDataFromProject(fields) {
       return operateOnKeysList(this.$store.state.Project, fields, f => f);
     },
+    getErrorListTS() {
+      const errors = [];
+      (this.CONSTANTS.TS_FIELDS).forEach((tsField) => {
+        // skip non-required tsFields
+        if (!this.isRequiredTSFields[tsField]) {
+          return;
+        }
+        const errorMsgTS = this.getErrorMsgTSFromProject(tsField);
+        if (errorMsgTS.length !== 0) {
+          errors.push(errorMsgTS);
+        }
+      });
+      return errors;
+    },
     getErrorListPayload() {
       const errors = [];
       Object.keys(this.$v).forEach((key) => {
@@ -89,7 +103,8 @@ const csvUploadMixin = {
       return `${this.capitalize(this.metadata[tsField].displayName)} Data are required`;
     },
     getErrorMsgTSFromProject(tsField) {
-      // this method also revalidates the TS to reset the errors
+      // this method also revalidates the TS
+      //  (note: this already skips non-required fields)
       const errorMsgTS = this.requiredDataLabel(tsField);
       if (this.tsData(tsField).data.length === 0
         || (!this.isMonthly(tsField)
@@ -189,14 +204,26 @@ const csvUploadMixin = {
         }
       });
     },
+    tsSetRequired(tsFields) {
+      tsFields.forEach((tsField) => {
+        const payload = {
+          tsName: this[tsField].tsName,
+          required: this.isRequiredTSFields[tsField],
+        };
+        this.$store.dispatch('setTSRequired', payload);
+      });
+    },
     useExistingField(tsField) {
       return `${tsField}UseExisting`;
     },
     validatedSave() {
       this.submitted = true;
       this.$v.$touch();
-      // save
+      // save TS (only valid TS are saved)
       this.tsSave(this.CONSTANTS.TS_FIELDS);
+      // set required on every TS
+      this.tsSetRequired(this.CONSTANTS.TS_FIELDS);
+      // save every non-TS field
       this.save(this.CONSTANTS.FIELDS);
       // set errorList (important to do this AFTER tsSave())
       this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());

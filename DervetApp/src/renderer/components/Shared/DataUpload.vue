@@ -16,7 +16,7 @@
           </b-form-group>
         </div>
         <div class="col-md-5 error-text-color">
-          <span v-html="uploadedData.errors"></span>
+          <span v-html="uploadedData.error"></span>
         </div>
         <div class="col-md-3">
           <b-button
@@ -121,6 +121,9 @@
       };
     },
     computed: {
+      dataExists() {
+        return this.uploadedData.data.length !== 0;
+      },
       firstLetterCapitalized() {
         return this.dataName.charAt(0).toUpperCase() + this.dataName.slice(1);
       },
@@ -134,7 +137,7 @@
         return this.dataFrequency.value === 'monthly' ? 'month' : 'timestep';
       },
       tsFrequencyHasChanged() {
-        return (!this.validDataExists && this.uploadedData.data.length !== 0);
+        return (!this.validDataExists && this.dataExists);
       },
       validDataExists() {
         return (this.dataExists && [undefined, ''].includes(this.importError));
@@ -142,7 +145,6 @@
     },
     props: {
       chartName: String,
-      dataExists: Boolean,
       DataModel: Function,
       dataName: String,
       dataFrequency: Object,

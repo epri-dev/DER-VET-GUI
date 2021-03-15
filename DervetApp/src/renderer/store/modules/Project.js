@@ -152,11 +152,11 @@ const mutations = {
     Object.assign(state, project);
   },
   // Backup
-  [m.SET_BACKUP_PRICE](state, newValue) {
-    state.backupPrice = newValue;
+  [m.SET_BACKUP_ENERGY_PRICE](state, newValue) {
+    state[c.MTS_BACKUP_ENERGY_PRICE] = newValue;
   },
-  [m.SET_BACKUP_ENERGY](state, newValue) {
-    state.backupEnergyReservation = newValue;
+  [m.SET_BACKUP_ENERGY_RESERVATION](state, newValue) {
+    state[c.MTS_BACKUP_ENERGY_RESERVATION] = newValue;
   },
   // Battery
   [m.REPLACE_TECHNOLOGY_SPECS_BATTERY](state, payload) {
@@ -205,9 +205,9 @@ const mutations = {
     const tmpSpecs = getters.getControllableLoadSpecsClone(state)();
     const { id, index, errorsString } = payload;
     const indexMatchingId = getters.getIndexOfControllableLoadId(state)(id);
-    // add errorsString to ts.errors
+    // add errorsString to ts.error
     if (errorsString !== undefined) {
-      tmpSpecs[indexMatchingId].associatedInputs[index].ts.errors = errorsString;
+      tmpSpecs[indexMatchingId].associatedInputs[index].ts.error = errorsString;
     }
     state.technologySpecsControllableLoad = tmpSpecs;
   },
@@ -267,19 +267,19 @@ const mutations = {
     state[c.DR_GROWTH] = newDRGrowth;
   },
   [m.SET_DR_APPLIED_MONTHS](state, newValue) {
-    state.drMonthsApplied = newValue;
+    state[c.MTS_DR_MONTHS_APPLIED] = newValue;
   },
   [m.SET_DR_APPLIED_MONTHS_LABELS](state, newValue) {
-    state.drMonthsAppliedLabels = newValue;
+    state[c.DR_APPLIED_MONTHS_LABELS] = newValue;
   },
   [m.SET_DR_CAPACITY_RESERVATION](state, newValue) {
-    state.drCapacityReservation = newValue;
+    state[c.MTS_DR_CAPACITY_RESERVATION] = newValue;
   },
-  [m.SET_DR_CAPACITY_AWARDS](state, newValue) {
-    state.drCapacityAwards = newValue;
+  [m.SET_DR_CAPACITY_PRICE](state, newValue) {
+    state[c.MTS_DR_CAPACITY_PRICE] = newValue;
   },
-  [m.SET_DR_ENERGY_AWARDS](state, newValue) {
-    state.drEnergyAwards = newValue;
+  [m.SET_DR_ENERGY_PRICE](state, newValue) {
+    state[c.MTS_DR_ENERGY_PRICE] = newValue;
   },
   // External incentives file
   [m.ADD_EXTERNAL_INCENTIVE](state, newExternalIncentive) {
@@ -371,9 +371,9 @@ const mutations = {
     const tmpSpecs = getters.getFleetEVSpecsClone(state)();
     const { id, index, errorsString } = payload;
     const indexMatchingId = getters.getIndexOfFleetEVId(state)(id);
-    // add errorsString to ts.errors
+    // add errorsString to ts.error
     if (errorsString !== undefined) {
-      tmpSpecs[indexMatchingId].associatedInputs[index].ts.errors = errorsString;
+      tmpSpecs[indexMatchingId].associatedInputs[index].ts.error = errorsString;
     }
     state.technologySpecsFleetEV = tmpSpecs;
   },
@@ -437,13 +437,17 @@ const mutations = {
   },
   [m.SET_INCLUDE_SITE_LOAD](state) {
     let customerSited = state.objectivesRetailEnergyChargeReduction;
-    customerSited = customerSited || state.objectivesRetailEnergyChargeReduction;
+    customerSited = customerSited || state.objectivesRetailDemandChargeReduction;
     state.includeSiteLoad = customerSited;
+    // also set TS boolean attribute
+    state[c.TS_SITE_LOAD].required = customerSited;
   },
   [m.SET_INCLUDE_SYSTEM_LOAD](state) {
     let gridDomainProject = state.objectivesDR;
     gridDomainProject = gridDomainProject || state.objectivesRA;
     state.includeSystemLoad = gridDomainProject;
+    // also set TS boolean attribute
+    state[c.TS_SYSTEM_LOAD].required = gridDomainProject;
   },
   [m.SET_OPTIMIZATION_HORIZON](state, newOptimizataionHorizon) {
     state.optimizationHorizon = newOptimizataionHorizon;
@@ -574,9 +578,9 @@ const mutations = {
     const tmpSpecs = getters.getSolarPVSpecsClone(state)();
     const { id, index, errorsString } = payload;
     const indexMatchingId = getters.getIndexOfSolarId(state)(id);
-    // add errorsString to ts.errors
+    // add errorsString to ts.error
     if (errorsString !== undefined) {
-      tmpSpecs[indexMatchingId].associatedInputs[index].ts.errors = errorsString;
+      tmpSpecs[indexMatchingId].associatedInputs[index].ts.error = errorsString;
     }
     state.technologySpecsSolarPV = tmpSpecs;
   },
@@ -746,6 +750,15 @@ const mutations = {
   [m.RESET_LIST_OF_ACTIVE_TECHNOLOGIES](state) {
     state.listOfActiveTechnologies = getDefaultState().listOfActiveTechnologies;
   },
+  // timeseries uploads
+  [m.SET_TS_ERROR](state, payload) {
+    const { tsName, error } = payload;
+    state[tsName].error = error;
+  },
+  [m.SET_TS_REQUIRED](state, payload) {
+    const { tsName, required } = payload;
+    state[tsName].required = required;
+  },
   // user defined service
   [m.SET_USER_ENERGY_MAX](state, payload) {
     state[c.TS_USER_ENERGY_MAX] = payload;
@@ -780,6 +793,13 @@ const actions = {
       commit(m.LOAD_NEW_PROJECT, merge(getDefaultState(), selectedUseCase));
       resolve();
     });
+  },
+  // backup
+  [a.SET_BACKUP_ENERGY_PRICE]({ commit }, payload) {
+    commit(m.SET_BACKUP_ENERGY_PRICE, payload);
+  },
+  [a.SET_BACKUP_ENERGY_RESERVATION]({ commit }, payload) {
+    commit(m.SET_BACKUP_ENERGY_RESERVATION, payload);
   },
   // battery
   [a.REPLACE_TECHNOLOGY_SPECS_BATTERY]({ commit }, payload) {
@@ -853,11 +873,11 @@ const actions = {
   [a.SET_DR_CAPACITY_RESERVATION]({ commit }, newValue) {
     commit(m.SET_DR_CAPACITY_RESERVATION, newValue);
   },
-  [a.SET_DR_CAPACITY_AWARDS]({ commit }, newValue) {
-    commit(m.SET_DR_CAPACITY_AWARDS, newValue);
+  [a.SET_DR_CAPACITY_PRICE]({ commit }, newValue) {
+    commit(m.SET_DR_CAPACITY_PRICE, newValue);
   },
-  [a.SET_DR_ENERGY_AWARDS]({ commit }, newValue) {
-    commit(m.SET_DR_ENERGY_AWARDS, newValue);
+  [a.SET_DR_ENERGY_PRICE]({ commit }, newValue) {
+    commit(m.SET_DR_ENERGY_PRICE, newValue);
   },
   [a.SET_DR_GROWTH]({ commit }, newDRGrowth) {
     commit(m.SET_DR_GROWTH, newDRGrowth);
@@ -1239,6 +1259,13 @@ const actions = {
     } else if (payload.tag === 'ElectricVehicle2') {
       commit(m.REMOVE_TECH_FLEET_EV, payload);
     }
+  },
+  // timeseries uploads
+  [a.SET_TS_ERROR]({ commit }, payload) {
+    commit(m.SET_TS_ERROR, payload);
+  },
+  [a.SET_TS_REQUIRED]({ commit }, payload) {
+    commit(m.SET_TS_REQUIRED, payload);
   },
   // user defined
   [a.SET_USER_ENERGY_MAX]({ commit }, payload) {

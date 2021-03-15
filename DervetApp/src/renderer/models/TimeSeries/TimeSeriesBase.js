@@ -5,7 +5,7 @@ class TimeSeriesBase extends DataArray {
     super(data);
     this.columnHeaderName = columnHeaderName;
     this.unit = this.getUnit();
-    this.errors = '';
+    this.error = '';
     // this.required = false;
   }
 
@@ -26,12 +26,12 @@ class TimeSeriesBase extends DataArray {
   }
 
   revalidate(expectedRowCount) {
-    // returns errors (a String)
-    // with no errors, this will be an empty string
+    // returns error (a String)
+    // with no error, this will be an empty string
     const errorMsgArray = [];
     errorMsgArray.push(this.invalidCheckRowsCount(expectedRowCount).errorMsg);
-    const errors = errorMsgArray.filter((item) => item !== null).join('<br>');
-    return errors;
+    const error = errorMsgArray.filter((item) => item !== null).join('<br>');
+    return error;
   }
 }
 export default TimeSeriesBase;

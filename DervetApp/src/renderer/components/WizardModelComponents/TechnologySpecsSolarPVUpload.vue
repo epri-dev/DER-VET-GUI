@@ -7,7 +7,6 @@
     <timeseries-data-upload
       chart-name="tsSolarPVGenerationProfileChartUploaded"
       @click="receiveRemove"
-      :data-exists="tsData('tsSolarPVGenerationProfile').data.length !== 0"
       :DataModel="metadata.tsSolarPVGenerationProfile.DataModel"
       :data-name="metadata.tsSolarPVGenerationProfile.displayName"
       :data-time-series="tsData('tsSolarPVGenerationProfile')"

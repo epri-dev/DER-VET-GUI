@@ -1,5 +1,5 @@
 import log from 'electron-log';
-import { callDervet, readDervetResults, writeDervetInputs } from './service/dervet';
+import { callDervet, readDervetResults, writeDervetInputs, exitPythonProcess } from './service/dervet';
 import menuConfig from './util/menu';
 require('dotenv').config();
 import { app, BrowserWindow, ipcMain, Menu } from 'electron'; // eslint-disable-line
@@ -80,6 +80,10 @@ function registerIpcChannels() {
         event.sender.send('dervet-error', errMessage);
       });
   });
+
+  ipcMain.on('kill-dervet', () => {
+    exitPythonProcess();
+  });
 }
 
 /**
@@ -100,3 +104,5 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
+app.on('will-quit', exitPythonProcess);

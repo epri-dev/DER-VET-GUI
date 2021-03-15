@@ -1,111 +1,104 @@
 ﻿<template>
   <div>
     <h3>Services: Backup Power</h3>
-    <form class="form-horizontal form-buffer">
+    <div class="form-horizontal form-buffer">
 
       <monthly-data-upload
-        chart-name="chartUploadedAwardsTimeSeries"
-        :data-name="priceName"
-        units="$/kWh"
-        :DataModel="BackupEnergyAdwardsMonthly"
-        @uploaded="receiveMonthlyData"
-        :data-time-series="price"
-        key="1"
+        chart-name="mtsBackupEnergyPriceChartUploaded"
+        @click="receiveRemove"
+        :DataModel="metadata.mtsBackupEnergyPrice.DataModel"
+        :data-name="metadata.mtsBackupEnergyPrice.displayName"
+        :monthly-data="tsData('mtsBackupEnergyPrice')"
+        :errorMessage="getErrorMsgTS('mtsBackupEnergyPrice')"
+        :isInvalid="submitted && tsData('mtsBackupEnergyPrice').data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('mtsBackupEnergyPrice')"
+        object-name="mtsBackupEnergyPrice"
+        @uploaded="receiveTimeseriesData"
       />
+
       <monthly-data-upload
-        chart-name="chartUploadedReservationTimeSeries"
-        :data-name="energyReservationName"
-        units="kWh"
-        :DataModel="BackupEnergyReservationMonthly"
-        @uploaded="receiveMonthlyData"
-        :data-time-series="energyReservation"
-        key="2"
+        chart-name="mtsBackupEnergyReservationChartUploaded"
+        @click="receiveRemove"
+        :DataModel="metadata.mtsBackupEnergyReservation.DataModel"
+        :data-name="metadata.mtsBackupEnergyReservation.displayName"
+        :monthly-data="tsData('mtsBackupEnergyReservation')"
+        :errorMessage="getErrorMsgTS('mtsBackupEnergyReservation')"
+        :isInvalid="submitted && tsData('mtsBackupEnergyReservation').data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('mtsBackupEnergyReservation')"
+        object-name="mtsBackupEnergyReservation"
+        @uploaded="receiveTimeseriesData"
+      />
+      <hr>
+
+      <save-and-save-continue
+        :displayError="submitted && ($v.$anyError || isTSError)"
+        :save="validatedSaveStay"
+        :save-continue="validatedSaveContinue"
       />
 
-      <save-buttons
-        :continue-link="WIZARD_COMPONENT"
-        :displayError="submitted && $v.$anyError"
-        :save="validatedSave" />
-
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
-  import BackupEnergyReservationMonthly from '@/models/Monthly/BackupEnergyReservationMonthly';
-  import BackupEnergyAdwardsMonthly from '@/models/Monthly/BackupEnergyAdwardsMonthly';
-  import { WIZARD_COMPONENT } from '@/router/constants';
-  import {
-    SET_BACKUP_PRICE,
-    SET_BACKUP_ENERGY,
-  } from '@/store/actionTypes';
-  import MonthlyDataUpload from '@/components/Shared/MonthlyDataUpload';
-  import { isNotNullAndNotUndefined } from '@/util/logic';
+  import { projectMetadata } from '@/models/Project/ProjectMetadata';
+  import * as c from '@/models/Project/constants';
+  import '@/assets/samples/Sample_BackupEnergyPrice_Monthly_12.csv';
+  import '@/assets/samples/Sample_BackupEnergyReservation_Monthly_12.csv';
+
+  import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
 
   const PAGEGROUP = 'components';
   const PAGEKEY = 'objectives';
   const PAGE = 'backup';
+  const FIELDS = [];
+  const TS_FIELDS = c.MTS_BACKUP_FIELDS;
+
+  const ALL_FIELDS = [...FIELDS, ...TS_FIELDS];
+  const validations = projectMetadata.getValidationSchema(FIELDS);
+
+  const CONSTANTS = {
+    DESTINATION_PATH,
+    PAGEGROUP,
+    PAGEKEY,
+    PAGE,
+    FIELDS,
+    TS_FIELDS,
+  };
 
   export default {
-    components: { MonthlyDataUpload },
     mixins: [csvUploadMixin, wizardFormMixin],
     data() {
-      const p = this.$store.state.Project;
       return {
-        price: p.backupPrice,
-        priceName: 'award for reserving backup power',
-        energyReservation: p.backupEnergyReservation,
-        energyReservationName: 'amount of energy to constantly reserve',
-        WIZARD_COMPONENT,
-        BackupEnergyReservationMonthly,
-        BackupEnergyAdwardsMonthly,
+        metadata: this.getMetadata(projectMetadata, ALL_FIELDS),
+        ...this.getDataFromProject(ALL_FIELDS),
+        ...this.getTSInputDefaultDataFromProject(TS_FIELDS),
+        ...this.getChildKeys(TS_FIELDS),
+        ...this.getUseExistingDefaults(TS_FIELDS),
+        CONSTANTS,
       };
     },
-    computed: {
-      errorList() {
-        return this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE];
-      },
+    validations: {
+      ...validations,
     },
-    beforeMount() {
-      // submitted is false initially; set it to true after the first save.
-      // initially, complete is null; after saving, it is set to either true or false.
-      // we want to show validation errors at any time after the first save, with submitted.
-      if (isNotNullAndNotUndefined(this.errorList)) {
-        this.submitted = true;
-        this.$v.$touch();
-      }
+    computed: {
+      isRequiredTSFields() {
+        // return an object of booleans for every TS_FIELD,
+        //   indicating if each is required
+        const isRequiredObject = {};
+        (TS_FIELDS).forEach((tsField) => {
+          isRequiredObject[tsField] = true;
+        });
+        return isRequiredObject;
+      },
     },
     methods: {
-      getErrorListPayload() {
-        const errors = [];
-        Object.keys(this.$v).forEach((key) => {
-          if (key.charAt(0) !== '$' && this.$v[key].$invalid) {
-            errors.push(key);
-          }
-        });
-        return {
-          pageGroup: PAGEGROUP,
-          pageKey: PAGEKEY,
-          page: PAGE,
-          errorList: errors,
-        };
-      },
-      validatedSave() {
-        this.submitted = true;
-        this.$v.$touch();
-        // set errorList
-        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
-        return this.save();
-      },
-      save() {
-        if (this.inputMonthly[this.priceName] !== undefined) {
-          this.$store.dispatch(SET_BACKUP_PRICE, this.inputMonthly[this.priceName]);
-        }
-        if (this.inputMonthly[this.energyReservationName] !== undefined) {
-          this.$store.dispatch(SET_BACKUP_ENERGY, this.inputMonthly[this.energyReservationName]);
-        }
+      getErrorMsg(fieldName) {
+        return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
     },
   };

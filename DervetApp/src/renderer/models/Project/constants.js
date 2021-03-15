@@ -16,6 +16,7 @@ export const DR_END_HOUR = 'drEndHour';
 export const DR_END_MODE = 'drEndMode';
 export const DR_EVENT_LENGTH = 'drEventLength';
 export const DR_PROGRAM_TYPE = 'drProgramType';
+export const DR_APPLIED_MONTHS_LABELS = 'drMonthsAppliedLabels';
 export const ENERGY_PRICE_SOURCE_WHOLESALE = 'energyPriceSourceWholesale';
 export const FINANCE_DISCOUNT_RATE = 'financeDiscountRate';
 export const FINANCE_FEDERAL_TAX_RATE = 'financeFederalTaxRate';
@@ -112,10 +113,19 @@ export const TS_ALL = [
 ];
 
 // Monthly
+export const MTS_BACKUP_ENERGY_PRICE = 'mtsBackupEnergyPrice';
+export const MTS_BACKUP_ENERGY_RESERVATION = 'mtsBackupEnergyReservation';
+export const MTS_BACKUP_FIELDS = [MTS_BACKUP_ENERGY_PRICE, MTS_BACKUP_ENERGY_RESERVATION];
+export const MTS_DR_CAPACITY_PRICE = 'mtsDrCapacityPrice';
+export const MTS_DR_CAPACITY_RESERVATION = 'mtsDrCapacityReservation';
+export const MTS_DR_ENERGY_PRICE = 'mtsDrEnergyPrice';
+export const MTS_DR_MONTHS_APPLIED = 'mtsDrMonthsApplied'; // not an upload
+export const MTS_DR_FIELDS = [MTS_DR_CAPACITY_PRICE, MTS_DR_CAPACITY_RESERVATION,
+  MTS_DR_ENERGY_PRICE];
 export const MTS_RA_CAPACITY_PRICE = 'mtsRaCapacityPrice';
 export const MTS_RA_FIELDS = [MTS_RA_CAPACITY_PRICE];
 
-export const MTS_ALL = [...MTS_RA_FIELDS];
+export const MTS_ALL = [...MTS_RA_FIELDS, ...MTS_BACKUP_FIELDS, ...MTS_DR_FIELDS];
 
 export const makeAllowedValues = lst => _.map(lst, x => ({ value: x, label: x }));
 
@@ -218,6 +228,7 @@ export const DEMAND_RESPONSE_FIELDS = [
   DR_EVENT_LENGTH,
   DR_PROGRAM_TYPE,
   DR_GROWTH,
+  DR_APPLIED_MONTHS_LABELS,
 ];
 export const FINANCE_FIELDS = [
   FINANCE_DISCOUNT_RATE,

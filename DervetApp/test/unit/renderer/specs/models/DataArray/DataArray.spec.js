@@ -72,7 +72,7 @@ describe('DataArray model', () => {
 
   it('should return invalidCheckSingleValueNumeric properly', () => {
     const actual = fakeData.invalidCheckSingleValueNumeric();
-    const expected = { errorMsg: '<b>1 Invalid Rows:</b> each value must be numeric : [3]' };
+    const expected = { errorMsg: '<b>1 Invalid Row:</b> each value must be numeric : [3]' };
     expect(actual).to.eql(expected);
   });
 
@@ -86,7 +86,7 @@ describe('DataArray model', () => {
     expect(actual).to.eql(expected);
 
     actual = fakeData2.invalidCheckSingleValueInclusiveList([3, 22, 4, 20]);
-    expected = { errorMsg: '<b>1 Invalid Rows:</b> each value must be 3, 22, 4 or 20 : [4]' };
+    expected = { errorMsg: '<b>1 Invalid Row:</b> each value must be 3, 22, 4 or 20 : [4]' };
     expect(actual).to.eql(expected);
   });
 
