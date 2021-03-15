@@ -37,7 +37,7 @@
               <span class="fas fa-play fa-lg"/>
               <!-- <span v-if="!runInProgress()" class="fas fa-spinner fa-spin fa-lg"/> -->
             </b-button>
-            <b-button size="lg" v-if="runInProgress()" class="btn btn-danger navbar-btn" type="submit"
+            <b-button disabled size="lg" v-if="runInProgress()" class="btn btn-danger navbar-btn" type="submit"
               @click="killDervet()">
               <span class="fas fa-stop fa-lg"/>
             </b-button>
@@ -168,7 +168,7 @@
           .then(this.$router.push({ path: WIZARD_OVERVIEW }));
       },
       cannotRun() {
-        this.$router.push({ path: WIZARD_RUN_CASE });
+        this.$router.push({ path: WIZARD_RUN_CASE }).catch(() => {});
       },
       getTechAssociatedInputsPath(tech) {
         const techID = tech.id;
