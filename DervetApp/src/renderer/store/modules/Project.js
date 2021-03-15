@@ -268,6 +268,7 @@ const mutations = {
   },
   [m.SET_DR_APPLIED_MONTHS](state, newValue) {
     state[c.MTS_DR_MONTHS_APPLIED] = newValue;
+    state[c.DR_APPLIED_MONTHS_LABELS] = newValue.data;
   },
   [m.SET_DR_APPLIED_MONTHS_LABELS](state, newValue) {
     state[c.DR_APPLIED_MONTHS_LABELS] = newValue;

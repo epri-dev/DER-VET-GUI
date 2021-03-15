@@ -233,6 +233,7 @@ export class ProjectMetadata {
         actionSetName: a.SET_DR_START_HOUR,
       }),
       [c.DR_APPLIED_MONTHS_LABELS]: new ProjectFieldMetadata({
+        defaultValue: [],
         actionSetName: a.SET_DR_APPLIED_MONTHS_LABELS,
       }),
       [c.ENERGY_PRICE_SOURCE_WHOLESALE]: new ProjectFieldMetadata({

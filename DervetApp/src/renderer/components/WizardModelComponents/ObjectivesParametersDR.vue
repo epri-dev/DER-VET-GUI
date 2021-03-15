@@ -213,7 +213,7 @@
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
-      validatesSave() {
+      validatedSave() {
         this.$store.dispatch(SET_DR_APPLIED_MONTHS, this.monthsAppliedConvertedIntoOnesAndZeros);
         csvUploadMixin.methods.validatedSave.bind(this)();
       },
