@@ -142,9 +142,9 @@ export const optionsYN = [
 
 // Allowed values
 export const ANALYSIS_HORIZON_MODE_ALLOWED_VALUES = [
-  { value: '1', label: 'User-defined analysis horizon' },
-  { value: '2', label: 'Auto-calculate analysis horizon by shortest DER lifetime' },
-  { value: '3', label: 'Auto-calculate analysis horizon by longest DER lifetime' },
+  { value: '1', label: 'User-defined' },
+  { value: '2', label: 'The shortest DER lifetime' },
+  { value: '3', label: 'The longest DER lifetime' },
 ];
 export const DR_PROGRAM_TYPE_ALLOWED_VALUES = makeAllowedValues(['Day of', 'Day ahead']);
 export const RA_DISPATCH_MODE_ALLOWED_VALUES = [
@@ -183,6 +183,8 @@ export const RELIABILITY_POST_OPTIMIZATION_ONLY_ALLOWED_VALUES = [
 ];
 export const SIZING_EQUIPMENT_ALLOWED_VALUES = optionsYN;
 export const TIMESTEP_ALLOWED_VALUES = makeAllowedValuesWithNull(['60', '30', '15', '5', '1']);
+
+export const GROWTH_RATE_DESCRIPTION = 'A per year increase from the baseline year. This is the project start year.';
 
 // Field groupings
 export const START_PROJECT_FIELDS = [
