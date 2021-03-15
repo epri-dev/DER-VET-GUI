@@ -77,6 +77,7 @@ const mutations = {
     state.runInProgress = true;
   },
   [m.SET_RUN_NOT_IN_PROGRESS](state) {
+    console.log('run ended');
     state.runInProgress = false;
   },
   [m.SET_RESULT_SUCCESS](state) {
@@ -152,15 +153,15 @@ const actions = {
     commit(m.SET_NEW_ERROR_LIST, selectedUseCase);
   },
   [a.RECEIVE_ERROR]({ commit }) {
+    commit(m.SET_RUN_NOT_IN_PROGRESS);
     commit(m.SET_RESULT_ERROR);
     // TODO: handle parsing error here
-    commit(m.SET_RUN_NOT_IN_PROGRESS);
   },
   [a.RESULTS_RECEIVED]: {
     root: true,
     handler({ commit }) {
-      commit(m.SET_RESULT_SUCCESS);
       commit(m.SET_RUN_NOT_IN_PROGRESS);
+      commit(m.SET_RESULT_SUCCESS);
     },
   },
   [a.RESET_APPLICATION_TO_DEFAULT]({ commit }, newId) {
@@ -172,6 +173,10 @@ const actions = {
     // TODO add try catch here HN
     const dervetInputs = makeDervetInputs(project);
     IpcService.sendProject(dervetInputs);
+  },
+  killPython({ commit }) {
+    commit(m.SET_RUN_NOT_IN_PROGRESS);
+    IpcService.stopPython();
   },
 };
 
