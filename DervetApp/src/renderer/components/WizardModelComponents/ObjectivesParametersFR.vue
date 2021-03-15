@@ -44,7 +44,6 @@
       <timeseries-data-upload
         chart-name="tsFrPriceChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsFrPrice').data.length !== 0"
         :DataModel="metadata.tsFrPrice.DataModel"
         :data-name="metadata.tsFrPrice.displayName"
         :data-time-series="tsData('tsFrPrice')"
@@ -60,7 +59,6 @@
       <timeseries-data-upload
         chart-name="tsFrUpPriceChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsFrUpPrice').data.length !== 0"
         :DataModel="metadata.tsFrUpPrice.DataModel"
         :data-name="metadata.tsFrUpPrice.displayName"
         :data-time-series="tsData('tsFrUpPrice')"
@@ -76,7 +74,6 @@
       <timeseries-data-upload
         chart-name="tsFrDownPriceChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsFrDownPrice').data.length !== 0"
         :DataModel="metadata.tsFrDownPrice.DataModel"
         :data-name="metadata.tsFrDownPrice.displayName"
         :data-time-series="tsData('tsFrDownPrice')"

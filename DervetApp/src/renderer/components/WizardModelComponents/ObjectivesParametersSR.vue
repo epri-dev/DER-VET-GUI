@@ -19,7 +19,6 @@
       <timeseries-data-upload
         chart-name="tsSrPriceChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsSrPrice').data.length !== 0"
         :DataModel="metadata.tsSrPrice.DataModel"
         :data-name="metadata.tsSrPrice.displayName"
         :data-time-series="tsData('tsSrPrice')"

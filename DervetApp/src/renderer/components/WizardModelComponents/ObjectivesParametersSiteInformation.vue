@@ -26,7 +26,6 @@
       <timeseries-data-upload
         chart-name="tsSiteLoadChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsSiteLoad').data.length !== 0"
         :DataModel="metadata.tsSiteLoad.DataModel"
         :data-name="metadata.tsSiteLoad.displayName"
         :data-time-series="tsData('tsSiteLoad')"

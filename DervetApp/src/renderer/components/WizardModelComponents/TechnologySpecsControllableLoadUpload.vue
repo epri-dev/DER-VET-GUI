@@ -7,7 +7,6 @@
     <timeseries-data-upload
       chart-name="tsControllableLoadProfileChartUploaded"
       @click="receiveRemove"
-      :data-exists="tsData('tsControllableLoadProfile').data.length !== 0"
       :DataModel="metadata.tsControllableLoadProfile.DataModel"
       :data-name="metadata.tsControllableLoadProfile.displayName"
       :data-time-series="tsData('tsControllableLoadProfile')"

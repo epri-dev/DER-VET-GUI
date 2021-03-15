@@ -77,7 +77,6 @@
       <monthly-data-upload
         chart-name="mtsDrCapacityPriceChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('mtsDrCapacityPrice').data.length !== 0"
         :DataModel="metadata.mtsDrCapacityPrice.DataModel"
         :data-name="metadata.mtsDrCapacityPrice.displayName"
         :monthly-data="tsData('mtsDrCapacityPrice')"
@@ -92,7 +91,6 @@
       <monthly-data-upload
         chart-name="mtsDrEnergyPriceChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('mtsDrEnergyPrice').data.length !== 0"
         :DataModel="metadata.mtsDrEnergyPrice.DataModel"
         :data-name="metadata.mtsDrEnergyPrice.displayName"
         :monthly-data="tsData('mtsDrEnergyPrice')"
@@ -107,7 +105,6 @@
       <monthly-data-upload
         chart-name="mtsDrCapacityReservationChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('mtsDrCapacityReservation').data.length !== 0"
         :DataModel="metadata.mtsDrCapacityReservation.DataModel"
         :data-name="metadata.mtsDrCapacityReservation.displayName"
         :monthly-data="tsData('mtsDrCapacityReservation')"

@@ -7,7 +7,6 @@
       <timeseries-data-upload
         chart-name="tsSystemLoadChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsSystemLoad').data.length !== 0"
         :DataModel="metadata.tsSystemLoad.DataModel"
         :data-name="metadata.tsSystemLoad.displayName"
         :data-time-series="tsData('tsSystemLoad')"

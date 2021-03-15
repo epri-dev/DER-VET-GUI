@@ -3,7 +3,6 @@
     <data-upload
       :chart-name="chartName"
       @click="onRemove"
-      :data-exists="dataExists"
       :data-name="dataName"
       :data-frequency="{
         value: 'monthly',
@@ -49,7 +48,6 @@
     },
     props: {
       chartName: String,
-      dataExists: Boolean,
       DataModel: Function,
       dataName: String,
       monthlyData: Object,

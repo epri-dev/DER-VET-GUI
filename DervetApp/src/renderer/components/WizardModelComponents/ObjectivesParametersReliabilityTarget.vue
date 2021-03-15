@@ -26,7 +26,6 @@
       <timeseries-data-upload
         chart-name="tsCriticalLoadChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsCriticalLoad').data.length !== 0"
         :DataModel="metadata.tsCriticalLoad.DataModel"
         :data-name="metadata.tsCriticalLoad.displayName"
         :data-time-series="tsData('tsCriticalLoad')"

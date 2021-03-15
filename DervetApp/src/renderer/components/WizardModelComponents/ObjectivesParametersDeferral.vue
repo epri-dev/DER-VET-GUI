@@ -31,7 +31,6 @@
       <timeseries-data-upload
         chart-name="tsDeferralLoadChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsDeferralLoad').data.length !== 0"
         :DataModel="metadata.tsDeferralLoad.DataModel"
         :data-name="metadata.tsDeferralLoad.displayName"
         :data-time-series="tsData('tsDeferralLoad')"

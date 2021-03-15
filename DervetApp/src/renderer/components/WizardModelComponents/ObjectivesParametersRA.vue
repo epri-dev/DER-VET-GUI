@@ -39,7 +39,6 @@
       <monthly-data-upload
         chart-name="mtsRaCapacityPriceChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('mtsRaCapacityPrice').data.length !== 0"
         :DataModel="metadata.mtsRaCapacityPrice.DataModel"
         :data-name="metadata.mtsRaCapacityPrice.displayName"
         :monthly-data="tsData('mtsRaCapacityPrice')"
@@ -54,7 +53,6 @@
       <timeseries-data-upload
         chart-name="tsRaActiveChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsRaActive').data.length !== 0"
         :DataModel="metadata.tsRaActive.DataModel"
         :data-name="metadata.tsRaActive.displayName"
         :data-time-series="tsData('tsRaActive')"

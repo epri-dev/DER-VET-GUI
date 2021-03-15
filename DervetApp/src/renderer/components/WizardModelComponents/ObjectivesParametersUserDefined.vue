@@ -13,7 +13,6 @@
       <timeseries-data-upload
         chart-name="tsUserPowerMaxChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsUserPowerMax').data.length !== 0"
         :DataModel="metadata.tsUserPowerMax.DataModel"
         :data-name="metadata.tsUserPowerMax.displayName"
         :data-time-series="tsData('tsUserPowerMax')"
@@ -28,7 +27,6 @@
       <timeseries-data-upload
         chart-name="tsUserPowerMinChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsUserPowerMin').data.length !== 0"
         :DataModel="metadata.tsUserPowerMin.DataModel"
         :data-name="metadata.tsUserPowerMin.displayName"
         :data-time-series="tsData('tsUserPowerMin')"
@@ -43,7 +41,6 @@
       <timeseries-data-upload
         chart-name="tsUserEnergyMaxChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsUserEnergyMax').data.length !== 0"
         :DataModel="metadata.tsUserEnergyMax.DataModel"
         :data-name="metadata.tsUserEnergyMax.displayName"
         :data-time-series="tsData('tsUserEnergyMax')"
@@ -58,7 +55,6 @@
       <timeseries-data-upload
         chart-name="tsUserEnergyMinChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsUserEnergyMin').data.length !== 0"
         :DataModel="metadata.tsUserEnergyMin.DataModel"
         :data-name="metadata.tsUserEnergyMin.displayName"
         :data-time-series="tsData('tsUserEnergyMin')"

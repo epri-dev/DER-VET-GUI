@@ -6,7 +6,6 @@
       <monthly-data-upload
         chart-name="mtsBackupEnergyPriceChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('mtsBackupEnergyPrice').data.length !== 0"
         :DataModel="metadata.mtsBackupEnergyPrice.DataModel"
         :data-name="metadata.mtsBackupEnergyPrice.displayName"
         :monthly-data="tsData('mtsBackupEnergyPrice')"
@@ -21,7 +20,6 @@
       <monthly-data-upload
         chart-name="mtsBackupEnergyReservationChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('mtsBackupEnergyReservation').data.length !== 0"
         :DataModel="metadata.mtsBackupEnergyReservation.DataModel"
         :data-name="metadata.mtsBackupEnergyReservation.displayName"
         :monthly-data="tsData('mtsBackupEnergyReservation')"

@@ -3,7 +3,6 @@
     <data-upload
       :chart-name="chartName"
       @click="onRemove"
-      :data-exists="dataExists"
       :data-name="dataName"
       :data-frequency="{
         value: timestepValue,
@@ -78,7 +77,6 @@
     },
     props: {
       chartName: String,
-      dataExists: Boolean,
       DataModel: Function,
       dataName: String,
       dataTimeSeries: Object,

@@ -7,7 +7,6 @@
     <timeseries-data-upload
       chart-name="tsFleetEVBaselineLoadProfileChartUploaded"
       @click="receiveRemove"
-      :data-exists="tsData('tsFleetEVBaselineLoadProfile').data.length !== 0"
       :DataModel="metadata.tsFleetEVBaselineLoadProfile.DataModel"
       :data-name="metadata.tsFleetEVBaselineLoadProfile.displayName"
       :data-time-series="tsData('tsFleetEVBaselineLoadProfile')"
