@@ -32,7 +32,6 @@
       <timeseries-data-upload
         chart-name="tsLfEOUChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsLfEOU').data.length !== 0"
         :DataModel="metadata.tsLfEOU.DataModel"
         :data-name="metadata.tsLfEOU.displayName"
         :data-time-series="tsData('tsLfEOU')"
@@ -47,7 +46,6 @@
       <timeseries-data-upload
         chart-name="tsLfEODChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsLfEOD').data.length !== 0"
         :DataModel="metadata.tsLfEOD.DataModel"
         :data-name="metadata.tsLfEOD.displayName"
         :data-time-series="tsData('tsLfEOD')"
@@ -62,7 +60,6 @@
       <timeseries-data-upload
         chart-name="tsLfPriceChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsLfPrice').data.length !== 0"
         :DataModel="metadata.tsLfPrice.DataModel"
         :data-name="metadata.tsLfPrice.displayName"
         :data-time-series="tsData('tsLfPrice')"
@@ -78,7 +75,6 @@
       <timeseries-data-upload
         chart-name="tsLfUpPriceChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsLfUpPrice').data.length !== 0"
         :DataModel="metadata.tsLfUpPrice.DataModel"
         :data-name="metadata.tsLfUpPrice.displayName"
         :data-time-series="tsData('tsLfUpPrice')"
@@ -94,7 +90,6 @@
       <timeseries-data-upload
         chart-name="tsLfDownPriceChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsLfDownPrice').data.length !== 0"
         :DataModel="metadata.tsLfDownPrice.DataModel"
         :data-name="metadata.tsLfDownPrice.displayName"
         :data-time-series="tsData('tsLfDownPrice')"
@@ -169,31 +164,36 @@
     validations: {
       ...validations,
     },
-    methods: {
-      getErrorListTS() {
-        const errors = [];
+    computed: {
+      isRequiredTSFields() {
+        // return an object of booleans for every TS_FIELD,
+        //   indicating if each is required
+        const isRequiredObject = {};
         (TS_FIELDS).forEach((tsField) => {
-          // skip non-required tsFields
-          switch (this.lfCombinedMarket) {
-            case 'false': {
-              if (tsField === 'tsLfPrice') return;
-              break;
+          if (this.lfCombinedMarket === false) {
+            if (tsField === 'tsLfPrice') {
+              isRequiredObject[tsField] = false;
+            } else {
+              isRequiredObject[tsField] = true;
             }
-            case 'true': {
-              if (['tsLfUpPrice', 'tsLfDownPrice'].includes(tsField)) return;
-              break;
+          } else if (this.lfCombinedMarket === true) {
+            if (['tsLfUpPrice', 'tsLfDownPrice'].includes(tsField)) {
+              isRequiredObject[tsField] = false;
+            } else {
+              isRequiredObject[tsField] = true;
             }
-            default: {
-              if (['tsLfUpPrice', 'tsLfDownPrice', 'tsLfPrice'].includes(tsField)) return;
+          } else if (this.lfCombinedMarket === null) {
+            if (['tsLfPrice', 'tsLfUpPrice', 'tsLfDownPrice'].includes(tsField)) {
+              isRequiredObject[tsField] = false;
+            } else {
+              isRequiredObject[tsField] = true;
             }
-          }
-          const errorMsgTS = this.getErrorMsgTSFromProject(tsField);
-          if (errorMsgTS.length !== 0) {
-            errors.push(errorMsgTS);
           }
         });
-        return errors;
+        return isRequiredObject;
       },
+    },
+    methods: {
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },

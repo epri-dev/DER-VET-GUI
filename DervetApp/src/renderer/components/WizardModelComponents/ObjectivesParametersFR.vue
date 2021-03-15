@@ -44,7 +44,6 @@
       <timeseries-data-upload
         chart-name="tsFrPriceChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsFrPrice').data.length !== 0"
         :DataModel="metadata.tsFrPrice.DataModel"
         :data-name="metadata.tsFrPrice.displayName"
         :data-time-series="tsData('tsFrPrice')"
@@ -60,7 +59,6 @@
       <timeseries-data-upload
         chart-name="tsFrUpPriceChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsFrUpPrice').data.length !== 0"
         :DataModel="metadata.tsFrUpPrice.DataModel"
         :data-name="metadata.tsFrUpPrice.displayName"
         :data-time-series="tsData('tsFrUpPrice')"
@@ -76,7 +74,6 @@
       <timeseries-data-upload
         chart-name="tsFrDownPriceChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsFrDownPrice').data.length !== 0"
         :DataModel="metadata.tsFrDownPrice.DataModel"
         :data-name="metadata.tsFrDownPrice.displayName"
         :data-time-series="tsData('tsFrDownPrice')"
@@ -147,23 +144,24 @@
     validations: {
       ...validations,
     },
-    methods: {
-      getErrorListTS() {
-        const errors = [];
+    computed: {
+      isRequiredTSFields() {
+        // return an object of booleans for every TS_FIELD,
+        //   indicating if each is required
+        const isRequiredObject = {};
         (TS_FIELDS).forEach((tsField) => {
-          // skip non-required tsFields
           if ((this.frCombinedMarket && tsField !== 'tsFrPrice')
             || (!this.frCombinedMarket && tsField === 'tsFrPrice')
             || this.frCombinedMarket === null) {
-            return;
-          }
-          const errorMsgTS = this.getErrorMsgTSFromProject(tsField);
-          if (errorMsgTS.length !== 0) {
-            errors.push(errorMsgTS);
+            isRequiredObject[tsField] = false;
+          } else {
+            isRequiredObject[tsField] = true;
           }
         });
-        return errors;
+        return isRequiredObject;
       },
+    },
+    methods: {
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },

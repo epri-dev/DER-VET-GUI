@@ -1,9 +1,11 @@
+import { MTS_BACKUP_ENERGY_RESERVATION } from '@/models/Project/constants';
 import MonthlyBase from './MonthlyBase';
 
-class DREnergyMonthly extends MonthlyBase {
+class BackupEnergyReservationMonthly extends MonthlyBase {
   constructor(data) {
     super('Backup Energy ($/kWh)', data);
+    this.tsName = MTS_BACKUP_ENERGY_RESERVATION;
   }
 }
 
-export default DREnergyMonthly;
+export default BackupEnergyReservationMonthly;

@@ -47,6 +47,7 @@ class DataArray {
   invalidCheckRowsCount(x) {
     const actualRowsCount = this.length();
     if (actualRowsCount === parseFloat(x)) return noErrorObject;
+    if (x === 'TBD') return noErrorObject;
     return {
       errorMsg: this.errorMsgInvalidData(actualRowsCount, x),
     };

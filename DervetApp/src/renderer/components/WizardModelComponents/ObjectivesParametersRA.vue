@@ -39,7 +39,6 @@
       <monthly-data-upload
         chart-name="mtsRaCapacityPriceChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('mtsRaCapacityPrice').data.length !== 0"
         :DataModel="metadata.mtsRaCapacityPrice.DataModel"
         :data-name="metadata.mtsRaCapacityPrice.displayName"
         :monthly-data="tsData('mtsRaCapacityPrice')"
@@ -54,7 +53,6 @@
       <timeseries-data-upload
         chart-name="tsRaActiveChartUploaded"
         @click="receiveRemove"
-        :data-exists="tsData('tsRaActive').data.length !== 0"
         :DataModel="metadata.tsRaActive.DataModel"
         :data-name="metadata.tsRaActive.displayName"
         :data-time-series="tsData('tsRaActive')"
@@ -85,6 +83,7 @@
   import * as c from '@/models/Project/constants';
   import '@/assets/samples/Sample_RAActive_TimeSeries_8760.csv';
   import '@/assets/samples/Sample_RAActive_TimeSeries_8784.csv';
+  import '@/assets/samples/Sample_RACapacityPrice_Monthly_12.csv';
 
   import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
 
@@ -121,22 +120,23 @@
     validations: {
       ...validations,
     },
-    methods: {
-      getErrorListTS() {
-        const errors = [];
+    computed: {
+      isRequiredTSFields() {
+        // return an object of booleans for every TS_FIELD,
+        //   indicating if each is required
+        const isRequiredObject = {};
         (TS_FIELDS).forEach((tsField) => {
-          // skip non-required tsFields
           if (this.raEventSelectionMethod !== 'Peak by Month with Active Hours'
             && tsField === 'tsRaActive') {
-            return;
-          }
-          const errorMsgTS = this.getErrorMsgTSFromProject(tsField);
-          if (errorMsgTS.length !== 0) {
-            errors.push(errorMsgTS);
+            isRequiredObject[tsField] = false;
+          } else {
+            isRequiredObject[tsField] = true;
           }
         });
-        return errors;
+        return isRequiredObject;
       },
+    },
+    methods: {
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
