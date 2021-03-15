@@ -24,11 +24,11 @@
           Use Existing Analysis
         </router-link>
         <p class="tool-tip-index">
-          Load a previously created case analysis.
+          Load a previously-created case analysis.
         </p>
       </div>
       <div class="col-md-4 text-center">
-        <b-dropdown text="Pre-defined Analyses"
+        <b-dropdown text="Pre-Defined Analyses"
                     toggle-class="btn btn-lg btn-light btn-quick-start btn-index-page">
           <b-dropdown-item v-for="option in useCases" v-bind:key="option.id"
                            v-on:click.native="loadQuickStartProject(option.value)">

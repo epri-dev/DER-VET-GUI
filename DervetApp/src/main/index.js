@@ -105,4 +105,4 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.on('will-quit', exitPythonProcess);
+app.on('will-quit', () => exitPythonProcess());

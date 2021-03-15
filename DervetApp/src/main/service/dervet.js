@@ -71,8 +71,10 @@ const listenForExit = pythonProcess => (
 );
 
 export const exitPythonProcess = (pythonProcess) => {
-  pythonProcess.kill();
-  pythonProcess = null;
+  if (pythonProcess) {
+    pythonProcess.kill();
+    pythonProcess = null;
+  }
 };
 
 export const callDervet = (modelParametersPath) => {
