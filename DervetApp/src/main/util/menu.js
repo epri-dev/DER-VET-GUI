@@ -19,6 +19,7 @@ const menuConfig = [
       { type: 'separator' },
       { role: 'resetZoom' },
       { role: 'zoomIn' },
+      ((process.env.NODE_ENV === 'development') && { role: 'toggleDevTools' }),
       { role: 'zoomOut' },
       { type: 'separator' },
       { role: 'togglefullscreen' },
