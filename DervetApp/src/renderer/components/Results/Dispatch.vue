@@ -22,10 +22,12 @@
                 </b-dropdown-item>
               </b-dropdown>
             
-              <button type="button" id="dispatch-prev" class="btn btn-default" @click="previousDispatchData">
+              <button type="button" id="dispatch-prev" class="btn btn-default" @click="previousDispatchData"
+                :disabled="disablePrev">
                 <i class="fas fa-chevron-left"></i>
               </button>
-              <button type="button" id="dispatch-next" class="btn btn-default"  @click="nextDispatchData">
+              <button type="button" id="dispatch-next" class="btn btn-default"  @click="nextDispatchData"
+                :disabled="disableNext">
                 <i class="fas fa-chevron-right"></i>
               </button>
             </div>
@@ -191,6 +193,12 @@
       // dipatchPlotData() {
       //   return this.chartData.stackedLineData.current(this.dispatchType);
       // },
+      disableNext() {
+        return moment(this.dispatchTo).isSameOrAfter(this.maxDate, 'day');
+      },
+      disablePrev() {
+        return moment(this.dispatchFrom).isSameOrBefore(this.minDate, 'day');
+      },
     },
     methods: {
       dataRange() {

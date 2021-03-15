@@ -157,7 +157,7 @@ export default class DispatchData {
   sliceDataOfDataLabel(yearIndex = 0) {
     const slicedItems = new Map();
     this.data[yearIndex].forEach((data, traceName) => {
-      const slicedDate = data.slice(this.currentStartIndex, this.currentEndIndex + 1);
+      const slicedDate = data.slice(this.currentStartIndex, this.currentEndIndex);
       slicedItems.set(traceName, slicedDate);
     });
     return slicedItems;
