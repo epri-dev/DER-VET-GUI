@@ -22,7 +22,7 @@
           current: isActive(this.paths.TECH_SPECS),
           incomplete: !isComplete('technologySpecs') }"
                    :to="this.paths.TECH_SPECS">
-        Technology Specifications
+        Distributed Energy Resources
       </router-link>
 
       <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"

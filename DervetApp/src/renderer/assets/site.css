@@ -825,6 +825,17 @@ p.tool-tip:hover {
     color: #000;
 }
 
+p.tool-tip-index {
+    padding-top: 15px;
+    margin-bottom: 0px;
+    color: #a7a7a7;
+    font-size: 15px;
+}
+
+p.tool-tip-index:hover {
+    color: #000;
+}
+
 p.selected-tool-tip {
     color: #000;
 }
@@ -837,7 +848,7 @@ p.selected-tool-tip {
     padding-right: 15px;
     padding-left: 15px;
     /*top: -8px;*/
-    margin-bottom: 5px;
+    margin: auto;
 }
 
 span.tooltip-space {
@@ -866,10 +877,6 @@ span.tooltip-space {
         margin: 0 0 15px 0;
     }
 
-    p.tool-tip {
-        margin-top: 15px;
-    }
-
     .tool-tip.tooltip-col {
         width: 100%;
         float: none;
@@ -879,6 +886,7 @@ span.tooltip-space {
         padding-left: 0;
         top: 5px;
         margin-bottom: 5px;
+        height: 100%;
     }
 
         .tool-tip.tooltip-col.tt-col-0,
