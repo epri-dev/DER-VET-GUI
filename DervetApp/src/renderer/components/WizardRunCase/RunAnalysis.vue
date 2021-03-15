@@ -14,7 +14,7 @@
       <div class="col-md-12 text-center" v-if="resultsExist">
         <img class="fas fa-thumbs-up fa-5x"/>
         <br/>
-        <h1>Run complete. Loading reuslts. Redirecting...</h1>
+        <h1>Run complete. Loading results. Redirecting...</h1>
       </div>
     </div>
   </div>

@@ -136,14 +136,14 @@
         </template>
         </br>
 
-        <div class="form-group form-buffer row">
+        <div class="form-group form-buffer text-center">
           <file-picker
             label="Export Project"
             :callback="exportProject"
             :isAsync="true"
             :isDirectory="true"
-            buttonAttributes="btn btn-lg btn-info pull-right btn-summary"
-            wrapperDivAttributes="col-md-5"/>
+            buttonAttributes="btn btn-lg btn-info btn-summary"
+            wrapperDivAttributes="col-md-12"/>
         </div>
 
       </div>
