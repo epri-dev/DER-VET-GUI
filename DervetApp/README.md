@@ -81,14 +81,14 @@ Package
 ``` bash
 # package dervet backend with pyinstaller (note: change absolute dervet and storagevet paths in pyinstaller command)
 cd dervet-gui/DervetBackEnd/dervet
-pyinstaller --paths=/path/to/dervet-gui/DervetBackEnd/dervet/storagevet --paths=/path/to/dervet-gui/DervetBackEnd/dervet --additional-hooks-dir=./hooks/ --add-data "Schema.json:."  --onefile run_DERVET.py
+pyinstaller --paths=/path/to/dervet-gui/DervetBackEnd/dervet/storagevet --paths=/path/to/dervet-gui/DervetBackEnd/dervet --additional-hooks-dir=./hooks/ --add-data "dervet/Schema.json:dervet"  --onefile run_DERVET.py
 cp dist/run_DERVET ../../DervetApp/extraResources/
 cd dervet-gui/DervetApp
 npm run build
 ```
 
 Notes on running pyinstaller command on Windows:
-- Use `--add-data "Schema.json;."` (semi-colon instead of colon)
+- Use `--add-data "dervet/Schema.json;dervet"` (semi-colon instead of colon)
 - If running on Windows 10, you may need to specify the path to the libopenblas.dll file used by CVXOPT (it should be in `{python distribution}Lib\site-packages\cvxopt\.lib`)
 
 The built installer will be saved to:
