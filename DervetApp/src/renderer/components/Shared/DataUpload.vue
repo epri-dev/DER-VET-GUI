@@ -81,7 +81,7 @@
           <span v-html="errorMessage"></span>
         </div>
       </div>
-      <div v-if="!dataExists && isSampleDataAvailable">
+      <div v-if="!dataExists && (isMonthlyData || !isNumberOfEntriesRequiredTBD)">
         <div class="form-group row">
           <div class="col-md-12">
             <i><a :href="getSampleDataFileName()" download class="important-link text-decoration-none"> Download a sample <b>{{dataName}}</b><code>.csv</code> file</a>{{getSampleDataText()}}</i>
@@ -127,8 +127,20 @@
       firstLetterCapitalized() {
         return this.dataName.charAt(0).toUpperCase() + this.dataName.slice(1);
       },
-      isSampleDataAvailable() {
-        return ['12', '8760', '8784'].includes(this.numberOfEntriesRequired);
+      isMonthlyData() {
+        return this.numberOfEntriesRequired === '12';
+      },
+      isTimeseriesData() {
+        return !this.isMonthlyData;
+      },
+      isNumberOfEntriesRequiredTBD() {
+        return this.numberOfEntriesRequired === 'TBD';
+      },
+      isLeapYear() {
+        return this.isTimeseriesData
+          && !this.isNumberOfEntriesRequiredTBD
+          && (((parseFloat(this.dataFrequency.value) / 60)
+          * parseFloat(this.numberOfEntriesRequired)) === 8784);
       },
       showPlot() {
         return (this.validDataExists && this.useExisting);
@@ -164,39 +176,22 @@
       },
       getSampleDataFileName() {
         const dataModelName = (new this.DataModel([])).constructor.name;
-        switch (this.numberOfEntriesRequired) {
-          case '12': {
-            const name = dataModelName.replace(/(Monthly)$/, '_$1');
-            return `files/Sample_${name}_${this.numberOfEntriesRequired}.csv`;
-          }
-          case '8760': {
-            const name = dataModelName.replace(/(TimeSeries)$/, '_$1');
-            return `files/Sample_${name}_${this.numberOfEntriesRequired}.csv`;
-          }
-          case '8784': {
-            const name = dataModelName.replace(/(TimeSeries)$/, '_$1');
-            return `files/Sample_${name}_${this.numberOfEntriesRequired}.csv`;
-          }
-          default: {
-            return undefined;
-          }
+        if (this.isMonthlyData) {
+          const name = dataModelName.replace(/(Monthly)$/, '_$1');
+          return `files/Sample_${name}_${this.numberOfEntriesRequired}.csv`;
         }
+        const name = dataModelName.replace(/(TimeSeries)$/, '_$1');
+        const sampleTsLength = this.isLeapYear ? '8784' : '8760';
+        return `files/Sample_${name}_${sampleTsLength}.csv`;
       },
       getSampleDataText() {
-        switch (this.numberOfEntriesRequired) {
-          case '12': {
-            return ' with 12 values representing each calendar month';
-          }
-          case '8760': {
-            return ' with a 60-minute timestep for a year with 365 days (8,760 entries)';
-          }
-          case '8784': {
-            return ' with a 60-minute timestep for a leap year with 366 days (8,784 entries)';
-          }
-          default: {
-            return undefined;
-          }
+        if (this.isMonthlyData) {
+          return ' with 12 values representing each calendar month';
         }
+        if (this.isLeapYear) {
+          return ' with a 60-minute timestep for a leap year with 366 days (8,784 entries)';
+        }
+        return ' with a 60-minute timestep for a year with 365 days (8,760 entries)';
       },
       importErrorOnDisabledUpload() {
         if (this.disableUpload) {
