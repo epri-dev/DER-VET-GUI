@@ -25,10 +25,22 @@ class DataArray {
     return `<b>Invalid Data:</b> This file has <b>${actualRowsCount}</b> ${entries}. It must have ${expectedRowsCount}`;
   }
 
+  errorMsgInvalidDataCustom(customErrorMsg, firstOccurrenceRowNum = undefined) {
+    // return a String containing the error message
+    const firstRowViolation = firstOccurrenceRowNum
+      ? `This first occurs on row ${firstOccurrenceRowNum}`
+      : '';
+    return `<b>Invalid Data:</b> This file has ${customErrorMsg}${firstRowViolation}`;
+  }
+
   errorMsgInvalidRows(violationName, invalidRows) {
     // return a String containing the error message
     const rows = (invalidRows.length === 1) ? 'Row' : 'Rows';
     return `<b>${invalidRows.length} Invalid ${rows}:</b> ${violationName} : [${this.arrayDisplayFirstFifteen(invalidRows)}]`;
+  }
+
+  formatErrorMsgArray(errorMsgArray) {
+    return errorMsgArray.filter((item) => item !== null).join('<br>');
   }
 
   getPageAttributes(pageGroup, pageKey, page) {
@@ -37,6 +49,13 @@ class DataArray {
       pageKey,
       page,
     };
+  }
+
+  getUnit() {
+    // find unit inside the ending parentheses from header
+    // return empty string if undefined in header
+    const unitMatchObject = this.columnHeaderName.match(/\(([^(]*?)\)$/);
+    return (unitMatchObject) ? (unitMatchObject[1] || '') : '';
   }
 
   // invalidCheck methods return noErrorObject when no violations are found
@@ -119,6 +138,21 @@ class DataArray {
     };
   }
 
+  invalidCheckValuesDontCrossZero() {
+    const isSignOfFirstValuePositive = this.data[0] >= 0;
+    const invalidRows = this.data.reduce((a, val, i) => {
+      const isSignOfNextValuePositive = val >= 0;
+      if (isSignOfNextValuePositive !== isSignOfFirstValuePositive) a.push(i + 1);
+      return a;
+    }, []);
+    if (invalidRows.length === 0) return noErrorObject;
+    const firstOccurrence = invalidRows[0];
+    const customErrorMsg = 'both positive and negative values. It must have only positive, or only negative values as it constrains power in one direction. ';
+    return {
+      errorMsg: this.errorMsgInvalidDataCustom(customErrorMsg, firstOccurrence),
+    };
+  }
+
   listToString(list, conjuntion = 'or') {
     return list.reduce((a, val, i) => {
       if (i === 0) {
@@ -130,6 +164,15 @@ class DataArray {
       }
       return a;
     }, '');
+  }
+
+  validate(expectedRowCount) {
+    // returns a String with any/all error messages, or an empty String
+    const errorMsgArray = [];
+    errorMsgArray.push(this.invalidCheckRowsCount(expectedRowCount).errorMsg);
+    errorMsgArray.push(this.invalidCheckRowSize(1).errorMsg);
+    errorMsgArray.push(this.invalidCheckSingleValueNumeric().errorMsg);
+    return this.formatErrorMsgArray(errorMsgArray);
   }
 }
 export default DataArray;

@@ -3,9 +3,19 @@ import TimeSeriesBase from './TimeSeriesBase';
 
 class UserPowerMinTimeSeries extends TimeSeriesBase {
   constructor(data) {
-    super('POI: max import (kW)', data);
+    super('POI: min import (kW)', data);
     this.pageAttributes = this.getPageAttributes('components', 'objectives', 'userDefined');
     this.tsName = TS_USER_POWER_MIN;
+  }
+
+  validate(expectedRowCount) {
+    // parent class validate must return no errors before extra validation occurs
+    const errorMsgArray = [super.validate(expectedRowCount)];
+    const defaultValidate = this.formatErrorMsgArray(errorMsgArray);
+    if (defaultValidate !== '') { return defaultValidate; }
+    // extra validation specific to this class
+    errorMsgArray.push(this.invalidCheckValuesDontCrossZero().errorMsg);
+    return this.formatErrorMsgArray(errorMsgArray);
   }
 }
 
