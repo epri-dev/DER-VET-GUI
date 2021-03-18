@@ -1,6 +1,6 @@
 <template>
   <div :class="wrapperDivAttributes">
-    <label for="filePicker" :class="buttonAttributes">
+    <div :class="buttonAttributes" @click="onClick">
       <div
         v-if="this.saving"
         class="spinner-border text-light"
@@ -8,24 +8,15 @@
         <span class="sr-only">Loading...</span>
       </div>
       <div v-else>{{label}}</div>
-    </label>
-    <input 
-      id="filePicker"
-      class="file-picker"
-      style="visibility:hidden;"
-      type="file"
-      @change="onChange"
-      :webkitdirectory="isDirectory"
-      :directory="isDirectory">
+    </div>
   </div>
 </template>
 
 <script>
-  import { getRootDirectoryFromWebkitEvent } from '@/util/file';
+  import { remote } from 'electron'; // eslint-disable-line
+
   /* TODO
     - Use typescript in script
-    - Validate that directory is received using accepted answer here:
-      https://stackoverflow.com/questions/52667995/how-to-check-if-selected-file-is-a-directory-or-regular-file
   */
   export default {
     props: {
@@ -45,7 +36,7 @@
         type: String,
         default: 'Select folder',
       },
-      onFileSelect: {
+      callback: {
         type: Function,
         default: () => null,
       },
@@ -60,24 +51,25 @@
       };
     },
     methods: {
+      onClick() {
+        const properties = this.isDirectory ? ['openDirectory'] : ['openFile'];
+        remote.dialog.showOpenDialog({ properties })
+          .then((e) => {
+            if (!e.canceled) {
+              this.onFileSelect(e.filePaths[0]);
+            }
+          });
+      },
+      onFileSelect(filePath) {
+        return this.isAsync ? this.onFileSelectAsync(filePath) : this.callback(filePath);
+      },
       onFileSelectAsync(path) {
         this.saving = true;
-        this.onFileSelect(path)
+        this.callback(path)
           // In case the operation is instantaneous, load for 1.5 seconds
           .then(this.setSavingWithTimeout)
           .catch(() => { this.$emit('importError'); })
           .finally(this.setSavingWithTimeout);
-      },
-      onChange(e) {
-        const file = e.target.files[0];
-        if (file !== undefined) {
-          const path = this.isDirectory ? getRootDirectoryFromWebkitEvent(file) : file.path;
-          if (this.isAsync) {
-            this.onFileSelectAsync(path);
-          } else {
-            this.onFileSelect(path);
-          }
-        }
       },
       setSavingWithTimeout() {
         setTimeout(() => { this.saving = false; }, 1500);

@@ -1,6 +1,6 @@
 <template>
   <div class="container body-content">
-    <h3>Technology Specs</h3>
+    <h3>Distributed Energy Resources (DERs)</h3>
     <hr>
     <div class="form-horizontal form-buffer row ">
       <div class="col-md-6">
@@ -42,7 +42,7 @@
       </div>
     </div>
     <hr>
-    <nav-button :continue-link="WIZARD_COMPONENT_PATH"
+    <nav-button :continue-link="CAL_ENVIRO_SCREEN"
                  continue-text="Done Adding Technologies"
                  :displayError="!complete"
                  :error-text="this.getSingleErrorMsg()"
@@ -52,9 +52,9 @@
 <script>
   import _ from 'lodash';
   import {
-    WIZARD_COMPONENT_PATH,
-    OBJECTIVES_PATH,
-    TECH_SPECS_PATH,
+    CAL_ENVIRO_SCREEN,
+    OBJECTIVES,
+    TECH_SPECS,
   } from '@/router/constants';
   import {
     ACTIVATE_TECH,
@@ -84,9 +84,9 @@
             label: '',
           },
         ],
-        WIZARD_COMPONENT_PATH,
-        OBJECTIVES_PATH,
-        TECH_SPECS_PATH,
+        CAL_ENVIRO_SCREEN,
+        OBJECTIVES,
+        TECH_SPECS,
       };
     },
     computed: {
@@ -126,8 +126,8 @@
         };
       },
       getSingleErrorMsg() {
-        if (!this.complete &&
-            this.$store.state.Application.errorList[PAGEGROUP][PAGE] !== null) {
+        if (!this.complete
+            && this.$store.state.Application.errorList[PAGEGROUP][PAGE] !== null) {
           return this.$store.state.Application.errorList[PAGEGROUP][PAGE][0];
         }
         return '';

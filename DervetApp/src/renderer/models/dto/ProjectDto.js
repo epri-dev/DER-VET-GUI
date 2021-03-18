@@ -44,35 +44,11 @@ const RESULTS = 'results';
 export const LOG_FILE = 'dervet_log.log';
 
 const TIMESERIES_FIELDS = [
-  'criticalLoad',
-  'deferralLoad',
-  'daPrice',
-  'lfEOU',
-  'lfEOD',
-  'lfPrice',
-  'lfUpPrice',
-  'lfDownPrice',
-  'frPrice',
-  'frUpPrice',
-  'frDownPrice',
-  'nsrPrice',
-  'siteLoad',
-  'srPrice',
-  'systemLoad',
-  'userPowerMin',
-  'userPowerMax',
-  'userEnergyMin',
-  'userEnergyMax',
+  ...c.TS_ALL,
 ];
 
 const MONTHLY_FIELDS = [
-  'backupPrice',
-  'backupEnergyReservation',
-  'drMonthsApplied',
-  'drCapacityReservation',
-  'drCapacityAwards',
-  'drEnergyAwards',
-  'raCapacityAwards',
+  ...c.MTS_ALL,
 ];
 
 export const convertToYesNo = condition => (condition ? YES : NO);
@@ -90,6 +66,10 @@ export const calculateSalvageValue = (techSpecs) => {
 
 export const setUndefinedNullToZero = value => (
   (value === undefined || value === null) ? 0 : value
+);
+
+export const setUndefinedNullToOne = value => (
+  (value === undefined || value === null) ? 1 : value
 );
 
 export const makeCsvFilePath = (directory, fileName) => (
@@ -179,7 +159,7 @@ export const makeSingleBatteryParameter = (battery, inputsDirectory) => {
   if (!battery.shouldEnergySize) {
     ({ energyCapacity } = battery);
   }
-  const replacementConstructionTime = setUndefinedNullToZero(battery.replacementConstructionTime);
+  const replacementConstructionTime = setUndefinedNullToOne(battery.replacementConstructionTime);
 
   const keys = {
     OMexpenses: makeBaseKey(battery.variableOMCosts, FLOAT),
@@ -190,6 +170,7 @@ export const makeSingleBatteryParameter = (battery, inputsDirectory) => {
     ch_min_rated: makeBaseKey(ZERO, FLOAT), // hardcoded
     construction_year: makeBaseKey(battery.constructionYear, PERIOD),
     cycle_life_filename: makeBaseKey(makeBatteryCsvFilePath(inputsDirectory, battery), STRING),
+    cycle_life_table_eol_condition: makeBaseKey(80, FLOAT), // TODO hardcode
     daily_cycle_limit: makeBaseKey(dailyCycleLimit, FLOAT),
     decommissioning_cost: makeBaseKey(battery.decomissioningCost, FLOAT),
     dis_max_rated: makeBaseKey(dischargingCapacity, FLOAT),
@@ -243,7 +224,7 @@ export const makeBatteryParameters = (project, inputsDirectory) => {
 };
 
 export const makeSingleControllableLoadParameter = (controllableLoad) => {
-  const replaceConstruction = setUndefinedNullToZero(controllableLoad.replacementConstructionTime);
+  const replaceConstruction = setUndefinedNullToOne(controllableLoad.replacementConstructionTime);
 
   const keys = {
     construction_year: makeBaseKey(controllableLoad.constructionYear, PERIOD),
@@ -273,7 +254,7 @@ export const makeControllableLoadParameters = (project) => {
 export const makeDAParameters = (project) => {
   if (project.objectivesDA) {
     const isActive = convertToYesNo(project.objectivesDA);
-    const keys = { growth: makeBaseKey(project.daGrowth, FLOAT) };
+    const keys = { growth: makeBaseKey(project[c.DA_GROWTH], FLOAT) };
     return makeGroup('', isActive, keys);
   }
   return makeEmptyGroup();
@@ -309,7 +290,7 @@ export const makeSingleDieselGensetParameter = (dieselGen) => {
   if (!dieselGen.shouldSize) {
     ({ ratedCapacity } = dieselGen);
   }
-  const replacementConstructionTime = setUndefinedNullToZero(dieselGen.replacementConstructionTime);
+  const replacementConstructionTime = setUndefinedNullToOne(dieselGen.replacementConstructionTime);
   const keys = {
     ccost: makeBaseKey(dieselGen.capitalCost, FLOAT),
     ccost_kW: makeBaseKey(dieselGen.capitalCostPerkW, FLOAT),
@@ -386,9 +367,8 @@ export const makeFinanceParameters = (project, inputsDirectory) => {
   return makeGroup('', YES, keys);
 };
 
-
 export const makeSingleFleetEVParameter = (fleetEV) => {
-  const replacementConstructionTime = setUndefinedNullToZero(fleetEV.replacementConstructionTime);
+  const replacementConstructionTime = setUndefinedNullToOne(fleetEV.replacementConstructionTime);
   const keys = {
     ccost: makeBaseKey(fleetEV.capitalCost, FLOAT),
     construction_year: makeBaseKey(fleetEV.constructionYear, PERIOD),
@@ -422,7 +402,7 @@ export const makeFRParameters = (project) => {
   if (project.objectivesFR) {
     const isActive = convertToYesNo(project.objectivesFR);
     const keys = {
-      CombinedMarket: makeBaseKey(project.frCombinedMarket, BOOL),
+      CombinedMarket: makeBaseKey(convertToOneZero(project.frCombinedMarket), BOOL),
       d_ts_constraints: makeBaseKey(ZERO, BOOL), // hardcoded
       duration: makeBaseKey(project.frDuration, FLOAT),
       energyprice_growth: makeBaseKey(project.frEnergyPriceGrowth, FLOAT),
@@ -442,7 +422,7 @@ export const makeSingleICEParameter = (iceGen) => {
   if (!iceGen.shouldSize) {
     ({ ratedCapacity } = iceGen);
   }
-  const replacementConstructionTime = setUndefinedNullToZero(iceGen.replacementConstructionTime);
+  const replacementConstructionTime = setUndefinedNullToOne(iceGen.replacementConstructionTime);
   const keys = {
     ccost: makeBaseKey(iceGen.capitalCost, FLOAT),
     ccost_kW: makeBaseKey(iceGen.capitalCostPerkW, FLOAT),
@@ -495,13 +475,12 @@ export const makeLFParameters = (project) => {
   return makeEmptyGroup();
 };
 
-
 export const makeNSRParameters = (project) => {
   if (project.objectivesNSR) {
     const isActive = convertToYesNo(project.objectivesNSR);
     const keys = {
-      duration: makeBaseKey(project.nsrDuration, FLOAT),
-      growth: makeBaseKey(project.nsrGrowth, FLOAT),
+      duration: makeBaseKey(project[c.NSR_DURATION], FLOAT),
+      growth: makeBaseKey(project[c.NSR_GROWTH], FLOAT),
       ts_constraints: makeBaseKey(ZERO, BOOL), // hardcoded
     };
     return makeGroup('', isActive, keys);
@@ -515,7 +494,7 @@ export const makeSinglePVParameter = (pv) => {
   if (!pv.shouldSize) {
     ({ ratedCapacity } = pv);
   }
-  const replacementConstructionTime = setUndefinedNullToZero(pv.replacementConstructionTime);
+  const replacementConstructionTime = setUndefinedNullToOne(pv.replacementConstructionTime);
   const keys = {
     ccost_kW: makeBaseKey(pv.cost, FLOAT),
     construction_year: makeBaseKey(pv.constructionYear, PERIOD),
@@ -537,7 +516,7 @@ export const makeSinglePVParameter = (pv) => {
     nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
     nu: makeBaseKey(setUndefinedNullToZero(pv.nu), FLOAT),
     operation_year: makeBaseKey(pv.operationYear, PERIOD),
-    PPA: makeBaseKey(convertToOneZero(pv.includePV), BOOL),
+    PPA: makeBaseKey(convertToOneZero(pv.includePPA), BOOL),
     PPA_cost: makeBaseKey(setUndefinedNullToZero(pv.ppaCost), FLOAT),
     PPA_inflation_rate: makeBaseKey(setUndefinedNullToZero(pv.ppaInflationRate), FLOAT),
     rated_capacity: makeBaseKey(ratedCapacity, FLOAT),
@@ -581,7 +560,7 @@ export const makeReliabilityParameters = (project, inputsDirectory) => {
       'n-2': makeBaseKey(ZERO, BOOL), // hardcoded
       post_facto_initial_soc: makeBaseKey(100, FLOAT), // TODO new, hardcoded for now
       post_facto_only: makeBaseKey(convertToOneZero(project.reliabilityPostOptimizationOnly), BOOL),
-      target: makeBaseKey(project.reliabilityTarget, FLOAT),
+      target: makeBaseKey(setUndefinedNullToOne(project.reliabilityTarget), FLOAT),
       load_shed_percentage: makeBaseKey(convertToOneZero(false), BOOL), // hardcoded
       load_shed_perc_filename: makeBaseKey(makeCsvFilePath(inputsDirectory, LOAD_SHEAD), STRING),
     };
@@ -634,7 +613,7 @@ export const makeScenarioParameters = (project, inputsDirectory) => {
   } else {
     n = project.optimizationHorizon;
   }
-  if (n === 'hours') {
+  if (n === 'Hour') {
     n = project.optimizationHorizonNum;
   }
 
@@ -654,8 +633,8 @@ export const makeScenarioParameters = (project, inputsDirectory) => {
     kappa_ene_max: makeBaseKey('100000', FLOAT), // hardcoded
     kappa_ene_min: makeBaseKey('100000', FLOAT), // hardcoded
     location: makeBaseKey(project.gridLocation.toLowerCase(), STRING),
-    max_export: makeBaseKey(project.maxExport, FLOAT),
-    max_import: makeBaseKey(project.maxImport, FLOAT),
+    max_export: makeBaseKey(setUndefinedNullToZero(project.maxExport), FLOAT),
+    max_import: makeBaseKey(setUndefinedNullToZero(project.maxImport), FLOAT),
     monthly_data_filename: makeBaseKey(makeCsvFilePath(inputsDirectory, MONTHLY), STRING),
     n: makeBaseKey(n, STRING_INT),
     opt_years: makeBaseKey(project.dataYear, LIST_INT),
@@ -670,7 +649,7 @@ export const makeScenarioParameters = (project, inputsDirectory) => {
 };
 
 export const makeSingleSingleEVParameter = (singleEV) => {
-  const replacementConstructionTime = setUndefinedNullToZero(singleEV.replacementConstructionTime);
+  const replacementConstructionTime = setUndefinedNullToOne(singleEV.replacementConstructionTime);
   const keys = {
     ccost: makeBaseKey(singleEV.capitalCost, FLOAT),
     ch_max_rated: makeBaseKey(singleEV.maximumChargingPower, FLOAT),
@@ -707,8 +686,8 @@ export const makeSRParameters = (project) => {
   if (project.objectivesSR) {
     const isActive = convertToYesNo(project.objectivesSR);
     const keys = {
-      duration: makeBaseKey(project.srDuration, FLOAT),
-      growth: makeBaseKey(project.srGrowth, FLOAT),
+      duration: makeBaseKey(project[c.SR_DURATION], FLOAT),
+      growth: makeBaseKey(project[c.SR_GROWTH], FLOAT),
       ts_constraints: makeBaseKey(ZERO, BOOL), // hardcoded
     };
     return makeGroup('', isActive, keys);
@@ -772,13 +751,9 @@ export const makeTariffCsv = project => billingPeriodsToCsv(project.retailTariff
 export const makeYearlyCsv = project => externalIncentivesToCsv(project.externalIncentives);
 
 export const makeMonthlyCsv = (project) => {
-  // initialize variables with monthly index
-  const data = _.map(_.range(1, 13), i => ({
-    year: project.dataYear,
-    month: i,
-  })); // List of lists of objects with format { 'field key': value }
-  const fields = ['year', 'month']; // List of field keys
-  const headers = ['Year', 'Month']; // TODO LL string constants - List of field headers
+  const data = []; // List of lists of objects with format { 'field key': value }
+  const fields = []; // List of field keys
+  const headers = []; // List of field headers
 
   function addSingleSeries(d, f, h) {
     data.push(d);
@@ -786,20 +761,28 @@ export const makeMonthlyCsv = (project) => {
     headers.push(h);
   }
 
+  // add month column
+  const monthObjectList = mapListToObjectList(_.range(1, 13), 'month');
+  addSingleSeries(monthObjectList, 'month', 'Month');
+  // add year column
+  const year = [...Array(12)].fill(project.dataYear);
+  const yearObjectList = mapListToObjectList(year, 'year');
+  addSingleSeries(yearObjectList, 'year', 'Year');
+
   // Add all available monthly to CSV
   MONTHLY_FIELDS.forEach((ts) => {
     const tsClass = project[ts];
-    if (tsClass) {
+    if (tsClass && tsClass.data.length !== 0) {
       const dataObjectList = mapListToObjectList(tsClass.data, ts);
       addSingleSeries(dataObjectList, ts, tsClass.columnHeaderName);
     }
   });
-
-  return objectToCsv(data, fields, headers);
+  const unzippedData = _.unzipWith(data, Object.assign);
+  return objectToCsv(unzippedData, fields, headers);
 };
 
 export const makeLoadShedCsv = () => {
-  // TODO implement this
+  // placeholder for Load shed data - user cant seslect/define this mode
   const data = _.map(_.range(1, 13), i => ({
     length: i,
     loadShed: i,
@@ -809,13 +792,20 @@ export const makeLoadShedCsv = () => {
   return objectToCsv(data, fields, headers);
 };
 
-export const makeDatetimeIndex = (dataYear, minuteTimestep) => {
+// TODO move timeseries handling into a class HN
+export const makeDatetimeIndex = (dataYear, minuteTimestep, reformat = true) => {
+  if (['', null].includes(minuteTimestep) || !Number.isInteger(dataYear)) {
+    return [];
+  }
   const start = new Date(Date.UTC(dataYear, 0, 1, 0, minuteTimestep));
   const end = new Date(Date.UTC(dataYear + 1, 0, 1, 0, minuteTimestep));
 
   const timedelta = d3.timeMinute.every(minuteTimestep);
   const datetimeIndex = timedelta.range(start, end);
-  return datetimeIndex.map(d => moment.utc(d).format('M/D/YYYY H:mm'));
+  if (reformat) {
+    return datetimeIndex.map(d => moment.utc(d).format('M/D/YYYY H:mm'));
+  }
+  return datetimeIndex.map(d => moment.utc(d).format());
 };
 
 export const makeEmptyCsvDataWithDatetimeIndex = (project) => {
@@ -823,37 +813,13 @@ export const makeEmptyCsvDataWithDatetimeIndex = (project) => {
   return datetimeIndex.map(d => ({ [TIMESERIES_DATETIME_INDEX]: d }));
 };
 
-export const addPvTimeSeries = (pv) => {
-  const tsClass = pv.generationProfile;
-  const pvData = mapListToObjectList(tsClass.data, 'pv');
-  const pvField = 'pv';
-  const pvHeader = `${tsClass.columnHeaderName}/${pv.id}`;
-  return { pvData, pvField, pvHeader };
+export const addTechnologyTimeSeries = (tsClass, technology) => {
+  const field = technology.tag;
+  const data = mapListToObjectList(tsClass.data, field);
+  const header = `${tsClass.columnHeaderName}/${technology.id}`;
+  return { data, field, header };
 };
 
-/* TODO: new timeseries fields
-  - RA Active (y/n)  TODO HN forgot about this input
-  - LF Reg Up Max (kW)
-  - LF Reg Up Min (kW)
-  - LF Reg Down Max (kW)
-  - LF Reg Down Min (kW)
-  - Battery: Charge Min (kW)/1
-  - Battery: Charge Max (kW)/1
-  - Battery: Energy Max (kWh)/1
-  - Battery: Energy Min (kWh)/1
-  - Battery: Discharge Min (kW)/1
-  - Battery: Discharge Max (kW)/1
-  - FR Reg Up Max (kW)
-  - FR Reg Up Min (kW)
-  - FR Reg Down Max (kW)
-  - FR Reg Down Min (kW)
-  - SR Max (kW)
-  - SR Min (kW)
-  - NSR Max (kW)
-  - NSR Min (kW)
-
-  Also turn this whole function into its own class/module
-*/
 export const makeTimeSeriesCsv = (project) => {
   const data = []; // List of lists of objects with format { 'field key': value }
   const fields = []; // List of field keys
@@ -870,9 +836,10 @@ export const makeTimeSeriesCsv = (project) => {
   addSingleSeries(dtIndex, TIMESERIES_DATETIME_INDEX, TIMESERIES_DATETIME_HEADER);
 
   // Add all available timeseries to CSV
+  // TODO: limit to active and required?
   TIMESERIES_FIELDS.forEach((ts) => {
     const tsClass = project[ts];
-    if (tsClass) {
+    if (tsClass && tsClass.data.length !== 0) {
       const dataObjectList = mapListToObjectList(tsClass.data, ts);
       addSingleSeries(dataObjectList, ts, tsClass.columnHeaderName);
     }
@@ -880,13 +847,21 @@ export const makeTimeSeriesCsv = (project) => {
 
   // Add PV timeseries
   _.forEach(project.technologySpecsSolarPV, (pv) => {
-    const { pvData, pvField, pvHeader } = addPvTimeSeries(pv);
-    addSingleSeries(pvData, pvField, pvHeader);
+    const { data, field, header } = addTechnologyTimeSeries(pv.associatedInputs[0].ts, pv);
+    addSingleSeries(data, field, header);
   });
 
-  // TODO HN Add fleet EV timeseries
+  // Add fleet EV timeseries
+  _.forEach(project.technologySpecsFleetEV, (ev) => {
+    const { data, field, header } = addTechnologyTimeSeries(ev.associatedInputs[0].ts, ev);
+    addSingleSeries(data, field, header);
+  });
 
-  // TODO HN Add controllable load timeseries
+  // Add controllable load timeseries
+  _.forEach(project.technologySpecsControllableLoad, (load) => {
+    const { data, field, header } = addTechnologyTimeSeries(load.associatedInputs[0].ts, load);
+    addSingleSeries(data, field, header);
+  });
 
   // Convert to CSV
   const unzippedData = _.unzipWith(data, Object.assign);

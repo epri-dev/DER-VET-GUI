@@ -2,35 +2,35 @@
   <div class="left-sidebar">
     <b-nav vertical>
       <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
-                   v-bind:class="{ current: isActive(this.paths.RESULTS_PATH) }"
-                   :to="this.paths.RESULTS_PATH">
+                   v-bind:class="{ current: isActive(this.paths.RESULTS) }"
+                   :to="this.paths.RESULTS">
         Summary
       </router-link>
-      <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
-                   v-bind:class="{ current: isActive(this.paths.RESULTS_DISPATCH_PATH) }"
-                   :to="this.paths.RESULTS_DISPATCH_PATH">
+      <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
+                   v-bind:class="{ current: isActive(this.paths.RESULTS_DISPATCH) }"
+                   :to="this.paths.RESULTS_DISPATCH">
         Dispatch
       </router-link>
-      <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
-                   v-bind:class="{ current: isActive(this.paths.RESULTS_DESIGN_PATH) }"
-                   :to="this.paths.RESULTS_DESIGN_PATH">
+      <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
+                   v-bind:class="{ current: isActive(this.paths.RESULTS_DESIGN) }"
+                   :to="this.paths.RESULTS_DESIGN">
         Design
       </router-link>
-      <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
-                   v-bind:class="{ current: isActive(this.paths.RESULTS_FINANCIAL_PATH) }"
-                   :to="this.paths.RESULTS_FINANCIAL_PATH">
+      <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
+                   v-bind:class="{ current: isActive(this.paths.RESULTS_FINANCIAL) }"
+                   :to="this.paths.RESULTS_FINANCIAL">
         Financial
       </router-link>
-      <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
+      <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
                    v-if="showReliabilityResults"
-                   v-bind:class="{ current: isActive(this.paths.RESULTS_RELIABILITY_PATH) }"
-                   :to="this.paths.RESULTS_RELIABILITY_PATH">
+                   v-bind:class="{ current: isActive(this.paths.RESULTS_RELIABILITY) }"
+                   :to="this.paths.RESULTS_RELIABILITY">
         Reliability
       </router-link>
-      <router-link class="nav nav-sidebar sidebar-root-el text-decoration-none"
+      <router-link class="nav nav-sidebar sidebar-indent text-decoration-none"
                    v-if="showDeferralResults"
-                   v-bind:class="{ current: isActive(this.paths.RESULTS_DEFERRAL_PATH) }"
-                   :to="this.paths.RESULTS_DEFERRAL_PATH">
+                   v-bind:class="{ current: isActive(this.paths.RESULTS_DEFERRAL) }"
+                   :to="this.paths.RESULTS_DEFERRAL">
         Deferral
       </router-link>
     </b-nav>

@@ -2,10 +2,13 @@ import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
 import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
 import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
 import {
-  TECH_SPECS_PV_PATH,
-  TECH_SPECS_BATTERY_PATH,
-  TECH_SPECS_BATTERY_DATA_CYCLES_PATH,
+  TECH_SPECS_BATTERY,
+  TECH_SPECS_BATTERY_DATA_CYCLES,
+  TECH_SPECS_PV,
+  TECH_SPECS_PV_DATA_GENERATION,
 } from '@/router/constants';
+
+import { ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV } from '@/store/actionTypes';
 
 import { pvGen, criticalLoad, siteLoad } from '@/assets/cases/billReduction/csvs';
 
@@ -28,11 +31,30 @@ export const billReductionCompleteness = {
   },
 };
 
+export const billReductionErrorList = {
+  overview: {
+    start: [],
+    objectives: [],
+    technologySpecs: [],
+  },
+  components: {
+    objectives: {
+      siteInformation: [],
+      resilience: [],
+    },
+    financial: {
+      inputs: [],
+      retailTariff: [],
+      externalIncentives: [],
+    },
+  },
+};
+
 // TODO turn this into a function
 export const billReductionProject = {
   analysisHorizon: 20,
   analysisHorizonMode: '1',
-  criticalLoad: new CriticalLoadTimeSeries(criticalLoad),
+  tsCriticalLoad: new CriticalLoadTimeSeries(criticalLoad),
   dataYear: 2017,
   financeDiscountRate: 6,
   energyPriceSourceWholesale: false,
@@ -243,14 +265,24 @@ export const billReductionProject = {
       complete: true,
     },
   ],
-  siteLoad: new SiteLoadTimeSeries(siteLoad),
+  tsSiteLoad: new SiteLoadTimeSeries(siteLoad),
   sizingEquipment: true,
   startYear: 2017,
   financeStateTaxRate: 0,
   technologySpecsSolarPV: [{
     active: true,
     allowGridCharge: true,
+    associatedInputs: [{
+      complete: true,
+      ts: new PVGenerationTimeSeries(pvGen),
+      displayName: 'Solar Generation Profile',
+      errorList: [],
+      path: TECH_SPECS_PV_DATA_GENERATION,
+      actionSetName: ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV,
+    }],
+    associatedInputsComplete: true,
     complete: true,
+    componentSpecsComplete: true,
     constructionYear: 2017,
     cost: 1660,
     decomissioningCost: 0,
@@ -258,7 +290,6 @@ export const billReductionProject = {
     expectedLifetime: 99,
     fixedOMCosts: 0,
     gamma: 43,
-    generationProfile: new PVGenerationTimeSeries(pvGen),
     id: '524bd961-1a12-43e0-b963-7f05e22ae5d5',
     includeCurtailment: false,
     includePPA: false,
@@ -270,7 +301,7 @@ export const billReductionProject = {
     name: 'Installation 1',
     nu: 20,
     operationYear: 2017,
-    path: TECH_SPECS_PV_PATH,
+    path: TECH_SPECS_PV,
     ppaCost: null,
     ppaInflationRate: null,
     ratedCapacity: 1000,
@@ -293,7 +324,7 @@ export const billReductionProject = {
       dataRows: [],
       displayName: 'Battery Cycle Life Curve',
       errorList: ['Not Started'],
-      path: TECH_SPECS_BATTERY_DATA_CYCLES_PATH,
+      path: TECH_SPECS_BATTERY_DATA_CYCLES,
     }],
     associatedInputsComplete: false,
     auxiliaryLoad: 0,
@@ -305,6 +336,7 @@ export const billReductionProject = {
     chargingCapacityMaximum: null,
     chargingCapacityMinimum: null,
     complete: true,
+    componentSpecsComplete: true,
     constructionYear: 2017,
     dailyCycleLimit: 0,
     dischargingCapacity: null,
@@ -328,7 +360,7 @@ export const billReductionProject = {
     maxDuration: 0,
     name: 'BESS 1',
     operationYear: 2017,
-    path: TECH_SPECS_BATTERY_PATH,
+    path: TECH_SPECS_BATTERY,
     powerCapacity: null,
     powerCapacityMaximum: null,
     powerCapacityMinimum: null,
@@ -345,7 +377,6 @@ export const billReductionProject = {
     shouldLimitDailyCycling: false,
     shouldMaxDuration: false,
     shouldPowerSize: true,
-    componentSpecsComplete: true,
     stateOfHealth: 0,
     tag: 'Battery',
     targetSOC: 50,

@@ -22,13 +22,13 @@ import UserEnergyMinTimeSeries from '@/models/TimeSeries/UserEnergyMinTimeSeries
 import UserPowerMaxTimeSeries from '@/models/TimeSeries/UserPowerMaxTimeSeries';
 import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
 
-import BackupEnergyAdwardsMonthly from '@/models/Monthly/BackupEnergyAdwardsMonthly';
+import BackupEnergyPriceMonthly from '@/models/Monthly/BackupEnergyPriceMonthly';
 import BackupEnergyReservationMonthly from '@/models/Monthly/BackupEnergyReservationMonthly';
-import DRCapacityAdwardsMonthly from '@/models/Monthly/DRCapacityAdwardsMonthly';
+import DRCapacityPriceMonthly from '@/models/Monthly/DRCapacityPriceMonthly';
 import DRCapacityReservationMonthly from '@/models/Monthly/DRCapacityReservationMonthly';
-import DREnergyAwardsMonthly from '@/models/Monthly/DREnergyAwardsMonthly';
-import DRMonthsMonthly from '@/models/Monthly/DRMonthsMonthly';
-import RACapacityAdwardsMonthly from '@/models/Monthly/RACapacityAdwardsMonthly';
+import DREnergyPriceMonthly from '@/models/Monthly/DREnergyPriceMonthly';
+import DRMonthsAppliedMonthly from '@/models/Monthly/DRMonthsAppliedMonthly';
+import RACapacityPriceMonthly from '@/models/Monthly/RACapacityPriceMonthly';
 
 import csvs from './csvs';
 
@@ -38,11 +38,11 @@ const TRUE = true;
 export const projectFixtureAllActive = {
   analysisHorizon: 0,
   analysisHorizonMode: '1',
-  backupPrice: new BackupEnergyAdwardsMonthly(new Array(12).fill(100)),
-  backupEnergyReservation: new BackupEnergyReservationMonthly(new Array(12).fill(30)),
-  criticalLoad: new CriticalLoadTimeSeries(csvs.siteLoad), // note: using hardcoded site load
+  mtsBackupEnergyPrice: new BackupEnergyPriceMonthly(new Array(12).fill(100)),
+  mtsBackupEnergyReservation: new BackupEnergyReservationMonthly(new Array(12).fill(30)),
+  tsCriticalLoad: new CriticalLoadTimeSeries(csvs.siteLoad), // note: using hardcoded site load
   daGrowth: 0,
-  daPrice: new DAPriceTimeSeries(csvs.daPrice),
+  tsDaPrice: new DAPriceTimeSeries(csvs.daPrice),
   dataYear: 2017,
   dcmGrowth: 5,
   discountRate: 7,
@@ -50,16 +50,16 @@ export const projectFixtureAllActive = {
   deferralReversePowerFlowLimit: -11000,
   deferralGrowth: 0,
   deferralPrice: 10000,
-  deferralLoad: new DeferralLoadTimeSeries(csvs.deferralLoad),
-  drCapacityReservation: new DRCapacityReservationMonthly(new Array(12).fill(100)),
-  drCapacityAwards: new DRCapacityAdwardsMonthly(new Array(12).fill(50)),
+  tsDeferralLoad: new DeferralLoadTimeSeries(csvs.deferralLoad),
+  mtsDrCapacityReservation: new DRCapacityReservationMonthly(new Array(12).fill(100)),
+  mtsDrCapacityPrice: new DRCapacityPriceMonthly(new Array(12).fill(50)),
   drEndHour: 24,
   drEventLength: null,
-  drEnergyAwards: new DREnergyAwardsMonthly(new Array(12).fill(68)),
+  mtsDrEnergyPrice: new DREnergyPriceMonthly(new Array(12).fill(68)),
   drGrowth: 1.47,
   drIncludeWeekends: true,
   drNumberEvents: 8,
-  drMonthsApplied: new DRMonthsMonthly([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]),
+  mtsDrMonthsApplied: new DRMonthsAppliedMonthly([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]),
   drProgramType: 'Day of',
   drStartHour: 10,
   externalIncentives: [
@@ -83,28 +83,28 @@ export const projectFixtureAllActive = {
   frEnergyPriceGrowth: 5,
   frCombinedMarket: 0,
   frDuration: 0,
-  frPrice: new FRPriceTimeSeries(csvs.price),
-  frUpPrice: new FRUpPriceTimeSeries(csvs.price),
-  frDownPrice: new FRDownPriceTimeSeries(csvs.price),
+  tsFrPrice: new FRPriceTimeSeries(csvs.price),
+  tsFrUpPrice: new FRUpPriceTimeSeries(csvs.price),
+  tsFrDownPrice: new FRDownPriceTimeSeries(csvs.price),
   gridLocation: 'Customer',
   includeSiteLoad: TRUE,
   includeInterconnectionConstraints: TRUE,
   includeSystemLoad: TRUE,
   inflationRate: 3,
-  lfDownPrice: new LFDownPriceTimeSeries(csvs.price),
+  tsLfDownPrice: new LFDownPriceTimeSeries(csvs.price),
   lfDuration: 0,
   lfCombinedMarket: TRUE,
   lfGrowth: 2,
   lfEnergyPriceGrowth: 1.5,
-  lfEOU: new LFEnergyOptionUpTimeSeries(csvs.deferralLoad), // TODO fix this
-  lfEOD: new LFEnergyOptionDownTimeSeries(csvs.deferralLoad), // TODO fix this
-  lfPrice: new LFPriceTimeSeries(csvs.price),
-  lfUpPrice: new LFUpPriceTimeSeries(csvs.price),
+  tsLfEOU: new LFEnergyOptionUpTimeSeries(csvs.deferralLoad), // TODO fix this
+  tsLfEOD: new LFEnergyOptionDownTimeSeries(csvs.deferralLoad), // TODO fix this
+  tsLfPrice: new LFPriceTimeSeries(csvs.price),
+  tsLfUpPrice: new LFUpPriceTimeSeries(csvs.price),
   maxImport: -10000,
   maxExport: 40000,
   nsrGrowth: 2,
   nsrDuration: 0,
-  nsrPrice: new NSRPriceTimeSeries(csvs.price),
+  tsNsrPrice: new NSRPriceTimeSeries(csvs.price),
   objectivesDA: TRUE,
   objectivesDR: TRUE,
   objectivesResilience: TRUE,
@@ -122,8 +122,8 @@ export const projectFixtureAllActive = {
   outputDirectory: OUTPUT_DIRECTORY,
   ownership: 'Customer',
   propertyTaxRate: 3,
-  raActive: new RAActiveTimeSeries(new Array(8760).fill(0)),
-  raCapacityAwards: new RACapacityAdwardsMonthly(new Array(12).fill(350)),
+  tsRaActive: new RAActiveTimeSeries(new Array(8760).fill(0)),
+  mtsRaCapacityPrice: new RACapacityPriceMonthly(new Array(12).fill(350)),
   raNumberEvents: 24,
   raEventLength: 6,
   raDispatchMode: 'Constrain power',
@@ -213,13 +213,13 @@ export const projectFixtureAllActive = {
       name: '',
     },
   ],
-  siteLoad: new SiteLoadTimeSeries(csvs.siteLoad),
+  tsSiteLoad: new SiteLoadTimeSeries(csvs.siteLoad),
   srGrowth: 6.2,
   srDuration: 0,
-  srPrice: new SRPriceTimeSeries(csvs.price),
+  tsSrPrice: new SRPriceTimeSeries(csvs.price),
   startYear: 2017,
   stateTaxRate: 3,
-  systemLoad: new SystemLoadTimeSeries(csvs.siteLoad),
+  tsSystemLoad: new SystemLoadTimeSeries(csvs.siteLoad),
   technologySpecsSolarPV: [{
     active: true,
     allowGridCharge: false,
@@ -389,10 +389,10 @@ export const projectFixtureAllActive = {
   technologySpecsSingleEV: [],
   timestep: 1,
   userPrice: 347,
-  userEnergyMax: new UserEnergyMaxTimeSeries(_.fill(Array(8760), 9000)),
-  userEnergyMin: new UserEnergyMinTimeSeries(_.fill(Array(8760), 0)),
-  userPowerMax: new UserPowerMaxTimeSeries(_.fill(Array(8760), 1900)),
-  userPowerMin: new UserPowerMinTimeSeries(_.fill(Array(8760), -1900)),
+  tsUserEnergyMax: new UserEnergyMaxTimeSeries(_.fill(Array(8760), 9000)),
+  tsUserEnergyMin: new UserEnergyMinTimeSeries(_.fill(Array(8760), 0)),
+  tsUserPowerMax: new UserPowerMaxTimeSeries(_.fill(Array(8760), 1900)),
+  tsUserPowerMin: new UserPowerMinTimeSeries(_.fill(Array(8760), -1900)),
 };
 
 export const getProjectFixture = (inputsDir, resultsDir) => {

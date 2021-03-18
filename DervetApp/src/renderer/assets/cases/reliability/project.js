@@ -1,24 +1,32 @@
 import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
 import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
 import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
+import {
+  TECH_SPECS_BATTERY,
+  TECH_SPECS_BATTERY_DATA_CYCLES,
+  TECH_SPECS_PV,
+  TECH_SPECS_PV_DATA_GENERATION,
+} from '@/router/constants';
+
+import { ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV } from '@/store/actionTypes';
 
 import { pvGen, criticalLoad, siteLoad } from '@/assets/cases/reliability/csvs';
 
-export const reliabilityCompleteness = {
+export const reliabilityErrorList = {
   overview: {
-    start: true,
-    objectives: true,
-    technologySpecs: true,
+    start: [],
+    objectives: [],
+    technologySpecs: [],
   },
   components: {
     objectives: {
-      siteInformation: true,
-      resilience: true,
+      siteInformation: [],
+      resilience: [],
     },
     financial: {
-      inputs: true,
-      retailTariff: true,
-      externalIncentives: true,
+      inputs: [],
+      retailTariff: [],
+      externalIncentives: [],
     },
   },
 };
@@ -27,7 +35,7 @@ export const reliabilityCompleteness = {
 export const reliabilityProject = {
   analysisHorizon: 20,
   analysisHorizonMode: '1',
-  criticalLoad: new CriticalLoadTimeSeries(criticalLoad),
+  tsCriticalLoad: new CriticalLoadTimeSeries(criticalLoad),
   dataYear: 2017,
   financeDiscountRate: 6,
   energyPriceSourceWholesale: false,
@@ -238,14 +246,24 @@ export const reliabilityProject = {
       complete: true,
     },
   ],
-  siteLoad: new SiteLoadTimeSeries(siteLoad),
+  tsSiteLoad: new SiteLoadTimeSeries(siteLoad),
   sizingEquipment: true,
   startYear: 2017,
   financeStateTaxRate: 0,
   technologySpecsSolarPV: [{
     active: true,
     allowGridCharge: true,
+    associatedInputs: [{
+      complete: true,
+      ts: new PVGenerationTimeSeries(pvGen),
+      displayName: 'Solar Generation Profile',
+      errorList: [],
+      path: TECH_SPECS_PV_DATA_GENERATION,
+      actionSetName: ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV,
+    }],
+    associatedInputsComplete: true,
     complete: true,
+    componentSpecsComplete: true,
     constructionYear: 2017,
     cost: 1660,
     decomissioningCost: 0,
@@ -253,7 +271,6 @@ export const reliabilityProject = {
     expectedLifetime: 99,
     fixedOMCosts: 0,
     gamma: 43,
-    generationProfile: new PVGenerationTimeSeries(pvGen),
     id: '524bd961-1a12-43e0-b963-7f05e22ae5d5',
     includeCurtailment: false,
     includePPA: false,
@@ -265,6 +282,7 @@ export const reliabilityProject = {
     name: 'Installation 1',
     nu: 20,
     operationYear: 2017,
+    path: TECH_SPECS_PV,
     ppaCost: null,
     ppaInflationRate: null,
     ratedCapacity: 1000,
@@ -281,21 +299,28 @@ export const reliabilityProject = {
   }],
   technologySpecsBattery: [{
     active: true,
+    associatedInputs: [{
+      complete: true,
+      dataRows: [
+        { ulimit: 0.05, val: 75000 },
+        { ulimit: 0.1, val: 40500 },
+        { ulimit: 0.15, val: 27000 },
+        { ulimit: 0.2, val: 20250 },
+        { ulimit: 0.3, val: 11250 },
+        { ulimit: 0.4, val: 6750 },
+        { ulimit: 0.5, val: 4500 },
+        { ulimit: 0.6, val: 3750 },
+        { ulimit: 0.7, val: 3225 },
+        { ulimit: 0.8, val: 2813 },
+        { ulimit: 0.9, val: 2475 },
+        { ulimit: 1, val: 2250 },
+      ],
+      displayName: 'Battery Cycle Life Curve',
+      errorList: [],
+      path: TECH_SPECS_BATTERY_DATA_CYCLES,
+    }],
+    associatedInputsComplete: true,
     auxiliaryLoad: 0,
-    batteryCycles: [
-      { ulimit: 0.05, val: 75000 },
-      { ulimit: 0.1, val: 40500 },
-      { ulimit: 0.15, val: 27000 },
-      { ulimit: 0.2, val: 20250 },
-      { ulimit: 0.3, val: 11250 },
-      { ulimit: 0.4, val: 6750 },
-      { ulimit: 0.5, val: 4500 },
-      { ulimit: 0.6, val: 3750 },
-      { ulimit: 0.7, val: 3225 },
-      { ulimit: 0.8, val: 2813 },
-      { ulimit: 0.9, val: 2475 },
-      { ulimit: 1, val: 2250 },
-    ],
     calendarDegradationRate: 0,
     capitalCost: 0,
     capitalCostPerkW: 800,
@@ -304,6 +329,7 @@ export const reliabilityProject = {
     chargingCapacityMaximum: null,
     chargingCapacityMinimum: null,
     complete: true,
+    componentSpecsComplete: true,
     constructionYear: 2017,
     dailyCycleLimit: 0,
     dischargingCapacity: null,
@@ -327,6 +353,7 @@ export const reliabilityProject = {
     maxDuration: 0,
     name: 'BESS 1',
     operationYear: 2017,
+    path: TECH_SPECS_BATTERY,
     powerCapacity: null,
     powerCapacityMaximum: null,
     powerCapacityMinimum: null,

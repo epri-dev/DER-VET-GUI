@@ -1,7 +1,8 @@
 import _ from 'lodash';
-import { objectToCsv, filterRowsByColumnCount } from '@/util/file';
+import { v4 as uuidv4 } from 'uuid';
 
 import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
+import { objectToCsv, filterRowsByColumnCount } from '@/util/file';
 
 const WEEKDAY_ALLOWED_VALUES = [
   {
@@ -80,7 +81,7 @@ export default class RetailTariffBillingPeriodMetadata {
 
   getDefaultValues() {
     return {
-      id: null,
+      id: uuidv4(),
       complete: null,
       ...this.operateOnDynamicFields(f => f.defaultValue),
     };

@@ -2,7 +2,7 @@
   <div>
     <h3>Services: Deferral</h3>
     <hr>
-    <form class="form-horizontal form-buffer">
+    <div class="form-horizontal form-buffer">
 
       <text-input v-model="deferralPlannedLoadLimit"
                   v-bind:field="metadata.deferralPlannedLoadLimit"
@@ -29,122 +29,87 @@
       </text-input>
 
       <timeseries-data-upload
-        chart-name="chartUploadedTimeSeries"
-        data-name="deferral load"
-        units="kW"
+        chart-name="tsDeferralLoadChartUploaded"
+        @click="receiveRemove"
+        :DataModel="metadata.tsDeferralLoad.DataModel"
+        :data-name="metadata.tsDeferralLoad.displayName"
+        :data-time-series="tsData('tsDeferralLoad')"
+        :errorMessage="getErrorMsgTS('tsDeferralLoad')"
+        :isInvalid="submitted && tsData('tsDeferralLoad').data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('tsDeferralLoad')"
+        object-name="tsDeferralLoad"
         @uploaded="receiveTimeseriesData"
-        :data-exists="(tsData !== null)"
-        :data-time-series="tsData"
-        :key="childKey"
       />
       <hr>
 
-      <save-buttons
-        :continue-link="WIZARD_COMPONENT_PATH"
-        :displayError="submitted && $v.$anyError"
-        :save="validatedSave" />
+      <save-and-save-continue
+        :displayError="submitted && ($v.$anyError || isTSError)"
+        :save="validatedSaveStay"
+        :save-continue="validatedSaveContinue"
+      />
 
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import * as p from '@/models/Project/ProjectMetadata';
+  import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
+  import { projectMetadata } from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
-  import operateOnKeysList from '@/util/object';
-  import csvUploadMixin from '@/mixins/csvUploadMixin';
-  import DeferralLoadTimeSeries from '@/models/TimeSeries/DeferralLoadTimeSeries';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
-  import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
+  import '@/assets/samples/Sample_DeferralLoad_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_DeferralLoad_TimeSeries_8784.csv';
 
-  const metadata = p.projectMetadata;
-  const validations = metadata.getValidationSchema(c.DEFERRAL_FIELDS);
+  import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
+
   const PAGEGROUP = 'components';
   const PAGEKEY = 'objectives';
   const PAGE = 'deferral';
+  const FIELDS = c.DEFERRAL_FIELDS;
+  const TS_FIELDS = c.TS_DEFERRAL_FIELDS;
+
+  const ALL_FIELDS = [...FIELDS, ...TS_FIELDS];
+  const validations = projectMetadata.getValidationSchema(FIELDS);
+
+  const CONSTANTS = {
+    DESTINATION_PATH,
+    PAGEGROUP,
+    PAGEKEY,
+    PAGE,
+    FIELDS,
+    TS_FIELDS,
+  };
 
   export default {
-    components: { TimeseriesDataUpload },
     mixins: [csvUploadMixin, wizardFormMixin],
     data() {
-      const p = this.$store.state.Project;
       return {
-        deferralLoad: p.deferralLoad,
-        metadata,
-        ...this.getDataFromProject(),
-        WIZARD_COMPONENT_PATH,
+        metadata: this.getMetadata(projectMetadata, ALL_FIELDS),
+        ...this.getDataFromProject(ALL_FIELDS),
+        ...this.getTSInputDefaultDataFromProject(TS_FIELDS),
+        ...this.getChildKeys(TS_FIELDS),
+        ...this.getUseExistingDefaults(TS_FIELDS),
+        CONSTANTS,
       };
     },
     validations: {
       ...validations,
     },
     computed: {
-      tsData() {
-        if (this.inputTimeseries === null) {
-          return this.deferralLoad;
-        }
-        return new DeferralLoadTimeSeries(this.inputTimeseries);
+      isRequiredTSFields() {
+        // return an object of booleans for every TS_FIELD,
+        //   indicating if each is required
+        const isRequiredObject = {};
+        (TS_FIELDS).forEach((tsField) => {
+          isRequiredObject[tsField] = true;
+        });
+        return isRequiredObject;
       },
-      complete() {
-        return this.$store.state.Application.pageCompleteness[PAGEGROUP][PAGEKEY][PAGE];
-      },
-    },
-    beforeMount() {
-      // submitted is false initially; set it to true after the first save.
-      // initially, complete is null; after saving, it is set to either true or false.
-      // we want to show validation errors at any time after the first save, with submitted.
-      if (this.complete !== null && this.complete !== undefined) {
-        this.submitted = true;
-        this.$v.$touch();
-      }
     },
     methods: {
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
-      },
-      getDataFromProject() {
-        return operateOnKeysList(this.$store.state.Project, c.DEFERRAL_FIELDS, f => f);
-      },
-      getCompletenessPayload() {
-        return {
-          pageGroup: PAGEGROUP,
-          pageKey: PAGEKEY,
-          page: PAGE,
-          completeness: !this.$v.$invalid,
-        };
-      },
-      getErrorListPayload() {
-        const errors = [];
-        Object.keys(this.$v).forEach((key) => {
-          if (key.charAt(0) !== '$' && this.$v[key].$invalid) {
-            errors.push(this.getErrorMsg(key));
-          }
-        });
-        return {
-          pageGroup: PAGEGROUP,
-          pageKey: PAGEKEY,
-          page: PAGE,
-          errorList: errors,
-        };
-      },
-      validatedSave() {
-        // set completeness
-        this.$store.dispatch('Application/setCompleteness', this.getCompletenessPayload());
-        this.submitted = true;
-        this.$v.$touch();
-        // set errorList
-        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
-        return this.save();
-      },
-      save() {
-        if (this.inputTimeseries !== null) {
-          this.$store.dispatch('setDeferralLoad', this.tsData);
-        }
-        this.$store.dispatch('setDeferralPlannedLoadLimit', this.deferralPlannedLoadLimit);
-        this.$store.dispatch('setDeferralReversePowerFlowLimit', this.deferralReversePowerFlowLimit);
-        this.$store.dispatch('setDeferralGrowth', this.deferralGrowth);
-        this.$store.dispatch('setDeferralPrice', this.deferralPrice);
       },
     },
   };

@@ -29,11 +29,11 @@
         <hr>
 
         <cancel-and-save-buttons
-          :back-link="FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
+          :back-link="FINANCIAL_INPUTS_RETAIL_TARIFF"
           backText="Cancel"
-          :disabled="importDisabled()"
+          :disabled="isImportDisabled()"
           continueText="Import Retail Tariff"
-          :displayError="importDisabled()"
+          :displayError="isImportDisabled()"
           :errorText="importError"
           :save="save"
         />
@@ -47,7 +47,8 @@
   import RetailTariffBillingPeriodMetadata, { parsedCsvToBillingPeriods } from '@/models/RetailTariffBillingPeriod';
   import { parseCsvFromEvent } from '@/util/file';
   import CancelAndSaveButtons from '@/components/Shared/CancelAndSaveButtons';
-  import { FINANCIAL_INPUTS_RETAIL_TARIFF_PATH } from '@/router/constants';
+  import { FINANCIAL_INPUTS_RETAIL_TARIFF } from '@/router/constants';
+  import { compileImportNotes } from '@/util/validation';
 
   const metadata = RetailTariffBillingPeriodMetadata.getHardcodedMetadata();
   const validationz = metadata.toValidationSchema();
@@ -59,9 +60,9 @@
         metadata,
         ...this.getDefaultData(),
         parsedBillingPeriodCsv: null,
-        importError: undefined,
+        importError: '',
         importedFilePath: null,
-        FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
+        FINANCIAL_INPUTS_RETAIL_TARIFF,
       };
     },
     validations() {
@@ -86,11 +87,6 @@
       this.$v.$touch();
     },
     methods: {
-      compileImportNotes(importNotes) {
-        // add source (file path) to the list
-        importNotes.push(`source: ${this.importedFilePath}`);
-        return importNotes;
-      },
       getDefaultData() {
         return metadata.getDefaultValues();
       },
@@ -133,13 +129,13 @@
         };
         parseCsvFromEvent(e, onSuccess);
       },
-      importDisabled() {
-        return this.importError !== undefined;
+      isImportDisabled() {
+        return (this.importError !== undefined || this.importedFilePath === null);
       },
       save() {
         // obtain data and import notes
         const pdsObject = parsedCsvToBillingPeriods(this.parsedBillingPeriodCsv);
-        const fileImportNotes = this.compileImportNotes(pdsObject.fileImportNotes);
+        const fileImportNotes = compileImportNotes(pdsObject.fileImportNotes, this.importedFilePath);
         const pds = pdsObject.csvValues;
         if (pds.length > 0) {
           // validate each row, by setting complete to true or false
@@ -154,7 +150,7 @@
         // complete this mutation before navigation to next page
         this.$store.dispatch('replaceRetailTariffBillingPeriods', pds)
           .then(this.$store.dispatch('replaceRetailTariffFileImportNotes', fileImportNotes))
-          .then(this.$router.push({ path: FINANCIAL_INPUTS_RETAIL_TARIFF_PATH }));
+          .then(this.$router.push({ path: FINANCIAL_INPUTS_RETAIL_TARIFF }));
       },
     },
   };

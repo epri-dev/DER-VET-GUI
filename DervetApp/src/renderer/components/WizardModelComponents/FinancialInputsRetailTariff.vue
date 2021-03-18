@@ -3,7 +3,7 @@
     <h3>Retail Tariff</h3>
     <div class="row">
       <div class="col-md-12">
-        Build a retail tariff definition by entering each billing period one at a time, or by importing a tariff from an export file.
+        Build a retail tariff definition by entering each billing period one at a time, by importing a tariff from an export file, or by selecting one from OpenEI's utility rate database.
       </div>
     </div>
 
@@ -26,8 +26,8 @@
         <div class="col-md-12">
           <table class="table table-bordered">
             <thead>
-              <tr class="table-align-center" >
-                <th v-for="label in RETAIL_TARIFF_HEADERS">
+              <tr class="table-align-center">
+                <th v-for="label in tariffTableHeaders">
                   {{label}}
                 </th>
                 <th class="table-align-center">
@@ -39,7 +39,6 @@
               <tr class="table-align-center"
                   v-for="pd in billingPeriods"
                   v-bind:class="{ incomplete: !pd.complete }">
-                <td>{{pd.id}}</td>
                 <td>{{pd.startMonth}}</td>
                 <td>{{pd.endMonth}}</td>
                 <td>{{pd.startTime}}</td>
@@ -64,21 +63,17 @@
           </table>
         </div>
       </div>
-<!--
-      <div class="form-group" v-else>
-        <div class="col-md-12 buffer-bottom">
-          <i>There are currently no retail tariff billing periods specified...</i>
-        </div>
-      </div>
--->
     </div>
 
     <div class="form-group row">
       <div class="col-md-12">
-        <router-link :to="`${FINANCIAL_INPUTS_RETAIL_TARIFF_PATH}-billing-period/null`" class="btn btn-secondary">
+        <router-link :to="`${paths.FINANCIAL_INPUTS_RETAIL_TARIFF_BILLING_PERIOD}/null`" class="btn btn-secondary">
           Add Billing Period
         </router-link>
-        <router-link :to="`${FINANCIAL_INPUTS_RETAIL_TARIFF_PATH}-import`" class="btn btn-secondary">
+        <router-link :to="paths.FINANCIAL_INPUTS_RETAIL_TARIFF_OPEN_EI" class="btn btn-secondary">
+          Add OpenEI Tariff
+        </router-link>
+        <router-link :to="paths.FINANCIAL_INPUTS_RETAIL_TARIFF_IMPORT" class="btn btn-secondary">
           <i class="fas fa-upload"/> Import Tariff
         </router-link>
         <a
@@ -95,10 +90,10 @@
 
     <hr>
 
-    <nav-button :continue-link="WIZARD_COMPONENT_PATH"
+    <nav-button :continue-link="paths.WIZARD_COMPONENT"
                 :displayError="!complete"
-                :error-text="getSingleErrorMsg()"
-                continue-text="Done Adding Billing Periods" />
+                :error-text="errorMessage"
+                continue-text="Done Adding Billing Periods"/>
 
   </div>
 </template>
@@ -107,14 +102,16 @@
   import { RETAIL_TARIFF_HEADERS, billingPeriodsToCsv } from '@/models/RetailTariffBillingPeriod';
   import { formatCsvForHref } from '@/util/file';
   import NavButton from '@/components/Shared/NavButton';
-  import {
-    WIZARD_COMPONENT_PATH,
-    FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
-  } from '@/router/constants';
+  import * as paths from '@/router/constants';
+  import { getSingleErrorMsg } from '@/util/validation';
 
   const PAGEGROUP = 'components';
   const PAGEKEY = 'financial';
   const PAGE = 'retailTariff';
+  const TABLE_ITEM_NAME = 'billing periods';
+
+  const tariffTableHeaders = [...RETAIL_TARIFF_HEADERS];
+  tariffTableHeaders.shift();
 
   export default {
     mounted() {
@@ -126,7 +123,10 @@
         return this.$store.state.Project.retailTariffBillingPeriods;
       },
       complete() {
-        return this.billingPeriodsExist() && this.getNumberOfInvalidRows() === 0;
+        return this.errorMessage === '';
+      },
+      errorMessage() {
+        return getSingleErrorMsg(this.billingPeriods, TABLE_ITEM_NAME);
       },
       fileImportNotes() {
         return this.$store.state.Project.retailTariffFileImportNotes;
@@ -134,9 +134,8 @@
     },
     data() {
       return {
-        RETAIL_TARIFF_HEADERS,
-        WIZARD_COMPONENT_PATH,
-        FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
+        paths,
+        tariffTableHeaders,
       };
     },
     methods: {
@@ -159,34 +158,12 @@
         };
       },
       getErrorListPayload() {
-        const errors = [];
-        if (!this.complete) {
-          errors.push(this.getSingleErrorMsg());
-        }
         return {
           pageGroup: PAGEGROUP,
           pageKey: PAGEKEY,
           page: PAGE,
-          errorList: errors,
+          errorList: this.complete ? [] : [this.errorMessage],
         };
-      },
-      getNumberOfInvalidRows() {
-        let invalidRowsCount = 0;
-        Object.values(this.billingPeriods).forEach((row) => {
-          if (!row.complete) {
-            invalidRowsCount += 1;
-          }
-        });
-        return invalidRowsCount;
-      },
-      getSingleErrorMsg() {
-        if (!this.billingPeriodsExist()) {
-          return 'There are no billing periods specified.';
-        } else if (!this.complete) {
-          const pluralizeRow = (this.getNumberOfInvalidRows() === 1) ? '' : 's';
-          return `There are errors with ${this.getNumberOfInvalidRows()} row${pluralizeRow} in the table.`;
-        }
-        return '';
       },
       removeAll() {
         this.$store.dispatch('removeAllRetailTariffBillingPeriods');

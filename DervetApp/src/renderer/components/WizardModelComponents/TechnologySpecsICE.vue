@@ -211,7 +211,7 @@
         </drop-down-input>
 
         <save-buttons
-          :continue-link="WIZARD_COMPONENT_PATH"
+          :continue-link="WIZARD_COMPONENT"
           :displayError="submitted && $v.$anyError"
           :save="validatedSave"
         />
@@ -227,7 +227,7 @@
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsICEMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsICE';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT } from '@/router/constants';
 
   const metadata = TechnologySpecsICEMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
@@ -242,7 +242,7 @@
       return {
         metadata,
         ...values,
-        WIZARD_COMPONENT_PATH,
+        WIZARD_COMPONENT,
       };
     },
     validations() {

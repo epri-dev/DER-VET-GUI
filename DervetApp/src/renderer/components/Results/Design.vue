@@ -51,15 +51,12 @@
 </template>
 
 <script>
-  import { RESULTS_PATH } from '@/router/constants';
+  import { RESULTS } from '@/router/constants';
 
   export default {
-    beforeMount() {
-      this.$store.dispatch('createDesignPlots');
-    },
     data() {
       return {
-        RESULTS_PATH,
+        RESULTS,
         costTableFields: [
           {
             key: 'total',

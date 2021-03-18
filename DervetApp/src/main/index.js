@@ -1,7 +1,8 @@
 import log from 'electron-log';
-import { callDervet, readDervetResults, writeDervetInputs } from './service/dervet';
+import { callDervet, readDervetResults, writeDervetInputs, exitPythonProcess } from './service/dervet';
+import menuConfig from './util/menu';
 require('dotenv').config();
-import { app, BrowserWindow, ipcMain } from 'electron' // eslint-disable-line
+import { app, BrowserWindow, ipcMain, Menu } from 'electron'; // eslint-disable-line
 
 /**
  * Set `__static` path to static files in production
@@ -42,13 +43,24 @@ function createWindow() {
 
   mainWindow.loadURL(winURL);
 
+  // Configure application menu
+  const menu = Menu.buildFromTemplate(menuConfig);
+  Menu.setApplicationMenu(menu);
+
+  // Open dev tools initially when in development mode
+  if (process.env.NODE_ENV === 'development') {
+    mainWindow.webContents.on('did-frame-finish-load', () => {
+      mainWindow.webContents.openDevTools();
+    });
+  }
+
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
 }
 
-function sendResults(event, results) {
-  event.sender.send('dervet-results', Object.assign(...results));
+function sendResults(event, results, resultsPath) {
+  event.sender.send('dervet-results', Object.assign(...results, { resultsPath }));
 }
 
 function registerIpcChannels() {
@@ -59,12 +71,16 @@ function registerIpcChannels() {
     Promise.all(writeDervetInputs(dervetInputs, modelParametersPath))
       .then(() => callDervet(modelParametersPath))
       .then(() => readDervetResults(resultsPath, dervetInputs.expectedResultCsvs))
-      .then(results => sendResults(event, results))
+      .then(results => sendResults(event, results, resultsPath))
       .catch((err) => {
         const errMessage = JSON.stringify(err);
         log.error(errMessage);
         event.sender.send('dervet-error', errMessage);
       });
+  });
+
+  ipcMain.on('kill-dervet', () => {
+    exitPythonProcess();
   });
 }
 
@@ -86,3 +102,5 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
+app.on('will-quit', () => exitPythonProcess());

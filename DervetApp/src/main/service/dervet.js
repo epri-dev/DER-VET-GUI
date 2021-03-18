@@ -70,11 +70,12 @@ const listenForExit = pythonProcess => (
   })
 );
 
-// TODO will use this eventually
-// const exitPythonProcess = () => {
-//   pythonProcess.kill();
-//   pythonProcess = null;
-// };
+export const exitPythonProcess = (pythonProcess) => {
+  if (pythonProcess) {
+    pythonProcess.kill();
+    pythonProcess = null;
+  }
+};
 
 export const callDervet = (modelParametersPath) => {
   console.log('Spawning DERVET subprocess...'); // eslint-disable-line

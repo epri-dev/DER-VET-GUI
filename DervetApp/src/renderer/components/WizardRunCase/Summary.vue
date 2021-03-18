@@ -65,17 +65,17 @@
           </div>
         </div>
 
-        <div v-if="activeObjectivesErrorExists" class="incomplete">
+        <div v-if="doesActiveObjectivesErrorExist" class="incomplete">
           <h4>Errors in Services Components</h4>
           <div v-for="service in activeObjectivesAndErrorsOnly">
-            <div v-if="!service.complete">
+            <div v-if="!service.isComplete">
               <li>
                 <router-link class="text-decoration-none"
                              :to="service.path">
-                  {{ service.fullName + notStartedText(service.complete) }}
+                  {{ service.fullName + notStartedText(service.errorList) }}
                 </router-link>
                 <ul>
-                  <li v-for="error in service.errors">
+                  <li v-for="error in service.errorList">
                     <span v-html="error"></span>
                   </li>
                 </ul>
@@ -84,17 +84,17 @@
           </div>
         </div>
 
-        <div v-if="activeFinancialErrorExists" class="incomplete">
+        <div v-if="doesActiveFinancialErrorExist" class="incomplete">
           <h4>Errors in Finances Components</h4>
           <div v-for="finance in activeFinancialAndErrorsOnly">
             <div v-if="!finance.complete">
               <li>
                 <router-link class="text-decoration-none"
                              :to="finance.path">
-                  {{ finance.fullName + notStartedText(finance.complete) }}
+                  {{ finance.fullName + notStartedText(finance.errorList) }}
                 </router-link>
                 <ul>
-                  <li v-for="error in finance.errors">
+                  <li v-for="error in finance.errorList">
                     <span v-html="error"></span>
                   </li>
                 </ul>
@@ -136,26 +136,14 @@
         </template>
         </br>
 
-        <div class="form-group form-buffer row">
+        <div class="form-group form-buffer text-center">
           <file-picker
             label="Export Project"
-            :onFileSelect="exportProject"
+            :callback="exportProject"
             :isAsync="true"
             :isDirectory="true"
-            buttonAttributes="btn btn-lg btn-info pull-right btn-summary"
-            wrapperDivAttributes="col-md-5"/>
-
-          <div class="col-md-2"/>
-
-          <div class="col-md-5">
-            <router-link
-              v-on:click.native="(runInProgress() || runDervetDisabled) ? () => null : runDervet()"
-              :event="runDervetDisabled ? '' : 'click'"
-              :to="this.$route.path"
-              class="btn btn-lg btn-danger pull-left btn-summary">
-              {{ runInProgress() ? 'Running Analysis...' : 'Run Analysis' }}
-            </router-link>
-          </div>
+            buttonAttributes="btn btn-lg btn-info btn-summary"
+            wrapperDivAttributes="col-md-12"/>
         </div>
 
       </div>
@@ -167,7 +155,6 @@
 <script>
   import _ from 'lodash';
   import * as paths from '@/router/constants';
-  import { RUN_ANALYSIS_PATH } from '@/router/constants';
   import { ANALYSIS_HORIZON_MODE_ALLOWED_VALUES } from '@/models/Project/constants';
   import * as techLabels from '@/models/Project/TechnologySpecs/labelConstants';
   import { exportProject } from '@/service/ProjectFileManager';
@@ -175,31 +162,29 @@
   import technologySpecsMixin from '@/mixins/technologySpecsMixin';
   import objectivesMixin from '@/mixins/objectivesMixin';
   import financeMixin from '@/mixins/financeMixin';
-  import { isObjectOfLengthZero } from '@/util/logic';
-
 
   const NOT_STARTED = ': Not Started';
 
   export default {
     mixins: [technologySpecsMixin, objectivesMixin, financeMixin],
     computed: {
-      activeFinancesWithErrors() {
-        return this.activeWithErrors(this.financial);
-      },
-      activeFinancialErrorExists() {
-        return this.activeErrorExists(this.activeFinancesWithErrors);
+      activeFinancal() {
+        return this.filterActive(this.financial);
       },
       activeFinancialAndErrorsOnly() {
-        return this.activeAndErrorsOnly(this.activeFinancesWithErrors);
+        return this.errorsOnly(this.activeFinancal);
       },
-      activeObjectivesWithErrors() {
-        return this.activeWithErrors(this.objectives);
+      doesActiveFinancialErrorExist() {
+        return this.activeFinancialAndErrorsOnly.length > 0;
+      },
+      activeObjectives() {
+        return this.filterActive(this.objectives);
       },
       activeObjectivesAndErrorsOnly() {
-        return this.activeAndErrorsOnly(this.activeObjectivesWithErrors);
+        return this.errorsOnly(this.activeObjectives);
       },
-      activeObjectivesErrorExists() {
-        return this.activeErrorExists(this.activeObjectivesWithErrors);
+      doesActiveObjectivesErrorExist() {
+        return this.activeObjectivesAndErrorsOnly.length > 0;
       },
       activeTechErrorExists() {
         let errorsTF = false;
@@ -210,45 +195,12 @@
         });
         return errorsTF;
       },
-      anyErrorExists() {
-        return (this.overviewErrorExists() || this.activeTechErrorExists
-          || this.activeObjectivesErrorExists || this.activeFinancialErrorExists);
-      },
-      errorList() {
-        return this.$store.state.Application.errorList;
-      },
       techAll() {
         const techList = [];
         this.techSpecs.forEach((item) => {
           techList.push(this.filterNonActives(item.items));
         });
         return _.flatten(techList);
-      },
-      runDervetDisabled() {
-        return this.anyErrorExists;
-      },
-    },
-    components: {
-      FilePicker,
-    },
-    methods: {
-      activeWithErrors(mixinObject) {
-        mixinObject.forEach((value) => {
-          if (value.show) {
-            value.errors = this.errorList.components[value.pageKey][value.pageName];
-          }
-        });
-        return mixinObject;
-      },
-      activeAndErrorsOnly(activeWithErrorsObject) {
-        const hasErrors = function hasErrors(o) {
-          return isObjectOfLengthZero(o.errors);
-        };
-        const pageWithErrors = _.filter(activeWithErrorsObject, hasErrors);
-        return pageWithErrors;
-      },
-      activeErrorExists(activeWithErrorsObject) {
-        return this.activeAndErrorsOnly(activeWithErrorsObject).length !== 0;
       },
       modeDescription() {
         const mode = this.$store.state.Project.analysisHorizonMode;
@@ -258,24 +210,27 @@
         const horizon = this.$store.state.Project.analysisHorizon;
         return horizon ? `${horizon} years` : '';
       },
+    },
+    components: {
+      FilePicker,
+    },
+    methods: {
+      filterActive(listOfObjects) {
+        return _.filter(listOfObjects, 'show');
+      },
+      errorsOnly(listOfObjects) {
+        const pageWithErrors = _.filter(listOfObjects, ['isComplete', false]);
+        return pageWithErrors;
+      },
       getRateDisplay(rate) {
         if (rate === null) {
           return '';
         }
         return `${rate} %`;
       },
-  
-      runInProgress() {
-        return this.$store.state.Application.runInProgress;
-      },
+
       exportProject(selectedPath) {
         return exportProject(selectedPath, this.$store.state.Project, this.$store.state.Application);
-      },
-      runDervet() {
-        // TODO: note that there is currently no validation, so calling this with an
-        // incomplete Project object will likely result in an unhandled exception
-        this.$store.dispatch('Application/runDervet', this.$store.state.Project)
-          .then(this.$router.push({ path: RUN_ANALYSIS_PATH }));
       },
 
       // components
@@ -302,7 +257,7 @@
       getTechDisplayName(tech) {
         if (tech.complete === null) {
           return NOT_STARTED;
-        } else if (!tech.name) {
+        } if (!tech.name) {
           return ': Undefined';
         }
         return `: ${tech.name}`;
@@ -338,11 +293,11 @@
       getOverviewPath(page) {
         let overviewPath = '';
         if (page === 'start') {
-          overviewPath = paths.START_PROJECT_PATH;
+          overviewPath = paths.PROJECT_CONFIGURATION;
         } else if (page === 'objectives') {
-          overviewPath = paths.OBJECTIVES_PATH;
+          overviewPath = paths.OBJECTIVES;
         } else if (page === 'technologySpecs') {
-          overviewPath = paths.TECH_SPECS_PATH;
+          overviewPath = paths.TECH_SPECS;
         }
         return overviewPath;
       },
@@ -371,8 +326,8 @@
         setup: [
           ['Project Name', (this.$store.state.Project.name || '')],
           ['Start Year', this.$store.state.Project.startYear],
-          ['Analysis Horizon', this.getAnalysisHorizonDisplay()],
-          ['Analysis Horizon Mode', this.modeDescription()],
+          ['Analysis Horizon', this.getAnalysisHorizonDisplay],
+          ['Analysis Horizon Mode', this.modeDescription],
           ['Data year', this.$store.state.Project.dataYear],
           ['Grid Domain', this.$store.state.Project.gridLocation],
           ['Ownership', this.$store.state.Project.ownership],
@@ -390,9 +345,6 @@
           ['Federal tax rate', this.getRateDisplay(this.$store.state.Project.financeFederalTaxRate)],
           ['State tax rate', this.getRateDisplay(this.$store.state.Project.financeStateTaxRate)],
           ['Property tax rate', this.getRateDisplay(this.$store.state.Project.financePropertyTaxRate)],
-        ],
-        scenario: [
-          ['FIXME Number of Scenario Analysis Cases', 'Baseline'],
         ],
       };
     },

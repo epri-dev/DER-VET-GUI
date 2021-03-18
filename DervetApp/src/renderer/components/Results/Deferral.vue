@@ -18,18 +18,15 @@
 
 <script>
   import Plotly from 'plotly.js';
-  import { RESULTS_PATH } from '@/router/constants';
+  import { RESULTS } from '@/router/constants';
 
   export default {
-    beforeMount() {
-      this.$store.dispatch('createDeferralPlots');
-    },
     mounted() {
       this.createChartCapacityVsTime('chartCapacityVsTime', this.chartData);
     },
     data() {
       return {
-        RESULTS_PATH,
+        RESULTS,
       };
     },
     computed: {
@@ -132,5 +129,4 @@
       },
     },
   };
-
 </script>

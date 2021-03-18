@@ -11,7 +11,7 @@
     <div class="form-horizontal form-buffer">
       <file-picker
         label="Select Project"
-        :onFileSelect="setImportDirectory"
+        :callback="setImportDirectory"
         buttonAttributes="btn btn-primary"
         wrapperDivAttributes="col-md-2"
         :isDirectory="false"
@@ -20,6 +20,7 @@
       <div class=col-md-10>
         {{this.importDirectory}}
       </div>
+      <br/>
       <div class="col-md-offset-2 col-md-10">
         <router-link :to="$route.path"
                      class="btn btn-primary"
@@ -33,7 +34,7 @@
 
 <script>
   import FilePicker from '@/components/Shared/FilePicker.vue';
-  import { WIZARD_START_PATH } from '@/router/constants';
+  import { SUMMARY } from '@/router/constants';
   import { importProject } from '@/service/ProjectFileManager';
   import store from '@/store';
   import { APPLICATION } from '@/store/modules/Application';
@@ -65,7 +66,7 @@
               store.dispatch(LOAD_NEW_PROJECT, project);
             })
             .then(() => store.dispatch('Application/setNewApplicationState', this.applicationState))
-            .then(() => this.$router.push({ path: WIZARD_START_PATH }));
+            .then(() => this.$router.push({ path: SUMMARY }));
         }
       },
     },

@@ -2,14 +2,19 @@ import { cloneDeep, flatten, merge } from 'lodash';
 
 import { billReductionProject } from '@/assets/cases/billReduction/project';
 import { reliabilityProject } from '@/assets/cases/reliability/project';
+import { dummyMarketServiceHourly } from '@/assets/cases/dummyMarketServiceHourly/project';
+import { ERCOTMarketService } from '@/assets/cases/ERCOTMarketService/project';
 import { projectMetadata } from '@/models/Project/ProjectMetadata';
+import { makeDatetimeIndex } from '@/models/dto/ProjectDto';
 import * as m from '@/store/mutationTypes';
 import * as a from '@/store/actionTypes';
 import * as c from '@/models/Project/constants';
 
-const usecaseDatabase = { // its a sad excuse for a database, but serves as one.
+const USECASE_DB = { // its a sad excuse for a database, but serves as one.
   billReductionProject,
   reliabilityProject,
+  dummyMarketServiceHourly,
+  ERCOTMarketService,
 };
 
 const metadataDefaultValues = projectMetadata.getDefaultValues();
@@ -134,6 +139,9 @@ const getters = {
   getSolarPVSpecsClone(state) {
     return () => cloneDeep(state.technologySpecsSolarPV);
   },
+  getTimeseriesXAxis(state) {
+    return makeDatetimeIndex(state.dataYear, state.timestep, false);
+  },
 };
 
 const mutations = {
@@ -144,11 +152,11 @@ const mutations = {
     Object.assign(state, project);
   },
   // Backup
-  [m.SET_BACKUP_PRICE](state, newValue) {
-    state.backupPrice = newValue;
+  [m.SET_BACKUP_ENERGY_PRICE](state, newValue) {
+    state[c.MTS_BACKUP_ENERGY_PRICE] = newValue;
   },
-  [m.SET_BACKUP_ENERGY](state, newValue) {
-    state.backupEnergyReservation = newValue;
+  [m.SET_BACKUP_ENERGY_RESERVATION](state, newValue) {
+    state[c.MTS_BACKUP_ENERGY_RESERVATION] = newValue;
   },
   // Battery
   [m.REPLACE_TECHNOLOGY_SPECS_BATTERY](state, payload) {
@@ -162,8 +170,8 @@ const mutations = {
     const tmpBatterySpecs = getters.getBatterySpecsClone(state)();
     const indexMatchingId = getters.getIndexOfBatteryId(state)(payload.batteryId);
     tmpBatterySpecs[indexMatchingId].associatedInputsComplete = payload.batteryCycles.complete;
-    tmpBatterySpecs[indexMatchingId].complete
-      = payload.batteryCycles.complete && tmpBatterySpecs[indexMatchingId].componentSpecsComplete;
+    tmpBatterySpecs[indexMatchingId].complete = (payload.batteryCycles.complete
+      && tmpBatterySpecs[indexMatchingId].componentSpecsComplete);
     // this updates the object, while retaining untouched pieces
     Object.assign(tmpBatterySpecs[indexMatchingId].associatedInputs[0], payload.batteryCycles);
     state.technologySpecsBattery = tmpBatterySpecs;
@@ -176,34 +184,55 @@ const mutations = {
     state.technologySpecsControllableLoad = tmpSpecs;
   },
   // Controllable Load upload
-  [m.ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD](state, payload) {
+  [m.ADD_DATA_TO_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD](state, payload) {
     const tmpSpecs = getters.getControllableLoadSpecsClone(state)();
-    const indexMatchingId = getters.getIndexOfControllableLoadId(state)(payload.solarId);
-    tmpSpecs[indexMatchingId].load = payload.load;
+    const { id, index, data } = payload;
+    const indexMatchingId = getters.getIndexOfControllableLoadId(state)(id);
+    // this updates the object, while retaining untouched pieces
+    Object.assign(tmpSpecs[indexMatchingId].associatedInputs[index], data);
+    state.technologySpecsControllableLoad = tmpSpecs;
+  },
+  [m.SET_COMPLETENESS_OF_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD](state, payload) {
+    const tmpSpecs = getters.getControllableLoadSpecsClone(state)();
+    const { id, data } = payload;
+    const indexMatchingId = getters.getIndexOfControllableLoadId(state)(id);
+    tmpSpecs[indexMatchingId].associatedInputsComplete = data.complete;
+    tmpSpecs[indexMatchingId].complete = (data.complete
+      && tmpSpecs[indexMatchingId].componentSpecsComplete);
+    state.technologySpecsControllableLoad = tmpSpecs;
+  },
+  [m.ADD_ERRORS_STRING_TO_DATA_IN_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD](state, payload) {
+    const tmpSpecs = getters.getControllableLoadSpecsClone(state)();
+    const { id, index, errorsString } = payload;
+    const indexMatchingId = getters.getIndexOfControllableLoadId(state)(id);
+    // add errorsString to ts.error
+    if (errorsString !== undefined) {
+      tmpSpecs[indexMatchingId].associatedInputs[index].ts.error = errorsString;
+    }
     state.technologySpecsControllableLoad = tmpSpecs;
   },
   // da page
   [m.SET_DA_GROWTH](state, newDAGrowth) {
-    state.daGrowth = newDAGrowth;
+    state[c.DA_GROWTH] = newDAGrowth;
   },
   [m.SET_DA_PRICE](state, newDAPrice) {
-    state.daPrice = newDAPrice;
+    state[c.TS_DA_PRICE] = newDAPrice;
   },
   // deferral page
   [m.SET_DEFERRAL_GROWTH](state, newDeferralGrowth) {
-    state.deferralGrowth = newDeferralGrowth;
+    state[c.DEFERRAL_GROWTH] = newDeferralGrowth;
   },
   [m.SET_DEFERRAL_PRICE](state, newDeferralPrice) {
-    state.deferralPrice = newDeferralPrice;
+    state[c.DEFERRAL_PRICE] = newDeferralPrice;
   },
   [m.SET_DEFERRAL_PLANNED_LOAD_LIMIT](state, newDeferralPlannedLoadLimit) {
-    state.deferralPlannedLoadLimit = newDeferralPlannedLoadLimit;
+    state[c.DEFERRAL_PLANNED_LOAD_LIMIT] = newDeferralPlannedLoadLimit;
   },
   [m.SET_DEFERRAL_LOAD](state, newDeferralLoad) {
-    state.deferralLoad = newDeferralLoad;
+    state[c.TS_DEFERRAL_LOAD] = newDeferralLoad;
   },
   [m.SET_DEFERRAL_REVERSE_POWER_FLOW_LIMIT](state, newDeferralReversePowerFlowLimit) {
-    state.deferralReversePowerFlowLimit = newDeferralReversePowerFlowLimit;
+    state[c.DEFERRAL_REVERSE_POWER_FLOW_LIMIT] = newDeferralReversePowerFlowLimit;
   },
   // Diesel
   [m.REPLACE_TECHNOLOGY_SPECS_DIESEL_GEN](state, payload) {
@@ -225,6 +254,9 @@ const mutations = {
   [m.SET_DR_END_HOUR](state, newValue) {
     state[c.DR_END_HOUR] = newValue;
   },
+  [m.SET_DR_END_MODE](state, newValue) {
+    state[c.DR_END_MODE] = newValue;
+  },
   [m.SET_DR_EVENT_LENGTH](state, newValue) {
     state[c.DR_EVENT_LENGTH] = newValue;
   },
@@ -235,19 +267,20 @@ const mutations = {
     state[c.DR_GROWTH] = newDRGrowth;
   },
   [m.SET_DR_APPLIED_MONTHS](state, newValue) {
-    state.drMonthsApplied = newValue;
+    state[c.MTS_DR_MONTHS_APPLIED] = newValue;
+    state[c.DR_APPLIED_MONTHS_LABELS] = newValue.data;
   },
   [m.SET_DR_APPLIED_MONTHS_LABELS](state, newValue) {
-    state.drMonthsAppliedLabels = newValue;
+    state[c.DR_APPLIED_MONTHS_LABELS] = newValue;
   },
   [m.SET_DR_CAPACITY_RESERVATION](state, newValue) {
-    state.drCapacityReservation = newValue;
+    state[c.MTS_DR_CAPACITY_RESERVATION] = newValue;
   },
-  [m.SET_DR_CAPACITY_AWARDS](state, newValue) {
-    state.drCapacityAwards = newValue;
+  [m.SET_DR_CAPACITY_PRICE](state, newValue) {
+    state[c.MTS_DR_CAPACITY_PRICE] = newValue;
   },
-  [m.SET_DR_ENERGY_AWARDS](state, newValue) {
-    state.drEnergyAwards = newValue;
+  [m.SET_DR_ENERGY_PRICE](state, newValue) {
+    state[c.MTS_DR_ENERGY_PRICE] = newValue;
   },
   // External incentives file
   [m.ADD_EXTERNAL_INCENTIVE](state, newExternalIncentive) {
@@ -282,33 +315,33 @@ const mutations = {
   SET_STATE_TAX_RATE(state, newStateTaxRate) {
     state.financeStateTaxRate = newStateTaxRate;
   },
-  // frequency response
-  SET_FR_COMBINED_MARKET(state, newFRCombinedMarket) {
-    state.frCombinedMarket = newFRCombinedMarket;
+  // frequency regulation
+  [m.SET_FR_COMBINED_MARKET](state, newFRCombinedMarket) {
+    state[c.FR_COMBINED_MARKET] = newFRCombinedMarket;
   },
-  SET_FR_DOWN_PRICE(state, newFRDownPrice) {
-    state.frDownPrice = newFRDownPrice;
+  [m.SET_FR_DOWN_PRICE](state, newFRDownPrice) {
+    state[c.TS_FR_DOWN_PRICE] = newFRDownPrice;
   },
-  SET_FR_DURATION(state, newFRDuration) {
-    state.frDuration = newFRDuration;
+  [m.SET_FR_DURATION](state, newFRDuration) {
+    state[c.FR_DURATION] = newFRDuration;
   },
-  SET_FR_ENERGY_GROWTH(state, newFREnergyGrowth) {
-    state.frEnergyPriceGrowth = newFREnergyGrowth;
+  [m.SET_FR_ENERGY_PRICE_GROWTH](state, payload) {
+    state[c.FR_ENERGY_PRICE_GROWTH] = payload;
   },
-  SET_FR_EOU(state, newFReou) {
-    state.frEOU = newFReou;
+  [m.SET_FR_EOU](state, newFReou) {
+    state[c.FR_EOU] = newFReou;
   },
-  SET_FR_EOD(state, newFReod) {
-    state.frEOD = newFReod;
+  [m.SET_FR_EOD](state, newFReod) {
+    state[c.FR_EOD] = newFReod;
   },
-  SET_FR_GROWTH(state, newFRGrowth) {
-    state.frGrowth = newFRGrowth;
+  [m.SET_FR_GROWTH](state, newFRGrowth) {
+    state[c.FR_GROWTH] = newFRGrowth;
   },
-  SET_FR_PRICE(state, newFRPrice) {
-    state.frPrice = newFRPrice;
+  [m.SET_FR_PRICE](state, newFRPrice) {
+    state[c.TS_FR_PRICE] = newFRPrice;
   },
-  SET_FR_UP_PRICE(state, newFRUpPrice) {
-    state.frUpPrice = newFRUpPrice;
+  [m.SET_FR_UP_PRICE](state, newFRUpPrice) {
+    state[c.TS_FR_UP_PRICE] = newFRUpPrice;
   },
   // Fleet EV
   [m.REPLACE_TECHNOLOGY_SPECS_FLEET_EV](state, payload) {
@@ -318,11 +351,32 @@ const mutations = {
     state.technologySpecsFleetEV = tmpSpecs;
   },
   // fleet ev upload
-  [m.ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_FLEET_EV](state, payload) {
+  [m.ADD_DATA_TO_TECHNOLOGY_SPECS_FLEET_EV](state, payload) {
     const tmpSpecs = getters.getFleetEVSpecsClone(state)();
-    const indexMatchingId = getters.getIndexOfFleetEVId(state)(payload.solarId);
-    tmpSpecs[indexMatchingId].baselineLoad = payload.baselineLoad;
-    state.technologySpecsControllableLoad = tmpSpecs;
+    const { id, index, data } = payload;
+    const indexMatchingId = getters.getIndexOfFleetEVId(state)(id);
+    // this updates the object, while retaining untouched pieces
+    Object.assign(tmpSpecs[indexMatchingId].associatedInputs[index], data);
+    state.technologySpecsFleetEV = tmpSpecs;
+  },
+  [m.SET_COMPLETENESS_OF_TECHNOLOGY_SPECS_FLEET_EV](state, payload) {
+    const tmpSpecs = getters.getFleetEVSpecsClone(state)();
+    const { id, data } = payload;
+    const indexMatchingId = getters.getIndexOfFleetEVId(state)(id);
+    tmpSpecs[indexMatchingId].associatedInputsComplete = data.complete;
+    tmpSpecs[indexMatchingId].complete = (data.complete
+      && tmpSpecs[indexMatchingId].componentSpecsComplete);
+    state.technologySpecsFleetEV = tmpSpecs;
+  },
+  [m.ADD_ERRORS_STRING_TO_DATA_IN_TECHNOLOGY_SPECS_FLEET_EV](state, payload) {
+    const tmpSpecs = getters.getFleetEVSpecsClone(state)();
+    const { id, index, errorsString } = payload;
+    const indexMatchingId = getters.getIndexOfFleetEVId(state)(id);
+    // add errorsString to ts.error
+    if (errorsString !== undefined) {
+      tmpSpecs[indexMatchingId].associatedInputs[index].ts.error = errorsString;
+    }
+    state.technologySpecsFleetEV = tmpSpecs;
   },
   // ICE
   REPLACE_TECHNOLOGY_SPECS_ICE(state, payload) {
@@ -333,35 +387,41 @@ const mutations = {
   },
   // load following
   [m.SET_LF_COMBINED_MARKET](state, newFRCombinedMarket) {
-    state.lfCombinedMarket = newFRCombinedMarket;
+    state[c.LF_COMBINED_MARKET] = newFRCombinedMarket;
   },
   [m.SET_LF_DOWN_PRICE](state, newFRDownPrice) {
-    state.lfDownPrice = newFRDownPrice;
+    state[c.TS_LF_DOWN_PRICE] = newFRDownPrice;
   },
   [m.SET_LF_DURATION](state, newFRDuration) {
-    state.lfDuration = newFRDuration;
+    state[c.LF_DURATION] = newFRDuration;
   },
   [m.SET_LF_EOU](state, newFReou) {
-    state.lfEOU = newFReou;
+    state[c.TS_LF_EOU] = newFReou;
   },
   [m.SET_LF_EOD](state, newFReod) {
-    state.lfEOD = newFReod;
+    state[c.TS_LF_EOD] = newFReod;
   },
   [m.SET_LF_PRICE](state, newFRPrice) {
-    state.lfPrice = newFRPrice;
+    state[c.TS_LF_PRICE] = newFRPrice;
   },
   [m.SET_LF_UP_PRICE](state, newFRUpPrice) {
-    state.lfUpPrice = newFRUpPrice;
+    state[c.TS_LF_UP_PRICE] = newFRUpPrice;
+  },
+  [m.SET_LF_ENERGY_PRICE_GROWTH](state, payload) {
+    state[c.LF_ENERGY_PRICE_GROWTH] = payload;
+  },
+  [m.SET_LF_GROWTH](state, newFRGrowth) {
+    state[c.LF_GROWTH] = newFRGrowth;
   },
   // non-spinning reserve
-  SET_NSR_DURATION(state, newNSRDuration) {
-    state.nsrDuration = newNSRDuration;
+  [m.SET_NSR_DURATION](state, newNSRDuration) {
+    state[c.NSR_DURATION] = newNSRDuration;
   },
-  SET_NSR_GROWTH(state, newNSRGrowth) {
-    state.nsrGrowth = newNSRGrowth;
+  [m.SET_NSR_GROWTH](state, newNSRGrowth) {
+    state[c.NSR_GROWTH] = newNSRGrowth;
   },
-  SET_NSR_PRICE(state, newNSRPrice) {
-    state.nsrPrice = newNSRPrice;
+  [m.SET_NSR_PRICE](state, newNSRPrice) {
+    state[c.TS_NSR_PRICE] = newNSRPrice;
   },
   // objectives
   [m.CHOOSE_ENERGY_STRUCTURE](state, wholesaleEnergyPrices) {
@@ -378,15 +438,17 @@ const mutations = {
   },
   [m.SET_INCLUDE_SITE_LOAD](state) {
     let customerSited = state.objectivesRetailEnergyChargeReduction;
-    customerSited = customerSited || state.objectivesRetailEnergyChargeReduction;
-    customerSited = customerSited || (state.ownership === 'Customer');
+    customerSited = customerSited || state.objectivesRetailDemandChargeReduction;
     state.includeSiteLoad = customerSited;
+    // also set TS boolean attribute
+    state[c.TS_SITE_LOAD].required = customerSited;
   },
   [m.SET_INCLUDE_SYSTEM_LOAD](state) {
     let gridDomainProject = state.objectivesDR;
     gridDomainProject = gridDomainProject || state.objectivesRA;
-    gridDomainProject = gridDomainProject || (state.ownership !== 'Customer');
     state.includeSystemLoad = gridDomainProject;
+    // also set TS boolean attribute
+    state[c.TS_SYSTEM_LOAD].required = gridDomainProject;
   },
   [m.SET_OPTIMIZATION_HORIZON](state, newOptimizataionHorizon) {
     state.optimizationHorizon = newOptimizataionHorizon;
@@ -414,10 +476,10 @@ const mutations = {
   },
   // resource adequacy
   [m.SET_RA_CAPACITY_PRICE](state, newValue) {
-    state.raCapacityAwards = newValue;
+    state[c.MTS_RA_CAPACITY_PRICE] = newValue;
   },
-  [m.SET_RA_ACTIVE_TIMESTEP](state, newValue) {
-    state.raActive = newValue;
+  [m.SET_RA_ACTIVE](state, newValue) {
+    state[c.TS_RA_ACTIVE] = newValue;
   },
   [m.SET_RA_NUMBER_EVENTS](state, newValue) {
     state[c.RA_NUMBER_EVENTS] = newValue;
@@ -435,39 +497,37 @@ const mutations = {
     state[c.RA_GROWTH] = newRAGrowth;
   },
   // reliability page
-  SET_CRITICAL_LOAD(state, newCriticalLoad) {
-    state.criticalLoad = newCriticalLoad;
+  [m.SET_CRITICAL_LOAD](state, newCriticalLoad) {
+    state[c.TS_CRITICAL_LOAD] = newCriticalLoad;
   },
-  SET_RELIABILITY_GAMMA(state, newReliabilityGamma) {
-    state.reliabilityGamma = newReliabilityGamma;
+  [m.SET_RELIABILITY_MAX_OUTAGE_DURATION](state, newReliabilityMaxOutageDuration) {
+    state[c.RELIABILITY_MAX_OUTAGE_DURATION] = newReliabilityMaxOutageDuration;
   },
-  SET_RELIABILITY_MAX_OUTAGE_DURATION(state, newReliabilityMaxOutageDuration) {
-    state.reliabilityMaxOutageDuration = newReliabilityMaxOutageDuration;
+  [m.SET_RELIABILITY_POST_OPTIMIZATION_ONLY](state, newPostOptimizationOnly) {
+    state[c.RELIABILITY_POST_OPTIMIZATION_ONLY] = newPostOptimizationOnly;
   },
-  SET_RELIABILITY_NU(state, newReliabilityNu) {
-    state.reliabilityNu = newReliabilityNu;
-  },
-  SET_RELIABILITY_POST_OPTIMIZATION_ONLY(state, newPostOptimizationOnly) {
-    state.reliabilityPostOptimizationOnly = newPostOptimizationOnly;
-  },
-  SET_RELIABILITY_TARGET(state, newReliabilityTarget) {
-    state.reliabilityTarget = newReliabilityTarget;
+  [m.SET_RELIABILITY_TARGET](state, newReliabilityTarget) {
+    state[c.RELIABILITY_TARGET] = newReliabilityTarget;
   },
   // retail tariff file
-  ADD_RETAIL_TARIFF_BILLING_PERIOD(state, newBillingPeriod) {
+  [m.ADD_RETAIL_TARIFF_BILLING_PERIOD](state, newBillingPeriod) {
     state.retailTariffBillingPeriods.push(newBillingPeriod);
   },
-  REPLACE_RETAIL_TARIFF_BILLING_PERIODS(state, newBillingPeriods) {
+  [m.ADD_MANY_RETAIL_TARIFF_BILLING_PERIODS](state, newBillingPeriods) {
+    const combinedBillingPeriods = [...state.retailTariffBillingPeriods, ...newBillingPeriods];
+    state.retailTariffBillingPeriods = combinedBillingPeriods;
+  },
+  [m.REPLACE_RETAIL_TARIFF_BILLING_PERIODS](state, newBillingPeriods) {
     state.retailTariffBillingPeriods = newBillingPeriods;
   },
-  REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES(state, newImportNotes) {
+  [m.REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES](state, newImportNotes) {
     state.retailTariffFileImportNotes = newImportNotes;
   },
-  REMOVE_RETAIL_TARIFF_BILLING_PERIOD(state, id) {
+  [m.REMOVE_RETAIL_TARIFF_BILLING_PERIOD](state, id) {
     const index = getters.getIndexOfBillingPeriodId(state)(id);
     state.retailTariffBillingPeriods.splice(index, 1);
   },
-  REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS(state) {
+  [m.REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS](state) {
     state.retailTariffBillingPeriods = [];
   },
   // Single EV
@@ -478,17 +538,17 @@ const mutations = {
     state.technologySpecsSingleEV = tmpSpecs;
   },
   // site information
-  SET_INCLUDE_POI_CONTRAINTS(state, newIncludePOIConstraints) {
-    state.includeInterconnectionConstraints = newIncludePOIConstraints;
+  [m.SET_INCLUDE_POI_CONSTRAINTS](state, payload) {
+    state[c.INCLUDE_INTERCONNECTION_CONSTRAINTS] = payload;
   },
-  SET_MAX_IMPORT_FROM_GRID(state, newChargingFromGridLimit) {
-    state.maxImport = newChargingFromGridLimit;
+  [m.SET_MAX_IMPORT_FROM_GRID](state, payload) {
+    state[c.MAX_IMPORT] = payload;
   },
-  SET_MAX_EXPORT_TO_GRID(state, newDischargingToGridLimit) {
-    state.maxExport = newDischargingToGridLimit;
+  [m.SET_MAX_EXPORT_TO_GRID](state, payload) {
+    state[c.MAX_EXPORT] = payload;
   },
-  SET_SITE_LOAD(state, newSiteLoad) {
-    state.siteLoad = newSiteLoad;
+  [m.SET_SITE_LOAD](state, payload) {
+    state[c.TS_SITE_LOAD] = payload;
   },
   // Solar PV
   REPLACE_TECHNOLOGY_SPECS_SOLAR_PV(state, payload) {
@@ -497,22 +557,43 @@ const mutations = {
     tmpSolarPVSpecs[indexMatchingId] = payload.newSolar;
     state.technologySpecsSolarPV = tmpSolarPVSpecs;
   },
-  // solar pv generation
-  ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV(state, payload) {
-    const tmpSolarPVSpecs = getters.getSolarPVSpecsClone(state)();
-    const indexMatchingId = getters.getIndexOfSolarId(state)(payload.solarId);
-    tmpSolarPVSpecs[indexMatchingId].generationProfile = payload.generationProfile;
-    state.technologySpecsSolarPV = tmpSolarPVSpecs;
+  // solar pv upload
+  [m.ADD_DATA_TO_TECHNOLOGY_SPECS_PV](state, payload) {
+    const tmpSpecs = getters.getSolarPVSpecsClone(state)();
+    const { id, index, data } = payload;
+    const indexMatchingId = getters.getIndexOfSolarId(state)(id);
+    // this updates the object, while retaining untouched pieces
+    Object.assign(tmpSpecs[indexMatchingId].associatedInputs[index], data);
+    state.technologySpecsSolarPV = tmpSpecs;
+  },
+  [m.SET_COMPLETENESS_OF_TECHNOLOGY_SPECS_PV](state, payload) {
+    const tmpSpecs = getters.getSolarPVSpecsClone(state)();
+    const { id, data } = payload;
+    const indexMatchingId = getters.getIndexOfSolarId(state)(id);
+    tmpSpecs[indexMatchingId].associatedInputsComplete = data.complete;
+    tmpSpecs[indexMatchingId].complete = (data.complete
+      && tmpSpecs[indexMatchingId].componentSpecsComplete);
+    state.technologySpecsSolarPV = tmpSpecs;
+  },
+  [m.ADD_ERRORS_STRING_TO_DATA_IN_TECHNOLOGY_SPECS_PV](state, payload) {
+    const tmpSpecs = getters.getSolarPVSpecsClone(state)();
+    const { id, index, errorsString } = payload;
+    const indexMatchingId = getters.getIndexOfSolarId(state)(id);
+    // add errorsString to ts.error
+    if (errorsString !== undefined) {
+      tmpSpecs[indexMatchingId].associatedInputs[index].ts.error = errorsString;
+    }
+    state.technologySpecsSolarPV = tmpSpecs;
   },
   // spinning reserve
-  SET_SR_DURATION(state, newSRDuration) {
-    state.srDuration = newSRDuration;
+  [m.SET_SR_DURATION](state, newSRDuration) {
+    state[c.SR_DURATION] = newSRDuration;
   },
-  SET_SR_GROWTH(state, newSRGrowth) {
-    state.srGrowth = newSRGrowth;
+  [m.SET_SR_GROWTH](state, newSRGrowth) {
+    state[c.SR_GROWTH] = newSRGrowth;
   },
-  SET_SR_PRICE(state, newSRPrice) {
-    state.srPrice = newSRPrice;
+  [m.SET_SR_PRICE](state, newSRPrice) {
+    state[c.TS_SR_PRICE] = newSRPrice;
   },
   // start page
   SET_ANALYSIS_HORIZON_MODE(state, newAnalysisHorizonMode) {
@@ -550,7 +631,7 @@ const mutations = {
   },
   // system load
   [m.SET_SYSTEM_LOAD](state, newSystemLoad) {
-    state.systemLoad = newSystemLoad;
+    state[c.TS_SYSTEM_LOAD] = newSystemLoad;
   },
   // technology specs
   [m.ACTIVATE_TECH_BATTERY](state, payload) {
@@ -646,8 +727,8 @@ const mutations = {
     state.technologySpecsDieselGen.splice(indexMatchingId, 1);
   },
   [m.REMOVE_TECH_FLEET_EV](state, payload) {
-    const indexMatchingId = getters.getIndexOfHomeEVId(state)(payload.id);
-    state.technologySpecsHomeEV.splice(indexMatchingId, 1);
+    const indexMatchingId = getters.getIndexOfFleetEVId(state)(payload.id);
+    state.technologySpecsFleetEV.splice(indexMatchingId, 1);
   },
   [m.REMOVE_TECH_ICE](state, payload) {
     const indexMatchingId = getters.getIndexOfICEId(state)(payload.id);
@@ -670,21 +751,30 @@ const mutations = {
   [m.RESET_LIST_OF_ACTIVE_TECHNOLOGIES](state) {
     state.listOfActiveTechnologies = getDefaultState().listOfActiveTechnologies;
   },
+  // timeseries uploads
+  [m.SET_TS_ERROR](state, payload) {
+    const { tsName, error } = payload;
+    state[tsName].error = error;
+  },
+  [m.SET_TS_REQUIRED](state, payload) {
+    const { tsName, required } = payload;
+    state[tsName].required = required;
+  },
   // user defined service
-  SET_USER_ENERGY_MAX(state, newUserEnergyMax) {
-    state.userEnergyMax = newUserEnergyMax;
+  [m.SET_USER_ENERGY_MAX](state, payload) {
+    state[c.TS_USER_ENERGY_MAX] = payload;
   },
-  SET_USER_ENERGY_MIN(state, newUserEnergyMin) {
-    state.userEnergyMin = newUserEnergyMin;
+  [m.SET_USER_ENERGY_MIN](state, payload) {
+    state[c.TS_USER_ENERGY_MIN] = payload;
   },
-  SET_USER_POWER_MAX(state, newUserPowerMax) {
-    state.userPowerMax = newUserPowerMax;
+  [m.SET_USER_POWER_MAX](state, payload) {
+    state[c.TS_USER_POWER_MAX] = payload;
   },
-  SET_USER_POWER_MIN(state, newUserPowerMin) {
-    state.userPowerMin = newUserPowerMin;
+  [m.SET_USER_POWER_MIN](state, payload) {
+    state[c.TS_USER_POWER_MIN] = payload;
   },
-  SET_USER_PRICE(state, newUserPrice) {
-    state.userPrice = newUserPrice;
+  [m.SET_USER_PRICE](state, payload) {
+    state[c.USER_PRICE] = payload;
   },
 };
 
@@ -699,11 +789,18 @@ const actions = {
     });
   },
   [a.LOAD_QUICK_START_PROJECT]({ commit }, caseName) {
-    const selectedUseCase = usecaseDatabase[caseName];
+    const selectedUseCase = USECASE_DB[caseName];
     return new Promise((resolve) => {
       commit(m.LOAD_NEW_PROJECT, merge(getDefaultState(), selectedUseCase));
       resolve();
     });
+  },
+  // backup
+  [a.SET_BACKUP_ENERGY_PRICE]({ commit }, payload) {
+    commit(m.SET_BACKUP_ENERGY_PRICE, payload);
+  },
+  [a.SET_BACKUP_ENERGY_RESERVATION]({ commit }, payload) {
+    commit(m.SET_BACKUP_ENERGY_RESERVATION, payload);
   },
   // battery
   [a.REPLACE_TECHNOLOGY_SPECS_BATTERY]({ commit }, payload) {
@@ -715,7 +812,9 @@ const actions = {
   },
   // Controllable Load upload page
   [a.ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD]({ commit }, payload) {
-    commit(m.ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD, payload);
+    commit(m.ADD_DATA_TO_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD, payload);
+    commit(m.SET_COMPLETENESS_OF_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD, payload);
+    commit(m.ADD_ERRORS_STRING_TO_DATA_IN_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD, payload);
   },
   // battery cycle file
   [a.ADD_BATTERY_CYCLES_TO_TECHNOLOGY_SPECS_BATTERY]({ commit }, payload) {
@@ -757,6 +856,9 @@ const actions = {
   [a.SET_DR_END_HOUR]({ commit }, newValue) {
     commit(m.SET_DR_END_HOUR, newValue);
   },
+  [a.SET_DR_END_MODE]({ commit }, newValue) {
+    commit(m.SET_DR_END_MODE, newValue);
+  },
   [a.SET_DR_EVENT_LENGTH]({ commit }, newValue) {
     commit(m.SET_DR_EVENT_LENGTH, newValue);
   },
@@ -772,11 +874,11 @@ const actions = {
   [a.SET_DR_CAPACITY_RESERVATION]({ commit }, newValue) {
     commit(m.SET_DR_CAPACITY_RESERVATION, newValue);
   },
-  [a.SET_DR_CAPACITY_AWARDS]({ commit }, newValue) {
-    commit(m.SET_DR_CAPACITY_AWARDS, newValue);
+  [a.SET_DR_CAPACITY_PRICE]({ commit }, newValue) {
+    commit(m.SET_DR_CAPACITY_PRICE, newValue);
   },
-  [a.SET_DR_ENERGY_AWARDS]({ commit }, newValue) {
-    commit(m.SET_DR_ENERGY_AWARDS, newValue);
+  [a.SET_DR_ENERGY_PRICE]({ commit }, newValue) {
+    commit(m.SET_DR_ENERGY_PRICE, newValue);
   },
   [a.SET_DR_GROWTH]({ commit }, newDRGrowth) {
     commit(m.SET_DR_GROWTH, newDRGrowth);
@@ -820,33 +922,33 @@ const actions = {
   setStateTaxRate({ commit }, newStateTaxRate) {
     commit('SET_STATE_TAX_RATE', newStateTaxRate);
   },
-  // frequency responce
-  setFRCombinedMarket({ commit }, newFRCombinedMarket) {
-    commit('SET_FR_COMBINED_MARKET', newFRCombinedMarket);
+  // frequency regulation
+  [a.SET_FR_COMBINED_MARKET]({ commit }, newFRCombinedMarket) {
+    commit(m.SET_FR_COMBINED_MARKET, newFRCombinedMarket);
   },
-  setFRDownPrice({ commit }, newFRDownPrice) {
-    commit('SET_FR_DOWN_PRICE', newFRDownPrice);
+  [a.SET_FR_DOWN_PRICE]({ commit }, newFRDownPrice) {
+    commit(m.SET_FR_DOWN_PRICE, newFRDownPrice);
   },
-  setFRDuration({ commit }, newFRDuration) {
-    commit('SET_FR_DURATION', newFRDuration);
+  [a.SET_FR_DURATION]({ commit }, newFRDuration) {
+    commit(m.SET_FR_DURATION, newFRDuration);
   },
-  setFREnergyGrowth({ commit }, newFREnergyGrowth) {
-    commit('SET_FR_ENERGY_GROWTH', newFREnergyGrowth);
+  [a.SET_FR_ENERGY_PRICE_GROWTH]({ commit }, payload) {
+    commit(m.SET_FR_ENERGY_PRICE_GROWTH, payload);
   },
-  setFReou({ commit }, newFReou) {
-    commit('SET_FR_EOU', newFReou);
+  [a.SET_FR_EOU]({ commit }, newFReou) {
+    commit(m.SET_FR_EOU, newFReou);
   },
-  setFReod({ commit }, newFReod) {
-    commit('SET_FR_EOD', newFReod);
+  [a.SET_FR_EOD]({ commit }, newFReod) {
+    commit(m.SET_FR_EOD, newFReod);
   },
-  setFRGrowth({ commit }, newFRGrowth) {
-    commit('SET_FR_GROWTH', newFRGrowth);
+  [a.SET_FR_GROWTH]({ commit }, newFRGrowth) {
+    commit(m.SET_FR_GROWTH, newFRGrowth);
   },
-  setFRPrice({ commit }, newFRPrice) {
-    commit('SET_FR_PRICE', newFRPrice);
+  [a.SET_FR_PRICE]({ commit }, newFRPrice) {
+    commit(m.SET_FR_PRICE, newFRPrice);
   },
-  setFRUpPrice({ commit }, newFRUpPrice) {
-    commit('SET_FR_UP_PRICE', newFRUpPrice);
+  [a.SET_FR_UP_PRICE]({ commit }, newFRUpPrice) {
+    commit(m.SET_FR_UP_PRICE, newFRUpPrice);
   },
   // Fleet EV
   replaceTechnologySpecsFleetEV({ commit }, payload) {
@@ -854,7 +956,9 @@ const actions = {
   },
   // fleet ev upload page
   [a.ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_FLEET_EV]({ commit }, payload) {
-    commit(m.ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_FLEET_EV, payload);
+    commit(m.ADD_DATA_TO_TECHNOLOGY_SPECS_FLEET_EV, payload);
+    commit(m.SET_COMPLETENESS_OF_TECHNOLOGY_SPECS_FLEET_EV, payload);
+    commit(m.ADD_ERRORS_STRING_TO_DATA_IN_TECHNOLOGY_SPECS_FLEET_EV, payload);
   },
   // ice
   replaceTechnologySpecsICE({ commit }, payload) {
@@ -870,8 +974,8 @@ const actions = {
   [a.SET_LF_DURATION]({ commit }, newLFDuration) {
     commit(m.SET_LF_DURATION, newLFDuration);
   },
-  [a.SET_LF_EOU]({ commit }, newLFEnergyGrowth) {
-    commit(m.SET_LF_EOU, newLFEnergyGrowth);
+  [a.SET_LF_EOU]({ commit }, payload) {
+    commit(m.SET_LF_EOU, payload);
   },
   [a.SET_LF_EOD]({ commit }, newLFeou) {
     commit(m.SET_LF_EOD, newLFeou);
@@ -882,15 +986,21 @@ const actions = {
   [a.SET_LF_UP_PRICE]({ commit }, newLFGrowth) {
     commit(m.SET_LF_UP_PRICE, newLFGrowth);
   },
+  [a.SET_LF_ENERGY_PRICE_GROWTH]({ commit }, payload) {
+    commit(m.SET_LF_ENERGY_PRICE_GROWTH, payload);
+  },
+  [a.SET_LF_GROWTH]({ commit }, newFRGrowth) {
+    commit(m.SET_LF_GROWTH, newFRGrowth);
+  },
   // non spinning reserves
-  setNSRDuration({ commit }, newNSRDuration) {
-    commit('SET_NSR_DURATION', newNSRDuration);
+  [a.SET_NSR_DURATION]({ commit }, newNSRDuration) {
+    commit(m.SET_NSR_DURATION, newNSRDuration);
   },
-  setNSRGrowth({ commit }, newNSRGrowth) {
-    commit('SET_NSR_GROWTH', newNSRGrowth);
+  [a.SET_NSR_GROWTH]({ commit }, newNSRGrowth) {
+    commit(m.SET_NSR_GROWTH, newNSRGrowth);
   },
-  setNSRPrice({ commit }, newNSRPrice) {
-    commit('SET_NSR_PRICE', newNSRPrice);
+  [a.SET_NSR_PRICE]({ commit }, newNSRPrice) {
+    commit(m.SET_NSR_PRICE, newNSRPrice);
   },
   // objectives
   [a.CHOOSE_ENERGY_STRUCTURE]({ commit }, energyPriceStructure) {
@@ -915,27 +1025,21 @@ const actions = {
     commit(m.SET_SIZING_EQUIPMENT, newSizingEquipment);
   },
   // reliability
-  setCriticalLoad({ commit }, newCriticalLoad) {
-    commit('SET_CRITICAL_LOAD', newCriticalLoad);
+  [a.SET_CRITICAL_LOAD]({ commit }, newCriticalLoad) {
+    commit(m.SET_CRITICAL_LOAD, newCriticalLoad);
   },
-  setReliabilityGamma({ commit }, newReliabilityGamma) {
-    commit('SET_RELIABILITY_GAMMA', newReliabilityGamma);
+  [a.SET_RELIABILITY_MAX_OUTAGE_DURATION]({ commit }, newReliabilityMaxOutageDuration) {
+    commit(m.SET_RELIABILITY_MAX_OUTAGE_DURATION, newReliabilityMaxOutageDuration);
   },
-  setReliabilityMaxOutageDuration({ commit }, newReliabilityMaxOutageDuration) {
-    commit('SET_RELIABILITY_MAX_OUTAGE_DURATION', newReliabilityMaxOutageDuration);
+  [a.SET_RELIABILITY_POST_OPTIMIZATION_ONLY]({ commit }, newPostOptimizationOnly) {
+    commit(m.SET_RELIABILITY_POST_OPTIMIZATION_ONLY, newPostOptimizationOnly);
   },
-  setReliabilityNu({ commit }, newReliabilityNu) {
-    commit('SET_RELIABILITY_NU', newReliabilityNu);
-  },
-  setReliabilityPostOptimizationOnly({ commit }, newPostOptimizationOnly) {
-    commit('SET_RELIABILITY_POST_OPTIMIZATION_ONLY', newPostOptimizationOnly);
-  },
-  setReliabilityTarget({ commit }, newReliabilityTarget) {
-    commit('SET_RELIABILITY_TARGET', newReliabilityTarget);
+  [a.SET_RELIABILITY_TARGET]({ commit }, newReliabilityTarget) {
+    commit(m.SET_RELIABILITY_TARGET, newReliabilityTarget);
   },
   // resource adequacy
-  [a.SET_RA_ACTIVE_TIMESTEP]({ commit }, newRAActive) {
-    commit(m.SET_RA_ACTIVE_TIMESTEP, newRAActive);
+  [a.SET_RA_ACTIVE]({ commit }, newRAActive) {
+    commit(m.SET_RA_ACTIVE, newRAActive);
   },
   [a.SET_RA_CAPACITY_PRICE]({ commit }, newRACapacityPrice) {
     commit(m.SET_RA_CAPACITY_PRICE, newRACapacityPrice);
@@ -956,58 +1060,64 @@ const actions = {
     commit(m.SET_RA_GROWTH, newRAGrowth);
   },
   // retail tariff billing period
-  addRetailTariffBillingPeriod({ commit }, newBillingPeriod) {
-    commit('ADD_RETAIL_TARIFF_BILLING_PERIOD', newBillingPeriod);
-    commit('REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES', []);
+  [a.ADD_RETAIL_TARIFF_BILLING_PERIOD]({ commit }, newBillingPeriod) {
+    commit(m.ADD_RETAIL_TARIFF_BILLING_PERIOD, newBillingPeriod);
+    commit(m.REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES, []);
   },
-  replaceRetailTariffBillingPeriods({ commit }, newBillingPeriods) {
-    commit('REPLACE_RETAIL_TARIFF_BILLING_PERIODS', newBillingPeriods);
+  [a.ADD_MANY_RETAIL_TARIFF_BILLING_PERIODS]({ commit }, newBillingPeriod) {
+    commit(m.ADD_MANY_RETAIL_TARIFF_BILLING_PERIODS, newBillingPeriod);
+    commit(m.REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES, []);
   },
-  replaceRetailTariffFileImportNotes({ commit }, newImportNotes) {
-    commit('REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES', newImportNotes);
+  [a.REPLACE_RETAIL_TARIFF_BILLING_PERIODS]({ commit }, newBillingPeriods) {
+    commit(m.REPLACE_RETAIL_TARIFF_BILLING_PERIODS, newBillingPeriods);
   },
-  removeAllRetailTariffBillingPeriods({ commit }) {
-    commit('REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS');
-    commit('REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES', []);
+  [a.REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES]({ commit }, newImportNotes) {
+    commit(m.REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES, newImportNotes);
   },
-  removeRetailTariffBillingPeriod({ commit }, id) {
-    commit('REMOVE_RETAIL_TARIFF_BILLING_PERIOD', id);
-    commit('REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES', []);
+  [a.REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS]({ commit }) {
+    commit(m.REMOVE_ALL_RETAIL_TARIFF_BILLING_PERIODS);
+    commit(m.REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES, []);
+  },
+  [a.REMOVE_RETAIL_TARIFF_BILLING_PERIOD]({ commit }, id) {
+    commit(m.REMOVE_RETAIL_TARIFF_BILLING_PERIOD, id);
+    commit(m.REPLACE_RETAIL_TARIFF_FILE_IMPORT_NOTES, []);
   },
   // Single EV
   replaceTechnologySpecsSingleEV({ commit }, payload) {
     commit('REPLACE_TECHNOLOGY_SPECS_SINGLE_EV', payload);
   },
   // site information
-  setIncludePOIConstraints({ commit }, newIncludePOIConstraints) {
-    commit('SET_INCLUDE_POI_CONTRAINTS', newIncludePOIConstraints);
+  [a.SET_INCLUDE_POI_CONSTRAINTS]({ commit }, newIncludePOIConstraints) {
+    commit(m.SET_INCLUDE_POI_CONSTRAINTS, newIncludePOIConstraints);
   },
-  setMaxImportFromGrid({ commit }, newChargingFromGridLimit) {
-    commit('SET_MAX_IMPORT_FROM_GRID', newChargingFromGridLimit);
+  [a.SET_MAX_IMPORT_FROM_GRID]({ commit }, newChargingFromGridLimit) {
+    commit(m.SET_MAX_IMPORT_FROM_GRID, newChargingFromGridLimit);
   },
-  setMaxExportToGrid({ commit }, newDischargingToGridLimit) {
-    commit('SET_MAX_EXPORT_TO_GRID', newDischargingToGridLimit);
+  [a.SET_MAX_EXPORT_TO_GRID]({ commit }, newDischargingToGridLimit) {
+    commit(m.SET_MAX_EXPORT_TO_GRID, newDischargingToGridLimit);
   },
-  setSiteLoad({ commit }, newSiteLoad) {
-    commit('SET_SITE_LOAD', newSiteLoad);
+  [a.SET_SITE_LOAD]({ commit }, newSiteLoad) {
+    commit(m.SET_SITE_LOAD, newSiteLoad);
   },
   // spinning reserves
-  setSRDuration({ commit }, newSRDuration) {
-    commit('SET_SR_DURATION', newSRDuration);
+  [a.SET_SR_DURATION]({ commit }, newSRDuration) {
+    commit(m.SET_SR_DURATION, newSRDuration);
   },
-  setSRGrowth({ commit }, newSRGrowth) {
-    commit('SET_SR_GROWTH', newSRGrowth);
+  [a.SET_SR_GROWTH]({ commit }, newSRGrowth) {
+    commit(m.SET_SR_GROWTH, newSRGrowth);
   },
-  setSRPrice({ commit }, newSRPrice) {
-    commit('SET_SR_PRICE', newSRPrice);
+  [a.SET_SR_PRICE]({ commit }, newSRPrice) {
+    commit(m.SET_SR_PRICE, newSRPrice);
   },
   // solar pv
   replaceTechnologySpecsSolarPV({ commit }, payload) {
     commit('REPLACE_TECHNOLOGY_SPECS_SOLAR_PV', payload);
   },
-  // solar pv generataion
-  addGenerationProfileToTechnologySpecsPV({ commit }, payload) {
-    commit('ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV', payload);
+  // solar pv upload
+  [a.ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV]({ commit }, payload) {
+    commit(m.ADD_DATA_TO_TECHNOLOGY_SPECS_PV, payload);
+    commit(m.SET_COMPLETENESS_OF_TECHNOLOGY_SPECS_PV, payload);
+    commit(m.ADD_ERRORS_STRING_TO_DATA_IN_TECHNOLOGY_SPECS_PV, payload);
   },
   // start project
   setAnalysisHorizon({ commit }, newAnalysisHorizon) {
@@ -1041,58 +1151,76 @@ const actions = {
     commit('SET_TIMESTEP', newTimestep);
   },
   // system load
-  [a.SET_SYSTEM_LOAD]({ commit }, newSiteLoad) {
-    commit(m.SET_SYSTEM_LOAD, newSiteLoad);
+  [a.SET_SYSTEM_LOAD]({ commit }, payload) {
+    commit(m.SET_SYSTEM_LOAD, payload);
   },
   // technology specs
   [a.ACTIVATE_TECH]({ commit }, payload) {
     if (payload.tag === 'ICE') {
       commit(m.ACTIVATE_TECH_ICE, payload);
-    } else if (payload.tag === 'DieselGen') {
+    }
+    if (payload.tag === 'DieselGen') {
       commit(m.ACTIVATE_TECH_DIESEL_GEN, payload);
-    } else if (payload.tag === 'PV') {
+    }
+    if (payload.tag === 'PV') {
       commit(m.ACTIVATE_TECH_SOLAR_PV, payload);
-    } else if (payload.tag === 'Battery') {
+    }
+    if (payload.tag === 'Battery') {
       commit(m.ACTIVATE_TECH_BATTERY, payload);
-    } else if (payload.tag === 'ControllableLoad') {
+    }
+    if (payload.tag === 'ControllableLoad') {
       commit(m.ACTIVATE_TECH_CONTROLLABLE_LOAD, payload);
-    } else if (payload.tag === 'ElectricVehicle1') {
+    }
+    if (payload.tag === 'ElectricVehicle1') {
       commit(m.ACTIVATE_TECH_SINGLE_EV, payload);
-    } else if (payload.tag === 'ElectricVehicle2') {
+    }
+    if (payload.tag === 'ElectricVehicle2') {
       commit(m.ACTIVATE_TECH_FLEET_EV, payload);
     }
   },
   [a.ADD_TECH]({ commit }, payload) {
     if (payload.tag === 'ICE') {
       commit(m.ADD_TECHNOLOGY_SPECS_ICE, payload);
-    } else if (payload.tag === 'DieselGen') {
+    }
+    if (payload.tag === 'DieselGen') {
       commit(m.ADD_TECHNOLOGY_SPECS_DIESEL_GEN, payload);
-    } else if (payload.tag === 'PV') {
+    }
+    if (payload.tag === 'PV') {
       commit(m.ADD_TECHNOLOGY_SPECS_SOLAR_PV, payload);
-    } else if (payload.tag === 'Battery') {
+    }
+    if (payload.tag === 'Battery') {
       commit(m.ADD_TECHNOLOGY_SPECS_BATTERY, payload);
-    } else if (payload.tag === 'ControllableLoad') {
+    }
+    if (payload.tag === 'ControllableLoad') {
       commit(m.ADD_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD, payload);
-    } else if (payload.tag === 'ElectricVehicle1') {
+    }
+    if (payload.tag === 'ElectricVehicle1') {
       commit(m.ADD_TECHNOLOGY_SPECS_SINGLE_EV, payload);
-    } else if (payload.tag === 'ElectricVehicle2') {
+    }
+    if (payload.tag === 'ElectricVehicle2') {
       commit(m.ADD_TECHNOLOGY_SPECS_FLEET_EV, payload);
     }
   },
   [a.DEACTIVATE_TECH]({ commit }, payload) {
     if (payload.tag === 'ICE') {
       commit(m.DEACTIVATE_TECH_ICE, payload);
-    } else if (payload.tag === 'DieselGen') {
+    }
+    if (payload.tag === 'DieselGen') {
       commit(m.DEACTIVATE_TECH_DIESEL_GEN, payload);
-    } else if (payload.tag === 'PV') {
+    }
+    if (payload.tag === 'PV') {
       commit(m.DEACTIVATE_TECH_SOLAR_PV, payload);
-    } else if (payload.tag === 'Battery') {
+    }
+    if (payload.tag === 'Battery') {
       commit(m.DEACTIVATE_TECH_BATTERY, payload);
-    } else if (payload.tag === 'ControllableLoad') {
+    }
+    if (payload.tag === 'ControllableLoad') {
       commit(m.DEACTIVATE_TECH_CONTROLLABLE_LOAD, payload);
-    } else if (payload.tag === 'ElectricVehicle1') {
+    }
+    if (payload.tag === 'ElectricVehicle1') {
       commit(m.DEACTIVATE_TECH_SINGLE_EV, payload);
-    } else if (payload.tag === 'ElectricVehicle2') {
+    }
+    if (payload.tag === 'ElectricVehicle2') {
       commit(m.DEACTIVATE_TECH_FLEET_EV, payload);
     }
   },
@@ -1133,21 +1261,28 @@ const actions = {
       commit(m.REMOVE_TECH_FLEET_EV, payload);
     }
   },
+  // timeseries uploads
+  [a.SET_TS_ERROR]({ commit }, payload) {
+    commit(m.SET_TS_ERROR, payload);
+  },
+  [a.SET_TS_REQUIRED]({ commit }, payload) {
+    commit(m.SET_TS_REQUIRED, payload);
+  },
   // user defined
-  setUserEnergyMax({ commit }, newUserEnergyMax) {
-    commit('SET_USER_ENERGY_MAX', newUserEnergyMax);
+  [a.SET_USER_ENERGY_MAX]({ commit }, payload) {
+    commit(m.SET_USER_ENERGY_MAX, payload);
   },
-  setUserEnergyMin({ commit }, newUserEnergyMin) {
-    commit('SET_USER_ENERGY_Min', newUserEnergyMin);
+  [a.SET_USER_ENERGY_MIN]({ commit }, payload) {
+    commit(m.SET_USER_ENERGY_MIN, payload);
   },
-  setUserPowerMax({ commit }, newUserPowerMax) {
-    commit('SET_USER_POWER_MAX', newUserPowerMax);
+  [a.SET_USER_POWER_MAX]({ commit }, payload) {
+    commit(m.SET_USER_POWER_MAX, payload);
   },
-  setUserPowerMin({ commit }, newUserPowerMin) {
-    commit('SET_USER_POWER_Min', newUserPowerMin);
+  [a.SET_USER_POWER_MIN]({ commit }, payload) {
+    commit(m.SET_USER_POWER_MIN, payload);
   },
-  setUserPrice({ commit }, newUserPrice) {
-    commit('SET_USER_PRICE', newUserPrice);
+  [a.SET_USER_PRICE]({ commit }, payload) {
+    commit(m.SET_USER_PRICE, payload);
   },
 };
 

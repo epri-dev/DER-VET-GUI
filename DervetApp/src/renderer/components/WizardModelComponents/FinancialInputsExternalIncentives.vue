@@ -67,10 +67,10 @@
 
     <div class="form-group row">
       <div class="col-md-12">
-        <router-link :to="`${FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH}-year/null`" class="btn btn-secondary">
+        <router-link :to="`${FINANCIAL_INPUTS_EXTERNAL_INCENTIVES}-year/null`" class="btn btn-secondary">
           Add External Incentives
         </router-link>
-        <router-link :to="`${FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH}-import`" class="btn btn-secondary">
+        <router-link :to="`${FINANCIAL_INPUTS_EXTERNAL_INCENTIVES}-import`" class="btn btn-secondary">
           <i class="fas fa-upload"/> Import Incentives
         </router-link>
         <a
@@ -87,9 +87,9 @@
 
     <hr>
     <nav-button
-      :continue-link="WIZARD_COMPONENT_PATH"
+      :continue-link="WIZARD_COMPONENT"
       :displayError="!complete"
-      :error-text="getSingleErrorMsg()"
+      :error-text="errorMessage"
       continue-text="Done Adding External Incentives" />
 
   </div>
@@ -100,13 +100,15 @@
   import { formatCsvForHref } from '@/util/file';
   import NavButton from '@/components/Shared/NavButton';
   import {
-    WIZARD_COMPONENT_PATH,
-    FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
+    WIZARD_COMPONENT,
+    FINANCIAL_INPUTS_EXTERNAL_INCENTIVES,
   } from '@/router/constants';
+  import { getSingleErrorMsg } from '@/util/validation';
 
   const PAGEGROUP = 'components';
   const PAGEKEY = 'financial';
   const PAGE = 'externalIncentives';
+  const TABLE_ITEM_NAME = 'external incentive periods';
 
   export default {
     mounted() {
@@ -122,7 +124,10 @@
         if (!this.externalIncentivesExist()) {
           return true;
         }
-        return this.externalIncentivesExist() && this.getNumberOfInvalidRows() === 0;
+        return this.errorMessage === '';
+      },
+      errorMessage() {
+        return getSingleErrorMsg(this.externalIncentives, TABLE_ITEM_NAME);
       },
       fileImportNotes() {
         return this.$store.state.Project.externalIncentivesFileImportNotes;
@@ -131,8 +136,8 @@
     data() {
       return {
         INCENTIVES_HEADERS,
-        WIZARD_COMPONENT_PATH,
-        FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
+        WIZARD_COMPONENT,
+        FINANCIAL_INPUTS_EXTERNAL_INCENTIVES,
       };
     },
     methods: {
@@ -155,32 +160,12 @@
         };
       },
       getErrorListPayload() {
-        const errors = [];
-        if (!this.complete) {
-          errors.push(this.getSingleErrorMsg());
-        }
         return {
           pageGroup: PAGEGROUP,
           pageKey: PAGEKEY,
           page: PAGE,
-          errorList: errors,
+          errorList: this.complete ? [] : [this.errorMessage],
         };
-      },
-      getNumberOfInvalidRows() {
-        let invalidRowsCount = 0;
-        Object.values(this.externalIncentives).forEach((row) => {
-          if (!row.complete) {
-            invalidRowsCount += 1;
-          }
-        });
-        return invalidRowsCount;
-      },
-      getSingleErrorMsg() {
-        if (!this.complete) {
-          const pluralizeRow = (this.getNumberOfInvalidRows() === 1) ? '' : 's';
-          return `There are errors with ${this.getNumberOfInvalidRows()} row${pluralizeRow} in the table.`;
-        }
-        return '';
       },
       removeAll() {
         this.$store.dispatch('removeAllExternalIncentives');

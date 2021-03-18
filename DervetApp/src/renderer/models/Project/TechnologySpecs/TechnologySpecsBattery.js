@@ -4,8 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 import { SHARED_DYNAMIC_FIELDS, createSharedHardcodedMetadata } from '@/models/Project/TechnologySpecs/sharedConstants';
 import { optionsYN } from '@/models/Project/constants';
-import { TECH_SPECS_BATTERY_PATH, TECH_SPECS_BATTERY_DATA_CYCLES_PATH } from '@/router/constants';
-
+import { TECH_SPECS_BATTERY, TECH_SPECS_BATTERY_DATA_CYCLES } from '@/router/constants';
 
 const Battery = 'Battery';
 
@@ -93,14 +92,14 @@ export default class TechnologySpecsBatteryMetadata {
         dataRows: [],
         displayName: 'Battery Cycle Life Curve',
         errorList: ['Not Started'],
-        path: TECH_SPECS_BATTERY_DATA_CYCLES_PATH,
+        path: TECH_SPECS_BATTERY_DATA_CYCLES,
       }],
       associatedInputsComplete: null,
       complete: null,
+      componentSpecsComplete: null,
       errorList: [],
       id: uuidv4(),
-      path: TECH_SPECS_BATTERY_PATH,
-      componentSpecsComplete: null,
+      path: TECH_SPECS_BATTERY,
       tag: Battery,
       technologyType: 'Energy Storage System',
       ...this.operateOnDynamicFields(f => f.defaultValue),
@@ -142,7 +141,7 @@ export default class TechnologySpecsBatteryMetadata {
         minValue: 0,
         type: Number,
         unit: '$',
-        description: 'What is the capital cost for the storage system?',
+        description: '',
         allowedValues: null,
       }),
       capitalCostPerkW: new ProjectFieldMetadata({

@@ -7,8 +7,7 @@ import {
   SHARED_DYNAMIC_FIELDS,
   createSharedHardcodedMetadata,
 } from '@/models/Project/TechnologySpecs/sharedConstants';
-import { TECH_SPECS_ICE_PATH } from '@/router/constants';
-
+import { TECH_SPECS_ICE } from '@/router/constants';
 
 const ICE = 'ICE';
 
@@ -16,7 +15,7 @@ const ICE = 'ICE';
 const SIZING_ALLOWED_VALUES = [
   {
     value: true,
-    label: 'Have DER-VET determine the capacity of the Internal Combustion Engines',
+    label: 'Determine the capacity of each generator',
   },
   {
     value: false,
@@ -60,7 +59,7 @@ export default class TechnologySpecsICEMetadata {
       complete: null,
       errorList: [],
       id: uuidv4(),
-      path: TECH_SPECS_ICE_PATH,
+      path: TECH_SPECS_ICE,
       tag: ICE,
       technologyType: 'Generator',
       ...this.operateOnDynamicFields(f => f.defaultValue),
@@ -104,7 +103,7 @@ export default class TechnologySpecsICEMetadata {
         minValue: 0,
         type: Number,
         unit: '$ / kW-year',
-        description: 'What is the cost of fixed operations and maintenance, including the non-fuel expenses from exercising the internal combustion engine?',
+        description: 'What is the cost of fixed operations and maintenance (O&M), including the non-fuel expenses from exercising the internal combustion engine?',
       }),
       fuelCost: new ProjectFieldMetadata({
         displayName: 'Fuel Cost',
@@ -112,7 +111,7 @@ export default class TechnologySpecsICEMetadata {
         minValue: 0,
         type: Number,
         unit: '$ / gallon',
-        description: 'What is the price of fuel (constant over analysis horizon)?',
+        description: 'This will be assumed to be constant over the analysis horizon',
       }),
       includeSizeLimits: new ProjectFieldMetadata({
         displayName: 'Include limits on capacity sizing?',
@@ -134,7 +133,7 @@ export default class TechnologySpecsICEMetadata {
         isRequired: true,
         minValue: 1, // differs from schema; want gt 0
         type: 'int',
-        description: 'What is the number of internal combustion engines to install?',
+        description: '',
       }),
       ratedCapacity: new ProjectFieldMetadata({
         displayName: 'Rated Capacity',
@@ -142,7 +141,7 @@ export default class TechnologySpecsICEMetadata {
         minValue: 0,
         type: Number,
         unit: 'kW / generator',
-        description: 'What is the rated capacity of the internal combustion engine?',
+        description: 'What is the rated capacity of each internal combustion engine?',
       }),
       ratedCapacityMaximum: new ProjectFieldMetadata({
         displayName: 'Rated Capacity Maximum',
@@ -166,7 +165,7 @@ export default class TechnologySpecsICEMetadata {
         minValue: 0,
         type: Number,
         unit: '$ / generator',
-        description: 'Total cost of replacing the old internal combustion engine at its end of life (recurring cost based on replacement year)',
+        description: 'Total cost of replacing an old internal combustion engine at its end of life (recurring based on lifetime)',
       }),
       replacementCostPerkW: new ProjectFieldMetadata({
         displayName: 'Replacement Cost per kW',
@@ -174,7 +173,7 @@ export default class TechnologySpecsICEMetadata {
         minValue: 0,
         type: Number,
         unit: '$ / kW-generator',
-        description: 'Replacement Cost per kW of rated capacity',
+        description: 'Replacement Cost of an Internal Combustion Engine per kW of rated capacity',
       }),
       shouldSize: new ProjectFieldMetadata({
         displayName: 'Sizing',

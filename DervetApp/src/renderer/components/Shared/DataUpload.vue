@@ -1,17 +1,31 @@
 <template>
   <div id="data-upload">
     <hr />
-    <div v-if="this.dataExists" class="form-group">
+    <div v-if="(validDataExists)||(tsFrequencyHasChanged)" class="form-group">
       <div class="col-md-12">
         <label for="UseExistingData" class="control-label"><b>{{this.firstLetterCapitalized}}</b> data have been uploaded for this project. Do you want to use these data?</label>
       </div>
-      <div class="col-md-12">
-        <b-form-group>
-          <b-form-radio-group
-            v-model="useExisting"
-            :options="sharedValidation.optionsYN.allowedValues"
-          ></b-form-radio-group>
-        </b-form-group>
+      <div class="row">
+        <div class="col-md-3">
+          <b-form-group>
+            <b-form-radio-group
+              v-model="useExisting"
+              :options="sharedValidation.optionsYN.allowedValues"
+              @input="onChange"
+            ></b-form-radio-group>
+          </b-form-group>
+        </div>
+        <div class="col-md-5 error-text-color">
+          <span v-html="uploadedData.error"></span>
+        </div>
+        <div class="col-md-3">
+          <b-button
+            size="sm"
+            class="btn-xs btn-danger delete-data pull-right"
+            @click="removeData">
+            Remove Data
+          </b-button>
+        </div>
       </div>
     </div>
     <div id="DataFile-Form" v-if="!(useExisting)||!(this.dataExists)">
@@ -26,7 +40,7 @@
           <label>Data Year:</label>
         </div>
         <div class="col-md-3">
-          <label>{{this.dataYear}}</label>
+          <label>{{this.dataYearLabel}}</label>
         </div>
         <div class="col-md-2 control-label">
           <label>Frequency of data:</label>
@@ -46,33 +60,51 @@
           <label class="control-label capitalize">
             {{this.dataName}} data
           </label>
-          <span class="unit-label" v-html="this.units"></span>
+          <span class="unit-label" v-html="this.unit"></span>
         </div>
         <div class="col-md-7">
           <input
             type="file"
             class="form-control"
+            :disabled="disableUpload"
             @change="onFileUpload">
         </div>
       </div>
+      <div class="form-group row">
+        <div class="col-md-1"></div>
+        <div v-if="(importedFilePath !== null) || (importError)"
+          class="error-text-color">
+          <span v-html="importError"></span>
+        </div>
+        <div v-else-if="(importedFilePath === null) && isInvalid"
+          class="error-text-color">
+          <span v-html="errorMessage"></span>
+        </div>
+      </div>
+      <div v-if="!dataExists && (isMonthlyData || !isNumberOfEntriesRequiredTBD)">
+        <div class="form-group row">
+          <div class="col-md-12">
+            <i><a :href="getSampleDataFileName()" download class="important-link text-decoration-none"> Download a sample <b>{{dataName}}</b><code>.csv</code> file</a>{{getSampleDataText()}}</i>
+          </div>
+        </div>
+      </div>
     </div>
-    <div v-if="this.dataExists">
+    <div v-if="showPlot">
       <div class="col-md-10" :id="this.chartName">
       </div>
     </div>
+
   </div>
 </template>
 
 <script>
   import Plotly from 'plotly.js';
-  import { flatten } from 'lodash';
-  import { isNotNullAndNotUndefined } from '@/util/logic';
   import { parseCsvFromEvent } from '@/util/file';
   import { sharedDefaults, sharedValidation } from '@/models/Shared.js';
 
   export default {
-    mounted() {
-      if (this.dataExists) {
+    updated() {
+      if (this.showPlot) {
         this.createChartUploadedDataPlot(this.chartName);
       }
     },
@@ -80,49 +112,139 @@
       return {
         sharedValidation,
         useExisting: sharedDefaults.useExistingTimeSeriesData,
+        importError: undefined,
+        importedFilePath: null,
+        unit: this.uploadedData.unit,
+        columnHeaderName: this.uploadedData.columnHeaderName,
+        ...this.importErrorOnDisabledUpload(),
+        dataYearLabel: this.dataYear || 'N/A',
       };
     },
     computed: {
       dataExists() {
-        const data = this.uploadedData;
-        if (!isNotNullAndNotUndefined(data)) {
-          // this.updloadedData is empty
-          return false;
-        }
-        // this.uploadedData is object, so check if data is empty
-        return isNotNullAndNotUndefined(data.data);
+        return this.uploadedData.data.length !== 0;
       },
       firstLetterCapitalized() {
         return this.dataName.charAt(0).toUpperCase() + this.dataName.slice(1);
       },
-      dataYear() {
-        return this.$store.state.Project.dataYear;
+      isMonthlyData() {
+        return this.numberOfEntriesRequired === '12';
+      },
+      isTimeseriesData() {
+        return !this.isMonthlyData;
+      },
+      isNumberOfEntriesRequiredTBD() {
+        return this.numberOfEntriesRequired === 'TBD';
+      },
+      isLeapYear() {
+        return this.isTimeseriesData
+          && !this.isNumberOfEntriesRequiredTBD
+          && (((parseFloat(this.dataFrequency.value) / 60)
+          * parseFloat(this.numberOfEntriesRequired)) === 8784);
+      },
+      showPlot() {
+        return (this.validDataExists && this.useExisting);
       },
       stringifyDataFrequency() {
-        return this.dataFrequency.value === 'monthly' ? 'monthly' : 'timestep';
+        return this.dataFrequency.value === 'monthly' ? 'month' : 'timestep';
+      },
+      tsFrequencyHasChanged() {
+        return (!this.validDataExists && this.dataExists);
+      },
+      validDataExists() {
+        return (this.dataExists && [undefined, ''].includes(this.importError));
       },
     },
     props: {
       chartName: String,
+      DataModel: Function,
       dataName: String,
       dataFrequency: Object,
-      DataModel: Function,
+      dataYear: String,
+      disableUpload: Boolean,
+      errorMessage: String,
+      isInvalid: Boolean,
       numberOfEntriesRequired: String,
-      units: String,
+      objectName: String,
       uploadedData: Object,
       xAxis: Array,
     },
     methods: {
+      arrayDisplayFirstFifteen(array) {
+        const num = 15;
+        return (array.length <= num) ? array : [array.slice(0, num), '...'];
+      },
+      getSampleDataFileName() {
+        const dataModelName = (new this.DataModel([])).constructor.name;
+        if (this.isMonthlyData) {
+          const name = dataModelName.replace(/(Monthly)$/, '_$1');
+          return `files/Sample_${name}_${this.numberOfEntriesRequired}.csv`;
+        }
+        const name = dataModelName.replace(/(TimeSeries)$/, '_$1');
+        const sampleTsLength = this.isLeapYear ? '8784' : '8760';
+        return `files/Sample_${name}_${sampleTsLength}.csv`;
+      },
+      getSampleDataText() {
+        if (this.isMonthlyData) {
+          return ' with 12 values representing each calendar month';
+        }
+        if (this.isLeapYear) {
+          return ' with a 60-minute timestep for a leap year with 366 days (8,784 entries)';
+        }
+        return ' with a 60-minute timestep for a year with 365 days (8,760 entries)';
+      },
+      importErrorOnDisabledUpload() {
+        if (this.disableUpload) {
+          return { importError: 'Both <b>Data Year</b> and <b>Timestep</b> must be defined in Project Configuration' };
+        }
+        return {};
+      },
+      onChange(e) {
+        this.importedFilePath = null;
+        const payload = {
+          button: e,
+          objectName: this.objectName,
+        };
+        this.$emit('input', payload);
+      },
       onFileUpload(e) {
-        const onSuccess = (results) => {
-          this.$emit('uploaded', this.uploadPayload(flatten(results)));
+        const onSuccess = (results, importedFilePath, errors) => {
+          // we must trim the last row off because it's always there as null
+          // TODO: AE: try this on other operating systems to make sure
+          results = results.slice(0, -1);
+          this.importError = errors;
+          this.importedFilePath = importedFilePath;
+          if (importedFilePath !== null && errors === undefined) {
+            const newData = new this.DataModel(results);
+            const validationResult = newData.validate(this.numberOfEntriesRequired);
+            if (validationResult.length !== 0) this.importError = validationResult;
+            if (this.importError === undefined) {
+              // only emit back when there are no errors
+              //   thus preventing an invalid TS from being saved
+              this.$emit('uploaded', this.uploadPayload(newData));
+              this.useExisting = true;
+            }
+          }
         };
         parseCsvFromEvent(e, onSuccess);
       },
+      removeData() {
+        // emit a payload to:
+        // - reset the stored TS data with an empty TS
+        // - then set the associated errorList
+        // and set variables to not render existing upload
+        this.useExisting = false;
+        this.importError = null;
+        // emit back payload to initiate a reset of the errorlist
+        const payload = {
+          objectName: this.objectName,
+        };
+        this.$emit('click', payload);
+      },
       uploadPayload(dataResults) {
         return {
-          dataArray: new this.DataModel(dataResults),
-          dataName: this.dataName,
+          dataArray: dataResults,
+          objectName: this.objectName,
         };
       },
       createChartUploadedDataPlot(chartId) {
@@ -130,10 +252,10 @@
         const uploadedTS = {
           x: this.xAxis,
           y: this.uploadedData.data,
-          unit: this.units,
+          unit: this.unit,
           mode: 'lines',
           name: '', // this.firstLetterCapitalized,
-          hovertemplate: `%{y} ${this.units}`,
+          hovertemplate: `%{y} ${this.unit}`,
         };
         const data = [uploadedTS];
         const layout = {
@@ -143,12 +265,12 @@
             x: 0,
             y: 1.12,
           },
-          height: 500,
+          height: 310,
           modebar: {
             orientation: 'v', // 'h' set how modebar will appear
           },
           title: {
-            text: this.uploadedData.columnHeaderName,
+            text: this.columnHeaderName,
             font: {
               size: 20,
             },
@@ -156,7 +278,7 @@
           },
           yaxis: {
             title: {
-              text: this.units,
+              text: this.unit,
               font: {
                 size: 12,
               },
@@ -193,6 +315,7 @@
             format: 'png', // 'jpeg',
             filename: `${this.dataName.replace(/ /g, '-')}-uploaded-data-plot`,
           },
+          modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'resetScale2d'],
         };
         return Plotly.newPlot(ctx, data, layout, config);
       },

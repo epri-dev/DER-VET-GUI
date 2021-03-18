@@ -99,7 +99,7 @@
         </text-input>
 
         <save-buttons
-          :continue-link="`${TECH_SPECS_CONTROLLABLE_LOAD_DATA_UPLOAD_PATH}/${this.id}`"
+          :continue-link="`${TECH_SPECS_CONTROLLABLE_LOAD_DATA_UPLOAD}/${this.id}`"
           :displayError="submitted && $v.$anyError"
           :save="validatedSave"
         />
@@ -116,7 +116,7 @@
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsControllableLoadMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsControllableLoad';
-  import { WIZARD_COMPONENT_PATH, TECH_SPECS_CONTROLLABLE_LOAD_DATA_UPLOAD_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT, TECH_SPECS_CONTROLLABLE_LOAD_DATA_UPLOAD } from '@/router/constants';
   import {
     REPLACE_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD,
     MAKE_LIST_OF_ACTIVE_TECHNOLOGIES,
@@ -135,8 +135,8 @@
       return {
         metadata,
         ...valuesMinusId,
-        WIZARD_COMPONENT_PATH,
-        TECH_SPECS_CONTROLLABLE_LOAD_DATA_UPLOAD_PATH,
+        WIZARD_COMPONENT,
+        TECH_SPECS_CONTROLLABLE_LOAD_DATA_UPLOAD,
       };
     },
     validations: {
@@ -180,6 +180,13 @@
         });
         return true;
       },
+      getAssociatedInputsCompleteness() {
+        // loop through associatedInputs array and check complete param
+        if (this.associatedInputs[0]) {
+          return this.associatedInputs[0].complete;
+        }
+        return false;
+      },
       getControllableLoadFromStore() {
         return this.$store.getters.getControllableLoadById(this.id);
       },
@@ -188,8 +195,8 @@
       },
       makeErrorList() {
         const errors = [];
-        Object.keys(this.metadata).forEach((key) => {
-          if (this.$v[key].$invalid) {
+        Object.keys(this.$v).forEach((key) => {
+          if (key.charAt(0) !== '$' && this.$v[key].$invalid) {
             errors.push(this.getErrorMsg(key));
           }
         });
@@ -206,7 +213,9 @@
         this.submitted = true;
         this.$v.$touch();
         // set complete to true or false
-        this.complete = !this.$v.$invalid;
+        this.componentSpecsComplete = !this.$v.$invalid;
+        this.associatedInputsComplete = this.getAssociatedInputsCompleteness();
+        this.complete = this.componentSpecsComplete && this.associatedInputsComplete;
         // populate errorList for this technology
         if (this.complete !== true) {
           this.errorList = this.makeErrorList();
@@ -222,7 +231,10 @@
       buildControllableLoad() {
         return {
           active: this.active,
+          associatedInputs: this.associatedInputs,
+          associatedInputsComplete: this.associatedInputsComplete,
           complete: this.complete,
+          componentSpecsComplete: this.componentSpecsComplete,
           constructionYear: this.constructionYear,
           decomissioningCost: this.decomissioningCost,
           duration: this.duration,

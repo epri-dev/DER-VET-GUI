@@ -69,7 +69,7 @@
       <save-and-nav-buttons
         :displayError="submitted && $v.$anyError"
         :save="validatedSave"
-        :continue-link="FINANCIAL_INPUTS_RETAIL_TARIFF_PATH"
+        :continue-link="FINANCIAL_INPUTS_RETAIL_TARIFF"
         continue-text="Save and Back To Retail Tariff" />
 
     </form>
@@ -80,7 +80,8 @@
   import { requiredIf, minValue, maxValue } from 'vuelidate/lib/validators';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import RetailTariffBillingPeriodMetadata from '@/models/RetailTariffBillingPeriod';
-  import { FINANCIAL_INPUTS_RETAIL_TARIFF_PATH } from '@/router/constants';
+  import { FINANCIAL_INPUTS_RETAIL_TARIFF } from '@/router/constants';
+  import { getSingleErrorMsg } from '@/util/validation';
 
   const metadata = RetailTariffBillingPeriodMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
@@ -88,6 +89,7 @@
   const PAGEGROUP = 'components';
   const PAGEKEY = 'financial';
   const PAGE = 'retailTariff';
+  const TABLE_ITEM_NAME = 'billing periods';
 
   export default {
     props: ['billingPeriodId'],
@@ -96,14 +98,14 @@
       if (this.isNewBillingPeriod()) {
         return {
           metadata,
-          ...this.getDefaultData(),
-          FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
+          ...metadata.getDefaultValues(),
+          FINANCIAL_INPUTS_RETAIL_TARIFF,
         };
       }
       return {
         metadata,
         ...this.getDataFromProject(),
-        FINANCIAL_INPUTS_RETAIL_TARIFF_PATH,
+        FINANCIAL_INPUTS_RETAIL_TARIFF,
       };
     },
     validations() {
@@ -149,15 +151,18 @@
         this.$v.$touch();
       }
     },
-    methods: {
-      getDefaultData() {
-        const defaultValues = metadata.getDefaultValues();
-        defaultValues.id = this.$store.getters.getNewRetailTariffBillingPeriodId;
-        return defaultValues;
+    computed: {
+      billingPeriods() {
+        return this.$store.state.Project.retailTariffBillingPeriods;
       },
+      errorMessage() {
+        return getSingleErrorMsg(this.billingPeriods, TABLE_ITEM_NAME);
+      },
+    },
+    methods: {
       getDataFromProject() {
         // the prop can become a string, but needs to be a number for this to work here
-        const pd = this.$store.getters.getListFieldById('retailTariffBillingPeriods', parseInt(this.billingPeriodId, 10));
+        const pd = this.$store.getters.getListFieldById('retailTariffBillingPeriods', this.billingPeriodId);
         return this.unpackData(pd);
       },
       getDynamicExcludingEndTimeMinValue() {
@@ -204,13 +209,11 @@
         };
       },
       getErrorListPayload() {
-        const errors = [];
-        errors.push(this.getSingleErrorMsg());
         return {
           pageGroup: PAGEGROUP,
           pageKey: PAGEKEY,
           page: PAGE,
-          errorList: errors,
+          errorList: this.errorMessage === '' ? [] : [this.errorMessage],
         };
       },
       setWeekdayValue() {
@@ -232,27 +235,6 @@
           this.chargeType = this.metadata.chargeType.defaultValue;
         }
         return this.metadata.value;
-      },
-      getNumberOfInvalidRows(rows) {
-        let invalidRowsCount = 0;
-        Object.values(rows).forEach((row) => {
-          if (!row.complete) {
-            invalidRowsCount += 1;
-          }
-        });
-        return invalidRowsCount;
-      },
-      getSingleErrorMsg() {
-        const billingPeriods = this.$store.state.Project.retailTariffBillingPeriods;
-        if (billingPeriods.length === 0) {
-          return 'There are no billing periods specified.';
-        }
-        const invalidRowCount = this.getNumberOfInvalidRows(billingPeriods);
-        if (invalidRowCount === 0) {
-          return '';
-        }
-        const pluralizeRow = (invalidRowCount === 1) ? '' : 's';
-        return `There are errors with ${invalidRowCount} row${pluralizeRow} in the table.`;
       },
       isNewBillingPeriod() {
         return this.billingPeriodId === 'null';
@@ -309,9 +291,6 @@
       valueInMonthRange(value) {
         return this.valueInRange(value, 1, 12);
       },
-      // saveAndAdd() {
-      // reload page ? (reset form)
-      // },
       buildBillingPeriod() {
         return new RetailTariffBillingPeriodMetadata({
           startMonth: this.startMonth,

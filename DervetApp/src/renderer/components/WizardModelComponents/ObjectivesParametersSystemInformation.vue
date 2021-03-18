@@ -1,102 +1,86 @@
 <template>
   <div>
     <h3>Services: System Information</h3>
-    <form class="form-horizontal form-buffer">
+    <hr>
+    <div class="form-horizontal form-buffer">
 
-      <div class="form-group">
-        <timeseries-data-upload 
-          chart-name="chartUploadedTimeSeries"
-          data-name="System load"
-          units="kW"
-          @uploaded="receiveTimeseriesData"
-          :data-exists="(tsData !== null)"
-          :data-time-series="tsData"
-          :key="childKey"
-          />
-        </div>
-
+      <timeseries-data-upload
+        chart-name="tsSystemLoadChartUploaded"
+        @click="receiveRemove"
+        :DataModel="metadata.tsSystemLoad.DataModel"
+        :data-name="metadata.tsSystemLoad.displayName"
+        :data-time-series="tsData('tsSystemLoad')"
+        :errorMessage="getErrorMsgTS('tsSystemLoad')"
+        :isInvalid="submitted && tsData('tsSystemLoad').data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('tsSystemLoad')"
+        object-name="tsSystemLoad"
+        @uploaded="receiveTimeseriesData"
+      />
       <hr>
 
-      <save-buttons :continue-link="WIZARD_COMPONENT_PATH"
-                    :displayError="submitted"
-                    :save="validatedSave" />
+      <save-and-save-continue
+        :displayError="submitted && ($v.$anyError || isTSError)"
+        :save="validatedSaveStay"
+        :save-continue="validatedSaveContinue"
+      />
 
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import csvUploadMixin from '@/mixins/csvUploadMixin';
-  import SystemLoadTimeSeries from '@/models/TimeSeries/SystemLoadTimeSeries';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
-  import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
+  import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
+  import { projectMetadata } from '@/models/Project/ProjectMetadata';
+  import * as c from '@/models/Project/constants';
+  import '@/assets/samples/Sample_SystemLoad_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_SystemLoad_TimeSeries_8784.csv';
+
+  import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
 
   const PAGEGROUP = 'components';
   const PAGEKEY = 'objectives';
   const PAGE = 'systemInformation';
+  const FIELDS = [];
+  const TS_FIELDS = [...c.TS_SYSTEM_FIELDS];
+
+  const ALL_FIELDS = [...FIELDS, ...TS_FIELDS];
+  const validations = projectMetadata.getValidationSchema(FIELDS);
+
+  const CONSTANTS = {
+    DESTINATION_PATH,
+    PAGEGROUP,
+    PAGEKEY,
+    PAGE,
+    FIELDS,
+    TS_FIELDS,
+  };
 
   export default {
-    components: { TimeseriesDataUpload },
     mixins: [csvUploadMixin, wizardFormMixin],
     data() {
-      const p = this.$store.state.Project;
       return {
-        includeSystemLoad: p.includeSystemLoad,
-        systemLoad: p.systemLoad,
-        WIZARD_COMPONENT_PATH,
+        metadata: this.getMetadata(projectMetadata, ALL_FIELDS),
+        ...this.getDataFromProject(ALL_FIELDS),
+        ...this.getTSInputDefaultDataFromProject(TS_FIELDS),
+        ...this.getChildKeys(TS_FIELDS),
+        ...this.getUseExistingDefaults(TS_FIELDS),
+        CONSTANTS,
       };
     },
+    validations: {
+      ...validations,
+    },
     computed: {
-      tsData() {
-        if (this.inputTimeseries === null) {
-          return this.systemLoad;
-        }
-        return new SystemLoadTimeSeries(this.inputTimeseries);
-      },
-      errorList() {
-        return this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE];
-      },
-    },
-    beforeMount() {
-      // submitted is false initially; set it to true after the first save.
-      // initially, complete is null; after saving, it is set to either true or false.
-      // we want to show validation errors at any time after the first save, with submitted.
-      if (this.errorList !== null && this.errorList !== undefined) {
-        this.submitted = true;
-        this.$v.$touch();
-      }
-    },
-    methods: {
-      getErrorListPayload() {
-        const errors = [];
-        Object.keys(this.$v).forEach((key) => {
-          if (key.charAt(0) !== '$' && this.$v[key].$invalid) {
-            errors.push(key);
-          }
+      isRequiredTSFields() {
+        // return an object of booleans for every TS_FIELD,
+        //   indicating if each is required
+        const isRequiredObject = {};
+        (TS_FIELDS).forEach((tsField) => {
+          isRequiredObject[tsField] = true;
         });
-        return {
-          pageGroup: PAGEGROUP,
-          pageKey: PAGEKEY,
-          page: PAGE,
-          errorList: errors,
-        };
-      },
-      validatedSave() {
-        // reset all non-required inputs to their defaults prior to saving
-        if (this.includeInterconnectionConstraints === false) {
-          this.resetNonRequired(['maxExport', 'maxImport']);
-        }
-        this.submitted = true;
-        this.$v.$touch();
-        // set errorList
-        this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
-        return this.save();
-      },
-      save() {
-        if (this.inputTimeseries !== null) {
-          this.$store.dispatch('setSystemLoad', this.tsData);
-        }
+        return isRequiredObject;
       },
     },
   };

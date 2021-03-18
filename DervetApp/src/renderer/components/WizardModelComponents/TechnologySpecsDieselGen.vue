@@ -210,7 +210,7 @@
         </drop-down-input>
 
         <save-buttons
-          :continue-link="WIZARD_COMPONENT_PATH"
+          :continue-link="WIZARD_COMPONENT"
           :displayError="submitted && $v.$anyError"
           :save="validatedSave"
         />
@@ -226,7 +226,7 @@
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsDieselGenMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsDieselGen';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT } from '@/router/constants';
 
   const metadata = TechnologySpecsDieselGenMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
@@ -237,12 +237,12 @@
     mixins: [wizardFormMixin],
     props: ['dieselGenId'],
     data() {
-      const values = this.isnewDieselGen() ?
-        metadata.getDefaultValues() : this.getDieselGenFromStore();
+      const values = this.isnewDieselGen()
+        ? metadata.getDefaultValues() : this.getDieselGenFromStore();
       return {
         metadata,
         ...values,
-        WIZARD_COMPONENT_PATH,
+        WIZARD_COMPONENT,
       };
     },
     validations() {

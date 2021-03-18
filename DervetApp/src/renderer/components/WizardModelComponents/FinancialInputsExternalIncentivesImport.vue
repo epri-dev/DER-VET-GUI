@@ -29,13 +29,13 @@
         <hr>
 
         <cancel-and-save-buttons
-          :backLink="FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH"
+          :backLink="FINANCIAL_INPUTS_EXTERNAL_INCENTIVES"
           backText="Cancel"
-          :disabled="importDisabled()"
+          :disabled="isImportDisabled()"
           continueText="Import External Incentives"
-          :displayError="importDisabled()"
+          :displayError="isImportDisabled()"
           :errorText="importError"
-          :save="this.save"
+          :save="save"
         />
       </div>
     </form>
@@ -46,7 +46,8 @@
   import ExternalIncentivesMetadata, { parsedCsvToExternalIncentives } from '@/models/ExternalIncentives';
   import { parseCsvFromEvent } from '@/util/file';
   import CancelAndSaveButtons from '@/components/Shared/CancelAndSaveButtons';
-  import { FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH } from '@/router/constants';
+  import { FINANCIAL_INPUTS_EXTERNAL_INCENTIVES } from '@/router/constants';
+  import { compileImportNotes } from '@/util/validation';
 
   const metadata = ExternalIncentivesMetadata.getHardcodedMetadata();
   const validationz = metadata.toValidationSchema();
@@ -58,9 +59,9 @@
         metadata,
         ...this.getDefaultData(),
         parsedExternalIncentivesCsv: null,
-        importError: undefined,
+        importError: '',
         importedFilePath: null,
-        FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH,
+        FINANCIAL_INPUTS_EXTERNAL_INCENTIVES,
       };
     },
     validations() {
@@ -72,11 +73,6 @@
       this.$v.$touch();
     },
     methods: {
-      compileImportNotes(importNotes) {
-        // add source (file path) to the list
-        importNotes.push(`source: ${this.importedFilePath}`);
-        return importNotes;
-      },
       getDefaultData() {
         return metadata.getDefaultValues();
       },
@@ -105,13 +101,13 @@
         };
         parseCsvFromEvent(e, onSuccess);
       },
-      importDisabled() {
-        return this.importError !== undefined;
+      isImportDisabled() {
+        return this.importError !== undefined || this.importedFilePath === null;
       },
       save() {
         // obtain data and import notes
         const eisObject = parsedCsvToExternalIncentives(this.parsedExternalIncentivesCsv);
-        const fileImportNotes = this.compileImportNotes(eisObject.fileImportNotes);
+        const fileImportNotes = compileImportNotes(eisObject.fileImportNotes, this.importedFilePath);
         const eis = eisObject.csvValues;
         if (eis.length > 0) {
           // validate each row, by setting complete to true or false
@@ -126,7 +122,7 @@
         // complete this mutation before navigation to next page
         this.$store.dispatch('replaceExternalIncentives', eis)
           .then(this.$store.dispatch('replaceExternalIncentivesFileImportNotes', fileImportNotes))
-          .then(this.$router.push({ path: FINANCIAL_INPUTS_EXTERNAL_INCENTIVES_PATH }));
+          .then(this.$router.push({ path: FINANCIAL_INPUTS_EXTERNAL_INCENTIVES }));
       },
     },
   };

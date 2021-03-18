@@ -1,13 +1,16 @@
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
+import { ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_FLEET_EV } from '@/store/actionTypes';
 import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 import {
   SHARED_DYNAMIC_FIELDS,
   createSharedHardcodedMetadata,
 } from '@/models/Project/TechnologySpecs/sharedConstants';
-import { TECH_SPECS_FLEET_EV_PATH } from '@/router/constants';
+import { TS_FLEETEV_BASELINE_LOAD_PROFILE } from '@/models/Project/constants';
+import { TECH_SPECS_FLEET_EV, TECH_SPECS_FLEET_EV_BASELINE } from '@/router/constants';
 
+import FleetEVBaselineLoadTimeSeries from '@/models/TimeSeries/FleetEVBaselineLoadTimeSeries';
 
 const ELECTRIC_VEHICLE2 = 'ElectricVehicle2';
 
@@ -34,11 +37,20 @@ export default class TechnologySpecsFleetEVMetadata {
   getDefaultValues() {
     return {
       active: true,
-      baselineLoad: null,
+      associatedInputs: [{
+        complete: false,
+        ts: new FleetEVBaselineLoadTimeSeries([]),
+        displayName: 'Baseline Load Profile',
+        errorList: ['Not Started'],
+        path: TECH_SPECS_FLEET_EV_BASELINE,
+        actionSetName: ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_FLEET_EV,
+      }],
+      associatedInputsComplete: null,
       complete: null,
+      componentSpecsComplete: null,
       errorList: [],
       id: uuidv4(),
-      path: TECH_SPECS_FLEET_EV_PATH, // TODO remove
+      path: TECH_SPECS_FLEET_EV, // TODO remove - mixin makes this unnessary
       tag: ELECTRIC_VEHICLE2,
       technologyType: 'Electric Vehicle',
       ...this.operateOnDynamicFields(f => f.defaultValue),
@@ -52,7 +64,6 @@ export default class TechnologySpecsFleetEVMetadata {
   // to be removed in favor of getMetadataFromSchema
   static getHardcodedMetadata() {
     return new TechnologySpecsFleetEVMetadata({
-      // baselineLoad: null,
       capitalCost: new ProjectFieldMetadata({
         displayName: 'Capital Cost',
         isRequired: true,
@@ -93,6 +104,13 @@ export default class TechnologySpecsFleetEVMetadata {
         type: Number,
         unit: '$ ',
         description: 'Total cost of replacing infrastructure for EV charging',
+      }),
+      // ts: timeseies
+      [TS_FLEETEV_BASELINE_LOAD_PROFILE]: new ProjectFieldMetadata({
+        DataModel: FleetEVBaselineLoadTimeSeries,
+        defaultValue: new FleetEVBaselineLoadTimeSeries([]),
+        displayName: 'baseline load profile',
+        actionSetName: ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_FLEET_EV,
       }),
       ...sharedHardcodedMetadata,
     });

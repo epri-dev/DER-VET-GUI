@@ -73,7 +73,7 @@
           :errorMessage="getErrorMsg('loc')">
         </drop-down-input>
 
-        <div v-if="loc === 'AC'">
+        <div v-if="(loc === 'AC') && essExists">
             <radio-button-input
               v-model="allowGridCharge"
               v-bind:field="metadata.allowGridCharge"
@@ -232,7 +232,7 @@
         </div>
 
         <save-buttons
-          :continue-link="`${TECH_SPECS_PV_DATA_GENERATION_PATH}/${this.solarId}`"
+          :continue-link="`${TECH_SPECS_PV_DATA_GENERATION}/${this.solarId}`"
           :displayError="submitted && $v.$anyError"
           :save="validatedSave"
         />
@@ -248,7 +248,7 @@
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
-  import { WIZARD_COMPONENT_PATH, TECH_SPECS_PV_DATA_GENERATION_PATH } from '@/router/constants';
+  import { WIZARD_COMPONENT, TECH_SPECS_PV_DATA_GENERATION } from '@/router/constants';
 
   const metadata = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
   const validations = metadata.toValidationSchema();
@@ -263,8 +263,8 @@
       return {
         metadata,
         ...values,
-        WIZARD_COMPONENT_PATH,
-        TECH_SPECS_PV_DATA_GENERATION_PATH,
+        WIZARD_COMPONENT,
+        TECH_SPECS_PV_DATA_GENERATION,
       };
     },
     validations() {
@@ -273,7 +273,7 @@
         allowGridCharge: {
           ...validations.allowGridCharge,
           required: requiredIf(function isAllowGridChargeRequired() {
-            return (this.loc === 'AC');
+            return (this.loc === 'AC') && this.essExists;
           }),
         },
         decomissioningCost: {
@@ -387,6 +387,9 @@
       reliabilitySelected() {
         return this.$store.state.Project.objectivesResilience;
       },
+      essExists() {
+        return this.$store.state.Project.technologySpecsBattery.length > 0;
+      },
     },
     methods: {
       resetNonRequired(list) {
@@ -398,6 +401,13 @@
       isNewSolar() {
         return this.solarId === 'null';
       },
+      getAssociatedInputsCompleteness() {
+        // loop through associatedInputs array and check complete param
+        if (this.associatedInputs[0]) {
+          return this.associatedInputs[0].complete;
+        }
+        return false;
+      },
       getSolarFromStore() {
         return this.$store.getters.getSolarPVById(this.solarId);
       },
@@ -408,8 +418,8 @@
       },
       makeErrorList() {
         const errors = [];
-        Object.keys(this.metadata).forEach((key) => {
-          if (this.$v[key].$invalid) {
+        Object.keys(this.$v).forEach((key) => {
+          if (key.charAt(0) !== '$' && this.$v[key].$invalid) {
             errors.push(this.getErrorMsg(key));
           }
         });
@@ -444,7 +454,9 @@
         this.submitted = true;
         this.$v.$touch();
         // set complete to true or false
-        this.complete = !this.$v.$invalid;
+        this.componentSpecsComplete = !this.$v.$invalid;
+        this.associatedInputsComplete = this.getAssociatedInputsCompleteness();
+        this.complete = this.componentSpecsComplete && this.associatedInputsComplete;
         // populate errorList for this technology
         if (this.complete !== true) {
           this.errorList = this.makeErrorList();
@@ -465,7 +477,10 @@
         return {
           active: this.active,
           allowGridCharge: this.allowGridCharge,
+          associatedInputs: this.associatedInputs,
+          associatedInputsComplete: this.associatedInputsComplete,
           complete: this.complete,
+          componentSpecsComplete: this.componentSpecsComplete,
           constructionYear: this.constructionYear,
           cost: this.cost,
           decomissioningCost: this.decomissioningCost,
@@ -473,7 +488,6 @@
           expectedLifetime: this.expectedLifetime,
           fixedOMCosts: this.fixedOMCosts,
           gamma: this.gamma,
-          generationProfile: this.generationProfile,
           id: this.id,
           includeCurtailment: this.includeCurtailment,
           includePPA: this.includePPA,

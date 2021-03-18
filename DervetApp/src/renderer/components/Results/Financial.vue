@@ -45,12 +45,9 @@
   import Chart from 'chart.js';
   import Plotly from 'plotly.js';
   import { formatYAxisCurrency } from '@/util/chart';
-  import { RESULTS_PATH } from '@/router/constants';
+  import { RESULTS } from '@/router/constants';
 
   export default {
-    beforeMount() {
-      this.$store.dispatch('createFinancialPlots');
-    },
     mounted() {
       this.createStackedCostBenefit('chartStackedCostBenefit', this.chartData.costBenefit);
       if (this.chartData.showMonthlyData) {
@@ -59,7 +56,7 @@
     },
     data() {
       return {
-        resultsPath: RESULTS_PATH,
+        resultsPath: RESULTS,
       };
     },
     computed: {
@@ -97,6 +94,7 @@
             format: 'png',
             filename: 'stacked-cost-benefit',
           },
+          modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d', 'toggleSpikelines'],
         };
         return Plotly.newPlot(ctx, chartData, layout, config);
       },
@@ -183,6 +181,7 @@
             format: 'png',
             filename: 'before-after-monthly-bill',
           },
+          modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d', 'toggleSpikelines'],
         };
         return Plotly.newPlot(ctx, chartData, layout, config);
       },
@@ -266,5 +265,4 @@
       },
     },
   };
-
 </script>

@@ -17,7 +17,6 @@ DervetApp/dervetpy/.python-version
 DervetApp/dist/electron/*
 DervetApp/dist/web/*
 DervetApp/build/*
-DervetApp/package-lock.json
 !DervetApp/build/icons
 coverage
 DervetApp/node_modules/

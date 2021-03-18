@@ -41,6 +41,16 @@ body {
     height: auto;
 }
 
+.logo-img {
+    max-width: 80%;
+    height: auto;
+}
+
+.epri-logo-img {
+    max-width: 30%;
+    height: auto;
+}
+
 .btn-quick-start {
     background-color: #ff9999 !important;
     color: white !important;
@@ -67,6 +77,9 @@ body {
     margin-bottom: 15px;
 }
 
+.left-margin-table-buffer {
+    padding-left: 30px !important;
+}
 
 /*
  * Global add-ons
@@ -83,6 +96,32 @@ body {
  */
 .navbar-fixed-top {
     border: 0;
+}
+
+.navbar-top-svg-item {
+    padding-left: 15px !important;
+}
+
+.nav-logo-img {
+    max-width: 100%;
+    height: auto;
+    opacity: 0.6;
+}
+
+.nav-logo-img:hover {
+    opacity: 1;
+}
+
+.no-padding {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.navbar-btn {
+    padding-left: 30px !important;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-right: 30px !important;
 }
 
 /*
@@ -276,7 +315,7 @@ textarea {
 
 .numberbox-lg {
     display: inline-block;
-    width: 170px;
+    width: 100%;
 }
 
 .textbox-lg {
@@ -808,6 +847,17 @@ p.tool-tip:hover {
     color: #000;
 }
 
+p.tool-tip-index {
+    padding-top: 15px;
+    margin-bottom: 0px;
+    color: #a7a7a7;
+    font-size: 15px;
+}
+
+p.tool-tip-index:hover {
+    color: #000;
+}
+
 p.selected-tool-tip {
     color: #000;
 }
@@ -820,7 +870,7 @@ p.selected-tool-tip {
     padding-right: 15px;
     padding-left: 15px;
     /*top: -8px;*/
-    margin-bottom: 5px;
+    margin: auto;
 }
 
 span.tooltip-space {
@@ -849,10 +899,6 @@ span.tooltip-space {
         margin: 0 0 15px 0;
     }
 
-    p.tool-tip {
-        margin-top: 15px;
-    }
-
     .tool-tip.tooltip-col {
         width: 100%;
         float: none;
@@ -862,6 +908,7 @@ span.tooltip-space {
         padding-left: 0;
         top: 5px;
         margin-bottom: 5px;
+        height: 100%;
     }
 
         .tool-tip.tooltip-col.tt-col-0,

@@ -1,84 +1,75 @@
 <template>
   <div>
-    <form class="form-horizontal form-buffer">
-      <h3>Technology Specs: Controllable Load Profile Upload</h3>
-      <timeseries-data-upload
-        chart-name="chartUploadedTimeSeries"
-        data-name="maximum load profile"
-        units='kW'
-        @uploaded="receiveTimeseriesData"
-        :data-exists="(tsData !== null && tsData !== undefined)"
-        :data-time-series="tsData"
-        :key="childKey"
-      />
+    <h3>Technology Specs: Controllable Load Profile Upload</h3>
+    <hr>
+    <div class="form-horizontal form-buffer">
 
-      <hr>
+    <timeseries-data-upload
+      chart-name="tsControllableLoadProfileChartUploaded"
+      @click="receiveRemove"
+      :DataModel="metadata.tsControllableLoadProfile.DataModel"
+      :data-name="metadata.tsControllableLoadProfile.displayName"
+      :data-time-series="tsData('tsControllableLoadProfile')"
+      :errorMessage="getErrorMsgTS('tsControllableLoadProfile')"
+      :isInvalid="submitted && tsData('tsControllableLoadProfile').data.length === 0"
+      @input="receiveUseExisting"
+      :key="childKey('tsControllableLoadProfile')"
+      object-name="tsControllableLoadProfile"
+      @uploaded="receiveTimeseriesData"
+    />
+    <hr>
 
-      <save-buttons
-        :continue-link="WIZARD_COMPONENT_PATH"
-        :save="this.save"
-      />
+    <save-and-save-continue
+      :displayError="submitted && ($v.$anyError || isTSError)"
+      :save="validatedSaveStay"
+      :save-continue="validatedSaveContinue"
+    />
 
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
-  import csvUploadMixin from '@/mixins/csvUploadMixin';
-  import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
-  import SaveButtons from '@/components/Shared/SaveButtons';
-  import { WIZARD_COMPONENT_PATH } from '@/router/constants';
-  import {
-    ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD,
-    ACTIVATE_TECH,
-    MAKE_LIST_OF_ACTIVE_TECHNOLOGIES,
-  } from '@/store/actionTypes';
-  import TimeseriesDataUpload from '@/components/Shared/TimeseriesDataUpload';
+  import wizardFormMixin from '@/mixins/wizardFormMixin';
+  import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
+  import associatedInputsMixin from '@/mixins/associatedInputsMixin';
+  import TechnologyMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsControllableLoad';
+  import { TS_CONTROLLABLE_LOAD_PROFILE as TS } from '@/models/Project/constants';
+  import '@/assets/samples/Sample_ControllableLoad_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_ControllableLoad_TimeSeries_8784.csv';
+
+  import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
+
+  const FIELDS = [];
+  const TS_FIELDS = [TS];
+  const ALL_FIELDS = [...FIELDS, ...TS_FIELDS];
+  const validations = [];
+
+  const CONSTANTS = {
+    DESTINATION_PATH,
+    FIELDS,
+    TS_FIELDS,
+  };
 
   export default {
-    components: { SaveButtons, TimeseriesDataUpload },
-    mixins: [csvUploadMixin],
+    // NOTE: the ordering of mixins below is intentional here; associatedInputs should be last
+    mixins: [csvUploadMixin, wizardFormMixin, associatedInputsMixin],
     props: ['id'],
     data() {
       return {
-        loadProfile: this.getloadProfile(),
-        WIZARD_COMPONENT_PATH,
+        metadata: this.getMetadata(TechnologyMetadata.getHardcodedMetadata(), ALL_FIELDS),
+        ...this.getAssociatedInputs(
+          TS_FIELDS,
+          this.$store.getters.getControllableLoadById(this.id).associatedInputs,
+        ),
+        ...this.getTSInputDefaultDataFromProject(TS_FIELDS),
+        ...this.getChildKeys(TS_FIELDS),
+        ...this.getUseExistingDefaults(TS_FIELDS),
+        CONSTANTS,
       };
     },
-    computed: {
-      tsData() {
-        if (this.inputTimeseries === null) {
-          return this.loadProfile;
-        }
-        return new SiteLoadTimeSeries(this.inputTimeseries);
-      },
-    },
-    methods: {
-      getloadProfile() {
-        const controllableLoadItem = this.$store.getters.getControllableLoadById(this.id);
-        return controllableLoadItem.load;
-      },
-      save() {
-        if (this.inputTimeseries !== null) {
-          const payload = this.makeSavePayload();
-          this.$store.dispatch(ADD_LOAD_PROFILE_TO_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD, payload);
-        }
-        const activePayload = this.makeSaveActivePayload();
-        this.$store.dispatch(ACTIVATE_TECH, activePayload);
-        this.$store.dispatch(MAKE_LIST_OF_ACTIVE_TECHNOLOGIES, this.$store.state.Project);
-      },
-      makeSaveActivePayload() {
-        return {
-          id: this.id,
-          tag: 'ControllableLoad',
-        };
-      },
-      makeSavePayload() {
-        return {
-          id: this.id,
-          loadProfile: this.tsData,
-        };
-      },
+    validations: {
+      ...validations,
     },
   };
 </script>
