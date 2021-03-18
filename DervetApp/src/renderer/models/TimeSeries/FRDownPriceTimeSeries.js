@@ -1,0 +1,12 @@
+import { TS_FR_DOWN_PRICE } from '@/models/Project/constants';
+import TimeSeriesBase from './TimeSeriesBase';
+
+class FRDownPriceTimeSeries extends TimeSeriesBase {
+  constructor(data) {
+    super('Reg Down Price ($/kW)', data);
+    this.pageAttributes = this.getPageAttributes('components', 'objectives', 'FR');
+    this.tsName = TS_FR_DOWN_PRICE;
+  }
+}
+
+export default FRDownPriceTimeSeries;

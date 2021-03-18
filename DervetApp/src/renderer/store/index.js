@@ -1,17 +1,18 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-
-import { createPersistedState, createSharedMutations } from 'vuex-electron';
+import createPersistedState from 'vuex-persistedstate';
 
 import modules from './modules';
 
 Vue.use(Vuex);
 
+const isDev = process.env.NODE_ENV !== 'production';
+
+const persistedStateSubset = createPersistedState({ paths: ['OpenEI'] });
+const fullPersistedState = createPersistedState();
+
 export default new Vuex.Store({
   modules,
-  plugins: [
-    createPersistedState(),
-    createSharedMutations(),
-  ],
-  strict: process.env.NODE_ENV !== 'production',
+  ...({ plugins: isDev ? [fullPersistedState] : [persistedStateSubset] }),
+  strict: isDev,
 });
