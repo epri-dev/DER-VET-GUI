@@ -1,11 +1,11 @@
-import { TS_USER_POWER_MAX } from '@/models/Project/constants';
+import { TS_USER_POWER_EXPORT_MAX } from '@/models/Project/constants';
 import TimeSeriesBase from './TimeSeriesBase';
 
-class UserPowerMaxTimeSeries extends TimeSeriesBase {
+class UserPowerExportMaxTimeSeries extends TimeSeriesBase {
   constructor(data) {
-    super('POI: max export (kW)', data);
+    super('POI: Max Export (kW)', data);
     this.pageAttributes = this.getPageAttributes('components', 'objectives', 'userDefined');
-    this.tsName = TS_USER_POWER_MAX;
+    this.tsName = TS_USER_POWER_EXPORT_MAX;
   }
 
   validate(expectedRowCount) {
@@ -19,4 +19,4 @@ class UserPowerMaxTimeSeries extends TimeSeriesBase {
   }
 }
 
-export default UserPowerMaxTimeSeries;
+export default UserPowerExportMaxTimeSeries;

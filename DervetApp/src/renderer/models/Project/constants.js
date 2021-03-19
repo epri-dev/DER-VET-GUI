@@ -89,10 +89,15 @@ export const TS_SYSTEM_LOAD = 'tsSystemLoad';
 export const TS_SYSTEM_FIELDS = [TS_SYSTEM_LOAD];
 export const TS_USER_ENERGY_MAX = 'tsUserEnergyMax';
 export const TS_USER_ENERGY_MIN = 'tsUserEnergyMin';
-export const TS_USER_POWER_MAX = 'tsUserPowerMax';
-export const TS_USER_POWER_MIN = 'tsUserPowerMin';
-export const TS_USER_DEFINED_FIELDS = [TS_USER_ENERGY_MAX, TS_USER_ENERGY_MIN,
-  TS_USER_POWER_MAX, TS_USER_POWER_MIN];
+export const TS_USER_POWER_EXPORT_MAX = 'tsUserPowerExportMax';
+export const TS_USER_POWER_EXPORT_MIN = 'tsUserPowerExportMin';
+export const TS_USER_POWER_IMPORT_MAX = 'tsUserPowerImportMax';
+export const TS_USER_POWER_IMPORT_MIN = 'tsUserPowerImportMin';
+export const TS_USER_DEFINED_FIELDS = [
+  TS_USER_ENERGY_MAX, TS_USER_ENERGY_MIN,
+  TS_USER_POWER_EXPORT_MAX, TS_USER_POWER_EXPORT_MIN,
+  TS_USER_POWER_IMPORT_MAX, TS_USER_POWER_IMPORT_MIN,
+];
 // technology timeseries
 export const TS_SOLARPV_GENERATION_PROFILE = 'tsSolarPVGenerationProfile';
 export const TS_CONTROLLABLE_LOAD_PROFILE = 'tsControllableLoadProfile';

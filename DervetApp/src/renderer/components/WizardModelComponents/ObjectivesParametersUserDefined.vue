@@ -11,30 +11,58 @@
       </text-input>
 
       <timeseries-data-upload
-        chart-name="tsUserPowerMaxChartUploaded"
+        chart-name="tsUserPowerExportMaxChartUploaded"
         @click="receiveRemove"
-        :DataModel="metadata.tsUserPowerMax.DataModel"
-        :data-name="metadata.tsUserPowerMax.displayName"
-        :data-time-series="tsData('tsUserPowerMax')"
-        :errorMessage="getErrorMsgTS('tsUserPowerMax')"
-        :isInvalid="submitted && tsData('tsUserPowerMax').data.length === 0"
+        :DataModel="metadata.tsUserPowerExportMax.DataModel"
+        :data-name="metadata.tsUserPowerExportMax.displayName"
+        :data-time-series="tsData('tsUserPowerExportMax')"
+        :errorMessage="getErrorMsgTS('tsUserPowerExportMax')"
+        :isInvalid="submitted && tsData('tsUserPowerExportMax').data.length === 0"
         @input="receiveUseExisting"
-        :key="childKey('tsUserPowerMax')"
-        object-name="tsUserPowerMax"
+        :key="childKey('tsUserPowerExportMax')"
+        object-name="tsUserPowerExportMax"
         @uploaded="receiveTimeseriesData"
       />
 
       <timeseries-data-upload
-        chart-name="tsUserPowerMinChartUploaded"
+        chart-name="tsUserPowerExportMinChartUploaded"
         @click="receiveRemove"
-        :DataModel="metadata.tsUserPowerMin.DataModel"
-        :data-name="metadata.tsUserPowerMin.displayName"
-        :data-time-series="tsData('tsUserPowerMin')"
-        :errorMessage="getErrorMsgTS('tsUserPowerMin')"
-        :isInvalid="submitted && tsData('tsUserPowerMin').data.length === 0"
+        :DataModel="metadata.tsUserPowerExportMin.DataModel"
+        :data-name="metadata.tsUserPowerExportMin.displayName"
+        :data-time-series="tsData('tsUserPowerExportMin')"
+        :errorMessage="getErrorMsgTS('tsUserPowerExportMin')"
+        :isInvalid="submitted && tsData('tsUserPowerExportMin').data.length === 0"
         @input="receiveUseExisting"
-        :key="childKey('tsUserPowerMin')"
-        object-name="tsUserPowerMin"
+        :key="childKey('tsUserPowerExportMin')"
+        object-name="tsUserPowerExportMin"
+        @uploaded="receiveTimeseriesData"
+      />
+
+      <timeseries-data-upload
+        chart-name="tsUserPowerImportMaxChartUploaded"
+        @click="receiveRemove"
+        :DataModel="metadata.tsUserPowerImportMax.DataModel"
+        :data-name="metadata.tsUserPowerImportMax.displayName"
+        :data-time-series="tsData('tsUserPowerImportMax')"
+        :errorMessage="getErrorMsgTS('tsUserPowerImportMax')"
+        :isInvalid="submitted && tsData('tsUserPowerImportMax').data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('tsUserPowerImportMax')"
+        object-name="tsUserPowerImportMax"
+        @uploaded="receiveTimeseriesData"
+      />
+
+      <timeseries-data-upload
+        chart-name="tsUserPowerImportMinChartUploaded"
+        @click="receiveRemove"
+        :DataModel="metadata.tsUserPowerImportMin.DataModel"
+        :data-name="metadata.tsUserPowerImportMin.displayName"
+        :data-time-series="tsData('tsUserPowerImportMin')"
+        :errorMessage="getErrorMsgTS('tsUserPowerImportMin')"
+        :isInvalid="submitted && tsData('tsUserPowerImportMin').data.length === 0"
+        @input="receiveUseExisting"
+        :key="childKey('tsUserPowerImportMin')"
+        object-name="tsUserPowerImportMin"
         @uploaded="receiveTimeseriesData"
       />
 
@@ -86,10 +114,14 @@
   import '@/assets/samples/Sample_UserEnergyMax_TimeSeries_8784.csv';
   import '@/assets/samples/Sample_UserEnergyMin_TimeSeries_8760.csv';
   import '@/assets/samples/Sample_UserEnergyMin_TimeSeries_8784.csv';
-  import '@/assets/samples/Sample_UserPowerMax_TimeSeries_8760.csv';
-  import '@/assets/samples/Sample_UserPowerMax_TimeSeries_8784.csv';
-  import '@/assets/samples/Sample_UserPowerMin_TimeSeries_8760.csv';
-  import '@/assets/samples/Sample_UserPowerMin_TimeSeries_8784.csv';
+  import '@/assets/samples/Sample_UserPowerExportMax_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_UserPowerExportMax_TimeSeries_8784.csv';
+  import '@/assets/samples/Sample_UserPowerExportMin_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_UserPowerExportMin_TimeSeries_8784.csv';
+  import '@/assets/samples/Sample_UserPowerImportMax_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_UserPowerImportMax_TimeSeries_8784.csv';
+  import '@/assets/samples/Sample_UserPowerImportMin_TimeSeries_8760.csv';
+  import '@/assets/samples/Sample_UserPowerImportMin_TimeSeries_8784.csv';
 
   import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
 

@@ -23,8 +23,10 @@ import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
 import SystemLoadTimeSeries from '@/models/TimeSeries/SystemLoadTimeSeries';
 import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
 import UserEnergyMinTimeSeries from '@/models/TimeSeries/UserEnergyMinTimeSeries';
-import UserPowerMaxTimeSeries from '@/models/TimeSeries/UserPowerMaxTimeSeries';
-import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
+import UserPowerExportMaxTimeSeries from '@/models/TimeSeries/UserPowerExportMaxTimeSeries';
+import UserPowerExportMinTimeSeries from '@/models/TimeSeries/UserPowerExportMinTimeSeries';
+import UserPowerImportMaxTimeSeries from '@/models/TimeSeries/UserPowerImportMaxTimeSeries';
+import UserPowerImportMinTimeSeries from '@/models/TimeSeries/UserPowerImportMinTimeSeries';
 
 import BackupEnergyPriceMonthly from '@/models/Monthly/BackupEnergyPriceMonthly';
 import BackupEnergyReservationMonthly from '@/models/Monthly/BackupEnergyReservationMonthly';
@@ -680,15 +682,25 @@ export class ProjectMetadata {
         displayName: 'minimum energy',
         actionSetName: a.SET_USER_ENERGY_MIN,
       }),
-      [c.TS_USER_POWER_MAX]: new ProjectFieldMetadata({
-        DataModel: UserPowerMaxTimeSeries,
-        displayName: 'maximum power',
-        actionSetName: a.SET_USER_POWER_MAX,
+      [c.TS_USER_POWER_EXPORT_MAX]: new ProjectFieldMetadata({
+        DataModel: UserPowerExportMaxTimeSeries,
+        displayName: 'maximum power export',
+        actionSetName: a.SET_USER_POWER_EXPORT_MAX,
       }),
-      [c.TS_USER_POWER_MIN]: new ProjectFieldMetadata({
-        DataModel: UserPowerMinTimeSeries,
-        displayName: 'minimum power',
-        actionSetName: a.SET_USER_POWER_MIN,
+      [c.TS_USER_POWER_EXPORT_MIN]: new ProjectFieldMetadata({
+        DataModel: UserPowerExportMinTimeSeries,
+        displayName: 'minimum power export',
+        actionSetName: a.SET_USER_POWER_EXPORT_MIN,
+      }),
+      [c.TS_USER_POWER_IMPORT_MAX]: new ProjectFieldMetadata({
+        DataModel: UserPowerImportMaxTimeSeries,
+        displayName: 'maximum power import',
+        actionSetName: a.SET_USER_POWER_IMPORT_MAX,
+      }),
+      [c.TS_USER_POWER_IMPORT_MIN]: new ProjectFieldMetadata({
+        DataModel: UserPowerImportMinTimeSeries,
+        displayName: 'minimum power import',
+        actionSetName: a.SET_USER_POWER_IMPORT_MIN,
       }),
       // mts: monthly timeseries
       [c.MTS_BACKUP_ENERGY_PRICE]: new ProjectFieldMetadata({

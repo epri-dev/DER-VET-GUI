@@ -10,8 +10,8 @@ import NSRPriceTimeSeries from '@/models/TimeSeries/NSRPriceTimeSeries';
 import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
 import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
 import UserEnergyMinTimeSeries from '@/models/TimeSeries/UserEnergyMinTimeSeries';
-import UserPowerMaxTimeSeries from '@/models/TimeSeries/UserPowerMaxTimeSeries';
-import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
+import UserPowerExportMaxTimeSeries from '@/models/TimeSeries/UserPowerExportMaxTimeSeries';
+import UserPowerExportMinTimeSeries from '@/models/TimeSeries/UserPowerExportMinTimeSeries';
 
 import csvs from './csvs';
 
@@ -221,8 +221,8 @@ export const projectFixture = {
   timestep: 60,
   tsUserEnergyMax: new UserEnergyMaxTimeSeries(_.fill(Array(8760), 9000)),
   tsUserEnergyMin: new UserEnergyMinTimeSeries(_.fill(Array(8760), 0)),
-  tsUserPowerMax: new UserPowerMaxTimeSeries(_.fill(Array(8760), 1900)),
-  tsUserPowerMin: new UserPowerMinTimeSeries(_.fill(Array(8760), -1900)),
+  tsUserPowerExportMax: new UserPowerExportMaxTimeSeries(_.fill(Array(8760), 1900)),
+  tsUserPowerExportMin: new UserPowerExportMinTimeSeries(_.fill(Array(8760), -1900)),
 };
 
 export const getProjectFixture = (inputsDir, resultsDir) => {
