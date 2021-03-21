@@ -28,7 +28,7 @@ class DataArray {
   errorMsgInvalidDataCustom(customErrorMsg, firstOccurrenceRowNum = undefined) {
     // return a String containing the error message
     const firstRowViolation = firstOccurrenceRowNum
-      ? `This first occurs on row ${firstOccurrenceRowNum}`
+      ? `This violation first occurs on row ${firstOccurrenceRowNum}`
       : '';
     return `<b>Invalid Data:</b> This file has ${customErrorMsg}${firstRowViolation}`;
   }

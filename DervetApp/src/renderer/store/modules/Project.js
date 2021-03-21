@@ -767,11 +767,17 @@ const mutations = {
   [m.SET_USER_ENERGY_MIN](state, payload) {
     state[c.TS_USER_ENERGY_MIN] = payload;
   },
-  [m.SET_USER_POWER_MAX](state, payload) {
-    state[c.TS_USER_POWER_MAX] = payload;
+  [m.SET_USER_POWER_EXPORT_MAX](state, payload) {
+    state[c.TS_USER_POWER_EXPORT_MAX] = payload;
   },
-  [m.SET_USER_POWER_MIN](state, payload) {
-    state[c.TS_USER_POWER_MIN] = payload;
+  [m.SET_USER_POWER_EXPORT_MIN](state, payload) {
+    state[c.TS_USER_POWER_EXPORT_MIN] = payload;
+  },
+  [m.SET_USER_POWER_IMPORT_MAX](state, payload) {
+    state[c.TS_USER_POWER_IMPORT_MAX] = payload;
+  },
+  [m.SET_USER_POWER_IMPORT_MIN](state, payload) {
+    state[c.TS_USER_POWER_IMPORT_MIN] = payload;
   },
   [m.SET_USER_PRICE](state, payload) {
     state[c.USER_PRICE] = payload;
@@ -1275,11 +1281,17 @@ const actions = {
   [a.SET_USER_ENERGY_MIN]({ commit }, payload) {
     commit(m.SET_USER_ENERGY_MIN, payload);
   },
-  [a.SET_USER_POWER_MAX]({ commit }, payload) {
-    commit(m.SET_USER_POWER_MAX, payload);
+  [a.SET_USER_POWER_EXPORT_MAX]({ commit }, payload) {
+    commit(m.SET_USER_POWER_EXPORT_MAX, payload);
   },
-  [a.SET_USER_POWER_MIN]({ commit }, payload) {
-    commit(m.SET_USER_POWER_MIN, payload);
+  [a.SET_USER_POWER_EXPORT_MIN]({ commit }, payload) {
+    commit(m.SET_USER_POWER_EXPORT_MIN, payload);
+  },
+  [a.SET_USER_POWER_IMPORT_MAX]({ commit }, payload) {
+    commit(m.SET_USER_POWER_IMPORT_MAX, payload);
+  },
+  [a.SET_USER_POWER_IMPORT_MIN]({ commit }, payload) {
+    commit(m.SET_USER_POWER_IMPORT_MIN, payload);
   },
   [a.SET_USER_PRICE]({ commit }, payload) {
     commit(m.SET_USER_PRICE, payload);
