@@ -10,6 +10,17 @@
                   :errorMessage="getErrorMsg('userPrice')">
       </text-input>
 
+      <div v-if="submitted && isTSError" class="error-text-color">
+        <br>
+        {{ GENERIC_TS_ERROR_MSG }}
+        <br>
+      </div>
+      <div v-if="submitted && isInfeasible" class="error-text-color">
+        <br>
+        <span v-html="infeasiblePowerExport.errorMsg"></span>
+        <br>
+      </div>
+
       <timeseries-data-upload
         chart-name="tsUserPowerExportMaxChartUploaded"
         @click="receiveRemove"
@@ -17,7 +28,7 @@
         :data-name="metadata.tsUserPowerExportMax.displayName"
         :data-time-series="tsData('tsUserPowerExportMax')"
         :errorMessage="getErrorMsgTS('tsUserPowerExportMax')"
-        :isInvalid="submitted && tsData('tsUserPowerExportMax').data.length === 0"
+        :isInvalid="false"
         @input="receiveUseExisting"
         :key="childKey('tsUserPowerExportMax')"
         object-name="tsUserPowerExportMax"
@@ -31,7 +42,7 @@
         :data-name="metadata.tsUserPowerExportMin.displayName"
         :data-time-series="tsData('tsUserPowerExportMin')"
         :errorMessage="getErrorMsgTS('tsUserPowerExportMin')"
-        :isInvalid="submitted && tsData('tsUserPowerExportMin').data.length === 0"
+        :isInvalid="false"
         @input="receiveUseExisting"
         :key="childKey('tsUserPowerExportMin')"
         object-name="tsUserPowerExportMin"
@@ -45,7 +56,7 @@
         :data-name="metadata.tsUserPowerImportMax.displayName"
         :data-time-series="tsData('tsUserPowerImportMax')"
         :errorMessage="getErrorMsgTS('tsUserPowerImportMax')"
-        :isInvalid="submitted && tsData('tsUserPowerImportMax').data.length === 0"
+        :isInvalid="false"
         @input="receiveUseExisting"
         :key="childKey('tsUserPowerImportMax')"
         object-name="tsUserPowerImportMax"
@@ -59,7 +70,7 @@
         :data-name="metadata.tsUserPowerImportMin.displayName"
         :data-time-series="tsData('tsUserPowerImportMin')"
         :errorMessage="getErrorMsgTS('tsUserPowerImportMin')"
-        :isInvalid="submitted && tsData('tsUserPowerImportMin').data.length === 0"
+        :isInvalid="false"
         @input="receiveUseExisting"
         :key="childKey('tsUserPowerImportMin')"
         object-name="tsUserPowerImportMin"
@@ -73,7 +84,7 @@
         :data-name="metadata.tsUserEnergyMax.displayName"
         :data-time-series="tsData('tsUserEnergyMax')"
         :errorMessage="getErrorMsgTS('tsUserEnergyMax')"
-        :isInvalid="submitted && tsData('tsUserEnergyMax').data.length === 0"
+        :isInvalid="false"
         @input="receiveUseExisting"
         :key="childKey('tsUserEnergyMax')"
         object-name="tsUserEnergyMax"
@@ -87,7 +98,7 @@
         :data-name="metadata.tsUserEnergyMin.displayName"
         :data-time-series="tsData('tsUserEnergyMin')"
         :errorMessage="getErrorMsgTS('tsUserEnergyMin')"
-        :isInvalid="submitted && tsData('tsUserEnergyMin').data.length === 0"
+        :isInvalid="false"
         @input="receiveUseExisting"
         :key="childKey('tsUserEnergyMin')"
         object-name="tsUserEnergyMin"
@@ -106,6 +117,8 @@
 </template>
 
 <script>
+  import filter from 'lodash/filter';
+  import flatten from 'lodash/flatten';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import { projectMetadata } from '@/models/Project/ProjectMetadata';
@@ -134,6 +147,8 @@
   const ALL_FIELDS = [...FIELDS, ...TS_FIELDS];
   const validations = projectMetadata.getValidationSchema(FIELDS);
 
+  const GENERIC_TS_ERROR_MSG = 'Data for at least 1 User-Defined time series field are required';
+
   const CONSTANTS = {
     DESTINATION_PATH,
     PAGEGROUP,
@@ -153,25 +168,73 @@
         ...this.getChildKeys(TS_FIELDS),
         ...this.getUseExistingDefaults(TS_FIELDS),
         CONSTANTS,
+        GENERIC_TS_ERROR_MSG,
       };
     },
     validations: {
       ...validations,
     },
     computed: {
+      infeasibleErrorList() {
+        return filter([
+          this.infeasiblePowerExport.errorListMsg,
+        ], null);
+      },
+      infeasiblePowerExport() {
+        return this.tsData('tsUserPowerExportMax')
+          .infeasibleCheckMaxMustExceedMin(this.tsData('tsUserPowerExportMin'));
+      },
+      isInfeasible() {
+        return this.infeasibleErrorList !== [];
+      },
       isRequiredTSFields() {
         // return an object of booleans for every TS_FIELD,
         //   indicating if each is required
         const isRequiredObject = {};
+        // const isOneRequiredTS = false;
         (TS_FIELDS).forEach((tsField) => {
-          isRequiredObject[tsField] = true;
+          // only 1 TS is required, of 6 possible
+          // have all TS that are valid be required=true,
+          if (this[tsField].data.length !== 0
+            || (this.tsData(tsField).data.length !== 0
+            && this[this.useExistingField(tsField)])) {
+            isRequiredObject[tsField] = true;
+          } else {
+            isRequiredObject[tsField] = false;
+          }
         });
+        // if no TS are valid, then have the first one that appears on the page required=true
+        if (Object.values(isRequiredObject).every(item => item === false)) {
+          isRequiredObject[TS_FIELDS[2]] = true;
+        }
         return isRequiredObject;
       },
     },
     methods: {
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
+      },
+      getInfeasibleListPayload() {
+        const errors = this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE];
+        errors.push(this.infeasibleErrorList);
+        return {
+          pageGroup: PAGEGROUP,
+          pageKey: PAGEKEY,
+          page: PAGE,
+          errorList: flatten(errors),
+        };
+      },
+      // have a generic Project error message for any TS on this page
+      //   since at least 1 is required
+      requiredDataLabel() {
+        return GENERIC_TS_ERROR_MSG;
+      },
+      validatedSave() {
+        csvUploadMixin.methods.validatedSave.bind(this)();
+        // append any infeasibilities found to errorList for this page
+        if (this.isInfeasible) {
+          this.$store.dispatch('Application/setErrorList', this.getInfeasibleListPayload());
+        }
       },
     },
   };

@@ -1,6 +1,7 @@
 import { isNumeric } from '@/util/logic';
 
 const noErrorObject = { errorMsg: null };
+const noInfeasibleErrorObject = { errorMsg: null, errorListMsg: null };
 
 class DataArray {
   // class that describes a 2-D data structure (an array of arrays)
@@ -30,7 +31,13 @@ class DataArray {
     const firstRowViolation = firstOccurrenceRowNum
       ? `This violation first occurs on row ${firstOccurrenceRowNum}`
       : '';
-    return `<b>Invalid Data:</b> This file has ${customErrorMsg}${firstRowViolation}`;
+    return `${customErrorMsg}${firstRowViolation}`;
+  }
+
+  errorMsgInfeasibleRows(violationName, invalidRows) {
+    // return a String containing the error message
+    const rows = (invalidRows.length === 1) ? 'Row' : 'Rows';
+    return `<b>${invalidRows.length} Infeasible ${rows}:</b> ${violationName} : [${this.arrayDisplayFirstFifteen(invalidRows)}]`;
   }
 
   errorMsgInvalidRows(violationName, invalidRows) {
@@ -58,9 +65,31 @@ class DataArray {
     return (unitMatchObject) ? (unitMatchObject[1] || '') : '';
   }
 
+  // infeasibleCheck methods return noInfeasibleErrorObject when no violations are found
+  //   otherwise, they return an object that contains an errorMsg describing
+  //   the error and an array with row numbers for each violation
+  //   additionally they return an errorListMsg for the Summary page
+  // NOTE: row numbers start with 1
+  // TODO: AE: these checks are not performant, and should be removed or replaced
+
+  infeasibleCheckMaxMustExceedMin(minTS) {
+    if (this.length() !== minTS.length()) return noInfeasibleErrorObject;
+    const infeasibleRows = this.data.reduce((a, val, i) => {
+      if (val < minTS.data[i]) a.push(i + 1);
+      return a;
+    }, []);
+    if (infeasibleRows.length === 0) return noInfeasibleErrorObject;
+    const violationName = `For all times, values in <b>${minTS.columnHeaderName}</b> must not exceed those in <b>${this.columnHeaderName}</b>`;
+    const errorListMsg = `Infeasible timeseries data: ${minTS.columnHeaderName} and ${this.columnHeaderName}`;
+    return {
+      errorMsg: this.errorMsgInfeasibleRows(violationName, infeasibleRows),
+      errorListMsg,
+    };
+  }
+
   // invalidCheck methods return noErrorObject when no violations are found
   //   otherwise, they return an object that contains an errorMsg describing
-  //   the error along with an array with row numbers for each violation
+  //   the error and an array with row numbers for each violation
   // NOTE: row numbers start with 1
   // NOTE: these methods may need to be reconsidered if they hamper performance
 
@@ -147,7 +176,7 @@ class DataArray {
     }, []);
     if (invalidRows.length === 0) return noErrorObject;
     const firstOccurrence = invalidRows[0];
-    const customErrorMsg = 'both positive and negative values. It must have only positive, or only negative values as it constrains power in one direction. ';
+    const customErrorMsg = '<b>Invalid Data:</b> This file has both positive and negative values. It must have only positive, or only negative values as it constrains power in one direction. ';
     return {
       errorMsg: this.errorMsgInvalidDataCustom(customErrorMsg, firstOccurrence),
     };
