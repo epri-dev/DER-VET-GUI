@@ -81,9 +81,6 @@
     },
     methods: {
       isCompleteOverview(page) {
-        // console.log(page);
-        // console.log(this.$store.state.Application.errorList.overview[page]);
-        // console.log(!this.$store.state.Application.pageCompleteness.overview[page]);
         return !this.$store.state.Application.pageCompleteness.overview[page];
       },
       isCurrent(path) {

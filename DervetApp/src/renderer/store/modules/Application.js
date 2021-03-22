@@ -77,7 +77,6 @@ const mutations = {
     state.runInProgress = true;
   },
   [m.SET_RUN_NOT_IN_PROGRESS](state) {
-    console.log('run ended');
     state.runInProgress = false;
   },
   [m.SET_RESULT_SUCCESS](state) {

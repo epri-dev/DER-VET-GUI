@@ -93,10 +93,13 @@
       complete() {
         return this.$store.state.Application.pageCompleteness.overview[PAGE];
       },
+      activeBatteryExists() {
+        return this.$store.getters.activeBatteryExists;
+      },
     },
     methods: {
       addTech(metadata) {
-        const defaultValues = metadata.getDefaultValues();
+        const defaultValues = metadata.getDefaultValues(this.activeBatteryExists);
         this.$store.dispatch(ADD_TECH, defaultValues);
         this.activateTech(defaultValues);
       },

@@ -8,7 +8,6 @@ export default class DispatchData {
     this.data = data;
     this.traceNames = traceNames;
     this.dateTime = this.findDataLabel(this.traceNames.timeSeries);
-    console.log(`${this.dateTime[25]}`);
     // booleans that indicate which charts/data traces will be included
     this.netLoadIncluded = true;
     this.energyPriceIncluded = true;
@@ -61,7 +60,6 @@ export default class DispatchData {
   }
 
   setCurrentWindow(windowSize, newStart = null, newEnd = null) {
-    console.log(windowSize);
     // if windowSize is different, then reset start and end indices to match
     if (this.windowSize !== windowSize) {
       let startMoment;
@@ -84,7 +82,6 @@ export default class DispatchData {
   }
 
   previous(currStartDate, currEndDate, windowSize) {
-    console.log(`prev - ${[currStartDate, currEndDate]}`);
     const endMoment = moment(currStartDate);
     // find start moment
     // increment nackward from current end date (js date type) according to window size
@@ -95,7 +92,6 @@ export default class DispatchData {
       const daysDiff = moment(currStartDate).diff(moment(currEndDate), 'days');
       startMoment = moment(endMoment).subtract(daysDiff, 'd');
     } else {
-      console.log(`windowSize: ${windowSize}`);
       startMoment = moment(endMoment).subtract(1, windowSize);
     }
     this.setCurrentIndices(startMoment, endMoment);
@@ -103,7 +99,6 @@ export default class DispatchData {
   }
 
   next(currStartDate, currEndDate, windowSize) {
-    console.log(`next - ${[currStartDate, currEndDate]}`);
     const startMoment = moment(currEndDate);
     // find end moment
     // increment current start date (js date type) according to window size
@@ -114,7 +109,6 @@ export default class DispatchData {
       const daysDiff = moment(currStartDate).diff(moment(currEndDate), 'days');
       endMoment = moment(startMoment).add(daysDiff, 'd');
     } else {
-      console.log(windowSize);
       endMoment = moment(startMoment).add(1, windowSize);
     }
     this.setCurrentIndices(startMoment, endMoment);
@@ -122,8 +116,6 @@ export default class DispatchData {
   }
 
   setCurrentIndices(startMoment, endMoment) {
-    console.log(`start: ${startMoment.format(DispatchData.dateFormat())}`);
-    console.log(`end: ${endMoment.format(DispatchData.dateFormat())}`);
     // find start index
     const newStartIndex = this.timeSeriesIndexOf(startMoment);
     // find end index
@@ -136,8 +128,6 @@ export default class DispatchData {
       this.currentStartIndex = newStartIndex;
       this.currentEndIndex = newEndIndex;
     }
-    console.log(`startIndex: ${newStartIndex}`);
-    console.log(`endIndex: ${newEndIndex}`);
   }
 
   indexToMoment(index) {
@@ -169,7 +159,6 @@ export default class DispatchData {
 
   timeSeriesIndexOf(date) {
     const stringDate = date.format(DispatchData.dateFormat());
-    console.log(`indexof: ${stringDate}`);
     return indexOf(this.dateTime, stringDate);
   }
 

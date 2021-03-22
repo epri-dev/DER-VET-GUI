@@ -1,11 +1,17 @@
-import { cloneDeep, flatten, merge } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import each from 'lodash/each';
+import filter from 'lodash/filter';
+import flatten from 'lodash/flatten';
+import isEmpty from 'lodash/isEmpty';
+import merge from 'lodash/merge';
 
 import { billReductionProject } from '@/assets/cases/billReduction/project';
 import { reliabilityProject } from '@/assets/cases/reliability/project';
 import { dummyMarketServiceHourly } from '@/assets/cases/dummyMarketServiceHourly/project';
 import { ERCOTMarketService } from '@/assets/cases/ERCOTMarketService/project';
-import { projectMetadata } from '@/models/Project/ProjectMetadata';
 import { makeDatetimeIndex } from '@/models/dto/ProjectDto';
+import { projectMetadata } from '@/models/Project/ProjectMetadata';
+import { LOC, LocType } from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
 import * as m from '@/store/mutationTypes';
 import * as a from '@/store/actionTypes';
 import * as c from '@/models/Project/constants';
@@ -65,6 +71,12 @@ const getters = {
   getBatterySpecsClone(state) {
     return () => cloneDeep(state.technologySpecsBattery);
   },
+  getIndexOfBatteryId(state) {
+    return id => state.technologySpecsBattery.findIndex(x => x.id === id);
+  },
+  activeBatteryExists(state) {
+    return !isEmpty(filter(state.technologySpecsBattery, batt => batt.active));
+  },
   getDieselGenById(state) {
     return id => state.technologySpecsDieselGen.find(x => x.id === id);
   },
@@ -82,9 +94,6 @@ const getters = {
   },
   getICESpecsClone(state) {
     return () => cloneDeep(state.technologySpecsICE);
-  },
-  getIndexOfBatteryId(state) {
-    return id => state.technologySpecsBattery.findIndex(x => x.id === id);
   },
   getIndexOfBillingPeriodId(state) {
     return id => state.retailTariffBillingPeriods.findIndex(x => x.id === id);
@@ -718,6 +727,9 @@ const mutations = {
     const indexMatchingId = getters.getIndexOfBatteryId(state)(payload.id);
     state.technologySpecsBattery.splice(indexMatchingId, 1);
   },
+  [m.SET_ALL_VALUES_IN_TECH](state, { techType, key, value }) {
+    each(state[techType], tech => { tech[key] = value; });
+  },
   [m.REMOVE_TECH_CONTROLLABLE_LOAD](state, payload) {
     const indexMatchingId = getters.getIndexOfControllableLoadId(state)(payload.id);
     state.technologySpecsControllableLoad.splice(indexMatchingId, 1);
@@ -1155,7 +1167,7 @@ const actions = {
     commit(m.SET_SYSTEM_LOAD, payload);
   },
   // technology specs
-  [a.ACTIVATE_TECH]({ commit }, payload) {
+  [a.ACTIVATE_TECH]({ commit, getters }, payload) {
     if (payload.tag === 'ICE') {
       commit(m.ACTIVATE_TECH_ICE, payload);
     }
@@ -1166,6 +1178,14 @@ const actions = {
       commit(m.ACTIVATE_TECH_SOLAR_PV, payload);
     }
     if (payload.tag === 'Battery') {
+      if (!getters.activeBatteryExists) {
+        const setValsPayload = {
+          techType: 'technologySpecsSolarPV',
+          key: LOC,
+          value: null,
+        };
+        commit(m.SET_ALL_VALUES_IN_TECH, setValsPayload);
+      }
       commit(m.ACTIVATE_TECH_BATTERY, payload);
     }
     if (payload.tag === 'ControllableLoad') {
@@ -1178,7 +1198,7 @@ const actions = {
       commit(m.ACTIVATE_TECH_FLEET_EV, payload);
     }
   },
-  [a.ADD_TECH]({ commit }, payload) {
+  [a.ADD_TECH]({ commit, getters }, payload) {
     if (payload.tag === 'ICE') {
       commit(m.ADD_TECHNOLOGY_SPECS_ICE, payload);
     }
@@ -1189,6 +1209,14 @@ const actions = {
       commit(m.ADD_TECHNOLOGY_SPECS_SOLAR_PV, payload);
     }
     if (payload.tag === 'Battery') {
+      if (!getters.activeBatteryExists) {
+        const setValsPayload = {
+          techType: 'technologySpecsSolarPV',
+          key: LOC,
+          value: null,
+        };
+        commit(m.SET_ALL_VALUES_IN_TECH, setValsPayload);
+      }
       commit(m.ADD_TECHNOLOGY_SPECS_BATTERY, payload);
     }
     if (payload.tag === 'ControllableLoad') {
@@ -1201,7 +1229,7 @@ const actions = {
       commit(m.ADD_TECHNOLOGY_SPECS_FLEET_EV, payload);
     }
   },
-  [a.DEACTIVATE_TECH]({ commit }, payload) {
+  [a.DEACTIVATE_TECH]({ commit, getters }, payload) {
     if (payload.tag === 'ICE') {
       commit(m.DEACTIVATE_TECH_ICE, payload);
     }
@@ -1213,6 +1241,14 @@ const actions = {
     }
     if (payload.tag === 'Battery') {
       commit(m.DEACTIVATE_TECH_BATTERY, payload);
+      if (!getters.activeBatteryExists) {
+        const setValsPayload = {
+          techType: 'technologySpecsSolarPV',
+          key: LOC,
+          value: LocType.AC,
+        };
+        commit(m.SET_ALL_VALUES_IN_TECH, setValsPayload);
+      }
     }
     if (payload.tag === 'ControllableLoad') {
       commit(m.DEACTIVATE_TECH_CONTROLLABLE_LOAD, payload);
@@ -1244,7 +1280,7 @@ const actions = {
   [a.REPLACE_LIST_FIELD]({ commit }, payload) {
     commit(m.REPLACE_LIST_FIELD, payload);
   },
-  [a.REMOVE_TECH]({ commit }, payload) {
+  [a.REMOVE_TECH]({ commit, getters }, payload) {
     if (payload.tag === 'ICE') {
       commit(m.REMOVE_TECH_ICE, payload);
     } else if (payload.tag === 'DieselGen') {
@@ -1253,6 +1289,14 @@ const actions = {
       commit(m.REMOVE_TECH_SOLAR_PV, payload);
     } else if (payload.tag === 'Battery') {
       commit(m.REMOVE_TECH_BATTERY, payload);
+      if (!getters.activeBatteryExists) {
+        const setValsPayload = {
+          techType: 'technologySpecsSolarPV',
+          key: LOC,
+          value: LocType.AC,
+        };
+        commit(m.SET_ALL_VALUES_IN_TECH, setValsPayload);
+      }
     } else if (payload.tag === 'ControllableLoad') {
       commit(m.REMOVE_TECH_CONTROLLABLE_LOAD, payload);
     } else if (payload.tag === 'ElectricVehicle1') {
