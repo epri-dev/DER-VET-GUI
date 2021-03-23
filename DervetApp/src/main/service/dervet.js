@@ -7,6 +7,7 @@ import log from 'electron-log';
 import { parseCsvFromFile, writeCsvToFile, writeJsonToFile } from '../util/file';
 
 const DERVET_SCRIPT_NAME = 'run_DERVET';
+let PYTHON_PROCESS = null;
 
 const writeCsvsToFile = csvs => (
   csvs.map(({ filePath, csv }) => writeCsvToFile(filePath, csv))
@@ -70,17 +71,16 @@ const listenForExit = pythonProcess => (
   })
 );
 
-export const exitPythonProcess = (pythonProcess) => {
-  if (pythonProcess) {
-    pythonProcess.kill();
-    pythonProcess = null;
+export const exitPythonProcess = () => {
+  if (PYTHON_PROCESS !== null) {
+    PYTHON_PROCESS.kill();
+    PYTHON_PROCESS = null;
   }
 };
 
 export const callDervet = (modelParametersPath) => {
   console.log('Spawning DERVET subprocess...'); // eslint-disable-line
 
-  let pythonProcess = null;
   const pythonExe = getPythonExe();
 
   // getPythonExe is used to determine whether this code is running within the
@@ -88,14 +88,14 @@ export const callDervet = (modelParametersPath) => {
   // in the expected directory, we assume we are running in the development
   // environment and the raw python code is called.
   if (pythonExeExists(pythonExe)) {
-    pythonProcess = spawnPackagedPythonProcess(pythonExe, modelParametersPath);
+    PYTHON_PROCESS = spawnPackagedPythonProcess(pythonExe, modelParametersPath);
   } else {
-    pythonProcess = spawnDevPythonProcess(modelParametersPath);
+    PYTHON_PROCESS = spawnDevPythonProcess(modelParametersPath);
   } // TODO handle case where neither executable nor source exists
 
-  if (pythonProcess != null) {
-    listenToPythonProcessLogs(pythonProcess);
-    return listenForExit(pythonProcess);
+  if (PYTHON_PROCESS != null) {
+    listenToPythonProcessLogs(PYTHON_PROCESS);
+    return listenForExit(PYTHON_PROCESS);
   }
   return new Promise((_, reject) => { reject(new Error('Failed to spawn python process')); });
 };
