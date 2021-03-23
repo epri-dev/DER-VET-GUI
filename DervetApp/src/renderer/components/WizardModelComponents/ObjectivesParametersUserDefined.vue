@@ -17,7 +17,7 @@
       </div>
       <div v-if="submitted && isInfeasible" class="error-text-color">
         <br>
-        <span v-html="infeasiblePowerExport.errorMsg"></span>
+        <span v-html="getInfeasibleErrorMsgs()"></span>
         <br>
       </div>
 
@@ -107,7 +107,7 @@
       <hr>
 
       <save-and-save-continue
-        :displayError="submitted && ($v.$anyError || isTSError)"
+        :displayError="submitted && ($v.$anyError || isTSError || isInfeasible)"
         :save="validatedSaveStay"
         :save-continue="validatedSaveContinue"
       />
@@ -176,16 +176,10 @@
     },
     computed: {
       infeasibleErrorList() {
-        return filter([
-          this.infeasiblePowerExport.errorListMsg,
-        ], null);
-      },
-      infeasiblePowerExport() {
-        return this.tsData('tsUserPowerExportMax')
-          .infeasibleCheckMaxMustExceedMin(this.tsData('tsUserPowerExportMin'));
+        return filter(this.userInfeasible.errorListMsg, null);
       },
       isInfeasible() {
-        return this.infeasibleErrorList !== [];
+        return this.infeasibleErrorList.length !== 0;
       },
       isRequiredTSFields() {
         // return an object of booleans for every TS_FIELD,
@@ -211,8 +205,16 @@
       },
     },
     methods: {
+      appendInfeasibleToErrorList() {
+        if (this.isInfeasible) {
+          this.$store.dispatch('Application/setErrorList', this.getInfeasibleListPayload());
+        }
+      },
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
+      },
+      getInfeasibleErrorMsgs() {
+        return this[TS_FIELDS[0]].formatErrorMsgArray(this.userInfeasible.errorMsg);
       },
       getInfeasibleListPayload() {
         const errors = this.$store.state.Application.errorList[PAGEGROUP][PAGEKEY][PAGE];
@@ -224,17 +226,48 @@
           errorList: flatten(errors),
         };
       },
-      // have a generic Project error message for any TS on this page
-      //   since at least 1 is required
+      infeasibleEnergy() {
+        return this.tsData('tsUserEnergyMax')
+          .infeasibleCheckMaxMustExceedMin(this.tsData('tsUserEnergyMin'));
+      },
+      infeasiblePowerExport() {
+        return this.tsData('tsUserPowerExportMax')
+          .infeasibleCheckMaxMustExceedMin(this.tsData('tsUserPowerExportMin'));
+      },
+      infeasiblePowerImport() {
+        return this.tsData('tsUserPowerImportMax')
+          .infeasibleCheckMaxMustExceedMin(this.tsData('tsUserPowerImportMin'));
+      },
+      infeasibleChecks() {
+        const infeasibleObject = { errorMsg: [], errorListMsg: [] };
+        const checks = [
+          this.infeasiblePowerExport(),
+          this.infeasiblePowerImport(),
+          this.infeasibleEnergy(),
+        ];
+        Object.values(checks).forEach((check) => {
+          infeasibleObject.errorMsg.push(check.errorMsg);
+          infeasibleObject.errorListMsg.push(check.errorListMsg);
+        });
+        return infeasibleObject;
+      },
+      receiveRemove(payload) {
+        csvUploadMixin.methods.receiveRemove.bind(this)(payload);
+        // check for infeasibilities and save userInfeasible object
+        this.userInfeasible = this.infeasibleChecks();
+        this.$store.dispatch(this.metadata.userInfeasible.actionSetName, this.userInfeasible);
+        this.appendInfeasibleToErrorList();
+      },
       requiredDataLabel() {
+        // have a generic Project error message for any TS on this page
+        //   since at least 1 is required
         return GENERIC_TS_ERROR_MSG;
       },
       validatedSave() {
+        // check for infeasibilities and set userInfeasible object
+        this.userInfeasible = this.infeasibleChecks();
         csvUploadMixin.methods.validatedSave.bind(this)();
-        // append any infeasibilities found to errorList for this page
-        if (this.isInfeasible) {
-          this.$store.dispatch('Application/setErrorList', this.getInfeasibleListPayload());
-        }
+        this.appendInfeasibleToErrorList();
       },
     },
   };

@@ -47,6 +47,7 @@ class DataArray {
   }
 
   formatErrorMsgArray(errorMsgArray) {
+    // TODO: AE: make this a static method
     return errorMsgArray.filter((item) => item !== null).join('<br>');
   }
 
@@ -70,7 +71,7 @@ class DataArray {
   //   the error and an array with row numbers for each violation
   //   additionally they return an errorListMsg for the Summary page
   // NOTE: row numbers start with 1
-  // TODO: AE: these checks are not performant, and should be removed or replaced
+  // NOTE: these checks are not performant at all, and may need to be reconsidered
 
   infeasibleCheckMaxMustExceedMin(minTS) {
     if (this.length() !== minTS.length()) return noInfeasibleErrorObject;

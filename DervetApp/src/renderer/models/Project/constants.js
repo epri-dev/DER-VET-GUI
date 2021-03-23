@@ -58,6 +58,7 @@ export const SR_GROWTH = 'srGrowth';
 export const SR_DURATION = 'srDuration';
 export const START_YEAR = 'startYear';
 export const TIMESTEP = 'timestep';
+export const USER_INFEASIBLE = 'userInfeasible';
 export const USER_PRICE = 'userPrice';
 
 // Timeseries
@@ -277,6 +278,7 @@ export const SR_FIELDS = [
   SR_GROWTH,
 ];
 export const USER_DEFINED_FIELDS = [
+  USER_INFEASIBLE,
   USER_PRICE,
 ];
 export const DA_FIELDS = [

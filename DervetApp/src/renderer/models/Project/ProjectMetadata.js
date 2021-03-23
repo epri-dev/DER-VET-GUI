@@ -582,6 +582,10 @@ export class ProjectMetadata {
         description: 'What is the frequency of the time-series data?',
         allowedValues: c.TIMESTEP_ALLOWED_VALUES,
       }),
+      [c.USER_INFEASIBLE]: new ProjectFieldMetadata({
+        type: Object,
+        actionSetName: a.SET_USER_INFEASIBLE,
+      }),
       [c.USER_PRICE]: new ProjectFieldMetadata({
         displayName: 'Yearly Cost Avoided',
         isRequired: true,

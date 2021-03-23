@@ -134,6 +134,7 @@ export const SET_USER_POWER_EXPORT_MAX = 'setUserPowerExportMax';
 export const SET_USER_POWER_EXPORT_MIN = 'setUserPowerExportMin';
 export const SET_USER_POWER_IMPORT_MAX = 'setUserPowerImportMax';
 export const SET_USER_POWER_IMPORT_MIN = 'setUserPowerImportMin';
+export const SET_USER_INFEASIBLE = 'setUserInfeasible';
 export const SET_USER_PRICE = 'setUserPrice';
 // financial
 export const ADD_RETAIL_TARIFF_BILLING_PERIOD = 'addRetailTariffBillingPeriod';

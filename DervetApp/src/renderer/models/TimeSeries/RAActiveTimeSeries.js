@@ -10,11 +10,11 @@ class RAActiveTimeSeries extends TimeSeriesBase {
 
   validate(expectedRowCount) {
     // parent class validate must return no errors before extra validation occurs
-    const errorMsgArray = [super.validate(expectedRowCount)];
+    let errorMsgArray = [super.validate(expectedRowCount)];
     const defaultValidate = this.formatErrorMsgArray(errorMsgArray);
     if (defaultValidate !== '') { return defaultValidate; }
     // extra validation specific to this class
-    errorMsgArray.push(this.invalidCheckSingleValueInclusiveList([0, 1]).errorMsg);
+    errorMsgArray = [this.invalidCheckSingleValueInclusiveList([0, 1]).errorMsg];
     return this.formatErrorMsgArray(errorMsgArray);
   }
 }
