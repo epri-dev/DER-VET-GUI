@@ -230,6 +230,10 @@
         return this.tsData('tsUserEnergyMax')
           .infeasibleCheckMaxMustExceedMin(this.tsData('tsUserEnergyMin'));
       },
+      infeasibleMinPower() {
+        return this.tsData('tsUserPowerExportMin')
+          .infeasibleCheckOnlyOneNonZero(this.tsData('tsUserPowerImportMin'));
+      },
       infeasiblePowerExport() {
         return this.tsData('tsUserPowerExportMax')
           .infeasibleCheckMaxMustExceedMin(this.tsData('tsUserPowerExportMin'));
@@ -244,6 +248,7 @@
           this.infeasiblePowerExport(),
           this.infeasiblePowerImport(),
           this.infeasibleEnergy(),
+          this.infeasibleMinPower(),
         ];
         Object.values(checks).forEach((check) => {
           infeasibleObject.errorMsg.push(check.errorMsg);

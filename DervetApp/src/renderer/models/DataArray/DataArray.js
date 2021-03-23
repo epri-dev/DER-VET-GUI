@@ -74,14 +74,30 @@ class DataArray {
   // NOTE: these checks are not performant at all, and may need to be reconsidered
 
   infeasibleCheckMaxMustExceedMin(minTS) {
+    // NOTE: this check works on absolute values of each comparison value
     if (this.length() !== minTS.length()) return noInfeasibleErrorObject;
     const infeasibleRows = this.data.reduce((a, val, i) => {
-      if (val < minTS.data[i]) a.push(i + 1);
+      if (Math.abs(val) < Math.abs(minTS.data[i])) a.push(i + 1);
       return a;
     }, []);
     if (infeasibleRows.length === 0) return noInfeasibleErrorObject;
     const violationName = `For all times, values in <b>${minTS.columnHeaderName}</b> must not exceed those in <b>${this.columnHeaderName}</b>`;
     const errorListMsg = `Infeasible timeseries data: ${minTS.columnHeaderName} and ${this.columnHeaderName}`;
+    return {
+      errorMsg: this.errorMsgInfeasibleRows(violationName, infeasibleRows),
+      errorListMsg,
+    };
+  }
+
+  infeasibleCheckOnlyOneNonZero(otherTS) {
+    if (this.length() !== otherTS.length()) return noInfeasibleErrorObject;
+    const infeasibleRows = this.data.reduce((a, val, i) => {
+      if ((val !== 0) && (otherTS.data[i] !== 0)) a.push(i + 1);
+      return a;
+    }, []);
+    if (infeasibleRows.length === 0) return noInfeasibleErrorObject;
+    const violationName = `For all times, values in <b>${this.columnHeaderName}</b> and <b>${otherTS.columnHeaderName}</b> must not both be non-zero`;
+    const errorListMsg = `Infeasible timeseries data: ${this.columnHeaderName} and ${otherTS.columnHeaderName}`;
     return {
       errorMsg: this.errorMsgInfeasibleRows(violationName, infeasibleRows),
       errorListMsg,
