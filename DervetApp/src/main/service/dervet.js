@@ -7,7 +7,7 @@ import log from 'electron-log';
 import { parseCsvFromFile, writeCsvToFile, writeJsonToFile } from '../util/file';
 
 const DERVET_SCRIPT_NAME = 'run_DERVET';
-let PYTHON_PROCESS = null;
+let pythonProcess = null;
 
 const writeCsvsToFile = csvs => (
   csvs.map(({ filePath, csv }) => writeCsvToFile(filePath, csv))
@@ -48,20 +48,20 @@ const spawnDevPythonProcess = (modelParametersPath) => {
 };
 
 // TODO refactor into a python service
-const listenToPythonProcessLogs = (pythonProcess) => {
-  pythonProcess.stdout.on('data', (data) => {
+const listenToPythonProcessLogs = (pyProcess) => {
+  pyProcess.stdout.on('data', (data) => {
     log.info(data);
     console.log(`python stdout: ${data}`); // eslint-disable-line
   });
-  pythonProcess.stderr.on('data', (data) => {
+  pyProcess.stderr.on('data', (data) => {
     log.info(data);
     console.error(`python stderr: ${data}`); // eslint-disable-line
   });
 };
 
-const listenForExit = pythonProcess => (
+const listenForExit = pyProcess => (
   new Promise((resolve, reject) => {
-    pythonProcess.on('exit', (val) => {
+    pyProcess.on('exit', (val) => {
       if (val === 0) {
         resolve(val);
       } else {
@@ -72,9 +72,9 @@ const listenForExit = pythonProcess => (
 );
 
 export const exitPythonProcess = () => {
-  if (PYTHON_PROCESS !== null) {
-    PYTHON_PROCESS.kill();
-    PYTHON_PROCESS = null;
+  if (pythonProcess !== null) {
+    pythonProcess.kill();
+    pythonProcess = null;
   }
 };
 
@@ -88,14 +88,14 @@ export const callDervet = (modelParametersPath) => {
   // in the expected directory, we assume we are running in the development
   // environment and the raw python code is called.
   if (pythonExeExists(pythonExe)) {
-    PYTHON_PROCESS = spawnPackagedPythonProcess(pythonExe, modelParametersPath);
+    pythonProcess = spawnPackagedPythonProcess(pythonExe, modelParametersPath);
   } else {
-    PYTHON_PROCESS = spawnDevPythonProcess(modelParametersPath);
+    pythonProcess = spawnDevPythonProcess(modelParametersPath);
   } // TODO handle case where neither executable nor source exists
 
-  if (PYTHON_PROCESS != null) {
-    listenToPythonProcessLogs(PYTHON_PROCESS);
-    return listenForExit(PYTHON_PROCESS);
+  if (pythonProcess != null) {
+    listenToPythonProcessLogs(pythonProcess);
+    return listenForExit(pythonProcess);
   }
   return new Promise((_, reject) => { reject(new Error('Failed to spawn python process')); });
 };

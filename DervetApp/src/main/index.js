@@ -81,6 +81,7 @@ function registerIpcChannels() {
 
   ipcMain.on('kill-dervet', () => {
     exitPythonProcess();
+    // TODO set runInProgress to false
   });
 }
 
