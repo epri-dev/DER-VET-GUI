@@ -19,7 +19,7 @@ const DYNAMIC_FIELDS = [
   'minimumChargingPower',
   'plugInHour',
   'plugOutHour',
-  'replacmentCost',
+  'replacementCost',
 ];
 
 const sharedHardcodedMetadata = createSharedHardcodedMetadata('single EV');
