@@ -68,7 +68,7 @@ export const createSharedHardcodedMetadata = derType => ({
     allowedValues: MACRS_TERM_ALLOWED_VALUES,
   }),
   [NAME]: new ProjectFieldMetadata({
-    displayName: 'Name',
+    displayName: 'Component Name',
     isRequired: true,
     type: String,
   }),

@@ -7,6 +7,7 @@ import log from 'electron-log';
 import { parseCsvFromFile, writeCsvToFile, writeJsonToFile } from '../util/file';
 
 const DERVET_SCRIPT_NAME = 'run_DERVET';
+let pythonProcess = null;
 
 const writeCsvsToFile = csvs => (
   csvs.map(({ filePath, csv }) => writeCsvToFile(filePath, csv))
@@ -47,20 +48,20 @@ const spawnDevPythonProcess = (modelParametersPath) => {
 };
 
 // TODO refactor into a python service
-const listenToPythonProcessLogs = (pythonProcess) => {
-  pythonProcess.stdout.on('data', (data) => {
+const listenToPythonProcessLogs = (pyProcess) => {
+  pyProcess.stdout.on('data', (data) => {
     log.info(data);
     console.log(`python stdout: ${data}`); // eslint-disable-line
   });
-  pythonProcess.stderr.on('data', (data) => {
+  pyProcess.stderr.on('data', (data) => {
     log.info(data);
     console.error(`python stderr: ${data}`); // eslint-disable-line
   });
 };
 
-const listenForExit = pythonProcess => (
+const listenForExit = pyProcess => (
   new Promise((resolve, reject) => {
-    pythonProcess.on('exit', (val) => {
+    pyProcess.on('exit', (val) => {
       if (val === 0) {
         resolve(val);
       } else {
@@ -70,8 +71,8 @@ const listenForExit = pythonProcess => (
   })
 );
 
-export const exitPythonProcess = (pythonProcess) => {
-  if (pythonProcess) {
+export const exitPythonProcess = () => {
+  if (pythonProcess !== null) {
     pythonProcess.kill();
     pythonProcess = null;
   }
@@ -80,7 +81,6 @@ export const exitPythonProcess = (pythonProcess) => {
 export const callDervet = (modelParametersPath) => {
   console.log('Spawning DERVET subprocess...'); // eslint-disable-line
 
-  let pythonProcess = null;
   const pythonExe = getPythonExe();
 
   // getPythonExe is used to determine whether this code is running within the

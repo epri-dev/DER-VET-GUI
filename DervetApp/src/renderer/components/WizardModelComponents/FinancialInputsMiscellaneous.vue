@@ -33,6 +33,8 @@
                   :isInvalid="submitted && $v.financePropertyTaxRate.$error"
                   :errorMessage="getErrorMsg('financePropertyTaxRate')">
       </text-input>
+      <!-- add an "other tax" box -->
+      <!-- add an "hide federal/state" box -->
 
       <hr>
 

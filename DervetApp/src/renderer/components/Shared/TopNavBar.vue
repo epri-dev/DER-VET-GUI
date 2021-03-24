@@ -37,7 +37,7 @@
               <span class="fas fa-play fa-lg"/>
               <!-- <span v-if="!runInProgress()" class="fas fa-spinner fa-spin fa-lg"/> -->
             </b-button>
-            <b-button disabled size="lg" v-if="runInProgress()" class="btn btn-danger navbar-btn" type="submit"
+            <b-button size="lg" v-if="runInProgress()" class="btn btn-danger navbar-btn" type="submit"
               @click="killDervet()">
               <span class="fas fa-stop fa-lg"/>
             </b-button>
@@ -161,11 +161,11 @@
         // TODO: note that there is currently no validation, so calling this with an
         // incomplete Project object will likely result in an unhandled exception
         this.$store.dispatch('Application/runDervet', this.$store.state.Project)
-          .then(this.$router.push({ path: RUN_ANALYSIS }));
+          .then(this.$router.push({ path: RUN_ANALYSIS }).catch(() => {}));
       },
       killDervet() {
         this.$store.dispatch('Application/killPython', this.$store.state.Project)
-          .then(this.$router.push({ path: WIZARD_OVERVIEW }));
+          .then(this.$router.push({ path: WIZARD_RUN_CASE }).catch(() => {}));
       },
       cannotRun() {
         this.$router.push({ path: WIZARD_RUN_CASE }).catch(() => {});
