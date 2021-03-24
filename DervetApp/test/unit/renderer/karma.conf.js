@@ -55,7 +55,7 @@ module.exports = config => {
         },
       },
     },
-    frameworks: ['mocha', 'chai', 'chai-as-promised'],
+    frameworks: ['mocha', 'chai-as-promised', 'chai'],
     files: ['./index.js'],
     mochaReporter: {
       colors: {

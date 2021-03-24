@@ -29,15 +29,13 @@
           :errorMessage="getErrorMsg('shouldSize')">
         </radio-button-input>
 
-        <div v-if="shouldSize === false">
-
-          <text-input
-            v-model="ratedCapacity"
-            v-bind:field="metadata.ratedCapacity"
-            :isInvalid="submitted && $v.ratedCapacity.$error"
-            :errorMessage="getErrorMsg('ratedCapacity')">
-          </text-input>
-        </div>
+        <text-input
+          v-if="shouldSize === false"
+          v-model="ratedCapacity"
+          v-bind:field="metadata.ratedCapacity"
+          :isInvalid="submitted && $v.ratedCapacity.$error"
+          :errorMessage="getErrorMsg('ratedCapacity')">
+        </text-input>
 
         <div v-if="shouldSize === true">
 
@@ -67,20 +65,20 @@
         </div>
 
         <drop-down-input
+          v-if="activeBatteryExists"
           v-model="loc"
           v-bind:field="metadata.loc"
           :isInvalid="submitted && $v.loc.$error"
           :errorMessage="getErrorMsg('loc')">
         </drop-down-input>
 
-        <div v-if="(loc === 'AC') && essExists">
-            <radio-button-input
-              v-model="allowGridCharge"
-              v-bind:field="metadata.allowGridCharge"
-              :isInvalid="submitted && $v.allowGridCharge.$error"
-              :errorMessage="getErrorMsg('allowGridCharge')">
-            </radio-button-input>
-          </div>
+        <radio-button-input
+          v-if="isLocAC && activeBatteryExists"
+          v-model="allowGridCharge"
+          v-bind:field="metadata.allowGridCharge"
+          :isInvalid="submitted && $v.allowGridCharge.$error"
+          :errorMessage="getErrorMsg('allowGridCharge')">
+        </radio-button-input>
 
         <text-input
           v-model="inverterMax"
@@ -165,15 +163,13 @@
           </text-input>
         </div>
 
-        <div v-if="includePPA === false">
-          <text-input
-            v-model="fixedOMCosts"
-            v-bind:field="metadata.fixedOMCosts"
-            :isInvalid="submitted && $v.fixedOMCosts.$error"
-            :errorMessage="getErrorMsg('fixedOMCosts')">
-          </text-input>
-
-        </div>
+        <text-input
+          v-if="includePPA === false"
+          v-model="fixedOMCosts"
+          v-bind:field="metadata.fixedOMCosts"
+          :isInvalid="submitted && $v.fixedOMCosts.$error"
+          :errorMessage="getErrorMsg('fixedOMCosts')">
+        </text-input>
 
         <radio-button-input
           v-model="isReplaceable"
@@ -247,7 +243,7 @@
   import { requiredIf, minValue } from 'vuelidate/lib/validators';
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import TechnologySpecsSolarPVMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
+  import TechnologySpecsSolarPVMetadata, { LocType } from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
   import { WIZARD_COMPONENT, TECH_SPECS_PV_DATA_GENERATION } from '@/router/constants';
 
   const metadata = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
@@ -255,16 +251,15 @@
 
   export default {
     name: 'TechnologySpecsSolarPV',
-    // TODO maybe rename this to just 'id'
     mixins: [wizardFormMixin],
     props: ['solarId'],
     data() {
-      const values = this.isNewSolar() ? metadata.getDefaultValues() : this.getSolarFromStore();
       return {
         metadata,
-        ...values,
+        ...this.getSolarFromStore(),
         WIZARD_COMPONENT,
         TECH_SPECS_PV_DATA_GENERATION,
+        LocType,
       };
     },
     validations() {
@@ -273,7 +268,7 @@
         allowGridCharge: {
           ...validations.allowGridCharge,
           required: requiredIf(function isAllowGridChargeRequired() {
-            return (this.loc === 'AC') && this.essExists;
+            return (this.loc === LocType.AC) && this.activeBatteryExists;
           }),
         },
         decomissioningCost: {
@@ -387,19 +382,16 @@
       reliabilitySelected() {
         return this.$store.state.Project.objectivesResilience;
       },
-      essExists() {
-        return this.$store.state.Project.technologySpecsBattery.length > 0;
+      activeBatteryExists() {
+        return this.$store.getters.activeBatteryExists;
       },
     },
     methods: {
       resetNonRequired(list) {
         list.forEach((item) => {
-          this[item] = this.metadata.getDefaultValues()[item];
+          this[item] = this.metadata.getDefaultValues(this.activeBatteryExists)[item];
         });
         return true;
-      },
-      isNewSolar() {
-        return this.solarId === 'null';
       },
       getAssociatedInputsCompleteness() {
         // loop through associatedInputs array and check complete param
@@ -415,6 +407,9 @@
         this.metadata.ratedCapacityMaximum.minValue = !(this.ratedCapacityMinimum >= 1)
           ? 1 : this.ratedCapacityMinimum;
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
+      },
+      isLocAC() {
+        return this.loc === LocType.AC;
       },
       makeErrorList() {
         const errors = [];
@@ -462,15 +457,11 @@
           this.errorList = this.makeErrorList();
         }
         const solarSpec = this.buildSolarPV();
-        if (this.isNewSolar()) {
-          this.$store.dispatch('addTechnologySpecsSolarPV', solarSpec);
-        } else {
-          const payload = {
-            newSolar: solarSpec,
-            solarId: this.solarId,
-          };
-          this.$store.dispatch('replaceTechnologySpecsSolarPV', payload);
-        }
+        const payload = {
+          newSolar: solarSpec,
+          solarId: this.solarId,
+        };
+        this.$store.dispatch('replaceTechnologySpecsSolarPV', payload);
         this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
       buildSolarPV() {

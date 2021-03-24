@@ -4,12 +4,18 @@ import { v4 as uuidv4 } from 'uuid';
 import { ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV } from '@/store/actionTypes';
 import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 import { SHARED_DYNAMIC_FIELDS, createSharedHardcodedMetadata } from '@/models/Project/TechnologySpecs/sharedConstants';
-import { TS_SOLARPV_GENERATION_PROFILE, optionsYN, makeAllowedValuesWithNull } from '@/models/Project/constants';
-import { TECH_SPECS_PV, TECH_SPECS_PV_DATA_GENERATION } from '@/router/constants';
-
+import { TS_SOLARPV_GENERATION_PROFILE, optionsYN } from '@/models/Project/constants';
 import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
+import { TECH_SPECS_PV, TECH_SPECS_PV_DATA_GENERATION } from '@/router/constants';
+import { enumToAllowedValues } from '@/util/project';
 
 const PV = 'PV';
+export const LOC = 'loc';
+
+export enum LocType {
+  AC = 'AC',
+  DC = 'DC',
+}
 
 // TODO parse these from schema
 const SIZING_ALLOWED_VALUES = [
@@ -22,7 +28,8 @@ const SIZING_ALLOWED_VALUES = [
     label: 'Known size',
   },
 ];
-const LOC_ALLOWED_VALUES = makeAllowedValuesWithNull(['AC', 'DC']);
+
+const LOC_ALLOWED_VALUES = enumToAllowedValues(LocType);
 
 const DYNAMIC_FIELDS = [
   ...SHARED_DYNAMIC_FIELDS,
@@ -48,16 +55,16 @@ const DYNAMIC_FIELDS = [
 const sharedHardcodedMetadata = createSharedHardcodedMetadata(PV);
 
 export default class TechnologySpecsSolarPVMetadata {
-  constructor(arg) {
+  constructor(arg: any) {
     Object.assign(this, arg);
   }
 
-  operateOnDynamicFields(callback) {
+  operateOnDynamicFields(callback: any) {
     return _.mapValues(_.pick(this, DYNAMIC_FIELDS), callback);
   }
 
-  getDefaultValues() {
-    return {
+  getDefaultValues(activeBatteryExistsInProject: any) {
+    const defaults: any = {
       active: true,
       associatedInputs: [{
         complete: false,
@@ -75,12 +82,16 @@ export default class TechnologySpecsSolarPVMetadata {
       path: TECH_SPECS_PV,
       tag: PV,
       technologyType: 'Intermittent Resource',
-      ...this.operateOnDynamicFields(f => f.defaultValue),
+      ...this.operateOnDynamicFields((f: any) => f.defaultValue),
     };
+
+    defaults.loc = activeBatteryExistsInProject ? defaults.loc : LocType.AC;
+
+    return defaults;
   }
 
   toValidationSchema() {
-    return this.operateOnDynamicFields(f => f.toValidationSchema());
+    return this.operateOnDynamicFields((f: any) => f.toValidationSchema());
   }
 
   // to be removed in favor of getMetadataFromSchema
@@ -153,7 +164,7 @@ export default class TechnologySpecsSolarPVMetadata {
         description: null,
         allowedValues: null,
       }),
-      loc: new ProjectFieldMetadata({
+      [LOC]: new ProjectFieldMetadata({
         defaultValue: null,
         displayName: 'Coupled System Type',
         isRequired: true,

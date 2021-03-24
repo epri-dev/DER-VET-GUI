@@ -154,7 +154,7 @@
           .then(() => {
             if (isEmpty(this.$store.state.OpenEI.utilities)) {
               this.$store.dispatch('loadUtilities', this.apiKey)
-                .catch((err: any) => console.log(err));
+                .catch((err: any) => err); // TODO handle error
             }
           });
       },
