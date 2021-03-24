@@ -88,21 +88,21 @@
       },
     },
     methods: {
+      resetAllStoreModules() {
+        return this.$store.dispatch(a.RESET_PROJECT) // TODO namespace project
+          .then(this.$store.dispatch(`Results/${a.RESET}`))
+          .then(this.$store.dispatch(`Application/${a.RESET}`))
+          .then(this.$store.dispatch(`CalEnviroScreen/${a.RESET}`));
+      },
       loadQuickStartProject(selectedUseCase) {
-        this.$store.dispatch('resetProjectToDefault')
-          .then(this.$store.dispatch('resetResultToDefault', this.$store.state.Project.id))
-          .then(this.$store.dispatch(`Application/${a.RESET_APPLICATION_TO_DEFAULT}`, this.$store.state.Project.id))
-          .then(this.$store.dispatch('resetZipCode'))
+        this.resetAllStoreModules()
           .then(this.$store.dispatch(LOAD_QUICK_START_PROJECT, selectedUseCase))
           .then(this.$store.dispatch('Application/setQuickStartCompleteness'))
           .then(this.$store.dispatch(`Application/${a.SET_QUICK_START_ERROR_LIST}`, selectedUseCase))
           .then(this.$router.push({ path: SUMMARY }));
       },
       resetProjectToDefault() {
-        this.$store.dispatch('resetProjectToDefault')
-          .then(this.$store.dispatch('resetResultToDefault', this.$store.state.Project.id))
-          .then(this.$store.dispatch(`Application/${a.RESET_APPLICATION_TO_DEFAULT}`, this.$store.state.Project.id))
-          .then(this.$store.dispatch('resetZipCode'))
+        this.resetAllStoreModules()
           .then(this.$router.push({ path: WIZARD_OVERVIEW }));
       },
     },

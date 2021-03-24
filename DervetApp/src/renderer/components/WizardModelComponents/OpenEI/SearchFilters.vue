@@ -150,10 +150,10 @@
         }
       },
       saveApiKey() {
-        this.$store.dispatch('setApiKey', this.apiKey)
+        this.$store.dispatch('OpenEI/setApiKey', this.apiKey)
           .then(() => {
             if (isEmpty(this.$store.state.OpenEI.utilities)) {
-              this.$store.dispatch('loadUtilities', this.apiKey)
+              this.$store.dispatch('OpenEI/loadUtilities', this.apiKey)
                 .catch((err: any) => err); // TODO handle error
             }
           });

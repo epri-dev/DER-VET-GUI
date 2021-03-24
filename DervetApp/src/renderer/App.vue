@@ -18,10 +18,10 @@
     name: 'DER-VET',
     beforeMount() {
       if (this.$store.state.CalEnviroScreen.cesScores === null) {
-        this.$store.dispatch('loadCesScores');
+        this.$store.dispatch('CalEnviroScreen/loadCesScores');
       }
       if (isEmpty(this.$store.state.OpenEI.utilities)) {
-        this.$store.dispatch('loadUtilities', this.$store.state.OpenEI.apiKey)
+        this.$store.dispatch('OpenEI/loadUtilities', this.$store.state.OpenEI.apiKey)
           .catch(() => null);
       }
     },

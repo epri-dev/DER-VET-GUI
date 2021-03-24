@@ -68,7 +68,9 @@
     },
     computed: {
       cesScores() {
-        return this.$store.getters.getCesScoresByZipCode(this.zipCode);
+        // TODO LL use a map getter
+        return this.$store.getters['CalEnviroScreen/getCesScoresByZipCode'](this.zipCode);
+        // return this.$store.getters.getCesScoresByZipCode(this.zipCode);
       },
       showCesScoresTable() {
         return this.zipCode !== null && this.cesScores.length > 0;
@@ -92,7 +94,7 @@
     methods: {
       onClickGo(zipCode) {
         this.zipCode = parseFloat(zipCode);
-        this.$store.dispatch('setZipCode', this.zipCode)
+        this.$store.dispatch('CalEnviroScreen/setZipCode', this.zipCode)
           .then(() => {
             if (this.noScoresFound) {
               this.errorMessage = `No scores found for zip code ${this.zipCode}.`;

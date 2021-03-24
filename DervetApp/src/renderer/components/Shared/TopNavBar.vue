@@ -32,14 +32,19 @@
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto">
           <b-button-group class="navbar-btn">
-            <b-button size="lg" variant="success" class="btn navbar-btn text-center" type="submit"
-              @click="(runDervetDisabled) ? cannotRun() : runDervet()" v-if="!isActiveIndex() && !runInProgress()">
-              <span class="fas fa-play fa-lg"/>
+            <b-button
+              v-if="!isActiveIndex() && !runInProgress()"
+              @click="(runDervetDisabled) ? cannotRun() : runDervet()"
+              class="btn navbar-btn text-center"
+              type="submit"
+              size="md"
+              variant="success">
+              <span class="fas fa-play fa-md"/>
               <!-- <span v-if="!runInProgress()" class="fas fa-spinner fa-spin fa-lg"/> -->
             </b-button>
-            <b-button size="lg" v-if="runInProgress()" class="btn btn-danger navbar-btn" type="submit"
+            <b-button size="md" v-if="runInProgress()" class="btn btn-danger navbar-btn" type="submit"
               @click="killDervet()">
-              <span class="fas fa-stop fa-lg"/>
+              <span class="fas fa-stop fa-md"/>
             </b-button>
           </b-button-group>
           <b-nav-item align="right" link-classes="navbar-top-svg-item">
@@ -71,6 +76,7 @@
   import technologySpecsMixin from '@/mixins/technologySpecsMixin';
   import objectivesMixin from '@/mixins/objectivesMixin';
   import financeMixin from '@/mixins/financeMixin';
+  import * as a from '@/store/actionTypes';
 
   const FORUM_LINK = 'https://www.der-vet.com/forum/';
   const USER_GUIDE_LINK = 'https://storagewiki.epri.com/index.php/DER_VET_User_Guide#Index';
@@ -160,8 +166,9 @@
       runDervet() {
         // TODO: note that there is currently no validation, so calling this with an
         // incomplete Project object will likely result in an unhandled exception
-        this.$store.dispatch('Application/runDervet', this.$store.state.Project)
-          .then(this.$router.push({ path: RUN_ANALYSIS }).catch(() => {}));
+        this.$store.dispatch(`Results/${a.RESET}`)
+          .then(this.$store.dispatch('Application/runDervet', this.$store.state.Project))
+          .then(this.$router.push({ path: RUN_ANALYSIS })).catch(() => {});
       },
       killDervet() {
         this.$store.dispatch('Application/killPython', this.$store.state.Project)

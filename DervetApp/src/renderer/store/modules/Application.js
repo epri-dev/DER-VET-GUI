@@ -32,7 +32,6 @@ const getDefaultApplicationState = () => ({
       },
     },
   },
-  id: NULL,
   isError: NULL,
   pageCompleteness: { // TODO remove use HN
     overview: {
@@ -65,14 +64,9 @@ const getDefaultApplicationState = () => ({
   runInProgress: NULL,
 });
 
-const namespaced = true;
-
 const state = getDefaultApplicationState();
 
 const mutations = {
-  SET_ID(state, newId) {
-    state.id = newId;
-  },
   [m.SET_RUN_IN_PROGRESS](state) {
     state.runInProgress = true;
   },
@@ -126,7 +120,7 @@ const mutations = {
   SET_NEW_APPLICATION_STATE(state, application) {
     Object.assign(state, application);
   },
-  RESET_APPLICATION_TO_DEFAULT(state) {
+  [m.RESET_APPLICATION](state) {
     Object.assign(state, getDefaultApplicationState());
   },
 };
@@ -163,9 +157,8 @@ const actions = {
       commit(m.SET_RESULT_SUCCESS);
     },
   },
-  [a.RESET_APPLICATION_TO_DEFAULT]({ commit }, newId) {
-    commit('RESET_APPLICATION_TO_DEFAULT');
-    commit('SET_ID', newId);
+  [a.RESET]({ commit }) {
+    commit(m.RESET_APPLICATION);
   },
   runDervet({ commit }, project) {
     commit(m.SET_RUN_IN_PROGRESS);
@@ -180,7 +173,7 @@ const actions = {
 };
 
 export default {
-  namespaced,
+  namespaced: true,
   state,
   mutations,
   actions,

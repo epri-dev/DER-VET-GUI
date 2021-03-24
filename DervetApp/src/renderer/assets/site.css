@@ -204,6 +204,10 @@ body {
     margin: 25px 0 0 0;
 }
 
+.center-error-vertically {
+    margin-top: 150px !important;
+}
+
 
 /*
  * Trash button hover css
