@@ -37,13 +37,13 @@ class DataArray {
   errorMsgInfeasibleRows(violationName, invalidRows) {
     // return a String containing the error message
     const rows = (invalidRows.length === 1) ? 'Row' : 'Rows';
-    return `<b>${invalidRows.length} Infeasible ${rows}:</b> ${violationName} : [${this.arrayDisplayFirstFifteen(invalidRows)}]`;
+    return `<b>${invalidRows.length} Infeasible ${rows}:</b> ${violationName} : <b>Line Numbers</b>: [${this.arrayDisplayFirstFifteen(invalidRows)}]`;
   }
 
   errorMsgInvalidRows(violationName, invalidRows) {
     // return a String containing the error message
     const rows = (invalidRows.length === 1) ? 'Row' : 'Rows';
-    return `<b>${invalidRows.length} Invalid ${rows}:</b> ${violationName} : [${this.arrayDisplayFirstFifteen(invalidRows)}]`;
+    return `<b>${invalidRows.length} Invalid ${rows}:</b> ${violationName} : <b>Line Numbers</b>: [${this.arrayDisplayFirstFifteen(invalidRows)}]`;
   }
 
   formatErrorMsgArray(errorMsgArray) {
