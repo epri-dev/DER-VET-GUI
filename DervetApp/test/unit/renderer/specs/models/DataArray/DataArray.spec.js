@@ -66,13 +66,13 @@ describe('DataArray model', () => {
 
   it('should return invalidCheckRowSize properly', () => {
     const actual = fakeData.invalidCheckRowSize(1);
-    const expected = { errorMsg: '<b>2 Invalid Rows:</b> each row must have 1 value : [5,6]' };
+    const expected = { errorMsg: '<b>2 Invalid Rows:</b> each row must have 1 value : <b>Line Numbers:</b> [5,6]' };
     expect(actual).to.eql(expected);
   });
 
   it('should return invalidCheckSingleValueNumeric properly', () => {
     const actual = fakeData.invalidCheckSingleValueNumeric();
-    const expected = { errorMsg: '<b>1 Invalid Row:</b> each value must be numeric : [3]' };
+    const expected = { errorMsg: '<b>1 Invalid Row:</b> each value must be numeric : <b>Line Number:</b> [3]' };
     expect(actual).to.eql(expected);
   });
 
@@ -86,13 +86,13 @@ describe('DataArray model', () => {
     expect(actual).to.eql(expected);
 
     actual = fakeData2.invalidCheckSingleValueInclusiveList([3, 22, 4, 20]);
-    expected = { errorMsg: '<b>1 Invalid Row:</b> each value must be 3, 22, 4 or 20 : [4]' };
+    expected = { errorMsg: '<b>1 Invalid Row:</b> each value must be 3, 22, 4 or 20 : <b>Line Number:</b> [4]' };
     expect(actual).to.eql(expected);
   });
 
   it('should return invalidCheckSingleValueBetweenXAndY properly', () => {
     let actual = fakeData2.invalidCheckSingleValueBetweenXAndY(0, 21);
-    let expected = { errorMsg: '<b>2 Invalid Rows:</b> each value must be between 0 and 21 : [2,4]' };
+    let expected = { errorMsg: '<b>2 Invalid Rows:</b> each value must be between 0 and 21 : <b>Line Numbers:</b> [2,4]' };
     expect(actual).to.eql(expected);
 
     actual = fakeData2.invalidCheckSingleValueBetweenXAndY(3, 50);
@@ -102,7 +102,7 @@ describe('DataArray model', () => {
 
   it('should return invalidCheckSingleValueAtLeastX properly', () => {
     let actual = fakeData2.invalidCheckSingleValueAtLeastX(20);
-    let expected = { errorMsg: '<b>2 Invalid Rows:</b> each value must be greater than or equal to 20 : [1,5]' };
+    let expected = { errorMsg: '<b>2 Invalid Rows:</b> each value must be greater than or equal to 20 : <b>Line Numbers:</b> [1,5]' };
     expect(actual).to.eql(expected);
 
     actual = fakeData2.invalidCheckSingleValueAtLeastX(3);

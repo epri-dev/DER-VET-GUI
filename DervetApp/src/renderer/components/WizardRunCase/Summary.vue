@@ -28,39 +28,41 @@
           <h4>Errors in Technology Components</h4>
           <div v-for="techTag in techSpecs">
             <div v-for="techItem in filterNonActives(techTag.items)">
-              
-              <li>
-                <router-link
-                  class="text-decoration-none"
-                  :to="techPath(techTag.path, techItem)">
-                  {{ getTechLabel(techTag.fullName, techItem) }}
-                </router-link>
-                
-                <ul>
-                  <li v-for="error in techItem.errorList">
-                    <span v-html="error"></span>
-                  </li>
+              <div v-if="!techItem.complete">
 
-                  <div v-if="techItem.associatedInputsComplete === false">
-                    <div v-for="associatedInputs in techItem.associatedInputs">
-                      <div v-if="!associatedInputs.complete">
-                        <li>
-                          <router-link
-                            class="text-decoration-none"
-                            :to="getTechAssociatedInputsPath(techItem)">
-                            {{ associatedInputs.displayName + getTechDisplayName(techItem) }}
-                          </router-link>
-                          <ul>
-                            <li v-for="dataError in associatedInputs.errorList">
-                              <span v-html="dataError"></span>
-                            </li>
-                          </ul>
-                        </li>
+                <li>
+                  <router-link
+                    class="text-decoration-none"
+                    :to="techPath(techTag.path, techItem)">
+                    {{ getTechLabel(techTag.fullName, techItem) }}
+                  </router-link>
+
+                  <ul>
+                    <li v-for="error in techItem.errorList">
+                      <span v-html="error"></span>
+                    </li>
+
+                    <div v-if="techItem.associatedInputsComplete === false">
+                      <div v-for="associatedInputs in techItem.associatedInputs">
+                        <div v-if="!associatedInputs.complete">
+                          <li>
+                            <router-link
+                              class="text-decoration-none"
+                              :to="getTechAssociatedInputsPath(techItem)">
+                              {{ associatedInputs.displayName + getTechDisplayName(techItem) }}
+                            </router-link>
+                            <ul>
+                              <li v-for="dataError in associatedInputs.errorList">
+                                <span v-html="dataError"></span>
+                              </li>
+                            </ul>
+                          </li>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </ul>
-              </li>
+                  </ul>
+                </li>
+              </div>
             </div>
           </div>
         </div>
@@ -262,7 +264,7 @@
         }
         return `: ${tech.name}`;
       },
-  
+
       getTechAssociatedInputsPath(tech) {
         const techID = tech.id;
         return `${tech.associatedInputs[0].path}/${techID}`;
@@ -317,7 +319,7 @@
       },
 
       // all
-  
+
     },
     data() {
       return {
