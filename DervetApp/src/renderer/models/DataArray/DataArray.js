@@ -48,7 +48,14 @@ class DataArray {
     return `<b>${invalidRows.length} Invalid ${rows}:</b> ${violationName} : <b>Line ${numbers}:</b> [${this.arrayDisplayFirstFifteen(invalidRows)}]`;
   }
 
+  extraValidate() {
+    // returns an empty Array, indicating no errors
+    // child classes may have this function defined
+    return [];
+  }
+
   formatErrorMsgArray(errorMsgArray) {
+    // returns a String
     // TODO: AE: make this a static method
     return errorMsgArray.filter((item) => item !== null).join('<br>');
   }
@@ -220,7 +227,11 @@ class DataArray {
     errorMsgArray.push(this.invalidCheckRowsCount(expectedRowCount).errorMsg);
     errorMsgArray.push(this.invalidCheckRowSize(1).errorMsg);
     errorMsgArray.push(this.invalidCheckSingleValueNumeric().errorMsg);
-    return this.formatErrorMsgArray(errorMsgArray);
+    const defaultValidate = this.formatErrorMsgArray(errorMsgArray);
+    // if defaultValidate has errors, then return then now
+    if (defaultValidate !== '') { return defaultValidate; }
+    // perform optional/specific extra validations as defined in each child class
+    return this.formatErrorMsgArray(this.extraValidate());
   }
 }
 export default DataArray;

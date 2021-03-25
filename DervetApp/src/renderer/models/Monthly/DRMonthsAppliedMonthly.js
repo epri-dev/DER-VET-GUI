@@ -7,14 +7,8 @@ class DRMonthsAppliedMonthly extends MonthlyBase {
     this.tsName = MTS_DR_MONTHS_APPLIED;
   }
 
-  validate(expectedRowCount) {
-    // parent class validate must return no errors before extra validation occurs
-    let errorMsgArray = [super.validate(expectedRowCount)];
-    const defaultValidate = this.formatErrorMsgArray(errorMsgArray);
-    if (defaultValidate !== '') { return defaultValidate; }
-    // extra validation specific to this class
-    errorMsgArray = [this.invalidCheckSingleValueInclusiveList([0, 1]).errorMsg];
-    return this.formatErrorMsgArray(errorMsgArray);
+  extraValidate() {
+    return [this.invalidCheckSingleValueInclusiveList([0, 1]).errorMsg];
   }
 }
 
