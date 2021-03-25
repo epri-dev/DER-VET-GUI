@@ -154,7 +154,7 @@ const getters = {
 };
 
 const mutations = {
-  [m.RESET_PROJECT_TO_DEFAULT](state) {
+  [m.RESET_PROJECT](state) {
     Object.assign(state, getDefaultState());
   },
   [m.LOAD_NEW_PROJECT](state, project) {
@@ -791,8 +791,8 @@ const mutations = {
 };
 
 const actions = {
-  [a.RESET_PROJECT_TO_DEFAULT]({ commit }) {
-    commit(m.RESET_PROJECT_TO_DEFAULT);
+  [a.RESET_PROJECT]({ commit }) {
+    commit(m.RESET_PROJECT);
   },
   [a.LOAD_NEW_PROJECT]({ commit }, project) {
     return new Promise((resolve) => {

@@ -1,4 +1,5 @@
 import ResultsData from '@/models/Results/Results';
+import * as a from '@/store/actionTypes';
 import * as m from '@/store/mutationTypes';
 
 const getDefaultResultState = () => ({
@@ -82,9 +83,6 @@ const mutations = {
       showDesign: runData.showPeakLoadDay,
     };
   },
-  SET_ID(state, newId) {
-    state.id = newId;
-  },
   SET_PATH(state, newPath) {
     state.path = newPath;
   },
@@ -95,29 +93,20 @@ const mutations = {
   SET_RESULT(state, results) {
     state.data = results;
   },
-  RESET_RESULT_TO_DEFAULT(state) {
+  [m.RESET_RESULTS](state) {
     Object.assign(state, getDefaultResultState());
   },
 };
 
 const actions = {
-  // setCurrentDispatchData({ commit }, windowSize) {
-  //   commit('SET_CURRENT_DISPATCH_DATA', windowSize);
-  // },
-  // setNextDispatchData({ commit }, payload) {
-  //   commit('SET_NEXT_DISPATCH_DATA', payload);
-  // },
-  // setPreviousDispatchData({ commit }, payload) {
-  //   commit('SET_PREVIOUS_DISPATCH_DATA', payload);
-  // },
-  receiveResults({ commit }, results) {
+  [a.RECEIVE_RESULTS]({ commit }, results) {
     // TODO: handle parsing error
-    commit(`Application/${m.SET_RUN_NOT_IN_PROGRESS}`);
+    commit(`Application/${m.SET_RUN_NOT_IN_PROGRESS}`, null, { root: true });
     try {
       const resultDataObject = new ResultsData(results);
       commit('SET_RESULT', resultDataObject);
       commit('SET_PATH', results.resultsPath);
-      commit('Application/SET_RESULT_SUCCESS');
+      commit('Application/SET_RESULT_SUCCESS', null, { root: true });
       commit('CREATE_SUMMARY_PLOTS');
       commit('CREATE_FINANCIAL_PLOTS');
       commit('CREATE_DISPATCH_PLOTS');
@@ -125,18 +114,18 @@ const actions = {
       commit('CREATE_RELIABILITY_PLOTS');
       commit('CREATE_DEFERRAL_PLOTS');
     } catch (error) {
-      commit('Application/SET_RESULT_ERROR');
+      commit('Application/SET_RESULT_ERROR', null, { root: true });
       throw error;
     }
   },
   // TODO add action that transforms the data into plots here, call before mounting a page
-  resetResultToDefault({ commit }, newId) {
-    commit('RESET_RESULT_TO_DEFAULT');
-    commit('SET_ID', newId);
+  [a.RESET]({ commit }) {
+    commit(m.RESET_RESULTS);
   },
 };
 
 export default {
+  namespaced: true,
   state,
   mutations,
   actions,

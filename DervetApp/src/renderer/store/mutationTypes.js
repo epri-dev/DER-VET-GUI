@@ -1,5 +1,8 @@
 // TODO use these constants in Results, Project, CalenvironScreen, and Appilcation
 
+// Results mutations
+export const RESET_RESULTS = 'RESET_RESULTS';
+
 // Aplication mutations
 export const APPLICATION = 'Application';
 export const SET_COMPLETENESS = 'SET_COMPLETENESS';
@@ -9,10 +12,11 @@ export const SET_RUN_NOT_IN_PROGRESS = 'SET_RUN_NOT_IN_PROGRESS';
 export const SET_RESULT_SUCCESS = 'SET_RESULT_SUCCESS';
 export const SET_RESULT_ERROR = 'SET_RESULT_ERROR';
 export const SET_NEW_ERROR_LIST = 'SET_NEW_ERROR_LIST';
+export const RESET_APPLICATION = 'RESET_APPLICATION';
 
 // Project mutations
 // index page
-export const RESET_PROJECT_TO_DEFAULT = 'RESET_PROJECT_TO_DEFAULT';
+export const RESET_PROJECT = 'RESET_PROJECT';
 export const LOAD_NEW_PROJECT = 'LOAD_NEW_PROJECT';
 export const LOAD_QUICK_START_PROJECT = 'LOAD_QUICK_START_PROJECT';
 export const SET_ALL_VALUES_IN_TECH = 'SET_ALL_VALUES_IN_TECH';
