@@ -845,6 +845,7 @@ p.tool-tip {
     font-size: 13px;
     line-height: 1.55rem;
     transition: all .3s ease-in;
+    margin-right: 1rem !important;
 }
 
 p.tool-tip:hover {
