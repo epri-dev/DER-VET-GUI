@@ -13,6 +13,8 @@
   import isEmpty from 'lodash/isEmpty';
   import TopNavBar from '@/components/Shared/TopNavBar';
 
+  import * as a from '@/store/actionTypes';
+
   export default {
     components: { TopNavBar },
     name: 'DER-VET',
@@ -21,7 +23,7 @@
         this.$store.dispatch('CalEnviroScreen/loadCesScores');
       }
       if (isEmpty(this.$store.state.OpenEI.utilities)) {
-        this.$store.dispatch('OpenEI/loadUtilities', this.$store.state.OpenEI.apiKey)
+        this.$store.dispatch(`OpenEI/${a.LOAD_UTILITIES}`, this.$store.state.OpenEI.apiKey)
           .catch(() => null);
       }
     },

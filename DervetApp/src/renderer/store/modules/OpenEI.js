@@ -25,7 +25,7 @@ const actions = {
     // but we never want to reset OpenEI state as part of the global reset.
     return null;
   },
-  loadUtilities({ commit }, apiKey) {
+  [a.LOAD_UTILITIES]({ commit }, apiKey) {
     return new Promise((resolve, reject) => {
       if (apiKey) {
         getUtilityCompanies(apiKey)
@@ -38,7 +38,7 @@ const actions = {
       }
     });
   },
-  setApiKey({ commit }, newApiKey) {
+  [a.SET_API_KEY]({ commit }, newApiKey) {
     return new Promise((resolve) => {
       commit('SET_API_KEY', newApiKey);
       resolve();

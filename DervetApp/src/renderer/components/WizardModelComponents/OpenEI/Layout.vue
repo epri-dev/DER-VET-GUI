@@ -44,6 +44,7 @@
 <script lang="ts">
   import Fuse from 'fuse.js';
   import filter from 'lodash/filter';
+  import isEmpty from 'lodash/isEmpty';
   import map from 'lodash/map';
 
   import SearchFilters from '@/components/WizardModelComponents/OpenEI/SearchFilters';
@@ -115,8 +116,11 @@
           this.$store.dispatch('addManyRetailTariffBillingPeriods', pds)
             .then(this.$router.push({ path: FINANCIAL_INPUTS_RETAIL_TARIFF }));
         }).catch((err) => {
-          this.errorMessage = `${err}: unable to add tariff to project.`;
+          this.errorMessage = `${err}`;
         });
+      },
+      isConnectionError(msg: string) {
+        return msg === 'Request failed with status code 403' || msg === 'Network Error';
       },
       onClickSearch(address: string, sector: Sector, utility: string) {
         this.fetchingTariffs = true;
@@ -127,12 +131,16 @@
           sector,
         }).then((response) => {
           this.tariffs = filter(response.data.items, i => i.utility === utility);
-          this.errorMessage = null;
-        }).catch((err) => {
-          if (err.message === 'Request failed with status code 403') {
-            this.errorMessage = 'Unable to fetch tariffs: please check that you have an internet connection and valid API key';
+          if (isEmpty(this.tariffs)) {
+            this.errorMessage = '0 tariffs matching search criteria.';
           } else {
-            this.errorMessage = `${err}: unable to fetch tariffs.`;
+            this.errorMessage = null;
+          }
+        }).catch((err) => {
+          if (this.isConnectionError(err.message)) {
+            this.errorMessage = 'Unable to fetch tariffs. Please check that you have an internet connection and valid API key.';
+          } else {
+            this.errorMessage = `${err.message}. Unable to fetch tariffs.`;
           }
         }).finally(() => {
           this.fetchingTariffs = false;
