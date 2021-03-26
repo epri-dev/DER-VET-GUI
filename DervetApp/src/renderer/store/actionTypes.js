@@ -1,6 +1,6 @@
 // TODO use these constants in Results, Project, CalenvironScreen, and Appilcation
 
-// Shared actions
+// Shared
 export const RESET = 'reset';
 
 // Aplication actions
@@ -11,10 +11,14 @@ export const RECEIVE_ERROR = 'receiveError';
 export const RESULTS_RECEIVED = 'resultRecieved';
 export const SET_QUICK_START_ERROR_LIST = 'setQuickStartErrorList';
 
-// Results actions
+// OpenEI
+export const LOAD_UTILITIES = 'loadUtilities';
+export const SET_API_KEY = 'setApiKey';
+
+// Results
 export const RECEIVE_RESULTS = 'receiveResults';
 
-// Project actions
+// Project
 // index page
 export const RESET_PROJECT = 'resetProject';
 export const LOAD_QUICK_START_PROJECT = 'loadQuickStartProject';

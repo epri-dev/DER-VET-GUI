@@ -12,7 +12,7 @@
              v-model="$attrs.value"
              @input="onChange">
       </input>
-      <input v-if="isNumeric(field)"
+      <input v-if="isNumeric(field.type)"
              class="form-control valid"
              :class="[{'is-invalid': isInvalid}, isLargeBox ? 'numberbox-lg' : 'numberbox']"
              v-model.number="$attrs.value"
@@ -55,12 +55,12 @@
       'buttonCallback',
     ],
     methods: {
-      isNumeric(field) {
-        return field.type === Number || field.type === 'float' || field.type === 'int';
+      isNumeric(type) {
+        return type === Number || type === 'float' || type === 'int';
       },
       onChange(e) {
         let val = e.target.value;
-        if (this.isNumeric(this.field)) {
+        if (this.isNumeric(this.field.type)) {
           const n = parseFloat(val);
           val = Number.isNaN(n) ? val : n;
         /* // for type int, this approach was suboptimal

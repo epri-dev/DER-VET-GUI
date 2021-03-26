@@ -5,7 +5,7 @@
       <legend>OpenEI Connection</legend>
 
       <div>
-        To use this tool, you must sign up for an API key on the <open-external-link :link="OPEN_EI_SIGNUP_URL" text="OpenEI website."/> Please enter the key below and click 'Save'.
+        To use this tool, you must sign up for an API key on <open-external-link :link="OPEN_EI_SIGNUP_URL" text="OpenEI's website."/> Please enter the key below and click 'Save'.
       </div>
 
       <br/>
@@ -66,6 +66,7 @@
   import OpenExternalLink from '@/components/Shared/OpenExternalLink';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import { Sector } from '@/service/OpenEI/response';
+  import * as a from '@/store/actionTypes';
   import { arrayToAllowedValues, enumToAllowedValues, AllowedValue } from '@/util/project';
 
   const OPEN_EI_SIGNUP_URL = 'https://openei.org/services/api/signup/';
@@ -150,10 +151,10 @@
         }
       },
       saveApiKey() {
-        this.$store.dispatch('OpenEI/setApiKey', this.apiKey)
+        this.$store.dispatch(`OpenEI/${a.SET_API_KEY}`, this.apiKey)
           .then(() => {
             if (isEmpty(this.$store.state.OpenEI.utilities)) {
-              this.$store.dispatch('OpenEI/loadUtilities', this.apiKey)
+              this.$store.dispatch(`OpenEI/${a.LOAD_UTILITIES}`, this.apiKey)
                 .catch((err: any) => err); // TODO handle error
             }
           });
