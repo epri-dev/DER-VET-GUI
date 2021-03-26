@@ -139,8 +139,11 @@ export const SET_TS_REQUIRED = 'setTSRequired';
 // user defined service
 export const SET_USER_ENERGY_MAX = 'setUserEnergyMax';
 export const SET_USER_ENERGY_MIN = 'setUserEnergyMin';
-export const SET_USER_POWER_MAX = 'setUserPowerMax';
-export const SET_USER_POWER_MIN = 'setUserPowerMin';
+export const SET_USER_POWER_EXPORT_MAX = 'setUserPowerExportMax';
+export const SET_USER_POWER_EXPORT_MIN = 'setUserPowerExportMin';
+export const SET_USER_POWER_IMPORT_MAX = 'setUserPowerImportMax';
+export const SET_USER_POWER_IMPORT_MIN = 'setUserPowerImportMin';
+export const SET_USER_INFEASIBLE = 'setUserInfeasible';
 export const SET_USER_PRICE = 'setUserPrice';
 // financial
 export const ADD_RETAIL_TARIFF_BILLING_PERIOD = 'addRetailTariffBillingPeriod';

@@ -7,6 +7,10 @@ class LFEnergyOptionUpTimeSeries extends TimeSeriesBase {
     this.pageAttributes = this.getPageAttributes('components', 'objectives', 'LF');
     this.tsName = TS_LF_EOU;
   }
+
+  extraValidate() {
+    return [this.invalidCheckSingleValueBetweenXAndY(0, 1).errorMsg];
+  }
 }
 
 export default LFEnergyOptionUpTimeSeries;

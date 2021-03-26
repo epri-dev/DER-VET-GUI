@@ -6,6 +6,10 @@ class DRMonthsAppliedMonthly extends MonthlyBase {
     super('DR Months (y/n)', data);
     this.tsName = MTS_DR_MONTHS_APPLIED;
   }
+
+  extraValidate() {
+    return [this.invalidCheckSingleValueInclusiveList([0, 1]).errorMsg];
+  }
 }
 
 export default DRMonthsAppliedMonthly;

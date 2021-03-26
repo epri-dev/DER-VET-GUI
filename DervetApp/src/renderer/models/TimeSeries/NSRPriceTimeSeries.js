@@ -7,6 +7,10 @@ class NSRPriceTimeSeries extends TimeSeriesBase {
     this.pageAttributes = this.getPageAttributes('components', 'objectives', 'NSR');
     this.tsName = TS_NSR_PRICE;
   }
+
+  extraValidate() {
+    return [this.invalidCheckSingleValueAtLeastX(0).errorMsg];
+  }
 }
 
 export default NSRPriceTimeSeries;

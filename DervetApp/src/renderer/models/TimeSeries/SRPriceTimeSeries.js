@@ -7,6 +7,10 @@ class SRPriceTimeSeries extends TimeSeriesBase {
     this.pageAttributes = this.getPageAttributes('components', 'objectives', 'SR');
     this.tsName = TS_SR_PRICE;
   }
+
+  extraValidate() {
+    return [this.invalidCheckSingleValueAtLeastX(0).errorMsg];
+  }
 }
 
 export default SRPriceTimeSeries;

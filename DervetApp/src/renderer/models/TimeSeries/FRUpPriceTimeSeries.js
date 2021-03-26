@@ -7,6 +7,10 @@ class FRUpPriceTimeSeries extends TimeSeriesBase {
     this.pageAttributes = this.getPageAttributes('components', 'objectives', 'FR');
     this.tsName = TS_FR_UP_PRICE;
   }
+
+  extraValidate() {
+    return [this.invalidCheckSingleValueAtLeastX(0).errorMsg];
+  }
 }
 
 export default FRUpPriceTimeSeries;
