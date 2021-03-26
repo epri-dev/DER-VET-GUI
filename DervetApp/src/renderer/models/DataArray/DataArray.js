@@ -194,10 +194,12 @@ class DataArray {
   }
 
   invalidCheckValuesDontCrossZero() {
-    const isSignOfFirstValuePositive = this.data[0] >= 0;
+    const firstValIndex = this.data.findIndex(val => val !== 0);
+    const isSignOfFirstNonZeroValuePositive = this.data[firstValIndex] > 0;
     const invalidRows = this.data.reduce((a, val, i) => {
-      const isSignOfNextValuePositive = val >= 0;
-      if (isSignOfNextValuePositive !== isSignOfFirstValuePositive) a.push(i + 1);
+      const isSignOfNextNonZeroValuePositive = val > 0;
+      if (val !== 0
+        && isSignOfNextNonZeroValuePositive !== isSignOfFirstNonZeroValuePositive) a.push(i + 1);
       return a;
     }, []);
     if (invalidRows.length === 0) return noErrorObject;

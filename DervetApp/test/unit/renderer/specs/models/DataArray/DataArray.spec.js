@@ -109,4 +109,62 @@ describe('DataArray model', () => {
     expected = { errorMsg: null };
     expect(actual).to.eql(expected);
   });
+
+  const fakeData3 = new DataArray(
+    [2, 0, 33, -0.1],
+  );
+  const fakeData4 = new DataArray(
+    [0, -2.2, -44, 55],
+  );
+
+  it('should return invalidCheckValuesDontCrossZero properly', () => {
+    let actual = fakeData3.invalidCheckValuesDontCrossZero();
+    let expected = { errorMsg: '<b>Invalid Data:</b> This file has both positive and negative values. It must have only positive, or only negative values as it constrains power in one direction. This violation first occurs on row 4' };
+    expect(actual).to.eql(expected);
+
+    actual = fakeData4.invalidCheckValuesDontCrossZero();
+    expect(actual).to.eql(expected);
+
+    actual = fakeData2.invalidCheckValuesDontCrossZero();
+    expected = { errorMsg: null };
+    expect(actual).to.eql(expected);
+  });
+
+  const fakeData5 = new DataArray(
+    [2, 0, -33, 22.2],
+  );
+  const fakeData6 = new DataArray(
+    [0, 0, 2, 2],
+  );
+
+  it('should return infeasibleCheckMaxMustExceedMin properly', () => {
+    let actual = fakeData5.infeasibleCheckMaxMustExceedMin(fakeData6);
+    let expected = { errorMsg: null, errorListMsg: null };
+    expect(actual).to.eql(expected);
+
+    actual = fakeData6.infeasibleCheckMaxMustExceedMin(fakeData5);
+    expected = {
+      errorMsg: '<b>3 Infeasible Rows:</b> For all times, values in <b>undefined</b> must not exceed those in <b>undefined</b> : <b>Line Numbers:</b> [1,3,4]',
+      errorListMsg: 'Infeasible timeseries data: undefined and undefined',
+    };
+    expect(actual).to.eql(expected);
+  });
+
+  const fakeData7 = new DataArray(
+    [-1, 1, 0, 0],
+  );
+
+  it('should return infeasibleCheckOnlyOneNonZero properly', () => {
+    let actual = fakeData6.infeasibleCheckOnlyOneNonZero(fakeData7);
+    let expected = { errorMsg: null, errorListMsg: null };
+    expect(actual).to.eql(expected);
+
+    actual = fakeData5.infeasibleCheckOnlyOneNonZero(fakeData6);
+    expected = {
+      errorMsg: '<b>2 Infeasible Rows:</b> For all times, values in <b>undefined</b> and <b>undefined</b> must not both be non-zero : <b>Line Numbers:</b> [3,4]',
+      errorListMsg: 'Infeasible timeseries data: undefined and undefined',
+    }
+    expect(actual).to.eql(expected);
+
+  });
 });
