@@ -163,8 +163,7 @@ describe('DataArray model', () => {
     expected = {
       errorMsg: '<b>2 Infeasible Rows:</b> For all times, values in <b>undefined</b> and <b>undefined</b> must not both be non-zero : <b>Line Numbers:</b> [3,4]',
       errorListMsg: 'Infeasible timeseries data: undefined and undefined',
-    }
+    };
     expect(actual).to.eql(expected);
-
   });
 });
