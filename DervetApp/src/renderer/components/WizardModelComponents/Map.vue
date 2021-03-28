@@ -10,7 +10,7 @@
                   :to="techPath(tagItems.path, techItem)"
                   v-bind:class="{ 'incomplete-btn': !techItem.complete }"
                   :key="techItem.id">
-          {{getTechLabel(tagItems.shortHand, techItem)}}
+          {{getTechLabel(techItem)}}
         </b-button>
       </div>
     </div>

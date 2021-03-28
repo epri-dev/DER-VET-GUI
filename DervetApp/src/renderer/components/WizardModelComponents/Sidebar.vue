@@ -23,7 +23,7 @@
                      v-bind:class="{
             current: isCurrent(techPath(techTag.path, techItem)),
             incomplete: !techItem.complete }">
-          {{ getTechLabel(techTag.shortHand, techItem) }}
+          {{ getTechLabel(techItem) }}
         </router-link>
       </div>
 

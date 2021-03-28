@@ -86,6 +86,7 @@
         CAL_ENVIRO_SCREEN,
         OBJECTIVES,
         TECH_SPECS,
+        addingTech: false,
       };
     },
     computed: {
