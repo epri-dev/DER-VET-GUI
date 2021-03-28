@@ -19,6 +19,15 @@
           ></b-form-checkbox-group>
         </b-form-group>
       </div>
+      <div class="row">
+        <div class="col-md-1"></div>
+        <div v-if="submitted && areZeroMonthsSelected"
+          class="col-md-5 error-text-color">
+          <span>{{ ZERO_MONTHS_ERROR_MSG }}</span>
+          <br>
+          <br>
+        </div>
+      </div>
 
       <text-input v-model="drNumberEvents"
                   v-bind:field="metadata.drNumberEvents"
@@ -118,7 +127,7 @@
       <hr>
 
       <save-and-save-continue
-        :displayError="submitted && ($v.$anyError || isTSError)"
+        :displayError="submitted && ($v.$anyError || isTSError || areZeroMonthsSelected)"
         :save="validatedSaveStay"
         :save-continue="validatedSaveContinue"
       />
@@ -153,6 +162,7 @@
 
   const ALL_FIELDS = [...FIELDS, ...TS_FIELDS];
   const validations = projectMetadata.getValidationSchema(FIELDS);
+  const ZERO_MONTHS_ERROR_MSG = 'At least one month must be selected';
 
   const CONSTANTS = {
     DESTINATION_PATH,
@@ -174,6 +184,7 @@
         ...this.getUseExistingDefaults(TS_FIELDS),
         CONSTANTS,
         monthsList: MONTHS,
+        ZERO_MONTHS_ERROR_MSG,
       };
     },
     validations: {
@@ -192,6 +203,9 @@
       },
     },
     computed: {
+      areZeroMonthsSelected() {
+        return !this.drMonthsAppliedLabels.some((val) => val !== 0);
+      },
       isRequiredTSFields() {
         // return an object of booleans for every TS_FIELD,
         //   indicating if each is required
@@ -210,6 +224,13 @@
       },
     },
     methods: {
+      getErrorListPayload() {
+        const errorListPayload = csvUploadMixin.methods.getErrorListPayload.bind(this)();
+        if (this.areZeroMonthsSelected) {
+          errorListPayload.errorList.unshift(ZERO_MONTHS_ERROR_MSG);
+        }
+        return errorListPayload;
+      },
       getErrorMsg(fieldName) {
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
