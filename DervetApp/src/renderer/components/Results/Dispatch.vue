@@ -32,48 +32,6 @@
               </button>
             </div>
           </div>
-          <!-- TODO keep for d3 plot 
-          <div class="form-group text-center">
-            <b-form-group>
-              <b-form-checkbox-group buttons class="col-md-10" v-model="displayData">
-                <b-form-checkbox value='SOC'>
-                  SOC
-                </b-form-checkbox>
-                <b-form-checkbox value='Battery'>
-                  Battery
-                </b-form-checkbox>
-                <b-form-checkbox value='PV'>
-                  PV
-                </b-form-checkbox>
-                <b-form-checkbox value='Distributed Generation'>
-                  Distributed Generation
-                </b-form-checkbox>
-                <b-form-checkbox value='Load'>
-                  Load
-                </b-form-checkbox>
-                <b-form-checkbox value='Net Load'>
-                  Net Load
-                </b-form-checkbox>
-              </b-form-checkbox-group>
-              <b-form-checkbox-group buttons v-model="displayData" class="col-md-10">
-                <b-form-checkbox value='Day Ahead'>
-                  Day Ahead
-                </b-form-checkbox>
-                <b-form-checkbox value='Spinning Reserves'>
-                  Spinning Reserves
-                </b-form-checkbox>
-                <b-form-checkbox value='Non-Spinning Reserves'>
-                  Non-Spinning Reserves
-                </b-form-checkbox>
-                <b-form-checkbox value='Regulation'>
-                  Regulation
-                </b-form-checkbox>
-                <b-form-checkbox value='Load Following'>
-                  Load Following
-                </b-form-checkbox>
-              </b-form-checkbox-group>
-            </b-form-group>
-          </div> -->
           <div class="form-group row text-center">
               <div class="col-md-1">
                 <label>From:</label>
@@ -100,6 +58,10 @@
           <div id="chartDispatchTimeSeriesPlots">
           </div>
         </div>
+        <!-- <div class="col-md-12">
+          <div id="chartDispatchTimeSeriesPlots2">
+          </div>
+        </div> -->
         <hr>
         <div class="form-group">
           <div class="col-md-12">
@@ -114,7 +76,6 @@
 
 <script>
   import moment from 'moment';
-  import * as d3 from 'd3';
   import forEach from 'lodash/forEach';
   import find from 'lodash/find';
   import Plotly from 'plotly.js';
@@ -127,6 +88,7 @@
       this.createChartEnergyPriceHeatMap('chartEnergyPriceHeatMap');
       this.setCurrentDispatchData('days');
       this.createChartDispatchTimeSeriesPlots('chartDispatchTimeSeriesPlots');
+      // this.tryChartDispatchTimeSeriesPlots('chartDispatchTimeSeriesPlots2');
     },
     data() {
       // TODO fixme
@@ -136,9 +98,6 @@
       return {
         resultsPath: RESULTS,
         displayData: [],
-        width: 500,
-        height: 270,
-        padding: 60,
         dispatchType: 'days',
         dispatchTo: null,
         dispatchFrom: null,
@@ -172,17 +131,6 @@
         }
         return null;
       },
-      rangeX() {
-        const width = this.width - this.padding;
-        return [0, width];
-      },
-      rangeY() {
-        const height = this.height - this.padding;
-        return [0, height];
-      },
-      viewBox() {
-        return `0 0 ${this.width} ${this.height}`;
-      },
       dispatchDataPayload() {
         return {
           currStartDate: this.dispatchFrom,
@@ -201,6 +149,9 @@
       },
     },
     methods: {
+      colorGenerator() {
+        return '#'.concat(Math.floor(Math.random() * 255)).toString(16);
+      },
       dataRange() {
         const momentFrom = moment(this.dispatchFrom).startOf('day');
         if (this.dispatchType === 'days') {
@@ -241,20 +192,6 @@
         const { currStartDate, currEndDate, windowSize } = this.dispatchDataPayload;
         this.dispatchDataIterator.previous(currStartDate, currEndDate, windowSize);
         this.redrawDispatchItems();
-      },
-      path(data) {
-        const x = d3.scaleLinear().range(this.rangeX);
-        const y = d3.scaleLinear().range(this.rangeY);
-        d3.axisLeft().scale(x);
-        d3.axisTop().scale(y);
-        x.domain(d3.extent(data, (d, i) => i));
-        y.domain([0, d3.max(data, d => d)]);
-        return d3.line()
-          .x((d, i) => x(i))
-          .y(d => y(d));
-      },
-      line(data) {
-        return this.path(data);
       },
       getColorFromTechnology(tech) {
         if (tech === 'pv') {
@@ -300,12 +237,13 @@
               },
             },
           },
+          annotations: [],
         };
   
         const config = {
           displaylogo: false, // hides the plotly logo from the modebar when false
           scrollZoom: false, // allows mouse wheel scroll when true
-          staticPlot: true, // disable modebar options when true
+          // staticPlot: true, // disable modebar options when true
           responsive: true, // responsive to window size
           autosizeable: true,
           toImageButtonOptions: {
@@ -313,57 +251,51 @@
             format: 'png', // 'jpeg',
             filename: 'dispatch-time-series-plots',
           },
-          modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d', 'toggleSpikelines'],
+          modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'toggleSpikelines'],
         };
 
         // BUILD LAYOUT AND DATA
+        const hasReservations = Boolean(rawData.marketPrices.length);
         let trace = null;
         const buffer = 0.02;
-        let totalNumPlots = 5 - (rawData.hasReservations ? 0 : 1);
+        let totalNumPlots = 5 - (hasReservations ? 0 : 1);
         totalNumPlots -= (rawData.aggregatedSOC.data !== null ? 0 : 1);
         const subPlotHeight = (1 / totalNumPlots) - buffer;
         let lastPlotHeight = 0;
 
-        // 1) Net load
-        forEach(rawData.poiPower, (value) => {
+        // 1) Aggregated SOC
+        const essSocData = rawData.aggregatedSOC;
+        if (essSocData.data !== null) {
+          // add trace
           trace = {
-            legendgroup: 'poiPower',
             x: xx,
-            y: value.data,
+            y: essSocData.data,
             mode: 'lines',
             type: 'scatter',
-            name: value.label,
-            // fill: rawData.hasReservations ? 'tozeroy' : 'none',
+            name: essSocData.label,
+            yaxis: 'y5',
             line: {
-              shape: 'vh',
+              shape: 'linear',
             },
-            // xaxis: 'x',
-            yaxis: 'y5',
+            marker: {
+              color: this.getColorFromTechnology('ess'),
+            },
           };
           data.push(trace);
-        });
-        // add reservations on top (if included in data)
-        forEach(rawData.reservations, (value) => {
-          trace = {
-            legendgroup: 'reservations',
-            x: xx,
-            y: value.data,
-            type: 'bar',
-            name: value.label,
-            yaxis: 'y5',
-          };
-          data.push(trace);
-        });
-        layout.yaxis5 = {
-          domain: [lastPlotHeight, lastPlotHeight + subPlotHeight],
-          title: {
-            text: 'Power (kW)',
-            font: {
-              size: 12,
+          layout.yaxis5 = {
+            domain: [lastPlotHeight, lastPlotHeight + subPlotHeight],
+            fixedrange: true,
+            tickformat: ',.0%', // format yaxis as a percent
+            range: [0, 1.01],
+            title: {
+              text: 'SOC (%)',
+              font: {
+                size: 12,
+              },
+              standoff: 5, // create gap between axis and title
             },
-            standoff: 5, // create gap between axis and title
-          },
-        };
+          };
+        }
         // increment plot height
         lastPlotHeight = lastPlotHeight + subPlotHeight + buffer;
 
@@ -378,7 +310,6 @@
           line: {
             shape: 'vh',
           },
-          // xaxis: 'x',
           yaxis: 'y4',
         };
         data.push(trace);
@@ -394,9 +325,8 @@
         };
         // increment plot height
         lastPlotHeight = lastPlotHeight + subPlotHeight + buffer;
-
         // 3) Market/Capacity Prices
-        if (rawData.hasReservations) {
+        if (hasReservations) {
           forEach(rawData.marketPrices, (value) => {
             trace = {
               legendgroup: 'marketPrices',
@@ -439,7 +369,6 @@
             line: {
               shape: 'vh',
             },
-            // xaxis: 'x',
             yaxis: 'y2',
           };
           data.push(trace);
@@ -457,42 +386,86 @@
         // increment plot height
         lastPlotHeight = lastPlotHeight + subPlotHeight + buffer;
 
-        // 5) Aggregated SOC
-        const essSocData = rawData.aggregatedSOC;
-        if (essSocData.data !== null) {
-          // add trace
+        // 5) Net load & reservations
+        let base = null;
+        forEach(rawData.poiPower, (value) => {
           trace = {
+            legendgroup: 'poiPower',
             x: xx,
-            y: essSocData.data,
+            y: value.data,
             mode: 'lines',
             type: 'scatter',
-            name: essSocData.label,
-            yaxis: 'y',
+            name: value.label,
             line: {
-              shape: 'linear',
+              shape: 'vh',
             },
+            yaxis: 'y',
+            showarrow: false,
+          };
+          if (value.label === 'Net Load') {
+            base = value.data;
+            console.log('set base');
+          }
+          data.push(trace);
+        });
+        // add reservations on top (if included in data)
+        forEach(rawData.reservations, (value) => {
+          const color = this.colorGenerator();
+          // bar
+          const vals = value.data;
+          trace = {
+            legendgroup: 'reservations',
+            x: xx,
+            y: vals,
+            base,
+            type: 'bar',
+            name: value.label,
+            yaxis: 'y',
+            width: 0.01,
             marker: {
-              color: this.getColorFromTechnology('ess'),
+              color,
             },
           };
           data.push(trace);
-          layout.yaxis = {
-            domain: [lastPlotHeight, lastPlotHeight + subPlotHeight],
-            fixedrange: true,
-            tickformat: ',.0%', // format yaxis as a percent
-            range: [0, 1.01],
-            title: {
-              text: 'SOC (%)',
-              font: {
-                size: 12,
-              },
-              standoff: 5, // create gap between axis and title
+          // arrow marker
+          let arrowMarker = null;
+          if (value.label.indexOf('Up') !== -1) {
+            arrowMarker = 'triangle-up';
+          } else {
+            arrowMarker = 'triangle-down';
+          }
+          const reservationMarker = base.map((el, i) => el + vals[i]);
+          trace = {
+            legendgroup: 'reservations',
+            x: xx,
+            y: reservationMarker,
+            base,
+            type: 'scatter',
+            mode: 'markers',
+            yaxis: 'y',
+            marker: {
+              symbol: arrowMarker,
+              size: 6,
+              color,
             },
+            showlegend: false,
+            hoverinfo: 'skip',
           };
-        }
+          data.push(trace);
+        });
+        layout.yaxis = {
+          domain: [lastPlotHeight, lastPlotHeight + subPlotHeight],
+          title: {
+            text: 'Power (kW)',
+            font: {
+              size: 12,
+            },
+            standoff: 5, // create gap between axis and title
+          },
+        };
+
         return Plotly.newPlot(ctx, data, layout, config);
       },
-
       createChartEnergyPriceHeatMap(chartId) {
         const ctx = document.getElementById(chartId);
         const trace1 = {
