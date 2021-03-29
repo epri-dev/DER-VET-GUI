@@ -410,7 +410,6 @@
           };
           if (value.label === 'Net Load') {
             base = value.data;
-            console.log('set base');
           }
           data.push(trace);
         });
