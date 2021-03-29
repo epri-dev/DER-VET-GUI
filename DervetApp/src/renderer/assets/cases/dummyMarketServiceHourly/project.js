@@ -1,6 +1,7 @@
 import DAPriceTimeSeries from '@/models/TimeSeries/DAPriceTimeSeries';
 import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
 import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
+import FRPriceTimeSeries from '@/models/TimeSeries/FRPriceTimeSeries';
 import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
 import {
   TECH_SPECS_BATTERY,
@@ -146,9 +147,9 @@ export const dummyMarketServiceHourly = {
   frEOD: 0.3,
   frGrowth: 2,
   frEnergyPriceGrowth: 5,
-  frCombinedMarket: false,
+  frCombinedMarket: true,
   frDuration: 0,
-  tsFrPrice: null,
+  tsFrPrice: new FRPriceTimeSeries(marketPrice),
   tsFrUpPrice: new FRUpPriceTimeSeries(marketPrice),
   tsFrDownPrice: new FRDownPriceTimeSeries(marketPrice),
   srGrowth: 2,

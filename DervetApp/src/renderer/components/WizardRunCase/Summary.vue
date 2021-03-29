@@ -34,7 +34,7 @@
                   <router-link
                     class="text-decoration-none"
                     :to="techPath(techTag.path, techItem)">
-                    {{ getTechLabel(techTag.fullName, techItem) }}
+                    {{ getTechLabel(techItem) }}
                   </router-link>
 
                   <ul>

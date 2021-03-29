@@ -68,7 +68,7 @@
     { id: 1, value: 'billReductionProject', text: 'DER for Bill Reduction' },
     { id: 2, value: 'reliabilityProject', text: 'DER for Reliability' },
     { id: 3, value: 'ERCOTMarketService', text: 'ERCOT Market Case' },
-    { id: 4, value: 'dummyMarketServiceHourly', text: 'Dummy Market Case' },
+    // { id: 4, value: 'dummyMarketServiceHourly', text: 'Dummy Market Case' }, // for testing only
   ];
 
   export default {
@@ -89,7 +89,8 @@
     },
     methods: {
       resetAllStoreModules() {
-        return this.$store.dispatch(a.RESET_PROJECT) // TODO namespace project
+        return this.$store.dispatch('Application/killPython', this.$store.state.Project)
+          .then(this.$store.dispatch(a.RESET_PROJECT)) // TODO namespace project
           .then(this.$store.dispatch(`Results/${a.RESET}`))
           .then(this.$store.dispatch(`Application/${a.RESET}`))
           .then(this.$store.dispatch(`CalEnviroScreen/${a.RESET}`));
