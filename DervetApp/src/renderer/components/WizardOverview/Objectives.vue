@@ -82,9 +82,11 @@
       </div>
       <div class="buffer-top-lg">
         <fieldset class="section-group">
-          <legend>Wholesale Services</legend>
-          <div class="col-md-12 tool-tip" v-if="sizingEquipment">
-            These serivces should only be chosen if each DER will have a size maximum, otherwise a solution will likely not be found.
+          <legend>Wholesale/Bulk Services</legend>
+          <div class="col-md-12" v-if="sizingEquipment">
+            <p class="tool-tip">
+              These services should only be chosen if each DER will have a size maximum, otherwise a solution will likely not be found.
+            </p>
           </div>
           <div class="row">
             <div class="col-md-6 checkboxes">
@@ -104,20 +106,26 @@
             </div>
           </div>
           <br>
+          <div class="row" v-if="(sizingEquipment === false)">
+            <br>
+            <div class="col-md-6 checkboxes">
+              <b-form-checkbox size='lg' v-model="listOfActiveServices" value="RA"><b>Resource Adequacy</b></b-form-checkbox>
+            </div>
+          </div>
+          <br>
         </fieldset>
       </div>
       <div class="buffer-top-lg">
         <fieldset class="section-group">
           <legend>Grid Support</legend>
           <div class="row">
-            <div class="col-md-6 checkboxes">
+            <div class="col-md-5 checkboxes">
               <b-form-checkbox size='lg' v-model="listOfActiveServices" value="Deferral"><b>Deferral</b></b-form-checkbox>
             </div>
-            <div class="col-md-6 tool-tip" v-if="sizingEquipment">
-              This serivce should only be chosen with storage. Sizing a mix of DERs for this service is in development.
-            </div>
-            <div class="col-md-6 checkboxes" v-if="(sizingEquipment === false)">
-              <b-form-checkbox size='lg' v-model="listOfActiveServices" value="RA"><b>Resource Adequacy</b></b-form-checkbox>
+            <div class="col-md-7" v-if="sizingEquipment">
+              <p class="tool-tip">
+                This service should only be chosen with storage. Sizing a mix of DERs for this service is in development.
+              </p>
             </div>
           </div>
           <br>
@@ -131,7 +139,7 @@
               <b-form-checkbox size='lg' v-model="listOfActiveServices" value="UserDefined"><b>User-Defined Storage Technology Settings</b></b-form-checkbox>
             </div>
             <div class="col-md-7">
-              <p class="tool-tip">Impose timestep by timestep constraints on the power from DERs (and SOC for storage) and service participation. Assign a financial value to meeting these constraints.</p>
+              <p class="tool-tip">Impose timestep-by-timestep constraints on the power from DERs (and SOC for storage) and service participation. Assign a financial value to meeting these constraints.</p>
             </div>
           </div>
         </fieldset>
