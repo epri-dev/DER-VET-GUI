@@ -1,9 +1,9 @@
+import TechnologySpecsBatteryMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsBattery';
 import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
 import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
 import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
 import {
   TECH_SPECS_BATTERY,
-  TECH_SPECS_BATTERY_DATA_CYCLES,
   TECH_SPECS_PV,
   TECH_SPECS_PV_DATA_GENERATION,
 } from '@/router/constants';
@@ -11,6 +11,9 @@ import {
 import { ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV } from '@/store/actionTypes';
 
 import { pvGen, criticalLoad, siteLoad } from '@/assets/cases/billReduction/csvs';
+
+const defaultBatteryCyclesObject = TechnologySpecsBatteryMetadata
+  .getHardcodedMetadata().getDefaultValues().associatedInputs;
 
 export const billReductionCompleteness = {
   overview: {
@@ -318,15 +321,8 @@ export const billReductionProject = {
   }],
   technologySpecsBattery: [{
     active: true,
-    // this should be set elsewhere
-    associatedInputs: [{
-      complete: false,
-      dataRows: [],
-      displayName: 'Battery Cycle Life Curve',
-      errorList: ['Not Started'],
-      path: TECH_SPECS_BATTERY_DATA_CYCLES,
-    }],
-    associatedInputsComplete: false,
+    associatedInputs: defaultBatteryCyclesObject,
+    associatedInputsComplete: true,
     auxiliaryLoad: 0,
     calendarDegradationRate: 0,
     capitalCost: 0,
