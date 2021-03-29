@@ -14,6 +14,9 @@
               <h5>{{ dataRange() }}</h5>
             </div>
             <div class="col-md-6 text-right">
+              <button type="button" id="dispatch-refresh" class="btn" @click="refreshSelection">
+                <i class="fas fa-refresh"></i>
+              </button>
               <b-dropdown :text="windowSizeText" 
                           toggle-class="form-control form-control-inline form-control-width-auto buffer-right">
                 <b-dropdown-item v-for="option in sizes" v-bind:key="option.id"
@@ -38,8 +41,8 @@
               </div>
               <div class="col-md-4">
                 <b-form-datepicker v-model="dispatchFrom" :min="minDate" close-button placeholder="MM/DD/YYYY"
-                  size="sm" :readonly="true" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
-                  :max="dispatchTo ? dispatchTo : maxDate" locale="en" @onChange="setCustomDispatchData">
+                  size="sm" :readonly="!isCustomSelector" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                  :max="dispatchTo ? dispatchTo : maxDate" locale="en">
                 </b-form-datepicker>
               </div>
             
@@ -48,8 +51,8 @@
               </div>
               <div class="col-md-4">
                 <b-form-datepicker v-model="dispatchTo" :min="dispatchFrom ? dispatchFrom : minDate"
-                  size="sm" :readonly="true" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
-                  placeholder="MM/DD/YYYY" close-button :max="maxDate" locale="en"  @onChange="setCustomDispatchData">
+                  size="sm" :readonly="!isCustomSelector" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                  placeholder="MM/DD/YYYY" close-button :max="maxDate" locale="en">
                 </b-form-datepicker>
               </div>
           </div>
@@ -58,10 +61,6 @@
           <div id="chartDispatchTimeSeriesPlots">
           </div>
         </div>
-        <!-- <div class="col-md-12">
-          <div id="chartDispatchTimeSeriesPlots2">
-          </div>
-        </div> -->
         <hr>
         <div class="form-group">
           <div class="col-md-12">
@@ -88,10 +87,8 @@
       this.createChartEnergyPriceHeatMap('chartEnergyPriceHeatMap');
       this.setCurrentDispatchData('days');
       this.createChartDispatchTimeSeriesPlots('chartDispatchTimeSeriesPlots');
-      // this.tryChartDispatchTimeSeriesPlots('chartDispatchTimeSeriesPlots2');
     },
     data() {
-      // TODO fixme
       const minDate = new Date(2017, 0, 1);
       const maxDate = new Date(2017, 11, 31);
 
@@ -108,7 +105,7 @@
           { value: 'weeks', text: 'Week' },
           { value: 'months', text: 'Month' },
           // { value: 'years', text: 'Year' },
-          // { value: 'custom', text: 'Custom' },
+          { value: 'custom', text: 'Custom' },
         ],
       };
     },
@@ -138,14 +135,14 @@
           windowSize: this.dispatchType,
         };
       },
-      // dipatchPlotData() {
-      //   return this.chartData.stackedLineData.current(this.dispatchType);
-      // },
       disableNext() {
-        return moment(this.dispatchTo).isSameOrAfter(this.maxDate, 'day');
+        return moment(this.dispatchTo).isSameOrAfter(this.maxDate, 'day') || this.isCustomSelector;
       },
       disablePrev() {
-        return moment(this.dispatchFrom).isSameOrBefore(this.minDate, 'day');
+        return moment(this.dispatchFrom).isSameOrBefore(this.minDate, 'day') || this.isCustomSelector;
+      },
+      isCustomSelector() {
+        return this.dispatchType === 'custom';
       },
     },
     methods: {
@@ -176,12 +173,21 @@
       setCurrentDispatchData(windowSize) {
         this.dispatchDataIterator.setCurrentWindow(windowSize);
         this.dispatchType = windowSize;
+        this.minDate = this.dispatchDataIterator.minDate;
+        this.maxDate = this.dispatchDataIterator.maxDate;
         this.redrawDispatchItems();
       },
       setCustomDispatchData() {
         this.dispatchDataIterator.setCurrentWindow('custom', this.dispatchFrom, this.dispatchTo);
-        this.dispatchType = 'custom';
+        // this.dispatchType = 'custom';
         this.redrawDispatchItems();
+      },
+      refreshSelection() {
+        if (this.isCustomSelector) {
+          this.setCustomDispatchData();
+        } else {
+          this.setCurrentDispatchData(this.dispatchType);
+        }
       },
       nextDispatchData() {
         const { currStartDate, currEndDate, windowSize } = this.dispatchDataPayload;

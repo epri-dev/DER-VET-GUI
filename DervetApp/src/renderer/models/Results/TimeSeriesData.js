@@ -233,7 +233,6 @@ export class TimeSeriesData extends BaseTableData {
   createDataLabelList(dataByYear, totalEnergyStorageCap) {
     const dataLabelByYear = [];
     forEach(dataByYear, tsData => {
-      console.log(Object.keys(tsData));
       const dataLabelMap = this.grabColumnData(tsData);
       dataLabelMap.set(TRACE_NAMES.timeSeries, tsData.startDatetimeHb);
       if (totalEnergyStorageCap) {
@@ -257,7 +256,6 @@ export class TimeSeriesData extends BaseTableData {
         negate,
       } = payload;
       let data = null;
-      console.log(traceName);
       if (minuendColumnName !== undefined && subtrahendColumnName !== undefined) {
         // subtract numbers (currently not used but keeping for full functionallity)
         const minuendObjKey = BaseTableData.toCamelCaseString(minuendColumnName);
@@ -270,16 +268,12 @@ export class TimeSeriesData extends BaseTableData {
         }
       } else if (minuendColumnName !== undefined && addendColumnName !== undefined) {
         // add numbers
-        console.log('adding');
         const minuendObjKey = BaseTableData.toCamelCaseString(minuendColumnName);
         const addend1 = tsData[minuendObjKey];
         const addendObjKey = BaseTableData.toCamelCaseString(addendColumnName);
         const addend2 = tsData[addendObjKey];
-        console.log(addend1);
-        console.log(addend2);
         if (addend1 !== undefined && addend2 !== undefined) {
           data = TimeSeriesData.addDataArrays(addend1, addend2);
-          // console.log(data);
           columnData.set(traceName, data);
         }
       } else if (minuendColumnName !== undefined) {
@@ -291,7 +285,6 @@ export class TimeSeriesData extends BaseTableData {
         }
       }
       if (data !== null && negate) {
-        console.log('negated');
         columnData.set(traceName, TimeSeriesData.negateDataArray(data));
       }
     });
