@@ -1358,7 +1358,7 @@ const actions = {
     };
     commit(m.SET_ALL_VALUES_IN_TECH, gammaPayload);
     commit(m.SET_ALL_VALUES_IN_TECH, nuPayload);
-    if (payload === true) {
+    if (payload) {
       // TODO: AE: use .then() here?
       dispatch(a.UPDATE_ADD_ALL_ERRORLISTS_IN_TECH, gammaPayload)
         .then(dispatch(a.UPDATE_ADD_ALL_ERRORLISTS_IN_TECH, nuPayload));
