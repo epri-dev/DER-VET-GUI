@@ -82,9 +82,9 @@ export const papaParseCsvString = (csvString, autoDetectHeader = false) => {
 
 export const formatCsvForHref = csv => `data:text/csv;charset=utf-8,${encodeURI(csv)}`;
 
-export const writeJsonToFile = (filePath, json) => (
+export const writeObjectToFile = (filePath, obj) => (
   new Promise((resolve, reject) => {
-    fs.writeFile(filePath, JSON.stringify(json), 'utf8', (err) => {
+    fs.writeFile(filePath, JSON.stringify(obj, null, 2), 'utf8', (err) => {
       if (err === null) {
         resolve();
       }

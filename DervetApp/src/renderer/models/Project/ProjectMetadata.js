@@ -80,6 +80,14 @@ export class ProjectMetadata {
       ...this.operateOnFieldList(c.DEMAND_RESPONSE_FIELDS, f => f.defaultValue),
       ...this.operateOnFieldList(c.TS_ALL, f => new f.DataModel([])),
       ...this.operateOnFieldList(c.MTS_ALL, f => new f.DataModel([])),
+      // DERS
+      [c.TECH_SPECS_BATTERY]: [],
+      [c.TECH_SPECS_CONTROLLABLE_LOAD]: [],
+      [c.TECH_SPECS_DIESEL_GEN]: [],
+      [c.TECH_SPECS_FLEET_EV]: [],
+      [c.TECH_SPECS_ICE]: [],
+      [c.TECH_SPECS_SINGLE_EV]: [],
+      [c.TECH_SPECS_SOLAR_PV]: [],
     };
   }
 
