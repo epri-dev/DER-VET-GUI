@@ -65,6 +65,8 @@ describe('project actions', () => {
   });
 
   it('should update gamma and nu values in PVs when Reliability Service is selected (a)', async () => {
+    // starting with an errorList that has 2 items, this should add 2 more to make 4
+    // starting with a non-null complete, complete should update to false
     const initialState: any = {
       technologySpecsSolarPV: [{ gamma: 44, nu: 22, errorList: ['abc', 'def'] }],
     };
@@ -78,6 +80,8 @@ describe('project actions', () => {
   });
 
   it('should update gamma and nu values in PVs when Reliability Service is selected (b)', async () => {
+    // starting with a value of null for complete, indicating that this service was
+    //   selected, but not started/saved, this action should NOT update complete or errorList
     const initialState: any = {
       technologySpecsSolarPV: [{ gamma: 44, nu: 22, errorList: [], complete: null }],
     };
@@ -91,6 +95,10 @@ describe('project actions', () => {
   });
 
   it('should update gamma and nu values in PVs when Reliability Service is selected (c)', async () => {
+    // starting with an errorList that has 1 item, but the item is the errorMsg is for gamma,
+    //   this should remove that errorMsg, and then add 2 more to make 2 in errorList
+    // starting with a non-null complete, complete should update to false
+    // since componentSpecsComplete exists, that is also updated to false
     const initialState: any = {
       technologySpecsSolarPV: [{
         gamma: 44,
@@ -111,6 +119,9 @@ describe('project actions', () => {
   });
 
   it('should update gamma and nu values in PVs when Reliability Service is deselected (a)', async () => {
+    // starting with an errorList that has 0 items, this action only removes
+    //   items from errorList, so that errorList is unchanged
+    // starting with a non-null complete, complete should update to true
     const initialState: any = {
       technologySpecsSolarPV: [{ gamma: 44, nu: 22, errorList: [] }],
     };
@@ -124,6 +135,8 @@ describe('project actions', () => {
   });
 
   it('should update gamma and nu values in PVs when Reliability Service is deselected (b)', async () => {
+    // starting with a value of null for complete, indicating that this service was
+    //   selected, but not started/saved, this action should NOT update complete or errorList
     const initialState: any = {
       technologySpecsSolarPV: [{ gamma: 44, nu: 22, errorList: [], complete: null }],
     };
@@ -137,6 +150,9 @@ describe('project actions', () => {
   });
 
   it('should update gamma and nu values in PVs when Reliability Service is deselected (c)', async () => {
+    // starting with an errorList that has 1 item, this action only removes
+    //   gamma and nu items from errorList, so that this errorList is unchanged
+    // starting with a non-null complete, complete should update to false
     const initialState: any = {
       technologySpecsSolarPV: [{ gamma: 44, nu: 22, errorList: ['abc'] }],
     };
@@ -150,6 +166,9 @@ describe('project actions', () => {
   });
 
   it('should update gamma and nu values in PVs when Reliability Service is deselected (d)', async () => {
+    // starting with an errorList that has 2 items (gamma and nu), this action removes
+    //   both of these items from errorList, so that this errorList is now []
+    // starting with a non-null complete, complete should update to true
     const initialState: any = {
       technologySpecsSolarPV: [{
         gamma: 44,
