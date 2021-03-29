@@ -131,7 +131,8 @@ export const MTS_DR_FIELDS = [MTS_DR_CAPACITY_PRICE, MTS_DR_CAPACITY_RESERVATION
 export const MTS_RA_CAPACITY_PRICE = 'mtsRaCapacityPrice';
 export const MTS_RA_FIELDS = [MTS_RA_CAPACITY_PRICE];
 
-export const MTS_ALL = [...MTS_RA_FIELDS, ...MTS_BACKUP_FIELDS, ...MTS_DR_FIELDS];
+export const MTS_ALL = [...MTS_RA_FIELDS, ...MTS_BACKUP_FIELDS, ...MTS_DR_FIELDS,
+  MTS_DR_MONTHS_APPLIED];
 
 export const makeAllowedValues = lst => _.map(lst, x => ({ value: x, label: x }));
 
