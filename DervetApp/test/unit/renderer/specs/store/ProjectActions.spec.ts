@@ -19,7 +19,7 @@ describe('project actions', () => {
   it('should update loc value in PVs to null when first battery added to project', async () => {
     const initialState: any = {
       technologySpecsBattery: [],
-      technologySpecsSolarPV: [{ loc: LocType.AC }],
+      technologySpecsSolarPV: [{ loc: LocType.AC, errorList: [] }],
     };
     const store: any = createStore(initialState);
 
@@ -28,9 +28,9 @@ describe('project actions', () => {
   });
 
   it('should update loc value in PVs to null when first battery is activated', async () => {
-    const initialState = {
+    const initialState: any = {
       technologySpecsBattery: [{ tag: 'Battery', id: '123', active: false }],
-      technologySpecsSolarPV: [{ loc: LocType.AC }],
+      technologySpecsSolarPV: [{ loc: LocType.AC, errorList: [] }],
     };
     const store: any = createStore(initialState);
 
@@ -39,9 +39,9 @@ describe('project actions', () => {
   });
 
   it('should update loc value in PVs to AC when last battery is removed from project', async () => {
-    const initialState = {
+    const initialState: any = {
       technologySpecsBattery: [{ id: '123', active: true }, { id: '456', active: true }],
-      technologySpecsSolarPV: [{ loc: LocType.DC }],
+      technologySpecsSolarPV: [{ loc: LocType.DC, errorList: [] }],
     };
     const store: any = createStore(initialState);
 
@@ -52,9 +52,9 @@ describe('project actions', () => {
   });
 
   it('should update loc value in PVs to AC when all batteries are deactivated', async () => {
-    const initialState = {
+    const initialState: any = {
       technologySpecsBattery: [{ id: '123', active: true }, { id: '456', active: true }],
-      technologySpecsSolarPV: [{ loc: LocType.DC }],
+      technologySpecsSolarPV: [{ loc: LocType.DC, errorList: [] }],
     };
     const store: any = createStore(initialState);
 

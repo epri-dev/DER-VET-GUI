@@ -1205,7 +1205,7 @@ const actions = {
     commit(m.SET_SYSTEM_LOAD, payload);
   },
   // technology specs
-  [a.ACTIVATE_TECH]({ commit, getters }, payload) {
+  [a.ACTIVATE_TECH]({ commit, getters, dispatch }, payload) {
     if (payload.tag === 'ICE') {
       commit(m.ACTIVATE_TECH_ICE, payload);
     }
@@ -1221,8 +1221,11 @@ const actions = {
           techType: 'technologySpecsSolarPV',
           key: LOC,
           value: null,
+          displayName: techSolarPVMetadata.loc.displayName,
         };
         commit(m.SET_ALL_VALUES_IN_TECH, setValsPayload);
+        dispatch(a.UPDATE_ADD_ALL_ERRORLISTS_IN_TECH, setValsPayload);
+        commit(m.SET_ALL_COMPLETENESS_IN_TECH, setValsPayload.techType);
       }
       commit(m.ACTIVATE_TECH_BATTERY, payload);
     }
@@ -1236,7 +1239,7 @@ const actions = {
       commit(m.ACTIVATE_TECH_FLEET_EV, payload);
     }
   },
-  [a.ADD_TECH]({ commit, getters }, payload) {
+  [a.ADD_TECH]({ commit, getters, dispatch }, payload) {
     if (payload.tag === 'ICE') {
       commit(m.ADD_TECHNOLOGY_SPECS_ICE, payload);
     }
@@ -1252,8 +1255,11 @@ const actions = {
           techType: 'technologySpecsSolarPV',
           key: LOC,
           value: null,
+          displayName: techSolarPVMetadata.loc.displayName,
         };
         commit(m.SET_ALL_VALUES_IN_TECH, setValsPayload);
+        dispatch(a.UPDATE_ADD_ALL_ERRORLISTS_IN_TECH, setValsPayload);
+        commit(m.SET_ALL_COMPLETENESS_IN_TECH, setValsPayload.techType);
       }
       commit(m.ADD_TECHNOLOGY_SPECS_BATTERY, payload);
     }
@@ -1284,8 +1290,11 @@ const actions = {
           techType: 'technologySpecsSolarPV',
           key: LOC,
           value: LocType.AC,
+          displayName: techSolarPVMetadata.loc.displayName,
         };
         commit(m.SET_ALL_VALUES_IN_TECH, setValsPayload);
+        commit(m.REMOVE_FROM_ALL_ERRORLISTS_IN_TECH, setValsPayload);
+        commit(m.SET_ALL_COMPLETENESS_IN_TECH, setValsPayload.techType);
       }
     }
     if (payload.tag === 'ControllableLoad') {
@@ -1332,8 +1341,11 @@ const actions = {
           techType: 'technologySpecsSolarPV',
           key: LOC,
           value: LocType.AC,
+          displayName: techSolarPVMetadata.loc.displayName,
         };
         commit(m.SET_ALL_VALUES_IN_TECH, setValsPayload);
+        commit(m.REMOVE_FROM_ALL_ERRORLISTS_IN_TECH, setValsPayload);
+        commit(m.SET_ALL_COMPLETENESS_IN_TECH, setValsPayload.techType);
       }
     } else if (payload.tag === 'ControllableLoad') {
       commit(m.REMOVE_TECH_CONTROLLABLE_LOAD, payload);
@@ -1359,7 +1371,6 @@ const actions = {
     commit(m.SET_ALL_VALUES_IN_TECH, gammaPayload);
     commit(m.SET_ALL_VALUES_IN_TECH, nuPayload);
     if (payload) {
-      // TODO: AE: use .then() here?
       dispatch(a.UPDATE_ADD_ALL_ERRORLISTS_IN_TECH, gammaPayload)
         .then(dispatch(a.UPDATE_ADD_ALL_ERRORLISTS_IN_TECH, nuPayload));
     } else {
