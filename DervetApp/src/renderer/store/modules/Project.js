@@ -11,7 +11,7 @@ import { dummyMarketServiceHourly } from '@/assets/cases/dummyMarketServiceHourl
 import { ERCOTMarketService } from '@/assets/cases/ERCOTMarketService/project';
 import { makeDatetimeIndex } from '@/models/dto/ProjectDto';
 import { projectMetadata } from '@/models/Project/ProjectMetadata';
-import { LOC, LocType } from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
+import TechnologySpecsSolarPVMetadata, { LOC, LocType } from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
 import * as m from '@/store/mutationTypes';
 import * as a from '@/store/actionTypes';
 import * as c from '@/models/Project/constants';
@@ -24,6 +24,7 @@ const USECASE_DB = { // its a sad excuse for a database, but serves as one.
 };
 
 const metadataDefaultValues = projectMetadata.getDefaultValues();
+const techSolarPVMetadata = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
 
 // TODO get rid of this completely...move over all DER, timeseries inits to getDefaultValues...
 export const getDefaultState = () => ({
@@ -727,6 +728,34 @@ const mutations = {
     const indexMatchingId = getters.getIndexOfBatteryId(state)(payload.id);
     state.technologySpecsBattery.splice(indexMatchingId, 1);
   },
+  [m.ADD_TO_ALL_ERRORLISTS_IN_TECH](state, { techType, displayName }) {
+    const errorMsg = `${displayName} is required`;
+    each(state[techType], tech => {
+      // only modify tech if it has been saved/started
+      if (tech.complete === null) { return; }
+      tech.errorList.push(errorMsg);
+    });
+  },
+  [m.REMOVE_FROM_ALL_ERRORLISTS_IN_TECH](state, { techType, displayName }) {
+    each(state[techType], tech => {
+      // only modify tech if it has been saved/started
+      if (tech.complete === null) { return; }
+      tech.errorList = tech.errorList.filter(item => !item.includes(displayName));
+    });
+  },
+  [m.SET_ALL_COMPLETENESS_IN_TECH](state, techType) {
+    each(state[techType], tech => {
+      // only modify tech if it has been saved/started
+      if (tech.complete === null) { return; }
+      if (tech.componentSpecsComplete !== undefined
+        && tech.associatedInputsComplete !== undefined) {
+        tech.componentSpecsComplete = tech.errorList.length === 0;
+        tech.complete = tech.componentSpecsComplete && tech.associatedInputsComplete;
+      } else {
+        tech.complete = tech.errorList.length === 0;
+      }
+    });
+  },
   [m.SET_ALL_VALUES_IN_TECH](state, { techType, key, value }) {
     each(state[techType], tech => { tech[key] = value; });
   },
@@ -1313,6 +1342,35 @@ const actions = {
     } else if (payload.tag === 'ElectricVehicle2') {
       commit(m.REMOVE_TECH_FLEET_EV, payload);
     }
+  },
+  [a.RESET_GAMMA_AND_NU]({ commit, dispatch }, payload) {
+    const gammaPayload = {
+      techType: 'technologySpecsSolarPV',
+      key: 'gamma',
+      value: techSolarPVMetadata.gamma.defaultValue,
+      displayName: techSolarPVMetadata.gamma.displayName,
+    };
+    const nuPayload = {
+      techType: 'technologySpecsSolarPV',
+      key: 'nu',
+      value: techSolarPVMetadata.nu.defaultValue,
+      displayName: techSolarPVMetadata.nu.displayName,
+    };
+    commit(m.SET_ALL_VALUES_IN_TECH, gammaPayload);
+    commit(m.SET_ALL_VALUES_IN_TECH, nuPayload);
+    if (payload) {
+      // TODO: AE: use .then() here?
+      dispatch(a.UPDATE_ADD_ALL_ERRORLISTS_IN_TECH, gammaPayload)
+        .then(dispatch(a.UPDATE_ADD_ALL_ERRORLISTS_IN_TECH, nuPayload));
+    } else {
+      commit(m.REMOVE_FROM_ALL_ERRORLISTS_IN_TECH, gammaPayload);
+      commit(m.REMOVE_FROM_ALL_ERRORLISTS_IN_TECH, nuPayload);
+    }
+    commit(m.SET_ALL_COMPLETENESS_IN_TECH, gammaPayload.techType);
+  },
+  [a.UPDATE_ADD_ALL_ERRORLISTS_IN_TECH]({ commit }, payload) {
+    commit(m.REMOVE_FROM_ALL_ERRORLISTS_IN_TECH, payload);
+    commit(m.ADD_TO_ALL_ERRORLISTS_IN_TECH, payload);
   },
   // timeseries uploads
   [a.SET_TS_ERROR]({ commit }, payload) {

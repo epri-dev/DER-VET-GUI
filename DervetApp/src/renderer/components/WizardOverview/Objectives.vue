@@ -165,6 +165,7 @@
   import { TECH_SPECS, PROJECT_CONFIGURATION } from '@/router/constants';
   import {
     CHOOSE_ENERGY_STRUCTURE,
+    RESET_GAMMA_AND_NU,
     SET_INCLUDE_SITE_LOAD,
     SET_INCLUDE_SYSTEM_LOAD,
     SET_OPTIMIZATION_HORIZON,
@@ -215,6 +216,9 @@
           return 'TBD';
         }
         return this.timeseriesXAxis.length;
+      },
+      isResilienceSelected() {
+        return this.listOfActiveServices.includes('Resilience');
       },
       isTBD() {
         return this.expectedRowCount === 'TBD';
@@ -317,6 +321,12 @@
         if (this.sizingEquipment) {
           this.listOfActiveServices = _.remove(this.listOfActiveServices, x => x !== 'RA');
           this.listOfActiveServices = _.remove(this.listOfActiveServices, x => x !== 'DR');
+        }
+        if (this.isResilienceSelected !== this.$store.state.Project.objectivesResilience) {
+          // consider when the resilience boolean changes value; it affects gamma and nu in solarpv
+          // reset gamma and nu in each solarPV tech (save with null)
+          // update errorList and completeness
+          this.$store.dispatch(RESET_GAMMA_AND_NU, this.isResilienceSelected);
         }
         this.$store.dispatch(CHOOSE_ENERGY_STRUCTURE, this.energyPriceSourceWholesale);
         this.$store.dispatch(SELECT_OTHER_SERVICES, this.listOfActiveServices);

@@ -92,6 +92,7 @@ export const SET_NSR_GROWTH = 'setNSRGrowth';
 export const SET_NSR_PRICE = 'setNSRPrice';
 // objectives
 export const CHOOSE_ENERGY_STRUCTURE = 'chooseEnergyStructure';
+export const RESET_GAMMA_AND_NU = 'resetGammaAndNu';
 export const SET_INCLUDE_SITE_LOAD = 'setIncludeSiteLoad';
 export const SET_INCLUDE_SYSTEM_LOAD = 'setIncludeSystemLoad';
 export const SET_OPTIMIZATION_HORIZON = 'setOptimizationHorizon';
@@ -131,6 +132,7 @@ export const DEACTIVATE_TECH = 'deactivateTech';
 export const MAKE_LIST_OF_ACTIVE_TECHNOLOGIES = 'makeListOfActiveTechnologies';
 export const REPLACE_LIST_FIELD = 'replaceListField';
 export const REMOVE_TECH = 'removeTech';
+export const UPDATE_ADD_ALL_ERRORLISTS_IN_TECH = 'updateAddAllErrorlistsInTech';
 // technology timeseries
 export const ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV = 'addGenerationProfileToTechnologySpecsPV';
 // timeseries uploads
