@@ -122,4 +122,52 @@ describe('Project Mutations', () => {
     expect(state.objectivesDeferral).to.equal(false);
     expect(state.objectivesFR).to.equal(false);
   });
+
+  it('should properly remove from all errorLists in a tech that has a non-null complete', () => {
+    const state = {
+      technologySpecsBattery: [
+        {
+          id: 'a1',
+          complete: false,
+          errorList: ['the key is abc alright', 'abcs are key', 'no a bee c here'],
+        },
+        {
+          id: 'a2',
+          complete: false,
+          errorList: ['abacus'],
+        },
+      ],
+    };
+    const payload = {
+      techType: 'technologySpecsBattery',
+      displayName: 'abc',
+    };
+    mutations.REMOVE_FROM_ALL_ERRORLISTS_IN_TECH(state, payload);
+    expect(state.technologySpecsBattery[0].errorList).to.eql(['no a bee c here']);
+    expect(state.technologySpecsBattery[1].errorList).to.eql(['abacus']);
+  });
+
+  it('should properly add to all errorLists in a tech that has a non-null complete', () => {
+    const state = {
+      technologySpecsBattery: [
+        {
+          id: 'a1',
+          complete: false,
+          errorList: ['the key is abc alright'],
+        },
+        {
+          id: 'a2',
+          complete: false,
+          errorList: [],
+        },
+      ],
+    };
+    const payload = {
+      techType: 'technologySpecsBattery',
+      displayName: 'abc',
+    };
+    mutations.ADD_TO_ALL_ERRORLISTS_IN_TECH(state, payload);
+    expect(state.technologySpecsBattery[0].errorList).to.eql(['the key is abc alright', 'abc is required']);
+    expect(state.technologySpecsBattery[1].errorList).to.eql(['abc is required']);
+  });
 });
