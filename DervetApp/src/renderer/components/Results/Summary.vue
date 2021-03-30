@@ -20,7 +20,7 @@
             </div>
             <div class="col-md-12 buffer-bottom text-center">
               <a class="btn btn-sm btn-default">
-                <router-link :to="paths.RESULTS_FINANCIAL">
+                <router-link :to="paths.RESULTS_FINANCIAL" class="btn btn-primary pull-right">
                   View Detailed Financials Results...
                 </router-link>
               </a>
@@ -38,7 +38,7 @@
             </div>
             <div class="col-md-12 buffer-bottom text-center">
               <a class="btn btn-sm btn-default">
-                <router-link :to="paths.RESULTS_DISPATCH">
+                <router-link :to="paths.RESULTS_DISPATCH"  class="btn btn-primary pull-right">
                   View Detailed Dispatch Results...
                 </router-link>
               </a>
@@ -57,7 +57,7 @@
           </div>
           <div class="col-md-12 buffer-bottom text-center">
             <a class="btn btn-sm btn-default">
-              <router-link :to="paths.RESULTS_DESIGN">
+              <router-link :to="paths.RESULTS_DESIGN"  class="btn btn-primary pull-right">
                 View Detailed Design Results...
               </router-link>
             </a>

@@ -250,7 +250,7 @@
               },
               standoff: 25, // create gap between axis and title
             },
-            range: [0, 1.005],
+            range: [0, 1.01],
             dtick: 0.1,
             fixedrange: true,
             // hoverformat: '.2r',
