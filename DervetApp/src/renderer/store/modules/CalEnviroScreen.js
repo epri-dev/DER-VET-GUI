@@ -25,7 +25,7 @@ const mutations = {
 };
 
 const actions = {
-  [a.RESET]({ commit }) {
+  [a.RESET_ZIP_CODE]({ commit }) {
     commit('SET_ZIP_CODE', null);
   },
   setZipCode({ commit }, zipCode) {
@@ -40,7 +40,6 @@ const actions = {
 };
 
 export default {
-  namespaced: true,
   state,
   getters,
   mutations,

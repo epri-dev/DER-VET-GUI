@@ -20,7 +20,7 @@
     name: 'DER-VET',
     beforeMount() {
       if (this.$store.state.CalEnviroScreen.cesScores === null) {
-        this.$store.dispatch('CalEnviroScreen/loadCesScores');
+        this.$store.dispatch('loadCesScores');
       }
       if (isEmpty(this.$store.state.OpenEI.utilities)) {
         this.$store.dispatch(`OpenEI/${a.LOAD_UTILITIES}`, this.$store.state.OpenEI.apiKey)

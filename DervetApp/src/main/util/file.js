@@ -25,7 +25,7 @@ export const writeCsvToFile = (filePath, csv) => (
 
 export const writeJsonToFile = (filePath, json) => (
   new Promise((resolve, reject) => {
-    fs.writeFile(filePath, JSON.stringify(json), 'utf8', (err) => {
+    fs.writeFile(filePath, JSON.stringify(json, null, 2), 'utf8', (err) => {
       if (err === null) {
         resolve();
       }

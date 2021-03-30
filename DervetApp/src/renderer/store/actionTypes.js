@@ -15,6 +15,9 @@ export const SET_QUICK_START_ERROR_LIST = 'setQuickStartErrorList';
 export const LOAD_UTILITIES = 'loadUtilities';
 export const SET_API_KEY = 'setApiKey';
 
+// CalEnviroScreen
+export const RESET_ZIP_CODE = 'resetZipCode';
+
 // Results
 export const RECEIVE_RESULTS = 'receiveResults';
 

@@ -93,7 +93,7 @@
           .then(this.$store.dispatch(a.RESET_PROJECT)) // TODO namespace project
           .then(this.$store.dispatch(`Results/${a.RESET}`))
           .then(this.$store.dispatch(`Application/${a.RESET}`))
-          .then(this.$store.dispatch(`CalEnviroScreen/${a.RESET}`));
+          .then(this.$store.dispatch(a.RESET_ZIP_CODE));
       },
       loadQuickStartProject(selectedUseCase) {
         this.resetAllStoreModules()
