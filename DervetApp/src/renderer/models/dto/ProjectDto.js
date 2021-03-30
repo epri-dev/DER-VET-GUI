@@ -736,11 +736,12 @@ export const makeModelParameters = (project, inputsDirectory, resultsDirectory) 
 });
 
 export const makeBatteryCycleLifeCsv = (battery) => {
-  /* TODO:
-    - check if batteryCycles exist
-    - extend to support multiple battery case
-  */
-  const data = battery.batteryCycles;
+  // if the boolean that controls using the cycle degradation curve or not is true,
+  //   then create a cycle-degradataion-curve file with data,
+  //   otherwise create the file with no data (header only)
+  const data = battery.includeCycleDegradation
+    ? battery.associatedInputs[0].dataRows
+    : [];
   const fields = ['ulimit', 'val'];
   const headers = ['Cycle Depth Upper Limit', 'Cycle Life Value']; // TODO HN string constants
   return objectToCsv(data, fields, headers);
@@ -964,12 +965,9 @@ export const makeExpectedResultCsvs = (project) => {
 
 export const makeBatteryCsvs = (project, inputsDirectory) => {
   const batteries = project.technologySpecsBattery;
-  const includeBatteryParameters = checkNotNullOrEmpty(batteries);
-
-  if (includeBatteryParameters) {
-    return _.map(batteries, battery => new CycleDto(battery, inputsDirectory));
-  }
-  return [];
+  // always create a battery csv, even if it contains no data
+  // batteries = batteries.filter(battery => battery.includeCycleDegradation);
+  return _.map(batteries, battery => new CycleDto(battery, inputsDirectory));
 };
 
 export const makeCsvs = (project, inputsDirectory) => {

@@ -1,3 +1,4 @@
+import TechnologySpecsBatteryMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsBattery';
 import DAPriceTimeSeries from '@/models/TimeSeries/DAPriceTimeSeries';
 import FRDownPriceTimeSeries from '@/models/TimeSeries/FRDownPriceTimeSeries';
 import FRUpPriceTimeSeries from '@/models/TimeSeries/FRUpPriceTimeSeries';
@@ -5,10 +6,12 @@ import FRPriceTimeSeries from '@/models/TimeSeries/FRPriceTimeSeries';
 import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
 import {
   TECH_SPECS_BATTERY,
-  TECH_SPECS_BATTERY_DATA_CYCLES,
 } from '@/router/constants';
 
 import { daPrice, marketPrice } from '@/assets/cases/dummyMarketServiceHourly/csvs';
+
+const defaultBatteryCyclesObject = TechnologySpecsBatteryMetadata
+  .getHardcodedMetadata().getDefaultValues().associatedInputs;
 
 export const dummyMarketServiceErrorList = {
   overview: {
@@ -75,15 +78,8 @@ export const dummyMarketServiceHourly = {
   technologySpecsSolarPV: [],
   technologySpecsBattery: [{
     active: true,
-    // this should be set elsewhere
-    associatedInputs: [{
-      complete: false,
-      dataRows: [],
-      displayName: 'Battery Cycle Life Curve',
-      errorList: ['Not Started'],
-      path: TECH_SPECS_BATTERY_DATA_CYCLES,
-    }],
-    associatedInputsComplete: false,
+    associatedInputs: defaultBatteryCyclesObject,
+    associatedInputsComplete: true,
     auxiliaryLoad: 0,
     calendarDegradationRate: 0,
     capitalCost: 0,

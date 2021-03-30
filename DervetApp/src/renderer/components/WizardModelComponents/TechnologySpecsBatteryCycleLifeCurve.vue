@@ -152,7 +152,8 @@
         this.$store.dispatch('makeListOfActiveTechnologies', this.$store.state.Project);
       },
       makeSavePayload() {
-        const payloadNotComplete = _.map(this.items, 'complete').includes(false);
+        const payloadNotComplete = (_.map(this.items, 'complete')
+          .includes(false) || this.items.length === 0);
         return {
           batteryId: this.batteryId,
           batteryCycles: {
