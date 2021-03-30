@@ -4,6 +4,7 @@ import filter from 'lodash/filter';
 import flatten from 'lodash/flatten';
 import isEmpty from 'lodash/isEmpty';
 import merge from 'lodash/merge';
+import { v4 as uuidv4 } from 'uuid';
 
 import { billReductionProject } from '@/assets/cases/billReduction/project';
 import { reliabilityProject } from '@/assets/cases/reliability/project';
@@ -29,15 +30,6 @@ const techSolarPVMetadata = TechnologySpecsSolarPVMetadata.getHardcodedMetadata(
 // TODO get rid of this completely...move over all DER, timeseries inits to getDefaultValues...
 export const getDefaultState = () => ({
   ...metadataDefaultValues,
-
-  // DERS
-  technologySpecsBattery: [],
-  technologySpecsControllableLoad: [],
-  technologySpecsDieselGen: [],
-  technologySpecsFleetEV: [],
-  technologySpecsICE: [],
-  technologySpecsSingleEV: [],
-  technologySpecsSolarPV: [],
 
   // TODO: make this dynamic/move to getter
   listOfActiveTechnologies: {
@@ -759,6 +751,9 @@ const mutations = {
   [m.SET_ALL_VALUES_IN_TECH](state, { techType, key, value }) {
     each(state[techType], tech => { tech[key] = value; });
   },
+  [m.SET_UNIQUE_IDS_IN_TECH](state) {
+    each(c.TECH_TYPES, techType => each(state[techType], tech => { tech.id = uuidv4(); }));
+  },
   [m.REMOVE_TECH_CONTROLLABLE_LOAD](state, payload) {
     const indexMatchingId = getters.getIndexOfControllableLoadId(state)(payload.id);
     state.technologySpecsControllableLoad.splice(indexMatchingId, 1);
@@ -835,15 +830,13 @@ const actions = {
   [a.LOAD_NEW_PROJECT]({ commit }, project) {
     return new Promise((resolve) => {
       commit(m.LOAD_NEW_PROJECT, merge(getDefaultState(), project));
+      commit(m.SET_UNIQUE_IDS_IN_TECH);
       resolve();
     });
   },
-  [a.LOAD_QUICK_START_PROJECT]({ commit }, caseName) {
+  [a.LOAD_QUICK_START_PROJECT]({ dispatch }, caseName) {
     const selectedUseCase = USECASE_DB[caseName];
-    return new Promise((resolve) => {
-      commit(m.LOAD_NEW_PROJECT, merge(getDefaultState(), selectedUseCase));
-      resolve();
-    });
+    return dispatch(a.LOAD_NEW_PROJECT, selectedUseCase);
   },
   // backup
   [a.SET_BACKUP_ENERGY_PRICE]({ commit }, payload) {
@@ -1218,7 +1211,7 @@ const actions = {
     if (payload.tag === 'Battery') {
       if (!getters.activeBatteryExists) {
         const setValsPayload = {
-          techType: 'technologySpecsSolarPV',
+          techType: c.TECH_SPECS_SOLAR_PV,
           key: LOC,
           value: null,
         };
@@ -1249,7 +1242,7 @@ const actions = {
     if (payload.tag === 'Battery') {
       if (!getters.activeBatteryExists) {
         const setValsPayload = {
-          techType: 'technologySpecsSolarPV',
+          techType: c.TECH_SPECS_SOLAR_PV,
           key: LOC,
           value: null,
         };
@@ -1281,7 +1274,7 @@ const actions = {
       commit(m.DEACTIVATE_TECH_BATTERY, payload);
       if (!getters.activeBatteryExists) {
         const setValsPayload = {
-          techType: 'technologySpecsSolarPV',
+          techType: c.TECH_SPECS_SOLAR_PV,
           key: LOC,
           value: LocType.AC,
         };
@@ -1329,7 +1322,7 @@ const actions = {
       commit(m.REMOVE_TECH_BATTERY, payload);
       if (!getters.activeBatteryExists) {
         const setValsPayload = {
-          techType: 'technologySpecsSolarPV',
+          techType: c.TECH_SPECS_SOLAR_PV,
           key: LOC,
           value: LocType.AC,
         };

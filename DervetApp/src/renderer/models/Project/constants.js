@@ -118,6 +118,24 @@ export const TS_ALL = [
   ...TS_USER_DEFINED_FIELDS,
 ];
 
+export const TECH_SPECS_BATTERY = 'technologySpecsBattery';
+export const TECH_SPECS_CONTROLLABLE_LOAD = 'technologySpecsControllableLoad';
+export const TECH_SPECS_DIESEL_GEN = 'technologySpecsDieselGen';
+export const TECH_SPECS_FLEET_EV = 'technologySpecsFleetEV';
+export const TECH_SPECS_ICE = 'technologySpecsICE';
+export const TECH_SPECS_SINGLE_EV = 'technologySpecsSingleEV';
+export const TECH_SPECS_SOLAR_PV = 'technologySpecsSolarPV';
+
+export const TECH_TYPES = [
+  TECH_SPECS_BATTERY,
+  TECH_SPECS_CONTROLLABLE_LOAD,
+  TECH_SPECS_DIESEL_GEN,
+  TECH_SPECS_FLEET_EV,
+  TECH_SPECS_ICE,
+  TECH_SPECS_SINGLE_EV,
+  TECH_SPECS_SOLAR_PV,
+];
+
 // Monthly
 export const MTS_BACKUP_ENERGY_PRICE = 'mtsBackupEnergyPrice';
 export const MTS_BACKUP_ENERGY_RESERVATION = 'mtsBackupEnergyReservation';
