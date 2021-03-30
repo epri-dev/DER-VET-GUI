@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash/cloneDeep';
 import IpcService from '@/service/Ipc';
 import { makeDervetInputs } from '@/models/dto/ProjectDto';
 import * as m from '@/store/mutationTypes';
@@ -142,7 +143,7 @@ const actions = {
     commit('SET_NEW_COMPLETENESS', billReductionCompleteness);
   },
   [a.SET_QUICK_START_ERROR_LIST]({ commit }, caseName) {
-    const selectedUseCase = USECASE_ERROR_LIST_DB[caseName];
+    const selectedUseCase = cloneDeep(USECASE_ERROR_LIST_DB[caseName]);
     commit(m.SET_NEW_ERROR_LIST, selectedUseCase);
   },
   [a.RECEIVE_ERROR]({ commit }) {
