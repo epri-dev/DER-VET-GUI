@@ -7,6 +7,9 @@ Vue.use(Router);
 
 export default new Router({
   mode: 'hash',
+  scrollBehavior() {
+    return { x: 0, y: 0 };
+  },
   routes: [
     {
       path: c.INDEX,
