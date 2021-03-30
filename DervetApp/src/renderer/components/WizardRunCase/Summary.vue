@@ -117,7 +117,7 @@
         <h4>Technology Specifications</h4>
         <ul v-for="techTag in techSpecs" :key="techTag.shortHand">
           <li v-for="techItem in filterNonActives(techTag.items)">
-            {{ getTechLabel(techTag.fullName, techItem) }}
+            {{ getTechLabel(techItem) }}
           </li>
         </ul>
         </br>
@@ -125,7 +125,7 @@
         <h4>Services</h4>
         <ul>
           <li v-for="service in activeServices">
-            {{ service }}
+            {{ addSpaces(service) }}
           </li>
         </ul>
         </br>
@@ -230,6 +230,10 @@
         }
         return `${rate} %`;
       },
+      addSpaces(text) {
+        const rex = /([A-Z])([A-Z])([a-z])|([a-z])([A-Z])/g;
+        return text.replace(rex, '$1$4 $2$3$5');
+      },
 
       exportProject(selectedPath) {
         return exportProject(selectedPath, this.$store.state.Project, this.$store.state.Application);
@@ -328,13 +332,9 @@
         setup: [
           ['Project Name', (this.$store.state.Project.name || '')],
           ['Start Year', this.$store.state.Project.startYear],
-          ['Analysis Horizon', this.getAnalysisHorizonDisplay],
-          ['Analysis Horizon Mode', this.modeDescription],
           ['Data year', this.$store.state.Project.dataYear],
           ['Grid Domain', this.$store.state.Project.gridLocation],
           ['Ownership', this.$store.state.Project.ownership],
-          ['Latitude', this.$store.state.Project.latitude],
-          ['Longitude', this.$store.state.Project.longitude],
         ],
         techGen: this.$store.state.Project.listOfActiveTechnologies.Generator,
         techIR: this.$store.state.Project.listOfActiveTechnologies['Intermittent Resource'],
