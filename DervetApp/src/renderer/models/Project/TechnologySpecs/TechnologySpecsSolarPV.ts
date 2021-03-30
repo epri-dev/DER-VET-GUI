@@ -131,7 +131,7 @@ export default class TechnologySpecsSolarPVMetadata {
         maxValue: 100,
         type: Number,
         unit: '%',
-        description: 'Worst-case percent of the timestep for which PV is at it\'s minimum generation (default=43)',
+        description: 'Percent of the timestep for which PV is at its minimum generation (suggested value: 43)<br><br>If you do not want to consider inter-timestep variability in PV generation enter 100 for both values above',
       }),
       includeCurtailment: new ProjectFieldMetadata({
         displayName: 'Allow curtailment?',
@@ -161,7 +161,7 @@ export default class TechnologySpecsSolarPVMetadata {
         minValue: 0,
         type: Number,
         unit: 'kW<sub>AC</sub>',
-        description: null,
+        description: 'The maximum net import or export power flow through the inverter',
         allowedValues: null,
       }),
       [LOC]: new ProjectFieldMetadata({
@@ -180,7 +180,7 @@ export default class TechnologySpecsSolarPVMetadata {
         maxValue: 100,
         type: Number,
         unit: '%',
-        description: 'Percent of the timestep for which PV is at its minimum generation',
+        description: 'Minimum percent of the PV generation within a timestep (suggested value: 20)',
       }),
       ppaCost: new ProjectFieldMetadata({
         defaultValue: null,
