@@ -837,10 +837,12 @@ export const makeTimeSeriesCsv = (project) => {
   addSingleSeries(dtIndex, TIMESERIES_DATETIME_INDEX, TIMESERIES_DATETIME_HEADER);
 
   // Add all available timeseries to CSV
-  // TODO: limit to active and required?
+  // limit to ts that have required not-eql-to false
+  //   (pre-defined ts data may not have required set)
+  // TODO: also limit to active ts?
   TIMESERIES_FIELDS.forEach((ts) => {
     const tsClass = project[ts];
-    if (tsClass && tsClass.data.length !== 0) {
+    if (tsClass && tsClass.data.length !== 0 && tsClass.required !== false) {
       const dataObjectList = mapListToObjectList(tsClass.data, ts);
       addSingleSeries(dataObjectList, ts, tsClass.columnHeaderName);
     }

@@ -273,7 +273,7 @@
               // reset errorList
               errorList = errorList.filter(item => !item.includes(tsErrorMatch));
               // set error with this TS only if it is required
-              if (dataObject.required) {
+              if (dataObject.required !== false) {
                 if (this.isTBD) {
                   errorList.push(tsError2);
                 } else if (errorsString !== '') {
