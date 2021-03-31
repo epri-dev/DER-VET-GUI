@@ -1,7 +1,7 @@
 ﻿<template>
   <div class="text-center">
     <b-navbar toggleable="lg" fixed="top" type="dark" variant="dark">
-      <b-navbar-brand :active="isActiveIndex()"
+      <b-navbar-brand :active="isActiveIndexOrAbout()"
                       :to="INDEX" class="col-md-2 no-padding">
         <img class="nav-logo-img" :src="FullLogo" />
       </b-navbar-brand>
@@ -33,20 +33,20 @@
         <b-navbar-nav class="ml-auto">
           <b-button-group class="navbar-btn">
             <b-button
-              v-if="!isActiveIndex() && !runInProgress()"
+              v-if="!isActiveIndexOrAbout() && !runInProgress()"
               @click="(runDervetDisabled) ? cannotRun() : runDervet()"
               class="btn navbar-btn text-center"
               type="submit"
               size="md"
               variant="success">
               <span class="fas fa-play fa-md"/>
-              <!-- <span v-if="!runInProgress()" class="fas fa-spinner fa-spin fa-lg"/> -->
             </b-button>
             <b-button size="md" v-if="runInProgress()" class="btn btn-danger navbar-btn" type="submit"
               @click="killDervet()">
               <span class="fas fa-stop fa-md"/>
             </b-button>
           </b-button-group>
+          
           <b-nav-item align="right" link-classes="navbar-top-svg-item">
             <span @click="(e) => openWebsiteInBrowser(e, FORUM_LINK)" class="fas fa-comment-alt"/>
           </b-nav-item>
@@ -154,8 +154,8 @@
       goToIndex() {
         this.$router.push({ path: INDEX });
       },
-      isActiveIndex() {
-        return this.$route.path === INDEX;
+      isActiveIndexOrAbout() {
+        return this.$route.path === INDEX || this.$route.path === '/about';
       },
       isActive(path) {
         return new RegExp(path).test(this.$route.path);
