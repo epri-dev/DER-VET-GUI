@@ -20,6 +20,10 @@ export default new Router({
       component: require('@/components/Home/ImportProject').default,
     },
     {
+      path: '/about',
+      component: require('@/components/Home/About').default,
+    },
+    {
       path: c.WIZARD_OVERVIEW,
       component: require('@/components/WizardOverview/Layout').default,
       children: [

@@ -51,6 +51,13 @@
           DER-VET was developed in part with funding from the California Energy Commission thus provides a free, publicly accessible, open-source platform. EPRI will support continuing updates and enhancements.
         </p>
       </div>
+      <div class="col-md-12">
+        <router-link to="/about">
+          <p class="tool-tip-index tool-tip-index-col">
+            About this Application.
+          </p>
+        </router-link>
+      </div>
     </div>
   </div>
 
