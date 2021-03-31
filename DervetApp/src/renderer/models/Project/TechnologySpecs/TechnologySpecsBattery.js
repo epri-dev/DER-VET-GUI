@@ -192,8 +192,8 @@ export default class TechnologySpecsBatteryMetadata {
         isRequired: true,
         minValue: 1, // differs from schema; want gt 0
         type: Number,
-        unit: 'hours',
-        description: 'Limit the daily total discharge and ene throughput not to exceed the (number of cycles * max energy storage capacity)',
+        unit: 'cycles',
+        description: 'Limit the daily total discharge and energy throughput not to exceed the (number of cycles * max energy storage capacity)',
         allowedValues: null,
       }),
       dischargingCapacity: new ProjectFieldMetadata({
