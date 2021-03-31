@@ -829,7 +829,7 @@ const actions = {
   },
   [a.LOAD_NEW_PROJECT]({ commit }, project) {
     return new Promise((resolve) => {
-      commit(m.LOAD_NEW_PROJECT, merge(getDefaultState(), project));
+      commit(m.LOAD_NEW_PROJECT, merge(cloneDeep(getDefaultState()), cloneDeep(project)));
       commit(m.SET_UNIQUE_IDS_IN_TECH);
       resolve();
     });
