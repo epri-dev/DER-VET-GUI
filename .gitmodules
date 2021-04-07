@@ -1,3 +1,6 @@
+[submodule "DervetBackEnddervet"]
+	path = DervetBackEnddervet
+	url = https://github.com/epri-dev/dervet.git
 [submodule "DervetBackEnd/dervet"]
 	path = DervetBackEnd/dervet
 	url = https://github.com/epri-dev/dervet.git
