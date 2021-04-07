@@ -10,8 +10,8 @@ import NSRPriceTimeSeries from '@/models/TimeSeries/NSRPriceTimeSeries';
 import SRPriceTimeSeries from '@/models/TimeSeries/SRPriceTimeSeries';
 import UserEnergyMaxTimeSeries from '@/models/TimeSeries/UserEnergyMaxTimeSeries';
 import UserEnergyMinTimeSeries from '@/models/TimeSeries/UserEnergyMinTimeSeries';
-import UserPowerMaxTimeSeries from '@/models/TimeSeries/UserPowerMaxTimeSeries';
-import UserPowerMinTimeSeries from '@/models/TimeSeries/UserPowerMinTimeSeries';
+import UserPowerExportMaxTimeSeries from '@/models/TimeSeries/UserPowerExportMaxTimeSeries';
+import UserPowerExportMinTimeSeries from '@/models/TimeSeries/UserPowerExportMinTimeSeries';
 
 import csvs from './csvs';
 
@@ -149,21 +149,9 @@ export const projectFixture = {
   technologySpecsICE: [],
   technologySpecsBattery: [{
     active: true,
+    associatedInputs: [],
+    associatedInputsComplete: true,
     auxiliaryLoad: 0,
-    batteryCycles: [
-      { ulimit: 0.05, val: 75000 },
-      { ulimit: 0.1, val: 40500 },
-      { ulimit: 0.15, val: 27000 },
-      { ulimit: 0.2, val: 20250 },
-      { ulimit: 0.3, val: 11250 },
-      { ulimit: 0.4, val: 6750 },
-      { ulimit: 0.5, val: 4500 },
-      { ulimit: 0.6, val: 3750 },
-      { ulimit: 0.7, val: 3225 },
-      { ulimit: 0.8, val: 2813 },
-      { ulimit: 0.9, val: 2475 },
-      { ulimit: 1, val: 2250 },
-    ],
     calendarDegradationRate: 0,
     capitalCost: 0,
     capitalCostPerkW: 100,
@@ -221,8 +209,8 @@ export const projectFixture = {
   timestep: 60,
   tsUserEnergyMax: new UserEnergyMaxTimeSeries(_.fill(Array(8760), 9000)),
   tsUserEnergyMin: new UserEnergyMinTimeSeries(_.fill(Array(8760), 0)),
-  tsUserPowerMax: new UserPowerMaxTimeSeries(_.fill(Array(8760), 1900)),
-  tsUserPowerMin: new UserPowerMinTimeSeries(_.fill(Array(8760), -1900)),
+  tsUserPowerExportMax: new UserPowerExportMaxTimeSeries(_.fill(Array(8760), 1900)),
+  tsUserPowerExportMin: new UserPowerExportMinTimeSeries(_.fill(Array(8760), -1900)),
 };
 
 export const getProjectFixture = (inputsDir, resultsDir) => {

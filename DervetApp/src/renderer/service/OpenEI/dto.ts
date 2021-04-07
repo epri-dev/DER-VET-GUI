@@ -171,7 +171,7 @@ export const checkForTieredRates = (
 ): void => {
   each(rates, (rate: RateStructureItem[]) => {
     if (rate.length > 1) {
-      throw new Error('Error: unable to process tiered tariff rates');
+      throw new Error('Unable to process tiered tariff rates at this time. Please select a tariff without tiers and try again.');
     }
   });
 };

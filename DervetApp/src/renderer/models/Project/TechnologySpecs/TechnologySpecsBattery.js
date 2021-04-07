@@ -88,10 +88,22 @@ export default class TechnologySpecsBatteryMetadata {
     return {
       active: true,
       associatedInputs: [{
-        complete: false,
-        dataRows: [],
+        complete: true,
+        dataRows: [
+          { ulimit: 0.1, val: 63000 },
+          { ulimit: 0.15, val: 42000 },
+          { ulimit: 0.2, val: 31500 },
+          { ulimit: 0.3, val: 17500 },
+          { ulimit: 0.4, val: 10500 },
+          { ulimit: 0.5, val: 7000 },
+          { ulimit: 0.6, val: 5833 },
+          { ulimit: 0.7, val: 5016 },
+          { ulimit: 0.8, val: 4375 },
+          { ulimit: 0.9, val: 3850 },
+          { ulimit: 1.0, val: 3500 },
+        ],
         displayName: 'Battery Cycle Life Curve',
-        errorList: ['Not Started'],
+        errorList: [],
         path: TECH_SPECS_BATTERY_DATA_CYCLES,
       }],
       associatedInputsComplete: null,
@@ -180,8 +192,8 @@ export default class TechnologySpecsBatteryMetadata {
         isRequired: true,
         minValue: 1, // differs from schema; want gt 0
         type: Number,
-        unit: 'hours',
-        description: 'Limit the daily total discharge and ene throughput not to exceed the (number of cycles * max energy storage capacity)',
+        unit: 'cycles',
+        description: 'Limit the daily total discharge and energy throughput not to exceed the (number of cycles * max energy storage capacity)',
         allowedValues: null,
       }),
       dischargingCapacity: new ProjectFieldMetadata({

@@ -7,6 +7,9 @@ Vue.use(Router);
 
 export default new Router({
   mode: 'hash',
+  scrollBehavior() {
+    return { x: 0, y: 0 };
+  },
   routes: [
     {
       path: c.INDEX,
@@ -15,6 +18,10 @@ export default new Router({
     {
       path: '/import-project',
       component: require('@/components/Home/ImportProject').default,
+    },
+    {
+      path: '/about',
+      component: require('@/components/Home/About').default,
     },
     {
       path: c.WIZARD_OVERVIEW,

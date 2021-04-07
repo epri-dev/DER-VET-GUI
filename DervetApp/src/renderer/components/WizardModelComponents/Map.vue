@@ -10,7 +10,7 @@
                   :to="techPath(tagItems.path, techItem)"
                   v-bind:class="{ 'incomplete-btn': !techItem.complete }"
                   :key="techItem.id">
-          {{getTechLabel(tagItems.shortHand, techItem)}}
+          {{getTechLabel(techItem)}}
         </b-button>
       </div>
     </div>
@@ -39,7 +39,7 @@
       </div>
     </div>
 
-    <nav-button :continue-link="SUMMARY" continue-text="Done defining comonents" :save="this.save" />
+    <nav-button :continue-link="SUMMARY" continue-text="Done Defining Components" :save="this.save" />
 
   </div>
 </template>

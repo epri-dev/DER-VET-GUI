@@ -105,12 +105,13 @@ const csvUploadMixin = {
     getErrorMsgTSFromProject(tsField) {
       // this method also revalidates the TS
       //  (note: this already skips non-required fields)
-      const errorMsgTS = this.requiredDataLabel(tsField);
       if (this.tsData(tsField).data.length === 0
-        || (!this.isMonthly(tsField)
-        && this.tsData(tsField).revalidate(this.expectedRowCount).length !== 0)
         || (this[tsField].data.length === 0 && !this[this.useExistingField(tsField)])) {
-        return errorMsgTS;
+        return this.requiredDataLabel(tsField);
+      }
+      if (!this.isMonthly(tsField)
+        && this.tsData(tsField).revalidate(this.expectedRowCount).length !== 0) {
+        return this.wrongNumberOfValuesLabel(tsField);
       }
       return '';
     },
@@ -234,6 +235,10 @@ const csvUploadMixin = {
     },
     validatedSaveStay() {
       this.validatedSave();
+    },
+    wrongNumberOfValuesLabel(tsField) {
+      const name = this[tsField].columnHeaderName;
+      return `The timeseries of ${name} has the wrong number of values`;
     },
   },
 };

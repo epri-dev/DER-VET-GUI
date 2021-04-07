@@ -12,7 +12,7 @@ import { TECH_SPECS_FLEET_EV, TECH_SPECS_FLEET_EV_BASELINE } from '@/router/cons
 
 import FleetEVBaselineLoadTimeSeries from '@/models/TimeSeries/FleetEVBaselineLoadTimeSeries';
 
-const ELECTRIC_VEHICLE2 = 'ElectricVehicle2';
+const ELECTRIC_VEHICLE2 = 'Fleet EV';
 
 const DYNAMIC_FIELDS = [
   ...SHARED_DYNAMIC_FIELDS,

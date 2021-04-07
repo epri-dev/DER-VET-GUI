@@ -4,8 +4,8 @@
     <hr />
 
     <p>
-      Import an existing project by clicking the "Choose File" button below and selecting the ZIP file from your computer that contains the
-      exported project you wish to import. Note that this file must be a ZIP file that includes the DER-VET project and application file (a <code>.json</code> file).
+      Import an existing project by clicking the "Select Project" button below and selecting the folder from your computer that contains the
+      project you wish to import. Note that this folder must include the DER-VET <code>project.json</code> and <code>application.json</code> files.
     </p>
 
     <div class="form-horizontal form-buffer">
@@ -14,7 +14,7 @@
         :callback="setImportDirectory"
         buttonAttributes="btn btn-primary"
         wrapperDivAttributes="col-md-2"
-        :isDirectory="false"
+        :isDirectory="true"
         :isAsync="false"
       />
       <div class=col-md-10>

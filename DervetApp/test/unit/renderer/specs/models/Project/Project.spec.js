@@ -59,12 +59,22 @@ describe('Project model', () => {
           f1 = startCase(f.slice(2, pageIndexEnd));
           f1page = `${f1.toLowerCase()}Defined`;
           break;
-        case 'tsUserPowerMax':
+        case 'tsUserPowerExportMax':
           pageIndexEnd = 6;
           f1 = startCase(f.slice(2, pageIndexEnd));
           f1page = `${f1.toLowerCase()}Defined`;
           break;
-        case 'tsUserPowerMin':
+        case 'tsUserPowerExportMin':
+          pageIndexEnd = 6;
+          f1 = startCase(f.slice(2, pageIndexEnd));
+          f1page = `${f1.toLowerCase()}Defined`;
+          break;
+        case 'tsUserPowerImportMax':
+          pageIndexEnd = 6;
+          f1 = startCase(f.slice(2, pageIndexEnd));
+          f1page = `${f1.toLowerCase()}Defined`;
+          break;
+        case 'tsUserPowerImportMin':
           pageIndexEnd = 6;
           f1 = startCase(f.slice(2, pageIndexEnd));
           f1page = `${f1.toLowerCase()}Defined`;
@@ -99,7 +109,8 @@ describe('Project model', () => {
 
       // skip ts with more complex columnHeaderNames
       if (!['tsFrUpPrice', 'tsFrDownPrice', 'tsUserEnergyMax', 'tsUserEnergyMin',
-        'tsUserPowerMax', 'tsUserPowerMin'].includes(f)) {
+        'tsUserPowerExportMax', 'tsUserPowerExportMin',
+        'tsUserPowerImportMax', 'tsUserPowerImportMin'].includes(f)) {
         expect(ts.columnHeaderName).to.have.string(f1);
       }
     });

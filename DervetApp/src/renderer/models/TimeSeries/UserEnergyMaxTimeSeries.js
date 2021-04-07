@@ -7,6 +7,10 @@ class UserEnergyMaxTimeSeries extends TimeSeriesBase {
     this.pageAttributes = this.getPageAttributes('components', 'objectives', 'userDefined');
     this.tsName = TS_USER_ENERGY_MAX;
   }
+
+  extraValidate() {
+    return [this.invalidCheckSingleValueAtLeastX(0).errorMsg];
+  }
 }
 
 export default UserEnergyMaxTimeSeries;

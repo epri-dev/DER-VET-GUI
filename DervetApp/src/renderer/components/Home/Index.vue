@@ -45,11 +45,18 @@
     <div class="row">
       <div class="col-md-12">
         <p class="tool-tip-index tool-tip-index-col">
-          DER-VET<sup>TM</sup> provides a free, publicly accessible, open-source platform for calculating, understanding, and optimizing the value of distributed energy resources (DER) based on their technical merits and constraints. An extension of EPRI's StorageVET<span>&#174;</span> tool, DER-VET supports site-specific assessments of energy storage and additional DER technologies—including solar, wind, demand response, electric vehicle charging, internal combustion engines, and combined heat and power—in different configurations, such as microgrids. It uses load and other data to determine optimal size, duration, and other characteristics for maximizing benefits based on site conditions and the value that can be extracted from targeted use cases. Customers, developers, utilities, and regulators across the industry can apply this tool to inform project-level decisions based on sound technical understanding and unbiased cost-performance data.
+          DER-VET<sup>TM</sup> is a tool for calculating, understanding, and optimizing the value of distributed energy resources (DER) based on their technical merits and constraints. An extension of EPRI's StorageVET<span>&#174;</span> tool, DER-VET supports site-specific assessments of energy storage and additional DER technologies—including solar, wind, demand response, electric vehicle charging, internal combustion engines, and combined heat and power—in different configurations, such as microgrids. It uses load and other data to determine optimal size, duration, and other characteristics for maximizing benefits based on site conditions and the value that can be extracted from targeted use cases. Customers, developers, utilities, and regulators across the industry can apply this tool to inform project-level decisions based on sound technical understanding and unbiased cost-performance data.
         </p>
         <p class="tool-tip-index tool-tip-index-col">
-          DER-VET was developed with funding from the California Energy Commission. EPRI plans to support continuing updates and enhancements.
+          DER-VET was developed in part with funding from the California Energy Commission thus provides a free, publicly accessible, open-source platform. EPRI will support continuing updates and enhancements.
         </p>
+      </div>
+      <div class="col-md-12">
+        <router-link to="/about">
+          <p class="tool-tip-index tool-tip-index-col">
+            About this Application.
+          </p>
+        </router-link>
       </div>
     </div>
   </div>
@@ -68,7 +75,7 @@
     { id: 1, value: 'billReductionProject', text: 'DER for Bill Reduction' },
     { id: 2, value: 'reliabilityProject', text: 'DER for Reliability' },
     { id: 3, value: 'ERCOTMarketService', text: 'ERCOT Market Case' },
-    { id: 4, value: 'dummyMarketServiceHourly', text: 'Dummy Market Case' },
+    // { id: 4, value: 'dummyMarketServiceHourly', text: 'Dummy Market Case' }, // for testing only
   ];
 
   export default {
@@ -88,21 +95,22 @@
       },
     },
     methods: {
+      resetAllStoreModules() {
+        return this.$store.dispatch('Application/killPython', this.$store.state.Project)
+          .then(this.$store.dispatch(a.RESET_PROJECT)) // TODO namespace project
+          .then(this.$store.dispatch(`Results/${a.RESET}`))
+          .then(this.$store.dispatch(`Application/${a.RESET}`))
+          .then(this.$store.dispatch(a.RESET_ZIP_CODE));
+      },
       loadQuickStartProject(selectedUseCase) {
-        this.$store.dispatch('resetProjectToDefault')
-          .then(this.$store.dispatch('resetResultToDefault', this.$store.state.Project.id))
-          .then(this.$store.dispatch(`Application/${a.RESET_APPLICATION_TO_DEFAULT}`, this.$store.state.Project.id))
-          .then(this.$store.dispatch('resetZipCode'))
+        this.resetAllStoreModules()
           .then(this.$store.dispatch(LOAD_QUICK_START_PROJECT, selectedUseCase))
           .then(this.$store.dispatch('Application/setQuickStartCompleteness'))
           .then(this.$store.dispatch(`Application/${a.SET_QUICK_START_ERROR_LIST}`, selectedUseCase))
           .then(this.$router.push({ path: SUMMARY }));
       },
       resetProjectToDefault() {
-        this.$store.dispatch('resetProjectToDefault')
-          .then(this.$store.dispatch('resetResultToDefault', this.$store.state.Project.id))
-          .then(this.$store.dispatch(`Application/${a.RESET_APPLICATION_TO_DEFAULT}`, this.$store.state.Project.id))
-          .then(this.$store.dispatch('resetZipCode'))
+        this.resetAllStoreModules()
           .then(this.$router.push({ path: WIZARD_OVERVIEW }));
       },
     },

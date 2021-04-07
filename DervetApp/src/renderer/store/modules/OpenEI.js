@@ -1,6 +1,7 @@
 import map from 'lodash/map';
 
 import { getUtilityCompanies } from '@/service/OpenEI/request';
+import * as a from '@/store/actionTypes';
 
 const getDefaultOpenEIState = () => ({
   utilities: [],
@@ -19,10 +20,12 @@ const mutations = {
 };
 
 const actions = {
-  resetUtilities({ commit }) {
-    commit('SET_UTILITIES', []);
+  [a.RESET]() {
+    // (TODO) All modules will have a reset action that's called by the global reset action,
+    // but we never want to reset OpenEI state as part of the global reset.
+    return null;
   },
-  loadUtilities({ commit }, apiKey) {
+  [a.LOAD_UTILITIES]({ commit }, apiKey) {
     return new Promise((resolve, reject) => {
       if (apiKey) {
         getUtilityCompanies(apiKey)
@@ -35,7 +38,7 @@ const actions = {
       }
     });
   },
-  setApiKey({ commit }, newApiKey) {
+  [a.SET_API_KEY]({ commit }, newApiKey) {
     return new Promise((resolve) => {
       commit('SET_API_KEY', newApiKey);
       resolve();
@@ -44,6 +47,7 @@ const actions = {
 };
 
 export default {
+  namespaced: true,
   state,
   mutations,
   actions,

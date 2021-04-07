@@ -1,6 +1,18 @@
-# DER-VET
+# DER-VET™
 
-#### Architecture
+[DER-VET™](https://der-vet.com) provides a free, publicly accessible, open-source platform for calculating, understanding, and optimizing the value 
+of distributed 
+energy resources (DER) based on their technical merits and constraints. An extension of EPRI's [StorageVET®](./storagevet) tool, DER-VET supports 
+site-specific assessments of energy storage and additional DER technologies—including solar, wind, demand response, electric vehicle charging, 
+internal combustion engines, and combined heat and power—in different configurations, such as microgrids. It uses load and other data to determine 
+optimal size, duration, and other characteristics for maximizing benefits based on site conditions and the value that can be extracted from targeted 
+use cases. Customers, developers, utilities, and regulators across the industry can apply this tool to inform project-level decisions based on sound 
+technical understanding and unbiased cost-performance data.
+
+DER-VET was developed with funding from the California Energy Commission. EPRI plans to support continuing updates and enhancements.
+
+
+#### Electron Architecture
 
 ```text
 start
@@ -102,3 +114,83 @@ Log files from running the packaged application will be written here:
 #### Icon Updating
 
 Save a 256x256 (pixels) to the `build/icons` directory. To convert PNG to ICO and ICNS formats required by Windows and Mac, use a tool like https://hnet.com/png-to-ico/ and https://cloudconvert.com/png-to-icns. Then commit both files to the same `build/icons` folder with the names icon.ico and icon.icns respectively.
+
+## Authors
+
+* **Halley Nathwani**
+* **Andrew Etringer**
+* **Leah Loversky**
+* **Miles Evans**
+* **Suma Jothibasu**
+* **Ramakrishnan Ravikumar**
+* **Andres Cortes**
+* **Arindam Maitra**
+* **Giovanni Damato**
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+
+## License
+
+This project is licensed under the BSD (3-clause) License - see [LICENSE.txt](./LICENSE.txt).
+
+DER-VET v1.0.0
+
+Copyright © 2021 Electric Power Research Institute, Inc. All Rights Reserved.
+
+Permission to use, copy, modify, and distribute this software for any purpose
+with or without fee is hereby granted, provided that the above copyright
+notice and this permission notice appear in all copies.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+DISCLAIMED. IN NO EVENT SHALL EPRI BE LIABLE FOR ANY DIRECT, INDIRECT, 
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Third-Party Software
+EPRI does not own any portion of the software that is attributed
+below.
+
+<CVXPY/1.1.11> - &lt;Steven Diamond&gt;, <diamond@cs.stanford.edu>
+Copyright © 2017 Steven Diamond
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+CVXPY is provided by the copyright holders and contributors "as is" and
+any express or implied warranties, including, but not limited to, the
+implied warranties of merchantability and fitness for a particular
+purpose are disclaimed.
+
+This software relies on CVXPY to interface with work(s) covered by the
+following copyright and permission notice(s): 
+
+GLPK 5.0 - Andrew Makhorin, mao@gnu.org
+Copyright © 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
+2010, 2011, 2012 Andrew Makhorin, Department for Applied Informatics,
+Moscow Aviation Institute, Moscow, Russia. All rights reserved.
+
+Licensed under GNU Public License v3.0; you may not use GLPK except in
+compliance with the License. You may obtain a copy of the License at
+https://www.gnu.org/licenses/gpl-3.0.en.html.
+
+GLPK is a free program and is provided by the copyright holders and
+contributors "as is" and any express or implied warranties, including,
+but not limited to, the implied warranties of merchantability and fitness
+for a particular purpose are disclaimed.

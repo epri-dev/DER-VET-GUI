@@ -28,39 +28,41 @@
           <h4>Errors in Technology Components</h4>
           <div v-for="techTag in techSpecs">
             <div v-for="techItem in filterNonActives(techTag.items)">
-              
-              <li>
-                <router-link
-                  class="text-decoration-none"
-                  :to="techPath(techTag.path, techItem)">
-                  {{ getTechLabel(techTag.fullName, techItem) }}
-                </router-link>
-                
-                <ul>
-                  <li v-for="error in techItem.errorList">
-                    <span v-html="error"></span>
-                  </li>
+              <div v-if="!techItem.complete">
 
-                  <div v-if="techItem.associatedInputsComplete === false">
-                    <div v-for="associatedInputs in techItem.associatedInputs">
-                      <div v-if="!associatedInputs.complete">
-                        <li>
-                          <router-link
-                            class="text-decoration-none"
-                            :to="getTechAssociatedInputsPath(techItem)">
-                            {{ associatedInputs.displayName + getTechDisplayName(techItem) }}
-                          </router-link>
-                          <ul>
-                            <li v-for="dataError in associatedInputs.errorList">
-                              <span v-html="dataError"></span>
-                            </li>
-                          </ul>
-                        </li>
+                <li>
+                  <router-link
+                    class="text-decoration-none"
+                    :to="techPath(techTag.path, techItem)">
+                    {{ getTechLabel(techItem) }}
+                  </router-link>
+
+                  <ul>
+                    <li v-for="error in techItem.errorList">
+                      <span v-html="error"></span>
+                    </li>
+
+                    <div v-if="techItem.associatedInputsComplete === false">
+                      <div v-for="associatedInputs in techItem.associatedInputs">
+                        <div v-if="!associatedInputs.complete">
+                          <li>
+                            <router-link
+                              class="text-decoration-none"
+                              :to="getTechAssociatedInputsPath(techItem)">
+                              {{ associatedInputs.displayName + getTechDisplayName(techItem) }}
+                            </router-link>
+                            <ul>
+                              <li v-for="dataError in associatedInputs.errorList">
+                                <span v-html="dataError"></span>
+                              </li>
+                            </ul>
+                          </li>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </ul>
-              </li>
+                  </ul>
+                </li>
+              </div>
             </div>
           </div>
         </div>
@@ -115,7 +117,7 @@
         <h4>Technology Specifications</h4>
         <ul v-for="techTag in techSpecs" :key="techTag.shortHand">
           <li v-for="techItem in filterNonActives(techTag.items)">
-            {{ getTechLabel(techTag.fullName, techItem) }}
+            {{ getTechLabel(techItem) }}
           </li>
         </ul>
         </br>
@@ -123,7 +125,7 @@
         <h4>Services</h4>
         <ul>
           <li v-for="service in activeServices">
-            {{ service }}
+            {{ addSpaces(service) }}
           </li>
         </ul>
         </br>
@@ -228,6 +230,10 @@
         }
         return `${rate} %`;
       },
+      addSpaces(text) {
+        const rex = /([A-Z])([A-Z])([a-z])|([a-z])([A-Z])/g;
+        return text.replace(rex, '$1$4 $2$3$5');
+      },
 
       exportProject(selectedPath) {
         return exportProject(selectedPath, this.$store.state.Project, this.$store.state.Application);
@@ -262,7 +268,7 @@
         }
         return `: ${tech.name}`;
       },
-  
+
       getTechAssociatedInputsPath(tech) {
         const techID = tech.id;
         return `${tech.associatedInputs[0].path}/${techID}`;
@@ -317,7 +323,7 @@
       },
 
       // all
-  
+
     },
     data() {
       return {
@@ -326,13 +332,9 @@
         setup: [
           ['Project Name', (this.$store.state.Project.name || '')],
           ['Start Year', this.$store.state.Project.startYear],
-          ['Analysis Horizon', this.getAnalysisHorizonDisplay],
-          ['Analysis Horizon Mode', this.modeDescription],
           ['Data year', this.$store.state.Project.dataYear],
           ['Grid Domain', this.$store.state.Project.gridLocation],
           ['Ownership', this.$store.state.Project.ownership],
-          ['Latitude', this.$store.state.Project.latitude],
-          ['Longitude', this.$store.state.Project.longitude],
         ],
         techGen: this.$store.state.Project.listOfActiveTechnologies.Generator,
         techIR: this.$store.state.Project.listOfActiveTechnologies['Intermittent Resource'],

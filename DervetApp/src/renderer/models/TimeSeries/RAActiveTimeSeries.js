@@ -8,10 +8,8 @@ class RAActiveTimeSeries extends TimeSeriesBase {
     this.tsName = TS_RA_ACTIVE;
   }
 
-  validate(expectedRowCount) {
-    const errorMsgArray = [super.validate(expectedRowCount)];
-    errorMsgArray.push(this.invalidCheckSingleValueInclusiveList([0, 1]).errorMsg);
-    return errorMsgArray.filter((item) => ![null, ''].includes(item)).join('<br>');
+  extraValidate() {
+    return [this.invalidCheckSingleValueInclusiveList([0, 1]).errorMsg];
   }
 }
 

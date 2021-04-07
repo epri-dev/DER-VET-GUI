@@ -170,10 +170,6 @@
       xAxis: Array,
     },
     methods: {
-      arrayDisplayFirstFifteen(array) {
-        const num = 15;
-        return (array.length <= num) ? array : [array.slice(0, num), '...'];
-      },
       getSampleDataFileName() {
         const dataModelName = (new this.DataModel([])).constructor.name;
         if (this.isMonthlyData) {

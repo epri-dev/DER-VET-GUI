@@ -6,7 +6,7 @@ import { optionsYN } from '@/models/Project/constants';
 import { SHARED_DYNAMIC_FIELDS, createSharedHardcodedMetadata } from '@/models/Project/TechnologySpecs/sharedConstants';
 import { TECH_SPECS_DIESEL } from '@/router/constants';
 
-const DieselGen = 'DieselGen';
+const DieselGen = 'Diesel';
 
 // TODO parse these from schema
 const SIZING_ALLOWED_VALUES = [

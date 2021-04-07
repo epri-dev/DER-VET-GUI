@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash/cloneDeep';
 import IpcService from '@/service/Ipc';
 import { makeDervetInputs } from '@/models/dto/ProjectDto';
 import * as m from '@/store/mutationTypes';
@@ -32,7 +33,6 @@ const getDefaultApplicationState = () => ({
       },
     },
   },
-  id: NULL,
   isError: NULL,
   pageCompleteness: { // TODO remove use HN
     overview: {
@@ -65,19 +65,13 @@ const getDefaultApplicationState = () => ({
   runInProgress: NULL,
 });
 
-const namespaced = true;
-
 const state = getDefaultApplicationState();
 
 const mutations = {
-  SET_ID(state, newId) {
-    state.id = newId;
-  },
   [m.SET_RUN_IN_PROGRESS](state) {
     state.runInProgress = true;
   },
   [m.SET_RUN_NOT_IN_PROGRESS](state) {
-    console.log('run ended');
     state.runInProgress = false;
   },
   [m.SET_RESULT_SUCCESS](state) {
@@ -127,7 +121,7 @@ const mutations = {
   SET_NEW_APPLICATION_STATE(state, application) {
     Object.assign(state, application);
   },
-  RESET_APPLICATION_TO_DEFAULT(state) {
+  [m.RESET_APPLICATION](state) {
     Object.assign(state, getDefaultApplicationState());
   },
 };
@@ -149,7 +143,7 @@ const actions = {
     commit('SET_NEW_COMPLETENESS', billReductionCompleteness);
   },
   [a.SET_QUICK_START_ERROR_LIST]({ commit }, caseName) {
-    const selectedUseCase = USECASE_ERROR_LIST_DB[caseName];
+    const selectedUseCase = cloneDeep(USECASE_ERROR_LIST_DB[caseName]);
     commit(m.SET_NEW_ERROR_LIST, selectedUseCase);
   },
   [a.RECEIVE_ERROR]({ commit }) {
@@ -164,9 +158,8 @@ const actions = {
       commit(m.SET_RESULT_SUCCESS);
     },
   },
-  [a.RESET_APPLICATION_TO_DEFAULT]({ commit }, newId) {
-    commit('RESET_APPLICATION_TO_DEFAULT');
-    commit('SET_ID', newId);
+  [a.RESET]({ commit }) {
+    commit(m.RESET_APPLICATION);
   },
   runDervet({ commit }, project) {
     commit(m.SET_RUN_IN_PROGRESS);
@@ -181,7 +174,7 @@ const actions = {
 };
 
 export default {
-  namespaced,
+  namespaced: true,
   state,
   mutations,
   actions,

@@ -58,6 +58,7 @@ export const SR_GROWTH = 'srGrowth';
 export const SR_DURATION = 'srDuration';
 export const START_YEAR = 'startYear';
 export const TIMESTEP = 'timestep';
+export const USER_INFEASIBLE = 'userInfeasible';
 export const USER_PRICE = 'userPrice';
 
 // Timeseries
@@ -89,10 +90,15 @@ export const TS_SYSTEM_LOAD = 'tsSystemLoad';
 export const TS_SYSTEM_FIELDS = [TS_SYSTEM_LOAD];
 export const TS_USER_ENERGY_MAX = 'tsUserEnergyMax';
 export const TS_USER_ENERGY_MIN = 'tsUserEnergyMin';
-export const TS_USER_POWER_MAX = 'tsUserPowerMax';
-export const TS_USER_POWER_MIN = 'tsUserPowerMin';
-export const TS_USER_DEFINED_FIELDS = [TS_USER_ENERGY_MAX, TS_USER_ENERGY_MIN,
-  TS_USER_POWER_MAX, TS_USER_POWER_MIN];
+export const TS_USER_POWER_EXPORT_MAX = 'tsUserPowerExportMax';
+export const TS_USER_POWER_EXPORT_MIN = 'tsUserPowerExportMin';
+export const TS_USER_POWER_IMPORT_MAX = 'tsUserPowerImportMax';
+export const TS_USER_POWER_IMPORT_MIN = 'tsUserPowerImportMin';
+export const TS_USER_DEFINED_FIELDS = [
+  TS_USER_ENERGY_MAX, TS_USER_ENERGY_MIN,
+  TS_USER_POWER_EXPORT_MAX, TS_USER_POWER_EXPORT_MIN,
+  TS_USER_POWER_IMPORT_MAX, TS_USER_POWER_IMPORT_MIN,
+];
 // technology timeseries
 export const TS_SOLARPV_GENERATION_PROFILE = 'tsSolarPVGenerationProfile';
 export const TS_CONTROLLABLE_LOAD_PROFILE = 'tsControllableLoadProfile';
@@ -112,6 +118,24 @@ export const TS_ALL = [
   ...TS_USER_DEFINED_FIELDS,
 ];
 
+export const TECH_SPECS_BATTERY = 'technologySpecsBattery';
+export const TECH_SPECS_CONTROLLABLE_LOAD = 'technologySpecsControllableLoad';
+export const TECH_SPECS_DIESEL_GEN = 'technologySpecsDieselGen';
+export const TECH_SPECS_FLEET_EV = 'technologySpecsFleetEV';
+export const TECH_SPECS_ICE = 'technologySpecsICE';
+export const TECH_SPECS_SINGLE_EV = 'technologySpecsSingleEV';
+export const TECH_SPECS_SOLAR_PV = 'technologySpecsSolarPV';
+
+export const TECH_TYPES = [
+  TECH_SPECS_BATTERY,
+  TECH_SPECS_CONTROLLABLE_LOAD,
+  TECH_SPECS_DIESEL_GEN,
+  TECH_SPECS_FLEET_EV,
+  TECH_SPECS_ICE,
+  TECH_SPECS_SINGLE_EV,
+  TECH_SPECS_SOLAR_PV,
+];
+
 // Monthly
 export const MTS_BACKUP_ENERGY_PRICE = 'mtsBackupEnergyPrice';
 export const MTS_BACKUP_ENERGY_RESERVATION = 'mtsBackupEnergyReservation';
@@ -125,7 +149,8 @@ export const MTS_DR_FIELDS = [MTS_DR_CAPACITY_PRICE, MTS_DR_CAPACITY_RESERVATION
 export const MTS_RA_CAPACITY_PRICE = 'mtsRaCapacityPrice';
 export const MTS_RA_FIELDS = [MTS_RA_CAPACITY_PRICE];
 
-export const MTS_ALL = [...MTS_RA_FIELDS, ...MTS_BACKUP_FIELDS, ...MTS_DR_FIELDS];
+export const MTS_ALL = [...MTS_RA_FIELDS, ...MTS_BACKUP_FIELDS, ...MTS_DR_FIELDS,
+  MTS_DR_MONTHS_APPLIED];
 
 export const makeAllowedValues = lst => _.map(lst, x => ({ value: x, label: x }));
 
@@ -272,6 +297,7 @@ export const SR_FIELDS = [
   SR_GROWTH,
 ];
 export const USER_DEFINED_FIELDS = [
+  USER_INFEASIBLE,
   USER_PRICE,
 ];
 export const DA_FIELDS = [

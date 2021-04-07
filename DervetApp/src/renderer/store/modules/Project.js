@@ -1,11 +1,18 @@
-import { cloneDeep, flatten, merge } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import each from 'lodash/each';
+import filter from 'lodash/filter';
+import flatten from 'lodash/flatten';
+import isEmpty from 'lodash/isEmpty';
+import merge from 'lodash/merge';
+import { v4 as uuidv4 } from 'uuid';
 
 import { billReductionProject } from '@/assets/cases/billReduction/project';
 import { reliabilityProject } from '@/assets/cases/reliability/project';
 import { dummyMarketServiceHourly } from '@/assets/cases/dummyMarketServiceHourly/project';
 import { ERCOTMarketService } from '@/assets/cases/ERCOTMarketService/project';
-import { projectMetadata } from '@/models/Project/ProjectMetadata';
 import { makeDatetimeIndex } from '@/models/dto/ProjectDto';
+import { projectMetadata } from '@/models/Project/ProjectMetadata';
+import TechnologySpecsSolarPVMetadata, { LOC, LocType } from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
 import * as m from '@/store/mutationTypes';
 import * as a from '@/store/actionTypes';
 import * as c from '@/models/Project/constants';
@@ -18,19 +25,11 @@ const USECASE_DB = { // its a sad excuse for a database, but serves as one.
 };
 
 const metadataDefaultValues = projectMetadata.getDefaultValues();
+const techSolarPVMetadata = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
 
 // TODO get rid of this completely...move over all DER, timeseries inits to getDefaultValues...
 export const getDefaultState = () => ({
   ...metadataDefaultValues,
-
-  // DERS
-  technologySpecsBattery: [],
-  technologySpecsControllableLoad: [],
-  technologySpecsDieselGen: [],
-  technologySpecsFleetEV: [],
-  technologySpecsICE: [],
-  technologySpecsSingleEV: [],
-  technologySpecsSolarPV: [],
 
   // TODO: make this dynamic/move to getter
   listOfActiveTechnologies: {
@@ -65,6 +64,12 @@ const getters = {
   getBatterySpecsClone(state) {
     return () => cloneDeep(state.technologySpecsBattery);
   },
+  getIndexOfBatteryId(state) {
+    return id => state.technologySpecsBattery.findIndex(x => x.id === id);
+  },
+  activeBatteryExists(state) {
+    return !isEmpty(filter(state.technologySpecsBattery, batt => batt.active));
+  },
   getDieselGenById(state) {
     return id => state.technologySpecsDieselGen.find(x => x.id === id);
   },
@@ -82,9 +87,6 @@ const getters = {
   },
   getICESpecsClone(state) {
     return () => cloneDeep(state.technologySpecsICE);
-  },
-  getIndexOfBatteryId(state) {
-    return id => state.technologySpecsBattery.findIndex(x => x.id === id);
   },
   getIndexOfBillingPeriodId(state) {
     return id => state.retailTariffBillingPeriods.findIndex(x => x.id === id);
@@ -145,7 +147,7 @@ const getters = {
 };
 
 const mutations = {
-  [m.RESET_PROJECT_TO_DEFAULT](state) {
+  [m.RESET_PROJECT](state) {
     Object.assign(state, getDefaultState());
   },
   [m.LOAD_NEW_PROJECT](state, project) {
@@ -718,6 +720,40 @@ const mutations = {
     const indexMatchingId = getters.getIndexOfBatteryId(state)(payload.id);
     state.technologySpecsBattery.splice(indexMatchingId, 1);
   },
+  [m.ADD_TO_ALL_ERRORLISTS_IN_TECH](state, { techType, displayName }) {
+    const errorMsg = `${displayName} is required`;
+    each(state[techType], tech => {
+      // only modify tech if it has been saved/started
+      if (tech.complete === null) { return; }
+      tech.errorList.push(errorMsg);
+    });
+  },
+  [m.REMOVE_FROM_ALL_ERRORLISTS_IN_TECH](state, { techType, displayName }) {
+    each(state[techType], tech => {
+      // only modify tech if it has been saved/started
+      if (tech.complete === null) { return; }
+      tech.errorList = tech.errorList.filter(item => !item.includes(displayName));
+    });
+  },
+  [m.SET_ALL_COMPLETENESS_IN_TECH](state, techType) {
+    each(state[techType], tech => {
+      // only modify tech if it has been saved/started
+      if (tech.complete === null) { return; }
+      if (tech.componentSpecsComplete !== undefined
+        && tech.associatedInputsComplete !== undefined) {
+        tech.componentSpecsComplete = tech.errorList.length === 0;
+        tech.complete = tech.componentSpecsComplete && tech.associatedInputsComplete;
+      } else {
+        tech.complete = tech.errorList.length === 0;
+      }
+    });
+  },
+  [m.SET_ALL_VALUES_IN_TECH](state, { techType, key, value }) {
+    each(state[techType], tech => { tech[key] = value; });
+  },
+  [m.SET_UNIQUE_IDS_IN_TECH](state) {
+    each(c.TECH_TYPES, techType => each(state[techType], tech => { tech.id = uuidv4(); }));
+  },
   [m.REMOVE_TECH_CONTROLLABLE_LOAD](state, payload) {
     const indexMatchingId = getters.getIndexOfControllableLoadId(state)(payload.id);
     state.technologySpecsControllableLoad.splice(indexMatchingId, 1);
@@ -767,11 +803,20 @@ const mutations = {
   [m.SET_USER_ENERGY_MIN](state, payload) {
     state[c.TS_USER_ENERGY_MIN] = payload;
   },
-  [m.SET_USER_POWER_MAX](state, payload) {
-    state[c.TS_USER_POWER_MAX] = payload;
+  [m.SET_USER_POWER_EXPORT_MAX](state, payload) {
+    state[c.TS_USER_POWER_EXPORT_MAX] = payload;
   },
-  [m.SET_USER_POWER_MIN](state, payload) {
-    state[c.TS_USER_POWER_MIN] = payload;
+  [m.SET_USER_POWER_EXPORT_MIN](state, payload) {
+    state[c.TS_USER_POWER_EXPORT_MIN] = payload;
+  },
+  [m.SET_USER_POWER_IMPORT_MAX](state, payload) {
+    state[c.TS_USER_POWER_IMPORT_MAX] = payload;
+  },
+  [m.SET_USER_POWER_IMPORT_MIN](state, payload) {
+    state[c.TS_USER_POWER_IMPORT_MIN] = payload;
+  },
+  [m.SET_USER_INFEASIBLE](state, payload) {
+    state[c.USER_INFEASIBLE] = payload;
   },
   [m.SET_USER_PRICE](state, payload) {
     state[c.USER_PRICE] = payload;
@@ -779,21 +824,19 @@ const mutations = {
 };
 
 const actions = {
-  [a.RESET_PROJECT_TO_DEFAULT]({ commit }) {
-    commit(m.RESET_PROJECT_TO_DEFAULT);
+  [a.RESET_PROJECT]({ commit }) {
+    commit(m.RESET_PROJECT);
   },
   [a.LOAD_NEW_PROJECT]({ commit }, project) {
     return new Promise((resolve) => {
-      commit(m.LOAD_NEW_PROJECT, merge(getDefaultState(), project));
+      commit(m.LOAD_NEW_PROJECT, merge(cloneDeep(getDefaultState()), cloneDeep(project)));
+      commit(m.SET_UNIQUE_IDS_IN_TECH);
       resolve();
     });
   },
-  [a.LOAD_QUICK_START_PROJECT]({ commit }, caseName) {
+  [a.LOAD_QUICK_START_PROJECT]({ dispatch }, caseName) {
     const selectedUseCase = USECASE_DB[caseName];
-    return new Promise((resolve) => {
-      commit(m.LOAD_NEW_PROJECT, merge(getDefaultState(), selectedUseCase));
-      resolve();
-    });
+    return dispatch(a.LOAD_NEW_PROJECT, selectedUseCase);
   },
   // backup
   [a.SET_BACKUP_ENERGY_PRICE]({ commit }, payload) {
@@ -1155,57 +1198,79 @@ const actions = {
     commit(m.SET_SYSTEM_LOAD, payload);
   },
   // technology specs
-  [a.ACTIVATE_TECH]({ commit }, payload) {
+  [a.ACTIVATE_TECH]({ commit, getters, dispatch }, payload) {
     if (payload.tag === 'ICE') {
       commit(m.ACTIVATE_TECH_ICE, payload);
     }
-    if (payload.tag === 'DieselGen') {
+    if (payload.tag === 'Diesel') {
       commit(m.ACTIVATE_TECH_DIESEL_GEN, payload);
     }
     if (payload.tag === 'PV') {
       commit(m.ACTIVATE_TECH_SOLAR_PV, payload);
     }
     if (payload.tag === 'Battery') {
+      if (!getters.activeBatteryExists) {
+        const setValsPayload = {
+          techType: c.TECH_SPECS_SOLAR_PV,
+          key: LOC,
+          value: null,
+          displayName: techSolarPVMetadata.loc.displayName,
+        };
+        commit(m.SET_ALL_VALUES_IN_TECH, setValsPayload);
+        dispatch(a.UPDATE_ADD_ALL_ERRORLISTS_IN_TECH, setValsPayload);
+        commit(m.SET_ALL_COMPLETENESS_IN_TECH, setValsPayload.techType);
+      }
       commit(m.ACTIVATE_TECH_BATTERY, payload);
     }
-    if (payload.tag === 'ControllableLoad') {
+    if (payload.tag === 'Controllable Load') {
       commit(m.ACTIVATE_TECH_CONTROLLABLE_LOAD, payload);
     }
-    if (payload.tag === 'ElectricVehicle1') {
+    if (payload.tag === 'Single EV') {
       commit(m.ACTIVATE_TECH_SINGLE_EV, payload);
     }
-    if (payload.tag === 'ElectricVehicle2') {
+    if (payload.tag === 'Fleet EV') {
       commit(m.ACTIVATE_TECH_FLEET_EV, payload);
     }
   },
-  [a.ADD_TECH]({ commit }, payload) {
+  [a.ADD_TECH]({ commit, getters, dispatch }, payload) {
     if (payload.tag === 'ICE') {
       commit(m.ADD_TECHNOLOGY_SPECS_ICE, payload);
     }
-    if (payload.tag === 'DieselGen') {
+    if (payload.tag === 'Diesel') {
       commit(m.ADD_TECHNOLOGY_SPECS_DIESEL_GEN, payload);
     }
     if (payload.tag === 'PV') {
       commit(m.ADD_TECHNOLOGY_SPECS_SOLAR_PV, payload);
     }
     if (payload.tag === 'Battery') {
+      if (!getters.activeBatteryExists) {
+        const setValsPayload = {
+          techType: c.TECH_SPECS_SOLAR_PV,
+          key: LOC,
+          value: null,
+          displayName: techSolarPVMetadata.loc.displayName,
+        };
+        commit(m.SET_ALL_VALUES_IN_TECH, setValsPayload);
+        dispatch(a.UPDATE_ADD_ALL_ERRORLISTS_IN_TECH, setValsPayload);
+        commit(m.SET_ALL_COMPLETENESS_IN_TECH, setValsPayload.techType);
+      }
       commit(m.ADD_TECHNOLOGY_SPECS_BATTERY, payload);
     }
-    if (payload.tag === 'ControllableLoad') {
+    if (payload.tag === 'Controllable Load') {
       commit(m.ADD_TECHNOLOGY_SPECS_CONTROLLABLE_LOAD, payload);
     }
-    if (payload.tag === 'ElectricVehicle1') {
+    if (payload.tag === 'Single EV') {
       commit(m.ADD_TECHNOLOGY_SPECS_SINGLE_EV, payload);
     }
-    if (payload.tag === 'ElectricVehicle2') {
+    if (payload.tag === 'Fleet EV') {
       commit(m.ADD_TECHNOLOGY_SPECS_FLEET_EV, payload);
     }
   },
-  [a.DEACTIVATE_TECH]({ commit }, payload) {
+  [a.DEACTIVATE_TECH]({ commit, getters }, payload) {
     if (payload.tag === 'ICE') {
       commit(m.DEACTIVATE_TECH_ICE, payload);
     }
-    if (payload.tag === 'DieselGen') {
+    if (payload.tag === 'Diesel') {
       commit(m.DEACTIVATE_TECH_DIESEL_GEN, payload);
     }
     if (payload.tag === 'PV') {
@@ -1213,14 +1278,25 @@ const actions = {
     }
     if (payload.tag === 'Battery') {
       commit(m.DEACTIVATE_TECH_BATTERY, payload);
+      if (!getters.activeBatteryExists) {
+        const setValsPayload = {
+          techType: c.TECH_SPECS_SOLAR_PV,
+          key: LOC,
+          value: LocType.AC,
+          displayName: techSolarPVMetadata.loc.displayName,
+        };
+        commit(m.SET_ALL_VALUES_IN_TECH, setValsPayload);
+        commit(m.REMOVE_FROM_ALL_ERRORLISTS_IN_TECH, setValsPayload);
+        commit(m.SET_ALL_COMPLETENESS_IN_TECH, setValsPayload.techType);
+      }
     }
-    if (payload.tag === 'ControllableLoad') {
+    if (payload.tag === 'Controllable Load') {
       commit(m.DEACTIVATE_TECH_CONTROLLABLE_LOAD, payload);
     }
-    if (payload.tag === 'ElectricVehicle1') {
+    if (payload.tag === 'Single EV') {
       commit(m.DEACTIVATE_TECH_SINGLE_EV, payload);
     }
-    if (payload.tag === 'ElectricVehicle2') {
+    if (payload.tag === 'Fleet EV') {
       commit(m.DEACTIVATE_TECH_FLEET_EV, payload);
     }
   },
@@ -1244,22 +1320,61 @@ const actions = {
   [a.REPLACE_LIST_FIELD]({ commit }, payload) {
     commit(m.REPLACE_LIST_FIELD, payload);
   },
-  [a.REMOVE_TECH]({ commit }, payload) {
+  [a.REMOVE_TECH]({ commit, getters }, payload) {
     if (payload.tag === 'ICE') {
       commit(m.REMOVE_TECH_ICE, payload);
-    } else if (payload.tag === 'DieselGen') {
+    } else if (payload.tag === 'Diesel') {
       commit(m.REMOVE_TECH_DIESEL_GEN, payload);
     } else if (payload.tag === 'PV') {
       commit(m.REMOVE_TECH_SOLAR_PV, payload);
     } else if (payload.tag === 'Battery') {
       commit(m.REMOVE_TECH_BATTERY, payload);
-    } else if (payload.tag === 'ControllableLoad') {
+      if (!getters.activeBatteryExists) {
+        const setValsPayload = {
+          techType: c.TECH_SPECS_SOLAR_PV,
+          key: LOC,
+          value: LocType.AC,
+          displayName: techSolarPVMetadata.loc.displayName,
+        };
+        commit(m.SET_ALL_VALUES_IN_TECH, setValsPayload);
+        commit(m.REMOVE_FROM_ALL_ERRORLISTS_IN_TECH, setValsPayload);
+        commit(m.SET_ALL_COMPLETENESS_IN_TECH, setValsPayload.techType);
+      }
+    } else if (payload.tag === 'Controllable Load') {
       commit(m.REMOVE_TECH_CONTROLLABLE_LOAD, payload);
-    } else if (payload.tag === 'ElectricVehicle1') {
+    } else if (payload.tag === 'Single EV') {
       commit(m.REMOVE_TECH_SINGLE_EV, payload);
-    } else if (payload.tag === 'ElectricVehicle2') {
+    } else if (payload.tag === 'Fleet EV') {
       commit(m.REMOVE_TECH_FLEET_EV, payload);
     }
+  },
+  [a.RESET_GAMMA_AND_NU]({ commit, dispatch }, payload) {
+    const gammaPayload = {
+      techType: 'technologySpecsSolarPV',
+      key: 'gamma',
+      value: techSolarPVMetadata.gamma.defaultValue,
+      displayName: techSolarPVMetadata.gamma.displayName,
+    };
+    const nuPayload = {
+      techType: 'technologySpecsSolarPV',
+      key: 'nu',
+      value: techSolarPVMetadata.nu.defaultValue,
+      displayName: techSolarPVMetadata.nu.displayName,
+    };
+    commit(m.SET_ALL_VALUES_IN_TECH, gammaPayload);
+    commit(m.SET_ALL_VALUES_IN_TECH, nuPayload);
+    if (payload) {
+      dispatch(a.UPDATE_ADD_ALL_ERRORLISTS_IN_TECH, gammaPayload)
+        .then(dispatch(a.UPDATE_ADD_ALL_ERRORLISTS_IN_TECH, nuPayload));
+    } else {
+      commit(m.REMOVE_FROM_ALL_ERRORLISTS_IN_TECH, gammaPayload);
+      commit(m.REMOVE_FROM_ALL_ERRORLISTS_IN_TECH, nuPayload);
+    }
+    commit(m.SET_ALL_COMPLETENESS_IN_TECH, gammaPayload.techType);
+  },
+  [a.UPDATE_ADD_ALL_ERRORLISTS_IN_TECH]({ commit }, payload) {
+    commit(m.REMOVE_FROM_ALL_ERRORLISTS_IN_TECH, payload);
+    commit(m.ADD_TO_ALL_ERRORLISTS_IN_TECH, payload);
   },
   // timeseries uploads
   [a.SET_TS_ERROR]({ commit }, payload) {
@@ -1275,11 +1390,20 @@ const actions = {
   [a.SET_USER_ENERGY_MIN]({ commit }, payload) {
     commit(m.SET_USER_ENERGY_MIN, payload);
   },
-  [a.SET_USER_POWER_MAX]({ commit }, payload) {
-    commit(m.SET_USER_POWER_MAX, payload);
+  [a.SET_USER_POWER_EXPORT_MAX]({ commit }, payload) {
+    commit(m.SET_USER_POWER_EXPORT_MAX, payload);
   },
-  [a.SET_USER_POWER_MIN]({ commit }, payload) {
-    commit(m.SET_USER_POWER_MIN, payload);
+  [a.SET_USER_POWER_EXPORT_MIN]({ commit }, payload) {
+    commit(m.SET_USER_POWER_EXPORT_MIN, payload);
+  },
+  [a.SET_USER_POWER_IMPORT_MAX]({ commit }, payload) {
+    commit(m.SET_USER_POWER_IMPORT_MAX, payload);
+  },
+  [a.SET_USER_POWER_IMPORT_MIN]({ commit }, payload) {
+    commit(m.SET_USER_POWER_IMPORT_MIN, payload);
+  },
+  [a.SET_USER_INFEASIBLE]({ commit }, payload) {
+    commit(m.SET_USER_INFEASIBLE, payload);
   },
   [a.SET_USER_PRICE]({ commit }, payload) {
     commit(m.SET_USER_PRICE, payload);

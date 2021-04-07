@@ -100,7 +100,7 @@ export const makeProjectControllableLoad = id => ({
   replacementConstructionTime: null,
   salvageValue: null,
   salvageValueOption: 'Sunk Cost',
-  tag: 'ControllableLoad',
+  tag: 'Controllable Load',
   technologyType: 'Controllable Load',
   ter: 7,
 });
@@ -134,7 +134,7 @@ export const makeProjectDieselGen = id => ({
   salvageValue: 0,
   salvageValueOption: 'User defined',
   shouldSize: false,
-  tag: 'DieselGen',
+  tag: 'Diesel',
   technologyType: 'Generator',
   ter: 7,
   variableOMCost: 0,
@@ -161,7 +161,7 @@ export const makeProjectFleetEV = id => ({
   replacementConstructionTime: null,
   salvageValue: null,
   salvageValueOption: 'Sunk Cost',
-  tag: 'ElectricVehicle2',
+  tag: 'Fleet EV',
   technologyType: 'Electric Vehicle',
   ter: 7,
 });
@@ -262,7 +262,7 @@ export const makeProjectSingleEV = id => ({
   replacementConstructionTime: null,
   salvageValue: null,
   salvageValueOption: 'Sunk Cost',
-  tag: 'ElectricVehicle1',
+  tag: 'Single EV',
   technologyType: 'Electric Vehicle',
   ter: 7,
 });

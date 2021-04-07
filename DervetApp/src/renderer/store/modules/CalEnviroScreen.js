@@ -1,5 +1,6 @@
 import loadCesScoresFromFile from '@/assets/CalEnviroScreen/csvLoader';
 import { parsedCsvToCesScores } from '@/models/CalEnviroScreen/Score';
+import * as a from '@/store/actionTypes';
 
 const getDefaultApplicationState = () => ({
   cesScores: null,
@@ -24,7 +25,7 @@ const mutations = {
 };
 
 const actions = {
-  resetZipCode({ commit }) {
+  [a.RESET_ZIP_CODE]({ commit }) {
     commit('SET_ZIP_CODE', null);
   },
   setZipCode({ commit }, zipCode) {

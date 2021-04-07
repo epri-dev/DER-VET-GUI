@@ -19,7 +19,7 @@ const sharedHardcodedMetadata = createSharedHardcodedMetadata('controllable load
 const SHARED_DYNAMIC_FIELDS_MINUS_MACRS = _.without(SHARED_DYNAMIC_FIELDS, MACRS_TERM);
 const sharedHardcodedMetadataMinusMacrs = _.omit(sharedHardcodedMetadata, MACRS_TERM);
 
-const CONTROLLABLE_LOAD = 'ControllableLoad';
+const CONTROLLABLE_LOAD = 'Controllable Load';
 
 const DYNAMIC_FIELDS = [
   ...SHARED_DYNAMIC_FIELDS_MINUS_MACRS,

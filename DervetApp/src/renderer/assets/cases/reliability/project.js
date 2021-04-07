@@ -1,9 +1,9 @@
+import TechnologySpecsBatteryMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsBattery';
 import CriticalLoadTimeSeries from '@/models/TimeSeries/CriticalLoadTimeSeries';
 import SiteLoadTimeSeries from '@/models/TimeSeries/SiteLoadTimeSeries';
 import PVGenerationTimeSeries from '@/models/TimeSeries/PVGenerationTimeSeries';
 import {
   TECH_SPECS_BATTERY,
-  TECH_SPECS_BATTERY_DATA_CYCLES,
   TECH_SPECS_PV,
   TECH_SPECS_PV_DATA_GENERATION,
 } from '@/router/constants';
@@ -11,6 +11,9 @@ import {
 import { ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV } from '@/store/actionTypes';
 
 import { pvGen, criticalLoad, siteLoad } from '@/assets/cases/reliability/csvs';
+
+const defaultBatteryCyclesObject = TechnologySpecsBatteryMetadata
+  .getHardcodedMetadata().getDefaultValues().associatedInputs;
 
 export const reliabilityErrorList = {
   overview: {
@@ -299,26 +302,7 @@ export const reliabilityProject = {
   }],
   technologySpecsBattery: [{
     active: true,
-    associatedInputs: [{
-      complete: true,
-      dataRows: [
-        { ulimit: 0.05, val: 75000 },
-        { ulimit: 0.1, val: 40500 },
-        { ulimit: 0.15, val: 27000 },
-        { ulimit: 0.2, val: 20250 },
-        { ulimit: 0.3, val: 11250 },
-        { ulimit: 0.4, val: 6750 },
-        { ulimit: 0.5, val: 4500 },
-        { ulimit: 0.6, val: 3750 },
-        { ulimit: 0.7, val: 3225 },
-        { ulimit: 0.8, val: 2813 },
-        { ulimit: 0.9, val: 2475 },
-        { ulimit: 1, val: 2250 },
-      ],
-      displayName: 'Battery Cycle Life Curve',
-      errorList: [],
-      path: TECH_SPECS_BATTERY_DATA_CYCLES,
-    }],
+    associatedInputs: defaultBatteryCyclesObject,
     associatedInputsComplete: true,
     auxiliaryLoad: 0,
     calendarDegradationRate: 0,

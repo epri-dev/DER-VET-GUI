@@ -8,7 +8,7 @@ import {
 } from '@/models/Project/TechnologySpecs/sharedConstants';
 import { TECH_SPECS_SINGLE_EV } from '@/router/constants';
 
-const ELECTRIC_VEHICLE1 = 'ElectricVehicle1';
+const ELECTRIC_VEHICLE1 = 'Single EV';
 
 const DYNAMIC_FIELDS = [
   ...SHARED_DYNAMIC_FIELDS,
@@ -19,7 +19,7 @@ const DYNAMIC_FIELDS = [
   'minimumChargingPower',
   'plugInHour',
   'plugOutHour',
-  'replacmentCost',
+  'replacementCost',
 ];
 
 const sharedHardcodedMetadata = createSharedHardcodedMetadata('single EV');

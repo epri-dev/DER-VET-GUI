@@ -204,6 +204,10 @@ body {
     margin: 25px 0 0 0;
 }
 
+.center-error-vertically {
+    margin-top: 150px !important;
+}
+
 
 /*
  * Trash button hover css
@@ -841,6 +845,7 @@ p.tool-tip {
     font-size: 13px;
     line-height: 1.55rem;
     transition: all .3s ease-in;
+    margin-right: 1rem !important;
 }
 
 p.tool-tip:hover {

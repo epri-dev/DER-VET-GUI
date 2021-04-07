@@ -11,6 +11,19 @@ export const TRACE_NAMES = {
   frequencyRegulationUp: 'Frequency Regulation Up',
   loadFollowingDown: 'Load Following Down',
   loadFollowingUp: 'Load Following Up',
+  // detailed reservations
+  spinningReserveCharging: 'Spinning Reserve Charging',
+  nonSpinningReserveCharging: 'Non-Spinning Reserve Charging',
+  frequencyRegulationDownCharging: 'Frequency Regulation Down Charging',
+  frequencyRegulationUpCharging: 'Frequency Regulation Up Charging',
+  loadFollowingDownCharging: 'Load Following Down Charging',
+  loadFollowingUpCharging: 'Load Following Up Charging',
+  spinningReserveDischarging: 'Spinning Reserve Discharging',
+  nonSpinningReserveDischarging: 'Non-Spinning Reserve Discharging',
+  frequencyRegulationDownDischarging: 'Frequency Regulation Down Discharging',
+  frequencyRegulationUpDischarging: 'Frequency Regulation Up Discharging',
+  loadFollowingDownDischarging: 'Load Following Down Discharging',
+  loadFollowingUpDischarging: 'Load Following Up Discharging',
   // power flows
   totalEssPower: 'Total Storage Power',
   totalGeneration: 'Total Generation',
@@ -37,7 +50,7 @@ export const TRACE_NAMES = {
 
 const COLUMN_TO_TRACE = [
   {
-    subtrahendColumnName: 'Net Load (kW)',
+    minuendColumnName: 'Net Load (kW)',
     traceName: TRACE_NAMES.netLoad,
   },
   {
@@ -63,6 +76,7 @@ const COLUMN_TO_TRACE = [
   {
     minuendColumnName: 'Total Storage Power (kW)',
     traceName: TRACE_NAMES.totalEssPower,
+    negate: true,
   },
   {
     minuendColumnName: 'Critical Load (kW)',
@@ -97,19 +111,22 @@ const COLUMN_TO_TRACE = [
     traceName: TRACE_NAMES.nonSpinningReservePrice,
   },
   {
-    minuendColumnName: 'Spinning Reserve Down (Disharging) (kW)',
+    minuendColumnName: 'Spinning Reserve Down (Discharging) (kW)',
     addendColumnName: 'Spinning Reserve Down (Charging) (kW)',
     traceName: TRACE_NAMES.spinningReserve,
+    negate: true,
   },
   {
-    minuendColumnName: 'Non-spinning Reserve Down (Disharging) (kW)',
+    minuendColumnName: 'Non-spinning Reserve Down (Discharging) (kW)',
     addendColumnName: 'Non-spinning Reserve Down (Charging) (kW)',
     traceName: TRACE_NAMES.nonSpinningReserve,
+    negate: true,
   },
   {
     minuendColumnName: 'Frequency Regulation Down (Discharging) (kW)',
     addendColumnName: 'Frequency Regulation Down (Charging) (kW)',
     traceName: TRACE_NAMES.frequencyRegulationDown,
+    negate: true,
   },
   {
     minuendColumnName: 'Frequency Regulation Up (Discharging) (kW)',
@@ -120,6 +137,7 @@ const COLUMN_TO_TRACE = [
     minuendColumnName: 'Load Following Down (Discharging) (kW)',
     addendColumnName: 'Load Following Down (Charging) (kW)',
     traceName: TRACE_NAMES.loadFollowingDown,
+    negate: true,
   },
   {
     minuendColumnName: 'Load Following Up (Discharging) (kW)',
@@ -230,7 +248,14 @@ export class TimeSeriesData extends BaseTableData {
   grabColumnData(tsData) {
     const columnData = new Map();
     forEach(COLUMN_TO_TRACE, (payload) => {
-      const { minuendColumnName, subtrahendColumnName, addendColumnName, traceName } = payload;
+      const {
+        minuendColumnName,
+        subtrahendColumnName,
+        addendColumnName,
+        traceName,
+        negate,
+      } = payload;
+      let data = null;
       if (minuendColumnName !== undefined && subtrahendColumnName !== undefined) {
         // subtract numbers (currently not used but keeping for full functionallity)
         const minuendObjKey = BaseTableData.toCamelCaseString(minuendColumnName);
@@ -238,22 +263,7 @@ export class TimeSeriesData extends BaseTableData {
         const subtrahendObjKey = BaseTableData.toCamelCaseString(subtrahendColumnName);
         const subtrahend = tsData[subtrahendObjKey];
         if (minuend !== undefined && subtrahend !== undefined) {
-          const data = TimeSeriesData.subtractDataArrays(minuend, subtrahend);
-          columnData.set(traceName, data);
-        }
-      } else if (minuendColumnName !== undefined) {
-        // dont need to transform data
-        const minuendObjKey = BaseTableData.toCamelCaseString(minuendColumnName);
-        const data = tsData[minuendObjKey];
-        if (data !== undefined) {
-          columnData.set(traceName, data);
-        }
-      } else if (subtrahendColumnName !== undefined) {
-        // negate the numbers in the array
-        const subtrahendObjKey = BaseTableData.toCamelCaseString(subtrahendColumnName);
-        const subtrahend = tsData[subtrahendObjKey];
-        if (subtrahend !== undefined) {
-          const data = TimeSeriesData.negateDataArray(subtrahend);
+          data = TimeSeriesData.subtractDataArrays(minuend, subtrahend);
           columnData.set(traceName, data);
         }
       } else if (minuendColumnName !== undefined && addendColumnName !== undefined) {
@@ -263,9 +273,19 @@ export class TimeSeriesData extends BaseTableData {
         const addendObjKey = BaseTableData.toCamelCaseString(addendColumnName);
         const addend2 = tsData[addendObjKey];
         if (addend1 !== undefined && addend2 !== undefined) {
-          const data = TimeSeriesData.addDataArrays(addend1, addend2);
+          data = TimeSeriesData.addDataArrays(addend1, addend2);
           columnData.set(traceName, data);
         }
+      } else if (minuendColumnName !== undefined) {
+        // dont need to transform data
+        const minuendObjKey = BaseTableData.toCamelCaseString(minuendColumnName);
+        data = tsData[minuendObjKey];
+        if (data !== undefined) {
+          columnData.set(traceName, data);
+        }
+      }
+      if (data !== null && negate) {
+        columnData.set(traceName, TimeSeriesData.negateDataArray(data));
       }
     });
     return columnData;

@@ -24,7 +24,6 @@ const technologySpecsMixin = {
       const p = this.$store.state.Project;
       return [
         {
-          shortHand: 'ICE',
           items: p.technologySpecsICE,
           fullName: 'Internal Combustion Engine (ICE) Generator sets',
           metadata: metadataICE,
@@ -32,7 +31,6 @@ const technologySpecsMixin = {
           path: paths.TECH_SPECS_ICE,
         },
         {
-          shortHand: 'Diesel',
           items: p.technologySpecsDieselGen,
           fullName: 'Diesel Generator sets',
           metadata: metadataDieselGen,
@@ -40,7 +38,6 @@ const technologySpecsMixin = {
           path: paths.TECH_SPECS_DIESEL,
         },
         {
-          shortHand: 'PV',
           items: p.technologySpecsSolarPV,
           fullName: 'Solar Photovoltaic (PV) Sytems',
           metadata: metadataSolarPV,
@@ -49,7 +46,6 @@ const technologySpecsMixin = {
         },
         {}, // filler card (empty, but gives some order when rendered)
         {
-          shortHand: 'Battery',
           items: p.technologySpecsBattery,
           fullName: 'Battery Energy Storage Sytems (BESS)',
           metadata: metadataBattery,
@@ -58,7 +54,6 @@ const technologySpecsMixin = {
         },
         {}, // filler card (empty, but gives some order when rendered)
         {
-          shortHand: 'Single EV',
           items: p.technologySpecsSingleEV,
           fullName: 'Single Electric Vehicle (EV)',
           metadata: metadataSingleEV,
@@ -66,7 +61,6 @@ const technologySpecsMixin = {
           path: paths.TECH_SPECS_SINGLE_EV,
         },
         {
-          shortHand: 'Fleet EV',
           items: p.technologySpecsFleetEV,
           fullName: 'Fleet Electric Vehicle (EV)',
           metadata: metadataFleetEV,
@@ -74,7 +68,6 @@ const technologySpecsMixin = {
           path: paths.TECH_SPECS_FLEET_EV,
         },
         {
-          shortHand: 'Controllable Load',
           items: p.technologySpecsControllableLoad,
           fullName: 'Controllable Loads (Demand Response)',
           metadata: metadataControllableLoad,
@@ -91,11 +84,11 @@ const technologySpecsMixin = {
     filterNonActives(listOfTech) {
       return _.filter(listOfTech, 'active');
     },
-    getTechLabel(shortHand, payload) {
+    getTechLabel(payload) {
       if (typeof payload.name === 'string') {
-        return `${shortHand}: ${payload.name}`;
+        return `${payload.tag}: ${payload.name}`;
       }
-      return `Undefined ${shortHand}`;
+      return `Undefined ${payload.tag}`;
     },
     isEmpty(payload) {
       return _.isEmpty(payload);

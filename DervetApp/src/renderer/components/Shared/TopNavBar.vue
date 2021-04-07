@@ -1,7 +1,7 @@
 ﻿<template>
   <div class="text-center">
     <b-navbar toggleable="lg" fixed="top" type="dark" variant="dark">
-      <b-navbar-brand :active="isActiveIndex()"
+      <b-navbar-brand :active="isActiveIndexOrAbout()"
                       :to="INDEX" class="col-md-2 no-padding">
         <img class="nav-logo-img" :src="FullLogo" />
       </b-navbar-brand>
@@ -32,16 +32,21 @@
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto">
           <b-button-group class="navbar-btn">
-            <b-button size="lg" variant="success" class="btn navbar-btn text-center" type="submit"
-              @click="(runDervetDisabled) ? cannotRun() : runDervet()" v-if="!isActiveIndex() && !runInProgress()">
-              <span class="fas fa-play fa-lg"/>
-              <!-- <span v-if="!runInProgress()" class="fas fa-spinner fa-spin fa-lg"/> -->
+            <b-button
+              v-if="!isActiveIndexOrAbout() && !runInProgress()"
+              @click="(runDervetDisabled) ? cannotRun() : runDervet()"
+              class="btn navbar-btn text-center"
+              type="submit"
+              size="md"
+              variant="success">
+              <span class="fas fa-play fa-md"/>
             </b-button>
-            <b-button disabled size="lg" v-if="runInProgress()" class="btn btn-danger navbar-btn" type="submit"
+            <b-button size="md" v-if="runInProgress()" class="btn btn-danger navbar-btn" type="submit"
               @click="killDervet()">
-              <span class="fas fa-stop fa-lg"/>
+              <span class="fas fa-stop fa-md"/>
             </b-button>
           </b-button-group>
+          
           <b-nav-item align="right" link-classes="navbar-top-svg-item">
             <span @click="(e) => openWebsiteInBrowser(e, FORUM_LINK)" class="fas fa-comment-alt"/>
           </b-nav-item>
@@ -71,6 +76,7 @@
   import technologySpecsMixin from '@/mixins/technologySpecsMixin';
   import objectivesMixin from '@/mixins/objectivesMixin';
   import financeMixin from '@/mixins/financeMixin';
+  import * as a from '@/store/actionTypes';
 
   const FORUM_LINK = 'https://www.der-vet.com/forum/';
   const USER_GUIDE_LINK = 'https://storagewiki.epri.com/index.php/DER_VET_User_Guide#Index';
@@ -148,8 +154,8 @@
       goToIndex() {
         this.$router.push({ path: INDEX });
       },
-      isActiveIndex() {
-        return this.$route.path === INDEX;
+      isActiveIndexOrAbout() {
+        return this.$route.path === INDEX || this.$route.path === '/about';
       },
       isActive(path) {
         return new RegExp(path).test(this.$route.path);
@@ -160,12 +166,13 @@
       runDervet() {
         // TODO: note that there is currently no validation, so calling this with an
         // incomplete Project object will likely result in an unhandled exception
-        this.$store.dispatch('Application/runDervet', this.$store.state.Project)
-          .then(this.$router.push({ path: RUN_ANALYSIS }));
+        this.$store.dispatch(`Results/${a.RESET}`)
+          .then(this.$store.dispatch('Application/runDervet', this.$store.state.Project))
+          .then(this.$router.push({ path: RUN_ANALYSIS })).catch(() => {});
       },
       killDervet() {
         this.$store.dispatch('Application/killPython', this.$store.state.Project)
-          .then(this.$router.push({ path: WIZARD_OVERVIEW }));
+          .then(this.$router.push({ path: WIZARD_RUN_CASE }).catch(() => {}));
       },
       cannotRun() {
         this.$router.push({ path: WIZARD_RUN_CASE }).catch(() => {});

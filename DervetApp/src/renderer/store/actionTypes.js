@@ -1,17 +1,29 @@
 // TODO use these constants in Results, Project, CalenvironScreen, and Appilcation
 
-// Aplication mutations
+// Shared
+export const RESET = 'reset';
+
+// Aplication actions
 export const APPLICATION = 'Application';
 export const SET_COMPLETENESS = 'setCompleteness';
 export const SET_ERROR_LIST = 'setErrorList';
 export const RECEIVE_ERROR = 'receiveError';
 export const RESULTS_RECEIVED = 'resultRecieved';
 export const SET_QUICK_START_ERROR_LIST = 'setQuickStartErrorList';
-export const RESET_APPLICATION_TO_DEFAULT = 'resetApplicationToDefault';
 
-// Project actions
+// OpenEI
+export const LOAD_UTILITIES = 'loadUtilities';
+export const SET_API_KEY = 'setApiKey';
+
+// CalEnviroScreen
+export const RESET_ZIP_CODE = 'resetZipCode';
+
+// Results
+export const RECEIVE_RESULTS = 'receiveResults';
+
+// Project
 // index page
-export const RESET_PROJECT_TO_DEFAULT = 'resetProjectToDefault';
+export const RESET_PROJECT = 'resetProject';
 export const LOAD_QUICK_START_PROJECT = 'loadQuickStartProject';
 export const LOAD_NEW_PROJECT = 'loadNewProject';
 // back up
@@ -83,6 +95,7 @@ export const SET_NSR_GROWTH = 'setNSRGrowth';
 export const SET_NSR_PRICE = 'setNSRPrice';
 // objectives
 export const CHOOSE_ENERGY_STRUCTURE = 'chooseEnergyStructure';
+export const RESET_GAMMA_AND_NU = 'resetGammaAndNu';
 export const SET_INCLUDE_SITE_LOAD = 'setIncludeSiteLoad';
 export const SET_INCLUDE_SYSTEM_LOAD = 'setIncludeSystemLoad';
 export const SET_OPTIMIZATION_HORIZON = 'setOptimizationHorizon';
@@ -122,6 +135,7 @@ export const DEACTIVATE_TECH = 'deactivateTech';
 export const MAKE_LIST_OF_ACTIVE_TECHNOLOGIES = 'makeListOfActiveTechnologies';
 export const REPLACE_LIST_FIELD = 'replaceListField';
 export const REMOVE_TECH = 'removeTech';
+export const UPDATE_ADD_ALL_ERRORLISTS_IN_TECH = 'updateAddAllErrorlistsInTech';
 // technology timeseries
 export const ADD_GENERATION_PROFILE_TO_TECHNOLOGY_SPECS_PV = 'addGenerationProfileToTechnologySpecsPV';
 // timeseries uploads
@@ -130,8 +144,11 @@ export const SET_TS_REQUIRED = 'setTSRequired';
 // user defined service
 export const SET_USER_ENERGY_MAX = 'setUserEnergyMax';
 export const SET_USER_ENERGY_MIN = 'setUserEnergyMin';
-export const SET_USER_POWER_MAX = 'setUserPowerMax';
-export const SET_USER_POWER_MIN = 'setUserPowerMin';
+export const SET_USER_POWER_EXPORT_MAX = 'setUserPowerExportMax';
+export const SET_USER_POWER_EXPORT_MIN = 'setUserPowerExportMin';
+export const SET_USER_POWER_IMPORT_MAX = 'setUserPowerImportMax';
+export const SET_USER_POWER_IMPORT_MIN = 'setUserPowerImportMin';
+export const SET_USER_INFEASIBLE = 'setUserInfeasible';
 export const SET_USER_PRICE = 'setUserPrice';
 // financial
 export const ADD_RETAIL_TARIFF_BILLING_PERIOD = 'addRetailTariffBillingPeriod';

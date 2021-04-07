@@ -19,24 +19,23 @@
       <div class="col-md-6">
         <h4>List of Technologies Added</h4>
         <b-table hover outlined small :no-border-collapse="false" class="mb-0" thead-class="d-none"
-                      v-for="tech in techSpecs" v-bind:key="tech.tag"
                       :fields="viewTechTableFields"
-                      :items="tech.items">
-          <template v-slot:cell(tagname)="row">
-            <b-col class="text-left">{{getTechLabel(tech.shortHand, row.item) }}</b-col>
+                      :items="listOfAllTechnologies">
+          <template v-slot:cell(tagname)="row" class="col-md-6">
+            {{getTechLabel(row.item) }}
           </template>
-          <template v-slot:cell(buttons)="row">
-            <b-col class="text-right">
-              <b-button size="sm"
-                        @click="toggleActivationOfTech(row.item)"
-                        variant="outline-secondary"
-                        :pressed="row.item.active"
-                        class="btn btn-xs">{{getActivationToggleLabel(row.item)}}</b-button>
-              <b-button pill
-                        size="sm"
-                        @click="removeTech(row.item)"
-                        class="btn btn-xs btn-danger delete-tech">Remove</b-button>
-            </b-col>
+          <template v-slot:cell(buttons)="row" class="text-right">
+            <b-button size="sm"
+                      @click="toggleActivationOfTech(row.item)"
+                      variant="outline-secondary"
+                      :pressed="row.item.active"
+                      class="btn btn-xs">{{getActivationToggleLabel(row.item)}}</b-button>
+            <b-button pill
+                      size="sm"
+                      @click="removeTech(row.item)"
+                      class="btn btn-xs btn-danger delete-tech">
+              <span class="fas fa-trash"/>
+            </b-button>
           </template>
         </b-table>
       </div>
@@ -87,16 +86,30 @@
         CAL_ENVIRO_SCREEN,
         OBJECTIVES,
         TECH_SPECS,
+        addingTech: false,
       };
     },
     computed: {
       complete() {
         return this.$store.state.Application.pageCompleteness.overview[PAGE];
       },
+      activeBatteryExists() {
+        return this.$store.getters.activeBatteryExists;
+      },
+      listOfAllTechnologies() {
+        let allTechs = [];
+        this.techSpecs.forEach((techType) => {
+          const techItems = techType.items;
+          if (techItems !== undefined) {
+            allTechs = [...allTechs, ...techItems];
+          }
+        });
+        return allTechs;
+      },
     },
     methods: {
       addTech(metadata) {
-        const defaultValues = metadata.getDefaultValues();
+        const defaultValues = metadata.getDefaultValues(this.activeBatteryExists);
         this.$store.dispatch(ADD_TECH, defaultValues);
         this.activateTech(defaultValues);
       },
