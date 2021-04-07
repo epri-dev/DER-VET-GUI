@@ -1,0 +1,3 @@
+[submodule "DervetBackEnd/dervet"]
+	path = DervetBackEnd/dervet
+	url = https://github.com/epri-dev/dervet.git
