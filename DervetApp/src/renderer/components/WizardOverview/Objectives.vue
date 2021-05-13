@@ -275,7 +275,7 @@
         // reset all non-required inputs to their defaults prior to saving
         if (this.sizingEquipment === true) {
           this.resetNonRequired(['optimizationHorizonNum', 'optimizationHorizon']);
-        } else if (this.sizingEquipment === false && this.optimizationHorizon !== 'Hours') {
+        } else if (this.sizingEquipment === false && this.optimizationHorizon !== 'Hour') {
           this.resetNonRequired(['optimizationHorizonNum']);
         }
         // set completeness
