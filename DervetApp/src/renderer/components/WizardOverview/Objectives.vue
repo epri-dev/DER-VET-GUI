@@ -197,7 +197,7 @@
       optimizationHorizonNum: {
         ...validations.optimizationHorizonNum,
         required: requiredIf(function isOptimizationHorizonNumRequired() {
-          return (this.sizingEquipment === false) && this.optimizationHorizon === 'Hours';
+          return (this.sizingEquipment === false) && this.optimizationHorizon === 'Hour';
         }),
       },
       optimizationHorizon: {
