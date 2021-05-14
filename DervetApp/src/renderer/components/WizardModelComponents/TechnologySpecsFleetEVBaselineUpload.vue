@@ -35,8 +35,6 @@
   import associatedInputsMixin from '@/mixins/associatedInputsMixin';
   import TechnologyMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsFleetEV';
   import { TS_FLEETEV_BASELINE_LOAD_PROFILE as TS } from '@/models/Project/constants';
-  import '@/assets/samples/Sample_FleetEVBaselineLoad_TimeSeries_8760.csv';
-  import '@/assets/samples/Sample_FleetEVBaselineLoad_TimeSeries_8784.csv';
 
   import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
 

@@ -3,7 +3,7 @@ import TimeSeriesBase from './TimeSeriesBase';
 
 class RAActiveTimeSeries extends TimeSeriesBase {
   constructor(data) {
-    super('RA Active (y/n)', data);
+    super('RA Active (y/n)', data, 'RAActive');
     this.pageAttributes = this.getPageAttributes('components', 'objectives', 'RA');
     this.tsName = TS_RA_ACTIVE;
   }

@@ -3,7 +3,7 @@ import TimeSeriesBase from './TimeSeriesBase';
 
 class UserPowerImportMinTimeSeries extends TimeSeriesBase {
   constructor(data) {
-    super('POI: Min Import (kW)', data);
+    super('POI: Min Import (kW)', data, 'UserPowerImportMin');
     this.pageAttributes = this.getPageAttributes('components', 'objectives', 'userDefined');
     this.tsName = TS_USER_POWER_IMPORT_MIN;
   }

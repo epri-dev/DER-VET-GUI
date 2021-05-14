@@ -3,7 +3,7 @@ import TimeSeriesBase from './TimeSeriesBase';
 
 class LFUpPriceTimeSeries extends TimeSeriesBase {
   constructor(data) {
-    super('LF Up Price ($/kW)', data);
+    super('LF Up Price ($/kW)', data, 'LFUpPrice');
     this.pageAttributes = this.getPageAttributes('components', 'objectives', 'LF');
     this.tsName = TS_LF_UP_PRICE;
   }

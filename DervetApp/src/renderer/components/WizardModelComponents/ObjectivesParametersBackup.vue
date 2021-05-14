@@ -47,8 +47,6 @@
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import { projectMetadata } from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
-  import '@/assets/samples/Sample_BackupEnergyPrice_Monthly_12.csv';
-  import '@/assets/samples/Sample_BackupEnergyReservation_Monthly_12.csv';
 
   import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
 

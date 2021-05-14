@@ -3,7 +3,7 @@ import TimeSeriesBase from './TimeSeriesBase';
 
 class UserPowerExportMaxTimeSeries extends TimeSeriesBase {
   constructor(data) {
-    super('POI: Max Export (kW)', data);
+    super('POI: Max Export (kW)', data, 'UserPowerExportMax');
     this.pageAttributes = this.getPageAttributes('components', 'objectives', 'userDefined');
     this.tsName = TS_USER_POWER_EXPORT_MAX;
   }

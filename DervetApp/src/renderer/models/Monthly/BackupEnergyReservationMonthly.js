@@ -3,7 +3,7 @@ import MonthlyBase from './MonthlyBase';
 
 class BackupEnergyReservationMonthly extends MonthlyBase {
   constructor(data) {
-    super('Backup Energy ($/kWh)', data);
+    super('Backup Energy ($/kWh)', data, 'BackupEnergyReservation');
     this.tsName = MTS_BACKUP_ENERGY_RESERVATION;
   }
 }
