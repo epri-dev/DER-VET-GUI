@@ -54,7 +54,7 @@ export const ERCOTMarketService = {
   objectivesRetailEnergyChargeReduction: false,
   objectivesSR: true,
   objectivesUserDefined: false,
-  optimizationHorizon: 'Year',
+  optimizationHorizon: 'Month',
   includeSiteLoad: false,
   includeInterconnectionConstraints: false,
   maxImport: -10000000000,
