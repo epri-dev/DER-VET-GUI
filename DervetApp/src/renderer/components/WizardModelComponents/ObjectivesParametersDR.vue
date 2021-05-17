@@ -142,9 +142,6 @@
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import { projectMetadata } from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
-  import '@/assets/samples/Sample_DRCapacityPrice_Monthly_12.csv';
-  import '@/assets/samples/Sample_DRCapacityReservation_Monthly_12.csv';
-  import '@/assets/samples/Sample_DREnergyPrice_Monthly_12.csv';
 
   import { SET_DR_APPLIED_MONTHS } from '@/store/actionTypes';
   import DRMonthsAppliedMonthly from '@/models/Monthly/DRMonthsAppliedMonthly';

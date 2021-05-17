@@ -2,6 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import Papa from 'papaparse';
 
+const EXTRA_RESOURCES = 'extraResources';
+
 export const getAppDataPath = () => {
   const appName = 'DER-VET'; // TODO get from a common place
   switch (process.platform) {
@@ -18,6 +20,21 @@ export const getAppDataPath = () => {
       throw new Error('Unsupported platform!');
     }
   }
+};
+
+const getExtraResourcesDevPath = () => {
+  const root = path.resolve(__dirname).split('src').shift();
+  return path.join(root, EXTRA_RESOURCES);
+};
+
+const getExtraResourcesBuiltPath = () => (
+  path.join(process.resourcesPath, EXTRA_RESOURCES)
+);
+
+export const getExtraResourcesPath = fileName => {
+  const builtPath = path.join(getExtraResourcesBuiltPath(), fileName);
+  const devPath = path.join(getExtraResourcesDevPath(), fileName);
+  return fs.existsSync(builtPath) ? builtPath : devPath;
 };
 
 export const createDirectory = (dirName) => {
@@ -123,4 +140,28 @@ export const findOverlap = (a, b) => {
   if (a.endsWith(b)) return b;
   if (a.indexOf(b) >= 0) return b;
   return findOverlap(a, b.substring(0, b.length - 1));
+};
+
+export const fileUrl = (filePath, options = {}) => {
+  if (typeof filePath !== 'string') {
+    throw new TypeError(`Expected a string, got ${typeof filePath}`);
+  }
+
+  const { resolve = true } = options;
+
+  let pathName = filePath;
+  if (resolve) {
+    pathName = path.resolve(filePath);
+  }
+
+  pathName = pathName.replace(/\\/g, '/');
+
+  // Windows drive letter must be prefixed with a slash.
+  if (pathName[0] !== '/') {
+    pathName = `/${pathName}`;
+  }
+
+  // Escape required characters for path components.
+  // See: https://tools.ietf.org/html/rfc3986#section-3.3
+  return encodeURI(`file://${pathName}`).replace(/[?#]/g, encodeURIComponent);
 };

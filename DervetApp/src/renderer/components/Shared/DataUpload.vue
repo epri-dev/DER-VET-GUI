@@ -99,7 +99,8 @@
 
 <script>
   import Plotly from 'plotly.js';
-  import { parseCsvFromEvent } from '@/util/file';
+
+  import { fileUrl, getExtraResourcesPath, parseCsvFromEvent } from '@/util/file';
   import { sharedDefaults, sharedValidation } from '@/models/Shared.js';
 
   export default {
@@ -171,14 +172,15 @@
     },
     methods: {
       getSampleDataFileName() {
-        const dataModelName = (new this.DataModel([])).constructor.name;
+        let fullFileName;
+        const dataName = new this.DataModel([]).sampleDataFileName;
         if (this.isMonthlyData) {
-          const name = dataModelName.replace(/(Monthly)$/, '_$1');
-          return `files/Sample_${name}_${this.numberOfEntriesRequired}.csv`;
+          fullFileName = `Sample_${dataName}_Monthly_12.csv`;
+        } else {
+          const sampleTsLength = this.isLeapYear ? '8784' : '8760';
+          fullFileName = `Sample_${dataName}_TimeSeries_${sampleTsLength}.csv`;
         }
-        const name = dataModelName.replace(/(TimeSeries)$/, '_$1');
-        const sampleTsLength = this.isLeapYear ? '8784' : '8760';
-        return `files/Sample_${name}_${sampleTsLength}.csv`;
+        return fileUrl(getExtraResourcesPath(fullFileName));
       },
       getSampleDataText() {
         if (this.isMonthlyData) {

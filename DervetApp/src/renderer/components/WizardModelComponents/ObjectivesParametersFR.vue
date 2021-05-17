@@ -102,12 +102,6 @@
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import { projectMetadata } from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
-  import '@/assets/samples/Sample_FRDownPrice_TimeSeries_8760.csv';
-  import '@/assets/samples/Sample_FRDownPrice_TimeSeries_8784.csv';
-  import '@/assets/samples/Sample_FRPrice_TimeSeries_8760.csv';
-  import '@/assets/samples/Sample_FRPrice_TimeSeries_8784.csv';
-  import '@/assets/samples/Sample_FRUpPrice_TimeSeries_8760.csv';
-  import '@/assets/samples/Sample_FRUpPrice_TimeSeries_8784.csv';
 
   import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
 

@@ -3,7 +3,7 @@ import MonthlyBase from './MonthlyBase';
 
 class DRMonthsAppliedMonthly extends MonthlyBase {
   constructor(data) {
-    super('DR Months (y/n)', data);
+    super('DR Months (y/n)', data, 'DRMonthsApplied');
     this.tsName = MTS_DR_MONTHS_APPLIED;
   }
 
