@@ -23,7 +23,7 @@ export const getAppDataPath = () => {
 export const createDirectory = (dirName) => {
   // TODO handle error properly and replace with fsPromise
   if (!fs.existsSync(dirName)) {
-    fs.mkdirSync(dirName);
+    fs.mkdirSync(dirName, { recursive: true });
   }
   return dirName;
 };

@@ -33,13 +33,9 @@ const getPythonExe = () => (
 
 const pythonExeExists = exePath => fs.existsSync(exePath);
 
-//const getDevPythonRuntime = () => process.env.DERVET_PYTHON_RUNTIME;
+const getDevPythonRuntime = () => process.env.DERVET_PYTHON_RUNTIME;
 
-//const getDevPythonScript = () => process.env.DERVET_PYTHON_SCRIPT;
-
-const getDevPythonRuntime = 'C:/ProgramData/Anaconda3/envs/dervet-venv/python.exe';
-
-const getDevPythonScript = 'C:/Users/phna001/Documents/dervet-gui/DervetBackEnd/dervet/run_DERVET.py';
+const getDevPythonScript = () => process.env.DERVET_PYTHON_SCRIPT;
 
 const spawnPackagedPythonProcess = (pythonExe, modelParametersPath) => (
   childProcess.execFile(pythonExe, [modelParametersPath])
