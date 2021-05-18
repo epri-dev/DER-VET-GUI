@@ -8,8 +8,12 @@ class DAPriceTimeSeries extends TimeSeriesBase {
     this.tsName = TS_DA_PRICE;
   }
 
-  extraValidate() {
-    return [this.invalidCheckSingleValueAtLeastX(0).errorMsg];
+  extraValidate(sizingOn) {
+    // conditional validation:
+    //   when sizing:     do not allow negative values
+    //   when not sizing: do not perform extra validation
+    if (sizingOn === true) return [this.invalidCheckSingleValueAtLeastX(0).errorMsg];
+    return [];
   }
 }
 

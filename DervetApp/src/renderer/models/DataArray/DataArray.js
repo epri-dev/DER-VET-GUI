@@ -57,7 +57,8 @@ class DataArray {
   formatErrorMsgArray(errorMsgArray) {
     // returns a String
     // TODO: AE: make this a static method
-    return errorMsgArray.filter((item) => item !== null).join('<br>');
+    return errorMsgArray.filter((item) => item !== null)
+      .filter((item) => item !== undefined).join('<br>');
   }
 
   getPageAttributes(pageGroup, pageKey, page) {
@@ -121,6 +122,7 @@ class DataArray {
 
   // these first 3 checks are performed for all TimeSeries and Monthly uploads
   invalidCheckRowsCount(x) {
+    // checks for a specific total number of rows
     const actualRowsCount = this.length();
     if (actualRowsCount === parseFloat(x)) return noErrorObject;
     if (x === 'TBD') return noErrorObject;
@@ -130,6 +132,7 @@ class DataArray {
   }
 
   invalidCheckRowSize(x) {
+    // checks each row for a specific number of values
     const values = (parseFloat(x) === 1) ? 'value' : 'values';
     const invalidRows = this.rowSizes.reduce((a, val, i) => {
       if (val !== x) a.push(i + 1);
@@ -223,7 +226,7 @@ class DataArray {
     }, '');
   }
 
-  validate(expectedRowCount) {
+  validate(expectedRowCount, sizingOn) {
     // returns a String with any/all error messages, or an empty String
     const errorMsgArray = [];
     errorMsgArray.push(this.invalidCheckRowsCount(expectedRowCount).errorMsg);
@@ -233,7 +236,7 @@ class DataArray {
     // if defaultValidate has errors, then return then now
     if (defaultValidate !== '') { return defaultValidate; }
     // perform optional/specific extra validations as defined in each child class
-    return this.formatErrorMsgArray(this.extraValidate());
+    return this.formatErrorMsgArray(this.extraValidate(sizingOn));
   }
 }
 export default DataArray;
