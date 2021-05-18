@@ -17,6 +17,7 @@
       @uploaded="onFileUpload"
       @input="onChange"
       :object-name="objectName"
+      :sizing-on="this.sizingOn"
       :uploaded-data="dataTimeSeries"
       :x-axis="timeseriesXAxis"
     />
@@ -59,6 +60,9 @@
           return 'TBD';
         }
         return String(this.timeseriesXAxis.length);
+      },
+      sizingOn() {
+        return this.$store.state.Project.sizingEquipment;
       },
       timeseriesXAxis() {
         // the first timestamp should be Jan 1 of dataYear at timestep minutes

@@ -10,11 +10,12 @@ class TimeSeriesBase extends DataArray {
     // this.required = false;
   }
 
-  revalidate(expectedRowCount) {
+  revalidate(expectedRowCount, sizingOn) {
     // returns error (a String)
     // with no error, this will be an empty string
     const errorMsgArray = [];
     errorMsgArray.push(this.invalidCheckRowsCount(expectedRowCount).errorMsg);
+    errorMsgArray.push(this.extraValidate(sizingOn)[0]);
     return this.formatErrorMsgArray(errorMsgArray);
   }
 }

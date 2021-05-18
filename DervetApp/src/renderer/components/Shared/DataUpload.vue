@@ -167,6 +167,7 @@
       isInvalid: Boolean,
       numberOfEntriesRequired: String,
       objectName: String,
+      sizingOn: Boolean,
       uploadedData: Object,
       xAxis: Array,
     },
@@ -214,7 +215,10 @@
           this.importedFilePath = importedFilePath;
           if (importedFilePath !== null && errors === undefined) {
             const newData = new this.DataModel(results);
-            const validationResult = newData.validate(this.numberOfEntriesRequired);
+            const validationResult = newData.validate(
+              this.numberOfEntriesRequired,
+              this.sizingOn,
+            );
             if (validationResult.length !== 0) this.importError = validationResult;
             if (this.importError === undefined) {
               // only emit back when there are no errors
@@ -253,7 +257,7 @@
           unit: this.unit,
           mode: 'lines',
           name: '', // this.firstLetterCapitalized,
-          hovertemplate: `%{y} ${this.unit}`,
+          hovertemplate: `%{y:.3f} ${this.unit}`,
         };
         const data = [uploadedTS];
         const layout = {

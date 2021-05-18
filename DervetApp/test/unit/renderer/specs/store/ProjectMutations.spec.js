@@ -85,23 +85,25 @@ describe('Project Mutations', () => {
   });
 
   it('should set retail and wholesale booleans accordingly when true', () => {
-    const state = { objectivesDA: false };
+    const state = { objectivesDA: false, tsDaPrice: {} };
 
     mutations.CHOOSE_ENERGY_STRUCTURE(state, true);
 
     expect(state.objectivesDA).to.equal(true);
     expect(state.objectivesRetailEnergyChargeReduction).to.equal(false);
     expect(state.energyPriceSourceWholesale).to.equal(true);
+    expect(state.tsDaPrice.required).to.equal(true);
   });
 
   it('should set retail and wholesale booleans accordingly when false', () => {
-    const state = { objectivesDA: true };
+    const state = { objectivesDA: true, tsDaPrice: {} };
 
     mutations.CHOOSE_ENERGY_STRUCTURE(state, false);
 
     expect(state.objectivesDA).to.equal(false);
     expect(state.objectivesRetailEnergyChargeReduction).to.equal(true);
     expect(state.energyPriceSourceWholesale).to.equal(false);
+    expect(state.tsDaPrice.required).to.equal(false);
   });
 
   it('should set services accordingly from list', () => {

@@ -431,9 +431,13 @@ const mutations = {
     if (wholesaleEnergyPrices !== null) {
       if (wholesaleEnergyPrices) {
         state.objectivesDA = true;
+        // also set TS boolean attribute
+        state[c.TS_DA_PRICE].required = true;
         state.objectivesRetailEnergyChargeReduction = false;
       } else {
         state.objectivesDA = false;
+        // also set TS boolean attribute
+        state[c.TS_DA_PRICE].required = false;
         state.objectivesRetailEnergyChargeReduction = true;
       }
     }
