@@ -235,7 +235,7 @@ export const parsedCsvToBillingPeriods = (csv) => {
       excludingEndTime: row[6],
       weekday: row[7],
       value: row[8],
-      chargeType: row[9],
+      chargeType: row[9].charAt(0).toUpperCase() + row[9].slice(1).toLowerCase(),
       name: row[10],
     })
   ));
