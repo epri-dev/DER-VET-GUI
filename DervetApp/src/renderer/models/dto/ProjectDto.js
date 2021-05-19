@@ -56,7 +56,7 @@ export const convertToYesNo = condition => (condition ? YES : NO);
 export const convertToOneZero = condition => (condition ? ONE : ZERO);
 
 export const calculateEndYear = (startYear, analysisHorizon) => (
-  (Number(startYear) + Number(analysisHorizon)).toString()
+  (Number(startYear) + Number(analysisHorizon) - 1).toString()
 );
 
 export const calculateSalvageValue = (techSpecs) => {
