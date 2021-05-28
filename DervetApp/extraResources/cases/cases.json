@@ -1,0 +1,14 @@
+[
+  {
+    "directory": "billReduction",
+    "displayText": "DER for Bill Reduction"
+  },
+  {
+    "directory": "reliability",
+    "displayText": "DER for Reliability"
+  },
+  {
+    "directory": "ERCOTMarketService",
+    "displayText": "ERCOT Market Case"
+  }
+]

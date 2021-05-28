@@ -22,20 +22,19 @@ export const getAppDataPath = () => {
   }
 };
 
-const getExtraResourcesDevPath = () => {
-  const root = path.resolve(__dirname).split('src').shift();
-  return path.join(root, EXTRA_RESOURCES);
+const getDevRootPath = () => path.resolve(__dirname).split('src').shift();
+
+const getBuiltRootPath = () => process.resourcesPath;
+
+const getRoot = () => {
+  const devExtraResources = path.join(getDevRootPath(), EXTRA_RESOURCES);
+  const builtExtraResources = path.join(getBuiltRootPath(), EXTRA_RESOURCES);
+  return fs.existsSync(builtExtraResources) ? builtExtraResources : devExtraResources;
 };
 
-const getExtraResourcesBuiltPath = () => (
-  path.join(process.resourcesPath, EXTRA_RESOURCES)
+export const getExtraResourcesPath = (fileName, subDirectoryList = []) => (
+  path.join(getRoot(), ...subDirectoryList, fileName)
 );
-
-export const getExtraResourcesPath = fileName => {
-  const builtPath = path.join(getExtraResourcesBuiltPath(), fileName);
-  const devPath = path.join(getExtraResourcesDevPath(), fileName);
-  return fs.existsSync(builtPath) ? builtPath : devPath;
-};
 
 export const createDirectory = (dirName) => {
   // TODO handle error properly and replace with fsPromise
@@ -120,6 +119,8 @@ export const readJsonFromFile = filePath => (
     });
   })
 );
+
+export const readJsonFromFileSync = filePath => JSON.parse(fs.readFileSync(filePath));
 
 export const filterRowsByColumnCount = (rows, validRowLength) => {
   let importNotes = null;

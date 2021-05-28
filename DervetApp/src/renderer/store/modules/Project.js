@@ -6,23 +6,12 @@ import isEmpty from 'lodash/isEmpty';
 import merge from 'lodash/merge';
 import { v4 as uuidv4 } from 'uuid';
 
-import { billReductionProject } from '@/assets/cases/billReduction/project';
-import { reliabilityProject } from '@/assets/cases/reliability/project';
-import { dummyMarketServiceHourly } from '@/assets/cases/dummyMarketServiceHourly/project';
-import { ERCOTMarketService } from '@/assets/cases/ERCOTMarketService/project';
 import { makeDatetimeIndex } from '@/models/dto/ProjectDto';
 import { projectMetadata } from '@/models/Project/ProjectMetadata';
 import TechnologySpecsSolarPVMetadata, { LOC, LocType } from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
 import * as m from '@/store/mutationTypes';
 import * as a from '@/store/actionTypes';
 import * as c from '@/models/Project/constants';
-
-const USECASE_DB = { // its a sad excuse for a database, but serves as one.
-  billReductionProject,
-  reliabilityProject,
-  dummyMarketServiceHourly,
-  ERCOTMarketService,
-};
 
 const metadataDefaultValues = projectMetadata.getDefaultValues();
 const techSolarPVMetadata = TechnologySpecsSolarPVMetadata.getHardcodedMetadata();
@@ -837,10 +826,6 @@ const actions = {
       commit(m.SET_UNIQUE_IDS_IN_TECH);
       resolve();
     });
-  },
-  [a.LOAD_QUICK_START_PROJECT]({ dispatch }, caseName) {
-    const selectedUseCase = USECASE_DB[caseName];
-    return dispatch(a.LOAD_NEW_PROJECT, selectedUseCase);
   },
   // backup
   [a.SET_BACKUP_ENERGY_PRICE]({ commit }, payload) {

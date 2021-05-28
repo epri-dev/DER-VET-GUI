@@ -11,15 +11,16 @@
       <div class="col-md-4 text-center">
         <router-link :to="$route.path"
                      class="btn btn-lg btn-warning btn-index-page text-white"
-                     v-on:click.native="resetProjectToDefault()">
+                     v-on:click.native="startNewProject()">
           Start a New Analysis
         </router-link>
         <p class="tool-tip-index">
           Create a new custom case analysis.
         </p>
       </div>
+
       <div class="col-md-4 text-center">
-        <router-link to="/import-project"
+        <router-link :to="IMPORT_PROJECT"
                      class="btn btn-lg btn-info btn-index-page">
           Use Existing Analysis
         </router-link>
@@ -27,12 +28,23 @@
           Load a previously-created case analysis.
         </p>
       </div>
+
       <div class="col-md-4 text-center">
-        <b-dropdown text="Pre-Defined Analyses"
-                    toggle-class="btn btn-lg btn-light btn-quick-start btn-index-page">
-          <b-dropdown-item v-for="option in useCases" v-bind:key="option.id"
-                           v-on:click.native="loadQuickStartProject(option.value)">
-            {{option.text}}
+        <b-dropdown toggle-class="btn btn-lg btn-light btn-quick-start btn-index-page" :no-caret="isLoading">
+          <template #button-content>
+            <span v-if="!isLoading">Pre-Defined Analyses</span>
+            <div
+              v-else
+              class="spinner-border text-light"
+              role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </template>
+          <b-dropdown-item
+            v-for="useCase, idx in USE_CASE_CONFIGS"
+            v-bind:key="idx"
+            v-on:click.native="loadUseCaseProject(useCase)">
+            {{useCase.displayText}}
           </b-dropdown-item>
         </b-dropdown>
         <p class="tool-tip-index">
@@ -68,50 +80,32 @@
 <script language="ts">
   import FullLogo from '@/assets/FullLogo.png';
   import EPRILogo from '@/assets/EPRILogo.png';
-  import { LOAD_QUICK_START_PROJECT } from '@/store/actionTypes';
-  import { WIZARD_OVERVIEW, SUMMARY } from '@/router/constants';
+  import loadExistingProjectMixin from '@/mixins/loadExistingProjectMixin';
+  import { IMPORT_PROJECT, WIZARD_OVERVIEW } from '@/router/constants';
+  import { USE_CASE_CONFIGS } from '@/models/Project/UseCaseConfig';
   import * as a from '@/store/actionTypes';
-
-  const useCases = [
-    { id: 1, value: 'billReductionProject', text: 'DER for Bill Reduction' },
-    { id: 2, value: 'reliabilityProject', text: 'DER for Reliability' },
-    { id: 3, value: 'ERCOTMarketService', text: 'ERCOT Market Case' },
-    // { id: 4, value: 'dummyMarketServiceHourly', text: 'Dummy Market Case' }, // for testing only
-  ];
 
   export default {
     name: 'index',
+    mixins: [loadExistingProjectMixin],
     data() {
       return {
-        WIZARD_OVERVIEW,
-        selectedUseCase: null,
-        useCases,
         EPRILogo,
         FullLogo,
+        isLoading: false,
+        selectedUseCase: null,
+        USE_CASE_CONFIGS,
+        IMPORT_PROJECT,
       };
     },
-    computed: {
-      projID() {
-        return this.$store.state.Project.id;
-      },
-    },
     methods: {
-      resetAllStoreModules() {
-        return this.$store.dispatch('Application/killPython', this.$store.state.Project)
-          .then(this.$store.dispatch(a.RESET_PROJECT)) // TODO namespace project
-          .then(this.$store.dispatch(`Results/${a.RESET}`))
-          .then(this.$store.dispatch(`Application/${a.RESET}`))
-          .then(this.$store.dispatch(a.RESET_ZIP_CODE));
+      loadUseCaseProject(useCase) {
+        this.isLoading = true;
+        this.loadExistingProject(useCase.getFullDirectory())
+          .finally(() => { this.isLoading = false; });
       },
-      loadQuickStartProject(selectedUseCase) {
-        this.resetAllStoreModules()
-          .then(this.$store.dispatch(LOAD_QUICK_START_PROJECT, selectedUseCase))
-          .then(this.$store.dispatch('Application/setQuickStartCompleteness'))
-          .then(this.$store.dispatch(`Application/${a.SET_QUICK_START_ERROR_LIST}`, selectedUseCase))
-          .then(this.$router.push({ path: SUMMARY }));
-      },
-      resetProjectToDefault() {
-        this.resetAllStoreModules()
+      startNewProject() {
+        this.$store.dispatch(a.RESET_ALL)
           .then(this.$router.push({ path: WIZARD_OVERVIEW }));
       },
     },

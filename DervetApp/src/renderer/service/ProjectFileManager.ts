@@ -50,8 +50,8 @@ const readFilesForImport = (files: any, directory: any) => {
   return Promise.all(promises);
 };
 
-const parseFilesForImport = (contents: any) => {
-  const promises: Promise<string>[] = [];
+const parseFileBuffersForImport = (contents: any) => {
+  const promises: Promise<object>[] = [];
   _.each(contents, content => {
     try {
       promises.push(JSON.parse(content.toString('utf8')));
@@ -62,8 +62,14 @@ const parseFilesForImport = (contents: any) => {
   return Promise.all(promises);
 };
 
-export const importProject = (directory: string) => (
+const convertParsedToImportDto = (parsed: any) => ({
+  project: parsed.find((item: any) => item.storeType === 'project'),
+  application: parsed.find((item: any) => item.storeType === 'application'),
+});
+
+export const importProject = (directory: string): Promise<object> => (
   fsPromises.readdir(directory)
     .then(files => readFilesForImport(files, directory))
-    .then(parsed => parseFilesForImport(parsed))
+    .then(buffered => parseFileBuffersForImport(buffered))
+    .then(parsed => convertParsedToImportDto(parsed))
 );
