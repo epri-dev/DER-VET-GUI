@@ -65,6 +65,7 @@
         <div class="col-md-7">
           <input
             type="file"
+            name="myFile"
             class="form-control"
             :disabled="disableUpload"
             @change="onFileUpload">
@@ -207,6 +208,7 @@
         this.$emit('input', payload);
       },
       onFileUpload(e) {
+        const fileInput = document.querySelector('input[name="myFile"]');
         const onSuccess = (results, importedFilePath, errors) => {
           // we must trim the last row off because it's always there as null
           // TODO: AE: try this on other operating systems to make sure
@@ -229,6 +231,9 @@
           }
         };
         parseCsvFromEvent(e, onSuccess);
+        // reset fileInput.value so that change is always triggered
+        //   this allows a user to edit a data file and re-upload it
+        fileInput.value = null;
       },
       removeData() {
         // emit a payload to:
