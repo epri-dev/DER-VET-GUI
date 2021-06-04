@@ -63,12 +63,13 @@
           <span class="unit-label" v-html="this.unit"></span>
         </div>
         <div class="col-md-7">
-          <input
-            type="file"
-            name="myFile"
-            class="form-control"
-            :disabled="disableUpload"
-            @change="onFileUpload">
+          <form ref="myFileInputForm">
+            <input
+              type="file"
+              class="form-control"
+              :disabled="disableUpload"
+              @change="onFileUpload">
+          </form>
         </div>
       </div>
       <div class="form-group row">
@@ -208,7 +209,7 @@
         this.$emit('input', payload);
       },
       onFileUpload(e) {
-        const fileInput = document.querySelector('input[name="myFile"]');
+        // const fileInput = document.querySelector('input[name="myFile"]');
         const onSuccess = (results, importedFilePath, errors) => {
           // we must trim the last row off because it's always there as null
           // TODO: AE: try this on other operating systems to make sure
@@ -231,9 +232,8 @@
           }
         };
         parseCsvFromEvent(e, onSuccess);
-        // reset fileInput.value so that change is always triggered
-        //   this allows a user to edit a data file and re-upload it
-        fileInput.value = null;
+        // reset form to allow a user to correct a data file and re-upload it immediately
+        this.$refs.myFileInputForm.reset();
       },
       removeData() {
         // emit a payload to:
