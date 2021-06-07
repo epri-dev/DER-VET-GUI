@@ -209,7 +209,6 @@
         this.$emit('input', payload);
       },
       onFileUpload(e) {
-        // const fileInput = document.querySelector('input[name="myFile"]');
         const onSuccess = (results, importedFilePath, errors) => {
           // we must trim the last row off because it's always there as null
           // TODO: AE: try this on other operating systems to make sure
