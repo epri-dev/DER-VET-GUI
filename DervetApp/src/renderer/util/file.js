@@ -68,10 +68,13 @@ export const parseCsvFromFile = (file, successCallback) => {
 
 export const parseCsvFromEvent = (e, successCallback) => {
   const FILE_TYPE_CSV = 'text/csv';
+  const FILE_TYPE_TXT = 'text/plain';
   const FILE_TYPE_XCEL = 'application/vnd.ms-excel';
   const file = getFileFromEvent(e);
   if (file) {
-    if (file.type === FILE_TYPE_CSV || file.type === FILE_TYPE_XCEL) {
+    if (file.type === FILE_TYPE_CSV
+      || file.type === FILE_TYPE_TXT
+      || file.type === FILE_TYPE_XCEL) {
       parseCsvFromFile(file, successCallback);
     } else {
       wrongFileType(file, FILE_TYPE_CSV, successCallback);

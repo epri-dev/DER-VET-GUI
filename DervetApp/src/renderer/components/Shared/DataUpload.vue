@@ -101,9 +101,11 @@
 
 <script>
   import Plotly from 'plotly.js';
+  import last from 'lodash/last';
 
   import { fileUrl, getExtraResourcesPath, parseCsvFromEvent } from '@/util/file';
   import { sharedDefaults, sharedValidation } from '@/models/Shared.js';
+  import { isNotNullAndNotUndefined, isNullOrUndefined } from '@/util/logic';
 
   export default {
     updated() {
@@ -210,9 +212,7 @@
       },
       onFileUpload(e) {
         const onSuccess = (results, importedFilePath, errors) => {
-          // we must trim the last row off because it's always there as null
-          // TODO: AE: try this on other operating systems to make sure
-          results = results.slice(0, -1);
+          results = this.trimLastLineNull(results);
           this.importError = errors;
           this.importedFilePath = importedFilePath;
           if (importedFilePath !== null && errors === undefined) {
@@ -246,6 +246,15 @@
           objectName: this.objectName,
         };
         this.$emit('click', payload);
+      },
+      trimLastLineNull(results) {
+        // trim the last value off if it's null or undefined
+        //   this commonly happens with certain line terminators
+        const lastLine = last(results);
+        if (isNotNullAndNotUndefined(lastLine) && isNullOrUndefined(lastLine[0])) {
+          results = results.slice(0, -1);
+        }
+        return results;
       },
       uploadPayload(dataResults) {
         return {
