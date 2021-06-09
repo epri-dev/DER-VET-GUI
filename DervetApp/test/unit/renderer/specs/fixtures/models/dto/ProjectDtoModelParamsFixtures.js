@@ -772,7 +772,7 @@ export const makeModelParamsElectricVehicle1 = id => ({
         },
         type: 'int',
       },
-      fixed_om_cost: {
+      fixed_om: {
         opt_value: '50',
         sensitivity: {
           active: 'no',
@@ -951,7 +951,7 @@ export const makeModelParamsElectricVehicle2 = id => ({
         },
         type: 'int',
       },
-      fixed_om_cost: {
+      fixed_om: {
         opt_value: '100',
         sensitivity: {
           active: 'no',
