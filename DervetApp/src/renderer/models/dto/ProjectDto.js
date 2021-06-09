@@ -375,7 +375,7 @@ export const makeSingleFleetEVParameter = (fleetEV) => {
     decommissioning_cost: makeBaseKey(fleetEV.decomissioningCost, FLOAT),
     'ecc%': makeBaseKey(ZERO, FLOAT), // TODO hardcoded
     expected_lifetime: makeBaseKey(fleetEV.expectedLifetime, INT),
-    fixed_om_cost: makeBaseKey(fleetEV.fixedOMCosts, FLOAT),
+    fixed_om: makeBaseKey(fleetEV.fixedOMCosts, FLOAT),
     lost_load_cost: makeBaseKey(fleetEV.lostLoadCost, FLOAT),
     macrs_term: makeBaseKey(fleetEV.macrsTerm, FLOAT),
     max_load_ctrl: makeBaseKey(fleetEV.maximumLoadCtrl, INT),
@@ -659,7 +659,7 @@ export const makeSingleSingleEVParameter = (singleEV) => {
     'ecc%': makeBaseKey(ZERO, FLOAT), // TODO hardcoded
     ene_target: makeBaseKey(singleEV.energyTarget, FLOAT),
     expected_lifetime: makeBaseKey(singleEV.expectedLifetime, INT),
-    fixed_om_cost: makeBaseKey(singleEV.fixedOMCosts, FLOAT),
+    fixed_om: makeBaseKey(singleEV.fixedOMCosts, FLOAT),
     macrs_term: makeBaseKey(singleEV.macrsTerm, FLOAT),
     name: makeBaseKey(singleEV.name, STRING),
     nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
