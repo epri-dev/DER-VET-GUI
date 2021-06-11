@@ -1,15 +1,20 @@
 // TODO use these constants in Results, Project, CalenvironScreen, and Appilcation
 
+// Global
+export const RESET_ALL = 'resetAll';
+
 // Shared
 export const RESET = 'reset';
 
 // Aplication actions
 export const APPLICATION = 'Application';
-export const SET_COMPLETENESS = 'setCompleteness';
-export const SET_ERROR_LIST = 'setErrorList';
+export const KILL_PYTHON = 'killPython';
 export const RECEIVE_ERROR = 'receiveError';
 export const RESULTS_RECEIVED = 'resultRecieved';
-export const SET_QUICK_START_ERROR_LIST = 'setQuickStartErrorList';
+export const RUN_DERVET = 'runDervet';
+export const SET_COMPLETENESS = 'setCompleteness';
+export const SET_ERROR_LIST = 'setErrorList';
+export const SET_NEW_APPLICATION_STATE = 'setNewApplicationState';
 
 // OpenEI
 export const LOAD_UTILITIES = 'loadUtilities';
@@ -24,7 +29,6 @@ export const RECEIVE_RESULTS = 'receiveResults';
 // Project
 // index page
 export const RESET_PROJECT = 'resetProject';
-export const LOAD_QUICK_START_PROJECT = 'loadQuickStartProject';
 export const LOAD_NEW_PROJECT = 'loadNewProject';
 // back up
 export const SET_BACKUP_ENERGY_PRICE = 'setBackupPrice';

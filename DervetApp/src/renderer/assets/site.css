@@ -51,6 +51,10 @@ body {
     height: auto;
 }
 
+.import-card {
+    height: 75px !important;
+}
+
 .btn-quick-start {
     background-color: #ff9999 !important;
     color: white !important;

@@ -32,6 +32,11 @@ start
 +-------------------+
 ```
 
+#### Adding a New Use Case
+1. In [extraResources/cases](extraResources/cases), add a folder containing project.json and application.json files that define a new use case.
+2. In [extraResources/cases/cases.json](extraResources/cases/cases.json), add a new entry with the name of the directory you added in Step #1 and the desired display name in the case-selection dropdown menu.
+3. Verify (or ask a developer to verify) that the case loads and runs in the app as expected.
+
 #### Development Setup
 
 ``` bash

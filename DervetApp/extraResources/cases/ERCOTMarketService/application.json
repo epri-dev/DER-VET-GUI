@@ -1,0 +1,44 @@
+{
+  "errorMessage": null,
+  "errorList": {
+    "overview": {
+      "start": [],
+      "objectives": [],
+      "technologySpecs": []
+    },
+    "components": {
+      "objectives": {
+        "siteInformation": [],
+        "DA": [],
+        "SR": []
+      },
+      "financial": {
+        "inputs": [],
+        "retailTariff": [],
+        "externalIncentives": []
+      }
+    }
+  },
+  "isError": null,
+  "pageCompleteness": {
+    "overview": {
+      "start": true,
+      "objectives": true,
+      "technologySpecs": true
+    },
+    "components": {
+      "objectives": {
+        "siteInformation": true,
+        "resilience": true
+      },
+      "financial": {
+        "inputs": true,
+        "retailTariff": true,
+        "externalIncentives": true
+      }
+    }
+  },
+  "resultsLoaded": null,
+  "storeType": "application",
+  "runInProgress": null
+}

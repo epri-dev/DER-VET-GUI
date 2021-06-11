@@ -185,7 +185,7 @@
           const sampleTsLength = this.isLeapYear ? '8784' : '8760';
           fullFileName = `Sample_${dataName}_TimeSeries_${sampleTsLength}.csv`;
         }
-        return fileUrl(getExtraResourcesPath(fullFileName));
+        return fileUrl(getExtraResourcesPath(fullFileName, ['samples']));
       },
       getSampleDataText() {
         if (this.isMonthlyData) {

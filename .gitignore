@@ -8,7 +8,8 @@ DervetBackEnd/build/*
 DervetBackEnd/dist/*
 DervetBackEnd/venv
 DervetBackEnd/*spec
-DervetApp/extraResources/*
+DervetApp/extraResources/run_DERVET
+DervetApp/extraResources/run_DERVET.exe
 
 # Electron build and dist files
 .DS_Store
