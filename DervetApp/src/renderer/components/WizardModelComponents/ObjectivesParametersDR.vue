@@ -232,6 +232,12 @@
         return this.getErrorMsgWrapped(validations, this.$v, this.metadata, fieldName);
       },
       validatedSave() {
+        // reset all non-required inputs to their defaults prior to saving
+        if (this.drEndMode === true) {
+          this.resetNonRequired(['drEndHour']);
+        } else if (this.drEndMode === false) {
+          this.resetNonRequired(['drEventLength']);
+        }
         this.$store.dispatch(SET_DR_APPLIED_MONTHS, this.monthsAppliedConvertedIntoOnesAndZeros);
         csvUploadMixin.methods.validatedSave.bind(this)();
       },
