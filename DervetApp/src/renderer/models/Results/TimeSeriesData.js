@@ -52,6 +52,7 @@ const COLUMN_TO_TRACE = [
   {
     minuendColumnName: 'Net Load (kW)',
     traceName: TRACE_NAMES.netLoad,
+    negate: true,
   },
   {
     minuendColumnName: 'System Load (kW)',
@@ -111,16 +112,14 @@ const COLUMN_TO_TRACE = [
     traceName: TRACE_NAMES.nonSpinningReservePrice,
   },
   {
-    minuendColumnName: 'Spinning Reserve Down (Discharging) (kW)',
-    addendColumnName: 'Spinning Reserve Down (Charging) (kW)',
+    minuendColumnName: 'Spinning Reserve Up (Discharging) (kW)',
+    addendColumnName: 'Spinning Reserve Up (Charging) (kW)',
     traceName: TRACE_NAMES.spinningReserve,
-    negate: true,
   },
   {
-    minuendColumnName: 'Non-spinning Reserve Down (Discharging) (kW)',
-    addendColumnName: 'Non-spinning Reserve Down (Charging) (kW)',
+    minuendColumnName: 'Non-spinning Reserve Up (Discharging) (kW)',
+    addendColumnName: 'Non-spinning Reserve Up (Charging) (kW)',
     traceName: TRACE_NAMES.nonSpinningReserve,
-    negate: true,
   },
   {
     minuendColumnName: 'Frequency Regulation Down (Discharging) (kW)',

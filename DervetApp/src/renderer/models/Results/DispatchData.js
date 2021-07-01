@@ -20,6 +20,7 @@ export default class DispatchData {
     this.frIncluded = this.isExisting(this.traceNames.frequencyRegulationUpPrice);
     this.nsrIncluded = this.isExisting(this.traceNames.nonSpinningReservePrice);
     this.lfIncluded = this.isExisting(this.traceNames.loadFollowingUpPrice);
+
     this.maxDate = this.dateTime[this.dateTime.length - 1];
     [this.minDate] = this.dateTime;
     this.internalPowerTraceList = [
