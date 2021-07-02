@@ -4,21 +4,39 @@
     <hr>
     <div class="form-horizontal form-buffer">
 
-      <div class="form-group row">
-        <div class="col-md-3">
-          <label class="control-label" for="size">
-            <b>Select all months when the demand response program will be active</b>
-          </label>
+      <div>
+        <div class="form-group row">
+          <div class="col-md-3">
+            <label class="control-label" for="size">
+              <b>Select all months when the demand response program will be active</b>
+            </label>
+          </div>
+          <b-form-group class="col-md-7 form-control-static">
+            <template v-slot="{ ariaDescribedBy }">
+            <b-form-checkbox-group
+              id="months"
+              size="lg"
+              :aria-desribedby="ariaDescribedBy"
+              v-model="drMonthsAppliedLabels"
+              :options="monthsList"
+              name="activeMonthsCheckboxes">
+            </b-form-checkbox-group>
+            </template>
+          </b-form-group>
+          <b-form-group class="col-md-2 form-control-static">
+            <template v-slot="label">
+            <b-form-checkbox
+              v-model="allSelected"
+              aria-describedby="months"
+              aria-controls="months"
+              @change="toggleAll">
+              {{ allSelected ? 'Un-select all calendar months' : 'Select all calendar months' }}
+            </b-form-checkbox>
+            </template>
+          </b-form-group>
         </div>
-        <b-form-group class="col-md-7 form-control-static">
-          <b-form-checkbox-group
-            size="lg"
-            v-model="drMonthsAppliedLabels"
-            :options="monthsList"
-            name="activeMonthsCheckboxes"
-          ></b-form-checkbox-group>
-        </b-form-group>
       </div>
+
       <div class="row">
         <div class="col-md-1"></div>
         <div v-if="submitted && areZeroMonthsSelected"
@@ -137,6 +155,7 @@
 </template>
 
 <script>
+  import reject from 'lodash/reject';
   import { requiredIf } from 'vuelidate/lib/validators';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
@@ -182,6 +201,7 @@
         CONSTANTS,
         monthsList: MONTHS,
         ZERO_MONTHS_ERROR_MSG,
+        allSelected: false,
       };
     },
     validations: {
@@ -200,6 +220,11 @@
       },
     },
     computed: {
+      areAllMonthsSelected() {
+        const nVals = this.drMonthsAppliedLabels.length
+          - reject(this.drMonthsAppliedLabels, 0).length;
+        return (nVals === this.monthsList.length);
+      },
       areZeroMonthsSelected() {
         return !this.drMonthsAppliedLabels.some((val) => val !== 0);
       },
@@ -213,14 +238,23 @@
         return isRequiredObject;
       },
       monthsAppliedConvertedIntoOnesAndZeros() {
-        if (this.drMonthsAppliedLabels.length > 0) {
-          const mon = this.monthsList.map(mon => (this.drMonthsAppliedLabels.includes(mon) ? 1 : 0));
-          return new DRMonthsAppliedMonthly(mon);
+        const mon = this.monthsList.map(mon => (this.drMonthsAppliedLabels.includes(mon) ? 1 : 0));
+        return new DRMonthsAppliedMonthly(mon);
+      },
+    },
+    watch: {
+      drMonthsAppliedLabels() {
+        // Handle changes in individual month checkboxes
+        this.allSelected = false;
+        if (this.areAllMonthsSelected) {
+          this.allSelected = true;
         }
-        return null;
       },
     },
     methods: {
+      toggleAll(checked) {
+        this.drMonthsAppliedLabels = checked ? this.monthsList.slice() : [];
+      },
       getErrorListPayload() {
         const errorListPayload = csvUploadMixin.methods.getErrorListPayload.bind(this)();
         if (this.areZeroMonthsSelected) {
