@@ -8,7 +8,7 @@
     "displayText": "DER for Reliability"
   },
   {
-    "directory": "ERCOTMarketService",
-    "displayText": "ERCOT Market Case"
+    "directory": "CAISOMarketService",
+    "displayText": "CAISO Market Case"
   }
 ]

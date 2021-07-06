@@ -9,13 +9,12 @@
     "components": {
       "objectives": {
         "siteInformation": [],
-        "DA": [],
-        "SR": []
+        "FR": [],
+        "DA": []
       },
       "financial": {
-        "inputs": [],
-        "retailTariff": [],
-        "externalIncentives": []
+        "externalIncentives": [],
+        "inputs": []
       }
     }
   },
@@ -28,12 +27,18 @@
     },
     "components": {
       "objectives": {
-        "siteInformation": true,
-        "resilience": true
+        "siteInformation": null,
+        "deferral": null,
+        "FR": null,
+        "NSR": null,
+        "resilience": null,
+        "SR": null,
+        "userDefined": null,
+        "DA": null
       },
       "financial": {
         "inputs": true,
-        "retailTariff": true,
+        "retailTariff": null,
         "externalIncentives": true
       }
     }
