@@ -10,5 +10,9 @@
   {
     "directory": "CAISOMarketService",
     "displayText": "CAISO Market Case"
+  },
+  {
+    "directory": "EVBatterySizing",
+    "displayText": "EV Battery Sizing"
   }
 ]
