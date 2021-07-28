@@ -391,15 +391,35 @@ describe('modelParametersDto', () => {
     const actual = makeUserParameters(projectFixtureAllActive);
     expect(Object.keys(actual[''].keys).length).to.eql(1);
   });
+
+  const sensitivity = {
+    active: 'no',
+    coupled: 'None',
+    value: 'nan',
+  };
   it('should make a base key value given a value and type', () => {
     const actual = makeBaseKey('1', 'int');
     const expected = {
       opt_value: '1',
-      sensitivity: {
-        active: 'no',
-        coupled: 'None',
-        value: 'nan',
-      },
+      sensitivity,
+      type: 'int',
+    };
+    expect(actual).to.eql(expected);
+  });
+  it('should make a null base key value given a null value and type', () => {
+    const actual = makeBaseKey(null, 'int');
+    const expected = {
+      opt_value: null,
+      sensitivity,
+      type: 'int',
+    };
+    expect(actual).to.eql(expected);
+  });
+  it('should make a null base key value given an undefined value and type', () => {
+    const actual = makeBaseKey(undefined, 'int');
+    const expected = {
+      opt_value: null,
+      sensitivity,
       type: 'int',
     };
     expect(actual).to.eql(expected);
