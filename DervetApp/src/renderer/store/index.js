@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
-
 import modules from './modules';
+import { actions } from './global';
 
 Vue.use(Vuex);
 
@@ -15,4 +15,5 @@ export default new Vuex.Store({
   modules,
   ...({ plugins: isDev ? [fullPersistedState] : [persistedStateSubset] }),
   strict: isDev,
+  actions,
 });

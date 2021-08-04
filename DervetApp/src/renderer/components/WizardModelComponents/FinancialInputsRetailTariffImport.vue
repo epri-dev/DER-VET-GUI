@@ -83,9 +83,6 @@
         },
       };
     },
-    beforeMount() {
-      this.$v.$touch();
-    },
     methods: {
       getDefaultData() {
         return metadata.getDefaultValues();

@@ -3,7 +3,7 @@ import MonthlyBase from './MonthlyBase';
 
 class DRCapacityPriceMonthly extends MonthlyBase {
   constructor(data) {
-    super('DR Capacity Price ($/kW)', data);
+    super('DR Capacity Price ($/kW)', data, 'DRCapacityPrice');
     this.tsName = MTS_DR_CAPACITY_PRICE;
   }
 }

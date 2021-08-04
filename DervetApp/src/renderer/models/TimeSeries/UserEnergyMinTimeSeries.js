@@ -3,7 +3,7 @@ import TimeSeriesBase from './TimeSeriesBase';
 
 class UserEnergyMinTimeSeries extends TimeSeriesBase {
   constructor(data) {
-    super('Aggregate Energy Min (kWh)', data);
+    super('Aggregate Energy Min (kWh)', data, 'UserEnergyMin');
     this.pageAttributes = this.getPageAttributes('components', 'objectives', 'userDefined');
     this.tsName = TS_USER_ENERGY_MIN;
   }

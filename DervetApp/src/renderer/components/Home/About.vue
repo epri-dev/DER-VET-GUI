@@ -11,8 +11,8 @@
     <div class="row">
       <div class="col-md-12">
         <p class="tool-tip-index tool-tip-index-col">
-          DER-VET v1.0.0<br>
-          <br> 
+          DER-VET v1.1.1<br>
+          <br>
           Copyright © 2021 Electric Power Research Institute, Inc. All Rights Reserved.<br>
           <br>
           Permission to use, copy, modify, and distribute this software for any purpose<br>

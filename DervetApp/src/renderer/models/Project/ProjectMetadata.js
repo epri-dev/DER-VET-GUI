@@ -118,7 +118,7 @@ export class ProjectMetadata {
       [c.DA_GROWTH]: new ProjectFieldMetadata({
         displayName: 'Growth Rate of Day Ahead Energy Prices',
         isRequired: true,
-        minValue: 0,
+        minValue: -100,
         maxValue: 100,
         type: Number,
         unit: '% / year',
@@ -134,7 +134,7 @@ export class ProjectMetadata {
       [c.DEFERRAL_GROWTH]: new ProjectFieldMetadata({
         displayName: 'Growth Rate of Deferral Load',
         isRequired: true,
-        minValue: 0,
+        minValue: -100,
         maxValue: 100,
         type: Number,
         unit: '% / year',
@@ -190,7 +190,7 @@ export class ProjectMetadata {
       [c.DR_GROWTH]: new ProjectFieldMetadata({
         displayName: 'Growth Rate of Demand Response Awards',
         isRequired: true,
-        minValue: 0,
+        minValue: -100,
         maxValue: 100,
         type: Number,
         unit: '% / year',
@@ -319,7 +319,7 @@ export class ProjectMetadata {
       [c.FR_ENERGY_PRICE_GROWTH]: new ProjectFieldMetadata({
         displayName: 'Growth Rate of Frequency Regulation Energy Price',
         isRequired: true,
-        minValue: 0,
+        minValue: -100,
         maxValue: 100,
         type: Number,
         unit: '% / year',
@@ -349,7 +349,7 @@ export class ProjectMetadata {
       [c.FR_GROWTH]: new ProjectFieldMetadata({
         displayName: 'Growth Rate of Frequency Regulation Price',
         isRequired: true,
-        minValue: 0,
+        minValue: -100,
         maxValue: 100,
         type: Number,
         unit: '% / year',
@@ -391,7 +391,7 @@ export class ProjectMetadata {
       [c.LF_ENERGY_PRICE_GROWTH]: new ProjectFieldMetadata({
         displayName: 'Growth Rate of Load Following Energy Price',
         isRequired: true,
-        minValue: 0,
+        minValue: -100,
         maxValue: 100,
         type: Number,
         unit: '% / year',
@@ -401,7 +401,7 @@ export class ProjectMetadata {
       [c.LF_GROWTH]: new ProjectFieldMetadata({
         displayName: 'Growth Rate of Load Following Price',
         isRequired: true,
-        minValue: 0,
+        minValue: -100,
         maxValue: 100,
         type: Number,
         unit: '% / year',
@@ -444,7 +444,7 @@ export class ProjectMetadata {
       [c.NSR_GROWTH]: new ProjectFieldMetadata({
         displayName: 'Growth Rate of Non-Spinning Reserve Prices',
         isRequired: true,
-        minValue: 0,
+        minValue: -100,
         maxValue: 100,
         type: Number,
         unit: '% / year',
@@ -516,7 +516,7 @@ export class ProjectMetadata {
       [c.RA_GROWTH]: new ProjectFieldMetadata({
         displayName: 'Growth Rate of Resource Adequacy Awards',
         isRequired: true,
-        minValue: 0,
+        minValue: -100,
         maxValue: 100,
         type: Number,
         unit: '% / year',
@@ -569,7 +569,7 @@ export class ProjectMetadata {
       [c.SR_GROWTH]: new ProjectFieldMetadata({
         displayName: 'Growth Rate of Spinning Reserve Prices',
         isRequired: true,
-        minValue: 0,
+        minValue: -100,
         maxValue: 100,
         type: Number,
         unit: '% / year',

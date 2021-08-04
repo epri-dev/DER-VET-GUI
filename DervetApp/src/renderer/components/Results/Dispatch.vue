@@ -331,6 +331,7 @@
         };
         // increment plot height
         lastPlotHeight = lastPlotHeight + subPlotHeight + buffer;
+
         // 3) Market/Capacity Prices
         if (hasReservations) {
           forEach(rawData.marketPrices, (value) => {
@@ -434,10 +435,10 @@
           data.push(trace);
           // arrow marker
           let arrowMarker = null;
-          if (value.label.indexOf('Up') !== -1) {
-            arrowMarker = 'triangle-up';
-          } else {
+          if (value.label.indexOf('Down') !== -1) {
             arrowMarker = 'triangle-down';
+          } else {
+            arrowMarker = 'triangle-up';
           }
           const reservationMarker = base.map((el, i) => el + vals[i]);
           trace = {

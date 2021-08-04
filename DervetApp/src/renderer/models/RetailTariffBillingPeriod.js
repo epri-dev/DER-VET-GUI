@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import ProjectFieldMetadata from '@/models/Project/FieldMetadata';
 import { objectToCsv, filterRowsByColumnCount } from '@/util/file';
+import convertToUpperCase from '@/util/string';
 
 const WEEKDAY_ALLOWED_VALUES = [
   {
@@ -235,7 +236,7 @@ export const parsedCsvToBillingPeriods = (csv) => {
       excludingEndTime: row[6],
       weekday: row[7],
       value: row[8],
-      chargeType: row[9],
+      chargeType: convertToUpperCase(row[9]),
       name: row[10],
     })
   ));

@@ -171,7 +171,6 @@
     SET_OPTIMIZATION_HORIZON,
     SET_OPTIMIZATION_HORIZON_NUM,
     SET_SIZING_EQUIPMENT,
-    // SET_TS_REQUIRED,
     SELECT_OTHER_SERVICES,
   } from '@/store/actionTypes';
 
@@ -197,7 +196,7 @@
       optimizationHorizonNum: {
         ...validations.optimizationHorizonNum,
         required: requiredIf(function isOptimizationHorizonNumRequired() {
-          return (this.sizingEquipment === false) && this.optimizationHorizon === 'Hours';
+          return (this.sizingEquipment === false) && this.optimizationHorizon === 'Hour';
         }),
       },
       optimizationHorizon: {
@@ -275,7 +274,7 @@
         // reset all non-required inputs to their defaults prior to saving
         if (this.sizingEquipment === true) {
           this.resetNonRequired(['optimizationHorizonNum', 'optimizationHorizon']);
-        } else if (this.sizingEquipment === false && this.optimizationHorizon !== 'Hours') {
+        } else if (this.sizingEquipment === false && this.optimizationHorizon !== 'Hour') {
           this.resetNonRequired(['optimizationHorizonNum']);
         }
         // set completeness
@@ -284,37 +283,39 @@
         this.$v.$touch();
         // set errorList
         this.$store.dispatch('Application/setErrorList', this.getErrorListPayload());
-        return this.save();
+        this.save();
       },
-      resetErrorList(tsFields) {
-        tsFields.forEach((tsField) => {
-          const ts = this.$store.state.Project[tsField];
-          const { pageGroup, pageKey, page } = ts.pageAttributes;
-          let errorList = this.$store.state.Application.errorList[pageGroup][pageKey][page];
-          if (errorList) {
-            const tsErrorMatch = `timeseries of ${ts.columnHeaderName}`;
-            const errorsString = ts.revalidate(this.expectedRowCount);
-            const tsError = `The timeseries of ${ts.columnHeaderName} has the wrong number of values`;
-            const tsError2 = `A timeseries of ${ts.columnHeaderName} is required`;
-            // reset errorList
-            errorList = errorList.filter(item => !item.includes(tsErrorMatch));
-            // set error with this TS only if it is required
-            if (ts.required) {
-              if (this.isTBD || ts.data.length === 0) {
-                errorList.push(tsError2);
-              } else if (errorsString !== '') {
-                errorList.push(tsError);
-              }
+      resetErrors(tsField) {
+        const ts = this.$store.state.Project[tsField];
+        const { pageGroup, pageKey, page } = ts.pageAttributes;
+        let errorList = this.$store.state.Application.errorList[pageGroup][pageKey][page];
+        if (errorList) {
+          const tsErrorMatch = `timeseries of ${ts.columnHeaderName}`;
+          const errorsString = ts.revalidate(this.expectedRowCount, this.sizingEquipment);
+          this.$store.dispatch('setTSError', { tsName: ts.tsName, error: errorsString });
+          const tsError = `The timeseries of ${ts.columnHeaderName} has the wrong number of values`;
+          const tsError2 = `A timeseries of ${ts.columnHeaderName} is required`;
+          const tsError3 = `The timeseries of ${ts.columnHeaderName} contains invalid data`;
+          // reset errorList
+          errorList = errorList.filter(item => !item.includes(tsErrorMatch));
+          // set error with this TS only if it is required
+          if (ts.required) {
+            if (this.isTBD || ts.data.length === 0) {
+              errorList.push(tsError2);
+            } else if (errorsString.includes('Invalid Rows')) {
+              errorList.push(tsError3);
+            } else if (errorsString.includes('Invalid Data')) {
+              errorList.push(tsError);
             }
-            const payload = {
-              pageGroup,
-              pageKey,
-              page,
-              errorList,
-            };
-            this.$store.dispatch('Application/setErrorList', payload);
           }
-        });
+          const payload = {
+            pageGroup,
+            pageKey,
+            page,
+            errorList,
+          };
+          this.$store.dispatch('Application/setErrorList', payload);
+        }
       },
       save() {
         // if sizing remove services that were hidden: RA and DR
@@ -328,14 +329,15 @@
           // update errorList and completeness
           this.$store.dispatch(RESET_GAMMA_AND_NU, this.isResilienceSelected);
         }
-        this.$store.dispatch(CHOOSE_ENERGY_STRUCTURE, this.energyPriceSourceWholesale);
+        this.$store.dispatch(CHOOSE_ENERGY_STRUCTURE, this.energyPriceSourceWholesale)
+          .then(this.resetErrors(c.TS_DA_PRICE));
         this.$store.dispatch(SELECT_OTHER_SERVICES, this.listOfActiveServices);
         this.$store.dispatch(SET_OPTIMIZATION_HORIZON, this.optimizationHorizon);
         this.$store.dispatch(SET_OPTIMIZATION_HORIZON_NUM, this.optimizationHorizonNum);
-        this.$store.dispatch(SET_SIZING_EQUIPMENT, this.sizingEquipment);
         this.$store.dispatch(SET_INCLUDE_SITE_LOAD)
-          .then(this.resetErrorList(c.TS_SITE_FIELDS));
+          .then(this.resetErrors(c.TS_SITE_LOAD));
         this.$store.dispatch(SET_INCLUDE_SYSTEM_LOAD);
+        this.$store.dispatch(SET_SIZING_EQUIPMENT, this.sizingEquipment);
       },
     },
   };

@@ -252,15 +252,20 @@
         // add to appropriate errorList for all saved TS from Services
         // NOTE: Monthly Data is not affected here
         if (this.tsRequiredLines !== this.numberOfEntriesRequired) {
+          const sizingOn = this.$store.state.Project[c.SIZING_EQUIPMENT];
           // re-validate all saved TS data here
           const dataObjects = operateOnKeysList(this.$store.state.Project, c.TS_ALL, f => f);
           Object.values(dataObjects).forEach((dataObject) => {
             // only need this when the TS already exists in the store
             if (dataObject.data.length !== 0) {
-              const errorsString = dataObject.revalidate(this.numberOfEntriesRequired);
+              const errorsString = dataObject.revalidate(
+                this.numberOfEntriesRequired,
+                sizingOn,
+              );
               const tsError = `The timeseries of ${dataObject.columnHeaderName} has the wrong number of values`;
               const tsError2 = `A timeseries of ${dataObject.columnHeaderName} is required`;
               const tsError3 = '<b>Invalid data:</b> The frequency is TBD';
+              const tsError4 = `The timeseries of ${dataObject.columnHeaderName} contains invalid data`;
               // attach errorsString to the stored ts.error
               const errorPayload = {
                 tsName: dataObject.tsName,
@@ -276,8 +281,10 @@
               if (dataObject.required !== false) {
                 if (this.isTBD) {
                   errorList.push(tsError2);
-                } else if (errorsString !== '') {
+                } else if (errorsString.includes('Invalid Data')) {
                   errorList.push(tsError);
+                } else if (errorsString.includes('Invalid Rows')) {
+                  errorList.push(tsError4);
                 }
               }
               const payload = {

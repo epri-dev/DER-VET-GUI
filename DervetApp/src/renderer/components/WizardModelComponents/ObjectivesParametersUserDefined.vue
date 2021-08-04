@@ -123,18 +123,6 @@
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import { projectMetadata } from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
-  import '@/assets/samples/Sample_UserEnergyMax_TimeSeries_8760.csv';
-  import '@/assets/samples/Sample_UserEnergyMax_TimeSeries_8784.csv';
-  import '@/assets/samples/Sample_UserEnergyMin_TimeSeries_8760.csv';
-  import '@/assets/samples/Sample_UserEnergyMin_TimeSeries_8784.csv';
-  import '@/assets/samples/Sample_UserPowerExportMax_TimeSeries_8760.csv';
-  import '@/assets/samples/Sample_UserPowerExportMax_TimeSeries_8784.csv';
-  import '@/assets/samples/Sample_UserPowerExportMin_TimeSeries_8760.csv';
-  import '@/assets/samples/Sample_UserPowerExportMin_TimeSeries_8784.csv';
-  import '@/assets/samples/Sample_UserPowerImportMax_TimeSeries_8760.csv';
-  import '@/assets/samples/Sample_UserPowerImportMax_TimeSeries_8784.csv';
-  import '@/assets/samples/Sample_UserPowerImportMin_TimeSeries_8760.csv';
-  import '@/assets/samples/Sample_UserPowerImportMin_TimeSeries_8784.csv';
 
   import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
 

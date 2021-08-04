@@ -3,7 +3,7 @@ import TimeSeriesBase from './TimeSeriesBase';
 
 class DeferralLoadTimeSeries extends TimeSeriesBase {
   constructor(data) {
-    super('Deferral Load (kW)', data);
+    super('Deferral Load (kW)', data, 'DeferralLoad');
     this.pageAttributes = this.getPageAttributes('components', 'objectives', 'deferral');
     this.tsName = TS_DEFERRAL_LOAD;
   }
