@@ -5,6 +5,13 @@ Questions and feedback can be submitted to the Electric Power Research Institute
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [1.1.1] - 2021-08-03
+### Added
+- Feature to allow the saving of deactivated tech in a project
+
+### Fixed
+- The unit label of variable o&m cost was fixed to match the backend
+
 ## [1.1.0] - 2021-07-08
 ### Added
 - This CHANGELOG file to document notable changes to each version.
