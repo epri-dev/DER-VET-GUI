@@ -1,12 +1,12 @@
 # DER-VET™
 
-[DER-VET™](https://der-vet.com) provides a free, publicly accessible, open-source platform for calculating, understanding, and optimizing the value 
-of distributed 
-energy resources (DER) based on their technical merits and constraints. An extension of EPRI's [StorageVET®](./storagevet) tool, DER-VET supports 
-site-specific assessments of energy storage and additional DER technologies—including solar, wind, demand response, electric vehicle charging, 
-internal combustion engines, and combined heat and power—in different configurations, such as microgrids. It uses load and other data to determine 
-optimal size, duration, and other characteristics for maximizing benefits based on site conditions and the value that can be extracted from targeted 
-use cases. Customers, developers, utilities, and regulators across the industry can apply this tool to inform project-level decisions based on sound 
+[DER-VET™](https://der-vet.com) provides a free, publicly accessible, open-source platform for calculating, understanding, and optimizing the value
+of distributed
+energy resources (DER) based on their technical merits and constraints. An extension of EPRI's [StorageVET®](./storagevet) tool, DER-VET supports
+site-specific assessments of energy storage and additional DER technologies—including solar, wind, demand response, electric vehicle charging,
+internal combustion engines, and combined heat and power—in different configurations, such as microgrids. It uses load and other data to determine
+optimal size, duration, and other characteristics for maximizing benefits based on site conditions and the value that can be extracted from targeted
+use cases. Customers, developers, utilities, and regulators across the industry can apply this tool to inform project-level decisions based on sound
 technical understanding and unbiased cost-performance data.
 
 DER-VET was developed with funding from the California Energy Commission. EPRI plans to support continuing updates and enhancements.
@@ -142,7 +142,7 @@ Please make sure to update tests as appropriate.
 
 This project is licensed under the BSD (3-clause) License - see [LICENSE.txt](./LICENSE.txt).
 
-DER-VET v1.0.0
+DER-VET v1.1.1
 
 Copyright © 2021 Electric Power Research Institute, Inc. All Rights Reserved.
 
