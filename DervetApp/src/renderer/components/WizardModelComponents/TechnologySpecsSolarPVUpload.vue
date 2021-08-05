@@ -35,8 +35,6 @@
   import associatedInputsMixin from '@/mixins/associatedInputsMixin';
   import TechnologyMetadata from '@/models/Project/TechnologySpecs/TechnologySpecsSolarPV';
   import { TS_SOLARPV_GENERATION_PROFILE as TS } from '@/models/Project/constants';
-  import '@/assets/samples/Sample_PVGeneration_TimeSeries_8760.csv';
-  import '@/assets/samples/Sample_PVGeneration_TimeSeries_8784.csv';
 
   import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
 

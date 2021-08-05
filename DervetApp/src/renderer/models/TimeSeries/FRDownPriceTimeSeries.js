@@ -3,7 +3,7 @@ import TimeSeriesBase from './TimeSeriesBase';
 
 class FRDownPriceTimeSeries extends TimeSeriesBase {
   constructor(data) {
-    super('Reg Down Price ($/kW)', data);
+    super('Reg Down Price ($/kW)', data, 'FRDownPrice');
     this.pageAttributes = this.getPageAttributes('components', 'objectives', 'FR');
     this.tsName = TS_FR_DOWN_PRICE;
   }

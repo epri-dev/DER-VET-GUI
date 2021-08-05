@@ -1,0 +1,18 @@
+[
+  {
+    "directory": "billReduction",
+    "displayText": "DER for Bill Reduction"
+  },
+  {
+    "directory": "reliability",
+    "displayText": "DER for Reliability"
+  },
+  {
+    "directory": "CAISOMarketService",
+    "displayText": "CAISO Market Case"
+  },
+  {
+    "directory": "EVBatterySizing",
+    "displayText": "EV Battery Sizing"
+  }
+]

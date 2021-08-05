@@ -40,8 +40,6 @@
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import { projectMetadata } from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
-  import '@/assets/samples/Sample_DAPrice_TimeSeries_8760.csv';
-  import '@/assets/samples/Sample_DAPrice_TimeSeries_8784.csv';
 
   import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
 

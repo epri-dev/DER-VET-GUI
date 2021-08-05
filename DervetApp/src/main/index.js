@@ -38,6 +38,7 @@ function createWindow() {
       // TODO refactor to use contextIntegration https://github.com/electron/electron/issues/23506
       nodeIntegration: true,
       enableRemoteModule: true,
+      webSecurity: false,
     },
   });
 

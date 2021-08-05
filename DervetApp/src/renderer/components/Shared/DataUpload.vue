@@ -63,11 +63,13 @@
           <span class="unit-label" v-html="this.unit"></span>
         </div>
         <div class="col-md-7">
-          <input
-            type="file"
-            class="form-control"
-            :disabled="disableUpload"
-            @change="onFileUpload">
+          <form ref="myFileInputForm">
+            <input
+              type="file"
+              class="form-control"
+              :disabled="disableUpload"
+              @change="onFileUpload">
+          </form>
         </div>
       </div>
       <div class="form-group row">
@@ -99,8 +101,11 @@
 
 <script>
   import Plotly from 'plotly.js';
-  import { parseCsvFromEvent } from '@/util/file';
+  import last from 'lodash/last';
+
+  import { fileUrl, getExtraResourcesPath, parseCsvFromEvent } from '@/util/file';
   import { sharedDefaults, sharedValidation } from '@/models/Shared.js';
+  import { isNotNullAndNotUndefined, isNullOrUndefined } from '@/util/logic';
 
   export default {
     updated() {
@@ -166,19 +171,21 @@
       isInvalid: Boolean,
       numberOfEntriesRequired: String,
       objectName: String,
+      sizingOn: Boolean,
       uploadedData: Object,
       xAxis: Array,
     },
     methods: {
       getSampleDataFileName() {
-        const dataModelName = (new this.DataModel([])).constructor.name;
+        let fullFileName;
+        const dataName = new this.DataModel([]).sampleDataFileName;
         if (this.isMonthlyData) {
-          const name = dataModelName.replace(/(Monthly)$/, '_$1');
-          return `files/Sample_${name}_${this.numberOfEntriesRequired}.csv`;
+          fullFileName = `Sample_${dataName}_Monthly_12.csv`;
+        } else {
+          const sampleTsLength = this.isLeapYear ? '8784' : '8760';
+          fullFileName = `Sample_${dataName}_TimeSeries_${sampleTsLength}.csv`;
         }
-        const name = dataModelName.replace(/(TimeSeries)$/, '_$1');
-        const sampleTsLength = this.isLeapYear ? '8784' : '8760';
-        return `files/Sample_${name}_${sampleTsLength}.csv`;
+        return fileUrl(getExtraResourcesPath(fullFileName, ['samples']));
       },
       getSampleDataText() {
         if (this.isMonthlyData) {
@@ -205,14 +212,15 @@
       },
       onFileUpload(e) {
         const onSuccess = (results, importedFilePath, errors) => {
-          // we must trim the last row off because it's always there as null
-          // TODO: AE: try this on other operating systems to make sure
-          results = results.slice(0, -1);
+          results = this.trimLastLineNull(results);
           this.importError = errors;
           this.importedFilePath = importedFilePath;
           if (importedFilePath !== null && errors === undefined) {
             const newData = new this.DataModel(results);
-            const validationResult = newData.validate(this.numberOfEntriesRequired);
+            const validationResult = newData.validate(
+              this.numberOfEntriesRequired,
+              this.sizingOn,
+            );
             if (validationResult.length !== 0) this.importError = validationResult;
             if (this.importError === undefined) {
               // only emit back when there are no errors
@@ -223,6 +231,8 @@
           }
         };
         parseCsvFromEvent(e, onSuccess);
+        // reset form to allow a user to correct a data file and re-upload it immediately
+        this.$refs.myFileInputForm.reset();
       },
       removeData() {
         // emit a payload to:
@@ -236,6 +246,15 @@
           objectName: this.objectName,
         };
         this.$emit('click', payload);
+      },
+      trimLastLineNull(results) {
+        // trim the last value off if it's null or undefined
+        //   this commonly happens with certain line terminators
+        const lastLine = last(results);
+        if (isNotNullAndNotUndefined(lastLine) && isNullOrUndefined(lastLine[0])) {
+          results = results.slice(0, -1);
+        }
+        return results;
       },
       uploadPayload(dataResults) {
         return {
@@ -251,7 +270,7 @@
           unit: this.unit,
           mode: 'lines',
           name: '', // this.firstLetterCapitalized,
-          hovertemplate: `%{y} ${this.unit}`,
+          hovertemplate: `%{y:.3f} ${this.unit}`,
         };
         const data = [uploadedTS];
         const layout = {

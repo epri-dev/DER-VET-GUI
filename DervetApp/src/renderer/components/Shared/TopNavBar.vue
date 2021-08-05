@@ -167,11 +167,11 @@
         // TODO: note that there is currently no validation, so calling this with an
         // incomplete Project object will likely result in an unhandled exception
         this.$store.dispatch(`Results/${a.RESET}`)
-          .then(this.$store.dispatch('Application/runDervet', this.$store.state.Project))
+          .then(this.$store.dispatch(`Application/${a.RUN_DERVET}`, this.$store.state.Project))
           .then(this.$router.push({ path: RUN_ANALYSIS })).catch(() => {});
       },
       killDervet() {
-        this.$store.dispatch('Application/killPython', this.$store.state.Project)
+        this.$store.dispatch(`Application/${a.KILL_PYTHON}`, this.$store.state.Project)
           .then(this.$router.push({ path: WIZARD_RUN_CASE }).catch(() => {}));
       },
       cannotRun() {

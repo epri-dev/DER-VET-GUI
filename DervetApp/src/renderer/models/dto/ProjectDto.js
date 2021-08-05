@@ -8,7 +8,7 @@ import * as c from '@/models/Project/constants';
 import { billingPeriodsToCsv } from '@/models/RetailTariffBillingPeriod';
 import { externalIncentivesToCsv } from '@/models/ExternalIncentives';
 import { getAppDataPath, createDirectory, objectToCsv } from '@/util/file';
-import { isNotNullAndNotUndefined } from '@/util/logic';
+import { isNotNullAndNotUndefined, isNullOrUndefined } from '@/util/logic';
 
 const NO = 'no';
 const YES = 'yes';
@@ -56,7 +56,7 @@ export const convertToYesNo = condition => (condition ? YES : NO);
 export const convertToOneZero = condition => (condition ? ONE : ZERO);
 
 export const calculateEndYear = (startYear, analysisHorizon) => (
-  (Number(startYear) + Number(analysisHorizon)).toString()
+  (Number(startYear) + Number(analysisHorizon) - 1).toString()
 );
 
 export const calculateSalvageValue = (techSpecs) => {
@@ -65,11 +65,11 @@ export const calculateSalvageValue = (techSpecs) => {
 };
 
 export const setUndefinedNullToZero = value => (
-  (value === undefined || value === null) ? 0 : value
+  isNullOrUndefined(value) ? 0 : value
 );
 
 export const setUndefinedNullToOne = value => (
-  (value === undefined || value === null) ? 1 : value
+  isNullOrUndefined(value) ? 1 : value
 );
 
 export const makeCsvFilePath = (directory, fileName) => (
@@ -77,7 +77,8 @@ export const makeCsvFilePath = (directory, fileName) => (
 );
 
 export const makeBaseKey = (value, type) => ({
-  opt_value: value.toString(),
+  // set undefined or null values to null
+  opt_value: isNullOrUndefined(value) ? null : value.toString(),
   sensitivity: {
     active: NO,
     coupled: NONE,
@@ -375,7 +376,7 @@ export const makeSingleFleetEVParameter = (fleetEV) => {
     decommissioning_cost: makeBaseKey(fleetEV.decomissioningCost, FLOAT),
     'ecc%': makeBaseKey(ZERO, FLOAT), // TODO hardcoded
     expected_lifetime: makeBaseKey(fleetEV.expectedLifetime, INT),
-    fixed_om_cost: makeBaseKey(fleetEV.fixedOMCosts, FLOAT),
+    fixed_om: makeBaseKey(fleetEV.fixedOMCosts, FLOAT),
     lost_load_cost: makeBaseKey(fleetEV.lostLoadCost, FLOAT),
     macrs_term: makeBaseKey(fleetEV.macrsTerm, FLOAT),
     max_load_ctrl: makeBaseKey(fleetEV.maximumLoadCtrl, INT),
@@ -659,7 +660,7 @@ export const makeSingleSingleEVParameter = (singleEV) => {
     'ecc%': makeBaseKey(ZERO, FLOAT), // TODO hardcoded
     ene_target: makeBaseKey(singleEV.energyTarget, FLOAT),
     expected_lifetime: makeBaseKey(singleEV.expectedLifetime, INT),
-    fixed_om_cost: makeBaseKey(singleEV.fixedOMCosts, FLOAT),
+    fixed_om: makeBaseKey(singleEV.fixedOMCosts, FLOAT),
     macrs_term: makeBaseKey(singleEV.macrsTerm, FLOAT),
     name: makeBaseKey(singleEV.name, STRING),
     nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
@@ -991,7 +992,7 @@ export const makeMeta = (project, inputsDirectory, resultsDirectory) => ({
 
 export const makeOutputDirectoryName = (outputDirectory) => {
   // If user does not select an output directory, default to their app data directory
-  if (outputDirectory === undefined || outputDirectory === null) {
+  if (isNullOrUndefined(outputDirectory)) {
     return path.join(getAppDataPath(), 'DER-VET');
   }
   // If user selects a directory, create a timestamped output folder

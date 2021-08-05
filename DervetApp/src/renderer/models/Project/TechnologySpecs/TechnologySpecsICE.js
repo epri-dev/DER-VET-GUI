@@ -186,8 +186,8 @@ export default class TechnologySpecsICEMetadata {
         isRequired: true,
         minValue: 0,
         type: Number,
-        unit: '$ / MWh',
-        description: 'What is the cost of variable operations and maintenance for each MWh of AC energy delivered?',
+        unit: '$ / kWh',
+        description: 'What is the cost of variable operations and maintenance for each kWh of AC energy delivered?',
       }),
       ...sharedHardcodedMetadata,
     });

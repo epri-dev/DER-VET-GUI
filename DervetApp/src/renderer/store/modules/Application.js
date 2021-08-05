@@ -1,22 +1,10 @@
-import cloneDeep from 'lodash/cloneDeep';
 import IpcService from '@/service/Ipc';
 import { makeDervetInputs } from '@/models/dto/ProjectDto';
 import * as m from '@/store/mutationTypes';
 import * as a from '@/store/actionTypes';
 
-import { billReductionErrorList, billReductionCompleteness } from '@/assets/cases/billReduction/project';
-import { reliabilityErrorList } from '@/assets/cases/reliability/project';
-import { dummyMarketServiceErrorList } from '@/assets/cases/dummyMarketServiceHourly/project';
-import { ERCOTMarketServiceErrorList } from '@/assets/cases/ERCOTMarketService/project';
-
 const NULL = null;
 export const APPLICATION = 'application';
-const USECASE_ERROR_LIST_DB = { // its a sad excuse for a database, but serves as one.
-  billReductionProject: billReductionErrorList,
-  reliabilityProject: reliabilityErrorList,
-  dummyMarketServiceHourly: dummyMarketServiceErrorList,
-  ERCOTMarketService: ERCOTMarketServiceErrorList,
-};
 
 const getDefaultApplicationState = () => ({
   errorMessage: NULL,
@@ -133,18 +121,11 @@ const actions = {
   [a.SET_ERROR_LIST]({ commit }, payload) {
     commit(m.SET_ERROR_LIST, payload);
   },
-  setNewApplicationState({ commit }, application) {
+  [a.SET_NEW_APPLICATION_STATE]({ commit }, application) {
     return new Promise((resolve) => {
       commit('SET_NEW_APPLICATION_STATE', application);
       resolve();
     });
-  },
-  setQuickStartCompleteness({ commit }) {
-    commit('SET_NEW_COMPLETENESS', billReductionCompleteness);
-  },
-  [a.SET_QUICK_START_ERROR_LIST]({ commit }, caseName) {
-    const selectedUseCase = cloneDeep(USECASE_ERROR_LIST_DB[caseName]);
-    commit(m.SET_NEW_ERROR_LIST, selectedUseCase);
   },
   [a.RECEIVE_ERROR]({ commit }) {
     commit(m.SET_RUN_NOT_IN_PROGRESS);
@@ -161,13 +142,13 @@ const actions = {
   [a.RESET]({ commit }) {
     commit(m.RESET_APPLICATION);
   },
-  runDervet({ commit }, project) {
+  [a.RUN_DERVET]({ commit }, project) {
     commit(m.SET_RUN_IN_PROGRESS);
     // TODO add try catch here HN
     const dervetInputs = makeDervetInputs(project);
     IpcService.sendProject(dervetInputs);
   },
-  killPython({ commit }) {
+  [a.KILL_PYTHON]({ commit }) {
     commit(m.SET_RUN_NOT_IN_PROGRESS);
     IpcService.stopPython();
   },

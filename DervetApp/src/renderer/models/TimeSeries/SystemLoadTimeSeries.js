@@ -3,7 +3,7 @@ import TimeSeriesBase from './TimeSeriesBase';
 
 class SystemLoadTimeSeries extends TimeSeriesBase {
   constructor(data) {
-    super('System Load (kW)', data);
+    super('System Load (kW)', data, 'SystemLoad');
     this.pageAttributes = this.getPageAttributes('components', 'objectives', 'systemInformation');
     this.tsName = TS_SYSTEM_LOAD;
   }

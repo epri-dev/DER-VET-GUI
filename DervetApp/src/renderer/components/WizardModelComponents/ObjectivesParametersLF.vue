@@ -118,16 +118,6 @@
   import csvUploadMixin from '@/mixins/csvUploadExtendableMixin';
   import { projectMetadata } from '@/models/Project/ProjectMetadata';
   import * as c from '@/models/Project/constants';
-  import '@/assets/samples/Sample_LFDownPrice_TimeSeries_8760.csv';
-  import '@/assets/samples/Sample_LFDownPrice_TimeSeries_8784.csv';
-  import '@/assets/samples/Sample_LFEnergyOptionDown_TimeSeries_8760.csv';
-  import '@/assets/samples/Sample_LFEnergyOptionDown_TimeSeries_8784.csv';
-  import '@/assets/samples/Sample_LFEnergyOptionUp_TimeSeries_8760.csv';
-  import '@/assets/samples/Sample_LFEnergyOptionUp_TimeSeries_8784.csv';
-  import '@/assets/samples/Sample_LFUpPrice_TimeSeries_8760.csv';
-  import '@/assets/samples/Sample_LFUpPrice_TimeSeries_8784.csv';
-  import '@/assets/samples/Sample_LFPrice_TimeSeries_8760.csv';
-  import '@/assets/samples/Sample_LFPrice_TimeSeries_8784.csv';
 
   import { WIZARD_COMPONENT as DESTINATION_PATH } from '@/router/constants';
 

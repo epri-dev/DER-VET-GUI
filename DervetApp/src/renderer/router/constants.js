@@ -5,6 +5,7 @@ export const WIZARD_OVERVIEW = '/wizard-overview';
 export const WIZARD_COMPONENT = '/wizard-model-components';
 export const WIZARD_RUN_CASE = '/wizard-run-case';
 export const RESULTS = '/results';
+export const IMPORT_PROJECT = '/import-project';
 
 const overview = subPath => `${WIZARD_OVERVIEW}/${subPath}`;
 const component = subPath => `${WIZARD_COMPONENT}/${subPath}`;
