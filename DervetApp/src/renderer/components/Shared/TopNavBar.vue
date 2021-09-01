@@ -2,7 +2,7 @@
   <div class="text-center">
     <b-navbar toggleable="lg" fixed="top" type="dark" variant="dark">
       <b-navbar-brand :active="isActiveIndexOrAbout()"
-                      :to="INDEX" class="col-md-2 no-padding">
+                      :to="INDEX" class="text-xs-left">
         <img class="nav-logo-img" :src="FullLogo" />
       </b-navbar-brand>
 
@@ -46,7 +46,7 @@
               <span class="fas fa-stop fa-md"/>
             </b-button>
           </b-button-group>
-          
+
           <b-nav-item align="right" link-classes="navbar-top-svg-item">
             <span @click="(e) => openWebsiteInBrowser(e, FORUM_LINK)" class="fas fa-comment-alt"/>
           </b-nav-item>
