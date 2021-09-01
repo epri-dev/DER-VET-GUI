@@ -1,7 +1,7 @@
 <template>
   <div class="form-group form-buffer row">
     <div class="col-md-3 back-btn">
-      <button @click="save" class="btn btn-primary">Save</button>
+      <button @click="save" type="button" class="btn btn-primary">Save</button>
     </div>
 
     <div v-if="displayError" class="col-md-5 error-text-color">
@@ -11,7 +11,7 @@
     </div>
 
     <div class="col-md-4 continue-btn">
-      <button @click="saveContinue" class="btn btn-primary pull-right">{{ continueText }}</button>
+      <button @click="saveContinue" type="button" class="btn btn-primary pull-right">{{ continueText }}</button>
     </div>
   </div>
 </template>
