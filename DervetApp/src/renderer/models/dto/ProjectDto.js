@@ -214,7 +214,7 @@ export const makeSingleBatteryParameter = (battery, inputsDirectory) => {
     user_dis_rated_min: makeBaseKey(setUndefinedNullToZero(battery.powerCapacityMinimum), FLOAT),
     user_ene_rated_max: makeBaseKey(setUndefinedNullToZero(battery.energyCapacityMaximum), FLOAT),
     user_ene_rated_min: makeBaseKey(setUndefinedNullToZero(battery.energyCapacityMinimum), FLOAT),
-    yearly_degrade: makeBaseKey(setUndefinedNullToZero(battery.calendarDegradationRate), INT),
+    yearly_degrade: makeBaseKey(setUndefinedNullToZero(battery.calendarDegradationRate), FLOAT),
   };
   return makeGroup(battery.id, convertToYesNo(battery.active), keys);
 };
