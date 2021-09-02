@@ -5,7 +5,7 @@
         <h3>Results</h3>
         <div class="row" v-if="outputDirectory !== null">
           <p>Saved at: {{ timestampsOutputDirectory }}</p>
-        </div>      
+        </div>
         <hr>
         <div class="form-group">
           <div class="row">
@@ -288,7 +288,7 @@
             filename: 'battery-dispatch-heat-map',
           },
           displayModeBar: true,
-          modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d', 'toggleSpikelines'],
+          modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'toggleSpikelines'],
         };
         return Plotly.newPlot(ctx, data, layout, config);
       },
