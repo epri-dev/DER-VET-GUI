@@ -1,6 +1,6 @@
 ﻿<template>
   <div class="text-center">
-    <b-navbar toggleable="lg" fixed="top" type="dark" variant="dark">
+    <b-navbar toggleable="md" fixed="top" type="dark" variant="dark">
       <b-navbar-brand :active="isActiveIndexOrAbout()"
                       :to="INDEX" class="text-xs-left">
         <img class="nav-logo-img" :src="FullLogo" />
