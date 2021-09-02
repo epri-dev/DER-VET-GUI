@@ -141,7 +141,7 @@ export default class TechnologySpecsBatteryMetadata {
         isRequired: true,
         minValue: 0,
         maxValue: 100,
-        type: 'int',
+        type: 'float',
         unit: '% / year',
         description: 'The calendar degradation combines with cycling degradation to get total degradation. * Note: Not compatible with size optimization.',
         allowedValues: null,
