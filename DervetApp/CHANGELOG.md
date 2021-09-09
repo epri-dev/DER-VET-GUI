@@ -5,7 +5,7 @@ Questions and feedback can be submitted to the Electric Power Research Institute
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
-## [1.1.2] - 2021-09-07
+## [1.1.2] - 2021-09-09
 ## Added
 - adds plotly button to reset axes in lower Results Dispatch, Results Reliability, and Results Summary plots
 - adds Choose Install Location option in Windows installation
@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Save buttons were fixed so as not to reset all project data
 - The size of the DER-VET brand in the Top Navigation Bar was adjusted to not get very large when zooming and re-sizing the app window
 - The unit label of variable o&m cost was again fixed to match the backend
+- Fixed bug that was prevented saving the Minimum Power for a Diesel Generator Technology
 
 ## [1.1.1] - 2021-08-03
 ### Added
