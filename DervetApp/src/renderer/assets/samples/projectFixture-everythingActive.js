@@ -372,7 +372,6 @@ export const projectFixtureAllActive = {
     shouldSize: false,
     numGenerators: 2,
     minGenerators: 0,
-    maxGenerators: 1,
   }],
   technologySpecsControllableLoad: [],
   technologySpecsFleetEV: [],
