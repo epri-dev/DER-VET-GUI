@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - The size of the DER-VET brand in the Top Navigation Bar was adjusted to not get very large when zooming and re-sizing the app window
 - The unit label of variable o&m cost was again fixed to match the backend
 - Fixed bug that was prevented saving the Minimum Power for a Diesel Generator Technology
+- Fixed bug with Retail Tariff file Import
 
 ## [1.1.1] - 2021-08-03
 ### Added
