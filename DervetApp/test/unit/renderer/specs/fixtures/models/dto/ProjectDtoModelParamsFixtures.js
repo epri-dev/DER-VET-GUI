@@ -477,7 +477,7 @@ export const makeModelParamsBattery = id => ({
         coupled: 'None',
         value: 'nan',
       },
-      type: 'int',
+      type: 'float',
     },
   },
 });

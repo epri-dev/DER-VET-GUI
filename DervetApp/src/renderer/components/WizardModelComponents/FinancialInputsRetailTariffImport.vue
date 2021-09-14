@@ -88,10 +88,6 @@
         return metadata.getDefaultValues();
       },
       isRowComplete() {
-        this.$v.$touch();
-        if (this.$v.$anyError === true) {
-          return false;
-        }
         // secondary validation checks on allowed values
         if ((this.metadata.chargeType.allowedValues
           .find(type => type.value === this.chargeType) === undefined)

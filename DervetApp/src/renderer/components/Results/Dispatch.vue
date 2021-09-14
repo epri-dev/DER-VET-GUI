@@ -17,14 +17,14 @@
               <button type="button" id="dispatch-refresh" class="btn" @click="refreshSelection">
                 <i class="fas fa-refresh"></i>
               </button>
-              <b-dropdown :text="windowSizeText" 
+              <b-dropdown :text="windowSizeText"
                           toggle-class="form-control form-control-inline form-control-width-auto buffer-right">
                 <b-dropdown-item v-for="option in sizes" v-bind:key="option.id"
                                  v-on:click.native="setCurrentDispatchData(option.value)">
                   {{option.text}}
                 </b-dropdown-item>
               </b-dropdown>
-            
+
               <button type="button" id="dispatch-prev" class="btn btn-default" @click="previousDispatchData"
                 :disabled="disablePrev">
                 <i class="fas fa-chevron-left"></i>
@@ -45,7 +45,7 @@
                   :max="dispatchTo ? dispatchTo : maxDate" locale="en">
                 </b-form-datepicker>
               </div>
-            
+
               <div class="col-md-1">
                 <label>To:</label>
               </div>
@@ -245,7 +245,7 @@
           },
           annotations: [],
         };
-  
+
         const config = {
           displaylogo: false, // hides the plotly logo from the modebar when false
           scrollZoom: false, // allows mouse wheel scroll when true
@@ -536,7 +536,7 @@
             format: 'png', // 'jpeg',
             filename: 'energy-price-heat-map',
           },
-          modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d', 'toggleSpikelines'],
+          modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'toggleSpikelines'],
         };
         return Plotly.newPlot(ctx, data, layout, config);
       },
