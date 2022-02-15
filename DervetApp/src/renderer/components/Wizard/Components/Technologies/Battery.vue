@@ -596,7 +596,7 @@
             this.resetNonRequired(['energyCapacityMaximum', 'energyCapacityMinimum']);
           }
         }
-        if ((this.shouldEnergySize === false) || (this.shouldPowerSize === false)) {
+        if ((this.shouldEnergySize === false) && (this.shouldPowerSize === false)) {
           this.resetNonRequired(['includeSizeLimits']);
         }
         if (this.shouldMaxDuration === false) {
