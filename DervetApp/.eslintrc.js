@@ -30,6 +30,7 @@ module.exports = {
     'import/newline-after-import': 0,
     'import/no-unresolved': 0,
     'linebreak-style': 0,
+    'lines-between-class-members': 0,
     'max-classes-per-file': 0, // Remove--this is a good rule to enforce
     'no-multi-assign': 0,
     'no-param-reassign': 0,

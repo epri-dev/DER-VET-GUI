@@ -127,6 +127,10 @@ body {
     padding-right: 30px !important;
 }
 
+.use-existing-button {
+    margin-left: 0px !important;
+}
+
 /*
  * Sidebar
  */
@@ -289,6 +293,13 @@ textarea {
 
 .incomplete {
     color: #dc3545;
+}
+a.incomplete:hover {
+    color: #a01c28;
+}
+
+.incomplete-row {
+    border: 3px solid #dc3545;
 }
 
 .incomplete-btn {

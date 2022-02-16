@@ -1,65 +1,42 @@
-import cloneDeep from 'lodash/cloneDeep';
-import RAActiveTimeSeries from '@/models/TimeSeries/RAActiveTimeSeries.js';
+import _ from 'lodash';
+
+import { projectFixture } from '@/assets/samples/projectFixture.js';
+import RAActiveTimeSeries from '@/service/Validation/TimeSeries/RAActiveTimeSeries.js';
+import { makeTestHeader } from '../../shared';
 
 describe('RAActiveTimeSeries model', () => {
-  it('should validate properly', () => {
-    const threeValidRows = new RAActiveTimeSeries(
-      [0, 1, [1]],
-    );
-    const threeValidRowsOrig = cloneDeep(threeValidRows);
-    let actual = threeValidRows.validate(3);
-    let expected = '';
-    expect(actual).to.eql(expected);
-    expect(threeValidRowsOrig).to.eql(threeValidRows);
+  makeTestHeader('-- RA ACTIVE TIMESERIES -- ');
 
-    const defaultData = new RAActiveTimeSeries([]);
-    const defaultDataOrig = cloneDeep(defaultData);
-    actual = defaultData.validate(8760);
-    expected = '<b>Invalid Data:</b> This file has <b>0</b> entries. It must have 8760';
+  it('should validate properly when invalid and not required', () => {
+    const validRows = new RAActiveTimeSeries([]);
+    const validRowsOrig = _.cloneDeep(validRows);
+    const actual = validRows.validate(projectFixture);
+    const expected = '';
     expect(actual).to.eql(expected);
-    expect(defaultData).to.eql(defaultDataOrig);
-
-    const threeInvalidRows = new RAActiveTimeSeries(
-      [[0], [-1], [1]],
-    );
-    const threeInvalidRowsOrig = cloneDeep(threeInvalidRows);
-    actual = threeInvalidRows.validate(3);
-    expected = '<b>1 Invalid Row:</b> each value must be 0 or 1 : <b>Line Number:</b> [2]';
-    expect(actual).to.eql(expected);
-    expect(threeInvalidRows).to.eql(threeInvalidRowsOrig);
+    expect(validRowsOrig).to.eql(validRows);
   });
 
-  it('should revalidate with success properly', () => {
-    const threeRowsOrig = new RAActiveTimeSeries(
-      [[0], [1], [1]],
-    );
-    const threeRows = cloneDeep(threeRowsOrig);
-    const expectedError = '';
+  it('should validate properly when no data and required', () => {
+    projectFixture.objectivesRA = true;
+    projectFixture.raEventSelectionMethod = 'Peak by Month with Active Hours';
 
-    const actual = threeRows.revalidate(3);
-    const actual2 = threeRows.revalidate(3, false);
-    const actual3 = threeRows.revalidate(3, true);
-    const expected = expectedError;
+    const validRows = new RAActiveTimeSeries([]);
+    const validRowsOrig = _.cloneDeep(validRows);
+    const actual = validRows.validate(projectFixture);
+    const expected = '<b>Invalid Data:</b> These data are required.';
     expect(actual).to.eql(expected);
-    expect(actual2).to.eql(expected);
-    expect(actual3).to.eql(expected);
-    expect(threeRows).to.eql(threeRowsOrig);
+    expect(validRows).to.eql(validRowsOrig);
   });
 
-  it('should revalidate with failure properly', () => {
-    const threeRowsOrig = new RAActiveTimeSeries(
-      [[0], [-1], [1]],
-    );
-    const threeRows = cloneDeep(threeRowsOrig);
-    const expectedError = '<b>Invalid Data:</b> This file has <b>3</b> entries. It must have 8760<br><b>1 Invalid Row:</b> each value must be 0 or 1 : <b>Line Number:</b> [2]';
+  it('should validate properly when invalid and required', () => {
+    projectFixture.objectivesRA = true;
+    projectFixture.raEventSelectionMethod = 'Peak by Month with Active Hours';
 
-    const actual = threeRows.revalidate(8760);
-    const actual2 = threeRows.revalidate(8760, false);
-    const actual3 = threeRows.revalidate(8760, true);
-    const expected = expectedError;
+    const validRows = new RAActiveTimeSeries(_.concat(0.5, _.fill(Array(8759), 1)));
+    const validRowsOrig = _.cloneDeep(validRows);
+    const actual = validRows.validate(projectFixture);
+    const expected = '<b>1 Invalid Row:</b> each value must be 0 or 1 : <b>Line Number:</b> [1]';
     expect(actual).to.eql(expected);
-    expect(actual2).to.eql(expected);
-    expect(actual3).to.eql(expected);
-    expect(threeRows).to.eql(threeRowsOrig);
+    expect(validRows).to.eql(validRowsOrig);
   });
 });
