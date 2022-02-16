@@ -1,8 +1,9 @@
 import { ValueFieldMetadata } from '@/models/Project/Metadata/ValueField';
 import { TimeSeriesFieldMetadata } from '@/models/Project/Metadata/TimeSeriesField';
 import { TechnologyMetadata } from '@/models/Project/Metadata/TechnologySpecs/Technology';
-import { TS_SOLARPV_GENERATION_PROFILE, optionsYN } from '@/models/Project/constants';
-import { enumToAllowedValues } from '@/util/project';
+import { YES_NO_OPTIONS } from '@/models/Project/Metadata/AllowedValues/constants';
+import { enumToAllowedValues } from '@/models/Project/Metadata/AllowedValues/generators';
+import { TS_SOLARPV_GENERATION_PROFILE } from '@/models/Project/constants';
 
 export const LOC = 'loc';
 
@@ -26,7 +27,7 @@ const LOC_ALLOWED_VALUES = enumToAllowedValues(LocType);
 
 export default class SolarPVMetadata extends TechnologyMetadata {
   allowGridCharge: ValueFieldMetadata = {
-    allowedValues: optionsYN,
+    allowedValues: YES_NO_OPTIONS,
     description: 'Allow the PV+ESS AC-coupled system to charge from the grid',
     displayName: 'Allow Grid Charging',
     isRequired: true,
@@ -58,21 +59,21 @@ export default class SolarPVMetadata extends TechnologyMetadata {
     unit: '%',
   };
   includeCurtailment: ValueFieldMetadata = {
-    allowedValues: optionsYN,
+    allowedValues: YES_NO_OPTIONS,
     description: 'Select \'yes\' to allow the PV to curtail its generation below its maximum generating level (which is set by the system size and the weather). This adds PV curtailment as an optimization variable (longer runtime) but can avoid constraint conflicts associated with overgeneration',
     displayName: 'Allow curtailment?',
     isRequired: true,
     type: Boolean,
   };
   includePPA: ValueFieldMetadata = {
-    allowedValues: optionsYN,
+    allowedValues: YES_NO_OPTIONS,
     description: 'Do you want to calculate the annual PV energy cost as a Power Purchase Agreement (PPA)?',
     displayName: 'Power Purchasing Agreement?',
     isRequired: true,
     type: Boolean,
   };
   includeSizeLimits: ValueFieldMetadata = {
-    allowedValues: optionsYN,
+    allowedValues: YES_NO_OPTIONS,
     description: 'Advanced sizing settings.',
     displayName: 'Include limits on capacity sizing?',
     isRequired: true,

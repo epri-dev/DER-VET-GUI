@@ -2,7 +2,8 @@ import _ from 'lodash';
 
 import { ValueFieldMetadata } from '@/models/Project/Metadata/ValueField';
 import { objectToCsv } from '@/util/file';
-import { AllowedValue } from '@/util/project';
+import { AllowedValue } from '@/models/Project/Metadata/AllowedValues/AllowedValue';
+
 import convertToUpperCase from '@/util/string';
 import {
   validateCsvHeaders,

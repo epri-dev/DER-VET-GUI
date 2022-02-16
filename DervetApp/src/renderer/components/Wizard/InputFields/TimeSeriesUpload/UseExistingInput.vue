@@ -13,7 +13,7 @@
         <b-form-group>
           <b-form-radio-group
             v-model="$attrs.value"
-            :options="optionsYN"
+            :options="YES_NO_OPTIONS"
             @input="onUseExistingChange"
           ></b-form-radio-group>
         </b-form-group>
@@ -38,7 +38,7 @@
     },
     data() {
       return {
-        optionsYN: [
+        YES_NO_OPTIONS: [
           { text: 'Yes', value: true },
           { text: 'No', value: false },
         ],
