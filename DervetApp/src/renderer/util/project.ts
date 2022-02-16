@@ -1,4 +1,4 @@
-import map from 'lodash/map';
+import _ from 'lodash';
 
 export interface AllowedValue {
   value: any;
@@ -7,7 +7,7 @@ export interface AllowedValue {
 }
 
 export const arrayToAllowedValues = (lst: any[]): AllowedValue[] => (
-  map(lst, x => ({ value: x, label: x }))
+  _.map(lst, x => ({ value: x, label: x }))
 );
 
 export const arrayToAllowedValuesWithNull = (lst: any[]): AllowedValue[] => {
@@ -20,3 +20,12 @@ export const enumToAllowedValues = (enm: any, withNull = false): AllowedValue[] 
   const lst = Object.values(enm);
   return withNull ? arrayToAllowedValuesWithNull(lst) : arrayToAllowedValues(lst);
 };
+
+export const includeSystemLoad = (project: any): boolean => (
+  project.objectivesDR || project.objectivesRA
+);
+
+// Checks that each row is non-empty, or does not contain all null values
+export const trimEmptyRows = (data: any[][]): any[][] => (
+  _.filter(data, row => !(row.length === 0 || _.every(row, i => i === null)))
+);

@@ -1,70 +1,39 @@
-import cloneDeep from 'lodash/cloneDeep';
-import DAPriceTimeSeries from '@/models/TimeSeries/DAPriceTimeSeries.js';
+import _ from 'lodash';
+
+import { projectFixture } from '@/assets/samples/projectFixture.js';
+import DAPriceTimeSeries from '@/service/Validation/TimeSeries/DAPriceTimeSeries.js';
+import { makeTestHeader } from '../../shared';
 
 describe('DAPriceTimeSeries model', () => {
-  it('should validate properly', () => {
-    const threeValidRows = new DAPriceTimeSeries(
-      [0, 1, [1]],
-    );
-    const threeValidRowsOrig = cloneDeep(threeValidRows);
-    let actual = threeValidRows.validate(3);
-    let expected = '';
-    expect(actual).to.eql(expected);
-    expect(threeValidRowsOrig).to.eql(threeValidRows);
+  makeTestHeader('-- DA PRICE TIMESERIES -- ');
 
-    const defaultData = new DAPriceTimeSeries([]);
-    const defaultDataOrig = cloneDeep(defaultData);
-    actual = defaultData.validate(8760);
-    expected = '<b>Invalid Data:</b> This file has <b>0</b> entries. It must have 8760';
-    expect(actual).to.eql(expected);
-    expect(defaultData).to.eql(defaultDataOrig);
+  projectFixture.objectivesDA = true;
+  projectFixture.sizingOn = true;
 
-    const threeInvalidRows = new DAPriceTimeSeries(
-      [[0], [-4], [9]],
-    );
-    const threeInvalidRowsOrig = cloneDeep(threeInvalidRows);
-    actual = threeInvalidRows.validate(3);
-    const actual2 = threeInvalidRows.validate(3, false);
-    const actual3 = threeInvalidRows.validate(3, true);
-    expected = '<b>1 Invalid Row:</b> each value must be greater than or equal to 0 : <b>Line Number:</b> [2]';
-    const expected2 = '';
-    expect(actual).to.eql(expected2);
-    expect(actual2).to.eql(expected2);
-    expect(actual3).to.eql(expected);
-    expect(threeInvalidRows).to.eql(threeInvalidRowsOrig);
+  it('should validate valid rows properly', () => {
+    const validRows = new DAPriceTimeSeries(_.fill(Array(8760), 1));
+    const validRowsOrig = _.cloneDeep(validRows);
+    const actual = validRows.validate(projectFixture);
+    const expected = '';
+    expect(actual).to.eql(expected);
+    expect(validRowsOrig).to.eql(validRows);
   });
 
-  it('should revalidate with success properly', () => {
-    const threeRowsOrig = new DAPriceTimeSeries(
-      [[0], [-9], [9]],
-    );
-    const threeRows = cloneDeep(threeRowsOrig);
-
-    const actual = threeRows.revalidate(3);
-    const actual2 = threeRows.revalidate(3, false);
-    const actual3 = threeRows.revalidate(3, true);
-    const expected = '<b>1 Invalid Row:</b> each value must be greater than or equal to 0 : <b>Line Number:</b> [2]';
-    const expected2 = '';
-    expect(actual).to.eql(expected2);
-    expect(actual2).to.eql(expected2);
-    expect(actual3).to.eql(expected);
-    expect(threeRows).to.eql(threeRowsOrig);
+  it('should validate too few rows properly', () => {
+    const shortRows = new DAPriceTimeSeries([1, 2, 3]);
+    const shortRowsOrig = _.cloneDeep(shortRows);
+    const actual = shortRows.validate(projectFixture);
+    const expected = '<b>Invalid Data:</b> This data has <b>3</b> entries. It must have 8760.';
+    expect(actual).to.eql(expected);
+    expect(shortRows).to.eql(shortRowsOrig);
   });
 
-  it('should revalidate with failure properly', () => {
-    const threeRowsOrig = new DAPriceTimeSeries(
-      [[0], [-9], [9]],
-    );
-    const threeRows = cloneDeep(threeRowsOrig);
-    const expected = '<b>Invalid Data:</b> This file has <b>3</b> entries. It must have 8760<br><b>1 Invalid Row:</b> each value must be greater than or equal to 0 : <b>Line Number:</b> [2]';
-    const expected2 = '<b>Invalid Data:</b> This file has <b>3</b> entries. It must have 8760';
-
-    const actual = threeRows.revalidate(8760);
-    const actual2 = threeRows.revalidate(8760, false);
-    const actual3 = threeRows.revalidate(8760, true);
-    expect(actual).to.eql(expected2);
-    expect(actual2).to.eql(expected2);
-    expect(actual3).to.eql(expected);
-    expect(threeRows).to.eql(threeRowsOrig);
+  it('should validate negative properly', () => {
+    const someNegatives = new DAPriceTimeSeries(_.concat([-1], _.fill(Array(8759), 1)));
+    const someNegativesOrig = _.cloneDeep(someNegatives);
+    const actual = someNegatives.validate(projectFixture);
+    const expected = '<b>1 Invalid Row:</b> each value must be greater than or equal to 0 : <b>Line Number:</b> [1]';
+    expect(actual).to.eql(expected);
+    expect(someNegatives).to.eql(someNegativesOrig);
   });
 });

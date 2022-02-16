@@ -32,8 +32,11 @@ start
 +-------------------+
 ```
 
+#### Migrating project.json from V1 to V2
+See powerpoint/dervet readme
+
 #### Adding a New Use Case
-1. In [extraResources/cases](extraResources/cases), add a folder containing project.json and application.json files that define a new use case.
+1. In [extraResources/cases](extraResources/cases), add a folder containing project.json files that define a new use case.
 2. In [extraResources/cases/cases.json](extraResources/cases/cases.json), add a new entry with the name of the directory you added in Step #1 and the desired display name in the case-selection dropdown menu.
 3. Verify (or ask a developer to verify) that the case loads and runs in the app as expected.
 
@@ -94,6 +97,8 @@ pip install -r requirements.txt -r packaging-requirements.txt
 ```
 
 Package
+
+In the .env file in the root of DervetApp, set PROJECT_SCHEMA_VERSION to the current schema version.
 
 ``` bash
 # package dervet backend with pyinstaller (note: change absolute dervet and storagevet paths in pyinstaller command)

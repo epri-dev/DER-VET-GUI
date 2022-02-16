@@ -11,7 +11,7 @@
     <div class="row">
       <div class="col-md-12">
         <p class="tool-tip-index tool-tip-index-col">
-          DER-VET v1.1.2<br>
+          DER-VET v{{version}}<br>
           <br>
           Copyright © 2021 Electric Power Research Institute, Inc. All Rights Reserved.<br>
           <br>
@@ -78,6 +78,8 @@
 </template>
 
 <script language="ts">
+  import { remote } from 'electron'; // eslint-disable-line
+
   import FullLogo from '@/assets/FullLogo.png';
   import EPRILogo from '@/assets/EPRILogo.png';
 
@@ -85,6 +87,7 @@
     name: 'about',
     data() {
       return {
+        version: process.env.npm_package_version || remote.app.getVersion(),
         EPRILogo,
         FullLogo,
       };

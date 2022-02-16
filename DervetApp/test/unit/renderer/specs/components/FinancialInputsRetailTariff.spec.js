@@ -1,8 +1,8 @@
-import FinancialInputsRetailTariff from '@/components/WizardModelComponents/FinancialInputsRetailTariff';
+import Main from '@/components/Wizard/Components/Financial/RetailTariff/Main';
 import mountVueElement from './helper';
 
-describe('FinancialInputsRetailTariff', () => {
-  const vm = mountVueElement(FinancialInputsRetailTariff, {});
+describe('Retail Tariff Main', () => {
+  const vm = mountVueElement(Main, {});
 
   it('should render title properly', () => {
     expect(vm.$el.querySelector('h3').textContent).to.contain('Retail Tariff');

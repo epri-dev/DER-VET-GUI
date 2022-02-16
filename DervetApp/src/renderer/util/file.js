@@ -59,8 +59,8 @@ export const wrongFileType = (file, desiredFileType, successCallback) => {
 
 export const parseCsvFromFile = (file, successCallback) => {
   papaParsePromise(file)
-    .then((results) => {
-      successCallback(results.data, file.path);
+    .then(({ data }) => {
+      successCallback(data, file.path);
     });
   // TODO add catch with errorCallback
 };
@@ -80,8 +80,6 @@ export const parseCsvFromEvent = (e, successCallback) => {
     }
     // TODO: AE: also check file.size and have an upper limit to avoid
     //   import attempts for huge files
-  } else {
-    successCallback([], null, '');
   }
 };
 
@@ -124,27 +122,6 @@ export const readJsonFromFile = filePath => (
 );
 
 export const readJsonFromFileSync = filePath => JSON.parse(fs.readFileSync(filePath));
-
-export const filterRowsByColumnCount = (rows, validRowLength) => {
-  let importNotes = null;
-  const origLinesCount = rows.length;
-  rows = rows.filter(row => row.length === validRowLength);
-  const postLinesCount = rows.length;
-  const removedLinesCount = origLinesCount - postLinesCount;
-  if (removedLinesCount > 0) {
-    const wasOrWere = (removedLinesCount === 1) ? 'was' : 'were';
-    importNotes = `${removedLinesCount} out of ${origLinesCount} lines did not have
-      the required ${validRowLength} columns of data, and ${wasOrWere} skipped`;
-  }
-  return { rows, importNotes };
-};
-
-export const findOverlap = (a, b) => {
-  if (b.length === 0) return '';
-  if (a.endsWith(b)) return b;
-  if (a.indexOf(b) >= 0) return b;
-  return findOverlap(a, b.substring(0, b.length - 1));
-};
 
 export const fileUrl = (filePath, options = {}) => {
   if (typeof filePath !== 'string') {

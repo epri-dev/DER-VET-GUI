@@ -1,27 +1,53 @@
 import _ from 'lodash';
 
-const getNumberOfInvalidRows = (rows: object[]) => {
-  // returns a number
-  const invalidRowsCount = _.filter(rows, { complete: false }).length;
-  return invalidRowsCount;
+export const validateCsvHeaders = (rows: any[][], headers: string[]): string => {
+  const headerRow = rows[0];
+  const areHeadersCorrect = _.isEqual(headerRow, headers);
+  const headerError = `CSV headers are incorrect: should be ${headers.join(',')}`;
+  return areHeadersCorrect ? null : headerError;
 };
 
-export const compileImportNotes = (importNotes: string[], file: string) => {
-  // adds a line to importNotes that indicates the source file
-  const sourceFileString = `source: ${file}`;
-  importNotes.push(sourceFileString);
-  return importNotes;
+export const validateCsvRowLength = (
+  rows: any[][], expectedRowLength: number,
+): string => {
+  const areRowsCorrectLength = _.every(rows, (row: any[]) => row.length === expectedRowLength);
+  const rowLengthError = `Some rows did not have the expected number of data columns: expected ${expectedRowLength}`;
+  return areRowsCorrectLength ? null : rowLengthError;
 };
 
-export const getSingleErrorMsg = (rows: object[], name: string) => {
-  // returns a string
-  if (rows.length === 0) {
-    return `There are no ${name} specified`;
+export const empty = (x: any) => (x === null || x === '' || x === undefined);
+
+export const nonEmpty = (x: any) => !empty(x);
+
+export const valueInHourRange = (value: number) => _.inRange(value, 1, 25);
+
+export const valueInMonthRange = (value: number) => _.inRange(value, 1, 13);
+
+export class CsvRowValidator {
+  invalidRowIndexes: number[];
+
+  constructor(data: number[][]) {
+    this.invalidRowIndexes = this.getInvalidRowIndices(data);
   }
-  const invalidRowsCount = getNumberOfInvalidRows(rows);
-  if (invalidRowsCount === 0) {
-    return '';
+
+  isInvalid(): boolean {
+    return this.invalidRowIndexes.length > 0;
   }
-  const pluralizeRow = (invalidRowsCount === 1) ? '' : 's';
-  return `There are errors with ${invalidRowsCount} row${pluralizeRow} in the table`;
-};
+
+  getErrorMessage(): string {
+    const slice = this.invalidRowIndexes.slice(0, 15);
+    const fmt = _.join((this.invalidRowIndexes.length <= 15) ? slice : [slice, '...']);
+    return this.isInvalid() ? `<b>Import Error</b>: Each row must have just 1 value: <b>Line Numbers</b>: ${fmt}` : null;
+  }
+
+  private getInvalidRowIndices(data: number[][]): number[] {
+    return _.reduce(data, (acc, row, idx) => {
+      if (this.isInvalidRow(row)) { acc.push(idx + 1); }
+      return acc;
+    }, []);
+  }
+
+  private isInvalidRow(row: number[]): boolean {
+    return row.length > 1 && _.some(_.tail(row), i => i !== null);
+  }
+}

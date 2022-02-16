@@ -10,10 +10,11 @@ const isDev = process.env.NODE_ENV !== 'production';
 
 const persistedStateSubset = createPersistedState({ paths: ['OpenEI'] });
 const fullPersistedState = createPersistedState();
+const persistedState = isDev ? fullPersistedState : persistedStateSubset;
 
 export default new Vuex.Store({
   modules,
-  ...({ plugins: isDev ? [fullPersistedState] : [persistedStateSubset] }),
+  ...({ plugins: [persistedState] }),
   strict: isDev,
   actions,
 });
