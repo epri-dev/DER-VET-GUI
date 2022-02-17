@@ -16,7 +16,7 @@ export default class TechnologySpecsFleetEVMetadata extends TechnologyMetadata {
     isRequired: true,
     minValue: 0,
     type: Number,
-    unit: '$ / yr',
+    unit: '$/yr',
     description: 'Cost of maintaining the charging infrastructure',
   };
   lostLoadCost: ValueFieldMetadata = {
@@ -24,7 +24,7 @@ export default class TechnologySpecsFleetEVMetadata extends TechnologyMetadata {
     isRequired: true,
     minValue: 0,
     type: Number,
-    unit: '$',
+    unit: '$/kWh',
     description: 'What is the cost of reducing the EV load?',
   };
   maximumLoadCtrl: ValueFieldMetadata = {
@@ -41,7 +41,7 @@ export default class TechnologySpecsFleetEVMetadata extends TechnologyMetadata {
     isRequired: true,
     minValue: 0,
     type: Number,
-    unit: '$ ',
+    unit: '$',
     description: 'Total cost of replacing infrastructure for EV charging',
   };
   tsFleetEVBaselineLoadProfile: TimeSeriesFieldMetadata = {
