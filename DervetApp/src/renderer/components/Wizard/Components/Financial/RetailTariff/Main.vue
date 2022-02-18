@@ -62,13 +62,13 @@
           Add Billing Period
         </router-link>
         <router-link :to="paths.FINANCIAL_INPUTS_RETAIL_TARIFF_OPEN_EI" class="btn btn-secondary">
-          Add OpenEI Tariff
+          Use OpenEI Tariff
         </router-link>
         <router-link :to="paths.FINANCIAL_INPUTS_RETAIL_TARIFF_IMPORT" class="btn btn-secondary">
           <i class="fas fa-upload"/> Import Tariff
         </router-link>
         <a
-          :href="exportCsv()"
+          :href="billingPeriodCsv"
           download="RetailTariff.csv"
           class="btn btn-secondary pull-right"
           v-if="billingPeriodsExist">
@@ -121,6 +121,12 @@
       billingPeriods() {
         return this.$store.state.Project.retailTariffBillingPeriods;
       },
+      billingPeriodCsv() {
+        const copied = _.cloneDeep(this.billingPeriods);
+        const values = _.map(copied, bp => bp.values);
+        const csv = billingPeriodsToCsv(values);
+        return formatCsvForHref(csv);
+      },
       billingPeriodsExist() {
         return this.billingPeriods.length > 0;
       },
@@ -146,11 +152,6 @@
       },
       isBillingPeriodComplete(id) {
         return this.isPageComplete(this.collectionType, id);
-      },
-      exportCsv() {
-        const values = _.map(this.billingPeriods, bp => bp.values);
-        const csv = billingPeriodsToCsv(values);
-        return formatCsvForHref(csv);
       },
       removeAll() {
         this.$store.dispatch(a.REMOVE_ALL_COLLECTION_ITEMS, this.collectionType);

@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 import { ValueFieldMetadata } from '@/models/Project/Metadata/ValueField';
 import { objectToCsv } from '@/util/file';
-import { validateCsvHeaders, validateCsvRowLength, nonEmpty } from '@/util/validation';
+import { validateCsvHeaders, validateCsvRowLength } from '@/util/validation';
 
 export const INCENTIVES_HEADERS = ['Year', 'Tax Credit (nominal $)', 'Other Incentive (nominal $)'];
 
@@ -16,7 +16,9 @@ export default class ExternalIncentivesMetadata {
   year: ValueFieldMetadata = {
     displayName: 'Year',
     isRequired: true,
-    minValueIf: { field: 'year', condition: (x: any) => (nonEmpty(x) ? x + 1 : 0) },
+    // TODO this will eventually come from root of project directory
+    // minValueIf: { field: 'year', condition: (x: any) => (nonEmpty(x) ? x + 1 : 0) },
+    minValue: 0,
     type: 'int',
     description: 'Please use a valid year for the project. Year one of the project is the year after the Project Start Year.',
   };

@@ -58,7 +58,7 @@
           <i class="fas fa-upload"/> Import Incentives
         </router-link>
         <a
-          :href="exportCsv()"
+          :href="externalIncentivesCsv"
           download="ExternalIncentives.csv"
           class="btn btn-secondary pull-right"
           v-if="externalIncentivesExist">
@@ -111,6 +111,12 @@
       externalIncentives() {
         return this.$store.state.Project.externalIncentives;
       },
+      externalIncentivesCsv() {
+        const copied = _.cloneDeep(this.externalIncentives);
+        const values = _.map(copied, ei => ei.values);
+        const csv = externalIncentivesToCsv(values);
+        return formatCsvForHref(csv);
+      },
       externalIncentivesExist() {
         return this.externalIncentives.length > 0;
       },
@@ -127,11 +133,6 @@
       },
       isExternalIncentiveComplete(id) {
         return this.isPageComplete(this.collectionType, id);
-      },
-      exportCsv() {
-        const values = _.map(this.externalIncentives, ei => ei.values);
-        const csv = externalIncentivesToCsv(values);
-        return formatCsvForHref(csv);
       },
       removeAll() {
         this.$store.dispatch(a.REMOVE_ALL_COLLECTION_ITEMS, this.collectionType);

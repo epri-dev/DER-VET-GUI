@@ -119,7 +119,8 @@
         )).then((pds) => {
           // TODO Should validate billing periods at some point
           const payload = { collectionType: CollectionTypes.RetailTariff, valuesList: pds };
-          this.$store.dispatch(a.ADD_MANY_COLLECTION_ITEMS, payload)
+          this.$store.dispatch(a.REMOVE_ALL_COLLECTION_ITEMS, CollectionTypes.RetailTariff)
+            .then(() => this.$store.dispatch(a.ADD_MANY_COLLECTION_ITEMS, payload))
             .then(this.navToRetailTariffPage);
         }).catch((err) => {
           this.errorMessage = `${err}`;
