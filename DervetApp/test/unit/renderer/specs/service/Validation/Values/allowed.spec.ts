@@ -6,7 +6,7 @@ describe('Page Reset', () => {
 
   const valueMetadata = {
     type: 'foo',
-    allowedValues: [{ value: 1 }, { value: 2 }],
+    allowedValues: [{ value: 1, label: '1' }, { value: 2, label: '2' }],
   };
 
   it('should return false for a value in allowed values', () => {

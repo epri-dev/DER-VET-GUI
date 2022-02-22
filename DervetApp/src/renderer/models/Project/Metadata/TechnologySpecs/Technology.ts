@@ -1,5 +1,6 @@
 import { ValueFieldMetadata } from '@/models/Project/Metadata/ValueField';
-import { optionsYN, makeAllowedValuesWithNull } from '@/models/Project/constants';
+import { YES_NO_OPTIONS } from '@/models/Project/Metadata/AllowedValues/constants';
+import { arrayToAllowedValuesWithNull } from '@/models/Project/Metadata/AllowedValues/generators';
 
 const CONSTRUCTION_YEAR = 'constructionYear';
 const DECOMISSIONING_COST = 'decomissioningCost';
@@ -13,8 +14,8 @@ const SALVAGE_OPTION = 'salvageValueOption';
 const SALVAGE_VALUE = 'salvageValue';
 const TER = 'ter';
 
-const MACRS_TERM_ALLOWED_VALUES = makeAllowedValuesWithNull(['3', '5', '7', '10', '15', '20', '25', '27.5', '39']);
-const SALVAGE_OPTION_ALLOWED_VALUES = makeAllowedValuesWithNull(['Sunk Cost', 'Linear Salvage Value', 'User defined']);
+const MACRS_TERMS = arrayToAllowedValuesWithNull([3, 5, 7, 10, 15, 20]);
+const SALVAGE_OPTIONS = arrayToAllowedValuesWithNull(['Sunk Cost', 'Linear Salvage Value', 'User defined']);
 
 export class TechnologyMetadata {
   [CONSTRUCTION_YEAR]: ValueFieldMetadata = {
@@ -45,7 +46,7 @@ export class TechnologyMetadata {
     type: Number,
     unit: 'years',
     description: 'Which MACRS GDS category does this technology fall into?',
-    allowedValues: MACRS_TERM_ALLOWED_VALUES,
+    allowedValues: MACRS_TERMS,
   };
   [NAME]: ValueFieldMetadata = {
     displayName: 'Component Name',
@@ -63,7 +64,7 @@ export class TechnologyMetadata {
     isRequired: true,
     type: Boolean,
     description: 'Will this technology be replaced at its end of lifetime or not?',
-    allowedValues: optionsYN,
+    allowedValues: YES_NO_OPTIONS,
   };
   [REPLACEMENT_CONSTRUCTION_TIME]: ValueFieldMetadata = {
     displayName: 'Replacement Construction Time',
@@ -80,7 +81,7 @@ export class TechnologyMetadata {
     type: String,
     unit: null,
     description: 'Applies a financial benefit in the last year of the analysis window if the resource is not beyond its end of life. <b>Sunk Cost</b> means that there is no end of analysis value (salvage value = 0), <b>Linear Salvage Value</b> which will calculate salvage value by multiplying the technology\'s capital cost by (remaining life/total life), or <b>User Defined</b> to specify the exact salvage value of the technology.',
-    allowedValues: SALVAGE_OPTION_ALLOWED_VALUES,
+    allowedValues: SALVAGE_OPTIONS,
   };
   [SALVAGE_VALUE]: ValueFieldMetadata = {
     displayName: 'User-defined Salvage Value',

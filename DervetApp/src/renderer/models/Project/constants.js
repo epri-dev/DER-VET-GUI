@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import Page from '@/models/Application/Page';
 
 export const ANALYSIS_HORIZON = 'analysisHorizon';
@@ -175,67 +173,6 @@ export const MTS_ALL = [
   ...MTS_BACKUP_FIELDS,
   ...MTS_DR_FIELDS,
 ];
-
-export const makeAllowedValues = lst => _.map(lst, x => ({ value: x, label: x }));
-
-export const makeAllowedValuesWithNull = (lst) => {
-  const mapped = makeAllowedValues(lst);
-  mapped.unshift({ value: null, label: '-' });
-  return mapped;
-};
-
-export const optionsYN = [
-  { value: true, label: 'Yes' },
-  { value: false, label: 'No' },
-];
-
-// Allowed values
-export const ANALYSIS_HORIZON_MODE_ALLOWED_VALUES = [
-  { value: '1', label: 'User-defined' },
-  { value: '2', label: 'The shortest DER lifetime' },
-  { value: '3', label: 'The longest DER lifetime' },
-];
-export const DR_PROGRAM_TYPE_ALLOWED_VALUES = makeAllowedValues(['Day of', 'Day ahead']);
-export const RA_DISPATCH_MODE_ALLOWED_VALUES = [
-  { value: true, label: 'Constrain power' },
-  { value: false, label: 'Constrain energy' },
-];
-export const ENERGY_PRICE_SOURCE_WHOLESALE_ALLOWED_VALUES = [
-  {
-    value: false,
-    label: 'Retail tariff, PPA, or other fixed contract (define energy price structure)',
-  },
-  {
-    value: true,
-    label: 'Wholesale energy market, production cost model, or other time-varying source (upload time series data)',
-  },
-];
-export const FR_COMBINED_MARKET_ALLOWED_VALUES = optionsYN;
-export const GRID_LOCATION_ALLOWED_VALUES = makeAllowedValues(['Generation', 'Transmission', 'Distribution', 'Customer']);
-export const INCLUDE_INTERCONNECTION_CONSTRAINTS_ALLOWED_VALUES = optionsYN;
-export const OPTIMIZATION_HORIZON_ALLOWED_VALUES = [
-  { value: 'Year', label: 'Years' },
-  { value: 'Month', label: 'Months' },
-  { value: 'Hour', label: 'Hours' },
-];
-export const OWNERSHIP_ALLOWED_VALUES = makeAllowedValues(['Customer', 'Utility', '3rd Party']);
-export const DR_END_MODE_ALLOWED_VALUES = [
-  { value: true, label: 'Event Length' },
-  { value: false, label: 'End Hour' },
-];
-export const RA_EVENT_SELECTION_METHOD_ALLOWED_VALUES = makeAllowedValues(['Peak by Year', 'Peak by Month', 'Peak by Month with Active Hours']);
-export const RELIABILITY_POST_OPTIMIZATION_ONLY_ALLOWED_VALUES = [
-  {
-    value: false,
-    label: 'Optimize DER size/operation for reliability',
-  },
-  {
-    value: true,
-    label: 'Only calculate the reliability benefit of the DERs',
-  },
-];
-export const SIZING_EQUIPMENT_ALLOWED_VALUES = optionsYN;
-export const TIMESTEP_ALLOWED_VALUES = makeAllowedValuesWithNull(['60', '30', '15', '5', '1']);
 
 export const GROWTH_RATE_DESCRIPTION = 'A per year increase from the baseline year. This is the project start year.';
 

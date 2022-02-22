@@ -67,7 +67,11 @@
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import { Sector } from '@/service/OpenEI/response';
   import * as a from '@/store/actionTypes';
-  import { arrayToAllowedValues, enumToAllowedValues, AllowedValue } from '@/util/project';
+  import { AllowedValue } from '@/models/Project/Metadata/AllowedValues/AllowedValue';
+  import {
+    arrayToAllowedValues,
+    enumToAllowedValues,
+  } from '@/models/Project/Metadata/AllowedValues/generators';
 
   const OPEN_EI_SIGNUP_URL = 'https://openei.org/services/api/signup/';
 

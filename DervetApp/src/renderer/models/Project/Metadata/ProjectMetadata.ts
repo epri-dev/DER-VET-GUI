@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 import * as c from '@/models/Project/constants';
+import * as a from '@/models/Project/Metadata/AllowedValues/constants';
 import { TimeSeriesFieldMetadata } from '@/models/Project/Metadata/TimeSeriesField';
 import { ValueFieldMetadata } from '@/models/Project/Metadata/ValueField';
 
@@ -17,7 +18,7 @@ export default class ProjectMetadata {
     isRequired: true,
     type: String,
     description: 'Define when to end cost benefit analysis. Choose it yourself, or by the lifetimes of your equipment',
-    allowedValues: c.ANALYSIS_HORIZON_MODE_ALLOWED_VALUES,
+    allowedValues: a.ANALYSIS_HORIZON_MODES,
   };
   [c.DA_GROWTH]: ValueFieldMetadata = {
     displayName: 'Growth Rate of Day Ahead Energy Prices',
@@ -82,7 +83,7 @@ export default class ProjectMetadata {
     type: Boolean,
     defaultValue: true,
     description: 'Define the last hour of the event or the length of the event.',
-    allowedValues: c.DR_END_MODE_ALLOWED_VALUES,
+    allowedValues: a.DR_END_MODES,
   };
   [c.DR_GROWTH]: ValueFieldMetadata = {
     displayName: 'Growth Rate of Demand Response Awards',
@@ -106,14 +107,14 @@ export default class ProjectMetadata {
     isRequired: true,
     type: String,
     description: 'Is the program participant notified of an event on the day of or a day in advance (day ahead)?',
-    allowedValues: c.DR_PROGRAM_TYPE_ALLOWED_VALUES,
+    allowedValues: a.DR_PROGRAM_TYPES,
   };
   [c.DR_INCLUDE_WEEKENDS]: ValueFieldMetadata = {
     displayName: 'Weekends?',
     isRequired: true,
     type: Boolean,
     description: 'Is the program active on weekends?',
-    allowedValues: c.optionsYN,
+    allowedValues: a.YES_NO_OPTIONS,
   };
   [c.DR_EVENT_LENGTH]: ValueFieldMetadata = {
     displayName: 'Length of an event',
@@ -138,7 +139,7 @@ export default class ProjectMetadata {
     isRequired: true,
     type: Boolean,
     description: '<p>Will the project be reducing energy charges on a retail electricity bill?</p><p>Day ahead energy time shift.</p>',
-    allowedValues: c.ENERGY_PRICE_SOURCE_WHOLESALE_ALLOWED_VALUES,
+    allowedValues: a.ENERGY_PRICE_SOURCE_WHOLESALE_OPTIONS,
   };
   [c.FINANCE_DISCOUNT_RATE]: ValueFieldMetadata = {
     displayName: 'Discount Rate (for discounted cash flow analysis)',
@@ -190,7 +191,7 @@ export default class ProjectMetadata {
     isRequired: true,
     type: Boolean,
     description: 'If it is combined, regulation up will be provided in the same quantity as regulation down always.',
-    allowedValues: c.FR_COMBINED_MARKET_ALLOWED_VALUES,
+    allowedValues: a.YES_NO_OPTIONS,
   };
   [c.FR_DURATION]: ValueFieldMetadata = {
     displayName: 'Duration for Energy Reservation Requirements',
@@ -242,20 +243,20 @@ export default class ProjectMetadata {
     isRequired: true,
     type: String,
     description: 'Which grid domain or location the project will be connected to. Please refer to documentation for further guidance on which services are available in your selected domain.',
-    allowedValues: c.GRID_LOCATION_ALLOWED_VALUES,
+    allowedValues: a.GRID_LOCATIONS,
   };
   [c.INCLUDE_INTERCONNECTION_CONSTRAINTS]: ValueFieldMetadata = {
     displayName: 'Apply interconnection constraints',
     isRequired: true,
     type: Boolean,
-    allowedValues: c.INCLUDE_INTERCONNECTION_CONSTRAINTS_ALLOWED_VALUES,
+    allowedValues: a.YES_NO_OPTIONS,
   };
   [c.LF_COMBINED_MARKET]: ValueFieldMetadata = {
     displayName: 'Combined Market Requirement',
     isRequired: true,
     type: Boolean,
     description: 'Is this a combined regulation market? If it is combined, regulation up will be provided in the same quantity as regulation down always.',
-    allowedValues: c.FR_COMBINED_MARKET_ALLOWED_VALUES,
+    allowedValues: a.YES_NO_OPTIONS,
   };
   [c.LF_DURATION]: ValueFieldMetadata = {
     displayName: 'Duration for Energy Reservation Requirements',
@@ -406,7 +407,7 @@ export default class ProjectMetadata {
     isRequired: true,
     type: String,
     description: 'We recommend:<br>- Month for Customer Services.<br>- Hours for Wholesale Services.<br>- Year to assume perfect forsight of an entire year.',
-    allowedValues: c.OPTIMIZATION_HORIZON_ALLOWED_VALUES,
+    allowedValues: a.OPTIMIZATION_HORIZONS,
   };
   [c.OPTIMIZATION_HORIZON_NUM]: ValueFieldMetadata = {
     displayName: 'How many hours per window?',
@@ -426,7 +427,7 @@ export default class ProjectMetadata {
     isRequired: true,
     type: String,
     description: 'Who owns the assets?',
-    allowedValues: c.OWNERSHIP_ALLOWED_VALUES,
+    allowedValues: a.OWNERSHIP_OPTIONS,
   };
   [c.RA_NUMBER_EVENTS]: ValueFieldMetadata = {
     displayName: 'Number of Events',
@@ -441,14 +442,14 @@ export default class ProjectMetadata {
     isRequired: true,
     type: Boolean,
     description: 'How should the DERs dispatch in response to the program?',
-    allowedValues: c.RA_DISPATCH_MODE_ALLOWED_VALUES,
+    allowedValues: a.RA_DISPATCH_MODES,
   };
   [c.RA_EVENT_SELECTION_METHOD]: ValueFieldMetadata = {
     displayName: 'Event Selection Method',
     isRequired: true,
     type: String,
     description: 'Based on the system load, how are resource adequacy events selected?',
-    allowedValues: c.RA_EVENT_SELECTION_METHOD_ALLOWED_VALUES,
+    allowedValues: a.RA_EVENT_SELECTION_METHODS,
   };
   [c.RA_EVENT_LENGTH]: ValueFieldMetadata = {
     displayName: 'Duration of Events',
@@ -481,7 +482,7 @@ export default class ProjectMetadata {
     isRequired: true,
     type: Boolean,
     description: 'How should we consider reliability in our analysis?',
-    allowedValues: c.RELIABILITY_POST_OPTIMIZATION_ONLY_ALLOWED_VALUES,
+    allowedValues: a.RELIABILITY_POST_OPTIMIZATION_ONLY_OPTIONS,
   };
   [c.RELIABILITY_TARGET]: ValueFieldMetadata = {
     displayName: 'Hours of guaranteed outage coverage',
@@ -496,7 +497,7 @@ export default class ProjectMetadata {
     description: 'Are there any microgrid components that you want to optimally size for?',
     isRequired: true,
     type: Boolean,
-    allowedValues: c.SIZING_EQUIPMENT_ALLOWED_VALUES,
+    allowedValues: a.YES_NO_OPTIONS,
   };
   [c.SR_DURATION]: ValueFieldMetadata = {
     displayName: 'Duration for Energy Reservation Requirements',
@@ -528,7 +529,7 @@ export default class ProjectMetadata {
     type: String,
     unit: 'minutes',
     description: 'What is the frequency of the time-series data?',
-    allowedValues: c.TIMESTEP_ALLOWED_VALUES,
+    allowedValues: a.TIMESTEPS,
   };
   [c.USER_INFEASIBLE]: ValueFieldMetadata = {
     type: Object,

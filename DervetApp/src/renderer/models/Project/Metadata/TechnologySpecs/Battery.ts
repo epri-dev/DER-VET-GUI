@@ -1,6 +1,6 @@
 import { ValueFieldMetadata } from '@/models/Project/Metadata/ValueField';
 import { TechnologyMetadata } from '@/models/Project/Metadata/TechnologySpecs/Technology';
-import { optionsYN } from '@/models/Project/constants';
+import { YES_NO_OPTIONS } from '@/models/Project/Metadata/AllowedValues/constants';
 
 const ENERGY_SIZING_ALLOWED_VALUES = [
   {
@@ -144,7 +144,7 @@ export default class BatteryMetadata extends TechnologyMetadata {
     type: Boolean,
     unit: null,
     description: 'Include Housekeeping Power" – Apply a constant AC power consumption that does not discharge the battery directly. This is usually associated with HVAC requirements and keeping all equipment on.',
-    allowedValues: optionsYN,
+    allowedValues: YES_NO_OPTIONS,
   };
   includeCycleDegradation: ValueFieldMetadata = {
     displayName: 'Include degradation due to cycling?',
@@ -152,13 +152,13 @@ export default class BatteryMetadata extends TechnologyMetadata {
     type: Boolean,
     unit: null,
     description: 'When selected, this will calculate degradation due to cycling based on the cycle life curve and combine this degradation with the calculated calendar degradation. * Note: Not compatible with deferral service.',
-    allowedValues: optionsYN,
+    allowedValues: YES_NO_OPTIONS,
   };
   includeSizeLimits: ValueFieldMetadata = {
     displayName: 'Include limits on capacity sizing?',
     isRequired: false,
     type: Boolean,
-    allowedValues: optionsYN,
+    allowedValues: YES_NO_OPTIONS,
     description: 'Advanced sizing settings.',
   };
   lowerSOCLimit: ValueFieldMetadata = {
@@ -250,7 +250,7 @@ export default class BatteryMetadata extends TechnologyMetadata {
     type: Boolean,
     unit: null,
     description: null,
-    allowedValues: optionsYN,
+    allowedValues: YES_NO_OPTIONS,
   };
   shouldEnergySize: ValueFieldMetadata = {
     displayName: 'Energy Capacity Sizing',
@@ -266,7 +266,7 @@ export default class BatteryMetadata extends TechnologyMetadata {
     type: Boolean,
     unit: null,
     description: 'Constrain the battery storage system\'s daily discharge energy. When selected, this input limits the amount of discharge energy a battery can do in any 24-hr period to a maximum of its rated energy capacity * daily cycle limit.',
-    allowedValues: optionsYN,
+    allowedValues: YES_NO_OPTIONS,
   };
   shouldMaxDuration: ValueFieldMetadata = {
     displayName: 'Set the max duration of the size?',
@@ -274,7 +274,7 @@ export default class BatteryMetadata extends TechnologyMetadata {
     type: Boolean,
     unit: null,
     description: null,
-    allowedValues: optionsYN,
+    allowedValues: YES_NO_OPTIONS,
   };
   shouldPowerSize: ValueFieldMetadata = {
     displayName: 'Power Capacity Sizing',

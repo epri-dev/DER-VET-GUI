@@ -1,6 +1,6 @@
 import { TechnologyMetadata } from '@/models/Project/Metadata/TechnologySpecs/Technology';
 import { ValueFieldMetadata } from '@/models/Project/Metadata/ValueField';
-import { optionsYN } from '@/models/Project/constants';
+import { YES_NO_OPTIONS } from '@/models/Project/Metadata/AllowedValues/constants';
 
 const SIZING_ALLOWED_VALUES = [
   {
@@ -58,7 +58,7 @@ export default class TechnologySpecsICEMetadata extends TechnologyMetadata {
     displayName: 'Include limits on capacity sizing?',
     isRequired: true,
     type: Boolean,
-    allowedValues: optionsYN,
+    allowedValues: YES_NO_OPTIONS,
     description: 'Advanced sizing settings.',
   };
   minimumPower: ValueFieldMetadata = {
