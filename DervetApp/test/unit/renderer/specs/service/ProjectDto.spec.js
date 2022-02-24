@@ -36,9 +36,9 @@ import {
   makeTimeSeriesCsv,
 } from '@/service/ProjectDto';
 
-import { projectFixture } from '@/assets/samples/projectFixture.js';
-import { projectFixtureAllActive } from '@/assets/samples/projectFixture-everythingActive.js';
-import modelParametersFixture from '../fixtures/models/dto/000-DA_battery_month.json';
+import projectFixture from '../fixtures/models/dto/projectFixture.js';
+import projectFixtureAllActive from '../fixtures/models/dto/projectFixture-everythingActive.js';
+import modelParametersFixture from '../fixtures/models/dto/model_params_fixture.json';
 import {
   makeProjectBattery,
   makeProjectControllableLoad,
@@ -70,86 +70,10 @@ import { makeTestHeader } from '../shared';
 describe('Project to ModelParameters DTO', () => {
   makeTestHeader('-- Project DTO -- ');
 
+  // TODO add a test for each pre-defined case instead of this random one
   const fullMp = makeModelParameters(projectFixture, testInputsDirectory, testResultsDirectory);
 
-  it('should have translated the name correctly', () => {
-    expect(fullMp.name).to.eql(modelParametersFixture.name);
-  });
-
-  const tagFixture = modelParametersFixture.tags;
-  const actualTags = fullMp.tags;
-
-  it('should have translated the DA parameters correctly', () => {
-    expect(actualTags.DA).to.eql(tagFixture.DA);
-  });
-
-  it('should have translated the DCM parameters correctly', () => {
-    expect(actualTags.DCM).to.eql(tagFixture.DCM);
-  });
-
-  it('should have translated the deferral parameters correctly', () => {
-    expect(actualTags.Deferral).to.eql(tagFixture.Deferral);
-  });
-
-  it('should have translated the finance parameters correctly', () => {
-    const expectedKeyList = Object.keys(tagFixture.Finance[''].keys);
-    const expectedLength = expectedKeyList.length;
-    expect(Object.keys(actualTags.Finance[''].keys).length).to.eql(expectedLength);
-    let i = 0;
-    while (i > expectedLength) {
-      const keyName = expectedKeyList[i];
-      if (!keyName.includes('filename')) {
-        expect(actualTags.Finance[keyName]).to.eql(tagFixture.Finance[keyName]);
-      }
-      i += 1;
-    }
-  });
-
-  it('should have translated the FR parameters correctly', () => {
-    expect(actualTags.FR).to.eql(tagFixture.FR);
-  });
-
-  it('should have translated the NSR parameters correctly', () => {
-    expect(actualTags.NSR).to.eql(tagFixture.NSR);
-  });
-
-  it('should have translated the reliability parameters correctly', () => {
-    expect(actualTags.Reliability).to.eql(tagFixture.Reliability);
-  });
-
-  it('should have translated the results parameters correctly', () => {
-    const actual = makeResultsParameters(projectFixture, testResultsDirectory);
-    const expected = makeModelParamsResults(testResultsDirectory);
-    expect(actual).to.eql(expected);
-  });
-
-  it('should have translated the retail ETS parameters correctly', () => {
-    expect(actualTags.retailTimeShift).to.eql(tagFixture.RetailTimeShift);
-  });
-
-  it('should have translated the scenario parameters correctly', () => {
-    const expectedKeyList = Object.keys(tagFixture.Scenario[''].keys);
-    const expectedLength = expectedKeyList.length;
-    expect(Object.keys(actualTags.Scenario[''].keys).length).to.eql(expectedLength);
-    let i = 0;
-    while (i > expectedLength) {
-      const keyName = expectedKeyList[i];
-      if (!keyName.includes('filename')) {
-        expect(actualTags.Scenario[keyName]).to.eql(tagFixture.Scenario[keyName]);
-      }
-      i += 1;
-    }
-  });
-
-  it('should have translated the SR parameters correctly', () => {
-    expect(actualTags.SR).to.eql(tagFixture.SR);
-  });
-
-  it('should have translated the user defined parameters correctly', () => {
-    expect(actualTags.User).to.eql(tagFixture.User);
-  });
-
-  xit('should translate a Project object into a ModelParameters object', () => {
+  it('should translate a Project object into a ModelParameters object', () => {
     expect(fullMp).to.eql(modelParametersFixture);
   });
 
@@ -281,6 +205,11 @@ describe('Project to ModelParameters DTO', () => {
     const expected = makeModelParamsDR;
     expect(actual).to.eql(expected);
   });
+  it('should have translated the results parameters correctly', () => {
+    const actual = makeResultsParameters(projectFixture, testResultsDirectory);
+    const expected = makeModelParamsResults(testResultsDirectory);
+    expect(actual).to.eql(expected);
+  });
   it('should make elevtric vehicle 1 (single EV) parameters', () => {
     const testProject = {
       technologySpecsSingleEV: [
@@ -315,7 +244,7 @@ describe('Project to ModelParameters DTO', () => {
   });
   it('should make finance parameters', () => {
     const actual = makeFinanceParameters(projectFixture, testInputsDirectory);
-    expect(Object.keys(actual[''].keys).length).to.eql(10);
+    expect(Object.keys(actual[''].keys).length).to.eql(13);
   });
   it('should make FR parameters', () => {
     const actual = makeFRParameters(projectFixtureAllActive);

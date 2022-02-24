@@ -8,13 +8,10 @@ import PageMetadata from '@/models/Application/PageMetadata';
 import * as paths from '@/router/constants';
 
 /*
-TODO use PageMetadataWithStatus from Application/PageMetadata
-
 tech extra fields
 ------
 id
 collectionType (instead of page)
-
 */
 
 const pagesMixin = {
@@ -233,6 +230,13 @@ const pagesMixin = {
             complete: !this.billingPeriodsErrorExists,
             errors: this.billingPeriodsError ? [this.billingPeriodsError] : [],
             submitted: true,
+          },
+          {
+            page: Page.FuelCosts,
+            ...this.pageMetadata[Page.FuelCosts],
+            complete: this.isPageComplete(Page.FuelCosts),
+            errors: this.getPageErrorList(Page.FuelCosts),
+            submitted: this.isPageSubmitted(Page.FuelCosts),
           },
         ];
       },

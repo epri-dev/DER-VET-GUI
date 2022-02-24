@@ -1,10 +1,9 @@
-export interface TimeSeries {
-  data: number[]
-}
-
 export interface Project {
   name: string;
   schemaVersion: string;
   objectivesDA: boolean;
-  tsDaPrice: TimeSeries;
+  tsDaPrice: number[];
+  fuelPriceGas: number;
+  fuelPriceLiquid: number;
+  fuelPriceOther: number;
 }

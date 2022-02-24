@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
-import { projectFixture } from '@/assets/samples/projectFixture.js';
 import DAPriceTimeSeries from '@/service/Validation/TimeSeries/DAPriceTimeSeries.js';
+import projectFixture from '../../fixtures/models/dto/projectFixture.js';
 import { makeTestHeader } from '../../shared';
 
 describe('DAPriceTimeSeries model', () => {

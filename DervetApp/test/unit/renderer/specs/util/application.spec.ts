@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 import generateApplicationStateFromProject from '@/util/application';
-import { projectFixture } from '@/assets/samples/projectFixture.js';
+import projectFixture from '../fixtures/models/dto/projectFixture.js';
 import { makeTestHeader } from '../shared';
 
 describe('util/application', () => {
@@ -10,6 +10,6 @@ describe('util/application', () => {
   it('should generate application state from a project', () => {
     const actual = generateApplicationStateFromProject(projectFixture);
     expect(_.keys(actual)).to.have.lengthOf(4);
-    expect(_.keys(actual.pageStatus)).to.have.lengthOf(26);
+    expect(_.keys(actual.pageStatus)).to.have.lengthOf(27);
   });
 });

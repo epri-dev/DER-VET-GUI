@@ -4,7 +4,7 @@ import csvs from './csvs';
 
 const OUTPUT_DIRECTORY = '/path/to/output';
 
-export const projectFixture = {
+export default {
   analysisHorizon: 0,
   analysisHorizonMode: '1',
   daGrowth: 0,
@@ -32,6 +32,9 @@ export const projectFixture = {
   financeInflationRate: 3,
   financePropertyTaxRate: 3,
   financeStateTaxRate: 3,
+  fuelPriceGas: null,
+  fuelPriceLiquid: null,
+  fuelPriceOther: null,
   mtsBackupEnergyPrice: [],
   mtsBackupEnergyReservation: [],
   mtsDrCapacityPrice: [],
@@ -167,7 +170,7 @@ export const projectFixture = {
   technologySpecsICE: [],
   technologySpecsBattery: [{
     active: true,
-    id: '',
+    id: '1',
     values: {
       auxiliaryLoad: 0,
       calendarDegradationRate: 0,
@@ -218,11 +221,4 @@ export const projectFixture = {
   }],
   technologySpecsDieselGen: [],
   timestep: 60,
-};
-
-export const getProjectFixture = (inputsDir, resultsDir) => {
-  const res = _.cloneDeep(projectFixture);
-  res.inputsDirectory = inputsDir;
-  res.resultsDirectory = resultsDir;
-  return res;
 };

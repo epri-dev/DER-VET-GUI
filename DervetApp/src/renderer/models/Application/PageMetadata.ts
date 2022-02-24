@@ -40,6 +40,12 @@ export default class PageMetadata {
           path: paths.FINANCIAL_INPUTS_MISCELLANEOUS,
           active: true,
         },
+        [Page.FuelCosts]: {
+          name: 'Fuel Costs',
+          fields: [],
+          path: paths.FINANCIAL_INPUTS_FUEL_COSTS,
+          active: true, // TODO dependent...
+        },
         [Page.Objectives]: {
           name: 'Services',
           fields: f.OBJECTIVE_FIELDS,

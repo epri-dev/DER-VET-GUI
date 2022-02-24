@@ -156,6 +156,11 @@ export default new Router({
           component: require('@/components/Wizard/Components/Objectives/SystemInformation').default,
         },
         {
+          path: 'financial-inputs-fuel-costs',
+          name: 'financialInputsFuelCosts',
+          component: require('@/components/Wizard/Components/Financial/FuelCosts').default,
+        },
+        {
           path: 'financial-inputs-retail-tariff',
           name: 'financialInputsRetailTariff',
           component: require('@/components/Wizard/Components/Financial/RetailTariff/Main').default,

@@ -23,8 +23,6 @@ const SIZING_ALLOWED_VALUES = [
   },
 ];
 
-const LOC_ALLOWED_VALUES = enumToAllowedValues(LocType);
-
 export default class SolarPVMetadata extends TechnologyMetadata {
   allowGridCharge: ValueFieldMetadata = {
     allowedValues: YES_NO_OPTIONS,
@@ -88,7 +86,7 @@ export default class SolarPVMetadata extends TechnologyMetadata {
     unit: 'kW<sub>AC</sub>',
   };
   loc: ValueFieldMetadata = {
-    allowedValues: LOC_ALLOWED_VALUES,
+    allowedValues: enumToAllowedValues(LocType),
     description: 'Solar plus storage AC or DC coupled system',
     displayName: 'Coupled System Type',
     isRequired: true,

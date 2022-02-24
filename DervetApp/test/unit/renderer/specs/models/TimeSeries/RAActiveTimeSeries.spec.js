@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
-import { projectFixture } from '@/assets/samples/projectFixture.js';
 import RAActiveTimeSeries from '@/service/Validation/TimeSeries/RAActiveTimeSeries.js';
+import projectFixture from '../../fixtures/models/dto/projectFixture.js';
 import { makeTestHeader } from '../../shared';
 
 describe('RAActiveTimeSeries model', () => {

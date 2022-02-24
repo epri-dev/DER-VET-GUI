@@ -28,6 +28,9 @@ export const FR_GROWTH = 'frGrowth';
 export const FR_ENERGY_PRICE_GROWTH = 'frEnergyPriceGrowth';
 export const FR_DURATION = 'frDuration';
 export const FR_COMBINED_MARKET = 'frCombinedMarket';
+export const FUEL_COST_GAS = 'fuelPriceGas';
+export const FUEL_COST_LIQUID = 'fuelPriceLiquid';
+export const FUEL_COST_OTHER = 'fuelPriceOther';
 export const LF_DURATION = 'lfDuration';
 export const LF_COMBINED_MARKET = 'lfCombinedMarket';
 export const LF_GROWTH = 'lfGrowth';
@@ -249,6 +252,13 @@ export const FINANCE_FIELDS = [
   FINANCE_PROPERTY_TAX_RATE,
   FINANCE_STATE_TAX_RATE,
 ];
+
+const FUEL_COST_FIELDS = [
+  FUEL_COST_GAS,
+  FUEL_COST_LIQUID,
+  FUEL_COST_OTHER,
+];
+
 export const FR_FIELDS = [
   FR_COMBINED_MARKET,
   FR_DURATION,
@@ -320,6 +330,8 @@ export class FieldListFactory {
       return START_PROJECT_FIELDS;
     } if (page === Page.Financial) {
       return FINANCE_FIELDS;
+    } if (page === Page.FuelCosts) {
+      return FUEL_COST_FIELDS;
     } if (page === Page.Objectives) {
       return OBJECTIVE_FIELDS;
     } if (page === Page.ObjectivesBackup) {

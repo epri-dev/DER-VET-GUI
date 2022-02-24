@@ -21,6 +21,18 @@ export const DR_END_MODES = [
 
 export const DR_PROGRAM_TYPES = arrayToAllowedValues(['Day of', 'Day ahead']);
 
+export enum FuelType {
+  Gas = 'gas',
+  Liquid = 'liquid',
+  Other = 'other',
+}
+
+export const FUEL_TYPES = [
+  { value: FuelType.Gas, label: 'Gas' },
+  { value: FuelType.Liquid, label: 'Liquid' },
+  { value: FuelType.Other, label: 'Other' },
+];
+
 export const ENERGY_PRICE_SOURCE_WHOLESALE_OPTIONS = [
   {
     value: false,

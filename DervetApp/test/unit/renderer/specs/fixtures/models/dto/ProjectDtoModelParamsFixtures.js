@@ -1157,14 +1157,14 @@ export const makeModelParamsIceDiesel = id => ({
         },
         type: 'float',
       },
-      fuel_cost: {
-        opt_value: '0',
+      fuel_type: {
+        opt_value: 'liquid',
         sensitivity: {
           active: 'no',
           coupled: 'None',
           value: 'nan',
         },
-        type: 'float',
+        type: 'string',
       },
       macrs_term: {
         opt_value: '3',

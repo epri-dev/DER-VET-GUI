@@ -72,12 +72,12 @@
           :errorMessage="getErrorMsg('efficiency')">
         </text-input>
 
-        <text-input
-          v-model="fuelCost"
-          :metadata="metadata.fuelCost"
-          :isInvalid="submitted && $v.fuelCost.$error"
-          :errorMessage="getErrorMsg('fuelCost')">
-        </text-input>
+        <radio-button-input
+          v-model="fuelType"
+          :metadata="metadata.fuelType"
+          :isInvalid="submitted && $v.fuelType.$error"
+          :errorMessage="getErrorMsg('fuelType')">
+        </radio-button-input>
 
         <fieldset class="section-group">
           <legend>Cost Function</legend>

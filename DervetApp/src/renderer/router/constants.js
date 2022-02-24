@@ -34,6 +34,7 @@ export const FINANCIAL_INPUTS_RETAIL_TARIFF = component('financial-inputs-retail
 export const FINANCIAL_INPUTS_RETAIL_TARIFF_BILLING_PERIOD = component('financial-inputs-retail-tariff-billing-period');
 export const FINANCIAL_INPUTS_RETAIL_TARIFF_IMPORT = component('financial-inputs-retail-tariff-import');
 export const FINANCIAL_INPUTS_RETAIL_TARIFF_OPEN_EI = component('financial-inputs-retail-tariff-open-ei');
+export const FINANCIAL_INPUTS_FUEL_COSTS = component('financial-inputs-fuel-costs');
 
 export const OBJECTIVES_BACKUP_POWER = component('objectives-parameters-backup');
 export const OBJECTIVES_DR = component('objectives-parameters-dr');
