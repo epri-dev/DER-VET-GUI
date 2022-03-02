@@ -1,5 +1,6 @@
 process.env.BABEL_ENV = 'renderer';
 
+const dotenv = require('dotenv');
 const path = require('path');
 const webpack = require('webpack');
 
@@ -207,8 +208,9 @@ if (process.env.NODE_ENV === 'production') {
         ignore: ['.*'],
       },
     ]),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"production"',
+    new webpack.EnvironmentPlugin({
+      NODE_ENV: 'production',
+      ...dotenv.config().parsed,
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
