@@ -28,9 +28,9 @@ export const FR_GROWTH = 'frGrowth';
 export const FR_ENERGY_PRICE_GROWTH = 'frEnergyPriceGrowth';
 export const FR_DURATION = 'frDuration';
 export const FR_COMBINED_MARKET = 'frCombinedMarket';
-export const FUEL_COST_GAS = 'fuelPriceGas';
-export const FUEL_COST_LIQUID = 'fuelPriceLiquid';
-export const FUEL_COST_OTHER = 'fuelPriceOther';
+export const FUEL_PRICE_GAS = 'fuelPriceGas';
+export const FUEL_PRICE_LIQUID = 'fuelPriceLiquid';
+export const FUEL_PRICE_OTHER = 'fuelPriceOther';
 export const LF_DURATION = 'lfDuration';
 export const LF_COMBINED_MARKET = 'lfCombinedMarket';
 export const LF_GROWTH = 'lfGrowth';
@@ -135,25 +135,6 @@ export const TS_ALL = [
   ...TS_USER_DEFINED_FIELDS,
 ];
 
-// TODO get rid of this (replaced by CollectionTypes)
-export const TECH_SPECS_BATTERY = 'technologySpecsBattery';
-export const TECH_SPECS_CONTROLLABLE_LOAD = 'technologySpecsControllableLoad';
-export const TECH_SPECS_DIESEL_GEN = 'technologySpecsDieselGen';
-export const TECH_SPECS_FLEET_EV = 'technologySpecsFleetEV';
-export const TECH_SPECS_ICE = 'technologySpecsICE';
-export const TECH_SPECS_SINGLE_EV = 'technologySpecsSingleEV';
-export const TECH_SPECS_SOLAR_PV = 'technologySpecsSolarPV';
-
-export const TECH_TYPES = [
-  TECH_SPECS_BATTERY,
-  TECH_SPECS_CONTROLLABLE_LOAD,
-  TECH_SPECS_DIESEL_GEN,
-  TECH_SPECS_FLEET_EV,
-  TECH_SPECS_ICE,
-  TECH_SPECS_SINGLE_EV,
-  TECH_SPECS_SOLAR_PV,
-];
-
 // Monthly
 export const MTS_BACKUP_ENERGY_PRICE = 'mtsBackupEnergyPrice';
 export const MTS_BACKUP_ENERGY_RESERVATION = 'mtsBackupEnergyReservation';
@@ -254,9 +235,9 @@ export const FINANCE_FIELDS = [
 ];
 
 const FUEL_COST_FIELDS = [
-  FUEL_COST_GAS,
-  FUEL_COST_LIQUID,
-  FUEL_COST_OTHER,
+  FUEL_PRICE_GAS,
+  FUEL_PRICE_LIQUID,
+  FUEL_PRICE_OTHER,
 ];
 
 export const FR_FIELDS = [

@@ -1,6 +1,8 @@
 <template>
   <div>
     <h3>Technology: Battery Storage</h3>
+    <hr />
+
     <form>
       <div class="form-horizontal form-buffer container">
         <text-input
@@ -383,7 +385,7 @@
 
   import BatteryCycleLifeCurve from '@/components/Wizard/Components/Technologies/BatteryCycleLifeCurve';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import CollectionTypes from '@/models/Project/CollectionTypes';
+  import { CollectionType } from '@/models/Project/CollectionType';
 
   export default {
     name: 'TechnologySpecsBattery',
@@ -393,7 +395,7 @@
     mixins: [wizardFormMixin],
     props: ['id'],
     data() {
-      const data = this.getData(CollectionTypes.Battery, CollectionTypes.Battery);
+      const data = this.getData(CollectionType.Battery, CollectionType.Battery);
       return {
         ...data,
         cycleLifeCurve: _.cloneDeep(data.cycleLifeCurve),
@@ -545,7 +547,7 @@
         return this.getErrorMsgWrapped(this.validationSchema, this.$v, fieldName);
       },
       getCycleLifeError() {
-        return this.$store.getters['Application/getPageErrors'](CollectionTypes.Battery, this.id).cycleLifeCurve;
+        return this.$store.getters['Application/getPageErrors'](CollectionType.Battery, this.id).cycleLifeCurve;
       },
       getOtherError() {
         return (this.cycleLifeErrorMessage === undefined || this.cycleLifeErrorMessage === null)

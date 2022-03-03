@@ -141,13 +141,13 @@
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import Page from '@/models/Application/Page';
-  import CollectionTypes from '@/models/Project/CollectionTypes';
+  import { CollectionType } from '@/models/Project/CollectionType';
   import { MONTHS } from '@/util/time';
 
   export default {
     mixins: [wizardFormMixin],
     data() {
-      const pageData = this.getData(CollectionTypes.Project, Page.ObjectivesDR);
+      const pageData = this.getData(CollectionType.Project, Page.ObjectivesDR);
       const selected = this.onesAndZerosToMonths(pageData.mtsDrMonthsApplied);
       return {
         ...pageData,

@@ -61,7 +61,7 @@
   import pagesMixin from '@/mixins/pagesMixin';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import Page from '@/models/Application/Page';
-  import CollectionTypes from '@/models/Project/CollectionTypes';
+  import { CollectionType } from '@/models/Project/CollectionType';
   import MetadataFactory from '@/models/Project/Metadata/Factory';
   import { LocType } from '@/models/Project/Metadata/TechnologySpecs/SolarPV';
   import { CAL_ENVIRO_SCREEN } from '@/router/constants';
@@ -93,7 +93,7 @@
         // TODO move this elsewhere
         const values = getDefaultValues(metadata);
         // if collectionType === SolarPV && this.batteryExists
-        if (collectionType === CollectionTypes.SolarPV && !this.$store.getters.activeBatteryExists) {
+        if (collectionType === CollectionType.SolarPV && !this.$store.getters.activeBatteryExists) {
           values.loc = LocType.AC;
         }
         this.$store.dispatch(a.ADD_COLLECTION_ITEM, { collectionType, values });

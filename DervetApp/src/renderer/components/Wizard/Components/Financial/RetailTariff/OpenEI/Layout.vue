@@ -49,7 +49,7 @@
   import SearchFilters from '@/components/Wizard/Components/Financial/RetailTariff/OpenEI/SearchFilters';
   import TariffsTable from '@/components/Wizard/Components/Financial/RetailTariff/OpenEI/TariffsTable';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import CollectionTypes from '@/models/Project/CollectionTypes';
+  import { CollectionType } from '@/models/Project/CollectionType';
   import { FINANCIAL_INPUTS_RETAIL_TARIFF } from '@/router/constants';
   import { getUtilityRates } from '@/service/OpenEI/request';
   import { Sector, UtilityRate } from '@/service/OpenEI/response';
@@ -118,8 +118,8 @@
           })
         )).then((pds) => {
           // TODO Should validate billing periods at some point
-          const payload = { collectionType: CollectionTypes.RetailTariff, valuesList: pds };
-          this.$store.dispatch(a.REMOVE_ALL_COLLECTION_ITEMS, CollectionTypes.RetailTariff)
+          const payload = { collectionType: CollectionType.RetailTariff, valuesList: pds };
+          this.$store.dispatch(a.REMOVE_ALL_COLLECTION_ITEMS, CollectionType.RetailTariff)
             .then(() => this.$store.dispatch(a.ADD_MANY_COLLECTION_ITEMS, payload))
             .then(this.navToRetailTariffPage);
         }).catch((err) => {

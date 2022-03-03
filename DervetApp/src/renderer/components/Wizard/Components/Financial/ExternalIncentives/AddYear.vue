@@ -37,15 +37,15 @@
   import { minValue } from 'vuelidate/lib/validators';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import { FINANCIAL_INPUTS_EXTERNAL_INCENTIVES } from '@/router/constants';
-  import CollectionTypes from '@/models/Project/CollectionTypes';
+  import { CollectionType } from '@/models/Project/CollectionType';
 
   export default {
     props: ['id'],
     mixins: [wizardFormMixin],
     data() {
       return this.getData(
-        CollectionTypes.ExternalIncentive,
-        CollectionTypes.ExternalIncentive,
+        CollectionType.ExternalIncentive,
+        CollectionType.ExternalIncentive,
         FINANCIAL_INPUTS_EXTERNAL_INCENTIVES,
       );
     },

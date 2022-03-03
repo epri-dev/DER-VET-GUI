@@ -1,5 +1,5 @@
 import project from '@/store/modules/Project';
-import CollectionTypes from '@/models/Project/CollectionTypes.ts';
+import { CollectionType } from '@/models/Project/CollectionType.ts';
 import { makeTestHeader } from '../shared';
 
 const { getters } = project;
@@ -12,7 +12,7 @@ describe('Project Getters', () => {
     const solarItem = { id, name: 'solar1' };
     const state = { technologySpecsSolarPV: [solarItem] };
 
-    const actual = getters.getCollectionItemById(state)(CollectionTypes.SolarPV, id);
+    const actual = getters.getCollectionItemById(state)(CollectionType.SolarPV, id);
 
     expect(actual).to.equal(solarItem);
   });
@@ -22,7 +22,7 @@ describe('Project Getters', () => {
     const solarSpec = [{ id, name: 'solar1' }];
     const state = { technologySpecsSolarPV: solarSpec };
 
-    const actual = getters.getCollectionClone(state)(CollectionTypes.SolarPV);
+    const actual = getters.getCollectionClone(state)(CollectionType.SolarPV);
 
     expect(actual).to.eql(solarSpec);
   });
@@ -32,7 +32,7 @@ describe('Project Getters', () => {
     const solarSpec = { id, name: 'solar1' };
     const state = { technologySpecsSolarPV: [solarSpec] };
 
-    const actual = getters.getIndexOfCollectionItemById(state)(CollectionTypes.SolarPV, id);
+    const actual = getters.getIndexOfCollectionItemById(state)(CollectionType.SolarPV, id);
 
     expect(actual).to.eql(0);
   });

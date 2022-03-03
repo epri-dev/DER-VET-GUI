@@ -100,7 +100,7 @@
   import * as paths from '@/router/constants';
   import { getDefaultValues } from '@/service/ProjectPage';
   import * as a from '@/store/actionTypes';
-  import CollectionTypes from '@/models/Project/CollectionTypes';
+  import { CollectionType } from '@/models/Project/CollectionType';
   import MetadataFactory from '@/models/Project/Metadata/Factory';
   import { formatCsvForHref } from '@/util/file';
 
@@ -111,7 +111,7 @@
     components: { NavButtons },
     data() {
       return {
-        collectionType: CollectionTypes.RetailTariff,
+        collectionType: CollectionType.RetailTariff,
         paths,
         tariffTableHeaders,
       };

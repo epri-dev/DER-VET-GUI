@@ -9,32 +9,32 @@ import SolarPVMetadata from '@/models/Project/Metadata/TechnologySpecs/SolarPV';
 import ExternalIncentivesMetadata from '@/models/Project/Metadata/Finances/ExternalIncentives';
 import RetailTariffBillingPeriodMetadata from '@/models/Project/Metadata/Finances/RetailTariffBillingPeriod';
 
-import CollectionTypes from '@/models/Project/CollectionTypes';
+import { CollectionType } from '@/models/Project/CollectionType';
 
 class MetadataFactory {
-  static getMetadata(type: CollectionTypes) {
-    if (type === CollectionTypes.Project) {
+  static getMetadata(type: CollectionType) {
+    if (type === CollectionType.Project) {
       return new ProjectMetadata();
-    } if (type === CollectionTypes.Battery) {
+    } if (type === CollectionType.Battery) {
       return new BatteryMetadata();
-    } if (type === CollectionTypes.ControllableLoad) {
+    } if (type === CollectionType.ControllableLoad) {
       const metadata = new TechnologySpecsControllableLoadMetadata();
       // TODO think of a better way to do this
       delete metadata.macrsTerm;
       return metadata;
-    } if (type === CollectionTypes.DieselGen) {
+    } if (type === CollectionType.DieselGen) {
       return new TechnologySpecsDieselGenMetadata();
-    } if (type === CollectionTypes.FleetEV) {
+    } if (type === CollectionType.FleetEV) {
       return new TechnologySpecsFleetEVMetadata();
-    } if (type === CollectionTypes.ICE) {
+    } if (type === CollectionType.ICE) {
       return new TechnologySpecsICEMetadata();
-    } if (type === CollectionTypes.SingleEV) {
+    } if (type === CollectionType.SingleEV) {
       return new TechnologySpecsSingleEVMetadata();
-    } if (type === CollectionTypes.SolarPV) {
+    } if (type === CollectionType.SolarPV) {
       return new SolarPVMetadata();
-    } if (type === CollectionTypes.ExternalIncentive) {
+    } if (type === CollectionType.ExternalIncentive) {
       return new ExternalIncentivesMetadata();
-    } if (type === CollectionTypes.RetailTariff) {
+    } if (type === CollectionType.RetailTariff) {
       return new RetailTariffBillingPeriodMetadata();
     }
     throw Error('Metadata not found');

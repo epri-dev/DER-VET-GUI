@@ -7,7 +7,7 @@ import NavButtons from '@/components/Shared/NavButtons';
 import TextInput from '@/components/Wizard/InputFields//TextInput';
 import TimeSeriesUpload from '@/components/Wizard/InputFields//TimeSeriesUpload/Layout';
 import MetadataFactory from '@/models/Project/Metadata/Factory';
-import CollectionTypes from '@/models/Project/CollectionTypes';
+import { CollectionType } from '@/models/Project/CollectionType';
 import { FieldListFactory } from '@/models/Project/constants';
 import ValidationService from '@/service/Validation/ValidationService';
 import * as a from '@/store/actionTypes';
@@ -79,9 +79,9 @@ export default {
         ...this.getPageData(fields.allFields, { type: collectionType, id: this.id }),
       };
     },
-    getPageMetadata(page, collectionType = CollectionTypes.Project) {
+    getPageMetadata(page, collectionType = CollectionType.Project) {
       const meta = MetadataFactory.getMetadata(collectionType);
-      return collectionType === CollectionTypes.Project ? this.filterMetadata(meta, page) : meta;
+      return collectionType === CollectionType.Project ? this.filterMetadata(meta, page) : meta;
     },
     getPageFields(metadata) {
       return {
@@ -93,7 +93,7 @@ export default {
     getPageSubmitted(page, id) {
       return this.$store.getters['Application/isPageSubmitted'](page, id);
     },
-    getPageData(fields, collectionDetails = { type: CollectionTypes.Project }) {
+    getPageData(fields, collectionDetails = { type: CollectionType.Project }) {
       const collection = this.getCollection(collectionDetails);
       return operateOnKeysList(collection, fields, f => f);
     },
@@ -103,7 +103,7 @@ export default {
     },
     getCollection(collectionDetails) {
       const { type, id } = collectionDetails;
-      if (type === CollectionTypes.Project) return this.$store.state.Project;
+      if (type === CollectionType.Project) return this.$store.state.Project;
       return this.$store.getters.getCollectionItemById(type, id).values;
     },
     getErrorMsg(field) {

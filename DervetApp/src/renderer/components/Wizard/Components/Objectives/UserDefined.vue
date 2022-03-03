@@ -84,7 +84,7 @@
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import Page from '@/models/Application/Page';
-  import CollectionTypes from '@/models/Project/CollectionTypes';
+  import { CollectionType } from '@/models/Project/CollectionType';
 
   const TS_ERROR_MSG = 'Data for at least one user-defined time series field are required';
 
@@ -92,7 +92,7 @@
     mixins: [wizardFormMixin],
     data() {
       return {
-        ...this.getData(CollectionTypes.Project, Page.ObjectivesUserDefined),
+        ...this.getData(CollectionType.Project, Page.ObjectivesUserDefined),
         pageError: TS_ERROR_MSG,
       };
     },

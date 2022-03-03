@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import CollectionTypes from '@/models/Project/CollectionTypes';
+import { CollectionType } from '@/models/Project/CollectionType';
 import MetadataFactory from '@/models/Project/Metadata/Factory';
 import { ValueFieldMetadata } from '@/models/Project/Metadata/ValueField';
 import {
@@ -45,7 +45,7 @@ export const validateValueField = (
 };
 
 export const validateCollection = (
-  type: CollectionTypes, values: any[],
+  type: CollectionType, values: any[],
 ): any => {
   const metadata: {[index: string]: any} = MetadataFactory.getMetadata(type);
 

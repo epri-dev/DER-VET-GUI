@@ -19,6 +19,10 @@ body {
     text-align: center;
 }
 
+.align-center {
+    text-align: center;
+}
+
 .error-align {
     margin-left: 10px;
 }

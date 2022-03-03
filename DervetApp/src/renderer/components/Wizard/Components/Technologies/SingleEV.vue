@@ -167,14 +167,14 @@
   import { requiredIf, minValue } from 'vuelidate/lib/validators';
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import CollectionTypes from '@/models/Project/CollectionTypes';
+  import { CollectionType } from '@/models/Project/CollectionType';
 
   export default {
     name: 'TechnologySpecsSingleEV',
     mixins: [wizardFormMixin],
     props: ['id'],
     data() {
-      return this.getData(CollectionTypes.SingleEV, CollectionTypes.SingleEV);
+      return this.getData(CollectionType.SingleEV, CollectionType.SingleEV);
     },
     validations() {
       return {

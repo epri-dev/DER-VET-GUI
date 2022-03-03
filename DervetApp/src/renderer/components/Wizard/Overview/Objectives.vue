@@ -237,14 +237,14 @@
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import Page from '@/models/Application/Page';
-  import CollectionTypes from '@/models/Project/CollectionTypes';
+  import { CollectionType } from '@/models/Project/CollectionType';
   import { TECH_SPECS } from '@/router/constants';
   import { RESET_GAMMA_AND_NU } from '@/store/actionTypes';
 
   export default {
     mixins: [wizardFormMixin],
     data() {
-      return this.getData(CollectionTypes.Project, Page.Objectives, TECH_SPECS);
+      return this.getData(CollectionType.Project, Page.Objectives, TECH_SPECS);
     },
     validations() {
       const { validationSchema } = this;

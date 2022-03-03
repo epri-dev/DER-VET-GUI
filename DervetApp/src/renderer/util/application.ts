@@ -2,18 +2,18 @@ import _ from 'lodash';
 
 import Page from '@/models/Application/Page';
 import PageMetadata, { SinglePageMetadata } from '@/models/Application/PageMetadata';
-import CollectionTypes from '@/models/Project/CollectionTypes';
+import { CollectionType } from '@/models/Project/CollectionType';
 import ValidationService from '@/service/Validation/ValidationService';
 
 export const defaultPageStatus = (submitted: boolean) => ({ errors: {}, submitted });
 
 // Use iterate!
 export const getDefaultApplicationState = (submitted: boolean) => {
-  const defaultCollections = _.reduce(CollectionTypes, (result: any, type: CollectionTypes) => {
+  const defaultCollections = _.reduce(CollectionType, (result: any, type: CollectionType) => {
     result[type] = {};
     return result;
   }, {});
-  delete defaultCollections[CollectionTypes.Project];
+  delete defaultCollections[CollectionType.Project];
 
   const defaultPages = _.reduce(Page, (result: any, page: Page) => {
     result[page] = defaultPageStatus(submitted);
@@ -61,10 +61,10 @@ export const iterateThroughApplicationState = (
     return result;
   }, {});
 
-  const collectionResult = _.reduce(CollectionTypes, (
-    result: any, collectionType: CollectionTypes,
+  const collectionResult = _.reduce(CollectionType, (
+    result: any, collectionType: CollectionType,
   ) => {
-    if (collectionType !== CollectionTypes.Project) {
+    if (collectionType !== CollectionType.Project) {
       result[collectionType] = {};
       _.each(project[collectionType], (collectionItem) => {
         result[collectionType][collectionItem.id] = collectionCb(collectionItem);

@@ -1,6 +1,8 @@
 <template>
   <div>
     <h3>Technology: Diesel Generator</h3>
+    <hr />
+
     <form>
       <div class="form-horizontal form-buffer container">
         <text-input
@@ -220,14 +222,14 @@
   import { requiredIf, minValue } from 'vuelidate/lib/validators';
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import CollectionTypes from '@/models/Project/CollectionTypes';
+  import { CollectionType } from '@/models/Project/CollectionType';
 
   export default {
     name: 'TechnologySpecsDieselGen',
     mixins: [wizardFormMixin],
     props: ['id'],
     data() {
-      return this.getData(CollectionTypes.DieselGen, CollectionTypes.DieselGen);
+      return this.getData(CollectionType.DieselGen, CollectionType.DieselGen);
     },
     validations() {
       return {

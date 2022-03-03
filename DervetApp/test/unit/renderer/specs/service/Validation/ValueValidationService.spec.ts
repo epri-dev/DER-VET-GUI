@@ -1,4 +1,4 @@
-import CollectionTypes from '@/models/Project/CollectionTypes';
+import { CollectionType } from '@/models/Project/CollectionType';
 import { validateCollection, formatForPageStatus } from '@/service/Validation/ValueValidationService';
 
 import { makeTestHeader } from '../../shared';
@@ -10,7 +10,7 @@ describe('Page Reset', () => {
   const testCollection: any = [{ id: 1, values: { endTime: null, startTime: 1 } }];
 
   it('should validate a collection of values', () => {
-    const actual = validateCollection(CollectionTypes.RetailTariff, testCollection);
+    const actual = validateCollection(CollectionType.RetailTariff, testCollection);
     const expected = {
       1: { endTime: 'End Hour is required' },
     };

@@ -48,7 +48,7 @@
     validateExternalIncentivesCsv,
     csvToExternalIncentives,
   } from '@/models/Project/Metadata/Finances/ExternalIncentives';
-  import CollectionTypes from '@/models/Project/CollectionTypes';
+  import { CollectionType } from '@/models/Project/CollectionType';
   import { FINANCIAL_INPUTS_EXTERNAL_INCENTIVES } from '@/router/constants';
   import * as a from '@/store/actionTypes';
   import { parseCsvFromEvent } from '@/util/file';
@@ -88,7 +88,7 @@
       },
       addImportedExternalIncentivesToProject(externalIncentives) {
         const payload = this.makeExternalIncentivesPayload(externalIncentives);
-        return this.$store.dispatch(a.REMOVE_ALL_COLLECTION_ITEMS, CollectionTypes.ExternalIncentive)
+        return this.$store.dispatch(a.REMOVE_ALL_COLLECTION_ITEMS, CollectionType.ExternalIncentive)
           .then(this.$store.dispatch(a.ADD_MANY_COLLECTION_ITEMS, payload));
       },
       navigateToExternalIncentives() {
@@ -96,7 +96,7 @@
       },
       makeExternalIncentivesPayload(incentives) {
         return {
-          collectionType: CollectionTypes.ExternalIncentive,
+          collectionType: CollectionType.ExternalIncentive,
           valuesList: incentives,
         };
       },

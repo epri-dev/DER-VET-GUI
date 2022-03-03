@@ -222,14 +222,14 @@
   import { requiredIf, minValue } from 'vuelidate/lib/validators';
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import CollectionTypes from '@/models/Project/CollectionTypes';
+  import { CollectionType } from '@/models/Project/CollectionType';
 
   export default {
     name: 'TechnologySpecsICE',
     mixins: [wizardFormMixin],
     props: ['id'],
     data() {
-      return this.getData(CollectionTypes.ICE, CollectionTypes.ICE);
+      return this.getData(CollectionType.ICE, CollectionType.ICE);
     },
     validations() {
       const { validationSchema } = this;

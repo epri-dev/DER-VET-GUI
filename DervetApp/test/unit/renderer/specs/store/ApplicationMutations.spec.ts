@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 import Page from '@/models/Application/Page';
 import application from '@/store/modules/Application';
-import CollectionTypes from '@/models/Project/CollectionTypes';
+import { CollectionType } from '@/models/Project/CollectionType';
 import { getDefaultApplicationState } from '@/util/application';
 import { makeTestHeader } from '../shared';
 
@@ -16,7 +16,7 @@ describe('Application mutations', () => {
 
   it('should set a collection item page status', () => {
     const payload = {
-      page: CollectionTypes.SolarPV,
+      page: CollectionType.SolarPV,
       id: 'foo',
       pageStatus: {
         errors: locError,
@@ -30,31 +30,31 @@ describe('Application mutations', () => {
     };
 
     mutations.SET_PAGE_STATUS(state, payload);
-    expect(state.pageStatus[CollectionTypes.SolarPV].foo).to.eql(expected);
+    expect(state.pageStatus[CollectionType.SolarPV].foo).to.eql(expected);
   });
 
   it('should remove a collection item page status', () => {
     const solarState = {
       pageStatus: {
-        [CollectionTypes.SolarPV]: {
+        [CollectionType.SolarPV]: {
           foo: { errors: locError, submitted: true },
         },
       },
     };
-    const payload = { page: CollectionTypes.SolarPV, id: 'foo' };
+    const payload = { page: CollectionType.SolarPV, id: 'foo' };
     mutations.REMOVE_COLLECTION_PAGE_STATUS(solarState, payload);
-    expect(solarState.pageStatus[CollectionTypes.SolarPV].foo).to.eql(undefined);
+    expect(solarState.pageStatus[CollectionType.SolarPV].foo).to.eql(undefined);
   });
 
   it('should set many collection items\' page status', () => {
     const pageStatus: any = { errors: {}, submitted: false };
     const payload: any = {
-      collectionType: CollectionTypes.SolarPV,
+      collectionType: CollectionType.SolarPV,
       pageStatusSet: { foo: pageStatus, bar: pageStatus },
     };
     mutations.SET_MANY_COLLECTION_PAGE_STATUS(state, payload);
-    expect(state.pageStatus[CollectionTypes.SolarPV].foo).to.eql(pageStatus);
-    expect(state.pageStatus[CollectionTypes.SolarPV].bar).to.eql(pageStatus);
+    expect(state.pageStatus[CollectionType.SolarPV].foo).to.eql(pageStatus);
+    expect(state.pageStatus[CollectionType.SolarPV].bar).to.eql(pageStatus);
   });
 
   it('should merge a page status', () => {

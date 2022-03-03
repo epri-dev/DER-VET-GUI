@@ -29,7 +29,7 @@ export const makeModelParamsBattery = id => ({
       },
       type: 'float',
     },
-    ccost_kw: {
+    ccost_kW: {
       opt_value: '800',
       sensitivity: {
         active: 'no',
@@ -38,7 +38,7 @@ export const makeModelParamsBattery = id => ({
       },
       type: 'float',
     },
-    ccost_kwh: {
+    ccost_kWh: {
       opt_value: '250',
       sensitivity: {
         active: 'no',

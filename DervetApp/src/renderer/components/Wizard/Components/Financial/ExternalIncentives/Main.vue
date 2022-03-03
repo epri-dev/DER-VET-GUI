@@ -87,7 +87,7 @@
 
   import { INCENTIVES_HEADERS, externalIncentivesToCsv } from '@/models/Project/Metadata/Finances/ExternalIncentives';
   import * as a from '@/store/actionTypes';
-  import CollectionTypes from '@/models/Project/CollectionTypes';
+  import { CollectionType } from '@/models/Project/CollectionType';
   import MetadataFactory from '@/models/Project/Metadata/Factory';
   import { getDefaultValues } from '@/service/ProjectPage';
   import NavButtons from '@/components/Shared/NavButtons';
@@ -100,7 +100,7 @@
     components: { NavButtons },
     data() {
       return {
-        collectionType: CollectionTypes.ExternalIncentive,
+        collectionType: CollectionType.ExternalIncentive,
         paths,
         INCENTIVES_HEADERS,
         ERROR_MESSAGE,

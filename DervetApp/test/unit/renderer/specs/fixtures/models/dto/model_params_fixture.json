@@ -28,7 +28,7 @@
             },
             "type": "float"
           },
-          "ccost_kw": {
+          "ccost_kW": {
             "opt_value": "100",
             "sensitivity": {
               "active": "no",
@@ -37,7 +37,7 @@
             },
             "type": "float"
           },
-          "ccost_kwh": {
+          "ccost_kWh": {
             "opt_value": "800",
             "sensitivity": {
               "active": "no",
@@ -734,6 +734,15 @@
       "": {
         "active": "yes",
         "keys": {
+          "activate_electricity_load_dump": {
+            "opt_value": "0",
+            "sensitivity": {
+              "active": "no",
+              "coupled": "None",
+              "value": "nan"
+            },
+            "type": "bool"
+          },
           "apply_interconnection_constraints": {
             "opt_value": "0",
             "sensitivity": {

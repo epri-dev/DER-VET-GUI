@@ -1,7 +1,7 @@
 import Page from '@/models/Application/Page';
 import * as paths from '@/router/constants';
 import * as f from '@/models/Project/constants';
-import { includeSystemLoad } from '@/util/project';
+import { includeSystemLoad, areFuelCostsRequired } from '@/util/project';
 
 export interface SinglePageMetadata {
   active: boolean;
@@ -44,7 +44,7 @@ export default class PageMetadata {
           name: 'Fuel Costs',
           fields: [],
           path: paths.FINANCIAL_INPUTS_FUEL_COSTS,
-          active: true, // TODO dependent...
+          active: areFuelCostsRequired(project),
         },
         [Page.Objectives]: {
           name: 'Services',

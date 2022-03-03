@@ -44,7 +44,7 @@
 
 <script>
   import NavButtons from '@/components/Shared/NavButtons';
-  import CollectionTypes from '@/models/Project/CollectionTypes';
+  import { CollectionType } from '@/models/Project/CollectionType';
   import {
     validateRetailTariffCsv,
     csvToRetailTariff,
@@ -88,7 +88,7 @@
       },
       addRetailTariffToProject(values) {
         const payload = this.makePayload(values);
-        return this.$store.dispatch(a.REMOVE_ALL_COLLECTION_ITEMS, CollectionTypes.RetailTariff)
+        return this.$store.dispatch(a.REMOVE_ALL_COLLECTION_ITEMS, CollectionType.RetailTariff)
           .then(this.$store.dispatch(a.ADD_MANY_COLLECTION_ITEMS, payload));
       },
       navigateToRetailTariff() {
@@ -96,7 +96,7 @@
       },
       makePayload(valuesList) {
         return {
-          collectionType: CollectionTypes.RetailTariff, valuesList,
+          collectionType: CollectionType.RetailTariff, valuesList,
         };
       },
     },
