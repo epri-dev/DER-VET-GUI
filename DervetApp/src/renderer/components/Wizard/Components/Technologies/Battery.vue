@@ -558,8 +558,8 @@
         this.cycleLifeErrorMessage = error;
       },
       isCycleLifeInvalid() {
-        return this.submitted && (
-          this.cycleLifeErrorMessage !== undefined || this.cycleLifeErrorMessage !== null
+        return (this.submitted && this.includeCycleDegradation === true) && (
+          this.cycleLifeErrorMessage !== undefined && this.cycleLifeErrorMessage !== null
         );
       },
       resetAllNonRequired() {
@@ -607,6 +607,9 @@
         }
         if (this.includeAuxiliaryLoad === false) {
           this.resetNonRequired(['auxiliaryLoad']);
+        }
+        if (this.includeCycleDegradation === false) {
+          this.resetNonRequired(['calendarDegradationRate', 'stateOfHealth', 'cycleLifeCurve']);
         }
         if (this.isReplaceable === false) {
           this.resetNonRequired(['replacementCost', 'replacementCostPerkW', 'replacementCostPerkWh', 'replacementConstructionTime']);
