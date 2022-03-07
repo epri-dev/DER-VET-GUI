@@ -41,6 +41,10 @@ body {
     height: auto;
 }
 
+.cal-enviro-screen-small-text {
+    font: .85em;
+}
+
 .logo-img {
     max-width: 80%;
     height: auto;
