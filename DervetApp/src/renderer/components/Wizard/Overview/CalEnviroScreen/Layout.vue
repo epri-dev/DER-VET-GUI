@@ -39,6 +39,9 @@
            <inner-image-zoom :src="CesMap" :zoomSrc="CesMap" />
         </div>
       </div>
+      <div class="cal-enviro-screen-small-text">
+        Image from California Environmental Protection Agency’s Office of Environmental Health Hazard Assessment (OEHHA)
+      </div>
     </div>
 
     <nav-buttons
@@ -50,7 +53,7 @@
 </template>
 
 <script>
-  import CesMap from '@/assets/CalEnviroScreen/CesMap.png';
+  import CesMap from '@/assets/CESMap4.png';
   import OpenExternalLink from '@/components/Shared/OpenExternalLink';
   import CesScoresTable from '@/components/Wizard/Overview/CalEnviroScreen/CesScoresTable';
   import ZipCodeFilter from '@/components/Wizard/Overview/CalEnviroScreen/ZipCodeFilter';
@@ -58,7 +61,7 @@
   import NavButtons from '@/components/Shared/NavButtons';
   import InnerImageZoom from 'vue-inner-image-zoom';
 
-  const CES_HOMEPAGE_URL = 'https://oehha.ca.gov/calenviroscreen/report/calenviroscreen-30';
+  const CES_HOMEPAGE_URL = 'https://oehha.ca.gov/calenviroscreen/report/calenviroscreen-40';
 
   export default {
     name: 'CalEnviroScreen',
@@ -107,8 +110,6 @@
       setErrorMessage(message) {
         this.zipCode = null;
         this.errorMessage = message;
-      },
-      save() {
       },
     },
   };
