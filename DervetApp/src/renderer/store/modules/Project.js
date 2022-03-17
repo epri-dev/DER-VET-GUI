@@ -7,27 +7,20 @@ import ValidationService from '@/service/Validation/ValidationService';
 import { validateCollection, formatForPageStatus } from '@/service/Validation/ValueValidationService';
 import resetInactiveValues from '@/service/ProjectReset';
 import ProjectMetadata from '@/models/Project/Metadata/ProjectMetadata';
-import CollectionTypes from '@/models/Project/CollectionTypes';
+import { CollectionType, Technology } from '@/models/Project/CollectionType';
 import SolarPVMetadata, { LOC, LocType } from '@/models/Project/Metadata/TechnologySpecs/SolarPV';
 import * as m from '@/store/mutationTypes';
 import * as a from '@/store/actionTypes';
-import * as c from '@/models/Project/constants';
 
 const techSolarPVMetadataDefaults = getDefaultValues(new SolarPVMetadata());
 const projectMetadata = new ProjectMetadata();
 
+const defaultCollections = _.reduce(CollectionType, (r, coll) => { r[coll] = []; return r; }, {});
+delete defaultCollections.Project;
+
 export const getDefaultState = () => ({
   ...getDefaultValues(projectMetadata),
-  // TODO iterate over collection types...
-  [c.TECH_SPECS_BATTERY]: [],
-  [c.TECH_SPECS_CONTROLLABLE_LOAD]: [],
-  [c.TECH_SPECS_DIESEL_GEN]: [],
-  [c.TECH_SPECS_FLEET_EV]: [],
-  [c.TECH_SPECS_ICE]: [],
-  [c.TECH_SPECS_SINGLE_EV]: [],
-  [CollectionTypes.SolarPV]: [],
-  retailTariffBillingPeriods: [],
-  externalIncentives: [],
+  ...defaultCollections,
 });
 
 const state = getDefaultState();
@@ -47,8 +40,18 @@ const getters = {
   getCollectionItemById(state) {
     return (collectionName, id) => state[collectionName].find(x => x.id === id);
   },
-  activeBatteryExists(state) {
-    return !_.isEmpty(_.filter(state.technologySpecsBattery, batt => batt.active));
+  checkConditionOnCollection(state) {
+    return (collectionType, condition) => !_.isEmpty(_.filter(state[collectionType], condition));
+  },
+  activeBatteryExists(state, getters) {
+    return getters.checkConditionOnCollection(CollectionType.Battery, batt => batt.active);
+  },
+  isFuelPriceRequired(state, getters) {
+    return (fuelType) => {
+      const condition = tech => (tech.values.fuelType === fuelType);
+      return (getters.checkConditionOnCollection(CollectionType.DieselGen, condition)
+        || getters.checkConditionOnCollection(CollectionType.ICE, condition));
+    };
   },
   getTimeseriesXAxis(state) {
     return makeDatetimeIndex(state.dataYear, state.timestep, false);
@@ -98,9 +101,9 @@ const mutations = {
   [m.SET_ALL_VALUES_IN_TECH](state, { techType, key, value }) {
     _.each(state[techType], tech => { tech.values[key] = value; });
   },
-  // TODO change to SET_UNIQUE_IDS_IN_COLLECTION
+  // TODO change to SET_UNIQUE_IDS_IN_COLLECTION?
   [m.SET_UNIQUE_IDS_IN_TECH](state) {
-    _.each(c.TECH_TYPES, techType => _.each(state[techType], tech => { tech.id = uuidv4(); }));
+    _.each(Technology, techType => _.each(state[techType], tech => { tech.id = uuidv4(); }));
   },
 };
 
@@ -125,10 +128,10 @@ const actions = {
   [a.ADD_COLLECTION_ITEM]({ commit, getters, dispatch }, payload) {
     return new Promise((resolve) => {
       const { collectionType } = payload;
-      if (collectionType === CollectionTypes.Battery) {
+      if (collectionType === CollectionType.Battery) {
         if (!getters.activeBatteryExists) {
           commit(m.SET_ALL_VALUES_IN_TECH, {
-            techType: CollectionTypes.SolarPV,
+            techType: CollectionType.SolarPV,
             key: LOC,
             value: null,
           });
@@ -161,10 +164,10 @@ const actions = {
   [a.REMOVE_COLLECTION_ITEM]({ commit, dispatch, getters }, payload) {
     const { collectionType, id } = payload;
     commit(m.REMOVE_COLLECTION_ITEM, payload);
-    if (collectionType === CollectionTypes.Battery) {
+    if (collectionType === CollectionType.Battery) {
       if (!getters.activeBatteryExists) {
         commit(m.SET_ALL_VALUES_IN_TECH, {
-          techType: CollectionTypes.SolarPV,
+          techType: CollectionType.SolarPV,
           key: LOC,
           value: LocType.AC,
         });
@@ -178,10 +181,10 @@ const actions = {
   },
   [a.ACTIVATE_TECH]({ commit, getters }, payload) {
     const { collectionType } = payload;
-    if (collectionType === CollectionTypes.Battery) {
+    if (collectionType === CollectionType.Battery) {
       if (!getters.activeBatteryExists) {
         commit(m.SET_ALL_VALUES_IN_TECH, {
-          techType: CollectionTypes.SolarPV,
+          techType: CollectionType.SolarPV,
           key: LOC,
           value: null,
         });
@@ -192,10 +195,10 @@ const actions = {
   [a.DEACTIVATE_TECH]({ commit, getters }, payload) {
     const { collectionType } = payload;
     commit(m.DEACTIVATE_TECH, payload);
-    if (collectionType === CollectionTypes.Battery) {
+    if (collectionType === CollectionType.Battery) {
       if (!getters.activeBatteryExists) {
         commit(m.SET_ALL_VALUES_IN_TECH, {
-          techType: CollectionTypes.SolarPV,
+          techType: CollectionType.SolarPV,
           key: LOC,
           value: LocType.AC,
         });
@@ -204,13 +207,13 @@ const actions = {
   },
   [a.RESET_GAMMA_AND_NU]({ commit }) {
     const gammaPayload = {
-      techType: 'technologySpecsSolarPV',
-      key: 'gamma',
+      techType: CollectionType.SolarPV,
+      key: 'gamma', // TODO use constant
       value: techSolarPVMetadataDefaults.gamma,
     };
     const nuPayload = {
-      techType: 'technologySpecsSolarPV',
-      key: 'nu',
+      techType: CollectionType.SolarPV,
+      key: 'nu', // TODO use constant
       value: techSolarPVMetadataDefaults.nu,
     };
     commit(m.SET_ALL_VALUES_IN_TECH, gammaPayload);

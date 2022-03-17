@@ -81,7 +81,7 @@
   import { requiredIf, minValue, maxValue } from 'vuelidate/lib/validators';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import { FINANCIAL_INPUTS_RETAIL_TARIFF } from '@/router/constants';
-  import CollectionTypes from '@/models/Project/CollectionTypes';
+  import { CollectionType } from '@/models/Project/CollectionType';
   import { valueInHourRange, valueInMonthRange } from '@/util/validation';
 
   export default {
@@ -89,7 +89,7 @@
     mixins: [wizardFormMixin],
     data() {
       return this.getData(
-        CollectionTypes.RetailTariff, CollectionTypes.RetailTariff, FINANCIAL_INPUTS_RETAIL_TARIFF,
+        CollectionType.RetailTariff, CollectionType.RetailTariff, FINANCIAL_INPUTS_RETAIL_TARIFF,
       );
     },
     validations() {

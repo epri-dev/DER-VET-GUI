@@ -1,6 +1,9 @@
-// TODO split into technology/financial?
-enum CollectionTypes {
-  Project = 'Project',
+// TODO remove eventually
+export enum Project {
+  Project = 'Project'
+}
+
+export enum Technology {
   Battery = 'technologySpecsBattery',
   ControllableLoad = 'technologySpecsControllableLoad',
   DieselGen = 'technologySpecsDieselGen',
@@ -8,8 +11,12 @@ enum CollectionTypes {
   ICE = 'technologySpecsICE',
   SingleEV = 'technologySpecsSingleEV',
   SolarPV = 'technologySpecsSolarPV',
+}
+
+export enum Financial {
   ExternalIncentive = 'externalIncentives',
   RetailTariff = 'retailTariffBillingPeriods',
 }
 
-export default CollectionTypes;
+export const CollectionType = { ...Project, ...Technology, ...Financial };
+export type CollectionType = Project | Technology | Financial; // eslint-disable-line

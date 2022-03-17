@@ -253,14 +253,14 @@
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import { LocType } from '@/models/Project/Metadata/TechnologySpecs/SolarPV';
-  import CollectionTypes from '@/models/Project/CollectionTypes';
+  import { CollectionType } from '@/models/Project/CollectionType';
 
 export default {
     name: 'TechnologySpecsSolarPV',
     mixins: [wizardFormMixin],
     props: ['id'],
     data() {
-      return this.getData(CollectionTypes.SolarPV, CollectionTypes.SolarPV);
+      return this.getData(CollectionType.SolarPV, CollectionType.SolarPV);
     },
     validations() {
       const { validationSchema } = this;

@@ -238,6 +238,30 @@ export default class ProjectMetadata {
     unit: '% / year',
     description: c.GROWTH_RATE_DESCRIPTION,
   };
+  [c.FUEL_PRICE_GAS]: ValueFieldMetadata = {
+    displayName: 'Gas Price',
+    isRequired: true,
+    minValue: 0,
+    type: Number,
+    unit: '$/MMBtu',
+    description: 'Price of gaseous fuel to be used for any DERs that have fuel type set to gas',
+  };
+  [c.FUEL_PRICE_LIQUID]: ValueFieldMetadata = {
+    displayName: 'Liquid Fuel Price',
+    isRequired: true,
+    minValue: 0,
+    type: Number,
+    unit: '$/MMBtu',
+    description: 'Price of liquid fuel to be used for any DERs that have fuel type set to liquid',
+  };
+  [c.FUEL_PRICE_OTHER]: ValueFieldMetadata = {
+    displayName: 'Other Fuel Price',
+    isRequired: true,
+    minValue: 0,
+    type: Number,
+    unit: '$/MMBtu',
+    description: 'Price of other fuel to be used for any DERs that have fuel type set to other',
+  };
   [c.GRID_LOCATION]: ValueFieldMetadata = {
     displayName: 'Grid Domain',
     isRequired: true,

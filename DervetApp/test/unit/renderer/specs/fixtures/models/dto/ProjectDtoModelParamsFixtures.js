@@ -29,7 +29,7 @@ export const makeModelParamsBattery = id => ({
       },
       type: 'float',
     },
-    ccost_kw: {
+    ccost_kW: {
       opt_value: '800',
       sensitivity: {
         active: 'no',
@@ -38,7 +38,7 @@ export const makeModelParamsBattery = id => ({
       },
       type: 'float',
     },
-    ccost_kwh: {
+    ccost_kWh: {
       opt_value: '250',
       sensitivity: {
         active: 'no',
@@ -1157,14 +1157,14 @@ export const makeModelParamsIceDiesel = id => ({
         },
         type: 'float',
       },
-      fuel_cost: {
-        opt_value: '0',
+      fuel_type: {
+        opt_value: 'liquid',
         sensitivity: {
           active: 'no',
           coupled: 'None',
           value: 'nan',
         },
-        type: 'float',
+        type: 'string',
       },
       macrs_term: {
         opt_value: '3',

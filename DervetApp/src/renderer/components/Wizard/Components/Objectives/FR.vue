@@ -86,12 +86,12 @@
 <script>
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import Page from '@/models/Application/Page';
-  import CollectionTypes from '@/models/Project/CollectionTypes';
+  import { CollectionType } from '@/models/Project/CollectionType';
 
   export default {
     mixins: [wizardFormMixin],
     data() {
-      return this.getData(CollectionTypes.Project, Page.ObjectivesFR);
+      return this.getData(CollectionType.Project, Page.ObjectivesFR);
     },
     // TODO need to reset non-required for timeseries depending on frCombinedMarket?
   };

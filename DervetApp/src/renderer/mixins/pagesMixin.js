@@ -3,18 +3,15 @@ import { mapGetters } from 'vuex';
 
 import MetadataFactory from '@/models/Project/Metadata/Factory';
 import Page from '@/models/Application/Page';
-import CollectionTypes from '@/models/Project/CollectionTypes';
+import { CollectionType } from '@/models/Project/CollectionType';
 import PageMetadata from '@/models/Application/PageMetadata';
 import * as paths from '@/router/constants';
 
 /*
-TODO use PageMetadataWithStatus from Application/PageMetadata
-
 tech extra fields
 ------
 id
 collectionType (instead of page)
-
 */
 
 const pagesMixin = {
@@ -54,7 +51,7 @@ const pagesMixin = {
       return this.externalIncentives.length > 0;
     },
     areAllExternalIncentivesComplete() {
-      const type = CollectionTypes.ExternalIncentive;
+      const type = CollectionType.ExternalIncentive;
       return _.every(this.externalIncentives, (bp) => this.isPageComplete(type, bp.id));
     },
     externalIncentivesError() {
@@ -67,7 +64,7 @@ const pagesMixin = {
       return this.billingPeriods.length > 0;
     },
     areAllBillingPeriodsComplete() {
-      const type = CollectionTypes.RetailTariff;
+      const type = CollectionType.RetailTariff;
       return _.every(this.billingPeriods, (bp) => this.isPageComplete(type, bp.id));
     },
     billingPeriodsErrorExists() {
@@ -98,59 +95,59 @@ const pagesMixin = {
         const p = this.$store.state.Project;
         return [
           {
-            collectionType: CollectionTypes.ICE,
+            collectionType: CollectionType.ICE,
             items: p.technologySpecsICE,
             techTypeFullName: 'Internal Combustion Engine (ICE) Generator Sets',
             techTypeShortName: 'ICE',
             path: paths.TECH_SPECS_ICE,
           },
           {
-            collectionType: CollectionTypes.DieselGen,
+            collectionType: CollectionType.DieselGen,
             items: p.technologySpecsDieselGen,
             techTypeFullName: 'Diesel Generator Sets',
             techTypeShortName: 'Diesel Generator',
             path: paths.TECH_SPECS_DIESEL,
           },
           {
-            collectionType: CollectionTypes.SolarPV,
+            collectionType: CollectionType.SolarPV,
             items: p.technologySpecsSolarPV,
             techTypeFullName: 'Solar Photovoltaic (PV) Sytems',
             techTypeShortName: 'PV',
-            metadata: MetadataFactory.getMetadata(CollectionTypes.SolarPV),
+            metadata: MetadataFactory.getMetadata(CollectionType.SolarPV),
             path: paths.TECH_SPECS_PV,
           },
           {}, // filler card (empty, but gives some order when rendered)
           {
-            collectionType: CollectionTypes.Battery,
+            collectionType: CollectionType.Battery,
             items: p.technologySpecsBattery,
             techTypeFullName: 'Battery Energy Storage Sytems (BESS)',
             techTypeShortName: 'Battery',
-            metadata: MetadataFactory.getMetadata(CollectionTypes.Battery),
+            metadata: MetadataFactory.getMetadata(CollectionType.Battery),
             path: paths.TECH_SPECS_BATTERY,
           },
           {}, // filler card (empty, but gives some order when rendered)
           {
-            collectionType: CollectionTypes.SingleEV,
+            collectionType: CollectionType.SingleEV,
             items: p.technologySpecsSingleEV,
             techTypeFullName: 'Single Electric Vehicle (EV)',
             techTypeShortName: 'Single EV',
-            metadata: MetadataFactory.getMetadata(CollectionTypes.SingleEV),
+            metadata: MetadataFactory.getMetadata(CollectionType.SingleEV),
             path: paths.TECH_SPECS_SINGLE_EV,
           },
           {
-            collectionType: CollectionTypes.FleetEV,
+            collectionType: CollectionType.FleetEV,
             items: p.technologySpecsFleetEV,
             techTypeFullName: 'Fleet Electric Vehicle (EV)',
             techTypeShortName: 'Fleet EV',
-            metadata: MetadataFactory.getMetadata(CollectionTypes.FleetEV),
+            metadata: MetadataFactory.getMetadata(CollectionType.FleetEV),
             path: paths.TECH_SPECS_FLEET_EV,
           },
           {
-            collectionType: CollectionTypes.ControllableLoad,
+            collectionType: CollectionType.ControllableLoad,
             items: p.technologySpecsControllableLoad,
             techTypeFullName: 'Controllable Loads (Demand Response)',
             techTypeShortName: 'Controllable Load',
-            metadata: MetadataFactory.getMetadata(CollectionTypes.ControllableLoad),
+            metadata: MetadataFactory.getMetadata(CollectionType.ControllableLoad),
             path: paths.TECH_SPECS_CONTROLLABLE_LOAD,
           },
         ];
@@ -218,7 +215,7 @@ const pagesMixin = {
           },
           {
             name: 'External Incentives',
-            page: CollectionTypes.ExternalIncentive,
+            page: CollectionType.ExternalIncentive,
             path: paths.FINANCIAL_INPUTS_EXTERNAL_INCENTIVES,
             active: true,
             complete: this.areAllExternalIncentivesComplete,
@@ -227,12 +224,19 @@ const pagesMixin = {
           },
           {
             name: 'Retail Tariff',
-            page: CollectionTypes.RetailTariff,
+            page: CollectionType.RetailTariff,
             path: paths.FINANCIAL_INPUTS_RETAIL_TARIFF,
             active: showRetailTariff,
             complete: !this.billingPeriodsErrorExists,
             errors: this.billingPeriodsError ? [this.billingPeriodsError] : [],
             submitted: true,
+          },
+          {
+            page: Page.FuelCosts,
+            ...this.pageMetadata[Page.FuelCosts],
+            complete: this.isPageComplete(Page.FuelCosts),
+            errors: this.getPageErrorList(Page.FuelCosts),
+            submitted: this.isPageSubmitted(Page.FuelCosts),
           },
         ];
       },

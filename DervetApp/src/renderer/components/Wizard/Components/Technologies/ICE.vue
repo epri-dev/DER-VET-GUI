@@ -74,12 +74,12 @@
           :errorMessage="getErrorMsg('efficiency')">
         </text-input>
 
-        <text-input
-          v-model="fuelCost"
-          :metadata="metadata.fuelCost"
-          :isInvalid="submitted && $v.fuelCost.$error"
-          :errorMessage="getErrorMsg('fuelCost')">
-        </text-input>
+        <radio-button-input
+          v-model="fuelType"
+          :metadata="metadata.fuelType"
+          :isInvalid="submitted && $v.fuelType.$error"
+          :errorMessage="getErrorMsg('fuelType')">
+        </radio-button-input>
 
         <fieldset class="section-group">
           <legend>Cost Function</legend>
@@ -222,14 +222,14 @@
   import { requiredIf, minValue } from 'vuelidate/lib/validators';
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import CollectionTypes from '@/models/Project/CollectionTypes';
+  import { CollectionType } from '@/models/Project/CollectionType';
 
   export default {
     name: 'TechnologySpecsICE',
     mixins: [wizardFormMixin],
     props: ['id'],
     data() {
-      return this.getData(CollectionTypes.ICE, CollectionTypes.ICE);
+      return this.getData(CollectionType.ICE, CollectionType.ICE);
     },
     validations() {
       const { validationSchema } = this;

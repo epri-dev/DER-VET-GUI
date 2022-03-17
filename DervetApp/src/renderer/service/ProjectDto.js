@@ -6,7 +6,7 @@ import path from 'path';
 
 import * as c from '@/models/Project/constants';
 import MetadataFactory from '@/models/Project/Metadata/Factory';
-import CollectionTypes from '@/models/Project/CollectionTypes';
+import { CollectionType } from '@/models/Project/CollectionType';
 import { billingPeriodsToCsv } from '@/models/Project/Metadata/Finances/RetailTariffBillingPeriod';
 import { externalIncentivesToCsv } from '@/models/Project/Metadata/Finances/ExternalIncentives';
 import { getAppDataPath, createDirectory, objectToCsv } from '@/util/file';
@@ -168,8 +168,8 @@ export const makeSingleBatteryParameter = (battery, inputsDirectory) => {
   const keys = {
     OMexpenses: makeBaseKey(values.variableOMCosts, FLOAT),
     ccost: makeBaseKey(values.capitalCost, FLOAT),
-    ccost_kw: makeBaseKey(values.capitalCostPerkW, FLOAT),
-    ccost_kwh: makeBaseKey(values.capitalCostPerkWh, FLOAT),
+    ccost_kW: makeBaseKey(values.capitalCostPerkW, FLOAT), // TODO fix tests
+    ccost_kWh: makeBaseKey(values.capitalCostPerkWh, FLOAT), // TODO fix tests
     ch_max_rated: makeBaseKey(chargingCapacity, FLOAT),
     ch_min_rated: makeBaseKey(ZERO, FLOAT), // hardcoded
     construction_year: makeBaseKey(values.constructionYear, PERIOD),
@@ -306,7 +306,7 @@ export const makeSingleDieselGensetParameter = (dieselGen) => {
     efficiency: makeBaseKey(values.efficiency, FLOAT),
     expected_lifetime: makeBaseKey(values.expectedLifetime, INT),
     fixed_om_cost: makeBaseKey(values.fixedOMCostIncludingExercise, FLOAT),
-    fuel_cost: makeBaseKey(values.fuelCost, FLOAT),
+    fuel_type: makeBaseKey(values.fuelType, STRING),
     macrs_term: makeBaseKey(values.macrsTerm, FLOAT),
     max_rated_capacity: makeBaseKey(setUndefinedNullToZero(values.ratedCapacityMaximum), FLOAT),
     min_power: makeBaseKey(values.minimumPower, FLOAT),
@@ -364,6 +364,9 @@ export const makeFinanceParameters = (project, inputsDirectory) => {
     ecc_mode: makeBaseKey(ZERO, BOOL), // TODO new input
     external_incentives: makeBaseKey(externalIncentivesExist, BOOL),
     federal_tax_rate: makeBaseKey(project.financeFederalTaxRate, FLOAT),
+    fuel_price_gas: makeBaseKey(setUndefinedNullToZero(project.fuelPriceGas), FLOAT),
+    fuel_price_liquid: makeBaseKey(setUndefinedNullToZero(project.fuelPriceLiquid), FLOAT),
+    fuel_price_other: makeBaseKey(setUndefinedNullToZero(project.fuelPriceOther), FLOAT),
     inflation_rate: makeBaseKey(project.financeInflationRate, FLOAT),
     npv_discount_rate: makeBaseKey(project.financeDiscountRate, FLOAT),
     property_tax_rate: makeBaseKey(project.financePropertyTaxRate, FLOAT),
@@ -440,7 +443,7 @@ export const makeSingleICEParameter = (iceGen) => {
     efficiency: makeBaseKey(values.efficiency, FLOAT),
     expected_lifetime: makeBaseKey(values.expectedLifetime, INT),
     fixed_om_cost: makeBaseKey(values.fixedOMCostIncludingExercise, FLOAT),
-    fuel_cost: makeBaseKey(values.fuelCost, FLOAT),
+    fuel_type: makeBaseKey(values.fuelType, STRING),
     macrs_term: makeBaseKey(values.macrsTerm, FLOAT),
     max_rated_capacity: makeBaseKey(setUndefinedNullToZero(values.ratedCapacityMaximum), FLOAT),
     min_power: makeBaseKey(values.minimumPower, FLOAT),
@@ -630,6 +633,7 @@ export const makeScenarioParameters = (project, inputsDirectory) => {
   const includeSiteLoad = (
     project.objectivesRetailDemandChargeReduction || project.objectivesRetailEnergyChargeReduction);
   const keys = {
+    activate_electricity_load_dump: makeBaseKey(ZERO, BOOL),
     apply_interconnection_constraints: makeBaseKey(convertToOneZero(includePoiConstraints), BOOL),
     binary: makeBaseKey(binary, BOOL),
     def_growth: makeBaseKey(2, FLOAT), // TODO ask for this value with site load
@@ -782,7 +786,7 @@ export const makeMonthlyCsv = (project) => {
   const yearObjectList = mapListToObjectList(year, 'year');
   addSingleSeries(yearObjectList, 'year', 'Year');
 
-  const metadata = MetadataFactory.getMetadata(CollectionTypes.Project);
+  const metadata = MetadataFactory.getMetadata(CollectionType.Project);
 
   // Add all available monthly to CSV
   MONTHLY_FIELDS.forEach((tsFieldName) => {
@@ -850,7 +854,7 @@ export const makeTimeSeriesCsv = (project) => {
   const dtIndex = makeEmptyCsvDataWithDatetimeIndex(project);
   addSingleSeries(dtIndex, TIMESERIES_DATETIME_INDEX, TIMESERIES_DATETIME_HEADER);
 
-  const projectMetadata = MetadataFactory.getMetadata(CollectionTypes.Project);
+  const projectMetadata = MetadataFactory.getMetadata(CollectionType.Project);
   // Add all available timeseries to CSV
   // limit to ts that have required not-eql-to false
   //   (pre-defined ts data may not have required set)
@@ -868,7 +872,7 @@ export const makeTimeSeriesCsv = (project) => {
   // Add PV timeseries
   _.forEach(project.technologySpecsSolarPV, (pv) => {
     const tsData = pv.values.tsSolarPVGenerationProfile;
-    const metadata = MetadataFactory.getMetadata(CollectionTypes.SolarPV);
+    const metadata = MetadataFactory.getMetadata(CollectionType.SolarPV);
     const columnHeader = metadata.tsSolarPVGenerationProfile.columnHeaderName;
     const { data, tag, header } = addTechnologyTimeSeries(tsData, pv.id, 'PV', columnHeader);
     addSingleSeries(data, tag, header);
@@ -877,7 +881,7 @@ export const makeTimeSeriesCsv = (project) => {
   // Add fleet EV timeseries
   _.forEach(project.technologySpecsFleetEV, (ev) => {
     const tsData = ev.values.tsFleetEVBaselineLoadProfile;
-    const metadata = MetadataFactory.getMetadata(CollectionTypes.FleetEV);
+    const metadata = MetadataFactory.getMetadata(CollectionType.FleetEV);
     const columnHeader = metadata.tsFleetEVBaselineLoadProfile.columnHeaderName;
     const { data, tag, header } = addTechnologyTimeSeries(tsData, ev.id, 'Fleet EV', columnHeader);
     addSingleSeries(data, tag, header);
@@ -886,7 +890,7 @@ export const makeTimeSeriesCsv = (project) => {
   // Add controllable load timeseries
   _.forEach(project.technologySpecsControllableLoad, (load) => {
     const tsData = load.values.tsControllableLoadProfile;
-    const metadata = MetadataFactory.getMetadata(CollectionTypes.FleetEV);
+    const metadata = MetadataFactory.getMetadata(CollectionType.FleetEV);
     const columnHeader = metadata.tsControllableLoadProfile.columnHeaderName;
     const { data, tag, header } = addTechnologyTimeSeries(tsData, load.id, 'Controllable Load', columnHeader);
     addSingleSeries(data, tag, header);

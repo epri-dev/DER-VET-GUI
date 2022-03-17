@@ -3,7 +3,7 @@ import Vuex from 'vuex';
 import Project from '@/store/modules/Project';
 import * as a from '@/store/actionTypes';
 import { LocType } from '@/models/Project/Metadata/TechnologySpecs/SolarPV';
-import CollectionTypes from '@/models/Project/CollectionTypes';
+import { CollectionType } from '@/models/Project/CollectionType';
 
 const createStore = (state: any) => (new Vuex.Store({
   modules: {
@@ -24,7 +24,7 @@ describe('project actions', () => {
     };
     const store: any = createStore(initialState);
 
-    await store.dispatch(a.ADD_COLLECTION_ITEM, { collectionType: CollectionTypes.Battery, contents: 'foo' });
+    await store.dispatch(a.ADD_COLLECTION_ITEM, { collectionType: CollectionType.Battery, contents: 'foo' });
     expect(store.state.project.technologySpecsSolarPV[0].values.loc).to.eql(null);
   });
 
@@ -35,7 +35,7 @@ describe('project actions', () => {
     };
     const store: any = createStore(initialState);
 
-    await store.dispatch(a.ACTIVATE_TECH, { collectionType: CollectionTypes.Battery, id: '123' });
+    await store.dispatch(a.ACTIVATE_TECH, { collectionType: CollectionType.Battery, id: '123' });
     expect(store.state.project.technologySpecsSolarPV[0].values.loc).to.eql(null);
   });
 
@@ -45,9 +45,9 @@ describe('project actions', () => {
       technologySpecsSolarPV: [{ id: 'foo', values: { loc: LocType.DC } }],
     };
     const store: any = createStore(initialState);
-    await store.dispatch(a.REMOVE_COLLECTION_ITEM, { collectionType: CollectionTypes.Battery, id: '123' });
+    await store.dispatch(a.REMOVE_COLLECTION_ITEM, { collectionType: CollectionType.Battery, id: '123' });
     expect(store.state.project.technologySpecsSolarPV[0].values.loc).to.eql(LocType.DC);
-    await store.dispatch(a.REMOVE_COLLECTION_ITEM, { collectionType: CollectionTypes.Battery, id: '456' });
+    await store.dispatch(a.REMOVE_COLLECTION_ITEM, { collectionType: CollectionType.Battery, id: '456' });
     expect(store.state.project.technologySpecsSolarPV[0].values.loc).to.eql(LocType.AC);
   });
 
@@ -58,9 +58,9 @@ describe('project actions', () => {
     };
     const store: any = createStore(initialState);
 
-    await store.dispatch(a.DEACTIVATE_TECH, { collectionType: CollectionTypes.Battery, id: '123' });
+    await store.dispatch(a.DEACTIVATE_TECH, { collectionType: CollectionType.Battery, id: '123' });
     expect(store.state.project.technologySpecsSolarPV[0].values.loc).to.eql(LocType.DC);
-    await store.dispatch(a.DEACTIVATE_TECH, { collectionType: CollectionTypes.Battery, id: '456' });
+    await store.dispatch(a.DEACTIVATE_TECH, { collectionType: CollectionType.Battery, id: '456' });
     expect(store.state.project.technologySpecsSolarPV[0].values.loc).to.eql(LocType.AC);
   });
 

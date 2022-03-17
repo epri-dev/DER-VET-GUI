@@ -5,7 +5,7 @@ import csvs from './csvs';
 const OUTPUT_DIRECTORY = '/path/to/output';
 const TRUE = true;
 
-export const projectFixtureAllActive = {
+export default {
   analysisHorizon: 0,
   analysisHorizonMode: '1',
   mtsBackupEnergyPrice: new Array(12).fill(100),
@@ -53,6 +53,9 @@ export const projectFixtureAllActive = {
   frEnergyPriceGrowth: 5,
   frCombinedMarket: 0,
   frDuration: 0,
+  fuelPriceGas: 0,
+  fuelPriceLiquid: 3.5,
+  fuelPriceOther: 0,
   tsFrPrice: csvs.price,
   tsFrUpPrice: csvs.price,
   tsFrDownPrice: csvs.price,
@@ -234,10 +237,10 @@ export const projectFixtureAllActive = {
       constructionYear: 2017,
       decomissioningCost: 0,
       efficiency: 0.15,
+      fuelType: 'gas',
       errorList: [],
       expectedLifetime: 13,
       fixedOMCostIncludingExercise: 0,
-      fuelCost: 0,
       includeSizeLimits: false,
       isReplaceable: false,
       macrsTerm: '3',
@@ -321,7 +324,7 @@ export const projectFixtureAllActive = {
       minimumPower: 100,
       startupTime: 0, // TODO remove
       efficiency: 0.15,
-      fuelCost: 3.5,
+      fuelType: 'liquid',
       capitalCost: 200,
       variableOMCost: 10,
       fixedOMCostIncludingExercise: 12,
@@ -344,11 +347,4 @@ export const projectFixtureAllActive = {
   tsUserPowerExportMin: _.fill(Array(8760), 0),
   tsUserPowerImportMax: _.fill(Array(8760), 900),
   tsUserPowerImportMin: _.fill(Array(8760), 0),
-};
-
-export const getProjectFixture = (inputsDir, resultsDir) => {
-  const res = _.cloneDeep(projectFixtureAllActive);
-  res.inputsDirectory = inputsDir;
-  res.resultsDirectory = resultsDir;
-  return res;
 };

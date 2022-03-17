@@ -28,6 +28,9 @@ export const FR_GROWTH = 'frGrowth';
 export const FR_ENERGY_PRICE_GROWTH = 'frEnergyPriceGrowth';
 export const FR_DURATION = 'frDuration';
 export const FR_COMBINED_MARKET = 'frCombinedMarket';
+export const FUEL_PRICE_GAS = 'fuelPriceGas';
+export const FUEL_PRICE_LIQUID = 'fuelPriceLiquid';
+export const FUEL_PRICE_OTHER = 'fuelPriceOther';
 export const LF_DURATION = 'lfDuration';
 export const LF_COMBINED_MARKET = 'lfCombinedMarket';
 export const LF_GROWTH = 'lfGrowth';
@@ -132,25 +135,6 @@ export const TS_ALL = [
   ...TS_USER_DEFINED_FIELDS,
 ];
 
-// TODO get rid of this (replaced by CollectionTypes)
-export const TECH_SPECS_BATTERY = 'technologySpecsBattery';
-export const TECH_SPECS_CONTROLLABLE_LOAD = 'technologySpecsControllableLoad';
-export const TECH_SPECS_DIESEL_GEN = 'technologySpecsDieselGen';
-export const TECH_SPECS_FLEET_EV = 'technologySpecsFleetEV';
-export const TECH_SPECS_ICE = 'technologySpecsICE';
-export const TECH_SPECS_SINGLE_EV = 'technologySpecsSingleEV';
-export const TECH_SPECS_SOLAR_PV = 'technologySpecsSolarPV';
-
-export const TECH_TYPES = [
-  TECH_SPECS_BATTERY,
-  TECH_SPECS_CONTROLLABLE_LOAD,
-  TECH_SPECS_DIESEL_GEN,
-  TECH_SPECS_FLEET_EV,
-  TECH_SPECS_ICE,
-  TECH_SPECS_SINGLE_EV,
-  TECH_SPECS_SOLAR_PV,
-];
-
 // Monthly
 export const MTS_BACKUP_ENERGY_PRICE = 'mtsBackupEnergyPrice';
 export const MTS_BACKUP_ENERGY_RESERVATION = 'mtsBackupEnergyReservation';
@@ -249,6 +233,13 @@ export const FINANCE_FIELDS = [
   FINANCE_PROPERTY_TAX_RATE,
   FINANCE_STATE_TAX_RATE,
 ];
+
+const FUEL_COST_FIELDS = [
+  FUEL_PRICE_GAS,
+  FUEL_PRICE_LIQUID,
+  FUEL_PRICE_OTHER,
+];
+
 export const FR_FIELDS = [
   FR_COMBINED_MARKET,
   FR_DURATION,
@@ -320,6 +311,8 @@ export class FieldListFactory {
       return START_PROJECT_FIELDS;
     } if (page === Page.Financial) {
       return FINANCE_FIELDS;
+    } if (page === Page.FuelCosts) {
+      return FUEL_COST_FIELDS;
     } if (page === Page.Objectives) {
       return OBJECTIVE_FIELDS;
     } if (page === Page.ObjectivesBackup) {

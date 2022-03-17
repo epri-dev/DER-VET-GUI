@@ -1,5 +1,5 @@
 import project from '@/store/modules/Project';
-import CollectionTypes from '@/models/Project/CollectionTypes.ts';
+import { CollectionType } from '@/models/Project/CollectionType.ts';
 import { makeTestHeader } from '../shared';
 
 const { mutations } = project;
@@ -17,7 +17,7 @@ describe('Project Mutations', () => {
       }],
     };
     const payload = {
-      collectionType: CollectionTypes.SolarPV,
+      collectionType: CollectionType.SolarPV,
       id: 'foo',
     };
     mutations.REMOVE_COLLECTION_ITEM(state, payload);
@@ -33,14 +33,14 @@ describe('Project Mutations', () => {
         },
       }],
     };
-    mutations.REMOVE_ALL_COLLECTION_ITEMS(state, CollectionTypes.SolarPV);
+    mutations.REMOVE_ALL_COLLECTION_ITEMS(state, CollectionType.SolarPV);
     expect(state.technologySpecsSolarPV).to.have.lengthOf(0);
   });
 
   it('should add a collection item', () => {
     const state = { technologySpecsSolarPV: [] };
     const payload = {
-      collectionType: CollectionTypes.SolarPV,
+      collectionType: CollectionType.SolarPV,
       id: 'foo',
       values: { name: 'pv' },
     };
@@ -63,7 +63,7 @@ describe('Project Mutations', () => {
       }],
     };
     const payload = {
-      collectionType: CollectionTypes.SolarPV,
+      collectionType: CollectionType.SolarPV,
       id: 'foo',
       values: {
         name: 'newPV',

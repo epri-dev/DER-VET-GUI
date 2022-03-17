@@ -109,7 +109,7 @@
   import FilePicker from '@/components/Shared/FilePicker';
   import wizardFormMixin from '@/mixins/wizardFormMixin';
   import Page from '@/models/Application/Page';
-  import CollectionTypes from '@/models/Project/CollectionTypes';
+  import { CollectionType } from '@/models/Project/CollectionType';
   import { OBJECTIVES } from '@/router/constants';
 
   export default {
@@ -118,7 +118,7 @@
       FilePicker,
     },
     data() {
-      return this.getData(CollectionTypes.Project, Page.ProjectConfiguration, OBJECTIVES);
+      return this.getData(CollectionType.Project, Page.ProjectConfiguration, OBJECTIVES);
     },
     validations() {
       const { validationSchema } = this;

@@ -2,7 +2,7 @@
 import _ from 'lodash';
 
 import Page from '@/models/Application/Page';
-import CollectionTypes from '@/models/Project/CollectionTypes';
+import { CollectionType } from '@/models/Project/CollectionType';
 import ValidationService from '@/service/Validation/ValidationService';
 import { makeTestHeader } from '../shared';
 
@@ -38,7 +38,7 @@ describe('Validation service', () => {
     tsUserEnergyMin: _.fill(Array(8760), 0),
     tsUserPowerExportMax: _.fill(Array(8760), 1900),
     tsUserPowerExportMin: _.fill(Array(8760), -1900),
-    [CollectionTypes.SolarPV]: [
+    [CollectionType.SolarPV]: [
       {
         id: 'foo',
         active: true,

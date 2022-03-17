@@ -118,14 +118,14 @@
   import { requiredIf } from 'vuelidate/lib/validators';
 
   import wizardFormMixin from '@/mixins/wizardFormMixin';
-  import CollectionTypes from '@/models/Project/CollectionTypes';
+  import { CollectionType } from '@/models/Project/CollectionType';
 
   export default {
     name: 'TechnologySpecsControllableLoad',
     mixins: [wizardFormMixin],
     props: ['id'],
     data() {
-      return this.getData(CollectionTypes.ControllableLoad, CollectionTypes.ControllableLoad);
+      return this.getData(CollectionType.ControllableLoad, CollectionType.ControllableLoad);
     },
     validations() {
       return {

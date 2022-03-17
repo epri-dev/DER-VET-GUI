@@ -1,6 +1,7 @@
 enum Page {
   ProjectConfiguration = 'projectConfiguration',
   Financial = 'financial',
+  FuelCosts = 'fuelCosts',
   Objectives = 'objectives',
   ObjectivesBackup = 'objectivesBackup',
   ObjectivesDA = 'objectivesDA',

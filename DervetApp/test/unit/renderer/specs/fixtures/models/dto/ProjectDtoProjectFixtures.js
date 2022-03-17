@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import path from 'path';
 
-export const testInputsDirectory = path.join('path', 'to', 'inputs');
-export const testResultsDirectory = path.join('path', 'to', 'outputs');
+export const testInputsDirectory = path.join('/path', 'to', 'inputs');
+export const testResultsDirectory = path.join('/path', 'to', 'outputs');
 export const testUuid1 = '14b1348c-29f2-402a-a167-2d30aae86680';
 export const testUuid2 = 'dbdd6d5d-e5e2-4948-bc3e-5d7ae3040ba0';
 
@@ -104,10 +104,10 @@ export const makeProjectDieselGen = id => ({
     constructionYear: 2017,
     decomissioningCost: 0,
     efficiency: 0.15,
+    fuelType: 'liquid',
     errorList: [],
     expectedLifetime: 13,
     fixedOMCostIncludingExercise: 0,
-    fuelCost: 0,
     includeSizeLimits: false,
     isReplaceable: false,
     macrsTerm: '3',
@@ -163,10 +163,10 @@ export const makeProjectICE = id => ({
     constructionYear: 2017,
     decomissioningCost: 0,
     efficiency: 0.15,
+    fuelType: 'liquid',
     errorList: [],
     expectedLifetime: 13,
     fixedOMCostIncludingExercise: 0,
-    fuelCost: 0,
     includeSizeLimits: false,
     isReplaceable: false,
     macrsTerm: '3',

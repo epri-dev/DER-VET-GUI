@@ -1,6 +1,6 @@
+import { YES_NO_OPTIONS, FUEL_TYPES } from '@/models/Project/Metadata/AllowedValues/constants';
 import { TechnologyMetadata } from '@/models/Project/Metadata/TechnologySpecs/Technology';
 import { ValueFieldMetadata } from '@/models/Project/Metadata/ValueField';
-import { YES_NO_OPTIONS } from '@/models/Project/Metadata/AllowedValues/constants';
 
 const SIZING_ALLOWED_VALUES = [
   {
@@ -35,8 +35,8 @@ export default class TechnologySpecsICEMetadata extends TechnologyMetadata {
     isRequired: true,
     minValue: 0,
     type: Number,
-    unit: 'gallons / kWh',
-    description: 'How many gallons of fuel does it take to generate 1 kWh of electricity? No variable efficiency is considered at this stage.',
+    unit: 'MMBtu/MWh',
+    description: 'How many million BTUs of fuel does it take to generate 1 MWh of electricity? No variable efficiency is considered at this stage.',
   };
   fixedOMCostIncludingExercise: ValueFieldMetadata = {
     displayName: 'Fixed O&M Cost, including exercise',
@@ -46,13 +46,12 @@ export default class TechnologySpecsICEMetadata extends TechnologyMetadata {
     unit: '$ / kW-year',
     description: 'What is the cost of fixed operations and maintenance (O&M), including the non-fuel expenses from exercising the internal combustion engine?',
   };
-  fuelCost: ValueFieldMetadata = {
-    displayName: 'Fuel Cost',
+  fuelType: ValueFieldMetadata = {
+    displayName: 'Fuel Type',
     isRequired: true,
-    minValue: 0,
-    type: Number,
-    unit: '$ / gallon',
-    description: 'This will be assumed to be constant over the analysis horizon',
+    type: String,
+    allowedValues: FUEL_TYPES,
+    description: 'Type of fuel that this DER can consume',
   };
   includeSizeLimits: ValueFieldMetadata = {
     displayName: 'Include limits on capacity sizing?',
