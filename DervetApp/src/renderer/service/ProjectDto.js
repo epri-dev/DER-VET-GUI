@@ -168,8 +168,8 @@ export const makeSingleBatteryParameter = (battery, inputsDirectory) => {
   const keys = {
     OMexpenses: makeBaseKey(values.variableOMCosts, FLOAT),
     ccost: makeBaseKey(values.capitalCost, FLOAT),
-    ccost_kW: makeBaseKey(values.capitalCostPerkW, FLOAT), // TODO fix tests
-    ccost_kWh: makeBaseKey(values.capitalCostPerkWh, FLOAT), // TODO fix tests
+    ccost_kW: makeBaseKey(values.capitalCostPerkW, FLOAT),
+    ccost_kWh: makeBaseKey(values.capitalCostPerkWh, FLOAT),
     ch_max_rated: makeBaseKey(chargingCapacity, FLOAT),
     ch_min_rated: makeBaseKey(ZERO, FLOAT), // hardcoded
     construction_year: makeBaseKey(values.constructionYear, PERIOD),
