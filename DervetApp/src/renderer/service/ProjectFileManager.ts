@@ -74,7 +74,7 @@ export const checkSchemaVersion = (project: any): Promise<object> => {
   // TODO update with the link to Andrew's powerpoint
   const errorMsg = `Import Error: This project is incompatible with the current GUI release.<br/> 
     To check whether your project is compatible, open the project.json file: it must contain a schemaVersion equal to ${PROJECT_SCHEMA_VERSION}.<br/>
-    To migrate a project exported with a previous version to the most current, see <b>link to script</b>`;
+    To migrate a project exported with a previous version to the most current, see https://github.com/epri-dev/DER-VET/tree/master/migrations/migrate_project_DERVET_GUI.py`;
   return new Promise((resolve, reject) => {
     project.schemaVersion === PROJECT_SCHEMA_VERSION ? resolve(project) : reject(errorMsg); // eslint-disable-line
   });
