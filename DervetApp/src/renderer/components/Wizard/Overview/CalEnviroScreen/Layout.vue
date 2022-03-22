@@ -14,7 +14,7 @@
 
       <br/>
 
-      <zip-code-filter 
+      <zip-code-filter
         @goClicked="onClickGo"
         @setErrorMessage="setErrorMessage"
       />
@@ -34,6 +34,9 @@
         </div>
       </div>
 
+      <div class="cal-enviro-screen-map-title-text">
+        CalEnviroScreen 4.0 Results (October 2021 Update)
+      </div>
       <div class="row">
         <div class="col-md-12 cal-enviro-screen-img">
            <inner-image-zoom :src="CesMap" :zoomSrc="CesMap" />

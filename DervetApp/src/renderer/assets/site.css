@@ -49,6 +49,11 @@ body {
     font: .85em;
 }
 
+.cal-enviro-screen-map-title-text {
+    text-align: center;
+    font-weight: bold;
+}
+
 .logo-img {
     max-width: 80%;
     height: auto;
