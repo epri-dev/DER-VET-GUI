@@ -33,7 +33,8 @@ start
 ```
 
 #### Migrating project.json from V1 to V2
-See https://github.com/epri-dev/DER-VET/tree/master/migrations/migrate_project_DERVET_GUI.py
+Script: https://github.com/epri-dev/DER-VET/tree/master/migrations/migrate_project_DERVET_GUI.py
+Instructions: https://github.com/epri-dev/DER-VET/blob/master/README.md#Migrating
 
 #### Adding a New Use Case
 1. In [extraResources/cases](extraResources/cases), add a folder containing project.json files that define a new use case.

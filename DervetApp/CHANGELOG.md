@@ -5,6 +5,40 @@ Questions and feedback can be submitted to the Electric Power Research Institute
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [1.2.0] - 2022-03-30
+## Added
+- fuel costs are now handled in a project-wide fashion
+  - adds a new Fuel Cost page in Finance
+  - this new page will conditionally appear if there is a fuel-consuming technology active
+  - user must set a fuel price for each fuel type that is called for (liquid, gas, and/or other)
+  - a fuel-consuming technology will require a fuel_type be chosen
+- version for project.json schema
+- CalEnviroScreen updated for version 4.0 (released in October 2021)
+## Changed
+- updates to the README with better packaging steps
+- updates the README with links to migration script
+- the import and export of a project is now achieved via a single project.json file
+- project.json files created from a previous GUI version are not compatible
+  - if a user tries to use an older project.json, they are given a link to a Python script
+    that lives in the dervet backend Python branch in a migrations/ folder
+  - this new backend script will transform an older project.json file into one that
+    is compatible with the GUI v1.2.0
+- all technologies are now a single page to capture all inputs (parameters and csv data)
+- major effort to refactor GUI validation of csv data
+  - validates data in the same fashion for an uploaded csv, and a project.json import
+  - now validates time series fields upon project import
+- major effort to reduce code redundancies in a structured way
+  - DRY button components
+  - Reorder Component directory
+  - consolidate wizard component functions in wizardFormMixin
+- retail tariff billing periods are now replaced upon import of OpenEI data
+- updated some parameters to match backend Python changes
+## Fixed
+- limit MACRS term allowed values to no greater than 20
+- Reset battery includeSizeLimits properly
+- Change fleet EV lost load cost units to $/kWh
+- The name of the Lifetime Present Value Results plot png file was corrected
+
 ## [1.1.2] - 2021-09-09
 ## Added
 - adds plotly button to reset axes in lower Results Dispatch, Results Reliability, and Results Summary plots
