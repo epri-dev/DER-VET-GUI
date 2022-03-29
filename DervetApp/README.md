@@ -89,7 +89,8 @@ The following assumes you have already gone through the Development Setup steps.
 ```
 env PYTHON_CONFIGURE_OPTS='--enable-shared' pyenv install 3.8.13
 cd dervet-gui/DervetBackEnd/dervet
-pyenv local 3.8.13
+pyenv virtualenv 3.8.13 venv
+pyenv activate venv
 pip install setuptools==52.0.0
 pip install -r requirements.txt -r requirements-packaging.txt
 pip install numpy_financial==1.0.0
@@ -104,7 +105,7 @@ cd dervet-gui/DervetBackEnd/dervet
 conda create -n venv python=3.8.13
 conda activate venv
 pip install setuptools==52.0.0
-conda install conda-forge::blas=*openblas -r requirements.txt -r requirements-packaging.txt
+conda install conda-forge::blas=*=openblas --file requirements.txt --file requirements-packaging.txt
 pip install numpy_financial==1.0.0
 pip install -e ./storagevet
 ```
@@ -127,7 +128,7 @@ Notes on running pyinstaller command on Windows:
 
 The built installer will be saved to:
 - mac: `DervetApp/build/DER-VET-x.x.x-mac.dmg`
-- win: `DervetApp/build/DER-VET Setup 0.0.1.exe`
+- win: `DervetApp/build/DER-VET Setup x.x.x.exe`
 
 Log files from running the packaged application are written here:
 - mac:`{user profile}/Library/Logs/DER-VET/main.log`
