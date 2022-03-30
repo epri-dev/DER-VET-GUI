@@ -9,7 +9,7 @@
 
           <p>
             Import an existing project by clicking the "Select Project" button below and selecting the folder from your computer that contains the
-            project you wish to import. Note that this folder must include the DER-VET <code>{{PROJECT_FILE}}</code> and <code>{{APPLICATION_FILE}}</code> files.
+            project you wish to import. Note that this folder must contain the DER-VET <code>{{PROJECT_FILE}}</code> file.
           </p>
 
           <div class="form-horizontal form-buffer">
@@ -61,9 +61,9 @@
             <div class="row">
               <div
                 class="col-md-12 error-text-color text-center"
-                v-if="this.importError !== null">
-                {{this.importError}}
-              </div>
+                v-if="importError !== null"
+                v-html="importError"
+              />
             </div>
 
           </div>
@@ -76,7 +76,7 @@
 <script>
   import FilePicker from '@/components/Shared/FilePicker.vue';
   import loadExistingProjectMixin from '@/mixins/loadExistingProjectMixin';
-  import { APPLICATION_FILE, PROJECT_FILE } from '@/service/ProjectFileManager';
+  import { PROJECT_FILE } from '@/service/ProjectFileManager';
 
   export default {
     components: {
@@ -85,7 +85,6 @@
     mixins: [loadExistingProjectMixin],
     data() {
       return {
-        APPLICATION_FILE,
         PROJECT_FILE,
         importDirectory: null,
         importError: null,

@@ -1,24 +1,39 @@
 import project from '@/store/modules/Project';
+import { CollectionType } from '@/models/Project/CollectionType.ts';
+import { makeTestHeader } from '../shared';
 
 const { getters } = project;
 
-describe('project getters', () => {
-  it('should get index of solar by ID', () => {
-    const solarId = 'e4ccd19f-0f3c-49ef-a955-bf063687982d';
-    const state = { technologySpecsSolarPV: [{ id: solarId, name: 'solar1' }] };
-
-    const index = getters.getIndexOfListFieldById(state)('technologySpecsSolarPV', solarId);
-
-    expect(index).to.equal(0);
-  });
+describe('Project Getters', () => {
+  makeTestHeader('-- PROJECT GETTERS --');
 
   it('should get index of list item by ID', () => {
-    const solarId = 'e4ccd19f-0f3c-49ef-a955-bf063687982d';
-    const solarItem = { id: solarId, name: 'solar1' };
+    const id = 'e4ccd19f-0f3c-49ef-a955-bf063687982d';
+    const solarItem = { id, name: 'solar1' };
     const state = { technologySpecsSolarPV: [solarItem] };
 
-    const actual = getters.getListFieldById(state)('technologySpecsSolarPV', solarId);
+    const actual = getters.getCollectionItemById(state)(CollectionType.SolarPV, id);
 
     expect(actual).to.equal(solarItem);
+  });
+
+  it('should return a collection clone', () => {
+    const id = 'e4ccd19f-0f3c-49ef-a955-bf063687982d';
+    const solarSpec = [{ id, name: 'solar1' }];
+    const state = { technologySpecsSolarPV: solarSpec };
+
+    const actual = getters.getCollectionClone(state)(CollectionType.SolarPV);
+
+    expect(actual).to.eql(solarSpec);
+  });
+
+  it('should return an index of a collection given the ID', () => {
+    const id = 'e4ccd19f-0f3c-49ef-a955-bf063687982d';
+    const solarSpec = { id, name: 'solar1' };
+    const state = { technologySpecsSolarPV: [solarSpec] };
+
+    const actual = getters.getIndexOfCollectionItemById(state)(CollectionType.SolarPV, id);
+
+    expect(actual).to.eql(0);
   });
 });

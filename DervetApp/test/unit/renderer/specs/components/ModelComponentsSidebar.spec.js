@@ -1,4 +1,4 @@
-import ModelComponentsSidebar from '@/components/WizardModelComponents/Sidebar';
+import ModelComponentsSidebar from '@/components/Wizard/Components/Sidebar';
 import mountVueElement from './helper';
 
 describe('ModelComponents-Sidebar', () => {

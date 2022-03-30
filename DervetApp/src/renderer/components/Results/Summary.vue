@@ -141,7 +141,7 @@
           toImageButtonOptions: {
             // set defaults for saving plot image
             format: 'png', // 'jpeg',
-            filename: 'peak-load-day',
+            filename: 'lifetime-present-value',
           },
           displayModeBar: true,
           modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d', 'toggleSpikelines'],

@@ -7,7 +7,6 @@ import last from 'lodash/last';
 import map from 'lodash/map';
 import mapValues from 'lodash/mapValues';
 import uniqWith from 'lodash/uniqWith';
-import { v4 as uuidv4 } from 'uuid';
 
 import {
   RateStructureItem,
@@ -17,8 +16,8 @@ import {
   ChargeType,
   WeekDay,
   TariffBillingPeriod,
-  WEEKDAY_ALLOWED_VALUES,
-} from '@/models/TariffBillingPeriod';
+  WEEKDAY_ALLOWED_VALUES_MAP,
+} from '@/models/Project/Metadata/Finances/RetailTariffBillingPeriod';
 
 interface PeriodsWithMonthIndex {
   startTime: number;
@@ -141,7 +140,7 @@ export const groupMonthIndicesToPeriods = (
 export const addTariffDetails = (
   res: PeriodsNoDetails[], rates: RateStructureItem[][], chargeType: ChargeType, weekday: WeekDay,
 ): TariffBillingPeriod[] => {
-  const weekdayValue = WEEKDAY_ALLOWED_VALUES.get(weekday).value;
+  const weekdayValue = WEEKDAY_ALLOWED_VALUES_MAP.get(weekday).value;
   return map(res, (val) => {
     const value = rates[val.valueId][0].rate;
     delete val.valueId;
@@ -149,9 +148,10 @@ export const addTariffDetails = (
       ...val,
       weekday: weekdayValue,
       chargeType,
-      id: uuidv4(),
-      complete: true,
       value,
+      excludingStartTime: null,
+      excludingEndTime: null,
+      name: null,
     };
   });
 };

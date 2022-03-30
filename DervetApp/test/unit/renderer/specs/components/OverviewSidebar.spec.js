@@ -1,4 +1,4 @@
-import OverviewSidebar from '@/components/WizardOverview/Sidebar';
+import OverviewSidebar from '@/components/Wizard/Overview/Sidebar';
 import mountVueElement from './helper';
 
 describe('Overview-Sidebar', () => {
