@@ -32,37 +32,35 @@ start
 +-------------------+
 ```
 
+#### Migrating project.json from V1 to V2
+Script: https://github.com/epri-dev/DER-VET/tree/master/migrations/migrate_project_DERVET_GUI.py
+Instructions: https://github.com/epri-dev/DER-VET/blob/master/README.md#Migrating
+
 #### Adding a New Use Case
-1. In [extraResources/cases](extraResources/cases), add a folder containing project.json and application.json files that define a new use case.
+1. In [extraResources/cases](extraResources/cases), add a folder containing project.json files that define a new use case.
 2. In [extraResources/cases/cases.json](extraResources/cases/cases.json), add a new entry with the name of the directory you added in Step #1 and the desired display name in the case-selection dropdown menu.
 3. Verify (or ask a developer to verify) that the case loads and runs in the app as expected.
 
 #### Development Setup
 
-``` bash
-# install Node on a mac with homebrew
-brew install nvm
-brew install node
+1. Install Node (any version >= 12)
 
-# install Node on windows
-https://nodejs.org/en/download/package-manager/#windows
-
-# install vue-cli globally with npm
+2. Install vue-cli globally with npm
+```
 npm install -g @vue/cli
 npm install -g @vue/cli-init
+```
 
-# install project's node dependencies (first time and whenever dependencies in package.json are updated)
+3. Install project's node dependencies (first time and whenever dependencies in package.json are updated)
+```
 npm install
+```
 
-# create a python3 virtualenv named venv in dervetpy and install dependencies
-cd dervetpy
-pip install virtualenv  # If not already installed
-virtualenv venv
-source venv/bin/activate
-pip install -r requirements.txt
+4. Follow the [backend](../DervetBackend/dervet/README.md) instructions to set up a python environment to run dervet
 
-# Add a .env file in the root of DervetApp with the following variables set to your python3 executable path and the main DERVET script
-DERVET_PYTHON_RUNTIME="/path/to/venv/python3"
+5. Add a .env file in the root of DervetApp with the following variables set to the python3 executable path (from step #4) and the main DERVET script
+```
+DERVET_PYTHON_RUNTIME="/path/to/python3"
 DERVET_PYTHON_SCRIPT="/path/to/dervet/run_DERVET.py"
 ```
 
@@ -83,22 +81,44 @@ npm run lint
 
 Setup & Dependencies
 
-1. Install [pyenv](https://github.com/pyenv/pyenv) and [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv).
+The following assumes you have already gone through the Development Setup steps. Setting up your python environment to run the backend (in the dervet folder) can be done in many ways, but these are specific steps that work for packaging it with pyinstaller.
+
+##### Mac
+
+1. Install [pyenv](https://github.com/pyenv/pyenv)
 2. Create a virtual environment with necessary dependencies:
 ```
-env PYTHON_CONFIGURE_OPTS='--enable-shared' pyenv install 3.6.5
-cd dervet-gui/DervetBackEnd
-pyenv local 3.6.5
-pyenv virtualenv 3.6.5 venv
-pip install -r requirements.txt -r packaging-requirements.txt
+env PYTHON_CONFIGURE_OPTS='--enable-shared' pyenv install 3.8.13
+cd dervet-gui/DervetBackEnd/dervet
+pyenv virtualenv 3.8.13 venv
+pyenv activate venv
+pip install setuptools==52.0.0
+pip install -r requirements.txt -r requirements-packaging.txt
+pip install numpy_financial==1.0.0
+pip install -e ./storagevet
+```
+
+##### Windows
+
+After following the Anaconda3 setup instructions in dervet/README.md setup
+```
+cd dervet-gui/DervetBackEnd/dervet
+conda create -n venv python=3.8.13
+conda activate venv
+pip install setuptools==52.0.0
+conda install conda-forge::blas=*=openblas --file requirements.txt --file requirements-packaging.txt
+pip install numpy_financial==1.0.0
+pip install -e ./storagevet
 ```
 
 Package
 
+In the .env file in the root of DervetApp, set PROJECT_SCHEMA_VERSION to the current schema version.
+
 ``` bash
 # package dervet backend with pyinstaller (note: change absolute dervet and storagevet paths in pyinstaller command)
 cd dervet-gui/DervetBackEnd/dervet
-pyinstaller --paths=/path/to/dervet-gui/DervetBackEnd/dervet/storagevet --paths=/path/to/dervet-gui/DervetBackEnd/dervet --additional-hooks-dir=./hooks/ --add-data "dervet/Schema.json:dervet"  --onefile run_DERVET.py
+pyinstaller --paths=/path/to/dervet-gui/DervetBackEnd/dervet/storagevet --paths=/path/to/dervet-gui/DervetBackEnd/dervet --additional-hooks-dir=./hooks/ --add-data "dervet/Schema.json:dervet" --onefile run_DERVET.py
 cp dist/run_DERVET ../../DervetApp/extraResources/
 cd dervet-gui/DervetApp
 npm run build
@@ -106,15 +126,14 @@ npm run build
 
 Notes on running pyinstaller command on Windows:
 - Use `--add-data "dervet/Schema.json;dervet"` (semi-colon instead of colon)
-- If running on Windows 10, you may need to specify the path to the libopenblas.dll file used by CVXOPT (it should be in `{python distribution}Lib\site-packages\cvxopt\.lib`)
 
 The built installer will be saved to:
-- mac: `DervetApp/build/dervetapp-x.x.x-mac.dmg`
-- win: `DervetApp/build/dervet-app Setup 0.0.1.exe`
+- mac: `DervetApp/build/DER-VET-x.x.x-mac.dmg`
+- win: `DervetApp/build/DER-VET Setup x.x.x.exe`
 
-Log files from running the packaged application will be written here:
-- mac:`{user profile}/Library/Logs/dervetapp/main.log`
-- win: `{user profile}\AppData\Roaming\dervetapp\logs\main.log`
+Log files from running the packaged application are written here:
+- mac:`{user profile}/Library/Logs/DER-VET/main.log`
+- win: `{user profile}\AppData\Roaming\DER-VET\logs\main.log`
 
 #### Icon Updating
 
@@ -142,9 +161,9 @@ Please make sure to update tests as appropriate.
 
 This project is licensed under the BSD (3-clause) License - see [LICENSE.txt](./LICENSE.txt).
 
-DER-VET v1.1.2
+DER-VET v1.2.0
 
-Copyright © 2021 Electric Power Research Institute, Inc. All Rights Reserved.
+Copyright © 2022 Electric Power Research Institute, Inc. All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software for any purpose
 with or without fee is hereby granted, provided that the above copyright

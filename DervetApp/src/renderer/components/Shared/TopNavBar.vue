@@ -31,18 +31,23 @@
 
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto">
+
           <b-button-group class="navbar-btn">
             <b-button
               v-if="!isActiveIndexOrAbout() && !runInProgress()"
-              @click="(runDervetDisabled) ? cannotRun() : runDervet()"
+              @click="runDervetDisabled ? cannotRun() : runDervet()"
               class="btn navbar-btn text-center"
               type="submit"
               size="md"
               variant="success">
               <span class="fas fa-play fa-md"/>
             </b-button>
-            <b-button size="md" v-if="runInProgress()" class="btn btn-danger navbar-btn" type="submit"
-              @click="killDervet()">
+            <b-button
+              v-if="runInProgress()"
+              @click="killDervet()"
+              class="btn btn-danger navbar-btn"
+              type="submit"
+              size="md">
               <span class="fas fa-stop fa-md"/>
             </b-button>
           </b-button-group>
@@ -61,8 +66,8 @@
 </template>
 
 <script>
-  import _ from 'lodash';
   import * as paths from '@/router/constants';
+  import somePageHasError from '@/util/page';
   import {
     INDEX,
     WIZARD_OVERVIEW,
@@ -73,16 +78,14 @@
   } from '@/router/constants';
   import FullLogo from '@/assets/FullLogoWhiteText.png';
   import openWebsiteInBrowser from '@/util/browser';
-  import technologySpecsMixin from '@/mixins/technologySpecsMixin';
-  import objectivesMixin from '@/mixins/objectivesMixin';
-  import financeMixin from '@/mixins/financeMixin';
+  import pagesMixin from '@/mixins/pagesMixin';
   import * as a from '@/store/actionTypes';
 
   const FORUM_LINK = 'https://www.der-vet.com/forum/';
   const USER_GUIDE_LINK = 'https://storagewiki.epri.com/index.php/DER_VET_User_Guide#Index';
 
   export default {
-    mixins: [technologySpecsMixin, objectivesMixin, financeMixin],
+    mixins: [pagesMixin],
     data() {
       return {
         INDEX,
@@ -101,56 +104,12 @@
       resultsExist() {
         return this.$store.state.Results.data !== null;
       },
-      activeFinancal() {
-        return this.filterActive(this.financial);
-      },
-      activeFinancialAndErrorsOnly() {
-        return this.errorsOnly(this.activeFinancal);
-      },
-      doesActiveFinancialErrorExist() {
-        return this.activeFinancialAndErrorsOnly.length > 0;
-      },
-      activeObjectives() {
-        return this.filterActive(this.objectives);
-      },
-      activeObjectivesAndErrorsOnly() {
-        return this.errorsOnly(this.activeObjectives);
-      },
-      doesActiveObjectivesErrorExist() {
-        return this.activeObjectivesAndErrorsOnly.length > 0;
-      },
-      activeTechErrorExists() {
-        let errorsTF = false;
-        this.techAll.forEach((tech) => {
-          if (tech.complete !== true) {
-            errorsTF = true;
-          }
-        });
-        return errorsTF;
-      },
-      anyErrorExists() {
-        return (this.overviewErrorExists() || this.activeTechErrorExists
-          || this.doesActiveFinancialErrorExist || this.doesActiveObjectivesErrorExist);
-      },
-      techAll() {
-        const techList = [];
-        this.techSpecs.forEach((item) => {
-          techList.push(this.filterNonActives(item.items));
-        });
-        return _.flatten(techList);
-      },
       runDervetDisabled() {
-        return this.anyErrorExists;
+        return somePageHasError(this.overviewPages) || somePageHasError(this.technologyItemsFlattened)
+          || somePageHasError(this.objectives) || somePageHasError(this.financial);
       },
     },
     methods: {
-      filterActive(listOfObjects) {
-        return _.filter(listOfObjects, 'show');
-      },
-      errorsOnly(listOfObjects) {
-        const pageWithErrors = _.filter(listOfObjects, ['isComplete', false]);
-        return pageWithErrors;
-      },
       goToIndex() {
         this.$router.push({ path: INDEX });
       },
@@ -176,43 +135,6 @@
       },
       cannotRun() {
         this.$router.push({ path: WIZARD_RUN_CASE }).catch(() => {});
-      },
-      getTechAssociatedInputsPath(tech) {
-        const techID = tech.id;
-        return `${tech.associatedInputs[0].path}/${techID}`;
-      },
-      // wizard overview
-      overviewAll() {
-        const overviewObject = {};
-        const overviewList = ['start', 'objectives', 'technologySpecs'];
-        overviewList.forEach((item) => {
-          overviewObject[item] = {
-            complete: this.$store.state.Application.pageCompleteness.overview[item],
-            errors: this.$store.state.Application.errorList.overview[item],
-            path: this.getOverviewPath(item),
-          };
-        });
-        return overviewObject;
-      },
-      overviewErrorExists() {
-        let errorsTF = false;
-        Object.values(this.overviewAll()).forEach((item) => {
-          if (item.complete !== true) {
-            errorsTF = true;
-          }
-        });
-        return errorsTF;
-      },
-      getOverviewPath(page) {
-        let overviewPath = '';
-        if (page === 'start') {
-          overviewPath = paths.PROJECT_CONFIGURATION;
-        } else if (page === 'objectives') {
-          overviewPath = paths.OBJECTIVES;
-        } else if (page === 'technologySpecs') {
-          overviewPath = paths.TECH_SPECS;
-        }
-        return overviewPath;
       },
     },
   };

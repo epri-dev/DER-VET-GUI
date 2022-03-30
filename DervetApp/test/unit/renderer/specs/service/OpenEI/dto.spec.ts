@@ -10,13 +10,16 @@ import {
 import {
   ChargeType,
   WeekDay,
-} from '@/models/TariffBillingPeriod';
+} from '@/models/Project/Metadata/Finances/RetailTariffBillingPeriod';
 import {
   expectedWeekdayBillingPeriods,
   rateFixture,
 } from '../../fixtures/service/OpenEI/fixtures';
+import { makeTestHeader } from '../../shared';
 
 describe('openEI dto', () => {
+  makeTestHeader('-- OPENEI DTO -- ');
+
   const rates = rateFixture.energyratestructure;
   const ungrouped = scheduleToPeriodsWithMonthIndex(rateFixture.energyweekdayschedule);
   const uniqueActual = getUniquePeriods(ungrouped);
@@ -66,9 +69,8 @@ describe('openEI dto', () => {
     expect(res).to.eql(expectedWeekdayBillingPeriods);
   });
 
-  it('should add weekend, chargetype, id details to periods', () => {
+  it('should add weekend, chargetype details to periods', () => {
     const actualWithDetails = addTariffDetails(res, rates, ChargeType.Energy, WeekDay.Weekdays);
-    delete actualWithDetails[0].id; // id is a random uuid, will be different every time
     expect(actualWithDetails[0]).to.eql({
       startMonth: 1,
       endMonth: 4,
@@ -77,12 +79,14 @@ describe('openEI dto', () => {
       value: 0.07152,
       chargeType: ChargeType.Energy,
       weekday: 1,
-      complete: true,
+      excludingEndTime: null,
+      excludingStartTime: null,
+      name: null,
     });
     expect(actualWithDetails.length).to.eql(11);
   });
 
-  it('should convert a full utility rate (energy and demand, weekday and weekend', () => {
+  it('should convert a full utility rate (energy and demand, weekday and weekend)', () => {
     const foo = convertUtilityRateToTariffList(rateFixture);
     expect(foo.length).to.eql(22);
   });

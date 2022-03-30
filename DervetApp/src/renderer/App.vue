@@ -10,6 +10,8 @@
 </template>
 
 <script>
+  import _ from 'lodash';
+
   import isEmpty from 'lodash/isEmpty';
   import TopNavBar from '@/components/Shared/TopNavBar';
 
@@ -26,6 +28,16 @@
         this.$store.dispatch(`OpenEI/${a.LOAD_UTILITIES}`, this.$store.state.OpenEI.apiKey)
           .catch(() => null);
       }
+      this.$store.subscribeAction({
+        after: (action) => {
+          const triggerValidation = _.includes(a.ACTIONS_THAT_TRIGGER_VALIDATION, action.type);
+          if (triggerValidation) {
+            // Trigger reset values to default
+            this.$store.dispatch(a.RESET_VALUES_TO_DEFAULT);
+            this.$store.dispatch(a.VALIDATE_PROJECT_AND_SET_ERRORS);
+          }
+        },
+      });
     },
   };
 </script>

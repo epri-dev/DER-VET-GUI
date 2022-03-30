@@ -1,4 +1,4 @@
-import loadCesScoresFromFile from '@/assets/CalEnviroScreen/csvLoader';
+import loadCesScoresFromFile from '@/service/CesLoader';
 import { parsedCsvToCesScores } from '@/models/CalEnviroScreen/Score';
 import * as a from '@/store/actionTypes';
 

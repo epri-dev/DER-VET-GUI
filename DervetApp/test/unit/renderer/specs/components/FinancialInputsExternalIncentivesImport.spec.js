@@ -1,8 +1,8 @@
-import FinancialInputsExternalIncentivesImport from '@/components/WizardModelComponents/FinancialInputsExternalIncentivesImport';
+import Import from '@/components/Wizard/Components/Financial/ExternalIncentives/Import';
 import mountVueElement from './helper';
 
-describe('FinancialInputsExternalIncentivesImport', () => {
-  const vm = mountVueElement(FinancialInputsExternalIncentivesImport, {});
+describe('External Incentives Import', () => {
+  const vm = mountVueElement(Import, {});
 
   it('should render title properly', () => {
     expect(vm.$el.querySelector('h3').textContent).to.contain('Import External Incentives');

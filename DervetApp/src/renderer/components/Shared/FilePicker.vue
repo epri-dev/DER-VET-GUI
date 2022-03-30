@@ -15,9 +15,6 @@
 <script>
   import { remote } from 'electron'; // eslint-disable-line
 
-  /* TODO
-    - Use typescript in script
-  */
   export default {
     props: {
       buttonAttributes: {

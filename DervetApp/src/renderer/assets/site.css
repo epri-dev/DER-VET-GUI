@@ -19,6 +19,10 @@ body {
     text-align: center;
 }
 
+.align-center {
+    text-align: center;
+}
+
 .error-align {
     margin-left: 10px;
 }
@@ -39,6 +43,15 @@ body {
 .cal-enviro-screen-img {
     max-width: 100%;
     height: auto;
+}
+
+.cal-enviro-screen-small-text {
+    font: .85em;
+}
+
+.cal-enviro-screen-map-title-text {
+    text-align: center;
+    font-weight: bold;
 }
 
 .logo-img {
@@ -125,6 +138,10 @@ body {
     padding-top: 0;
     padding-bottom: 0;
     padding-right: 30px !important;
+}
+
+.use-existing-button {
+    margin-left: 0px !important;
 }
 
 /*
@@ -289,6 +306,13 @@ textarea {
 
 .incomplete {
     color: #dc3545;
+}
+a.incomplete:hover {
+    color: #a01c28;
+}
+
+.incomplete-row {
+    border: 3px solid #dc3545;
 }
 
 .incomplete-btn {

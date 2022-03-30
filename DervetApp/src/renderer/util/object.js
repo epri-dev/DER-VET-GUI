@@ -1,7 +1,10 @@
 import _ from 'lodash';
 
-const operateOnKeysList = (obj, fieldList, callback) => (
-  _.mapValues(_.pick(obj, fieldList), callback)
+const operateOnKeysList = (obj, fields) => (
+  _.reduce(fields, (result, field) => {
+    result[field] = obj[field];
+    return result;
+  }, {})
 );
 
 export default operateOnKeysList;

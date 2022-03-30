@@ -2,7 +2,7 @@
 #       files already under revision cannot be ignored here.
 
 # Python/DERVET build and dist files
-DervetBackEnd/.python-version
+*.python-version
 DervetBackEnd/__pycache__/*
 DervetBackEnd/build/*
 DervetBackEnd/dist/*
