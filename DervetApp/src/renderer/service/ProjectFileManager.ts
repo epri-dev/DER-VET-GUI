@@ -7,6 +7,7 @@ import * as FileUtil from '@/util/file';
 
 export const PROJECT_FILE = 'project.json';
 const { PROJECT_SCHEMA_VERSION } = process.env;
+const STORE_TYPE = 'project';
 
 const getProjectPath = (directory: string) => path.join(directory, PROJECT_FILE);
 
@@ -14,10 +15,11 @@ export const exportProject = (directory: string, project: Project) => {
   // TODO LL handle error
   const projectCopy = _.cloneDeep(project);
   projectCopy.schemaVersion = PROJECT_SCHEMA_VERSION;
+  projectCopy.storeType = STORE_TYPE;
   const exportDirectory = path.join(directory, project.name);
   return fsPromises.mkdir(exportDirectory, { recursive: true })
     .then(() => Promise.all([
-      FileUtil.writeObjectToFile(getProjectPath(exportDirectory), project),
+      FileUtil.writeObjectToFile(getProjectPath(exportDirectory), projectCopy),
     ]));
 };
 
@@ -57,9 +59,9 @@ const parseFileBuffersForImport = (contents: any) => {
   return Promise.all(promises);
 };
 
-// TODO eventually unnecessary
+// TODO remove eventually, unnecessary
 const convertParsedToImportDto = (parsed: any) => (
-  parsed.find((item: any) => item.storeType === 'project')
+  parsed.find((item: any) => item.storeType === STORE_TYPE)
 );
 
 export const importProject = (directory: string): Promise<object> => (
@@ -71,7 +73,6 @@ export const importProject = (directory: string): Promise<object> => (
 );
 
 export const checkSchemaVersion = (project: any): Promise<object> => {
-  // TODO update with the link to Andrew's powerpoint
   const errorMsg = `Import Error: This project is incompatible with the current GUI release.<br/> 
     To check whether your project is compatible, open the project.json file: it must contain a schemaVersion equal to ${PROJECT_SCHEMA_VERSION}.<br/>
     To migrate a project exported with a previous version to the most current, see https://github.com/epri-dev/DER-VET/tree/master/migrations/migrate_project_DERVET_GUI.py`;
