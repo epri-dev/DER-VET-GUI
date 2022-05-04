@@ -109,20 +109,22 @@
           </div>
         </div>
 
-        <radio-button-input
-          v-model="shouldMaxDuration"
-          :metadata="metadata.shouldMaxDuration"
-          :isInvalid="submitted && $v.shouldMaxDuration.$error"
-          :errorMessage="getErrorMsg('shouldMaxDuration')">
-        </radio-button-input>
+        <div v-if="(shouldPowerSize === true) || (shouldEnergySize === true)">
+          <radio-button-input
+            v-model="shouldMaxDuration"
+            :metadata="metadata.shouldMaxDuration"
+            :isInvalid="submitted && $v.shouldMaxDuration.$error"
+            :errorMessage="getErrorMsg('shouldMaxDuration')">
+          </radio-button-input>
 
-        <div v-if="shouldMaxDuration === true">
-          <text-input
-            v-model="maxDuration"
-            :metadata="metadata.maxDuration"
-            :isInvalid="submitted && $v.maxDuration.$error"
-            :errorMessage="getErrorMsg('maxDuration')">
-          </text-input>
+          <div v-if="shouldMaxDuration === true">
+            <text-input
+              v-model="maxDuration"
+              :metadata="metadata.maxDuration"
+              :isInvalid="submitted && $v.maxDuration.$error"
+              :errorMessage="getErrorMsg('maxDuration')">
+            </text-input>
+          </div>
         </div>
 
         <text-input
