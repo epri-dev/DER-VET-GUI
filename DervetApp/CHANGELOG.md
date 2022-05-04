@@ -5,6 +5,12 @@ Questions and feedback can be submitted to the Electric Power Research Institute
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [1.2.1] - 2022-05-04
+## Added
+- disable the setting of the battery duration_max parameter when NOT sizing the battery.
+## Fixed
+- allow import of project.json files created via the Export Project button
+
 ## [1.2.0] - 2022-03-30
 ## Added
 - fuel costs are now handled in a project-wide fashion

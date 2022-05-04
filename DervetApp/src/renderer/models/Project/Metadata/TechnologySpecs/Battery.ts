@@ -143,7 +143,7 @@ export default class BatteryMetadata extends TechnologyMetadata {
     isRequired: true,
     type: Boolean,
     unit: null,
-    description: 'Include Housekeeping Power" – Apply a constant AC power consumption that does not discharge the battery directly. This is usually associated with HVAC requirements and keeping all equipment on.',
+    description: 'Include Housekeeping Power? – Apply a constant AC power consumption that does not discharge the battery directly. This is usually associated with HVAC requirements and keeping all equipment on.',
     allowedValues: YES_NO_OPTIONS,
   };
   includeCycleDegradation: ValueFieldMetadata = {
