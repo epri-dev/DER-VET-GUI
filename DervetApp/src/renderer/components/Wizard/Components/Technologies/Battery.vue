@@ -532,6 +532,12 @@
             return this.shouldPowerSize === false;
           }),
         },
+        shouldMaxDuration: {
+          ...validationSchema.shouldMaxDuration,
+          required: requiredIf(function isshouldMaxDurationRequired() {
+            return this.shouldEnergySize || this.shouldPowerSize;
+          }),
+        },
       };
     },
     beforeMount() {
@@ -601,7 +607,7 @@
           }
         }
         if ((this.shouldEnergySize === false) && (this.shouldPowerSize === false)) {
-          this.resetNonRequired(['includeSizeLimits']);
+          this.resetNonRequired(['includeSizeLimits', 'shouldMaxDuration', 'maxDuration']);
         }
         if (this.shouldMaxDuration === false) {
           this.resetNonRequired(['maxDuration']);
