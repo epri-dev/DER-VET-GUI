@@ -172,7 +172,7 @@ export default class BatteryMetadata extends TechnologyMetadata {
   };
   maxDuration: ValueFieldMetadata = {
     displayName: 'Maximum Duration',
-    isRequired: true,
+    isRequired: false,
     minValue: 1, // differs from schema; want gt 0
     type: Number,
     unit: 'hours',
@@ -270,11 +270,10 @@ export default class BatteryMetadata extends TechnologyMetadata {
   };
   shouldMaxDuration: ValueFieldMetadata = {
     displayName: 'Set the max duration of the size?',
-    isRequired: true,
+    isRequired: false,
     type: Boolean,
-    unit: null,
-    description: null,
     allowedValues: YES_NO_OPTIONS,
+    description: 'Advanced sizing setting.',
   };
   shouldPowerSize: ValueFieldMetadata = {
     displayName: 'Power Capacity Sizing',
