@@ -5,6 +5,11 @@ Questions and feedback can be submitted to the Electric Power Research Institute
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [1.2.2] - 2022-07-07
+### Fixed
+- set the default isRequired attribute to false for maxDuration
+  - it becomes required only when sizing is ON
+
 ## [1.2.1] - 2022-05-04
 ## Added
 - disable the setting of the battery duration_max parameter when NOT sizing the battery.
