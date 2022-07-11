@@ -1,3 +1,4 @@
 [submodule "DervetBackEnd/dervet"]
 	path = DervetBackEnd/dervet
-	url = git@gitlab.epri.com:storagevet/dervet.git
+	url = https://github.com/epri-dev/DER-VET.git
+	branch = master
