@@ -12,7 +12,6 @@ const getDefaultResultState = () => ({
   // PLOTS - null if the charts dont exist
   deferralVueObjects: null,
   designVueObjects: null,
-  // dispatchVueObjects: null,
   dispatchData: null,
   dispatchEnergyPriceMapData: null,
   financialVueObjects: null,
@@ -43,17 +42,6 @@ const mutations = {
     state.dispatchEnergyPriceMapData = runData.dispatchEnergyPriceMapData;
     state.dispatchData = runData.dispatchData;
   },
-  // SET_CURRENT_DISPATCH_DATA(state, windowSize) {
-  //   state.dispatchDataIterator.setCurrentValue(windowSize);
-  // },
-  // SET_NEXT_DISPATCH_DATA(state, payload) {
-  //   const { currStartDate, currEndDate, windowSize } = payload;
-  //   state.dispatchDataIterator.next(currStartDate, currEndDate, windowSize);
-  // },
-  // SET_PREVIOUS_DISPATCH_DATA(state, payload) {
-  //   const { currStartDate, currEndDate, windowSize } = payload;
-  //   state.dispatchDataIterator.previous(currStartDate, currEndDate, windowSize);
-  // },
   CREATE_FINANCIAL_PLOTS(state) {
     const runData = state.data;
     state.financialVueObjects = {
