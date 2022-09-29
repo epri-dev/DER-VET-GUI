@@ -833,7 +833,8 @@ export const makeEmptyCsvDataWithDatetimeIndex = (project) => {
   return datetimeIndex.map(d => ({ [TIMESERIES_DATETIME_INDEX]: d }));
 };
 
-export const addTechnologyTimeSeries = (tsData, id, tag, columnHeader) => {
+export const addTechnologyTimeSeries = (tsData, id, tagName, columnHeader) => {
+  const tag = `${tagName} -- ${id}`;
   const data = mapListToObjectList(tsData, tag);
   const header = `${columnHeader}/${id}`;
   return { data, tag, header };

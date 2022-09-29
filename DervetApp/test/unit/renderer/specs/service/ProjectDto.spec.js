@@ -37,6 +37,7 @@ import {
 } from '@/service/ProjectDto';
 
 import projectFixture from '../fixtures/models/dto/projectFixture.js';
+import projectFixtureMultiplePV from '../fixtures/models/dto/projectFixtureMultiplePV.js';
 import projectFixtureAllActive from '../fixtures/models/dto/projectFixture-everythingActive.js';
 import modelParametersFixture from '../fixtures/models/dto/model_params_fixture.json';
 import {
@@ -82,6 +83,11 @@ describe('Project to ModelParameters DTO', () => {
     expect(actual.length).to.eql(6);
   });
 
+  it('should create an object containing CSVs needed to run DERVET with multiple PV', () => {
+    const actual = makeCsvs(projectFixtureMultiplePV, testInputsDirectory);
+    expect(actual.length).to.eql(6);
+  });
+
   it('should create a battery CSV file path', () => {
     const id = '3d5e9040-5433-4545-b100-bc271c600377';
     const actual = makeBatteryCsvFilePath(testInputsDirectory, id);
@@ -113,6 +119,14 @@ describe('Project to ModelParameters DTO', () => {
   it('should create a CSV containing timeseries data', () => {
     const actual = makeTimeSeriesCsv(projectFixture);
     expect(actual).to.have.string('Datetime (he)');
+    // TODO add more details here
+  });
+
+  it('should create a CSV containing timeseries data with multiple PV columns', () => {
+    const actual = makeTimeSeriesCsv(projectFixtureMultiplePV);
+    expect(actual).to.have.string('Datetime (he)');
+    expect(actual).to.have.string('PV Gen (kW/rated kW)/1');
+    expect(actual).to.have.string('PV Gen (kW/rated kW)/2');
   });
 
   it('should generate a datetime index given a data year and hourly timestep', () => {

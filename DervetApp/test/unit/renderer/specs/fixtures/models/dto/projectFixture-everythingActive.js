@@ -204,7 +204,7 @@ export default {
       expectedLifetime: 99,
       fixedOMCosts: 0,
       gamma: 0,
-      generationProfile: csvs.deferralLoad, // TODO fix this
+      tsSolarPVGenerationProfile: csvs.generationProfilePV,
       includeCurtailment: false,
       includePPA: false,
       includeSizeLimits: false,
