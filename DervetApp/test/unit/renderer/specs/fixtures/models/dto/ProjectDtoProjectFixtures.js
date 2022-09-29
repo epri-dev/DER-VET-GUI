@@ -200,7 +200,7 @@ export const makeProjectPV = id => ({
     expectedLifetime: 99,
     fixedOMCosts: 0,
     gamma: null,
-    generationProfile: _.fill(Array(5), 1),
+    tsSolarPVGenerationProfile: _.fill(Array(5), 1),
     includeCurtailment: false,
     includePPA: false,
     includeSizeLimits: false,
