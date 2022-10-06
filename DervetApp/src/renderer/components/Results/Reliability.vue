@@ -206,7 +206,7 @@
             dash: 'solid', // 'dot', 'dashdot',
           },
           // text: 'Probability', // text will appear below value on hover
-          hovertemplate: 'Probability : <b>%{y:.2f}</b><br><b>%{x}</b> <i>hour</i> outage',
+          hovertemplate: 'Probability (%) : <b>%{y:.1f}</b><br><b>%{x}</b> <i>hour</i> outage',
           cliponaxis: false, // clip markers/lines at axes when true (default)
 
         };
@@ -217,7 +217,7 @@
             orientation: 'v', // 'h' set how modebar will appear
           },
           title: {
-            text: 'Load Coverage Probability',
+            text: 'Load Coverage Probability (%)',
             font: {
               size: 25,
             },
@@ -244,14 +244,14 @@
           },
           yaxis: {
             title: {
-              text: 'Load Coverage Probability',
+              text: 'Load Coverage Probability (%)',
               font: {
                 size: 12,
               },
               standoff: 25, // create gap between axis and title
             },
-            range: [0, 1.01],
-            dtick: 0.1,
+            range: [0, 101],
+            dtick: 10,
             fixedrange: true,
             // hoverformat: '.2r',
             // showgrid: false,
