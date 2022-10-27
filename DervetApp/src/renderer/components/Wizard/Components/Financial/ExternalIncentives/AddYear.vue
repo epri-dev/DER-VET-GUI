@@ -67,7 +67,7 @@
         if (!this.$store.state.Project.startYear) {
           return 0;
         }
-        return this.$store.state.Project.startYear + 1;
+        return this.$store.state.Project.startYear;
       },
       validatedSave() {
         // TODO Do null reset for '' values?
