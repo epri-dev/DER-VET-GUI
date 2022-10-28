@@ -25,9 +25,8 @@ export class TechnologyMetadata {
     type: Number,
   };
   [DECOMISSIONING_COST]: ValueFieldMetadata = {
-    displayName: 'Decomissioning Cost',
+    displayName: 'Decommissioning Cost',
     isRequired: true,
-    minValue: 0,
     type: Number,
     unit: '$',
     description: 'The cost to decommission this technology when it reaches its expected lifetime end',
