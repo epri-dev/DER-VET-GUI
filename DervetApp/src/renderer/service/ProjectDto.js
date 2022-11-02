@@ -602,17 +602,34 @@ export const makeRetailTimeShiftParameters = (project) => {
 };
 
 export const makeScenarioParameters = (project, inputsDirectory) => {
+  const isPowerSizingOn = (projectTechSpecs) => {
+    // For a battery, power sizing can be on or off when sizing; check with .shouldPowerSize
+    // For all other DERS, check with .shouldSize
+    if (checkNotNullOrEmpty(projectTechSpecs)) {
+      let techNum = 0;
+      while (techNum < projectTechSpecs.length) {
+        if ((projectTechSpecs[techNum].values.shouldSize)
+        || (projectTechSpecs[techNum].values.shouldPowerSize)) {
+          return true;
+        }
+        techNum += 1;
+      }
+    }
+    return false;
+  };
+  const shouldBinaryBeOff = (project) => {
+    if (isPowerSizingOn(project.technologySpecsDieselGen)
+    || isPowerSizingOn(project.technologySpecsICE)
+    || isPowerSizingOn(project.technologySpecsSolarPV)
+    || isPowerSizingOn(project.technologySpecsBattery)) {
+      return true;
+    }
+    return false;
+  };
   // find BINARY value
   let binary = ONE;
-  const includeBattery = checkNotNullOrEmpty(project.technologySpecsBattery);
-  if (includeBattery) {
-    let batteryNum = 0;
-    while (batteryNum < project.technologySpecsBattery.length) {
-      if (project.technologySpecsBattery[batteryNum].values.shouldEnergySize) {
-        binary = ZERO;
-      }
-      batteryNum += 1;
-    }
+  if (shouldBinaryBeOff(project)) {
+    binary = ZERO;
   }
 
   // find N value

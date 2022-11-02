@@ -7,7 +7,7 @@ import { makeTestHeader } from '../../shared';
 describe('DAPriceTimeSeries model', () => {
   makeTestHeader('-- DA PRICE TIMESERIES -- ');
 
-  const projectFixtureClone = _.cloneDeep(projectFixture)
+  const projectFixtureClone = _.cloneDeep(projectFixture);
 
   projectFixtureClone.objectivesDA = true;
   projectFixtureClone.sizingEquipment = true;
