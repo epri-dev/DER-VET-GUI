@@ -603,13 +603,15 @@ export const makeRetailTimeShiftParameters = (project) => {
 
 export const makeScenarioParameters = (project, inputsDirectory) => {
   const isPowerSizingOn = (projectTechSpecs) => {
-    // For a battery, power sizing can be on or off when sizing; check with .shouldPowerSize
+    // For a battery, power sizing can be on or off when sizing
+    // set to true for all battery sizing; check .shouldPowerSize and .shouldEnergySize
     // For all other DERS, check with .shouldSize
     if (checkNotNullOrEmpty(projectTechSpecs)) {
       let techNum = 0;
       while (techNum < projectTechSpecs.length) {
         if ((projectTechSpecs[techNum].values.shouldSize)
-        || (projectTechSpecs[techNum].values.shouldPowerSize)) {
+        || (projectTechSpecs[techNum].values.shouldPowerSize)
+        || (projectTechSpecs[techNum].values.shouldEnergySize)) {
           return true;
         }
         techNum += 1;

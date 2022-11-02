@@ -25,7 +25,7 @@ const POWER_SIZING_ALLOWED_VALUES = [
 
 export default class BatteryMetadata extends TechnologyMetadata {
   auxiliaryLoad: ValueFieldMetadata = {
-    displayName: 'Auxilary Load',
+    displayName: 'Auxiliary Load',
     isRequired: true,
     minValue: 1, // differs from schema; want gt 0
     type: Number,
