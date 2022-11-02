@@ -328,6 +328,9 @@ describe('Project to ModelParameters DTO', () => {
   it('should make scenario parameters', () => {
     const actual = makeScenarioParameters(projectFixture, testInputsDirectory);
     expect(Object.keys(actual[''].keys).length).to.eql(26);
+    expect(Object.keys(actual[''].keys.binary.opt_value)).to.eql(['0']);
+    // TODO make this test work
+    // expect(Object.keys(actual[''].keys.n.opt_value)).to.eql(['month']);
   });
 
   it('should make SR parameters', () => {
