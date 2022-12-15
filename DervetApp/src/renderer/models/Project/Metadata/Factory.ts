@@ -18,10 +18,7 @@ class MetadataFactory {
     } if (type === CollectionType.Battery) {
       return new BatteryMetadata();
     } if (type === CollectionType.ControllableLoad) {
-      const metadata = new TechnologySpecsControllableLoadMetadata();
-      // TODO think of a better way to do this
-      delete metadata.macrsTerm;
-      return metadata;
+      return new TechnologySpecsControllableLoadMetadata();
     } if (type === CollectionType.DieselGen) {
       return new TechnologySpecsDieselGenMetadata();
     } if (type === CollectionType.FleetEV) {

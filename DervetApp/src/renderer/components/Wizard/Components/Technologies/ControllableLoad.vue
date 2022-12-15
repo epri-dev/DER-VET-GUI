@@ -25,6 +25,25 @@
           :errorMessage="getErrorMsg('ratedCapacity')">
         </text-input>
 
+        <fieldset class="section-group">
+          <legend>Cost Function</legend>
+
+          <text-input
+            v-model="capitalCost"
+            :metadata="metadata.capitalCost"
+            :isInvalid="submitted && $v.capitalCost.$error"
+            :errorMessage="getErrorMsg('capitalCost')">
+          </text-input>
+
+        </fieldset>
+
+        <text-input
+          v-model="fixedOMCosts"
+          :metadata="metadata.fixedOMCosts"
+          :isInvalid="submitted && $v.fixedOMCosts.$error"
+          :errorMessage="getErrorMsg('fixedOMCosts')">
+        </text-input>
+
         <text-input
           v-model="constructionYear"
           :metadata="metadata.constructionYear"
@@ -60,6 +79,17 @@
             :isInvalid="submitted && $v.replacementConstructionTime.$error"
             :errorMessage="getErrorMsg('replacementConstructionTime')">
           </text-input>
+
+          <fieldset class="section-group">
+            <legend>Replacement Cost Function</legend>
+            <text-input
+              v-model="replacementCost"
+              :metadata="metadata.replacementCost"
+              :isInvalid="submitted && $v.replacementCost.$error"
+              :errorMessage="getErrorMsg('replacementCost')">
+            </text-input>
+
+          </fieldset>
         </div>
 
         <text-input
@@ -92,6 +122,15 @@
           :isInvalid="submitted && $v.ter.$error"
           :errorMessage="getErrorMsg('ter')">
         </text-input>
+
+        <drop-down-input
+          v-model="macrsTerm"
+          :metadata="metadata.macrsTerm"
+          :isInvalid="submitted && $v.macrsTerm.$error"
+          :errorMessage="getErrorMsg('macrsTerm')">
+        </drop-down-input>
+
+        <hr>
 
         <time-series-upload
           :chartKey="chartKey"
@@ -157,6 +196,9 @@
       }
     },
     methods: {
+      getErrorMsg(fieldName) {
+        return this.getErrorMsgWrapped(this.validationSchema, this.$v, fieldName);
+      },
       resetAllNonRequired() {
         // reset all non-required inputs to their defaults prior to saving
         if (this.isReplaceable === false) {

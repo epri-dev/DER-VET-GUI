@@ -486,6 +486,15 @@ export const makeModelParamsControllableLoad = id => ({
   [id]: {
     active: 'yes',
     keys: {
+      ccost: {
+        opt_value: '800',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
       construction_year: {
         opt_value: '2017',
         sensitivity: {
@@ -531,6 +540,24 @@ export const makeModelParamsControllableLoad = id => ({
         },
         type: 'int',
       },
+      fixed_om: {
+        opt_value: '50',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      macrs_term: {
+        opt_value: '3',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
       name: {
         opt_value: 'demand response',
         sensitivity: {
@@ -560,6 +587,15 @@ export const makeModelParamsControllableLoad = id => ({
       },
       power_rating: {
         opt_value: '100',
+        sensitivity: {
+          active: 'no',
+          coupled: 'None',
+          value: 'nan',
+        },
+        type: 'float',
+      },
+      rcost: {
+        opt_value: '250',
         sensitivity: {
           active: 'no',
           coupled: 'None',
