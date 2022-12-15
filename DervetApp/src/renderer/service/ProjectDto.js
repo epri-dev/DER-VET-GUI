@@ -232,15 +232,19 @@ export const makeSingleControllableLoadParameter = (controllableLoad) => {
   const replaceConstruction = setUndefinedNullToOne(values.replacementConstructionTime);
 
   const keys = {
+    ccost: makeBaseKey(values.capitalCost, FLOAT),
     construction_year: makeBaseKey(values.constructionYear, PERIOD),
     decommissioning_cost: makeBaseKey(values.decomissioningCost, FLOAT),
     duration: makeBaseKey(setUndefinedNullToZero(values.duration), FLOAT),
     'ecc%': makeBaseKey(ZERO, FLOAT), // TODO hardcoded
     expected_lifetime: makeBaseKey(values.expectedLifetime, INT),
+    fixed_om: makeBaseKey(values.fixedOMCosts, FLOAT),
+    macrs_term: makeBaseKey(values.macrsTerm, FLOAT),
     name: makeBaseKey(values.name, STRING),
     nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
     operation_year: makeBaseKey(values.operationYear, PERIOD),
     power_rating: makeBaseKey(values.ratedCapacity, FLOAT),
+    rcost: makeBaseKey(setUndefinedNullToZero(values.replacementCost), FLOAT),
     replaceable: makeBaseKey(convertToOneZero(values.isReplaceable), BOOL),
     replacement_construction_time: makeBaseKey(replaceConstruction, INT),
     salvage_value: makeBaseKey(calculateSalvageValue(values), STRING_INT),
@@ -910,7 +914,7 @@ export const makeTimeSeriesCsv = (project) => {
   // Add controllable load timeseries
   _.forEach(project.technologySpecsControllableLoad, (load) => {
     const tsData = load.values.tsControllableLoadProfile;
-    const metadata = MetadataFactory.getMetadata(CollectionType.FleetEV);
+    const metadata = MetadataFactory.getMetadata(CollectionType.ControllableLoad);
     const columnHeader = metadata.tsControllableLoadProfile.columnHeaderName;
     const { data, tag, header } = addTechnologyTimeSeries(tsData, load.id, 'Controllable Load', columnHeader);
     addSingleSeries(data, tag, header);
