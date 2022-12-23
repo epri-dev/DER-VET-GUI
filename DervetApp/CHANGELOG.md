@@ -5,6 +5,23 @@ Questions and feedback can be submitted to the Electric Power Research Institute
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [1.2.3] - 2022-12-16
+### Fixed
+- resolve data not being displayed in the Financial Results chart
+- the Load Coverage Probability plot (in Results--Reliability) will be labeled and shown as percent
+- allow External Incentives to be entered for the Project Start Year
+- properly set the binary model parameter based on the type of sizing being requested
+- allow a Controllable Load Technology to be saved
+### Added
+- allow for more than one time series input from a given technology type
+  - for example, two PV systems each with their own time series input
+- add several standard model parameter inputs to Controllable Load Technology
+### Changed
+- disallow negative energy prices when DER-VET sizing is ON
+  (however, note that the back-end code does allow this with a Warning)
+  - change negative values to zero in both Sample DA Price Time Series CSV files
+- allow decommissioning costs to be negative
+
 ## [1.2.2] - 2022-07-07
 ### Fixed
 - set the default isRequired attribute to false for maxDuration

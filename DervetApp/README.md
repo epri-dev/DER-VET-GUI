@@ -161,7 +161,7 @@ Please make sure to update tests as appropriate.
 
 This project is licensed under the BSD (3-clause) License - see [LICENSE.txt](./LICENSE.txt).
 
-DER-VET v1.2.2
+DER-VET v1.2.3
 
 Copyright © 2022 Electric Power Research Institute, Inc. All Rights Reserved.
 

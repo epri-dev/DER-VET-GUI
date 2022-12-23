@@ -1,6 +1,6 @@
 {
   "name": "DER-VET",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "author": "",
   "description": "",
   "license": null,
@@ -89,7 +89,7 @@
     "numeral": "^2.0.6",
     "papaparse": "^5.2.0",
     "path": "^0.12.7",
-    "plotly.js": "1.54.0",
+    "plotly.js": "2.14.0",
     "tinycolor2": "^1.4.2",
     "uuid": "^8.3.0",
     "vue": "^2.6.12",

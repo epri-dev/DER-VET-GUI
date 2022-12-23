@@ -232,15 +232,19 @@ export const makeSingleControllableLoadParameter = (controllableLoad) => {
   const replaceConstruction = setUndefinedNullToOne(values.replacementConstructionTime);
 
   const keys = {
+    ccost: makeBaseKey(values.capitalCost, FLOAT),
     construction_year: makeBaseKey(values.constructionYear, PERIOD),
     decommissioning_cost: makeBaseKey(values.decomissioningCost, FLOAT),
     duration: makeBaseKey(setUndefinedNullToZero(values.duration), FLOAT),
     'ecc%': makeBaseKey(ZERO, FLOAT), // TODO hardcoded
     expected_lifetime: makeBaseKey(values.expectedLifetime, INT),
+    fixed_om: makeBaseKey(values.fixedOMCosts, FLOAT),
+    macrs_term: makeBaseKey(values.macrsTerm, FLOAT),
     name: makeBaseKey(values.name, STRING),
     nsr_response_time: makeBaseKey(ZERO, INT), // hardcoded
     operation_year: makeBaseKey(values.operationYear, PERIOD),
     power_rating: makeBaseKey(values.ratedCapacity, FLOAT),
+    rcost: makeBaseKey(setUndefinedNullToZero(values.replacementCost), FLOAT),
     replaceable: makeBaseKey(convertToOneZero(values.isReplaceable), BOOL),
     replacement_construction_time: makeBaseKey(replaceConstruction, INT),
     salvage_value: makeBaseKey(calculateSalvageValue(values), STRING_INT),
@@ -602,17 +606,36 @@ export const makeRetailTimeShiftParameters = (project) => {
 };
 
 export const makeScenarioParameters = (project, inputsDirectory) => {
+  const isPowerSizingOn = (projectTechSpecs) => {
+    // For a battery, power sizing can be on or off when sizing
+    // set to true for all battery sizing; check .shouldPowerSize and .shouldEnergySize
+    // For all other DERS, check with .shouldSize
+    if (checkNotNullOrEmpty(projectTechSpecs)) {
+      let techNum = 0;
+      while (techNum < projectTechSpecs.length) {
+        if ((projectTechSpecs[techNum].values.shouldSize)
+        || (projectTechSpecs[techNum].values.shouldPowerSize)
+        || (projectTechSpecs[techNum].values.shouldEnergySize)) {
+          return true;
+        }
+        techNum += 1;
+      }
+    }
+    return false;
+  };
+  const shouldBinaryBeOff = (project) => {
+    if (isPowerSizingOn(project.technologySpecsDieselGen)
+    || isPowerSizingOn(project.technologySpecsICE)
+    || isPowerSizingOn(project.technologySpecsSolarPV)
+    || isPowerSizingOn(project.technologySpecsBattery)) {
+      return true;
+    }
+    return false;
+  };
   // find BINARY value
   let binary = ONE;
-  const includeBattery = checkNotNullOrEmpty(project.technologySpecsBattery);
-  if (includeBattery) {
-    let batteryNum = 0;
-    while (batteryNum < project.technologySpecsBattery.length) {
-      if (project.technologySpecsBattery[batteryNum].values.shouldEnergySize) {
-        binary = ZERO;
-      }
-      batteryNum += 1;
-    }
+  if (shouldBinaryBeOff(project)) {
+    binary = ZERO;
   }
 
   // find N value
@@ -833,7 +856,8 @@ export const makeEmptyCsvDataWithDatetimeIndex = (project) => {
   return datetimeIndex.map(d => ({ [TIMESERIES_DATETIME_INDEX]: d }));
 };
 
-export const addTechnologyTimeSeries = (tsData, id, tag, columnHeader) => {
+export const addTechnologyTimeSeries = (tsData, id, tagName, columnHeader) => {
+  const tag = `${tagName} -- ${id}`;
   const data = mapListToObjectList(tsData, tag);
   const header = `${columnHeader}/${id}`;
   return { data, tag, header };
@@ -890,7 +914,7 @@ export const makeTimeSeriesCsv = (project) => {
   // Add controllable load timeseries
   _.forEach(project.technologySpecsControllableLoad, (load) => {
     const tsData = load.values.tsControllableLoadProfile;
-    const metadata = MetadataFactory.getMetadata(CollectionType.FleetEV);
+    const metadata = MetadataFactory.getMetadata(CollectionType.ControllableLoad);
     const columnHeader = metadata.tsControllableLoadProfile.columnHeaderName;
     const { data, tag, header } = addTechnologyTimeSeries(tsData, load.id, 'Controllable Load', columnHeader);
     addSingleSeries(data, tag, header);
