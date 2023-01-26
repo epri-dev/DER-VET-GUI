@@ -21,7 +21,7 @@
           <div class="col-md-9">
             <input
               type="file"
-              class="form-control"
+              class="form-control-static"
               id="retail-tariff-file"
               @change="onFileUpload">
           </div>
@@ -33,7 +33,7 @@
           right-text="Import"
           :error-text="error"
           :on-right-click="save"
-          :on-left-click="save"
+          :on-left-click="navigateToRetailTariff"
           :disabled="isImportDisabled()"
           :show-error="isImportDisabled()"
         />

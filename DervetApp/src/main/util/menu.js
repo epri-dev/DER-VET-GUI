@@ -1,5 +1,8 @@
 const { app, shell } = require('electron'); // eslint-disable-line
 
+const isMac = process.platform === 'darwin';
+const isDev = process.env.NODE_ENV === 'development';
+
 const makeHelpItem = (label, link) => ({
   label,
   click: async () => {
@@ -7,8 +10,24 @@ const makeHelpItem = (label, link) => ({
   },
 });
 
-const makeViewSubMenu = () => {
-  const menu = [
+const appMenu = () => ({
+  label: app.name,
+  submenu: [
+    { role: 'about' },
+    ...(isMac ? [
+      { type: 'separator' },
+      { role: 'hide' },
+      { role: 'hideOthers' },
+      { role: 'unhide' },
+      { type: 'separator' },
+      { role: 'quit' },
+    ] : []),
+  ],
+});
+
+const viewMenu = () => ({
+  label: 'View',
+  submenu: [
     { role: 'reload' },
     { role: 'forceReload' },
     { type: 'separator' },
@@ -17,24 +36,26 @@ const makeViewSubMenu = () => {
     { role: 'zoomOut' },
     { type: 'separator' },
     { role: 'togglefullscreen' },
-  ];
+    ...(isDev ? [
+      { role: 'toggleDevTools' },
+    ] : []),
+  ],
+});
 
-  if (process.env.NODE_ENV === 'development') {
-    menu.push({ role: 'toggleDevTools' });
-  }
-
-  return menu;
-};
+const windowMenu = () => ({
+  label: 'Window',
+  submenu: [
+    { role: 'minimize' },
+    { role: 'close' },
+  ],
+});
 
 const menuConfig = [
-  { role: 'appMenu' },
+  appMenu(),
   { role: 'fileMenu' },
   { role: 'editMenu' },
-  {
-    label: 'View',
-    submenu: makeViewSubMenu(),
-  },
-  { role: 'windowMenu' },
+  viewMenu(),
+  windowMenu(),
   {
     role: 'help',
     submenu: [

@@ -21,7 +21,7 @@
           <div class="col-md-9">
             <input
               type="file"
-              class="form-control"
+              class="form-control-static"
               id="external-incentives-file"
               @change="onFileUpload">
           </div>

@@ -74,6 +74,10 @@ export const setUndefinedNullToOne = value => (
   isNullOrUndefined(value) ? 1 : value
 );
 
+export const setUndefinedNullToDefaultValue = (value, defaultValue) => (
+  isNullOrUndefined(value) ? defaultValue : value
+);
+
 export const makeCsvFilePath = (directory, fileName) => (
   path.join(directory, `${fileName}.csv`)
 );
@@ -515,17 +519,17 @@ export const makeSinglePVParameter = (pv) => {
     ccost_kW: makeBaseKey(values.cost, FLOAT),
     construction_year: makeBaseKey(values.constructionYear, PERIOD),
     curtail: makeBaseKey(convertToOneZero(values.includeCurtailment), BOOL),
-    decommissioning_cost: makeBaseKey(values.decomissioningCost, FLOAT),
+    decommissioning_cost: makeBaseKey(setUndefinedNullToZero(values.decomissioningCost), FLOAT),
     'ecc%': makeBaseKey(ZERO, FLOAT), // TODO hardcoded
     expected_lifetime: makeBaseKey(values.expectedLifetime, INT),
-    fixed_om_cost: makeBaseKey(values.fixedOMCosts, FLOAT),
+    fixed_om_cost: makeBaseKey(setUndefinedNullToZero(values.fixedOMCosts), FLOAT),
     gamma: makeBaseKey(setUndefinedNullToZero(values.gamma), FLOAT),
     grid_charge: makeBaseKey(convertToOneZero(values.allowGridCharge), BOOL),
     grid_charge_penalty: makeBaseKey(ZERO, BOOL), // hardcoded
     growth: makeBaseKey(ZERO, FLOAT), // hardcoded
     inv_max: makeBaseKey(values.inverterMax, FLOAT),
     loc: makeBaseKey(values.loc, FLOAT),
-    macrs_term: makeBaseKey(values.macrsTerm, FLOAT),
+    macrs_term: makeBaseKey(setUndefinedNullToDefaultValue(values.macrsTerm, 10), FLOAT),
     max_rated_capacity: makeBaseKey(setUndefinedNullToZero(values.ratedCapacityMaximum), BOOL),
     min_rated_capacity: makeBaseKey(setUndefinedNullToZero(values.ratedCapacityMinimum), BOOL),
     name: makeBaseKey(values.name, STRING),
@@ -539,7 +543,7 @@ export const makeSinglePVParameter = (pv) => {
     rcost_kW: makeBaseKey(setUndefinedNullToZero(values.replacementCost), FLOAT),
     replaceable: makeBaseKey(convertToOneZero(values.isReplaceable), BOOL),
     replacement_construction_time: makeBaseKey(replacementConstructionTime, INT),
-    salvage_value: makeBaseKey(calculateSalvageValue(values), STRING_INT),
+    salvage_value: makeBaseKey(setUndefinedNullToZero(calculateSalvageValue(values)), STRING_INT),
     sr_response_time: makeBaseKey(ZERO, INT), // hardcoded
     startup_time: makeBaseKey(ZERO, INT), // hardcoded
     ter: makeBaseKey(values.ter, FLOAT),
