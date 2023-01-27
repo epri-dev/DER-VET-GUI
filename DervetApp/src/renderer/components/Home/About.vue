@@ -13,7 +13,7 @@
         <p class="tool-tip-index tool-tip-index-col">
           DER-VET v{{version}}<br>
           <br>
-          Copyright © 2022 Electric Power Research Institute, Inc. All Rights Reserved.<br>
+          Copyright © 2023 Electric Power Research Institute, Inc. All Rights Reserved.<br>
           <br>
           Permission to use, copy, modify, and distribute this software for any purpose<br>
           with or without fee is hereby granted, provided that the above copyright<br>
