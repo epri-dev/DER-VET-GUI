@@ -5,8 +5,12 @@ Questions and feedback can be submitted to the Electric Power Research Institute
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
-## [1.2.3] - 2022-12-16
+## [1.2.3] - 2023-01-26
 ### Fixed
+- removed non-functioning menu bar actions
+- removed the box surrounding each Choose-File button
+- made the Salvage-Value box larger in Battery
+- activated the Cancel button in Import-Retail-Tariff
 - resolve data not being displayed in the Financial Results chart
 - the Load Coverage Probability plot (in Results--Reliability) will be labeled and shown as percent
 - allow External Incentives to be entered for the Project Start Year

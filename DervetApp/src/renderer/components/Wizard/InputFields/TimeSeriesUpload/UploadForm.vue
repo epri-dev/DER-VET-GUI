@@ -3,7 +3,7 @@
     <div class="col-md-4">
       <input
         type="file"
-        class="form-control"
+        class="form-control-static"
         :disabled="disableUpload"
         @change="onFileUpload">
     </div>

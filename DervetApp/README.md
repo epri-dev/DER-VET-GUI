@@ -88,9 +88,9 @@ The following assumes you have already gone through the Development Setup steps.
 1. Install [pyenv](https://github.com/pyenv/pyenv)
 2. Create a virtual environment with necessary dependencies:
 ```
-env PYTHON_CONFIGURE_OPTS='--enable-shared' pyenv install 3.8.13
+env PYTHON_CONFIGURE_OPTS='--enable-shared' pyenv install 3.8.16
 cd dervet-gui/DervetBackEnd/dervet
-pyenv virtualenv 3.8.13 venv
+pyenv virtualenv 3.8.16 venv
 pyenv activate venv
 pip install setuptools==52.0.0
 pip install -r requirements.txt -r requirements-packaging.txt
@@ -103,17 +103,21 @@ pip install -e ./storagevet
 After following the Anaconda3 setup instructions in dervet/README.md setup
 ```
 cd dervet-gui/DervetBackEnd/dervet
-conda create -n venv python=3.8.13
+conda create -n venv python=3.8.16
 conda activate venv
 pip install setuptools==52.0.0
-conda install conda-forge::blas=*=openblas --file requirements.txt --file requirements-packaging.txt
+conda install conda-forge::blas=*=openblas --file requirements.txt
+pip install -r requirements-packaging.txt
 pip install numpy_financial==1.0.0
 pip install -e ./storagevet
 ```
 
 Package
 
-In the .env file in the root of DervetApp, set PROJECT_SCHEMA_VERSION to the current schema version.
+In the .env file in the root of DervetApp,
+- set PROJECT_SCHEMA_VERSION to the current schema version ("1.0.0")
+- Set DERVET_PYTHON_RUNTIME to the proper full path of the python executable
+- Set DERVET_PYTHON_SCRIPT to the proper full path of run_DERVET.py
 
 ``` bash
 # package dervet backend with pyinstaller (note: change absolute dervet and storagevet paths in pyinstaller command)
@@ -121,6 +125,7 @@ cd dervet-gui/DervetBackEnd/dervet
 pyinstaller --paths=/path/to/dervet-gui/DervetBackEnd/dervet/storagevet --paths=/path/to/dervet-gui/DervetBackEnd/dervet --additional-hooks-dir=./hooks/ --add-data "dervet/Schema.json:dervet" --onefile run_DERVET.py
 cp dist/run_DERVET ../../DervetApp/extraResources/
 cd dervet-gui/DervetApp
+npm install
 npm run build
 ```
 
