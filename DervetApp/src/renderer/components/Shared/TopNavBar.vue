@@ -53,7 +53,7 @@
           </b-button-group>
 
           <b-nav-item align="right" link-classes="navbar-top-svg-item">
-            <span @click="(e) => openWebsiteInBrowser(e, FORUM_LINK)" class="fas fa-comment-alt"/>
+            <span @click="(e) => openWebsiteInBrowser(e, HELP_LINK)" class="fas fa-comment-alt"/>
           </b-nav-item>
           <b-nav-item align="right" link-classes="navbar-top-svg-item">
             <span @click="(e) => openWebsiteInBrowser(e, USER_GUIDE_LINK)" class="fas fa-question-circle"/>
@@ -81,7 +81,7 @@
   import pagesMixin from '@/mixins/pagesMixin';
   import * as a from '@/store/actionTypes';
 
-  const FORUM_LINK = 'https://www.der-vet.com/forum/';
+  const HELP_LINK = 'https://www.der-vet.com/help/';
   const USER_GUIDE_LINK = 'https://storagewiki.epri.com/index.php/DER_VET_User_Guide#Index';
 
   export default {
@@ -89,7 +89,7 @@
     data() {
       return {
         INDEX,
-        FORUM_LINK,
+        HELP_LINK,
         USER_GUIDE_LINK,
         WIZARD_OVERVIEW,
         WIZARD_COMPONENT,

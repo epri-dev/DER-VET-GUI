@@ -56,13 +56,13 @@
 </template>
 
 <script>
-  import CesMap from '@/assets/CESMap4.png';
-  import OpenExternalLink from '@/components/Shared/OpenExternalLink';
-  import CesScoresTable from '@/components/Wizard/Overview/CalEnviroScreen/CesScoresTable';
-  import ZipCodeFilter from '@/components/Wizard/Overview/CalEnviroScreen/ZipCodeFilter';
-  import { WIZARD_COMPONENT } from '@/router/constants';
-  import NavButtons from '@/components/Shared/NavButtons';
   import InnerImageZoom from 'vue-inner-image-zoom';
+import CesMap from '@/assets/CESMap4.png';
+import OpenExternalLink from '@/components/Shared/OpenExternalLink';
+import CesScoresTable from '@/components/Wizard/Overview/CalEnviroScreen/CesScoresTable';
+import ZipCodeFilter from '@/components/Wizard/Overview/CalEnviroScreen/ZipCodeFilter';
+import { WIZARD_COMPONENT } from '@/router/constants';
+import NavButtons from '@/components/Shared/NavButtons';
 
   const CES_HOMEPAGE_URL = 'https://oehha.ca.gov/calenviroscreen/report/calenviroscreen-40';
 

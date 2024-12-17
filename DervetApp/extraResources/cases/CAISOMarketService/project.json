@@ -45,6 +45,7 @@
   "optimizationHorizonNum": 24,
   "sizingEquipment": false,
   "includeInterconnectionConstraints": false,
+  "isDervetUseCase": true,
   "maxExport": null,
   "maxImport": null,
   "deferralGrowth": null,

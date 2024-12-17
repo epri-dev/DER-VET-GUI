@@ -21,8 +21,8 @@
               <b-tr>
                 <!-- TODO: assign columns based on column in rows -->
                 <b-th><span class="sr-only">Name</span></b-th>
-                <b-th :colspan="chartData.numPowerCol">Power Specifications</b-th>
-                <b-th :colspan="chartData.numEnergyCol">Energy Specifications</b-th>
+                <b-th v-if="chartData.numPowerCol > 0" :colspan="chartData.numPowerCol">Power Specifications</b-th>
+                <b-th v-if="chartData.numEnergyCol > 0" :colspan="chartData.numEnergyCol">Energy Specifications</b-th>
                 <b-th><span class="sr-only">Quantity</span></b-th>
               </b-tr>
             </template>

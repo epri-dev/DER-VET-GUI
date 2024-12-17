@@ -4,6 +4,7 @@ import { arrayToAllowedValuesWithNull } from '@/models/Project/Metadata/AllowedV
 
 const CONSTRUCTION_YEAR = 'constructionYear';
 const DECOMISSIONING_COST = 'decomissioningCost';
+const DESCRIPTION = 'description';
 const EXPECTED_LIFETIME = 'expectedLifetime';
 export const MACRS_TERM = 'macrsTerm';
 const NAME = 'name';
@@ -30,6 +31,12 @@ export class TechnologyMetadata {
     type: Number,
     unit: '$',
     description: 'The cost to decommission this technology when it reaches its expected lifetime end',
+  };
+  [DESCRIPTION]: ValueFieldMetadata = {
+    displayName: 'Component Description',
+    isRequired: false,
+    type: String,
+    description: 'Optional field for describing this technology.',
   };
   [EXPECTED_LIFETIME]: ValueFieldMetadata = {
     displayName: 'Expected Lifetime',

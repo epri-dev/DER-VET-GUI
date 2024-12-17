@@ -60,7 +60,7 @@ const menuConfig = [
     role: 'help',
     submenu: [
       makeHelpItem('Documentation', 'https://storagewiki.epri.com/index.php/DER_VET_User_Guide#Index'),
-      makeHelpItem('Community Discussions', 'https://www.der-vet.com/forum/'),
+      makeHelpItem('Help', 'https://www.der-vet.com/help/'),
       makeHelpItem('Feedback', 'https://www.surveymonkey.com/r/dervetfeedback'),
     ],
   },

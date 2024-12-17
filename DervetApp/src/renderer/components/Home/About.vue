@@ -13,7 +13,7 @@
         <p class="tool-tip-index tool-tip-index-col">
           DER-VET v{{version}}<br>
           <br>
-          Copyright © 2023 Electric Power Research Institute, Inc. All Rights Reserved.<br>
+          Copyright © 2024 Electric Power Research Institute, Inc. All Rights Reserved.<br>
           <br>
           Permission to use, copy, modify, and distribute this software for any purpose<br>
           with or without fee is hereby granted, provided that the above copyright<br>
@@ -34,7 +34,7 @@
           EPRI does not own any portion of the software that is attributed
           below.<br>
           <br>
-          &#60;CVXPY&#47;1.1.11&#62; - &#60;Steven Diamond&#62;, &#60;diamond@cs.stanford.edu&#62;<br>
+          &#60;CVXPY&#47;1.4.2&#62; - &#60;Steven Diamond&#62;, &#60;diamond@cs.stanford.edu&#62;<br>
           Copyright © 2017 Steven Diamond<br>
           <br>
           Licensed under the Apache License, Version 2.0 (the "License");<br>

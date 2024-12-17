@@ -83,32 +83,37 @@ Setup & Dependencies
 
 The following assumes you have already gone through the Development Setup steps. Setting up your python environment to run the backend (in the dervet folder) can be done in many ways, but these are specific steps that work for packaging it with pyinstaller.
 
-##### Mac
+##### Mac (pyenv, pip)
 
 1. Install [pyenv](https://github.com/pyenv/pyenv)
 2. Create a virtual environment with necessary dependencies:
 ```
-env PYTHON_CONFIGURE_OPTS='--enable-shared' pyenv install 3.8.16
+env PYTHON_CONFIGURE_OPTS='--enable-shared' pyenv install 3.11.9
 cd dervet-gui/DervetBackEnd/dervet
-pyenv virtualenv 3.8.16 venv
+pyenv virtualenv 3.11.9 venv
 pyenv activate venv
-pip install setuptools==52.0.0
 pip install -r requirements.txt -r requirements-packaging.txt
-pip install numpy_financial==1.0.0
-pip install -e ./storagevet
 ```
 
-##### Windows
+##### Windows (pip)
+
+After following the Windows setup instructions in dervet/README.md setup
+```
+cd dervet-gui/DervetBackEnd/dervet
+pip install virtualenv
+virtualenv venv
+"./venv/Scripts/activate"
+pip install -r requirements.txt -r requirements-packaging.txt
+```
+
+##### Windows (conda)
 
 After following the Anaconda3 setup instructions in dervet/README.md setup
 ```
 cd dervet-gui/DervetBackEnd/dervet
-conda create -n venv python=3.8.16
+conda create -n venv python=3.11.9
 conda activate venv
-pip install setuptools==52.0.0
-conda install conda-forge::blas=*=openblas --file requirements.txt
-pip install -r requirements-packaging.txt
-pip install numpy_financial==1.0.0
+conda install --channel conda-forge --file requirements-conda.txt --file requirements-packaging.txt
 pip install -e ./storagevet
 ```
 
@@ -164,11 +169,11 @@ Please make sure to update tests as appropriate.
 
 ## License
 
-This project is licensed under the BSD (3-clause) License - see [LICENSE.txt](./LICENSE.txt).
+This project is licensed under the 3-clause BSD License - see [LICENSE.txt](./LICENSE.txt).
 
-DER-VET v1.2.3
+DER-VET v1.3.0
 
-Copyright © 2022 Electric Power Research Institute, Inc. All Rights Reserved.
+Copyright © 2024 Electric Power Research Institute, Inc. All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software for any purpose
 with or without fee is hereby granted, provided that the above copyright
@@ -189,7 +194,7 @@ Third-Party Software
 EPRI does not own any portion of the software that is attributed
 below.
 
-<CVXPY/1.1.11> - &lt;Steven Diamond&gt;, <diamond@cs.stanford.edu>
+<CVXPY/1.4.2> - &lt;Steven Diamond&gt;, <diamond@cs.stanford.edu>
 Copyright © 2017 Steven Diamond
 
 Licensed under the Apache License, Version 2.0 (the "License");

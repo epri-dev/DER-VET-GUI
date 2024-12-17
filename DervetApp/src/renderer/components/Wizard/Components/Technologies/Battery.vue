@@ -12,6 +12,13 @@
           :errorMessage="getErrorMsg('name')">
         </text-input>
 
+        <text-area
+          v-model="description"
+          :metadata="metadata.description"
+          :isInvalid="submitted && $v.description.$error"
+          :errorMessage="getErrorMsg('description')">
+        </text-area>
+
         <radio-button-input
           v-model="shouldEnergySize"
           :metadata="metadata.shouldEnergySize"

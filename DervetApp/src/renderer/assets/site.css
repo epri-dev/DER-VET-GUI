@@ -709,6 +709,9 @@ input.input-validation-error {
     font-weight: bold;
 }
 
+.is-a-link {
+  cursor: pointer;
+}
 
 .results-legend {
     text-align: center;

@@ -315,7 +315,7 @@ export default class BatteryMetadata extends TechnologyMetadata {
     isRequired: true,
     minValue: 0,
     type: Number,
-    unit: '$ / MWh-year',
+    unit: '$ / MWh',
     description: 'What is the variable cost of operations and maintenance for the battery storage system?',
   };
 }

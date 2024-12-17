@@ -23,6 +23,18 @@
 
         </br>
 
+        <div v-if="(isTagWebUC === true)" @click="clickMethodTagwebUC" class=is-a-link>
+          <h4>EPRI TAGWeb Details</h4>
+          {{ `This Use Case was created using values from EPRI's TAGWeb application. Please click here to learn more and to visit the site at ${TAGWEBUC_LINK}. TAGWeb® (Technical Assessment Guide Web) is an integrated, web-based software tool that provides current economic cost and technical performance data and analytical tools to assess power generation and storage technologies.` }}
+        </div>
+
+        <div v-if="(isDervetUC === true)" @click="clickMethodDervetUC" class=is-a-link>
+          <h4>DER-VET Use Case Details</h4>
+          {{ `This Use Case was created by EPRI. Please click here to learn more about this and other DER-VET Use Cases ${DERVETUC_LINK}` }}
+        </div>
+
+        </br>
+        </br>
         <h4>Project Configuration</h4>
         <template>
           <b-table-lite thead-tr-class="d-none" fixed hover bordered striped
@@ -75,7 +87,11 @@
   import PageErrors from '@/components/Wizard/Run/PageErrors';
   import pagesMixin from '@/mixins/pagesMixin';
   import * as paths from '@/router/constants';
+  import openWebsiteInBrowser from '@/util/browser';
   import { exportProject } from '@/service/ProjectFileManager';
+
+  const TAGWEBUC_LINK = 'https://www.epri.com/research/products/000000003002030823';
+  const DERVETUC_LINK = 'https://www.der-vet.com/referencecases/';
 
   export default {
     mixins: [pagesMixin],
@@ -85,7 +101,10 @@
     },
     data() {
       return {
+        TAGWEBUC_LINK,
+        DERVETUC_LINK,
         paths,
+        openWebsiteInBrowser,
         setup: [
           ['Project Name', (this.$store.state.Project.name || '')],
           ['Start Year', this.$store.state.Project.startYear],
@@ -94,6 +113,8 @@
           ['Ownership', this.$store.state.Project.ownership],
         ],
         activeServices: this.getListOfActiveServices(),
+        isTagWebUC: this.isTagWebUseCase(),
+        isDervetUC: this.isDervetUseCase(),
         finances: [
           ['Discount rate', this.getRateDisplay(this.$store.state.Project.financeDiscountRate)],
           ['Inflation rate', this.getRateDisplay(this.$store.state.Project.financeInflationRate)],
@@ -104,6 +125,12 @@
       };
     },
     methods: {
+      clickMethodDervetUC(e) {
+        openWebsiteInBrowser(e, DERVETUC_LINK);
+      },
+      clickMethodTagwebUC(e) {
+        openWebsiteInBrowser(e, TAGWEBUC_LINK);
+      },
       getRateDisplay(rate) {
         return rate === null ? '' : `${rate} %`;
       },
@@ -129,6 +156,14 @@
         if (p.objectivesDR) activeServices.push('DR');
         if (p.objectivesRA) activeServices.push('RA');
         return activeServices;
+      },
+      isTagWebUseCase() {
+        if (this.$store.state.Project.isTagWebUseCase) return true;
+        return false;
+      },
+      isDervetUseCase() {
+        if (this.$store.state.Project.isDervetUseCase) return true;
+        return false;
       },
     },
   };

@@ -1,6 +1,6 @@
+import { required, decimal, minValue } from 'vuelidate/lib/validators';
 import { ValueFieldMetadata } from '@/models/Project/Metadata/ValueField';
 import { valueFieldMetadataToValidationSchema } from '@/service/ProjectPage';
-import { required, decimal, minValue } from 'vuelidate/lib/validators';
 
 describe('Field model', () => {
   it('should translate to a validation schema', () => {

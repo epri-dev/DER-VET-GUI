@@ -68,6 +68,12 @@ export default class ProjectMetadata {
     unit: 'kW',
     description: 'Maximum net export power flow to grid Range: less than or equal to 0',
   };
+  [c.DESCRIPTION]: ValueFieldMetadata = {
+    displayName: 'Description',
+    isRequired: false,
+    type: String,
+    description: 'Optional field for describing this project.',
+  };
   [c.DR_END_HOUR]: ValueFieldMetadata = {
     displayName: 'End Hour',
     isRequired: true,
@@ -272,6 +278,16 @@ export default class ProjectMetadata {
   [c.INCLUDE_INTERCONNECTION_CONSTRAINTS]: ValueFieldMetadata = {
     displayName: 'Apply interconnection constraints',
     isRequired: true,
+    type: Boolean,
+    allowedValues: a.YES_NO_OPTIONS,
+  };
+  isDervetUseCase: ValueFieldMetadata = {
+    isRequired: false,
+    type: Boolean,
+    allowedValues: a.YES_NO_OPTIONS,
+  };
+  isTagWebUseCase: ValueFieldMetadata = {
+    isRequired: false,
     type: Boolean,
     allowedValues: a.YES_NO_OPTIONS,
   };

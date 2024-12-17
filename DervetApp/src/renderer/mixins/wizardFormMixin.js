@@ -5,6 +5,7 @@ import DropDownInput from '@/components/Wizard/InputFields//DropDownInput';
 import RadioButtonInput from '@/components/Wizard/InputFields//RadioButtonInput';
 import NavButtons from '@/components/Shared/NavButtons';
 import TextInput from '@/components/Wizard/InputFields//TextInput';
+import TextArea from '@/components/Wizard/InputFields//TextArea';
 import TimeSeriesUpload from '@/components/Wizard/InputFields//TimeSeriesUpload/Layout';
 import MetadataFactory from '@/models/Project/Metadata/Factory';
 import { CollectionType } from '@/models/Project/CollectionType';
@@ -34,6 +35,7 @@ export default {
     DropDownInput,
     RadioButtonInput,
     TextInput,
+    TextArea,
     TimeSeriesUpload,
     NavButtons,
   },

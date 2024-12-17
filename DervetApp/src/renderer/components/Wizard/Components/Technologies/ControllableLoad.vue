@@ -11,6 +11,13 @@
           :errorMessage="getErrorMsg('name')">
         </text-input>
 
+        <text-area
+          v-model="description"
+          :metadata="metadata.description"
+          :isInvalid="submitted && $v.description.$error"
+          :errorMessage="getErrorMsg('description')">
+        </text-area>
+
         <text-input
           v-model="duration"
           :metadata="metadata.duration"

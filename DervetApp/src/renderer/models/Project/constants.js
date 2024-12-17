@@ -8,6 +8,7 @@ export const DEFERRAL_PLANNED_LOAD_LIMIT = 'deferralPlannedLoadLimit';
 export const DEFERRAL_REVERSE_POWER_FLOW_LIMIT = 'deferralReversePowerFlowLimit';
 export const DEFERRAL_GROWTH = 'deferralGrowth';
 export const DEFERRAL_PRICE = 'deferralPrice';
+export const DESCRIPTION = 'description';
 export const DR_NUMBER_EVENTS = 'drNumberEvents';
 export const DR_GROWTH = 'drGrowth';
 export const DR_INCLUDE_WEEKENDS = 'drIncludeWeekends';
@@ -165,6 +166,7 @@ export const START_PROJECT_FIELDS = [
   ANALYSIS_HORIZON,
   ANALYSIS_HORIZON_MODE,
   DATA_YEAR,
+  DESCRIPTION,
   GRID_LOCATION,
   NAME,
   OUTPUT_DIRECTORY,

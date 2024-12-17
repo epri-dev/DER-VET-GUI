@@ -1,10 +1,10 @@
 import _ from 'lodash';
 
+import { required, decimal, minValue } from 'vuelidate/lib/validators';
 import SolarPVMetadata from '@/models/Project/Metadata/TechnologySpecs/SolarPV';
 import {
   metadataCollectionToValidationSchema,
 } from '@/service/ProjectPage';
-import { required, decimal, minValue } from 'vuelidate/lib/validators';
 import { makeTestHeader } from '../../shared';
 
 describe('SolarPVMetadata', () => {
@@ -13,7 +13,7 @@ describe('SolarPVMetadata', () => {
   makeTestHeader('-- SOLAR PV METADATA -- ');
 
   it('should initialize properly', () => {
-    expect(_.keys(solarPVMetadata)).to.have.lengthOf(29);
+    expect(_.keys(solarPVMetadata)).to.have.lengthOf(30);
   });
 
   it('should create a validation schema', () => {
@@ -23,6 +23,7 @@ describe('SolarPVMetadata', () => {
       constructionYear: { },
       cost: { required, decimal, minValue: minValue(0) },
       decomissioningCost: { },
+      description: { },
       expectedLifetime: { },
       fixedOMCosts: { },
       gamma: { },

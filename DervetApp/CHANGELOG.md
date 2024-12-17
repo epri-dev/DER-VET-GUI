@@ -5,6 +5,24 @@ Questions and feedback can be submitted to the Electric Power Research Institute
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [1.3.0] - 2024-12-02
+### Added
+- Adds 3 new pre-defined TAGWeb Use Cases
+  - TAGWeb Use Cases will now load with a link to EPRI's TAGWeb site
+  - the link to https://tagweb.epri.com/ appears
+    when the imported project.json file has the parameter
+    'isTagWebUseCase' set to true
+  - 3 new TagWeb Use Cases (pre-defined) will load at the Summary Page,
+    which has a clickable link to EPRI's TagWeb website.
+- an optional project description field can now be saved with any text
+- an optional technology description fields can now be saved with any text
+- These descriptions will get saved when an Export Project is initiated.
+  (they will become parameters in the project.json file)
+### Changed
+- Changes the forum link to a help-page link
+  The forum is no longer functional.
+  We now link to DER-VET's help page: der-vet.com/help/
+
 ## [1.2.3] - 2023-01-26
 ### Fixed
 - removed non-functioning menu bar actions

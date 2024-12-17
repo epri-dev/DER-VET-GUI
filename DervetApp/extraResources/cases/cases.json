@@ -14,5 +14,17 @@
   {
     "directory": "EVBatterySizing",
     "displayText": "EV Battery Sizing"
+  },
+  {
+    "directory": "TAGWebBESS",
+    "displayText": "TAGWeb BESS Case"
+  },
+  {
+    "directory": "TAGWebPV",
+    "displayText": "TAGWeb PV Case"
+  },
+  {
+    "directory": "TAGWebICE",
+    "displayText": "TAGWeb ICE Case"
   }
 ]
