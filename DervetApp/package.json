@@ -86,7 +86,7 @@
     "karma-chai-as-promised": "^0.1.2",
     "lodash": "^4.17.19",
     "log4js": "^6.4.0",
-    "moment": "^2.29.0",
+    "moment": "^2.31.0",
     "numeral": "^2.0.6",
     "papaparse": "^5.2.0",
     "path": "^0.12.7",
